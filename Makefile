@@ -21,6 +21,7 @@ coverage coverage-check: sanitizer-checkpoints-check
 sanitizer-checkpoints-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_sanitizer_checkpoints.py'
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_quality_phase_checkpoints.py'
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_hosted_quality_evidence.py'
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_m01_normal_attestation.py'
 threads:
 	swift test --scratch-path .build/tsan --sanitize=thread

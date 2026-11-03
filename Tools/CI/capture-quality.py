@@ -19,6 +19,8 @@ evidence = root / 'reports/quality-runtime'
 evidence.mkdir(parents=True, exist_ok=False)
 originals = evidence / 'originals'
 originals.mkdir()
+from hosted_quality_evidence import begin_capture, seal_capture
+job_capture = begin_capture()
 sha = streaming_sha
 write = lambda path, value: path.write_text(json.dumps(value, indent=2) + '\n')
 known = {}
@@ -255,6 +257,13 @@ finally:
     if changed or after_head != head:
         status['exitCode'] = exit_code = 126
     write(evidence / 'summary.json', status)
+    if exit_code == 0:
+        try:
+            seal_capture(job_capture)
+        except Exception as error:
+            write(evidence / 'capture-error.json', {'type': type(error).__name__, 'detail': str(error)})
+            status['exitCode'] = exit_code = 126
+            write(evidence / 'summary.json', status)
     write(evidence / 'originals-manifest.json',
           {str(path.relative_to(evidence)): sha(path) for path in evidence.rglob('*') if path.is_file()})
 print(json.dumps({'exitCode': exit_code, 'source': head, 'attempts': len(records)}))
