@@ -4,6 +4,16 @@
 
 Updated 30 October 2026. This is the current delivery guide, not a content-complete claim. Root prioritises; authoring developers merge their own reviewed feature PRs, and G1 publishes releases. There is no separate integrator or integration queue. Historical [delivery evidence](DELIVERY-BACKLOG.md) remains intact.
 
+## PR #301 normal test build memory — 6 November 2026
+
+Root assigned G1 (`01a131fd-24b4-79a1-aff2-a2c1618d2698`) to reconcile the existing test module split with PR #301. Scope is `Package.swift` and this ledger. Attempt 3 stopped before discovery during normal coverage compilation at 3,253,911,552 bytes against the existing 3 GiB aggregate guard. The retained process map identifies the large L337CoreTests module emission but does not record exact membership at peak.
+
+Source checkpoint `ffeaa968804cf5389428db9a48037988283a172b` adapts `66f59408` to the PR's exact base. It assigns 204 byte-identical donor files to the two existing design modules and leaves ten changed donor candidates, the explicitly grouped and opted-in tests, and all other files in CoreTests. All 559 existing Swift files stay in the same test bundle dependency graph, with 355 still in CoreTests. The source files, commands, CI resource limits and coverage policy are unchanged. Static source ownership is checked. The donor's historical guarded build and 3,514-method discovery apply only to that donor tree.
+
+Status is development and validation pending. G2 reviews the reconciled source, then G1 verifies the exact current execution tree and full native discovery against the unchanged source inventory before claiming coverage or qualification. Full normal coverage, zero leaks, required reviews and checks, protected merge and exact-main Sonar remain pending. This PR does not deliver a new playable build.
+
+Exact hosted attempt 2 on execution merge `67da76df` reached `ships-check` and stopped before coverage because the test package manifest is a shared renderer input. On exact source `789f5fa0`, G1 ran guarded `make ships` once. It regenerated all 171 ships, and `make ships-check` passed. Every GIF output digest is identical to its previous digest; only the renderer-generated input manifest changes. The final media delta and PR still require fresh review and exact-head hosted qualification.
+
 ## Current M03 focused and media qualification — 30 October 2026
 
 Coherent a4250b1e passed23 affected methods in11 suites with zero issues/failures/skips, including all20 earlier failures, three new presentation methods/five cases and actual HQ destruction/tombstone/cold load. Build129.01 seconds, tests111.203 seconds; total245.083 seconds. Independent actual source/composition and result reviews are clear. The original3434-method failed run and all historical counters remain retained; this focused result does not establish full CI/coverage/leaks/main Sonar/release.

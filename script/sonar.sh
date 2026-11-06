@@ -25,7 +25,11 @@ readonly SOURCE_REVISION
 export SONAR_TOKEN="${SONAR_TOKEN:-${SONAR_TOKEN_PERSONAL:-}}"
 [[ -n "$SONAR_TOKEN" ]] || { printf 'SONAR_TOKEN is required.\n' >&2; exit 2; }
 python3 Tools/verify-sonar-settings.py
-./script/coverage.sh
+if [[ "${GITHUB_ACTIONS:-}" == true && "${GITHUB_JOB:-}" == native_checks ]]; then
+  python3 Tools/CI/hosted_quality_evidence.py
+else
+  ./script/coverage.sh
+fi
 require_main
 CURRENT_REVISION="$(source_checkpoint)"
 [[ "$CURRENT_REVISION" == "$SOURCE_REVISION" ]] || {

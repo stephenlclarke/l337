@@ -147,6 +147,10 @@ def reviewed_build_profile(path, checksum, phase, environment):
 def run_phase(phase, cache, profile_policy=None, profile_sha256=None):
     root = ROOT
     build_profile = reviewed_build_profile(profile_policy, profile_sha256, phase, os.environ)
+    capture = None
+    if os.environ.get('GITHUB_ACTIONS') == 'true' and os.environ.get('GITHUB_JOB') == 'native_checks':
+        from hosted_quality_evidence import current_capture
+        _, capture = current_capture()
     owned_directory(cache)
     descriptor = os.open(cache / 'executor.lock', os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
     with os.fdopen(descriptor, 'a') as lock:
@@ -212,6 +216,8 @@ def run_phase(phase, cache, profile_policy=None, profile_sha256=None):
         if build_profile is not None:
             identity['build_profile'] = {**build_profile, 'argv': build_command}
             identity['phase_image'] = str(image.resolve())
+        if capture is not None:
+            identity['job_capture'] = capture
         key = digest_identity(identity)
         storage = cache / 'phases' / key
         owned_directory(storage)

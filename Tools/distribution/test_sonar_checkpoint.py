@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 
@@ -17,7 +18,7 @@ class SonarCheckpointTests(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory(prefix="elite-sonar-checkpoint-")
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name)
-        for directory in ("script", "Tools/distribution", "Sources", "bin"):
+        for directory in ("script", "Tools/distribution", "Tools/CI", "Sources", "bin"):
             (self.root / directory).mkdir(parents=True)
         for name in ("script/sonar.sh", "Tools/distribution/package_macos.py"):
             shutil.copy2(ROOT / name, self.root / name)
@@ -29,6 +30,10 @@ class SonarCheckpointTests(unittest.TestCase):
             "Path('reports/settings-checked').write_text('checked')\n"
         )
         self.set_coverage("mkdir -p reports\nprintf covered > reports/coverage-checked\n")
+        (self.root / "Tools/CI/hosted_quality_evidence.py").write_text(
+            "from pathlib import Path\n"
+            "Path('reports/hosted-evidence-checked').write_text('offline routing fixture')\n"
+        )
         scanner = self.root / "bin/sonar-scanner"
         scanner.write_text(
             "#!/usr/bin/env python3\n"
@@ -60,14 +65,17 @@ class SonarCheckpointTests(unittest.TestCase):
         path.write_text("#!/usr/bin/env bash\nset -euo pipefail\n" + commands)
         path.chmod(0o755)
 
-    def run_entrypoint(self):
-        environment = os.environ.copy()
+    def run_entrypoint(self, overrides=None):
+        environment = {key: value for key, value in os.environ.items()
+                       if not key.startswith(('GITHUB_', 'RUNNER_', 'ELITE_NATIVE_', 'ELITE_RECOVERABLE_'))
+                       and key != 'GH_TOKEN'}
         # Shell startup files can replace PATH and escape the offline fixtures.
         environment.pop("BASH_ENV", None)
         environment.pop("ENV", None)
         # A local sentinel only; the settings/scanner fixtures never contact a service.
         environment["SONAR_TOKEN"] = "offline-checkpoint-fixture"
         environment["PATH"] = str(self.root / "bin") + os.pathsep + environment["PATH"]
+        environment.update(overrides or {})
         return subprocess.run(
             ["bash", "script/sonar.sh"], cwd=self.root, env=environment,
             text=True, capture_output=True, check=False,
@@ -87,6 +95,23 @@ class SonarCheckpointTests(unittest.TestCase):
         )
         self.assertTrue((self.root / "reports/settings-checked").exists())
         self.assertTrue((self.root / "reports/coverage-checked").exists())
+
+    def test_default_offline_fixture_does_not_inherit_real_hosted_authorization(self):
+        with patch.dict(os.environ, GITHUB_ACTIONS="true", GITHUB_JOB="native_checks",
+                        ELITE_NATIVE_POLICY="must-not-consume-host-policy"):
+            result = self.run_entrypoint()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((self.root / "reports/coverage-checked").exists())
+        self.assertFalse((self.root / "reports/hosted-evidence-checked").exists())
+
+    def test_hosted_main_uses_current_job_evidence_without_calling_coverage_again(self):
+        result = self.run_entrypoint({"GITHUB_ACTIONS": "true", "GITHUB_JOB": "native_checks",
+                                      "GITHUB_REF": "refs/heads/main", "GITHUB_EVENT_NAME": "push"})
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((self.root / "reports/hosted-evidence-checked").exists())
+        self.assertFalse((self.root / "reports/coverage-checked").exists())
+        self.assertEqual(json.loads((self.root / "reports/scanner-arguments.json").read_text()),
+                         ["-Dsonar.projectVersion=" + self.revision])
 
     def test_untracked_maintained_inputs_fail_before_settings_or_coverage(self):
         for name in (
