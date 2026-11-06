@@ -81,7 +81,10 @@ class HostedQualityEvidenceTests(unittest.TestCase):
             self.complete()
             calls = list(self.phase.calls)
             evidence.consume_for_sonar()
-            evidence.consume_for_sonar()
+            with patch.dict(os.environ, GITHUB_EVENT_NAME='workflow_dispatch'):
+                evidence.consume_for_sonar()
+            with patch.dict(os.environ, GITHUB_EVENT_NAME='pull_request'), self.assertRaises(ValueError):
+                evidence.consume_for_sonar()
             self.assertEqual(self.phase.calls, calls)
             self.assertEqual(sum(c[1] == 'test' for c in calls), 1)
             self.assertEqual(sum(c[0] == '/usr/bin/leaks' for c in calls), 1)
@@ -148,7 +151,7 @@ class HostedQualityEvidenceTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 evidence.consume_for_sonar()
 
-    def test_main_push_is_required_and_missing_leak_phase_refuses_sealing(self):
+    def test_main_ref_is_required_and_missing_leak_phase_refuses_sealing(self):
         with self.context():
             capture = evidence.begin_capture()
             phases.run_phase('normal', self.root / 'normal-cache')

@@ -184,8 +184,9 @@ def _current_identity(identity, authority, capture):
 
 def consume_for_sonar():
     """Authoritative main analysis consumes this job's sealed complete proof exactly as produced."""
-    if os.environ.get('GITHUB_REF') != 'refs/heads/main' or os.environ.get('GITHUB_EVENT_NAME') != 'push':
-        raise ValueError('Only actual main push analysis can consume hosted quality evidence')
+    event = os.environ.get('GITHUB_EVENT_NAME')
+    if os.environ.get('GITHUB_REF') != 'refs/heads/main' or event not in ('push', 'workflow_dispatch'):
+        raise ValueError('Only main push or workflow dispatch can consume hosted quality evidence')
     from quality_phase_checkpoints import ensure_no_live_tests
     authority, capture = current_capture()
     ensure_no_live_tests()
