@@ -611,7 +611,7 @@ extension Game {
       )
     }
     let structuralProp = bodies.first(where: { $0.physical?.identity == death.victim })
-      .map { isC01StructuralProp($0) } ?? false
+      .map { isC01StructuralProp($0) || c03PassiveEvidenceKind(of: $0) != nil } ?? false
     let shipDeath =
       death.victim == context.player.identity
       || (!structuralProp
@@ -635,7 +635,8 @@ extension Game {
   ) {
     guard let death, death.owner == context.player.identity, case .body(let id) = target,
       let body = bodies.first(where: { $0.id == id }), body.hull.isTargetShip,
-      !isGlassMeridianClock(body), !isC01Surveyor(body), !isC01StructuralProp(body)
+      !isGlassMeridianClock(body), !isC01Surveyor(body), !isC01StructuralProp(body),
+      c03PassiveEvidenceKind(of: body) == nil
     else { return }
     creditQualifiedCombatDeath(death)
   }

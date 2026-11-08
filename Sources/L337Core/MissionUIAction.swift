@@ -4,6 +4,10 @@ import Foundation
 public enum MissionUIAction: String, CaseIterable, Sendable {
   case gallery = "gallery-open"
   case contacts = "contacts-open"
+  case originalSealConsent = "original-seal-consent"
+  case originalWakeScan = "original-wake-scan"
+  case originalRegisterRecovery = "original-register-recover"
+  case reviewRecoveredRegister = "recovered-register-review"
   case contracts = "contracts-open"
   case rumours = "rumours-open"
   case trial = "gallery-trial"
@@ -20,6 +24,10 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
     switch self {
     case .gallery: "Mission Gallery"
     case .contacts: "Mission Contacts"
+    case .originalSealConsent: "Contact Selected Freighter"
+    case .originalWakeScan: "Scan Selected Wake Mark"
+    case .originalRegisterRecovery: "Recover Original Custody Register"
+    case .reviewRecoveredRegister: "Read Recovered Custody Register"
     case .contracts: "Station Contracts"
     case .rumours: "Station Rumours"
     case .trial:
@@ -41,6 +49,10 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
 
   public func isEnabled(in game: Game) -> Bool {
     switch self {
+    case .originalSealConsent: return (try? game.makeHollowManifestConsentReview()) != nil
+    case .originalWakeScan: return game.hollowManifestWakeTarget != nil
+    case .originalRegisterRecovery: return game.hollowManifestRegisterTarget != nil
+    case .reviewRecoveredRegister: return game.canOpenC03ArchiveReader
     case .assemblyCalibrationStart: return game.canStartAssemblyCalibration
     case .assemblyCalibrationCancel: return game.canCancelAssemblyCalibration
     case .assemblyCapacityConsole: return game.canOpenAssemblyCapacityEditor
@@ -72,7 +84,11 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
   }
 
   /// Page-affecting actions use the actor's existing exact painted-page proof.
-  public var requiresPageProof: Bool { self == .contracts || self == .trial || self == .retry }
+  public var requiresPageProof: Bool {
+    self == .contracts || self == .trial || self == .retry || self == .originalSealConsent
+      || self == .originalWakeScan || self == .originalRegisterRecovery
+      || self == .reviewRecoveredRegister
+  }
 }
 
 /// Captured in the native input stream. The actor rechecks epoch, availability and page proof.
@@ -82,6 +98,9 @@ public struct MissionUIIntent: Sendable, Equatable {
   public let screen: Screen
   public let inventoryContext: InventoryContextEpoch
   private let assemblyCalibrationSelection: NativeAssemblyCalibrationSelection?
+  private let originalSealTarget: ActorIdentity?
+  private let originalWakeTarget: ActorIdentity?
+  private let originalRegisterTarget: ActorIdentity?
   /// Check again inside GameRuntime immediately before dispatch, without an intervening await.
   public func isCurrent(in game: Game) -> Bool {
     screen == game.screen && inventoryContext == game.inventoryContextEpoch
@@ -89,6 +108,12 @@ public struct MissionUIIntent: Sendable, Equatable {
       && (!action.requiresPageProof || presentation == game.scriptPagePresentation)
       && (action != .assemblyCalibrationStart
         || assemblyCalibrationSelection?.isCurrent(in: game) == true)
+      && (action != .originalSealConsent
+        || (originalSealTarget != nil && originalSealTarget == game.hollowManifestConsentTarget))
+      && (action != .originalWakeScan
+        || (originalWakeTarget != nil && originalWakeTarget == game.hollowManifestWakeTarget))
+      && (action != .originalRegisterRecovery
+        || (originalRegisterTarget != nil && originalRegisterTarget == game.hollowManifestRegisterTarget))
   }
 
   public init(action: MissionUIAction, game: Game, presentation: ScriptPagePresentation) {
@@ -96,6 +121,9 @@ public struct MissionUIIntent: Sendable, Equatable {
     self.presentation = presentation
     screen = game.screen
     inventoryContext = game.inventoryContextEpoch
+    originalSealTarget = action == .originalSealConsent ? game.hollowManifestConsentTarget : nil
+    originalWakeTarget = action == .originalWakeScan ? game.hollowManifestWakeTarget : nil
+    originalRegisterTarget = action == .originalRegisterRecovery ? game.hollowManifestRegisterTarget : nil
     assemblyCalibrationSelection = action == .assemblyCalibrationStart
       ? NativeAssemblyCalibrationSelection.capture(in: game) : nil
   }
@@ -106,6 +134,7 @@ extension GameRuntime {
   public func missionUICommand(_ intent: MissionUIIntent) {
     guard intent.isCurrent(in: game) else { return }
     if handleAssemblyCalibrationUI(intent) { return }
+    if handleC03ArchiveReaderUI(intent) { return }
     if intent.action.requiresPageProof {
       scriptPageKey(intent.action.rawValue, expected: intent.presentation)
     } else {

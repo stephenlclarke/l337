@@ -31,10 +31,11 @@ public enum NativePersonReference: Hashable, Codable, Sendable {
   case evacuation(NativeOriginalEvacuationIdentity)
   case clinicPilot(NativeC01ClinicPilotIdentity)
   case utilityEngineer(NativeUtilityEngineerIdentity)
+  case hollowManifestCrew(NativeC03CrewIdentity)
   var emp: EMPCrewIdentity? {
     switch self {
     case .emp(let person): person
-    case .station, .rescue, .evacuation, .clinicPilot, .utilityEngineer: nil
+    case .station, .rescue, .evacuation, .clinicPilot, .utilityEngineer, .hollowManifestCrew: nil
     }
   }
   var key: String {
@@ -44,6 +45,7 @@ public enum NativePersonReference: Hashable, Codable, Sendable {
     case .evacuation(let person): return person.key
     case .clinicPilot(let person): return person.key
     case .utilityEngineer(let person): return person.key
+    case .hollowManifestCrew(let person): return person.key
     case .emp(let person):
       return
         "emp:\(person.source.system.galaxy):\(person.source.system.system):\(person.source.visit):\(person.source.entity):\(person.ordinal)"
@@ -65,8 +67,13 @@ public enum NativePersonReference: Hashable, Codable, Sendable {
     if case .utilityEngineer(let person) = self { return person }
     return nil
   }
+  var hollowManifestCrew: NativeC03CrewIdentity? {
+    if case .hollowManifestCrew(let person) = self { return person }
+    return nil
+  }
   var nativeID: UUID? {
     station?.id ?? rescue?.id ?? evacuation?.id ?? clinicPilot?.id ?? utilityEngineer?.id
+      ?? hollowManifestCrew?.id
   }
   var station: NativeStationPersonIdentity? {
     if case .station(let person) = self { return person }
@@ -247,6 +254,7 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
     var crewService: NativeCrewServiceState? = nil
     var clinicSource: NativeC01ClinicSourceState? = nil
     var utilityEngineer: NativeUtilityEngineerState? = nil
+    var hollowManifestCrew: NativeC03CrewSourceState? = nil
     var admissions: [NativePeopleAdmission] = []
     var transfers: [NativePeopleTransferReceipt] = []
 
@@ -263,6 +271,7 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
       copyCrewService(from: source)
       copyClinicSource(from: source)
       copyUtilityEngineer(from: source)
+      copyHollowManifestCrew(from: source)
       copyAdmissions(from: source)
       copyTransfers(from: source)
     }
@@ -305,6 +314,11 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
     @inline(never)
     private func copyUtilityEngineer(from source: Storage) {
       utilityEngineer = source.utilityEngineer
+    }
+
+    @inline(never)
+    private func copyHollowManifestCrew(from source: Storage) {
+      hollowManifestCrew = source.hollowManifestCrew
     }
 
     @inline(never)
@@ -437,6 +451,18 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
       yield &storage.utilityEngineer
     }
   }
+
+  var hollowManifestCrew: NativeC03CrewSourceState? {
+    _read { yield storage.hollowManifestCrew }
+    set {
+      ensureUniqueStorage()
+      storage.hollowManifestCrew = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &storage.hollowManifestCrew
+    }
+  }
   var transfers: [NativePeopleTransferReceipt] {
     _read { yield storage.transfers }
     set {
@@ -460,6 +486,7 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
     guard equalCrewService(lhs.storage, rhs.storage) else { return false }
     guard equalClinicSource(lhs.storage, rhs.storage) else { return false }
     guard equalUtilityEngineer(lhs.storage, rhs.storage) else { return false }
+    guard equalHollowManifestCrew(lhs.storage, rhs.storage) else { return false }
     guard equalAdmissions(lhs.storage, rhs.storage) else { return false }
     guard equalTransfers(lhs.storage, rhs.storage) else { return false }
     return true
@@ -511,6 +538,11 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
   }
 
   @inline(never)
+  private static func equalHollowManifestCrew(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.hollowManifestCrew == rhs.hollowManifestCrew
+  }
+
+  @inline(never)
   private static func equalAdmissions(_ lhs: Storage, _ rhs: Storage) -> Bool {
     lhs.admissions == rhs.admissions
   }
@@ -548,7 +580,10 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
     guard NativeUtilityEngineerSave.validSource(
       utilityEngineer, custody: self, commander: commander)
     else { return false }
-    guard custodyAdmissionsValid(commander: commander) else { return false }
+    guard let c03Budget = NativeC03CrewHistoryBudget.current(custody: self, commander: commander),
+      c03Budget.countsWithinLimits(self)
+    else { return false }
+    guard custodyAdmissionsValid(commander: commander, c03Budget: c03Budget) else { return false }
     guard custodyTransfersValid(commander: commander) else { return false }
     return custodyRevisionsValid(commander: commander)
   }
@@ -558,7 +593,7 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
     guard owner == commander.equipmentOwnerID,
       !admissions.isEmpty || stationJourney != nil || outlookJourney != nil
         || originalRescue != nil || orbitalEvacuation != nil || crewService != nil
-        || clinicSource != nil || utilityEngineer != nil
+        || clinicSource != nil || utilityEngineer != nil || hollowManifestCrew != nil
     else { return false }
     return true
   }
@@ -588,8 +623,10 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
   }
 
   @inline(never)
-  private func custodyAdmissionsValid(commander: Commander) -> Bool {
-    guard admissions.count <= Self.maximumPeople, transfers.count <= Self.maximumPeople,
+  private func custodyAdmissionsValid(
+    commander: Commander, c03Budget: NativeC03CrewHistoryBudget
+  ) -> Bool {
+    guard c03Budget.countsWithinLimits(self),
       Set(admissions.map(\.person)).count == admissions.count,
       admissions.allSatisfy({ $0.valid(commander: commander) && $0.revision <= revision }),
       Set(transfers.map(\.operation)).count == transfers.count,
@@ -597,8 +634,8 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
         || (admissions.isEmpty && transfers.isEmpty
           && (stationJourney != nil || outlookJourney != nil || originalRescue != nil
             || orbitalEvacuation != nil || crewService != nil || clinicSource != nil
-            || utilityEngineer != nil)))
-        && revision <= UInt64(Self.maximumPeople * 2)
+            || utilityEngineer != nil || hollowManifestCrew != nil)))
+        && revision <= c03Budget.maximumRevision
     else { return false }
     return true
   }
@@ -607,6 +644,12 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
   private func custodyTransfersValid(commander: Commander) -> Bool {
     var terminal: Set<NativePersonReference> = []
     for transfer in transfers {
+      if let source = hollowManifestCrew, source.loss?.transfer == transfer.operation {
+        // valid() has already joined the full source, sole terminal and actual loss.
+        guard NativeC03CrewSourceSave.validDirectTransfer(
+          transfer, source: source, commander: commander) else { return false }
+        continue
+      }
       guard transfer.owner == owner, (1...Self.maximumPeople).contains(transfer.members.count),
         Set(transfer.members).count == transfer.members.count,
         transfer.members.allSatisfy({ person in
@@ -667,7 +710,7 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
   }
   private enum CodingKeys: String, CodingKey {
     case owner, revision, admissions, transfers, stationJourney, outlookJourney, originalRescue,
-      orbitalEvacuation, crewService, clinicSource, utilityEngineer
+      orbitalEvacuation, crewService, clinicSource, utilityEngineer, hollowManifestCrew
   }
   init(from decoder: any Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -685,8 +728,12 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
     clinicSource = try values.decodeIfPresent(NativeC01ClinicSourceState.self, forKey: .clinicSource)
     utilityEngineer = try values.decodeIfPresent(
       NativeUtilityEngineerState.self, forKey: .utilityEngineer)
+    hollowManifestCrew = try values.decodeIfPresent(
+      NativeC03CrewSourceState.self, forKey: .hollowManifestCrew)
     admissions = try Self.bounded(values, key: .admissions, type: NativePeopleAdmission.self)
-    transfers = try Self.bounded(values, key: .transfers, type: NativePeopleTransferReceipt.self)
+    transfers = try Self.bounded(
+      values, key: .transfers, type: NativePeopleTransferReceipt.self,
+      maximum: NativeC03CrewHistoryBudget.maximumRawTransfers)
   }
   func encode(to encoder: any Encoder) throws {
     var values = encoder.container(keyedBy: CodingKeys.self)
@@ -699,6 +746,7 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
     try Self.encodeCrewService(storage, into: &values)
     try Self.encodeClinicSource(storage, into: &values)
     try Self.encodeUtilityEngineer(storage, into: &values)
+    try Self.encodeHollowManifestCrew(storage, into: &values)
     try Self.encodeAdmissions(storage, into: &values)
     try Self.encodeTransfers(storage, into: &values)
   }
@@ -722,6 +770,13 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
     _ storage: Storage, into values: inout KeyedEncodingContainer<CodingKeys>
   ) throws {
     try values.encodeIfPresent(storage.utilityEngineer, forKey: .utilityEngineer)
+  }
+
+  @inline(never)
+  private static func encodeHollowManifestCrew(
+    _ storage: Storage, into values: inout KeyedEncodingContainer<CodingKeys>
+  ) throws {
+    try values.encodeIfPresent(storage.hollowManifestCrew, forKey: .hollowManifestCrew)
   }
 
   @inline(never)
@@ -781,13 +836,14 @@ struct NativePeopleCustodyState: Equatable, Codable, Sendable {
   }
 
   private static func bounded<T: Decodable>(
-    _ values: KeyedDecodingContainer<CodingKeys>, key: CodingKeys, type: T.Type
+    _ values: KeyedDecodingContainer<CodingKeys>, key: CodingKeys, type: T.Type,
+    maximum: Int = maximumPeople
   ) throws -> [T] {
     var entries = try values.nestedUnkeyedContainer(forKey: key)
-    guard (entries.count ?? 0) <= maximumPeople else { throw SaveError.invalidCommander }
+    guard (entries.count ?? 0) <= maximum else { throw SaveError.invalidCommander }
     var result: [T] = []
     while !entries.isAtEnd {
-      guard result.count < maximumPeople else { throw SaveError.invalidCommander }
+      guard result.count < maximum else { throw SaveError.invalidCommander }
       result.append(try entries.decode(type))
     }
     return result
@@ -825,6 +881,9 @@ extension Commander {
   }
   @inline(never)
   private var nativePeopleSourcesPresent: Bool {
+    if NativeC03CrewSourceSave.sourceRequired(self), nativePeople?.hollowManifestCrew == nil {
+      return false
+    }
     if nativeStations?.ledger.records.contains(where: { $0.utilitySourceBirth != nil }) == true,
       nativePeople?.utilityEngineer == nil
     {

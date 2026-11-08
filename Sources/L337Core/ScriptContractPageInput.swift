@@ -33,6 +33,7 @@ extension Game {
     fields += wayfarerRepairLoopPageFacts
     fields += fieldReliefPageFacts
     fields += isolationWorkPageFacts
+    fields += hollowManifestPageFacts
     return contractPageIdentity(fields: fields)
   }
 
@@ -94,6 +95,7 @@ extension Game {
     if contractBoard.detail {
       review = contractBoard.wayfarerInductionQuote?.reviewToken
       if review == nil { review = contractBoard.isolationWorkParentQuote?.reviewToken }
+      if review == nil { review = contractBoard.hollowManifestQuote?.reviewToken }
       if review == nil { review = contractBoard.glassMeridianQuote?.reviewToken }
       if review == nil { review = contractBoard.flightReceptionQuote?.reviewToken }
       if review == nil { review = contractBoard.measuredExtractionQuote?.reviewToken }

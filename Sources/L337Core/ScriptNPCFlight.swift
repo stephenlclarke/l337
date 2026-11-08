@@ -1,5 +1,17 @@
 import Foundation
 
+/// Actual powered-phase input; no other file can construct this capture.
+struct NativeC03AppliedNPCStep: Sendable {
+  let before: SpaceBody
+  let after: SpaceBody
+  let delta: Double
+  fileprivate init(before: SpaceBody, after: SpaceBody, delta: Double) {
+    self.before = before
+    self.after = after
+    self.delta = delta
+  }
+}
+
 extension Game {
   mutating func applyScriptNPCIntent(
     _ command: ScriptValue, pack: ScriptPack, state: inout ScriptInstance
@@ -55,7 +67,17 @@ extension Game {
   }
 
   /// All actors observe the same post-camera snapshot; array order cannot change steering.
-  mutating func advanceScriptNPCFlight(delta: Double, excluding: Set<ActorIdentity> = []) {
+  mutating func advanceScriptNPCFlight(
+    delta: Double, excluding: Set<ActorIdentity> = [], prepareC03Routes: Bool = true
+  ) {
+    let c03RoutePass: C03FreighterRoutePass
+    if prepareC03Routes {
+      c03RoutePass = prepareC03FreighterRoutePass(delta: delta)
+    } else {
+      let recognized = c03RecognizedBodyIDs()
+      // The native opening already installed its route. Unhandled late originals coast.
+      c03RoutePass = .init(recognizedBodyIDs: recognized, refusedBodyIDs: recognized)
+    }
     let snapshot = bodies
     let owned = Dictionary(
       snapshot.compactMap { body in
@@ -77,14 +99,20 @@ extension Game {
         bodies[index].energy = min(
           definition.energy, bodies[index].energy + definition.recharge * delta)
       }
-      let guidance =
-        c01ClinicGuidance(bodies[index], profile: definition, delta: delta)
+      let guidance: NativeArkDockGuidance?
+      if c03RoutePass.refusedBodyIDs.contains(bodies[index].id) {
+        // A refused original source coasts; no guidance or generic arrival is minted.
+        guidance = .init(desired: npc.velocity, orientation: bodies[index].orientation)
+      } else {
+        guidance = c01ClinicGuidance(bodies[index], profile: definition, delta: delta)
         .map({ NativeArkDockGuidance(desired: $0.desired, orientation: $0.orientation) })
         ?? inductionArkDockGuidance(bodies[index], profile: definition, delta: delta)
         ?? inductionRescueDockGuidance(bodies[index], profile: definition, delta: delta)
+      }
       let decision = scriptNPCFlightDecision(
         bodies[index], npc: npc, owned: owned,
-        station: station, guidance: guidance, delta: delta)
+        station: station, guidance: guidance, delta: delta,
+        allowGenericArrival: !c03RoutePass.recognizedBodyIDs.contains(bodies[index].id))
       bodies[index].orientation = decision.orientation
       if let pending = decision.pending {
         emitScriptNPCFlightResult(
@@ -94,6 +122,9 @@ extension Game {
       npc.velocity = decision.translation.velocity
       bodies[index].position = decision.translation.end
       bodies[index].scriptNPC = npc
+      if prepareC03Routes && nativeC03MotionPending != nil {
+        captureC03PoweredStep(.init(before: snapshot[index], after: bodies[index], delta: delta))
+      }
     }
     resolveC01ClinicMotion(before: snapshot, delta: delta)
     resolveInductionArkDockMotion(before: snapshot, delta: delta)

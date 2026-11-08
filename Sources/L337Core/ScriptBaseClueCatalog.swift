@@ -115,6 +115,11 @@ struct ScriptClueTrustCatalog: Sendable {
   private let pins: [ScriptClueExecutionPin]
   static let production = ScriptClueTrustCatalog(approvedPins: [
     .init(
+      sourceID: NativeHollowManifestDefinition.logicalSourceID,
+      definition: NativeHollowManifestCommission.stateID,
+      version: NativeHollowManifestCommission.version, digest: NativeHollowManifestCommission.digest,
+      terminalEvents: ["mission.receipted"]),
+    .init(
       sourceID: NativeIsolationWorkParent.stateID, definition: NativeIsolationWorkParent.stateID,
       version: NativeIsolationWorkParent.version, digest: NativeIsolationWorkParent.digest,
       terminalEvents: ["mission.receipted"]),

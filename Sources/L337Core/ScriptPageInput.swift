@@ -36,6 +36,8 @@ public enum ScriptPageIdentity: Codable, Sendable, Equatable {
   case journal(NativeC01InquiryJournalPageIdentity)
   case inductionUtility(UUID)
   case isolationWork(UUID)
+  case hollowManifestConsent(UUID)
+  case c03ArchiveReader(String)
   case assemblyCapacity(UUID)
   var valid: Bool {
     switch self {
@@ -47,6 +49,8 @@ public enum ScriptPageIdentity: Codable, Sendable, Equatable {
     case .journal(let page): page.valid
     case .inductionUtility: true
     case .isolationWork: true
+    case .hollowManifestConsent: true
+    case .c03ArchiveReader(let digest): ScriptCompletionReceipt.validDigest(digest)
     case .assemblyCapacity: true
     }
   }
@@ -72,7 +76,11 @@ public struct ScriptPagePresentation: Codable, Sendable, Equatable {
 extension Game {
   public var scriptPagePresentation: ScriptPagePresentation {
     let page: ScriptPageIdentity?
-    if screen == .handoff, let digest = scriptAvailablePackDigest {
+    if screen == .handoff, let review = hollowManifestConsentReview {
+      page = .hollowManifestConsent(review.nonce)
+    } else if screen == .library, let digest = c03ArchiveReaderPageDigest {
+      page = .c03ArchiveReader(digest)
+    } else if screen == .handoff, let digest = scriptAvailablePackDigest {
       page = .offer(digest)
     } else if screen == .handoff, let instance = scriptOffer, let shown = scriptPresentedDialogue {
       page = .question(
@@ -107,7 +115,9 @@ extension Game {
 extension GameRuntime {
   public func scriptPageKey(_ key: String, expected: ScriptPagePresentation) {
     let allowed: Bool
-    if case .gallery(let page)? = expected.page {
+    if case .c03ArchiveReader? = expected.page {
+      allowed = Self.c03ArchiveReaderKeys.contains(key)
+    } else if case .gallery(let page)? = expected.page {
       allowed = page.allowedKeys.contains(key) || key == "contracts-open"
     } else if case .journal(let page)? = expected.page {
       allowed = page.allowedKeys.contains(key)
@@ -118,6 +128,9 @@ extension GameRuntime {
         ScriptPagePresentation.controlKeys.contains(key)
         || ScriptPagePresentation.galleryContextKeys.contains(key)
         || ScriptPagePresentation.contractContextKeys.contains(key)
+        || key == MissionUIAction.originalSealConsent.rawValue
+        || key == MissionUIAction.originalWakeScan.rawValue
+        || key == MissionUIAction.originalRegisterRecovery.rawValue
     } else {
       allowed = ScriptPagePresentation.controlKeys.contains(key)
     }
@@ -125,6 +138,10 @@ extension GameRuntime {
       currentScriptPageMatches(expected)
     else {
       game.notify("CONTACT CHANGED - REVIEW THE CURRENT PAGE")
+      return
+    }
+    if case .c03ArchiveReader? = expected.page {
+      c03ArchiveReaderKey(key)
       return
     }
     self.key(key)
@@ -136,7 +153,11 @@ extension GameRuntime {
       game.notify("CONTACT CHANGED - REVIEW THE CURRENT PAGE")
       return
     }
-    if case .assemblyCapacity? = expected.page {
+    if case .c03ArchiveReader? = expected.page {
+      c03ArchiveReaderClick(x: x, y: y)
+    } else if case .hollowManifestConsent? = expected.page {
+      hollowManifestConsentClick(x: x, y: y)
+    } else if case .assemblyCapacity? = expected.page {
       return
     } else if case .journal? = expected.page {
       return

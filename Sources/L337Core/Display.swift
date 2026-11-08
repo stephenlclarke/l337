@@ -198,7 +198,7 @@ public enum Display {
         return assemblyCapacityConsole(game, width: 768, height: 768)
       }
       inventory(game, into: &frame)
-    case .handoff: return blackjackHandoff(game, width: 768, height: 768)
+    case .handoff: return hollowManifestConsentHandoff(game, width: 768, height: 768)
     case .secret: secret(game, into: &frame)
     case .help: help(game, into: &frame)
     case .library: return referenceLibrary(game, width: 768, height: 768)

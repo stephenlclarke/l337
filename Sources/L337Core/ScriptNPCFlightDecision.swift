@@ -56,7 +56,8 @@ extension Game {
   /// guidance; pure outer preparation supplies only the read-only course projection.
   func scriptNPCFlightDecision(
     _ body: SpaceBody, npc: ScriptNPCState, owned: [UUID: SpaceBody], station: SpaceBody?,
-    guidance: NativeArkDockGuidance?, delta: Double, allowNativeTransit: Bool = true
+    guidance: NativeArkDockGuidance?, delta: Double, allowNativeTransit: Bool = true,
+    allowGenericArrival: Bool = true
   ) -> ScriptNPCFlightDecision {
     let definition = npc.fit.definition
     var orientation = body.orientation
@@ -116,7 +117,8 @@ extension Game {
           desired = orientation.z * speed
           if intent.mode == .follow { desired = desired + targetVelocity }
           desired = desired.limited(to: definition.speed)
-          if intent.status == .requested && [.hold, .approach, .follow].contains(intent.mode)
+          if allowGenericArrival && intent.status == .requested
+            && [.hold, .approach, .follow].contains(intent.mode)
             && transitGoal == nil
             && offset.length <= intent.tolerance && (npc.velocity - targetVelocity).length < 1
           {

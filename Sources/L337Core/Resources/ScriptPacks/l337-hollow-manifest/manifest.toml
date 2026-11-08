@@ -1,0 +1,81 @@
+# C03 authored binding only; native operations and registration remain OPEN.
+# Text and declaration shapes supply no consent, custody, progress or payment.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.contract"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2", "dialogue-choices-v2", "exclusive-choices-v2"]
+priority = 570
+source = "Pinned C03 l337.hollow-manifest; Meridian c70110b292077588a0855fb48127adfb1b611c9d / docs/meridian/missions/definitions/hollow-manifest.json SHA-256 82d8567a390bdd82b68a08430b071da84696e07e6b1d5a027f3ee5690e065e2a. Authored binding only; native support and registration remain open."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "hollow-manifest"
+title = "The Hollow Manifest"
+briefing = "Nia Toren: Two paid manifests name the same crate, and both captains insist it never reached them. Scan the freighters at Garrivek. If we follow the seal rather than the accusation, we can find where the cargo really went.\n\nA freight mutual is paying claims for industrial cargo that never left its warehouse. Reused seals make innocent captains appear responsible, while the true carrier transports unlisted refinery waste. The commander follows a physical seal through several freighters, rescues the carrier's stranded crew, recovers the original customs register and chooses public disclosure or a restitution tribunal. The witnesses are protected and the cargo fraud is resolved through evidence rather than revenge.\n\nSpeak to freight auditor Nia Toren at Narargan in Galaxy 2 after completing one normal commodity sale. No score gate or link to another campaign."
+destination = "Galaxy 2 / Narargan / Garrivek / Torenran / Haldator / Durenran / Haldator / Garrivek / Torenran / Narargan"
+reward = "5600 CR. Expense reimbursement is tracked separately; the selected public report or restitution fund appears in local gossip. Existing legal status is never reset. A permanent clue for The Unwritten Route: The inward mark."
+milestones = ["Accept the duplicate-manifest audit at Narargan.", "Scan the cargo seals on two consenting freighters at Garrivek.", "Have the seals examined at Torenran and collect a loaned one-tonne inspection kit.", "Follow three cargo-handler wake marks to the hidden transfer cradle at Haldator.", "Recover the cradle's original custody register at Durenran.", "Guide the damaged carrier's evacuation launch to Haldator station.", "Dock at Garrivek and reconcile the register, seals and rescued crew's log.", "Choose public disclosure or a crew restitution tribunal at Torenran.", "Return the inspection kit and seal the remaining evidence at Narargan.", "Confirm the fraud resolution and collect payment at Narargan."]
+requiredChoiceGroups = ["hollow-manifest-remedy"]
+
+[hollowManifest]
+schema = "l337-mission-design/1"
+sourceID = "l337.hollow-manifest"
+version = "1.0.0"
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"
+
+[[dialogs]]
+id = "accept"
+text = "TOREN: The mutual has paid for the same machinery twice. I want a complete custody record. Keep the captains alive and their original seals intact."
+
+[[dialogs]]
+id = "inspect-freighters"
+text = "Both seals are authentic, but their manufacturing scratches match. These are two impressions of one physical master, not two independent shipments."
+
+[[dialogs]]
+id = "analyse-seals"
+text = "IVEN: The master seal was recalled. Someone retained it, stamped new dates and sent an empty carrier along the insured route. Take this scanner kit; it belongs to the laboratory."
+
+[[dialogs]]
+id = "follow-carrier"
+text = "The marks lead away from the station approach. The cradle accepted cargo that has no line in the carrier's declared manifest."
+
+[[dialogs]]
+id = "recover-register"
+text = "The register lists sealed refinery waste. The machinery manifests were insurance cover for its transport. The carrier's crew were not told what their holds contained."
+
+[[dialogs]]
+id = "rescue-crew"
+text = "The waste has overheated a service compartment. The evacuation launch carries the crew and its unaltered cargo log. Keep the route clear until station rescue accepts it."
+
+[[dialogs]]
+id = "reconstruct-ledger"
+text = "TOREN: The warehouse dates, recalled master and transfer register now agree. We can identify every false claim without inventing an accusation or silencing a witness."
+
+[[dialogs]]
+id = "choose-remedy"
+text = "IVEN: Publish the full ledger to stop new claims immediately, or lodge it with the restitution tribunal so the crews receive compensation first. The evidence is preserved in either case."
+
+[[dialogs.choices]]
+id = "publish-ledger"
+label = "Publish the complete custody ledger"
+group = "hollow-manifest-remedy"
+
+[[dialogs.choices]]
+id = "restitution-tribunal"
+label = "Submit the case to the restitution tribunal"
+group = "hollow-manifest-remedy"
+
+[[dialogs]]
+id = "return-equipment"
+text = "TOREN: The kit is back with the laboratory. The original seal and custody register will remain available to the crews."
+
+[[dialogs]]
+id = "close-case"
+text = "TOREN: The false claims have stopped and the crew is safe. Your audit fee is 5,600 CR. Your own offences, if any, remain your responsibility.\n\nTOREN: The master seal carried an older imprint beneath its serial number. It was never part of the freight register. Keep the image; the loops seem to point towards something missing from the middle."

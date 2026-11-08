@@ -252,6 +252,8 @@ enum MissionActorAdmissionAuthority: Sendable, Equatable {
   case transit(UUID)
   case inductionArkBerth(UUID)
   case inductionRescueBerth(UUID)
+  case c03Initial
+  case c03Retained
 }
 
 struct MissionActorAdmissionPart: Sendable {
@@ -293,11 +295,17 @@ struct MissionActorAdmissionTemplate: Sendable {
   let retainedNativeCondition: NPCState?
   let retainedNativeVelocity: Vector3?
   let retainedNativeLaserCooldown: Double?
+  let c03Context: C03ActorAdmissionContext?
+  let c03WakeContext: NativeC03WakeAdmissionContext?
+  let c03RegisterContext: NativeC03RegisterAdmissionContext?
 
   fileprivate init(
     actor: ScriptOwnedActor, canonicalBody: SpaceBody, maximumHullEnergy: Double,
     declaredHostile: Bool, parts: [MissionActorAdmissionPart], minimum: Vector3,
-    maximum: Vector3, radius: Double, nativeUnits: Int, initialNativeCondition: NPCState? = nil
+    maximum: Vector3, radius: Double, nativeUnits: Int, initialNativeCondition: NPCState? = nil,
+    c03Context: C03ActorAdmissionContext? = nil,
+    c03WakeContext: NativeC03WakeAdmissionContext? = nil,
+    c03RegisterContext: NativeC03RegisterAdmissionContext? = nil
   ) {
     actorID = actor.identity
     alias = actor.alias
@@ -313,6 +321,9 @@ struct MissionActorAdmissionTemplate: Sendable {
     retainedNativeCondition = actor.body.physical?.npc ?? initialNativeCondition
     retainedNativeVelocity = actor.body.physical?.velocity
     retainedNativeLaserCooldown = actor.body.physical?.laserCooldown
+    self.c03Context = c03Context
+    self.c03WakeContext = c03WakeContext
+    self.c03RegisterContext = c03RegisterContext
   }
 }
 
@@ -332,13 +343,19 @@ struct MissionActorAdmissionSource: Sendable {
   let actors: [MissionActorAdmissionTemplate]
   fileprivate let installedBaseEncounter: ScriptOwnedEncounter?
   fileprivate let transitContext: OriginalWorldJourneyContext?
+  fileprivate let c03Context: C03ActorAdmissionContext?
+  fileprivate let c03WakeContext: NativeC03WakeAdmissionContext?
+  fileprivate let c03RegisterContext: NativeC03RegisterAdmissionContext?
 
   fileprivate init(
     mode: MissionActorAdmissionMode, authority: MissionActorAdmissionAuthority,
     instance: borrowing ScriptInstance, pack: borrowing ScriptPack, encounter: ScriptOwnedEncounter,
     definition: borrowing ScriptEncounterDefinition, actors: [MissionActorAdmissionTemplate],
     installedBaseEncounter: ScriptOwnedEncounter?,
-    transitContext: OriginalWorldJourneyContext? = nil
+    transitContext: OriginalWorldJourneyContext? = nil,
+    c03Context: C03ActorAdmissionContext? = nil,
+    c03WakeContext: NativeC03WakeAdmissionContext? = nil,
+    c03RegisterContext: NativeC03RegisterAdmissionContext? = nil
   ) {
     self.mode = mode
     self.authority = authority
@@ -357,6 +374,9 @@ struct MissionActorAdmissionSource: Sendable {
     self.actors = actors
     self.installedBaseEncounter = installedBaseEncounter
     self.transitContext = transitContext
+    self.c03Context = c03Context
+    self.c03WakeContext = c03WakeContext
+    self.c03RegisterContext = c03RegisterContext
   }
 }
 
@@ -366,17 +386,25 @@ struct MissionActorRetentionPatch: Sendable {
   let instanceRevision: UInt64
   let packDigest: String
   let encounterID: String
-  let expectedEncounter: ScriptOwnedEncounter
+  let expectedEncounter: ScriptOwnedEncounter?
   let updatedEncounter: ScriptOwnedEncounter
   private let definition: String
   private let version: String
 
-  fileprivate init(source: MissionActorAdmissionSource, updated: ScriptOwnedEncounter) {
+  fileprivate let c03Install: C03PreparedActorInstall?
+
+  fileprivate init(
+    source: MissionActorAdmissionSource, updated: ScriptOwnedEncounter,
+    c03Install: C03PreparedActorInstall? = nil
+  ) {
     instanceID = source.instanceID
     instanceRevision = source.instanceRevision
     packDigest = source.packDigest
     encounterID = source.encounterID
-    expectedEncounter = source.retention
+    expectedEncounter = (source.c03Context?.initial == true || source.c03WakeContext?.initial == true
+      || source.c03RegisterContext?.initial == true)
+      ? nil : source.retention
+    self.c03Install = c03Install
     updatedEncounter = updated
     definition = source.definition
     version = source.version
@@ -393,9 +421,24 @@ struct MissionActorRetentionPatch: Sendable {
     guard matches(instance) else {
       throw MissionPackError("Actor retention changed before admission.")
     }
+    if let c03Install {
+      guard instance == c03Install.expected else { throw SaveError.invalidCommander }
+      return c03Install.selected
+    }
     var staged = instance
     apply(to: &staged)
     return staged
+  }
+
+  func validateC03Commit(in game: borrowing Game) throws {
+    guard let c03Install else { return }
+    guard game.acceptsHollowManifestInstalledCase(c03Install.pin),
+      game.withReadOnlyScriptState({ $0.instances[instanceID] == c03Install.expected }),
+      game.withReadOnlyScriptState({ $0.geometry == c03Install.previousGeometry }),
+      C03PreparedActorInstall.eventCapacity(
+        next: game.withReadOnlyScriptState({ $0.nextEvent }),
+        pending: game.withReadOnlyScriptState({ $0.pendingEvents.count }), demand: 0)
+    else { throw NativeMissionActorAdmissionError.stalePlan }
   }
 
   fileprivate func apply(to instance: inout ScriptInstance) {
@@ -405,6 +448,28 @@ struct MissionActorRetentionPatch: Sendable {
 
 extension MissionActorAdmissionSource {
   /// Only the native preparation supplies new scene addresses; no historical address is reused.
+  func prepareRetentionPatch(
+    sceneBodyIDs: [UUID: Int], nativeBodies: [SpaceBody],
+    stagedFlight: FlightSimulationState, original: borrowing Game
+  ) throws -> MissionActorRetentionPatch {
+    if let context = c03RegisterContext {
+      return try original.prepareC03RegisterRetentionPatch(
+        source: self, context: context, bodyIDs: sceneBodyIDs,
+        bodies: nativeBodies, flight: stagedFlight)
+    }
+    if let context = c03WakeContext {
+      return try original.prepareC03WakeRetentionPatch(
+        source: self, context: context, bodyIDs: sceneBodyIDs,
+        bodies: nativeBodies, flight: stagedFlight)
+    }
+    if let c03Context {
+      return try original.prepareC03RetentionPatch(
+        source: self, context: c03Context, bodyIDs: sceneBodyIDs,
+        bodies: nativeBodies, flight: stagedFlight)
+    }
+    return try prepareRetentionPatch(sceneBodyIDs: sceneBodyIDs, nativeBodies: nativeBodies)
+  }
+
   func prepareRetentionPatch(sceneBodyIDs: [UUID: Int], nativeBodies: [SpaceBody] = []) throws
     -> MissionActorRetentionPatch
   {
@@ -535,6 +600,39 @@ extension Game {
   /// Prepared retention stays private to its adapter and must also match the staged patch.
   @inline(never)
   func validateMissionActorAdmissionSource(_ source: MissionActorAdmissionSource) throws {
+    guard [source.c03Context != nil, source.c03WakeContext != nil, source.c03RegisterContext != nil]
+      .filter({ $0 }).count <= 1 else {
+      throw NativeMissionActorAdmissionError.invalidCondition
+    }
+    if let context = source.c03RegisterContext {
+      guard acceptsHollowManifestRegisterAdmissionContext(context),
+        source.actors.allSatisfy({ $0.c03Context == nil && $0.c03WakeContext == nil
+          && $0.c03RegisterContext === context }),
+        source.retention == context.retention,
+        source.installedBaseEncounter == context.installedEncounter
+      else { throw NativeMissionActorAdmissionError.stalePlan }
+      return
+    }
+    if let context = source.c03WakeContext {
+      guard acceptsHollowManifestWakeAdmissionContext(context),
+        source.actors.allSatisfy({ $0.c03Context == nil && $0.c03RegisterContext == nil
+          && $0.c03WakeContext === context }),
+        source.retention == context.retention,
+        source.installedBaseEncounter == context.installedEncounter
+      else { throw NativeMissionActorAdmissionError.stalePlan }
+      return
+    }
+    if let context = source.c03Context {
+      guard acceptsHollowManifestInstalledCase(context.pin),
+        source.actors.allSatisfy({ $0.c03WakeContext == nil && $0.c03RegisterContext == nil
+          && $0.c03Context === context }),
+        withReadOnlyCommander({ $0.flightSimulation }) == context.flight,
+        scriptAnchor == context.station, source.retention == context.retention,
+        source.installedBaseEncounter == context.installedEncounter,
+        context.lives.values.allSatisfy({ acceptsHollowManifestOriginalLife($0) })
+      else { throw NativeMissionActorAdmissionError.stalePlan }
+      return
+    }
     let currentInputs = currentMissionActorAdmissionSourceValues()
     let snapshot = try validatedMissionActorAdmissionOwner(
       source, instances: currentInputs.instances)
@@ -582,7 +680,8 @@ extension Game {
         return try original.preparedMissionActorAdmissionSource(
           pack: pack, state: owner, encounter: source.retention,
           worldJob: identity, pulse: pulse, installedOwner: installedOwner)
-      case .retained, .transit, .inductionArkBerth, .inductionRescueBerth:
+      case .retained, .transit, .inductionArkBerth, .inductionRescueBerth,
+        .c03Initial, .c03Retained:
         throw MissionPackError("A prepared cohort cannot substitute retained admission authority.")
       }
     }
@@ -600,9 +699,13 @@ extension Game {
   func retainedMissionActorAdmissionSources() throws -> [MissionActorAdmissionSource] {
     let instances = retainedMissionActorInstances
     var sources: [MissionActorAdmissionSource] = []
+    if let c03 = try c03ActorAdmissionSource() { sources.append(c03) }
+    if let wakes = try c03WakeActorAdmissionSource() { sources.append(wakes) }
+    if let archive = try c03RegisterActorAdmissionSource() { sources.append(archive) }
     for id in instances.keys.sorted(by: { $0.uuidString < $1.uuidString }) {
       guard let instance = instances[id], let pack = scriptPack(for: instance)
       else { continue }
+      if NativeHollowManifestCommission.marked(instance) { continue }
       guard instance.id == id else {
         throw MissionPackError("Retained actor instance key mismatch.")
       }
@@ -768,7 +871,7 @@ extension Game {
           && $0.digest == ownerDigest
       }),
       encounter.valid,
-      let definition = NativeC01Surveyor.encounterDefinition(
+      let definition = NativeHollowManifestCommission.encounterDefinition(
         pack: pack, state: state, id: encounter.id),
       definition.valid, definition.galaxy == encounter.galaxy,
       definition.system == encounter.system,
@@ -828,8 +931,8 @@ extension Game {
       }
       let template = try Self.missionActorAdmissionTemplate(
         actor, specification: spec,
-        npcDefinitions: NativeC01Surveyor.profiles(pack: pack, state: state),
-        installedModels: NativeC01Surveyor.designs(pack: pack, state: state), geometry: geometry,
+        npcDefinitions: NativeHollowManifestCommission.profiles(pack: pack, state: state),
+        installedModels: NativeHollowManifestCommission.designs(pack: pack, state: state), geometry: geometry,
         initialNativeCondition: mode == .prepared
           ? try Self.preparedNativeMissionResources(state: state, actor: actor) : nil)
       if mode == .prepared {
@@ -1502,7 +1605,25 @@ extension Game {
     attempt.publishesGeometry = true
   }
   /// Native facts retain canonical location/condition and never infer death from disappearance.
-  mutating func persistScriptActors(unloading: Bool = false) {
+  @discardableResult
+  mutating func persistScriptActors(unloading: Bool = false) -> Set<Int> {
+    let refused = persistC03ActorsPreservingRefusals(unloading: unloading)
+    persistGenericScriptActors(unloading: unloading)
+    return refused
+  }
+
+  @discardableResult
+  mutating func persistC03ActorsPreservingRefusals(unloading: Bool = false) -> Set<Int> {
+    do {
+      try captureC03OwnedActors(unloading: unloading)
+      return []
+    } catch {
+      return c03RecognizedBodyIDs().union(c03WakeRecognizedBodyIDs())
+        .union(c03RegisterRecognizedBodyIDs())
+    }
+  }
+
+  private mutating func persistGenericScriptActors(unloading: Bool) {
     guard !commander.scriptState.instances.isEmpty else { return }
     refreshScriptPersistenceStation()
     let system = missionActorAdmissionSystemIdentity
@@ -1539,6 +1660,7 @@ extension Game {
       uniquingKeysWith: { first, _ in first })
     for instanceID in commander.scriptState.instances.keys {
       guard var instance = commander.scriptState.instances[instanceID] else { continue }
+      if NativeHollowManifestCommission.marked(instance) { continue }
       for encounterID in instance.ownedEncounters.keys {
         guard var encounter = instance.ownedEncounters[encounterID], encounter.admitted
         else { continue }
@@ -1614,6 +1736,24 @@ extension Game {
     }
   }
   mutating func recordScriptActorRemoval(_ body: SpaceBody, destroyed: Bool) {
+    if isC03RegisterBody(body) {
+      do { try recordC03RegisterRemoval(body, destroyed: destroyed) } catch {
+        notify("ORIGINAL REGISTER STATE UNAVAILABLE - REMOVAL NOT RETAINED", voiced: false)
+      }
+      return
+    }
+    if isC03WakeBody(body) {
+      do { try recordC03WakeActorRemoval(body, destroyed: destroyed) } catch {
+        notify("ORIGINAL WAKE STATE UNAVAILABLE - REMOVAL NOT RETAINED", voiced: false)
+      }
+      return
+    }
+    if isC03OriginalBody(body) {
+      do { try recordC03ActorRemoval(body, destroyed: destroyed) } catch {
+        notify("ORIGINAL FREIGHTER STATE UNAVAILABLE - REMOVAL NOT RETAINED", voiced: false)
+      }
+      return
+    }
     if destroyed { recordScriptWorldResourceLoss(body) }
     recordScriptShotRemoval(body)
     guard let identity = body.missionActorID, let instanceID = body.missionInstanceID,
@@ -1879,5 +2019,684 @@ extension ScriptOwnedEncounter {
     var intValue: Int? { nil }
     init?(stringValue: String) { self.stringValue = stringValue }
     init?(intValue: Int) { return nil }
+  }
+}
+
+final class C03ActorAdmissionContext: Sendable {
+  let pin: NativeHollowManifestInstalledCase
+  let initial: Bool
+  let reference: ShipPose
+  let anchors: SystemAnchors
+  let flight: FlightSimulationState
+  let station: SpaceBody
+  let retention: ScriptOwnedEncounter
+  let installedEncounter: ScriptOwnedEncounter?
+  let declarations: ScriptEncounterDefinition
+  let profiles: [ScriptNPCDefinition]
+  let designs: [String: ShipDesign]
+  let geometry: [String: ShipDesign]
+  let projections: [UUID: NativeC03RetainedMotion.AdmissionProjection]
+  let lives: [NativeHollowManifestState.Slot: NativeHollowManifestOriginalLife]
+
+  fileprivate init(
+    pin: NativeHollowManifestInstalledCase, initial: Bool, reference: ShipPose,
+    anchors: SystemAnchors, flight: FlightSimulationState, station: SpaceBody,
+    retention: ScriptOwnedEncounter, declarations: ScriptEncounterDefinition,
+    profiles: [ScriptNPCDefinition], designs: [String: ShipDesign],
+    geometry: [String: ShipDesign],
+    projections: [UUID: NativeC03RetainedMotion.AdmissionProjection],
+    lives: [NativeHollowManifestState.Slot: NativeHollowManifestOriginalLife]
+  ) {
+    self.pin = pin
+    self.initial = initial
+    self.reference = reference
+    self.anchors = anchors
+    self.flight = flight
+    self.station = station
+    self.retention = retention
+    installedEncounter = initial ? nil : retention
+    self.declarations = declarations
+    self.profiles = profiles
+    self.designs = designs
+    self.geometry = geometry
+    self.projections = projections
+    self.lives = lives
+  }
+}
+
+private final class C03PreparedActorInstall: Sendable {
+  let pin: NativeHollowManifestInstalledCase
+  let expected: ScriptInstance
+  let selected: ScriptInstance
+  let previousGeometry: [String: ShipDesign]
+  let additions: [String: ShipDesign]
+
+  init(
+    pin: NativeHollowManifestInstalledCase, expected: ScriptInstance, selected: ScriptInstance,
+    previousGeometry: [String: ShipDesign], additions: [String: ShipDesign]
+  ) {
+    self.pin = pin
+    self.expected = expected
+    self.selected = selected
+    self.previousGeometry = previousGeometry
+    self.additions = additions
+  }
+
+  static func eventCapacity(next: UInt64, pending: Int, demand: Int) -> Bool {
+    demand >= 0 && demand <= 2 && pending >= 0 && pending <= 4096 - demand
+      && next <= UInt64(Int64.max) - 1 - UInt64(demand)
+  }
+}
+
+
+extension Game {
+  @inline(never)
+  private func c03ActorAdmissionSource() throws -> MissionActorAdmissionSource? {
+    guard !docked, systemIdentity == NativeHollowManifestDefinition.freighterWorld,
+      withReadOnlyScriptState({ $0.instances.values.contains(where: {
+        NativeHollowManifestCommission.marked($0)
+      }) })
+    else { return nil }
+    let pin = try hollowManifestInstalledCase()
+    guard let instance = withReadOnlyScriptState({ $0.instances[pin.missionID] }),
+      let pack = scriptPack(for: instance)
+    else { throw SaveError.invalidCommander }
+    guard let station = scriptAnchor, station.energy > 0, bodies.contains(station),
+      let anchors = commander.flightSimulation.anchors, let projected = gameplayContext(),
+      NativeC03AnchorFrames.matches(
+        canonical: anchors, current: projected, flight: commander.flightSimulation, station: station)
+    else { return nil }
+    let flight = withReadOnlyCommander({ $0.flightSimulation })
+    let initial = pin.state.phase == .unadmitted
+    var lives: [NativeHollowManifestState.Slot: NativeHollowManifestOriginalLife] = [:]
+    for slot in NativeHollowManifestState.Slot.allCases {
+      if pin.state.terminals.contains(where: { $0.effect.admission.slot == slot }) { continue }
+      let life = try hollowManifestOriginalLife(slot: slot)
+      guard acceptsHollowManifestOriginalLife(life), life.pin.missionID == pin.missionID else {
+        throw SaveError.invalidCommander
+      }
+      lives[slot] = life
+    }
+    let layout = try NativeC03FreighterRoute.candidateLayout(
+      anchors: initial ? anchors : pin.state.routeAnchors)
+    var axes = Basis3()
+    axes.x = layout.u
+    axes.y = layout.v
+    axes.z = layout.normal
+    let reference =
+      initial
+      ? ShipPose(position: (layout.firstCentre + layout.secondCentre) * 0.5, orientation: axes)
+      : pin.state.sourceFrame
+    guard let reference else { throw SaveError.invalidCommander }
+    try NativeC03RetainedMotion.validateAdmissionFrames(
+      flight: flight, reference: reference, station: station)
+    let declared = try NativeHollowManifestCommission.admissionDeclarations(
+      birth: pin.state.birth, anchors: initial ? anchors : pin.state.routeAnchors!,
+      sourceFrame: reference, encounter: NativeHollowManifestCommission.encounter)
+    var geometry = withReadOnlyScriptState({ $0.geometry })
+    var hashes: [String: String] = [:]
+    for (name, design) in declared.designs {
+      let digest: String
+      if let first = pin.state.admissions.first {
+        digest =
+          name == NativeHollowManifestCommission.rootModel
+          ? first.geometry.rootGeometryHash : first.geometry.sealGeometryHash
+      } else {
+        digest = ScriptPackLibrary.hash(try ScriptPackLibrary.canonicalGeometry(design))
+      }
+      if let installed = geometry[digest] {
+        guard installed == design else { throw SaveError.invalidCommander }
+      } else {
+        geometry[digest] = design
+      }
+      hashes[name] = digest
+    }
+    var encounter: ScriptOwnedEncounter
+    if initial {
+      guard instance.ownedEncounters.isEmpty else { throw SaveError.invalidCommander }
+      var actors: [String: ScriptOwnedActor] = [:]
+      for slot in NativeHollowManifestState.Slot.allCases {
+        let logical = NativeHollowManifestCommission.logicalActor(
+          mission: pin.missionID, slot: slot)
+        guard let spec = declared.encounter.actors.first(where: { $0.id == slot.rawValue }),
+          let profile = declared.profiles.first(where: { $0.id == spec.npc })
+        else { throw SaveError.invalidCommander }
+        let centre = slot == .first ? layout.firstCentre : layout.secondCentre
+        var body = SpaceBody(
+          id: -1, hull: .cobra,
+          position: station.orientation.inverse(flight.pose.shipPoint(centre) - station.position),
+          hostile: false)
+        body.orientation = axes.relative(to: flight.pose.orientation).relative(
+          to: station.orientation)
+        body.energy = pin.state.birth.fit.hullEnergy
+        body.missiles = 0
+        body.ecmEnabled = false
+        body.rotation = 0
+        body.rotationRate = 0
+        body.missionInstanceID = pin.missionID
+        body.missionActorID = logical
+        body.scriptNPC = .init(
+          fit: .init(definition: profile, models: hashes), fuel: 0,
+          guns: [:],
+          components: [
+            slot.rawValue: .init(
+              identity: NativeHollowManifestCommission.component(logicalActor: logical, slot: slot),
+              energy: pin.state.birth.fit.sealEnergy, guns: [:])
+          ])
+        actors[slot.rawValue] = .init(
+          identity: logical, alias: slot.rawValue, body: body, presence: .prepared)
+      }
+      encounter = .init(id: declared.encounter.id, galaxy: 1, system: 113, actors: actors)
+    } else {
+      guard NativeHollowManifestCommission.admittedActorClaimsMatch(instance),
+        let owned = instance.ownedEncounters[NativeHollowManifestCommission.encounter]
+      else { throw SaveError.invalidCommander }
+      encounter = owned
+    }
+    var projections: [UUID: NativeC03RetainedMotion.AdmissionProjection] = [:]
+    if !initial {
+      for actor in encounter.actors.values
+      where [.outside, .unloaded].contains(actor.presence) && actor.body.energy > 0 {
+        guard
+          let latest = pin.state.latestAdmissions.first(where: { $0.slot.rawValue == actor.alias }),
+          let admission = pin.state.admissions.first(where: { $0.reference == latest })
+        else { throw SaveError.invalidCommander }
+        projections[actor.identity] = try NativeC03RetainedMotion.projectForAdmission(
+          owned: actor, original: admission.original, reference: reference, flight: flight,
+          station: station)
+      }
+    }
+    let context = C03ActorAdmissionContext(
+      pin: pin, initial: initial, reference: reference,
+      anchors: initial ? anchors : pin.state.routeAnchors!, flight: flight, station: station,
+      retention: encounter, declarations: declared.encounter, profiles: declared.profiles,
+      designs: declared.designs, geometry: geometry, projections: projections, lives: lives)
+    var templates: [MissionActorAdmissionTemplate] = []
+    for spec in declared.encounter.actors.sorted(by: { $0.id < $1.id }) {
+      guard let actor = encounter.actors[spec.id] else { throw SaveError.invalidCommander }
+      let condition = initial ? Self.c03InitialNativeCondition(fit: pin.state.birth.fit) : nil
+      let base = try Self.missionActorAdmissionTemplate(
+        actor, specification: spec,
+        npcDefinitions: declared.profiles, installedModels: declared.designs, geometry: geometry,
+        legacy: nil, initialNativeCondition: condition)
+      let canonical = projections[actor.identity]?.body ?? base.canonicalBody
+      if initial {
+        try Self.validatePreparedMissionActorCondition(
+          actor, spec: spec, template: base,
+          legacy: nil,
+          preparedPose: .init(position: canonical.position, orientation: canonical.orientation))
+      }
+      templates.append(
+        .init(
+          actor: actor, canonicalBody: canonical,
+          maximumHullEnergy: base.maximumHullEnergy, declaredHostile: base.declaredHostile,
+          parts: base.parts, minimum: base.minimum, maximum: base.maximum, radius: base.radius,
+          nativeUnits: base.nativeUnits, initialNativeCondition: condition, c03Context: context))
+    }
+    return .init(
+      mode: initial ? .prepared : .retained,
+      authority: initial ? .c03Initial : .c03Retained, instance: instance, pack: pack,
+      encounter: encounter, definition: declared.encounter, actors: templates,
+      installedBaseEncounter: initial ? nil : encounter, c03Context: context)
+  }
+
+  private static func c03InitialNativeCondition(fit: NativeHollowManifestSourceBirth.InspectionFit)
+    -> NPCState
+  {
+    var npc = NPCState(
+      role: .mission, origin: NativeHollowManifestDefinition.freighterWorld,
+      destination: NativeHollowManifestDefinition.freighterWorld)
+    npc.hasFuelScoops = false
+    npc.resources = .init(
+      profile: .nativeHull, energyCapacity: fit.hullEnergy,
+      energyRecharge: fit.recharge, frontCapacity: 0, rearCapacity: 0, shieldRecharge: 0,
+      frontShield: 0, rearShield: 0, heatCapacity: 240, heatCooling: 12, fuel: 0, fuelCapacity: 0)
+    return npc
+  }
+}
+
+
+extension C03ActorAdmissionContext {
+  func projectedIntent(
+    alias: String, logical: UUID, actor: ActorIdentity,
+    flight: FlightSimulationState
+  ) throws -> ScriptNPCIntent {
+    guard let slot = NativeHollowManifestState.Slot(rawValue: alias),
+      let routeSlot = NativeC03FreighterRoute.Slot(rawValue: alias),
+      let original = pin.state.birth.originals.first(where: { $0.slot == slot }),
+      let profile = profiles.first(where: { $0.components?.first?.id == alias })
+    else { throw SaveError.invalidCommander }
+    let endpoints: NativeC03FreighterRoute.Endpoints
+    let target: NativeC03FreighterRoute.Waypoint
+    let revision: UInt64
+    if initial {
+      let layout = try NativeC03FreighterRoute.candidateLayout(anchors: anchors)
+      endpoints = slot == .first ? layout.first : layout.second
+      target = .first
+      revision = 1
+    } else {
+      guard let route = pin.state.routes.first(where: { $0.admission.slot == slot }),
+        route.admission.revision < UInt64(Int64.max) - 1
+      else { throw SaveError.invalidCommander }
+      endpoints = try .init(first: route.first, second: route.second)
+      target = route.target == .first ? .first : .second
+      revision = route.admission.revision + 1
+    }
+    let binding = try NativeC03FreighterRoute.Binding(
+      source: original.source,
+      mission: pin.missionID, sourceRevision: revision, actor: logical, actorAlias: alias,
+      physicalActor: actor, slot: routeSlot, endpoints: endpoints)
+    return try NativeC03FreighterRouteRuntime.projectIntent(
+      binding: binding, target: target,
+      flight: flight, station: station, profile: profile)
+  }
+}
+
+extension Game {
+  @inline(never)
+  fileprivate func prepareC03RetentionPatch(
+    source: borrowing MissionActorAdmissionSource, context: C03ActorAdmissionContext,
+    bodyIDs: [UUID: Int], bodies admitted: [SpaceBody], flight: FlightSimulationState
+  ) throws -> MissionActorRetentionPatch {
+    let sourceInstanceID = source.instanceID
+    guard acceptsHollowManifestInstalledCase(context.pin),
+      let expected = withReadOnlyScriptState({ $0.instances[sourceInstanceID] }),
+      expected.ownedEncounters[source.encounterID] == context.installedEncounter,
+      (1...2).contains(admitted.count), admitted.count == bodyIDs.count,
+      Set(admitted.compactMap(\.missionActorID)) == Set(bodyIDs.keys),
+      Set(admitted.map(\.id)).count == admitted.count,
+      !context.initial || admitted.count == 2,
+      context.pin.state.nextSourceSequence < UInt64(Int64.max) - UInt64(admitted.count)
+    else { throw SaveError.invalidCommander }
+    var updated = context.retention
+    var admissions: [NativeHollowManifestState.Admission] = []
+    for slot in NativeHollowManifestState.Slot.allCases {
+      guard var owned = updated.actors[slot.rawValue] else { throw SaveError.invalidCommander }
+      guard let bodyID = bodyIDs[owned.identity] else { continue }
+      guard
+        let body = admitted.first(where: { $0.id == bodyID && $0.missionActorID == owned.identity }
+        ),
+        body.missionInstanceID == source.instanceID, let physical = body.physical,
+        let spawn = physical.spawnIdentity, let npc = body.scriptNPC,
+        let component = npc.components[slot.rawValue],
+        let original = context.pin.state.birth.originals.first(where: { $0.slot == slot }),
+        let rootHash = npc.fit.models[NativeHollowManifestCommission.rootModel],
+        let sealHash = npc.fit.models[NativeHollowManifestCommission.sealModel]
+      else { throw SaveError.invalidCommander }
+      let old = context.pin.state.latestAdmissions.first(where: { $0.slot == slot })
+      guard context.initial || (old != nil && old!.revision < UInt64(Int64.max) - 1) else {
+        throw SaveError.invalidCommander
+      }
+      let revision = context.initial ? 1 : old!.revision + 1
+      let binding = NativeHollowManifestOriginalSealBinding(
+        slot: slot,
+        mission: source.instanceID, owner: context.pin.owner,
+        source: original.source, hull: original.hull, captain: original.captain,
+        seal: original.seal, master: original.master, imprint: original.imprint,
+        actor: physical.identity, component: component.identity, sourceRevision: revision,
+        issuedSequence: context.pin.state.nextSourceSequence + UInt64(admissions.count),
+        issuedTime: flight.physicalTime)
+      let geometry = NativeHollowManifestSealGeometryReference(
+        rootGeometryHash: rootHash,
+        sealGeometryHash: sealHash, revision: 1,
+        componentPose: .init(
+          position: NativeC03SealGeometry.componentPosition,
+          orientation: NativeC03SealGeometry.componentOrientation), rootScale: 1, componentScale: 1)
+      admissions.append(
+        .init(
+          reference: .init(slot: slot, revision: revision),
+          original: binding, logicalActor: owned.identity, spawn: spawn, geometry: geometry))
+      // The native allocator supplied these fresh addresses. Only this scratch is modified.
+      owned.body.id = body.id
+      owned.body.physical = physical
+      owned.presence = .present
+      owned.body = try NativeC03RetainedMotion.capture(
+        body: body, owned: owned,
+        original: binding, flight: flight, reference: context.reference)
+      if let projection = context.projections[owned.identity] {
+        guard
+          NativeC03RetainedMotion.preparedAdmissionMatches(
+            projection,
+            original: binding, owned: owned, body: body, flight: flight)
+        else { throw NativeMissionActorAdmissionError.invalidCondition }
+      }
+      updated.actors[slot.rawValue] = owned
+    }
+    let next: NativeHollowManifestState
+    if context.initial {
+      next = try .preparingFirstAdmission(
+        from: context.pin.state, admissions: admissions,
+        stagedFlight: flight, sourceFrame: context.reference, anchors: context.anchors,
+        encounter: source.encounterID, initialTargets: [.first: .first, .second: .first])
+    } else {
+      next = try .preparingRetainedAdmission(
+        from: context.pin.state,
+        admissions: admissions, stagedFlight: flight)
+    }
+    updated.admitted = true
+    var selected = expected
+    selected.savedHollowManifest = next
+    selected.ownedEncounters[source.encounterID] = updated
+    // G2 intentionally refuses admitted prefixes until the actual producer/life owner composes.
+    guard updated.valid, NativeHollowManifestCommission.admittedActorClaimsMatch(selected),
+      NativeHollowManifestCommission.prefixValid(selected)
+    else { throw SaveError.invalidCommander }
+    let previous = withReadOnlyScriptState({ $0.geometry })
+    var additions: [String: ShipDesign] = [:]
+    for (hash, design) in context.geometry where previous[hash] == nil { additions[hash] = design }
+    guard additions.count <= 2 else { throw SaveError.invalidCommander }
+    let install = C03PreparedActorInstall(
+      pin: context.pin, expected: expected, selected: selected,
+      previousGeometry: previous, additions: additions)
+    return .init(source: source, updated: updated, c03Install: install)
+  }
+
+  mutating func publishC03AdmissionGeometry(_ patch: MissionActorRetentionPatch) {
+    guard let install = patch.c03Install else { return }
+    for (hash, design) in install.additions { commander.scriptState.geometry[hash] = design }
+  }
+}
+
+
+private final class C03PreparedCapture {
+  let pin: NativeHollowManifestInstalledCase
+  let selected: ScriptInstance
+  let flight: FlightSimulationState
+  let observed: [SpaceBody]
+  let event: (body: SpaceBody, alias: String, destroyed: Bool)?
+
+  init(
+    pin: NativeHollowManifestInstalledCase, selected: ScriptInstance,
+    flight: FlightSimulationState, observed: [SpaceBody],
+    event: (body: SpaceBody, alias: String, destroyed: Bool)?
+  ) {
+    self.pin = pin
+    self.selected = selected
+    self.flight = flight
+    self.observed = observed
+    self.event = event
+  }
+}
+
+extension Game {
+  func isC03OriginalBody(_ body: borrowing SpaceBody) -> Bool {
+    guard let id = body.missionInstanceID, let instance = commander.scriptState.instances[id]
+    else { return false }
+    return NativeHollowManifestCommission.marked(instance)
+  }
+
+  /// Fallible C03 work precedes all generic persistence mutations and every writer call.
+  mutating func persistScriptActorsChecked(unloading: Bool = false) throws {
+    try captureC03OwnedActors(unloading: unloading)
+    persistGenericScriptActors(unloading: unloading)
+  }
+
+  @inline(never)
+  private func prepareC03Capture(
+    unloading: Bool,
+    removal: SpaceBody? = nil, destroyed: Bool = false
+  ) throws -> C03PreparedCapture? {
+    guard
+      withReadOnlyScriptState({ $0.instances.values.contains(where: {
+        NativeHollowManifestCommission.marked($0) && $0.savedHollowManifest?.phase != .unadmitted
+      }) })
+    else { return nil }
+    let pin = try hollowManifestInstalledCase()
+    guard var selected = withReadOnlyScriptState({ $0.instances[pin.missionID] }),
+      var encounter = selected.ownedEncounters[NativeHollowManifestCommission.encounter],
+      let reference = pin.state.sourceFrame,
+      NativeHollowManifestCommission.admittedActorClaimsMatch(selected)
+    else { throw SaveError.invalidCommander }
+    var event: (body: SpaceBody, alias: String, destroyed: Bool)?
+    if let removal {
+      guard
+        let actor = encounter.actors.values.first(where: { $0.identity == removal.missionActorID }),
+        actor.body.id == removal.id
+      else { throw SaveError.invalidCommander }
+      if actor.presence != .present { return nil }
+      guard destroyed ? removal.energy <= 0 : removal.energy > 0 else {
+        throw SaveError.invalidCommander
+      }
+      event = (removal, actor.alias, destroyed)
+    }
+    let demand = event != nil && selected.outcome == .active ? 1 : 0
+    guard
+      C03PreparedActorInstall.eventCapacity(
+        next: withReadOnlyScriptState({ $0.nextEvent }),
+        pending: withReadOnlyScriptState({ $0.pendingEvents.count }), demand: demand)
+    else { throw SaveError.invalidCommander }
+    let flight = withReadOnlyCommander({ $0.flightSimulation })
+    var observed: [SpaceBody] = []
+    for slot in NativeHollowManifestState.Slot.allCases {
+      guard var owned = encounter.actors[slot.rawValue] else { throw SaveError.invalidCommander }
+      if [.destroyed, .inTransit, .arrivalPending].contains(owned.presence) { continue }
+      if owned.location(in: encounter) != systemIdentity { continue }
+      if let removal, removal.missionActorID != owned.identity { continue }
+      let matches = bodies.filter { $0.missionActorID == owned.identity }
+      if matches.isEmpty && [.outside, .unloaded].contains(owned.presence) { continue }
+      guard matches.count == 1, let body = matches.first,
+        body.missionInstanceID == pin.missionID, body.id == owned.body.id,
+        let latest = pin.state.latestAdmissions.first(where: { $0.slot == slot }),
+        let admission = pin.state.admissions.first(where: { $0.reference == latest })
+      else { throw SaveError.invalidCommander }
+      if body.energy <= 0 {
+        // Only the proper real root-effect owner can admit this fact, before removal.
+        guard
+          pin.state.terminals.contains(where: {
+            $0.effect.incident.victim == body.physical?.identity
+          })
+        else { throw SaveError.invalidCommander }
+      }
+      if body.energy > 0 {
+        let life = try hollowManifestOriginalLife(slot: slot)
+        guard acceptsHollowManifestOriginalLife(life), life.pin.missionID == pin.missionID else {
+          throw SaveError.invalidCommander
+        }
+      }
+      owned.body = try NativeC03RetainedMotion.capture(
+        body: body, owned: owned,
+        original: admission.original, flight: flight, reference: reference)
+      if unloading && owned.presence == .present { owned.presence = .unloaded }
+      if let event, event.body.id == body.id {
+        owned.presence = destroyed ? .destroyed : .outside
+        if destroyed { owned.destroyedByPlayer = body.destroyedByPlayer == true }
+      }
+      encounter.actors[slot.rawValue] = owned
+      observed.append(body)
+    }
+    guard observed.count <= 2 else { throw SaveError.invalidCommander }
+    selected.ownedEncounters[encounter.id] = encounter
+    guard NativeHollowManifestCommission.admittedActorClaimsMatch(selected) else {
+      throw SaveError.invalidCommander
+    }
+    return .init(pin: pin, selected: selected, flight: flight, observed: observed, event: event)
+  }
+
+  @inline(never)
+  private mutating func publishC03Capture(_ prepared: C03PreparedCapture) throws {
+    let demand = prepared.event != nil && prepared.selected.outcome == .active ? 1 : 0
+    guard acceptsHollowManifestInstalledCase(prepared.pin),
+      withReadOnlyCommander({ $0.flightSimulation }) == prepared.flight,
+      prepared.observed.allSatisfy({ actual in bodies.contains(actual) }),
+      C03PreparedActorInstall.eventCapacity(
+        next: withReadOnlyScriptState({ $0.nextEvent }),
+        pending: withReadOnlyScriptState({ $0.pendingEvents.count }), demand: demand)
+    else { throw NativeMissionActorAdmissionError.stalePlan }
+    commander.scriptState.instances[prepared.pin.missionID] = prepared.selected
+    if let event = prepared.event, let logical = event.body.missionActorID {
+      emitScriptEvent(
+        event.destroyed ? "actor.destroyed" : "actor.removed",
+        values: [
+          "actor_id": .string(logical.uuidString), "alias": .string(event.alias),
+          "encounter_id": .string(NativeHollowManifestCommission.encounter),
+          "destroyed_by_player": .bool(event.body.destroyedByPlayer == true),
+        ], only: prepared.pin.missionID, drain: false)
+    }
+  }
+
+  /// Both owned captures publish Commander fields only. Restore their common beforeimage
+  /// on either refusal; no half-captured source reaches a writer, cull or death settlement.
+  private mutating func captureC03OwnedActors(unloading: Bool) throws {
+    guard withReadOnlyScriptState({ $0.instances.values.contains(where: NativeHollowManifestCommission.marked) })
+    else { return }
+    let before = commander
+    do {
+      try captureC03Actors(unloading: unloading)
+      try captureC03WakeActors(unloading: unloading)
+      try captureC03RegisterActor(unloading: unloading)
+    } catch {
+      commander = before
+      throw error
+    }
+  }
+
+  private mutating func captureC03Actors(unloading: Bool) throws {
+    if let prepared = try prepareC03Capture(unloading: unloading) {
+      try publishC03Capture(prepared)
+    }
+  }
+
+  private mutating func recordC03ActorRemoval(_ body: SpaceBody, destroyed: Bool) throws {
+    if let prepared = try prepareC03Capture(unloading: false, removal: body, destroyed: destroyed) {
+      try publishC03Capture(prepared)
+    }
+  }
+}
+
+extension Game {
+  @inline(never)
+  private func c03WakeActorAdmissionSource() throws -> MissionActorAdmissionSource? {
+    guard let context = try hollowManifestWakeAdmissionContext() else { return nil }
+    guard acceptsHollowManifestWakeAdmissionContext(context),
+      let instance = withReadOnlyScriptState({ $0.instances[context.pin.missionID] }),
+      let pack = scriptPack(for: instance)
+    else { throw SaveError.invalidCommander }
+    var templates: [MissionActorAdmissionTemplate] = []
+    for spec in context.declaration.actors.sorted(by: { $0.id < $1.id }) {
+      guard let actor = context.retention.actors[spec.id] else { throw SaveError.invalidCommander }
+      let initial = context.initial ? NativeC03EvidenceInitialCondition.state(for: .wakeFragment) : nil
+      let base = try Self.missionActorAdmissionTemplate(
+        actor, specification: spec, npcDefinitions: context.profiles,
+        installedModels: context.designs, geometry: context.geometry, legacy: nil,
+        initialNativeCondition: initial)
+      let canonical = context.projections[actor.identity]?.body ?? base.canonicalBody
+      if context.initial {
+        try Self.validatePreparedMissionActorCondition(
+          actor, spec: spec, template: base, legacy: nil,
+          preparedPose: .init(position: canonical.position, orientation: canonical.orientation))
+      }
+      templates.append(.init(
+        actor: actor, canonicalBody: canonical, maximumHullEnergy: base.maximumHullEnergy,
+        declaredHostile: base.declaredHostile, parts: base.parts, minimum: base.minimum,
+        maximum: base.maximum, radius: base.radius, nativeUnits: base.nativeUnits,
+        initialNativeCondition: initial, c03WakeContext: context))
+    }
+    return .init(
+      mode: context.initial ? .prepared : .retained,
+      authority: context.initial ? .c03Initial : .c03Retained,
+      instance: instance, pack: pack, encounter: context.retention,
+      definition: context.declaration, actors: templates,
+      installedBaseEncounter: context.installedEncounter, c03WakeContext: context)
+  }
+
+  @inline(never)
+  fileprivate func prepareC03WakeRetentionPatch(
+    source: borrowing MissionActorAdmissionSource, context: NativeC03WakeAdmissionContext,
+    bodyIDs: [UUID: Int], bodies admitted: [SpaceBody], flight: FlightSimulationState
+  ) throws -> MissionActorRetentionPatch {
+    let sourceInstanceID = source.instanceID
+    guard acceptsHollowManifestWakeAdmissionContext(context),
+      let expected = withReadOnlyScriptState({ $0.instances[sourceInstanceID] }),
+      source.instanceID == context.pin.missionID,
+      expected.ownedEncounters[source.encounterID] == context.installedEncounter,
+      source.encounterID == NativeC03WakeTrail.encounter,
+      admitted.count == bodyIDs.count,
+      admitted.allSatisfy({ body in body.missionActorID.flatMap({ bodyIDs[$0] }) == body.id })
+    else { throw NativeMissionActorAdmissionError.stalePlan }
+    let prepared = try NativeC03WakeTrail.preparingAdmission(
+      context: context, admitted: admitted, flight: flight)
+    var selected = expected
+    selected.savedHollowManifest = prepared.state
+    selected.ownedEncounters[source.encounterID] = prepared.encounter
+    var candidate = commander
+    candidate.flightSimulation = flight
+    candidate.scriptState.instances[source.instanceID] = selected
+    candidate.scriptState.geometry = context.geometry
+    guard NativeHollowManifestSave.validateClaims(candidate) else { throw SaveError.invalidCommander }
+    let previous = context.previousGeometry
+    let additions = context.geometry.filter { previous[$0.key] == nil }
+    guard additions.count <= 3 else { throw SaveError.invalidCommander }
+    let install = C03PreparedActorInstall(
+      pin: context.pin, expected: expected, selected: selected,
+      previousGeometry: previous, additions: additions)
+    return .init(source: source, updated: prepared.encounter, c03Install: install)
+  }
+}
+
+extension Game {
+  @inline(never)
+  private func c03RegisterActorAdmissionSource() throws -> MissionActorAdmissionSource? {
+    guard let context = try hollowManifestRegisterAdmissionContext() else { return nil }
+    guard acceptsHollowManifestRegisterAdmissionContext(context),
+      let instance = withReadOnlyScriptState({ $0.instances[context.pin.missionID] }),
+      let pack = scriptPack(for: instance),
+      let spec = context.declaration.actors.first,
+      let actor = context.retention.actors[spec.id]
+    else { throw SaveError.invalidCommander }
+    let initial = context.initial ? NativeC03EvidenceInitialCondition.state(for: .custodyArchive) : nil
+    let base = try Self.missionActorAdmissionTemplate(
+      actor, specification: spec, npcDefinitions: [NativeC03RegisterGeometry.profile],
+      installedModels: context.designs, geometry: context.geometry, legacy: nil,
+      initialNativeCondition: initial)
+    let canonical = context.projection?.body ?? base.canonicalBody
+    if context.initial {
+      try Self.validatePreparedMissionActorCondition(
+        actor, spec: spec, template: base, legacy: nil,
+        preparedPose: .init(position: canonical.position, orientation: canonical.orientation))
+    }
+    let template = MissionActorAdmissionTemplate(
+      actor: actor, canonicalBody: canonical, maximumHullEnergy: base.maximumHullEnergy,
+      declaredHostile: base.declaredHostile, parts: base.parts, minimum: base.minimum,
+      maximum: base.maximum, radius: base.radius, nativeUnits: base.nativeUnits,
+      initialNativeCondition: initial, c03RegisterContext: context)
+    return .init(
+      mode: context.initial ? .prepared : .retained,
+      authority: context.initial ? .c03Initial : .c03Retained,
+      instance: instance, pack: pack, encounter: context.retention,
+      definition: context.declaration, actors: [template],
+      installedBaseEncounter: context.installedEncounter, c03RegisterContext: context)
+  }
+
+  @inline(never)
+  fileprivate func prepareC03RegisterRetentionPatch(
+    source: borrowing MissionActorAdmissionSource, context: NativeC03RegisterAdmissionContext,
+    bodyIDs: [UUID: Int], bodies admitted: [SpaceBody], flight: FlightSimulationState
+  ) throws -> MissionActorRetentionPatch {
+    let sourceInstanceID = source.instanceID
+    guard acceptsHollowManifestRegisterAdmissionContext(context),
+      let expected = withReadOnlyScriptState({ $0.instances[sourceInstanceID] }),
+      source.instanceID == context.pin.missionID,
+      source.encounterID == NativeC03RegisterState.encounter,
+      expected.ownedEncounters[source.encounterID] == context.installedEncounter,
+      admitted.count == 1, bodyIDs.count == 1,
+      admitted.allSatisfy({ body in body.missionActorID.flatMap({ bodyIDs[$0] }) == body.id })
+    else { throw NativeMissionActorAdmissionError.stalePlan }
+    let prepared = try NativeC03RegisterState.preparingAdmission(
+      context: context, admitted: admitted, flight: flight)
+    var selected = expected
+    selected.savedHollowManifest = prepared.state
+    selected.ownedEncounters[source.encounterID] = prepared.encounter
+    var candidate = commander
+    candidate.flightSimulation = flight
+    candidate.scriptState.instances[source.instanceID] = selected
+    candidate.scriptState.geometry = context.geometry
+    guard NativeHollowManifestSave.validateClaims(candidate) else { throw SaveError.invalidCommander }
+    let previous = context.previousGeometry
+    let additions = context.geometry.filter { previous[$0.key] == nil }
+    guard additions.count <= 2 else { throw SaveError.invalidCommander }
+    let install = C03PreparedActorInstall(
+      pin: context.pin, expected: expected, selected: selected,
+      previousGeometry: previous, additions: additions)
+    return .init(source: source, updated: prepared.encounter, c03Install: install)
   }
 }

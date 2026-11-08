@@ -2,6 +2,9 @@ import Foundation
 
 extension Display {
   public static func referenceLibrary(_ game: Game, width: Double, height: Double) -> Frame {
+    if let display = game.c03ArchiveReaderDisplay, game.isC03ArchiveReaderVisible {
+      return c03RecoveredRegister(display, width: width, height: height)
+    }
     var frame = Frame()
     frame.responsive = true
     frame.rasterizeGraphics = false

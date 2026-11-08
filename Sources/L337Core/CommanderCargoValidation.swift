@@ -127,6 +127,10 @@ extension Commander {
       NativeIsolationProgrammerDefinition.occupiedTonnes(in: equipmentInventory))
     guard !programmer.overflow else { return false }
     total = programmer.partialValue
+    let inspectionKit = total.addingReportingOverflow(
+      NativeHollowManifestKitDefinition.occupiedTonnes(in: equipmentInventory))
+    guard !inspectionKit.overflow else { return false }
+    total = inspectionKit.partialValue
     let underTow = total.addingReportingOverflow(
       NativeUnderTowReferenceDefinition.occupiedTonnes(in: equipmentInventory))
     guard !underTow.overflow else { return false }

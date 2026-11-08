@@ -158,6 +158,9 @@ extension Game {
   func scriptUnavailable(
     _ pack: borrowing ScriptPack, navigationBinding: ScriptNavigationTradeBinding? = nil
   ) -> String? {
+    if NativeHollowManifestCommission.applies(pack) {
+      if let reason = hollowManifestContentUnavailable(pack) { return reason }
+    }
     if NativeSignedPassageOpening.applies(pack) {
       if let reason = signedPassageOpeningUnavailable(pack) { return reason }
     }
@@ -729,6 +732,9 @@ extension Game {
     guard pack.manifest.wayfarerInduction == nil,
       pack.manifest.stateID != NativeWayfarerInduction.stateID
     else { throw MissionPackError("Use Senn's actual induction commission review.") }
+    guard !NativeHollowManifestCommission.applies(pack) else {
+      throw MissionPackError("Use Nia Toren's actual Narargan commission review.")
+    }
     guard pack.manifest.glassMeridian == nil, pack.manifest.stateID != NativeGlassMeridian.stateID
     else { throw MissionPackError("Use the actual Venn commission review.") }
     guard pack.manifest.stateID != NativeDefensiveFlight.stateID else {
@@ -1721,6 +1727,7 @@ extension Game {
     }
   }
   private func scriptGalleryEntry(_ pack: ScriptPack, stateID: UUID?) -> GalleryMission {
+    if let native = hollowManifestGalleryEntry(pack) { return native }
     if let entry = signedPassageOpeningGalleryEntry(pack) { return entry }
     if let entry = memoryAtlasGalleryEntry(pack) { return entry }
     if let entry = quietChoirGalleryEntry(pack) { return entry }

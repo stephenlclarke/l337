@@ -260,7 +260,12 @@ extension Game {
         member: UInt16(index), producer: .mission)
       prepared[index].id = nextBodyID + index
       let velocity: Vector3
-      if NativeC01Surveyor.passiveFit(prepared[index])
+      if let historical = template.c03Context?.projections[template.actorID]?.historicalPhysical
+        ?? template.c03WakeContext?.projections[template.actorID]?.historicalPhysical
+        ?? template.c03RegisterContext?.projection?.historicalPhysical
+      {
+        velocity = historical.velocity
+      } else if NativeC01Surveyor.passiveFit(prepared[index])
         || c01TimingStandardPart(prepared[index]) != nil
         || c01LaneRepairTarget(prepared[index]) != nil
         || c01ClinicCradleDeclared(prepared[index]),
@@ -293,6 +298,13 @@ extension Game {
         physical.canonicalSpin = true
       }
       physical.laserCooldown = template.retainedNativeLaserCooldown ?? 0
+      if let historical = template.c03Context?.projections[template.actorID]?.historicalPhysical
+        ?? template.c03WakeContext?.projections[template.actorID]?.historicalPhysical
+        ?? template.c03RegisterContext?.projection?.historicalPhysical
+      {
+        physical.angularVelocity = historical.angularVelocity
+        physical.canonicalSpin = historical.canonicalSpin
+      }
       let measuredEnergyCapacityValid: Bool
       if let resources = physical.npc?.resources {
         measuredEnergyCapacityValid = resources.energyCapacity == template.maximumHullEnergy
@@ -304,6 +316,10 @@ extension Game {
         measuredEnergyCapacityValid, physical.velocity.finite
       else { throw NativeMissionActorAdmissionError.invalidCondition }
       prepared[index].physical = physical
+      if let c03 = template.c03Context {
+        prepared[index].scriptNPC?.intent = try c03.projectedIntent(
+          alias: template.alias, logical: template.actorID, actor: actor, flight: staged)
+      }
       addresses[template.actorID] = prepared[index].id
       var request = SpawnRequest(
         identity: spawn, population: .mission, hull: prepared[index].hull,
@@ -311,6 +327,10 @@ extension Game {
         orientation: prepared[index].orientation.transformed(by: staged.pose.orientation),
         velocity: velocity, npc: physical.npc, rock: nil, payload: nil, priority: .mission)
       request.energy = prepared[index].energy
+      if template.c03Context != nil || template.c03WakeContext != nil
+        || template.c03RegisterContext != nil {
+        request.angularVelocity = physical.angularVelocity
+      }
       requests.append(request)
     }
     guard staged.valid else { throw NativeMissionActorAdmissionError.invalidScene }
@@ -334,7 +354,8 @@ extension Game {
       return .pending(.native(refusal))
     }
     let patch = try source.prepareRetentionPatch(
-      sceneBodyIDs: staged.sceneBodyIDs, nativeBodies: staged.admittedBodies)
+      sceneBodyIDs: staged.sceneBodyIDs, nativeBodies: staged.admittedBodies,
+      stagedFlight: staged.flight, original: original)
     return .ready(
       .init(
         retentionPatch: patch, sceneBodyIDs: staged.sceneBodyIDs, source: copy source,
@@ -360,6 +381,7 @@ extension Game {
     let context = Self.currentMissionActorAdmissionCommitContext(original: self)
     try Self.validateMissionActorAdmissionCommitScene(original: self, context: context)
     try Self.validateMissionActorAdmissionCommitFacts(original: self, plan: plan, context: context)
+    try plan.retentionPatch.validateC03Commit(in: self)
     return applyValidatedMissionActorAdmission(plan)
   }
 
@@ -407,6 +429,7 @@ extension Game {
     commander.flightSimulation = plan.flight
     bodies.append(contentsOf: plan.admittedBodies)
     nextBodyID += plan.admittedBodies.count
+    publishC03AdmissionGeometry(plan.retentionPatch)
     return receipt
   }
 

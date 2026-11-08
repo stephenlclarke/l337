@@ -29,7 +29,9 @@ extension Display {
   static func contractDetailRows(_ game: Game, width: Double) -> [String] {
     guard let row = game.contractBoard.selected else { return ["No contract selected."] }
     var rows: [String]
-    if row.borrowedVoice != nil {
+    if row.hollowManifest != nil {
+      rows = game.hollowManifestDetail()
+    } else if row.borrowedVoice != nil {
       rows = game.borrowedVoiceDetail()
     } else if row.quietChoir != nil {
       rows = game.quietChoirDetail()
@@ -150,6 +152,7 @@ extension Display {
           : active.first ?? "No active contract assignments."), layout.left, 62, scale: scale,
       ink: active.isEmpty ? .white : .green)
     var detailReason: String? {
+      if let reason = game.contractBoard.hollowManifestQuote?.issues.first { return reason }
       if let reason = game.contractBoard.signedPassageOpeningQuote?.issues.first { return reason }
       if let reason = game.contractBoard.memoryAtlasQuote?.issues.first { return reason }
       if let reason = game.contractBoard.quietChoirQuote?.issues.first { return reason }
@@ -196,6 +199,7 @@ extension Display {
         let people = game.contractBoard.peopleQuote
         let utility = game.contractBoard.utilityQuote
         let isolation = game.contractBoard.isolationWorkParentQuote
+        let hollow = game.contractBoard.hollowManifestQuote
         let repairLoop = game.contractBoard.repairLoopQuote
         let coldChain = game.contractBoard.coldChainQuote
         let provider = game.contractBoard.providerQuote
@@ -225,6 +229,7 @@ extension Display {
           || (assemblyOfOrbits != nil && action == .accept && assemblyOfOrbits?.allowed == true)
           || (utility != nil && action == .accept && utility?.allowed == true)
           || (isolation != nil && action == .accept && isolation?.allowed == true)
+          || (hollow != nil && action == .accept && hollow?.allowed == true)
           || (wayfarerInduction != nil && action == .accept && wayfarerInduction?.allowed == true)
           || (inquiry != nil && action == .accept && inquiry?.allowed == true)
           || (glassMeridian != nil && action == .accept && glassMeridian?.allowed == true)
@@ -255,7 +260,7 @@ extension Display {
                 || identifiedSalvage != nil
                 || survey != nil
                 || provider != nil || coldChain != nil
-                || repairLoop != nil || utility != nil || isolation != nil)
+                || repairLoop != nil || utility != nil || isolation != nil || hollow != nil)
               ? "Confirm"
               : action == .accept && people != nil
                 ? (people?.row.action ?? "Closed")

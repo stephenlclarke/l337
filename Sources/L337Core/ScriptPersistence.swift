@@ -354,6 +354,38 @@ struct ScriptSavePointer: Codable {
   var bisonUnitJournalCheckpoint: BisonUnitJournalCheckpoint? = nil
 }
 
+/// C03 is a distinct outer namespace; older roots cannot carry its retained native claims.
+/// Existing feature families still select their own lower raw-validation namespace.
+enum NativeC03PublicationNamespace {
+  static let version = 149
+  static let alienVersion = 150
+  static func contains(_ schema: Int?) -> Bool {
+    schema == version || schema == alienVersion
+  }
+
+  /// Compare the actual typed leaf without materializing a whole optional mission.
+  @inline(never)
+  static func matches(
+    _ publication: borrowing NativeC03PublicationPreflight.Publication,
+    commander: borrowing Commander
+  ) -> Bool {
+    let mission = publication.mission
+    let state = publication.state
+    return commander.withReadOnlyScriptState { script in
+      guard let index = script.instances.index(forKey: mission) else { return false }
+      return matches(script.instances[index].value, state: state)
+    }
+  }
+
+  @inline(never)
+  private static func matches(
+    _ instance: borrowing ScriptInstance, state: NativeHollowManifestState
+  ) -> Bool {
+    guard let stored = instance.savedHollowManifest else { return false }
+    return stored == state
+  }
+}
+
 /// Publication is synchronous inside GameRuntime: no actor reentrancy can overwrite newer simulation state.
 enum ScriptSaveStore {
   @discardableResult
@@ -397,6 +429,9 @@ enum ScriptSaveStore {
   /// Current feature namespaces are selected from actual retained claims, never invented predecessors.
   @inline(never)
   static func publicationSchema(_ commander: borrowing Commander, alien: Bool) -> Int {
+    if NativeHollowManifestSave.hasClaims(commander) {
+      return alien ? NativeC03PublicationNamespace.alienVersion : NativeC03PublicationNamespace.version
+    }
     if NativeSecondCommoditySaleSave.hasClaims(commander) {
       return alien ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version
     }
@@ -535,6 +570,7 @@ enum ScriptSaveStore {
       NativeUnderTowSave.validateClaims(commander),
       NativeBorrowedVoiceSave.validateClaims(commander),
       NativeTitheCommissionSave.validateClaims(commander),
+      NativeC03PublicationPreflight.validateClaims(commander),
       NativeQuietChoirSave.validateClaims(commander),
       NativeMemoryAtlasSave.validateClaims(commander),
       NativeMemoryAtlasWatcherSourceSave.validateClaims(commander),
@@ -733,8 +769,26 @@ enum ScriptSaveStore {
       let location: ScriptSaveJSONPreflight.InquiryArchiveLocation =
         name == "commander.json" ? .commander : name == "world.json" ? .world
         : name == "missions.json" ? .missions : .contracts
-      try NativeSecondCommoditySaleSave.validateFields(data, location: location, schema: schema)
-      let kitSchema = NativeSecondCommoditySaleSave.contains(schema)
+      let c03Envelope = NativeC03PublicationNamespace.contains(schema)
+      let publications = try NativeC03PublicationPreflight.validate(
+        data, part: name == "missions.json" ? .missions
+          : name == "commander.json" ? .commander : .contracts,
+        schema: schema,
+        currentSchema: alienPublication != nil
+          ? NativeC03PublicationNamespace.alienVersion : NativeC03PublicationNamespace.version,
+        owner: commander.equipmentOwnerID)
+      for publication in publications {
+        guard NativeC03PublicationNamespace.matches(publication, commander: commander) else {
+          throw SaveError.invalidCommander
+        }
+      }
+      let secondSchema = c03Envelope && NativeSecondCommoditySaleSave.hasClaims(commander)
+        ? (alienPublication != nil
+          ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version)
+        : schema
+      try NativeSecondCommoditySaleSave.validateFields(
+        data, location: location, schema: secondSchema)
+      let kitSchema = (NativeSecondCommoditySaleSave.contains(schema) || c03Envelope)
         && CurrentNewtKitSave.hasClaims(commander)
         ? (alienPublication != nil ? CurrentNewtKitSave.alienVersion : CurrentNewtKitSave.version)
         : schema
@@ -778,6 +832,8 @@ enum ScriptSaveStore {
     navigationBinding: ScriptNavigationTradeBinding? = nil
   ) throws -> (Commander, ScriptWorldSave) {
     guard pointerBytes.count <= 262144 else { throw SaveError.invalidCommander }
+    _ = try NativeC03PublicationPreflight.validate(
+      pointerBytes, part: .contracts, schema: nil, currentSchema: nil, owner: nil)
     try ScriptSaveJSONPreflight.validate(pointerBytes)
     try NativeMemoryAtlasWatcherEnvelope.validateFields(pointerBytes, location: .pointer, schema: nil)
     try NativeFirstCommodityTradeSave.validateFields(pointerBytes, location: .pointer, schema: nil)
@@ -801,17 +857,19 @@ enum ScriptSaveStore {
     try CurrentNewtKitSave.validateFields(pointerBytes, location: .pointer, schema: nil)
     try BisonUnitJournalSave.validateFields(pointerBytes, location: .pointer)
     let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: pointerBytes)
-    let secondEnvelope = NativeSecondCommoditySaleSave.contains(pointer.schemaVersion)
+    let c03Envelope = NativeC03PublicationNamespace.contains(pointer.schemaVersion)
     let inquiryComposition = try NativeC01InquiryArchiveComposition.prepare(pointer, from: url)
+    let secondEnvelope = NativeSecondCommoditySaleSave.contains(pointer.schemaVersion)
+      || (c03Envelope && inquiryComposition?.hasSecondClaims == true)
     let newtEnvelope = CurrentNewtKitSave.contains(pointer.schemaVersion)
-      || (secondEnvelope && inquiryComposition?.hasNewtClaims == true)
+      || ((secondEnvelope || c03Envelope) && inquiryComposition?.hasNewtClaims == true)
     let watcherEnvelope = NativeMemoryAtlasWatcherEnvelope.contains(pointer.schemaVersion)
-      || ((newtEnvelope || secondEnvelope) && inquiryComposition?.hasWatcherClaims == true)
+      || ((newtEnvelope || secondEnvelope || c03Envelope) && inquiryComposition?.hasWatcherClaims == true)
     let tradeEnvelope = NativeFirstCommodityTradeSave.contains(pointer.schemaVersion)
-      || ((watcherEnvelope || newtEnvelope || secondEnvelope)
+      || ((watcherEnvelope || newtEnvelope || secondEnvelope || c03Envelope)
         && inquiryComposition?.hasTradeClaims == true)
     let inquiryEnvelope = NativeC01InquirySave.contains(pointer.schemaVersion)
-      || ((tradeEnvelope || watcherEnvelope || newtEnvelope || secondEnvelope)
+      || ((tradeEnvelope || watcherEnvelope || newtEnvelope || secondEnvelope || c03Envelope)
         && inquiryComposition?.hasInquiryClaims == true)
     let featureEnvelopeSchema = inquiryComposition?.featureSchema ?? pointer.schemaVersion
     // The closed current service envelope admits W02, W03 or both after feature validation.
@@ -848,7 +906,8 @@ enum ScriptSaveStore {
       featureEnvelopeSchema == ScriptFreightVersionedSave.version
       || featureEnvelopeSchema == ScriptFreightVersionedSave.alienVersion
     let alien =
-      pointer.schemaVersion == NativeSecondCommoditySaleSave.alienVersion
+      pointer.schemaVersion == NativeC03PublicationNamespace.alienVersion
+      || pointer.schemaVersion == NativeSecondCommoditySaleSave.alienVersion
       || pointer.schemaVersion == CurrentNewtKitSave.alienVersion
       || pointer.schemaVersion == NativeC01InquirySave.alienVersion
       || pointer.schemaVersion == NativeFirstCommodityTradeSave.alienVersion
@@ -892,7 +951,7 @@ enum ScriptSaveStore {
         || fieldReliefEnvelope
         || measuredExtractionEnvelope
         || recordRecoveryEnvelope || inquiryEnvelope || tradeEnvelope || watcherEnvelope
-        || newtEnvelope || secondEnvelope,
+        || newtEnvelope || secondEnvelope || c03Envelope,
       UUID(uuidString: pointer.generation)?.uuidString == pointer.generation,
       Set(pointer.hashes.keys) == names,
       ["commander", "gallery"].contains(pointer.scope ?? "")
@@ -927,6 +986,11 @@ enum ScriptSaveStore {
         throw SaveError.invalidCommander
       }
       if inquiryComposition == nil {
+        // Older roots cannot carry C03 claims; reject raw placement before their decoders.
+        _ = try NativeC03PublicationPreflight.validate(
+          data, part: name == "missions.json" ? .missions
+            : name == "commander.json" ? .commander : .contracts,
+          schema: pointer.schemaVersion, currentSchema: nil, owner: nil)
         try NativeSecondCommoditySaleSave.validateFields(
           data, location: name == "commander.json" ? .commander
             : name == "missions.json" ? .missions : name == "world.json" ? .world : .contracts,
@@ -1067,7 +1131,8 @@ enum ScriptSaveStore {
       commander.scriptState = try missionsDecoder.decode(
         ScriptEngineState.self, from: chunks["missions.json"]!)
     }
-    guard secondEnvelope == NativeSecondCommoditySaleSave.hasClaims(commander),
+    guard c03Envelope == NativeHollowManifestSave.hasClaims(commander),
+      secondEnvelope == NativeSecondCommoditySaleSave.hasClaims(commander),
       newtEnvelope == CurrentNewtKitSave.hasClaims(commander),
       inquiryEnvelope == NativeC01InquirySave.hasClaims(commander),
       tradeEnvelope == NativeFirstCommodityTradeSave.hasClaims(commander),
@@ -1266,6 +1331,7 @@ enum ScriptSaveStore {
       NativeUnderTowSave.validateClaims(commander),
       NativeBorrowedVoiceSave.validateClaims(commander),
       NativeTitheCommissionSave.validateClaims(commander),
+      NativeC03PublicationPreflight.validateClaims(commander),
       NativeQuietChoirSave.validateClaims(commander),
       NativeMemoryAtlasSave.validateClaims(commander),
       NativeMemoryAtlasWatcherSourceSave.validateClaims(commander),

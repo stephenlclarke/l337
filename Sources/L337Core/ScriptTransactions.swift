@@ -2,6 +2,62 @@ import Foundation
 
 typealias ScriptPublisher = @Sendable (inout Game) throws -> Void
 
+/// Immutable earlier DATA from this synchronous actor turn. It grants no source
+/// authority; the current root still validates every candidate before publication.
+private struct NativeC03PublicationHistory: Sendable {
+  let states: [UUID: NativeHollowManifestState]
+  let complete: Bool
+
+  init(_ commander: borrowing Commander) {
+    let observed = commander.withReadOnlyScriptState { script -> (
+      [UUID: NativeHollowManifestState], Bool
+    ) in
+      var retained: [UUID: NativeHollowManifestState] = [:]
+      // Iterate small keys and borrow the indexed value. Iterating values would
+      // materialize whole ScriptInstance payloads before selecting C03 history.
+      for key in script.instances.keys {
+        guard let index = script.instances.index(forKey: key),
+          Self.retain(script.instances[index].value, in: &retained)
+        else { return (retained, false) }
+      }
+      return (retained, true)
+    }
+    states = observed.0
+    complete = observed.1
+  }
+
+  @inline(never)
+  private static func retain(
+    _ instance: borrowing ScriptInstance, in retained: inout [UUID: NativeHollowManifestState]
+  ) -> Bool {
+    guard NativeHollowManifestCommission.marked(instance) else { return true }
+    guard retained.isEmpty, let state = instance.savedHollowManifest else { return false }
+    retained[instance.id] = state
+    return true
+  }
+
+  @inline(never)
+  private static func preserves(
+    _ instance: borrowing ScriptInstance, earlier: NativeHollowManifestState
+  ) -> Bool {
+    guard NativeHollowManifestCommission.marked(instance),
+      let candidate = instance.savedHollowManifest else { return false }
+    return candidate.birth == earlier.birth && candidate.preservesHistory(of: earlier)
+  }
+
+  func requirePreserved(in commander: borrowing Commander) throws {
+    guard complete else { throw SaveError.invalidCommander }
+    let preserved = commander.withReadOnlyScriptState { current in
+      for (id, earlier) in states {
+        guard let index = current.instances.index(forKey: id),
+          Self.preserves(current.instances[index].value, earlier: earlier) else { return false }
+      }
+      return true
+    }
+    guard preserved else { throw SaveError.invalidCommander }
+  }
+}
+
 extension GameRuntime {
   /// Captures value paths and a bounded Sendable, non-authoritative observation reference.
   /// No writer, actor or interpreter callback escapes this turn.
@@ -15,10 +71,13 @@ extension GameRuntime {
     }
     let namespace = galleryNamespace
     let diagnostics = scriptRefusalDiagnostic
+    let c03History = NativeC03PublicationHistory(game.commander)
     return { candidate in
+      try c03History.requirePreserved(in: candidate.commander)
       let prepared = try Self.prepareScriptPublication(
         &candidate, to: url, namespace: namespace, diagnostics: diagnostics,
         diagnosticBoundary: diagnosticBoundary)
+      try c03History.requirePreserved(in: prepared.commander)
       let alienPublication: AlienStoragePublication?
       do {
         alienPublication = try Self.writeScriptPublication(
@@ -53,7 +112,7 @@ extension GameRuntime {
         candidate.commander.scriptState.calendarLedger?.legacyUntrackedJourney = true
       }
     }
-    candidate.persistScriptActors()
+    try candidate.persistScriptActorsChecked()
     candidate.inductionArkDockPublicationPending = false
     candidate.inductionRescueDockPublicationPending = false
     candidate.inductionUtilityWorkRuntime.dirty = false
@@ -105,7 +164,9 @@ extension GameRuntime {
   ) throws {
     var stage = ScriptRefusalStage.commandFlush
     do {
+      let c03History = NativeC03PublicationHistory(before.commander)
       guard game.flushNativeSalvageWork() else { throw SaveError.invalidCommander }
+      try c03History.requirePreserved(in: game.commander)
       let ownsPersistentState =
         before.requiresScriptDurability || game.requiresScriptDurability
       let changed =
@@ -155,6 +216,7 @@ extension GameRuntime {
   static func writeCommander(
     _ candidate: inout Game, to url: URL, navigationBinding: ScriptNavigationTradeBinding? = nil
   ) throws {
+    let c03History = NativeC03PublicationHistory(candidate.commander)
     let originalJournal = candidate.commander.savedBisonUnitAllocations
     try candidate.commander.prepareEquipment()
     try candidate.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
@@ -168,9 +230,10 @@ extension GameRuntime {
         candidate.commander.scriptState.calendarLedger?.legacyUntrackedJourney = true
       }
     }
-    candidate.persistScriptActors()
+    try candidate.persistScriptActorsChecked()
     guard candidate.commander.savedBisonUnitAllocations == originalJournal else { throw SaveError.invalidCommander }
     let prepared = try Self.prepareNativeSaveState(candidate)
+    try c03History.requirePreserved(in: prepared.commander)
     try writePreparedCommander(
       &candidate, prepared: prepared, to: url, navigationBinding: navigationBinding)
   }
