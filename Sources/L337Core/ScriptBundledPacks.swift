@@ -215,6 +215,8 @@ extension ScriptPackLibrary {
     appendBundledPack(
       bundledMemoryAtlasDirectory, errorPrefix: "Bundled The Memory Atlas commission: ", to: &library)
     appendBundledPack(
+      bundledPublicRecordDirectory, errorPrefix: "Bundled Public Record case: ", to: &library)
+    appendBundledPack(
       bundledSignedPassageDirectory, errorPrefix: "Bundled Signed Passage commission: ", to: &library)
     appendBundledPack(
       bundledIsolationWorkParentDirectory, errorPrefix: "Bundled original isolation contract: ",

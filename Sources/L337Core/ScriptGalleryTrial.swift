@@ -87,6 +87,7 @@ extension Game {
   }
   // Keep isolated trial storage out of the selected-entry/catalogue lookup frame.
   private func isolatedMissionTrialAvailable(_ pack: ScriptPack) -> Bool {
+    guard !NativePublicRecordDefinition.applies(pack) else { return false }
     guard !NativeSignedPassageOpening.applies(pack) else { return false }
     guard !NativeMemoryAtlasDefinition.applies(pack) else { return false }
     guard !NativeQuietChoirDefinition.applies(pack) else { return false }
@@ -139,6 +140,9 @@ extension Game {
       state.outcome == .active && state.suspension != nil || hasSuspendedWorldJobs(origin: id),
       let pack = scriptPack(for: state)
     else { return false }
+    guard !NativePublicRecordDefinition.applies(pack), !NativePublicRecordDefinition.marked(state) else {
+      return false
+    }
     guard !NativeSignedPassageOpening.applies(pack), !NativeSignedPassageOpening.marked(state) else {
       return false
     }
@@ -176,6 +180,9 @@ extension Game {
     }
     guard let pack = scriptPacks.first(where: { $0.digest == packDigest }) else {
       throw MissionPackError("Choose an installed mission for a trial.")
+    }
+    guard !NativePublicRecordDefinition.applies(pack) else {
+      throw MissionPackError("Public Record uses the actual commander and native commissioning history.")
     }
     guard !NativeSignedPassageOpening.applies(pack) else {
       throw MissionPackError("Signed Passage uses the actual commander and native commissioning history.")

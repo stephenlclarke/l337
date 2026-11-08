@@ -35,6 +35,7 @@ public struct ContractBoardRow: Sendable {
   var borrowedVoice: NativeBorrowedVoiceAction?
   var quietChoir: NativeQuietChoirAction?
   var memoryAtlas: NativeMemoryAtlasAction?
+  var publicRecord: NativePublicRecordAction?
   var signedPassageOpening: NativeSignedPassageOpeningAction?
   var assemblyOfOrbits: NativeAssemblyOfOrbitsAction?
   var isolationWorkParent: NativeIsolationWorkParentAction?
@@ -69,6 +70,7 @@ public struct ContractBoardRow: Sendable {
     borrowedVoice: NativeBorrowedVoiceAction? = nil,
     quietChoir: NativeQuietChoirAction? = nil,
     memoryAtlas: NativeMemoryAtlasAction? = nil,
+    publicRecord: NativePublicRecordAction? = nil,
     signedPassageOpening: NativeSignedPassageOpeningAction? = nil,
     assemblyOfOrbits: NativeAssemblyOfOrbitsAction? = nil,
     isolationWorkParent: NativeIsolationWorkParentAction? = nil,
@@ -102,6 +104,7 @@ public struct ContractBoardRow: Sendable {
     self.borrowedVoice = borrowedVoice
     self.quietChoir = quietChoir
     self.memoryAtlas = memoryAtlas
+    self.publicRecord = publicRecord
     self.signedPassageOpening = signedPassageOpening
     self.assemblyOfOrbits = assemblyOfOrbits
     self.isolationWorkParent = isolationWorkParent
@@ -113,6 +116,7 @@ public struct ContractBoardRow: Sendable {
     if let borrowedVoice { return borrowedVoice.key }
     if let quietChoir { return quietChoir.key }
     if let memoryAtlas { return memoryAtlas.key }
+    if let publicRecord { return publicRecord.key }
     if let signedPassageOpening { return signedPassageOpening.key }
     if let assemblyOfOrbits { return assemblyOfOrbits.key }
     if let isolationWorkParent { return isolationWorkParent.key }
@@ -172,6 +176,7 @@ private indirect enum ContractBoardReview: Sendable {
   case borrowedVoice(NativeBorrowedVoiceReview)
   case quietChoir(NativeQuietChoirReview)
   case memoryAtlas(NativeMemoryAtlasReview)
+  case publicRecord(NativePublicRecordReview)
   case signedPassageOpening(NativeSignedPassageOpeningReview)
   case assemblyOfOrbits(NativeAssemblyOfOrbitsReview)
   case isolationWorkParent(NativeIsolationWorkParentReview)
@@ -208,6 +213,19 @@ public struct ContractBoardUI: Sendable {
       if let newValue {
         review = .finance(newValue)
       } else if case .finance(_)? = review {
+        review = nil
+      }
+    }
+  }
+  var publicRecordQuote: NativePublicRecordReview? {
+    get {
+      guard case .publicRecord(let value)? = review else { return nil }
+      return value
+    }
+    set {
+      if let newValue {
+        review = .publicRecord(newValue)
+      } else if case .publicRecord(_)? = review {
         review = nil
       }
     }
@@ -564,6 +582,7 @@ extension Game {
     candidate.contractBoard.utilityQuote = nil
     candidate.contractBoard.underTowQuote = nil
     candidate.contractBoard.signedPassageOpeningQuote = nil
+    candidate.contractBoard.publicRecordQuote = nil
     candidate.contractBoard.borrowedVoiceQuote = nil
     candidate.contractBoard.quietChoirQuote = nil
     candidate.contractBoard.memoryAtlasQuote = nil
@@ -590,6 +609,7 @@ extension Game {
       + borrowedVoiceRows
       + quietChoirRows
       + memoryAtlasRows
+      + publicRecordRows
       + signedPassageOpeningRows
       + assemblyOfOrbitsRows
       + glassMeridianRows
@@ -644,6 +664,7 @@ extension Game {
         || contractBoard.borrowedVoiceQuote != nil
         || contractBoard.quietChoirQuote != nil
         || contractBoard.memoryAtlasQuote != nil
+        || contractBoard.publicRecordQuote != nil
         || contractBoard.signedPassageOpeningQuote != nil
         || contractBoard.assemblyOfOrbitsQuote != nil
         || contractBoard.glassMeridianQuote != nil
@@ -676,6 +697,10 @@ extension Game {
   // Specialized review buffers retire before the ordinary acceptance preview begins.
   @inline(never)
   private mutating func refreshSpecializedContractQuote() -> Bool {
+    if let action = contractBoard.selected?.publicRecord {
+      contractBoard.publicRecordQuote = publicRecordReview(action)
+      return true
+    }
     if let action = contractBoard.selected?.hollowManifest {
       contractBoard.hollowManifestQuote = hollowManifestReview(action)
       return true
@@ -707,6 +732,7 @@ extension Game {
     }
     contractBoard.underTowQuote = nil
     contractBoard.signedPassageOpeningQuote = nil
+    contractBoard.publicRecordQuote = nil
     contractBoard.borrowedVoiceQuote = nil
     contractBoard.quietChoirQuote = nil
     contractBoard.memoryAtlasQuote = nil
@@ -822,6 +848,7 @@ extension Game {
         contractBoard.utilityQuote = nil
       contractBoard.underTowQuote = nil
       contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.publicRecordQuote = nil
       contractBoard.borrowedVoiceQuote = nil
       contractBoard.quietChoirQuote = nil
       contractBoard.memoryAtlasQuote = nil
@@ -885,6 +912,7 @@ extension Game {
       contractBoard.utilityQuote = nil
       contractBoard.underTowQuote = nil
       contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.publicRecordQuote = nil
       contractBoard.borrowedVoiceQuote = nil
       contractBoard.quietChoirQuote = nil
       contractBoard.memoryAtlasQuote = nil
@@ -908,6 +936,7 @@ extension Game {
     case borrowedVoice
     case quietChoir
     case memoryAtlas
+    case publicRecord
     case signedPassageOpening
     case underTow
     case assemblyOfOrbits
@@ -935,6 +964,13 @@ extension Game {
   // Return before refreshing rows: native quotes can validate and encode loss witnesses.
   @inline(never)
   private mutating func confirmContractDetailAction() throws -> ContractDetailCompletion? {
+    if let action = contractBoard.selected?.publicRecord {
+      guard contractBoard.action == .accept, let quote = contractBoard.publicRecordQuote,
+        quote.action == action, quote.allowed
+      else { throw MissionPackError("Review Sol's current Public Record case; Back changes nothing.") }
+      try confirmPublicRecord(quote)
+      return .publicRecord
+    }
     if let action = contractBoard.selected?.hollowManifest {
       guard contractBoard.action == .accept, let quote = contractBoard.hollowManifestQuote,
         quote.action == action, quote.allowed
@@ -1159,8 +1195,11 @@ extension Game {
       contractBoard.quietChoirQuote = nil
     case .memoryAtlas:
       contractBoard.memoryAtlasQuote = nil
+    case .publicRecord:
+      contractBoard.publicRecordQuote = nil
     case .signedPassageOpening:
       contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.publicRecordQuote = nil
       contractBoard.borrowedVoiceQuote = nil
       contractBoard.quietChoirQuote = nil
       contractBoard.memoryAtlasQuote = nil
@@ -1171,6 +1210,7 @@ extension Game {
       contractBoard.utilityQuote = nil
       contractBoard.underTowQuote = nil
       contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.publicRecordQuote = nil
       contractBoard.borrowedVoiceQuote = nil
       contractBoard.quietChoirQuote = nil
       contractBoard.memoryAtlasQuote = nil
@@ -1211,6 +1251,7 @@ extension Game {
       contractBoard.utilityQuote = nil
       contractBoard.underTowQuote = nil
       contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.publicRecordQuote = nil
       contractBoard.borrowedVoiceQuote = nil
       contractBoard.quietChoirQuote = nil
       contractBoard.memoryAtlasQuote = nil
@@ -1233,6 +1274,7 @@ extension Game {
     case .underTow:
       contractBoard.underTowQuote = nil
       contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.publicRecordQuote = nil
       contractBoard.borrowedVoiceQuote = nil
       contractBoard.quietChoirQuote = nil
       contractBoard.memoryAtlasQuote = nil

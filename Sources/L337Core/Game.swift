@@ -2424,6 +2424,7 @@ public struct Commander: Sendable, Equatable, Codable {
       NativeFirstCommoditySaleSave.validateClaims(self),
       NativeFirstCommodityTradeSave.validateClaims(self),
       NativeUnderTowSave.validateClaims(self),
+      NativePublicRecordSave.validateClaims(self),
       NativeBorrowedVoiceSave.validateClaims(self),
       NativeTitheCommissionSave.validateClaims(self),
       NativeQuietChoirSave.validateClaims(self),
@@ -7891,6 +7892,7 @@ public actor GameRuntime {
     try NativeQuietChoirSave.validateFields(data, part: .commander)
     try NativeMemoryAtlasSave.validateFields(data, part: .commander)
     try NativeSignedPassageOpeningSave.validateFields(data, part: .commander)
+    try NativePublicRecordSave.validateFields(data, part: .commander)
     if let pointer = try? JSONDecoder().decode(ScriptSavePointer.self, from: data) {
       guard (pointer.scope == "gallery") == (galleryNamespace != nil) else {
         throw MissionPackError(

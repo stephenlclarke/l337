@@ -464,6 +464,7 @@ public enum ScriptPackLibrary {
     try NativeTitheCommissionDefinition.validateDeclaration(manifest)
     try NativeQuietChoirDefinition.validateDeclaration(manifest)
     try NativeMemoryAtlasDefinition.validateDeclaration(manifest)
+    try NativePublicRecordDefinition.validateDeclaration(manifest)
     try NativeSignedPassageOpening.validateDeclaration(manifest)
     try validateNPCDeclarations(manifest)
     try validateWorldJobs(manifest)

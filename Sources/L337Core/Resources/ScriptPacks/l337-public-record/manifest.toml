@@ -1,0 +1,24 @@
+# Original Public Record commission only; original Fenias reference is a separate pickup.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.public-record"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2"]
+priority = 880
+source = "Original Public Record from Meridian c70110b292077588a0855fb48127adfb1b611c9d; public-record.json SHA256 0ebf720710dc5d7954158e2c25d6d0a346bc0883481d0d39fe4634f5f68e4bb5. Commission only; no reference/stock/recorder/observer-consent/routing-decision/controller/independent-measurement/evidence-version/hash/reply/lease/privacy-audit/qualified-work/witness/crew/newsroom/receiver/delegate/publication/settlement/payment/clue is produced by this module."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "public-record"
+title = "Public Record"
+briefing = "SOL: A story that cannot survive an independent reading is not ready to publish.\n\nAn orbital news service wants to report a dangerous cargo-routing fault, but its sponsor owns the only accepted recording instrument. The commander obtains independent readings, protects a consenting technical witness and helps the newsroom choose an open evidence release or a witnessed right-of-reply process.\n\nAt Fenias in Galaxy 5, after one ordinary trade. No imported score gate or source campaign prerequisite. The reference loan needs one tonne of free hold. The original reference is collected here before the survey departure. The settlement choice is made with actual arrived delegates at the witness receiver; final return/audit remains at this issuer."
+destination = "Fenias / Fenel / Heroeth / Voron / Galaxy 5"
+reward = "6,300 CR and the unreported-frequency clue, only after real independent routing/controller observations, preserved evidence, technical witness reception, both selected independent anonymised-archive/reply-escrow proofs, original reference return and final audit."
+milestones = ["Accept Public Record at Fenias.", "Collect the identified one-tonne reference instrument from Dispatcher Neris Sol.", "Observe three actual cargo-routing decisions under the source observers consent.", "Compare two external route controllers with the original public recorder; freeze the independently measured evidence version.", "Verify actual safe transit and living reception of the consenting technical witness to the newsroom receiving berth.", "At the actual witness receiving station, choose the settlement with the arrived authorised operator delegates.", "Verify both independent proofs for the selected settlement.", "Return the reference instrument and confirm all physical receiving and settlement receipts.", "Confirm successful completion, the recorded settlement and the once-only fee."]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"
