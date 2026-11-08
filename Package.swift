@@ -359,6 +359,7 @@ let package = Package(
         .copy("Resources/OriginalShipTextures"),
         .copy("Resources/OriginalFleetShowroomModels"),
         .copy("Resources/OriginalFleetPhysical"),
+        .copy("Resources/OkapiFiniteEmpty"),
         .copy("Resources/ZebuPhysical"),
         .copy("Resources/ServalPhysical"),
         .copy("Resources/SakerPhysical"),

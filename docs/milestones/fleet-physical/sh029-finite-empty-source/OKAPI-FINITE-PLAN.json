@@ -1,0 +1,217 @@
+{
+  "id": "SH029",
+  "name": "Okapi",
+  "scope": "Separate finite intrinsic EMPTY engineering only; shipping point model and all adopted kit/load/native sources unchanged",
+  "metresPerSourceUnit": 1,
+  "allocations": [
+    {
+      "id": "SH029-empty-intrinsic-0",
+      "originalAllocationIndex": 0,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        -7.000000000000008,
+        -2.000000000000002,
+        -16.372803966627874
+      ],
+      "detailedOwnerIndex": 8,
+      "detailedOwnerName": "pallet stern drive casing",
+      "nativeOwnerIndex": 5,
+      "nativeOwnerName": "pallet stern drive bounded closed casing",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority"
+    },
+    {
+      "id": "SH029-empty-intrinsic-1",
+      "originalAllocationIndex": 1,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        7.000000000000007,
+        -2.000000000000003,
+        -16.372803966627878
+      ],
+      "detailedOwnerIndex": 11,
+      "detailedOwnerName": "pallet stern drive casing",
+      "nativeOwnerIndex": 6,
+      "nativeOwnerName": "pallet stern drive bounded closed casing",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority"
+    },
+    {
+      "id": "SH029-empty-intrinsic-2",
+      "originalAllocationIndex": 2,
+      "massKg": 750,
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "detailedOwnerIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "nativeOwnerIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        -3
+      ],
+      "newDimensionsMetres": [
+        1,
+        0.8,
+        1.2
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority"
+    },
+    {
+      "id": "SH029-empty-intrinsic-3",
+      "originalAllocationIndex": 3,
+      "massKg": 180,
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "detailedOwnerIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "nativeOwnerIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        3
+      ],
+      "newDimensionsMetres": [
+        1,
+        0.6,
+        1.2
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority"
+    },
+    {
+      "id": "SH029-empty-intrinsic-4",
+      "originalAllocationIndex": 4,
+      "massKg": 120,
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "detailedOwnerIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "nativeOwnerIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        -2,
+        0,
+        1
+      ],
+      "newDimensionsMetres": [
+        0.8,
+        0.8,
+        0.8
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority"
+    },
+    {
+      "id": "SH029-empty-intrinsic-5",
+      "originalAllocationIndex": 5,
+      "massKg": 90,
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "detailedOwnerIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "nativeOwnerIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        2,
+        0,
+        1
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority"
+    },
+    {
+      "id": "SH029-empty-intrinsic-6",
+      "originalAllocationIndex": 6,
+      "massKg": 140,
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "detailedOwnerIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "nativeOwnerIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        -2,
+        0,
+        -3
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority"
+    },
+    {
+      "id": "SH029-empty-intrinsic-7",
+      "originalAllocationIndex": 7,
+      "massKg": 160,
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "detailedOwnerIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "nativeOwnerIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        2,
+        0,
+        -3
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority"
+    }
+  ],
+  "notGranted": [
+    "installed cabin",
+    "crew position",
+    "powered plant function",
+    "loaded tensor",
+    "stock or paid equipment",
+    "native/game acceptance"
+  ],
+  "normalResourcePolicy": "OS/tool defaults; no artificial execution caps"
+}
