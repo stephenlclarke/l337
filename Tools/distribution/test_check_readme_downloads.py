@@ -26,7 +26,7 @@ class Opener:
     def __init__(self, responses):
         self.responses, self.requests = list(responses), []
 
-    def open(self, request, timeout):
+    def open(self,request,timeout=None):
         self.requests.append(request)
         result = self.responses.pop(0)
         if isinstance(result, Exception):

@@ -197,7 +197,7 @@ def _register_locked(runner_name="elite-mbp-native", deadline=None, descriptors=
         remaining = deadline - time.time()
         if remaining <= 0:
             raise ValueError("Registration deadline expired.")
-        return {"timeout": min(60, remaining), "pass_fds": tuple(descriptors)}
+        return {"timeout": remaining, "pass_fds": tuple(descriptors)}
     result = subprocess.run(
         ["gh", "api", "--method", "POST", "repos/stephenlclarke/l337/actions/runners/registration-token"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, **bounds())
@@ -331,16 +331,11 @@ def reviewed_recoverable_policy(path, checksum, base):
         if native_runner.phase_profile(value, 'normal') is None:
             raise ValueError('Current CI role reservation requires both normal/leaks phase profiles')
     if (type(config.get("schema")) is not int or config.get("schema") != 1 or set(config) - {"schema", "host", "cache", "legacy_cache", "workers", "admission", "planning", "phase_profiles"}
-            or set(config.get("workers", {})) != {"one"}
-            or config.get("admission", {}).get("explicit") != 1
+            or not config.get("workers")
             or not re.fullmatch(r"[0-9A-F]{8}(?:-[0-9A-F]{4}){3}-[0-9A-F]{12}", config.get("host", ""))):
-        raise ValueError("Recoverable execution needs one approved physical worker and static admission.")
-    bounds = config["admission"]
-    if (set(bounds) != {"explicit", "cpu_budget", "ram_capacity", "ram_reserve", "peak_per_worker", "disk_capacity", "disk_reserve", "disk_per_worker"}
-            or any(type(n) not in (int, float) or not math.isfinite(n) or n <= 0 for n in bounds.values())):
-        raise ValueError("Reviewed static admission fields are incomplete.")
+        raise ValueError("Recoverable execution needs approved physical worker identities.")
     spaces = [Path(config[name]) for name in ("cache", "legacy_cache")]
-    spaces += [Path(config["workers"]["one"]), Path(activation["assignment_root"])]
+    spaces += [*(Path(value) for value in config["workers"].values()), Path(activation["assignment_root"])]
     protected = [ROOT, RUNNER, AUTHORIZATION_ROOT, HOME_ROOT / "recoverable-sessions"]
     if (any(not path.is_absolute() or path != path.resolve() for path in spaces)
             or any(a.is_relative_to(b) or b.is_relative_to(a) for a in spaces for b in protected)
@@ -467,7 +462,7 @@ def session_run_active(policy, binding):
     _require_provisioning()
     result = subprocess.run(["gh", "api", "repos/stephenlclarke/l337/actions/runs/" + binding["run_id"]],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
-                            timeout=min(60, max(1, binding["expires_at"] - time.time())))
+                            timeout=max(0, binding["expires_at"] - time.time()))
     if result.returncode:
         raise ValueError("Workflow run metadata is unavailable; renewal stopped.")
     run = json.loads(result.stdout)

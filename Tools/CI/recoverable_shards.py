@@ -37,10 +37,10 @@ SCHEMA = 1
 POLICY = "recoverable-parallel-shards-v1"
 # Execution is available only with the separately installed exact-head owned authorization.
 PHYSICAL_EXECUTION_ENABLED = True
-SHARD_MAX_SECONDS = 7200
-PACKED_ID_TARGET = 64
-ASAN_PACKED_ID_TARGET = 16
-LOCAL_PACKED_ID_TARGET = 16
+SHARD_MAX_SECONDS = None  # OS/toolchain defaults; no project execution deadline.
+PACKED_ID_TARGET = None
+ASAN_PACKED_ID_TARGET = None
+LOCAL_PACKED_ID_TARGET = None
 MODES = ("thread", "address")
 AUTHORIZATION_CONTROLS = (
     "ELITE_RECOVERABLE_PLAN_SHA256", "ELITE_RECOVERABLE_ASSIGNMENT_SHA256", "ELITE_RECOVERABLE_ASSIGNMENT_PATH",
@@ -170,13 +170,13 @@ def file_claim(path, shared=False, wait_seconds=0, diagnostic_role=None):
         if info.st_uid != os.getuid() or info.st_mode & 0o022:
             raise ValueError("Foreign claim lock")
         operation = fcntl.LOCK_SH if shared else fcntl.LOCK_EX
-        deadline = time.monotonic() + wait_seconds
+        deadline = None if wait_seconds is None else time.monotonic() + wait_seconds
         while True:
             try:
                 fcntl.flock(lock, operation | fcntl.LOCK_NB)
                 break
             except BlockingIOError:
-                if time.monotonic() >= deadline:
+                if deadline is not None and time.monotonic() >= deadline:
                     raise
                 time.sleep(0.02)
         if diagnostic_role is None:
@@ -226,8 +226,6 @@ def shard_identity(runtime, shard):
 def make_plan(runtime, methods, shared_groups=(), history=None, resources=None, budget=600, pack=True, max_methods=None):
     """Pack whole audited groups/suites by duration; timings are only planning hints."""
     validate_runtime(runtime)
-    if runtime["mode"] == "address":
-        max_methods = min(max_methods, ASAN_PACKED_ID_TARGET) if max_methods is not None else ASAN_PACKED_ID_TARGET
     if type(budget) not in (int, float) or not 300 <= budget <= 600:
         raise ValueError("The soft duration target must be five to ten minutes")
     methods = sorted(methods)
@@ -334,9 +332,6 @@ def validate_plan(plan):
     atomic = {fingerprint(sorted(atom)): sorted(atom) for atom in legacy.partition(
         plan["inventory"], plan["runtime"]["mode"], 1, plan["shared_groups"])}
     for shard in plan["shards"]:
-        if (plan["runtime"]["mode"] == "address" and len(shard["methods"]) > ASAN_PACKED_ID_TARGET
-                and len(shard["atoms"]) != 1):
-            raise ValueError("ASAN packing exceeds the process memory profile")
         if (shard["atoms"] != sorted(set(shard["atoms"]))
                 or set(shard["resource_audits"]) != set(shard["atoms"])
                 or any(atom not in atomic for atom in shard["atoms"])
@@ -539,7 +534,7 @@ class Store:
 
     def index(self, identities):
         """Rescan committed successes, including a success orphaned before index/upload."""
-        with claim(self.root / "claims", "index", wait_seconds=30):
+        with claim(self.root / "claims", "index", wait_seconds=None):
             entries = {}
             index_path = self.root / "index.json"
             if index_path.exists():
@@ -720,7 +715,7 @@ PROGRESS_HEARTBEAT_SECONDS = 30
 class ObservedTestProgress:
     """Live output observations only; XML and sealed receipts remain the pass authority."""
     ansi = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
-    test_line = re.compile(r"^\S+ Test (.+) (started|passed|failed|skipped|cancelled|recorded an issue)([ .].*)$")
+    test_line = re.compile(r"^\S Test (.+) (started|passed|failed|skipped|cancelled|recorded an issue)([ .].*)$")
 
     def __init__(self, attempt, raw, context, clock=time.monotonic):
         self.attempt, self.raw, self.context, self.clock = attempt, raw, dict(context), clock
@@ -768,9 +763,6 @@ class ObservedTestProgress:
             if not self.discard_line:
                 self.observe(line.rstrip("\r"))
             self.discard_line = False
-        if len(self.pending) > 65536:
-            # Preserve every raw byte, but never manufacture a truncated test name.
-            self.pending, self.discard_line, self.partial = "", True, True
 
     def observe(self, line):
         match = self.test_line.match(self.ansi.sub("", line))
@@ -917,17 +909,7 @@ def execute_process(command, workspace, attempt, timeout, descriptors, environme
                 capture.start()
             if observer:
                 observer.start(process.pid)
-            try:
-                code = process.wait(timeout=timeout)
-            except subprocess.TimeoutExpired:
-                durable_json(attempt / "timeout.json", {"schema": SCHEMA, "seconds": timeout, "reason": "process wait deadline"})
-                os.killpg(process.pid, signal.SIGTERM)
-                try:
-                    process.wait(timeout=2)
-                except subprocess.TimeoutExpired:
-                    os.killpg(process.pid, signal.SIGKILL)
-                    process.wait()
-                code = 124
+            code = process.wait()
             if observer and not observer.finish(code != 0):
                 code = code or 125
         except BaseException:
@@ -948,31 +930,11 @@ def execute_process(command, workspace, attempt, timeout, descriptors, environme
         return code
 
 
-def worker_limit(explicit, cpu_budget, ram_available, ram_reserve, peak_per_worker,
-                 disk_available, disk_reserve, disk_per_worker, ram_capacity=None, disk_capacity=None):
-    if type(explicit) is not int or explicit not in (1, 2):
-        raise ValueError("Reviewed initial worker cap is one or two")
-    for value in (cpu_budget, ram_available, ram_reserve, peak_per_worker,
-                  disk_available, disk_reserve, disk_per_worker):
-        positive(value)
-    for capacity in (ram_capacity, disk_capacity):
-        if capacity is not None:
-            positive(capacity)
-    result = min(explicit, int(cpu_budget),
-                 int((ram_available - ram_reserve) // peak_per_worker),
-                 int((disk_available - disk_reserve) // disk_per_worker))
-    if result < 1:
-        # Reuse the existing sanitized refusal schema; never sample again or invent
-        # configured/observed CPU values that this boundary was not given.
-        bounds = dict(explicit=explicit, cpu_budget=cpu_budget, ram_available=ram_available,
-                      ram_reserve=ram_reserve, peak_per_worker=peak_per_worker,
-                      disk_available=disk_available, disk_reserve=disk_reserve,
-                      disk_per_worker=disk_per_worker, ram_capacity=ram_capacity,
-                      disk_capacity=disk_capacity)
-        message = "RAM/disk admission reserve blocks a new worker"
-        refusal = admission_refusal(bounds, None, None, "decision", ValueError(message))
-        raise ValueError(message + ": " + json.dumps(refusal, sort_keys=True))
-    return result
+def worker_limit(explicit=None, cpu_budget=None, ram_available=None, ram_reserve=None,
+                 peak_per_worker=None, disk_available=None, disk_reserve=None,
+                 disk_per_worker=None, ram_capacity=None, disk_capacity=None):
+    """Legacy API: there is no project CPU/worker/RAM/disk ceiling or reserve."""
+    return None
 
 
 def admission_refusal(bounds, configured_cpu, observed_cpu, stage, error):
@@ -1005,7 +967,7 @@ def admission_refusal(bounds, configured_cpu, observed_cpu, stage, error):
             "category": category, "sample": sample}
 
 
-def reservation_update(store, reservation, *, wait_seconds=30, **changes):
+def reservation_update(store, reservation, *, wait_seconds=None, **changes):
     with claim(store.root / "claims", "admission", wait_seconds=wait_seconds):
         current = load_json(reservation["path"])
         if current["nonce"] != reservation["nonce"]:
@@ -1016,67 +978,96 @@ def reservation_update(store, reservation, *, wait_seconds=30, **changes):
         durable_json(reservation["path"], current)
 
 
+def require_legacy_workspace_custody_clear(store, executor):
+    """Check prior actual ownership, never its retired numeric capacity allocation.
+
+    Caller holds the old admission metadata lock and the current workspace lock.
+    Old records without an attributable workspace are conservatively unresolved.
+    The old record is retained byte-for-byte, even after a proved terminal.
+    """
+    workspace=Path(executor.workspace)
+    if not workspace.is_absolute() or workspace!=workspace.resolve():
+        raise ValueError('Worker workspace must retain canonical physical identity')
+    for path in sorted((store.root/'reservations').glob('*.json')):
+        if re.fullmatch(r'[0-9]+',path.stem) is None:
+            continue
+        native_runner.require_owned_activation_file(path)
+        prior=load_json(path)
+        if (not isinstance(prior,dict) or type(prior.get('schema')) is not int or prior.get('schema')!=SCHEMA
+                or prior.get('state') not in ('pending','launching','running','unknown','released')
+                or not isinstance(prior.get('owner'),dict)):
+            raise ValueError('Legacy workspace ownership record is unresolved')
+        if prior['state']=='released':
+            continue
+        attempt=Path(prior['attempt']) if isinstance(prior.get('attempt'),str) else None
+        if attempt is not None and (not attempt.is_absolute() or attempt!=attempt.resolve()
+                or not attempt.is_relative_to(store.root/'attempts')):
+            raise ValueError('Legacy ownership attempt path is not canonical and confined')
+        spaces=[]
+        if prior.get('workspace') is not None:
+            spaces.append((prior['workspace'],False))
+        if attempt is not None and (attempt/'processes.json').exists():
+            native_runner.require_owned_activation_file(attempt/'processes.json')
+            processes=load_json(attempt/'processes.json')
+            if processes.get('workspace') is not None:spaces.append((processes['workspace'],True))
+        roots=set()
+        for name,active_mode_child in spaces:
+            if not isinstance(name,str):raise ValueError('Legacy workspace identity is unresolved')
+            actual=Path(name)
+            if not actual.is_absolute() or actual!=actual.resolve():
+                raise ValueError('Legacy workspace identity is not canonical')
+            roots.add(actual.parent if active_mode_child and actual.name in MODES else actual)
+        if len(roots)>1:
+            raise ValueError('Legacy workspace ownership identities disagree')
+        if roots and workspace not in roots:
+            continue
+        try:
+            with claim(store.root/'claims','worker:'+path.stem):
+                if load_json(path)!=prior:
+                    raise ValueError('Legacy workspace ownership generation changed')
+                if attempt is None:
+                    raise ValueError('Legacy workspace ownership has no terminal proof')
+                no_child=(attempt/'launch-failure.json').is_file() and not (attempt/'child.json').exists()
+                if not no_child and not all((attempt/name).is_file() for name in
+                        ('start.json','processes.json','child.json','child-exit.json')):
+                    raise ValueError('Legacy workspace terminal evidence is incomplete')
+                if not executor.reclaimable(prior) or not executor.proven_exited(attempt):
+                    raise ValueError('Legacy workspace still has live or unknown execution custody')
+        except BlockingIOError as error:
+            raise ValueError('Legacy workspace reservation lease remains active') from error
+
+
 @contextmanager
 def reserve_worker(store, executor, runtime, admission, timeout):
+    """Reserve an authorized workspace identity, not a CPU/RAM/disk allocation."""
     native_runner.require_diagnostic_custody_clear()
-    chosen, reservation = None, None
-    with ExitStack() as held:
-        with claim(store.root / "claims", "admission", wait_seconds=timeout):
-            if hasattr(executor, "observe_admission"):
-                admission = executor.observe_admission()
-            worker_limit(**admission)
-            static = {name: value for name, value in admission.items()
-                      if name not in ("ram_available", "disk_available")}
-            policy = {"schema": SCHEMA, "host": runtime["host"], "bounds": static}
-            policy_path = store.root / "admission.json"
-            if policy_path.exists() and load_json(policy_path) != policy:
-                raise ValueError("Host worker admission policy changed")
-            if not policy_path.exists():
-                durable_json(policy_path, policy)
-            # Namespace depends on reviewed capacity, never the current remaining free capacity.
-            cap = worker_limit(**{**admission, "ram_available": admission["ram_capacity"],
-                                   "disk_available": admission["disk_capacity"]})
-            active, candidates = 0, []
-            legacy.owned_directory(store.root / "reservations")
-            for slot in range(cap):
-                diagnostic = getattr(getattr(executor, "authority", None), "config", {}).get("vmmap_diagnostic")
-                context = claim(store.root / "claims", "worker:" + str(slot),
-                                diagnostic_role="reservation" if diagnostic is not None else None)
-                try:
-                    lock = context.__enter__()
-                except BlockingIOError:
-                    active += 1
-                    continue
-                path = store.root / "reservations" / (str(slot) + ".json")
-                prior = load_json(path) if path.exists() else None
-                if prior and prior["state"] != "released" and not executor.reclaimable(prior):
-                    active += 1
-                    context.__exit__(None, None, None)
-                else:
-                    candidates.append((context, lock, path))
-            try:
-                # Charge full running headroom if no trustworthy actual-use binding exists.
-                # This deliberately double-charges current use and may admit fewer workers.
-                if (not candidates or admission["ram_available"] - admission["ram_reserve"]
-                        < (active + 1) * admission["peak_per_worker"]
-                        or admission["disk_available"] - admission["disk_reserve"]
-                        < (active + 1) * admission["disk_per_worker"]):
-                    raise ValueError("Occupied slots or conservative RAM/disk headroom blocks admission")
-                chosen, lock, path = candidates.pop(0)
-                held.callback(chosen.__exit__, None, None, None)
-                record = {"schema": SCHEMA, "nonce": str(uuid.uuid4()), "state": "pending",
-                          "owner": executor.owner_identity(), "attempt": None}
-                durable_json(path, record)
-                reservation = {"path": path, "nonce": record["nonce"], "lock": lock}
-            finally:
-                for context, lock, path in candidates:
-                    context.__exit__(None, None, None)
+    with claim(store.root / "claims", "host-identity",wait_seconds=None):
+        host_path = store.root / "execution-host.json"
+        for existing in (host_path, store.root / "admission.json"):
+            if existing.exists() and load_json(existing).get("host") != runtime["host"]:
+                raise ValueError("Host worker identity changed")
+        if not host_path.exists():
+            durable_json(host_path, {"schema": SCHEMA, "host": runtime["host"],
+                                    "execution_resources": "os-toolchain-defaults-v1"})
+    key = fingerprint(str(executor.workspace))
+    with claim(store.root / "claims", "workspace:" + key) as lock:
+        legacy.owned_directory(store.root / "reservations")
+        path = store.root / "reservations" / (key + ".json")
+        with claim(store.root/'claims','admission',wait_seconds=None):
+            require_legacy_workspace_custody_clear(store,executor)
+            prior = load_json(path) if path.exists() else None
+            if prior and prior["state"] != "released" and not executor.reclaimable(prior):
+                raise ValueError("Workspace still has an owned or unresolved execution")
+            record = {"schema": SCHEMA, "nonce": str(uuid.uuid4()), "state": "pending",
+                      "owner": executor.owner_identity(), "attempt": None, "workspace": str(executor.workspace)}
+            durable_json(path, record)
+            reservation = {"path": path, "nonce": record["nonce"], "lock": lock}
         try:
             yield reservation
         finally:
-            current = load_json(reservation["path"])
+            current = load_json(path)
             safe = current["state"] == "pending" or (current["attempt"] is not None
-                                                      and executor.proven_exited(Path(current["attempt"])))
+                    and executor.proven_exited(Path(current["attempt"])))
             reservation_update(store, reservation, state="released" if safe else "unknown")
 
 
@@ -1104,7 +1095,7 @@ def run_shard(plan, shard_id, store, executor, current_head, timeout, admission,
     identity = shard_identity(plan["runtime"], shard)
     if not re.fullmatch(r"[0-9a-f]{40}", current_head):
         raise ValueError("A committed current head is required")
-    positive(timeout)
+    timeout = None
     with ExitStack() as stack:
         locks = [stack.enter_context(claim(store.root / "claims", "shard:" + shard_id))]
         locks.append(stack.enter_context(claim(store.root / "claims", "preparation", shared=True)))
@@ -1161,7 +1152,7 @@ def run_shard(plan, shard_id, store, executor, current_head, timeout, admission,
         started = time.monotonic()
         reservation_update(store, reservation, state="launching")
         executor.reservation_callback = lambda: reservation_update(
-            store, reservation, wait_seconds=0 if diagnostic is not None else 30, state="running")
+            store, reservation, wait_seconds=0 if diagnostic is not None else None, state="running")
         if diagnostic is not None:
             executor.diagnostic_leases = [getattr(executor.authority, "controller_lease", None)] + [
                 getattr(lock, "_diagnostic_lease", None) for lock in locks
@@ -1197,11 +1188,9 @@ def run_shard(plan, shard_id, store, executor, current_head, timeout, admission,
 
 
 def run_pending(plans, store, executors, current_head, timeout, admission):
-    """One bounded pool, not one independent unbounded pool per sanitizer mode."""
-    if not executors or len(executors) > 2 or len({str(x.workspace) for x in executors}) != len(executors):
-        raise ValueError("One or two distinct owned worker workspaces are required")
-    if len(executors) > worker_limit(**admission):
-        raise ValueError("Requested pool exceeds CPU/RAM/disk admission")
+    """Schedule only the authorized distinct workspaces, using executor defaults."""
+    if not executors or len({str(x.workspace) for x in executors}) != len(executors):
+        raise ValueError("Distinct owned worker workspaces are required")
     if len({plan["runtime"]["host"] for plan in plans}) != 1:
         raise ValueError("One pool cannot promote receipts across hosts")
     for plan in plans:
@@ -1220,7 +1209,7 @@ def run_pending(plans, store, executors, current_head, timeout, admission):
             except (OSError, ValueError, ET.ParseError) as error:
                 output.append({"id": shard["id"], "failed": str(error)})
         return output
-    with ThreadPoolExecutor(max_workers=len(executors)) as pool:
+    with ThreadPoolExecutor() as pool:
         futures = [pool.submit(work, executor, queue) for executor, queue in zip(executors, queues)]
         for future in futures:
             results.extend(future.result())
@@ -1255,7 +1244,7 @@ def phase_matches_runtime(identity, runtime, inventory, phase_profile=None):
             raise ValueError("A phase build profile was not independently approved")
     else:
         require_fields(build, ("kind", "phase", "profile", "policy_sha256", "admission", "flags", "argv"))
-        expected_flags = ["--jobs", "1", "-Xswiftc", "-disable-batch-mode"]
+        expected_flags = []
         expected = [identity["swift_executable"], "build", *(["--build-tests"] if identity["phase"] == "normal" else []),
                     *identity["flags"], *expected_flags]
         if (build["kind"] != "owned-phase-build-v1" or build["phase"] != identity["phase"]
@@ -1372,7 +1361,6 @@ def validate_phase_command(result, start):
 def validate_phase_memory(value, identity, profile, origin):
     require_fields(value, ("processes", "child", "terminal"))
     record, child, terminal = value["processes"], value["child"], value["terminal"]
-    memory = record.get("resident_memory", {})
     if (origin["authorization"]["role"] != "native_phase" or origin["authorization"]["phase"] != identity["phase"]
             or origin["authorization"]["head"] != origin["tested_head"]
             or record.get("running") is not False or record.get("workspace") != origin["authorization"]["workspace"]
@@ -1380,39 +1368,10 @@ def validate_phase_memory(value, identity, profile, origin):
             or type(terminal.get("exit_code")) is not int or terminal["exit_code"] != 0
             or record.get("root", {}).get("pid") != child["pid"] or not record["root"].get("start")
             or not same_process(record["root"], record.get("processes", {}).get(str(child["pid"])))
-            or memory.get("kind") != "sampled-owned-process-rss-v1" or memory.get("mode") != identity["phase"]
-            or memory.get("phase_profile_sha256") != fingerprint(profile) or memory.get("failure") is not None
-            or memory.get("budget_bytes") != native_runner.phase_resource_limits(profile)["runtime"]
-            or type(memory.get("samples")) is not int or memory["samples"] < 1
-            or type(memory.get("high_water_bytes")) is not int or not 0 <= memory["high_water_bytes"] <= native_runner.phase_resource_limits(profile)["compiler"]
-            or type(memory.get("last_bytes")) is not int or not 0 <= memory["last_bytes"] <= memory["high_water_bytes"]
-            or type(memory.get("helper_samples")) is not int or not 0 <= memory["helper_samples"] <= memory["samples"]
-            or (identity["phase"] == "normal" and memory["helper_samples"] < 1)):
-        raise ValueError("Phase process/image lifecycle or independent RSS budget proof is incomplete")
-    limits = native_runner.phase_resource_limits(profile)
-    if limits["compiler"] != limits["runtime"]:
-        counters = ("compiler_samples", "runtime_samples", "compiler_high_water_bytes", "runtime_high_water_bytes")
-        last_kind = memory.get("last_phase_kind")
-        if (memory.get("phase_limits_kind") != "closed-compiler-runtime-rss-v1"
-                or memory.get("compiler_budget_bytes") != limits["compiler"]
-                or memory.get("admission_peak_bytes") != limits["admission"]
-                or any(type(memory.get(name)) is not int or memory[name] < 0 for name in counters)
-                or memory["compiler_samples"] + memory["runtime_samples"] != memory["samples"]
-                or memory["helper_samples"] > memory["runtime_samples"]
-                or any(memory[kind + "_samples"] == 0 and memory[kind + "_high_water_bytes"] != 0
-                       for kind in ("compiler", "runtime"))
-                or memory["compiler_high_water_bytes"] > limits["compiler"]
-                or memory["runtime_high_water_bytes"] > limits["runtime"]
-                or max(memory["compiler_high_water_bytes"], memory["runtime_high_water_bytes"]) != memory["high_water_bytes"]
-                or last_kind not in ("compiler", "runtime")
-                or memory.get("last_budget_bytes") != limits[last_kind]
-                or memory[last_kind + "_samples"] < 1
-                or memory["last_bytes"] > memory[last_kind + "_high_water_bytes"]
-                or memory["last_bytes"] > limits[last_kind]):
-            raise ValueError("Closed compiler/runtime phase RSS proof is incomplete")
-    elif (memory.get("last_phase_kind") != "runtime"
-            or memory.get("last_budget_bytes") != limits["runtime"]):
-        raise ValueError("Fixed phase final RSS sample budget is inconsistent")
+            or record.get("execution_resources") != "os-toolchain-defaults-v1"
+            or record.get("phase") != identity["phase"]
+            or record.get("phase_profile_sha256") != fingerprint(profile)):
+        raise ValueError("Phase process/image lifecycle proof is incomplete")
     if identity["phase"] == "normal":
         parsed = {}
         for uuid_value, architecture in re.findall(r"UUID: ([0-9A-Fa-f-]{36}) \(([^)]+)\)", identity["image_uuid"]):
@@ -1420,7 +1379,7 @@ def validate_phase_memory(value, identity, profile, origin):
                 raise ValueError("Duplicate normal image architecture")
             parsed[architecture] = uuid_value.upper()
         if not parsed or {"sha256": identity["image_sha256"], "uuid": fingerprint(parsed)} not in record["observed_images"].values():
-            raise ValueError("Normal memory capture did not observe its exact native helper image")
+            raise ValueError("Normal process capture did not observe its exact native helper image")
 
 
 def aggregate(plans, store, normal_bundle, normal_digest, leaks_bundle, leaks_digest):
@@ -1457,7 +1416,7 @@ def require_physical_activation():
 def native_output(command, workspace, environment, descriptors=()):
     return subprocess.check_output(command, cwd=workspace, env=environment,
                                    pass_fds=tuple(descriptors), stderr=subprocess.PIPE,
-                                   text=True, timeout=900 if command[:2] == ["git", "clone"] else 60,
+                                   text=True,
                                    umask=0o077).strip()
 
 
@@ -1548,7 +1507,7 @@ class NativeAuthority:
         if any(one.is_relative_to(two) or two.is_relative_to(one)
                for index, one in enumerate(paths) for two in paths[index + 1:]):
             raise ValueError("Native cache/workspace reservations overlap")
-        if len(self.workers) > 2 or self.config["admission"]["explicit"] > len(self.workers):
+        if not self.workers:
             raise ValueError("Unreserved worker capacity")
         for path in paths:
             legacy.owned_directory(path)
@@ -1563,7 +1522,7 @@ class NativeAuthority:
 
     def snapshot(self, resident=False):
         fields = "pid=,ppid=,pgid=,stat=,lstart=," + ("rss=," if resident else "") + "command="
-        return process_rows(self.output(["ps", *(["-ww"] if resident else []), "-axo", fields]), resident=resident)
+        return process_rows(self.output(["ps", "-ww", "-axo", fields]), resident=resident)
 
     def host(self):
         raw = self.output(["ioreg", "-rd1", "-c", "IOPlatformExpertDevice"])
@@ -1581,63 +1540,8 @@ class NativeAuthority:
     def admission(self, phase=None):
         native_runner.require_diagnostic_custody_clear()
         if phase is not None and self.phase_profile(phase) is None:
-            raise ValueError("Independent phase admission was not approved")
-        bounds = (dict(self.config["admission"]) if phase is None
-                  else native_runner.phase_resource_admission(self.phase_profile(phase)))
-        configured_cpu, cpus, stage = bounds.get("cpu_budget"), None, "configuration"
-        observed = {}
-        try:
-            require_fields(bounds, ("explicit", "cpu_budget", "ram_reserve", "peak_per_worker",
-                                    "disk_reserve", "disk_per_worker", "ram_capacity", "disk_capacity"))
-            stage = "cpu"
-            cpus = int(self.output(["sysctl", "-n", "hw.logicalcpu"]))
-            stage = "ram"
-            memory = self.output(["vm_stat"])
-            size = re.search(r"page size of (\d+) bytes", memory)
-            if not size:
-                raise ValueError("Available memory evidence is missing")
-            pages = []
-            for name in ("Pages free", "Pages inactive", "Pages speculative"):
-                match = re.search(re.escape(name) + r":\s*(\d+)\.", memory)
-                if not match:
-                    raise ValueError("Available memory evidence is incomplete")
-                pages.append(int(match[1]))
-            stage = "bounds"
-            observed["cpu_budget"] = min(positive(bounds["cpu_budget"]), cpus)
-            stage = "ram"
-            observed["ram_available"] = sum(pages) * int(size[1])
-            stage = "disk"
-            observed["disk_available"] = shutil.disk_usage(self.cache).free
-            bounds.update(observed)
-            stage = "decision"
-            worker_limit(**bounds)
-        except (KeyError, OSError, TypeError, ValueError, subprocess.SubprocessError) as error:
-            sample = {**bounds, **{name: observed.get(name) for name in ("cpu_budget", "ram_available", "disk_available")}}
-            record = admission_refusal(sample, configured_cpu, cpus, stage, error)
-            if phase is not None:
-                record["phase"] = phase
-            retained = False
-            try:
-                report = self.cache / "preparation" / str(uuid.uuid4())
-                legacy.owned_directory(report)
-                durable_json(report / "resource-admission.json", record)
-                mode = self.environment.get("ELITE_RECOVERABLE_REQUEST_MODE")
-                durable_json(report / "launch.json", {"head": self.policy["approved_head"],
-                    "mode": mode if mode in MODES else None,
-                    "stage": "admission", "status": "not-launched", "authorization": self.authorization()})
-                retained = True
-            except (KeyError, OSError, TypeError, ValueError):
-                pass  # Retention failure cannot replace the original admission refusal.
-            try:
-                message = json.dumps({"resource_admission": record, "raw_attempt_retained": retained}, sort_keys=True)
-                legacy.progress(message)
-                if self.environment.get("GITHUB_STEP_SUMMARY"):
-                    with Path(self.environment["GITHUB_STEP_SUMMARY"]).open("a") as summary:
-                        summary.write("## Resource admission refused\n\n```json\n" + message + "\n```\n")
-            except (OSError, ValueError):
-                pass  # A disconnected report must not change the refusal or trigger another sample.
-            raise
-        return bounds
+            raise ValueError("Independent phase authorization is missing")
+        return {}
 
     def environment_for(self, mode):
         value = self.execution_environment()
@@ -1724,16 +1628,12 @@ def validate_vmmap_policy(config):
             or value["target_binding"] != "single-owned-prepared-image-v1"
             or value["accounting"] != "controller-worker-vmmap-support-union-v1"
             or any(type(value[key]) is not int or value[key] != expected for key, expected in (
-                ("trigger_worker_rss_bytes", 1879048192), ("max_captures", 1), ("capture_seconds", 10),
-                ("cleanup_seconds", 2), ("output_limit_bytes", 4 * 1024 * 1024), ("cohort_count", 16)))
+                ("max_captures", 1), ("cohort_count", 16)))
             or any(not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest) for digest in (
                 value["tool"]["sha256"], value["deployment"]["sha256"], value["cohort_methods_sha256"],
                 value["game_test_inputs_sha256"]))
             or not Path(value["deployment"]["path"]).is_absolute()
-            or type(config["admission"]["peak_per_worker"]) is not int
-            or type(config["admission"]["ram_reserve"]) is not int
-            or config["admission"]["peak_per_worker"] != 2415919104
-            or config["admission"]["ram_reserve"] != 2147483648):
+):
         raise ValueError("Unknown or weakened vmmap diagnostic contract")
     return value
 
@@ -1808,7 +1708,7 @@ class _VmmapCapability:
         self.check_static()
 
     def check_static(self):
-        if self.phase != "timed" or self.clock() >= self.deadline:
+        if self.phase != "timed":
             raise ValueError("Diagnostic capability expired or entered custody-only phase")
         if (os.getpid() != self.controller["pid"] or str(Path(sys.executable).resolve()) != self.controller["image"]
                 or legacy.digest(Path(self.controller["image"])) != self.controller["image_sha256"]
@@ -1823,8 +1723,6 @@ class _VmmapCapability:
         self.authority.check_session("execute")
         if self.authority.budget_state()[1]["used"] != 1:
             raise ValueError("Capability cannot consume or replace a launch allowance")
-        if self.clock() >= self.deadline:
-            raise ValueError("Capability validation exhausted the original deadline")
 
     def require_current(self):
         self.check_static()
@@ -1847,8 +1745,6 @@ class _VmmapCapability:
             registry = self.require_current()
         registry["records"][self.nonce] = record
         registry["generation"] += 1
-        if len(json.dumps(registry, indent=2, allow_nan=False).encode()) + 1 > 900000:
-            raise ValueError("Shared custody registry capacity reached")
         durable_json(native_runner.diagnostic_custody_root() / "registry.json", registry)
         self.active_sha = native_runner.custody_digest(record)
 
@@ -1918,7 +1814,7 @@ def validate_local_session(session):
             or str(uuid.UUID(session["id"])) != session["id"]
             or not re.fullmatch(r"[0-9a-f]{40}", session["head"])
             or not re.fullmatch(r"[0-9a-f]{64}", session["policy_sha256"])
-            or session["mode"] not in MODES or session["worker"] != "one"
+            or session["mode"] not in MODES or not isinstance(session["worker"],str) or not session["worker"]
             or session["stage"] not in ("prepare", "execute", "validate")
             or type(session["max_launches"]) is not int
             or not 0 <= session["max_launches"] <= 256):
@@ -2019,14 +1915,8 @@ class LocalAuthority(NativeAuthority):
         self.physical_home = Path(pwd.getpwuid(os.getuid()).pw_dir)
         if self.config.get("legacy_cache") != str(self.physical_home / "Library/EliteNativeCI/sanitizer-checkpoints"):
             raise ValueError("Local modes must share the existing physical executor lease")
-        if (set(self.config.get("workers", {})) != {"one"}
-                or self.config.get("admission", {}).get("explicit") != 1
-                or self.config.get("admission", {}).get("cpu_budget") != 1):
-            raise ValueError("Local sanitizers reserve exactly one serial worker")
-        bounds = self.config["admission"]
-        require_fields(bounds, ("explicit", "cpu_budget", "ram_capacity", "ram_reserve", "peak_per_worker",
-                                "disk_capacity", "disk_reserve", "disk_per_worker"))
-        worker_limit(**bounds, ram_available=bounds["ram_capacity"], disk_available=bounds["disk_capacity"])
+        if not isinstance(self.config.get('workers'),dict) or not self.config['workers']:
+            raise ValueError('Local policy needs authorized worker identities')
         spaces = [self.root, *(Path(self.config[k]) for k in ("cache", "legacy_cache")),
                   *(Path(p) for p in self.config["workers"].values())]
         if any(control.is_relative_to(space) or space.is_relative_to(control.parent)
@@ -2059,6 +1949,8 @@ class LocalAuthority(NativeAuthority):
         local_control(self.policy_path)
         session = local_control(self.session_path)
         validate_local_session(session)
+        if session['worker'] not in self.config['workers']:
+            raise ValueError('Local session names an unauthorized worker')
         if (not re.fullmatch(r"[0-9a-f]{64}", self.session_digest or "")
                 or legacy.digest(self.session_path) != self.session_digest
                 or legacy.digest(self.policy_path) != self.policy_sha256
@@ -2183,18 +2075,12 @@ def writable_private_tree(root):
 
 
 def sanitizer_build_flags(mode):
-    """Keep ASAN compilation to one build job without combining frontend batches."""
-    flags = ["--scratch-path", ".build/tsan" if mode == "thread" else ".build/asan", "--sanitize=" + mode]
-    if mode == "address":
-        flags += ["--jobs", "1", "-Xswiftc", "-disable-batch-mode"]
-    return flags
+    """Keep sanitizer mode and isolated scratch identity; use default compiler scheduling."""
+    return ["--scratch-path", ".build/tsan" if mode == "thread" else ".build/asan", "--sanitize=" + mode]
 
 
 def local_sanitizer_flags(mode):
-    flags = sanitizer_build_flags(mode)
-    if mode == "thread":
-        flags += ["--jobs", "1", "-Xswiftc", "-disable-batch-mode"]
-    return flags
+    return sanitizer_build_flags(mode)
 
 
 def frozen_build_content(build, destination):
@@ -2228,9 +2114,6 @@ class NativeBuilder:
         source = self.authority.root / runtime["flags"][1]
         entries = build_entries(source)
         size = sum((source / name).stat().st_size for name, entry in entries.items() if "sha256" in entry)
-        budget = self.authority.admission()
-        if budget["disk_available"] - budget["disk_reserve"] < size:
-            raise ValueError("Disk reserve blocks durable build capture")
         copy_build_tree(source, destination / "scratch")
         if build_entries(destination / "scratch") != entries:
             raise ValueError("Durable scratch copy changed")
@@ -2281,8 +2164,6 @@ class NativeBuilder:
 
     def build_only(self, mode, timeout):
         """A separate GitHub step records an owned build checkpoint before discovery."""
-        if timeout > SHARD_MAX_SECONDS:
-            raise ValueError("Preparation exceeds the reviewed two-hour bound")
         destination = self.authority.cache / "build-stage" / self.authority.policy["approved_head"] / mode
         flags = self.authority.build_flags(mode)
         with self.preparation_claim():
@@ -2418,11 +2299,8 @@ class NativeBuilder:
         self.authority.output(["git", "checkout", "--detach", build["tested_head"]], workspace)
         scratch = Path(build["runtime"]["flags"][1])
         legacy.owned_directory((workspace / scratch).parent)
-        budget = self.authority.admission()
         size = sum((bundle / "scratch" / name).stat().st_size for name, entry in build["scratch"].items()
                    if "sha256" in entry)
-        if budget["disk_available"] - budget["disk_reserve"] < size:
-            raise ValueError("Disk reserve blocks private scratch restoration")
         copy_build_tree(bundle / "scratch", workspace / scratch)
         writable_private_tree(workspace / scratch)
         image = workspace / build["image_relative"]
@@ -2514,10 +2392,10 @@ class _VmmapOwners:
 class _VmmapChild:
     """Two fair bounded pipe reads per tick; no communicate/wait or unbounded buffer."""
     def __init__(self, role, argv, workspace, environment, descriptors, output, limit):
-        self.role, self.argv, self.output, self.limit = role, list(argv), output, limit
+        self.role, self.argv, self.output, self.limit = role, list(argv), output, None
         self.total, self.buffers, self.streams = 0, {}, {}
         self.pty, self.code, self.closed = None, None, False
-        self.clock, self.deadline = time.monotonic, float("inf")
+        self.clock, self.deadline = time.monotonic, None
         if role == "worker":
             master, slave = os.openpty()
             tty.setraw(slave)
@@ -2542,17 +2420,17 @@ class _VmmapChild:
         self.buffers = {name: bytearray() for name in self.streams}
 
     def poll(self):
-        if self.code is None and self.clock() < self.deadline:
+        if self.code is None:
             self.code = self.process.poll()  # WNOHANG reaps only this direct child.
         return self.code
 
     def drain(self):
-        if not self.open_streams or self.clock() >= self.deadline:
+        if not self.open_streams:
             return
         ready, _, _ = select.select([self.streams[key] for key in self.open_streams], [], [], 0)
         for name in list(self.open_streams):
             fd = self.streams[name]
-            if fd not in ready or self.clock() >= self.deadline:
+            if fd not in ready:
                 continue
             try:
                 data = os.read(fd, 16384)
@@ -2567,12 +2445,6 @@ class _VmmapChild:
                 self.open_streams.remove(name)
                 continue
             self.total += len(data)
-            if self.limit is not None and self.total > self.limit:
-                available = max(0, len(data) - (self.total - self.limit))
-                if self.output is not None:
-                    self.output[name].write(data[:available])
-                    self.output[name].flush()
-                raise ValueError("Diagnostic combined output cap")
             if self.output is None:
                 self.buffers[name].extend(data)
             else:
@@ -2608,16 +2480,12 @@ class VmmapDiagnostic:
         self.last_sample_started, self.utility_finished = None, None
         self.outputs, self.handlers = {}, {}
         self.failed_output = set()
-        self.memory = {"kind": "sampled-owned-diagnostic-rss-v1", "budget_bytes": 2415919104,
-                       "worker_trigger_bytes": 1879048192, "poll_wait_seconds": 0.1, "samples": 0,
+        self.memory = {"kind": "sampled-owned-diagnostic-rss-v1", "budget_bytes": None,
+                       "worker_trigger_bytes": None, "poll_wait_seconds": 0.1, "samples": 0,
                        "high_water_bytes": 0, "last_bytes": None, "roles": None, "failure": None}
 
     def persist(self, critical=False):
         self.record["identities"] = [dict(self.owners.known[pid]) for pid in sorted(self.owners.known)]
-        # Leave bounded space for UNKNOWN and doubled terminal identities before any new spawn.
-        size = len(json.dumps(self.record, indent=2, allow_nan=False).encode()) + 1
-        if size > (700000 if critical else 250000):
-            raise ValueError("Diagnostic custody evidence capacity reached")
         self.cap.publish(self.record)
         durable_json(self.attempt / "processes.json", {"schema": SCHEMA, "workspace": str(self.workspace),
             "controller": self.owner, "root": None if self.worker is None else {"pid": self.worker.pid},
@@ -2626,14 +2494,12 @@ class VmmapDiagnostic:
 
     def launch(self, role, argv, output=None, critical=False):
         self.cap.require_current()
-        if self.clock() >= self.deadline - (0 if critical else 2):
-            raise ValueError("No time remains for bounded capture and cleanup")
         intent = {"role": role, "argv": list(argv), "pid": None, "state": "planned"}
         self.record["intents"].append(intent)
         self.persist(critical)
         try:
             child = self.spawn(role, argv, self.workspace, self.environment, self.descriptors, output,
-                               None if role == "worker" else self.spec["output_limit_bytes"])
+                               None)
         except OSError:
             # A constructor may fail after spawning. Keep its planned intent unresolved.
             self.persist(critical)
@@ -2650,8 +2516,6 @@ class VmmapDiagnostic:
 
     def drain(self, cleanup=False):
         for child in self.children:
-            if self.clock() >= self.deadline:
-                return
             if child.pid not in self.failed_output:
                 try:
                     child.drain()
@@ -2668,8 +2532,6 @@ class VmmapDiagnostic:
 
     def sample(self, critical=False):
         now = self.clock()
-        if now >= self.deadline:
-            return False
         if self.sampler is None and now >= self.sample_due:
             self.sampler = self.launch("support", ["/bin/ps", "-axo", "pid=,ppid=,pgid=,stat=,lstart=,rss=,command="],
                                        critical=critical)
@@ -2689,10 +2551,6 @@ class VmmapDiagnostic:
             "union_bytes": total, "roles": roles, "status": "last-verified"}
         self.sample_due = self.clock() + 0.1
         self.persist(critical)
-        if total > self.memory["budget_bytes"]:
-            self.memory["failure"] = "owned diagnostic union exceeds budget"
-            if not critical:
-                raise ValueError(self.memory["failure"])
         return True
 
     def tool_identity(self):
@@ -2705,14 +2563,14 @@ class VmmapDiagnostic:
     def target_identity(self, expected=None):
         launch = self.worker.argv if self.worker is not None else []
         flags = self.runtime["flags"]
-        prefix = [launch[0], "test", *flags, "--skip-build", "--no-parallel",
+        prefix = [launch[0], "test", *flags, "--skip-build",
                   "--xunit-output", str(self.attempt / "tests.xml"), "--filter"] if launch else []
         if (not launch or len(launch) != len(prefix) + 1 or launch[:-1] != prefix
                 or any(not arg or any(character.isspace() for character in arg)
                        for arg in [*launch, str(self.image)])):
             raise ValueError("Unsupported diagnostic worker command/report shape")
         # SwiftPM forwards these exact options, moves filter before xunit, and names its own report.
-        forwarded = [*flags, "--skip-build", "--no-parallel", "--filter", launch[-1],
+        forwarded = [*flags, "--skip-build", "--filter", launch[-1],
                      "--xunit-output", str(self.attempt / "tests-swift-testing.xml")]
         candidates = []
         for pid, row in self.live.items():
@@ -2746,8 +2604,6 @@ class VmmapDiagnostic:
 
     def begin_capture(self):
         self.triggered = True  # No retry, including a failed binding/spawn.
-        if self.clock() >= self.deadline - 2:
-            raise ValueError("Capture cannot reserve cleanup within original deadline")
         self.target = self.target_identity()
         self.record["target"] = dict(self.target)
         self.tool_identity()
@@ -2755,13 +2611,13 @@ class VmmapDiagnostic:
             fd = os.open(self.attempt / ("vmmap." + name), os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
             self.outputs[name] = os.fdopen(fd, "wb")
         argv = ["/usr/bin/vmmap", "-summary", "-w", str(self.target["pid"])]
-        self.capture_deadline = min(self.clock() + 10, self.deadline - 2)
+        self.capture_deadline = None
         self.utility = self.launch("vmmap", argv, self.outputs)
         self.events.append({"event": "target-before", "identity": self.target, "time": self.clock()})
 
     def cleanup(self):
-        """All observations/signals/reaps end at the original cohort deadline."""
-        end = min(self.deadline, self.clock() + 2)
+        """After terminal or explicit cancellation, resolve owned identities before release."""
+        end = self.clock() + 2
         term_end = min(end, self.clock() + 1)
         sent = set()
         while self.clock() < end:
@@ -2841,7 +2697,7 @@ class VmmapDiagnostic:
         validate_vmmap_deployment(self.authority, self.runtime)
         self.environment = child_environment(self.attempt, environment)
         self.descriptors = tuple(descriptors)
-        self.deadline = self.clock() + timeout
+        self.deadline = None
         controller = {"pid": self.owner["pid"], "start": self.owner["start"], "command": self.owner["command"],
             "image": str(Path(sys.executable).resolve()), "image_sha256": self.owner["image_sha256"],
             "source_sha256": legacy.digest(self.authority.root / "Tools/CI/recoverable_shards.py")}
@@ -2862,16 +2718,14 @@ class VmmapDiagnostic:
                 signal.signal(signum, lambda number, frame: setattr(self, "cancelled", True))
             self.worker = self.launch("worker", command, {"stdout": log})
             durable_json(self.attempt / "child.json", {"pid": self.worker.pid, "command": command})
-            while self.clock() < self.deadline - 2:
+            while True:
                 if self.cancelled:
                     raise ValueError("Diagnostic cancelled; bounded cleanup required")
                 self.drain()
                 fresh = self.sample()
-                if fresh and not self.triggered and self.record["last_verified"]["worker_bytes"] >= 1879048192:
+                if fresh and not self.triggered and any("swiftpm-testing-helper" in row["command"] for row in self.live.values()):
                     self.begin_capture()
                 if self.utility is not None and not self.capture_complete:
-                    if self.clock() >= self.capture_deadline:
-                        raise ValueError("Diagnostic capture deadline")
                     if self.utility.poll() is not None and not self.utility.open_streams:
                         if (self.utility.poll() != 0 or self.utility.total == 0
                                 or (self.attempt / "vmmap.stdout").stat().st_size == 0):
@@ -2896,8 +2750,7 @@ class VmmapDiagnostic:
             self.errors.append(type(error).__name__ + ": " + str(error))
         # One cleanup budget only, including after capture, cancellation or sampling failure.
         try:
-            if self.clock() < self.deadline:
-                clean = self.cleanup()
+            clean = self.cleanup()
         except BaseException as cleanup_error:
             self.errors.append("cleanup: " + type(cleanup_error).__name__)
         if clean:
@@ -2941,43 +2794,19 @@ class NativeMonitor:
         self.bound_callback = None
         self.stop, self.thread = threading.Event(), None
         self.memory = None
-        self.phase_limits = None
-        profile = authority.phase_profile(phase) if phase is not None else None
-        if phase is not None and profile is None:
-            raise ValueError("Phase RSS monitoring requires its own approved profile")
-        if profile is not None or (expected_runtime is not None and (expected_runtime["mode"] == "address" or (
-                expected_runtime["mode"] == "thread" and isinstance(authority, LocalAuthority)
-                and expected_runtime["environment"].get(LOCAL_POLICY_ENV) == hashlib.sha256(
-                    authority.policy_sha256.encode()).hexdigest()))):
-            budget = (profile["admission"] if profile is not None else authority.config["admission"])["peak_per_worker"]
-            if type(budget) is not int or budget <= 0:
-                raise ValueError("Sanitizer resident budget must be positive integer bytes")
-            self.memory = {"kind": "sampled-owned-process-rss-v1", "budget_bytes": budget,
-                           "mode": phase if profile is not None else expected_runtime["mode"],
-                           "poll_wait_seconds": 0.1, "samples": 0, "helper_samples": 0,
-                           "last_bytes": 0, "high_water_bytes": 0, "failure": None,
-                           "authority": "sampled RSS sum; not physical footprint or an OS hard limit"}
-            if profile is not None:
-                self.memory["phase_profile_sha256"] = fingerprint(profile)
-                self.phase_limits = native_runner.phase_resource_limits(profile)
-                self.memory["budget_bytes"] = self.phase_limits["runtime"]
-                self.memory["last_budget_bytes"] = self.phase_limits["runtime"]
-                self.memory["last_phase_kind"] = "runtime"
-                if self.phase_limits["compiler"] != self.phase_limits["runtime"]:
-                    self.memory.update(phase_limits_kind="closed-compiler-runtime-rss-v1",
-                        compiler_budget_bytes=self.phase_limits["compiler"],
-                        admission_peak_bytes=self.phase_limits["admission"],
-                        compiler_samples=0, runtime_samples=0,
-                        compiler_high_water_bytes=0, runtime_high_water_bytes=0,
-                        last_budget_bytes=self.phase_limits["runtime"], last_phase_kind="runtime")
+        self.phase = phase
+        self.profile = authority.phase_profile(phase) if phase is not None else None
+        if phase is not None and self.profile is None:
+            raise ValueError("Phase observation requires its independently authorized profile")
 
     def persist(self):
         record = {"schema": SCHEMA, "workspace": str(self.workspace), "controller": self.controller,
                   "root": self.root_identity, "running": not self.stop.is_set(),
                   "observed_images": self.observed,
-                  "processes": {str(pid): row for pid, row in self.known.items()}}
-        if self.memory is not None:
-            record["resident_memory"] = dict(self.memory)
+                  "processes": {str(pid): row for pid, row in self.known.items()},
+                  "execution_resources": "os-toolchain-defaults-v1"}
+        if self.profile is not None:
+            record.update(phase=self.phase, phase_profile_sha256=fingerprint(self.profile))
         durable_json(self.attempt / "processes.json", record)
 
     def memory_failure(self, reason):
@@ -2989,44 +2818,8 @@ class NativeMonitor:
             legacy.progress(json.dumps({label.lower() + "_resident_memory_refused": self.memory}, sort_keys=True))
 
     def sample_memory(self, live, rows=None):
-        if self.memory is None or not live:
-            return
-        sample = dict(live)
-        dynamic = self.memory.get("phase_limits_kind") == "closed-compiler-runtime-rss-v1"
-        if self.phase_limits is not None:
-            # Reuse this same snapshot for the observer and its direct children.
-            # They enter aggregate RSS and the shared ancestor/overlap checks, but
-            # do not acquire cleanup ownership merely by appearing in the sample.
-            pid = self.controller["pid"] if self.controller is not None else None
-            if pid is None or rows is None or not same_process(self.controller, rows.get(pid)):
-                self.memory_failure("incomplete observer resident sample")
-                return
-            sample.update({child: row for child, row in rows.items()
-                           if child == pid or row["parent"] == pid})
-        if any(type(row.get("rss_bytes")) is not int or row["rss_bytes"] < 0 for row in sample.values()):
-            self.memory_failure("incomplete resident sample")
-            return
-        total = sum(row["rss_bytes"] for row in sample.values())
-        budget = self.memory["budget_bytes"]
-        if dynamic:
-            guard = native_runner.normal_phase_guard()
-            adapted = {pid: {**row, "rss": row["rss_bytes"]} for pid, row in sample.items()}
-            leader = self.root_identity["pid"] if self.root_identity else None
-            observer = self.controller["pid"] if self.controller else None
-            limit = guard.normal_ci_sample_rss_limit(leader, set(adapted), adapted, observer)
-            kind = "compiler" if limit == guard.NORMAL_COMPILER_RSS else "runtime"
-            budget = self.phase_limits[kind]
-            self.memory[kind + "_samples"] += 1
-            self.memory[kind + "_high_water_bytes"] = max(self.memory[kind + "_high_water_bytes"], total)
-            self.memory["last_budget_bytes"] = budget
-            self.memory["last_phase_kind"] = kind
-        self.memory["samples"] += 1
-        self.memory["helper_samples"] += int(any(
-            "swiftpm-testing-helper" in row["command"] for row in live.values()))
-        self.memory["last_bytes"] = total
-        self.memory["high_water_bytes"] = max(self.memory["high_water_bytes"], total)
-        if total > budget:
-            self.memory_failure("owned process tree exceeds budget")
+        """Compatibility hook: process identity is observed without RSS enforcement."""
+        return
 
     def cleanup_memory_failure(self, live):
         if self.memory is not None and self.memory["failure"] is not None:
@@ -3037,7 +2830,7 @@ class NativeMonitor:
 
     def observe(self):
         try:
-            rows = self.authority.snapshot(resident=True) if self.memory is not None else self.authority.snapshot()
+            rows = self.authority.snapshot()
         except Exception as error:
             if self.memory is not None:
                 self.memory_failure("snapshot " + type(error).__name__)
@@ -3386,16 +3179,14 @@ def owned_active_artifact_job(authority, run, expected_run, api):
             or agent.get("agentName") != name or agent.get("workFolder") != "_work"
             or agent.get("gitHubUrl") != "https://github.com/" + native_runner.REPOSITORY):
         return False
-    # The existing callback bounds each request to 60s. Refuse a page arriving after this window.
-    deadline, total, seen, active = time.monotonic() + 120, None, set(), []
-    for page in range(1, 17):
-        if time.monotonic() >= deadline:
-            return False
+    # Read the complete actual job inventory without a project page/time quota.
+    total,seen,active,page=None,set(),[],1
+    while True:
         result = api(f"repos/{native_runner.REPOSITORY}/actions/runs/{expected_run}/attempts/{attempt}/jobs?per_page=100&page={page}")
-        if time.monotonic() >= deadline or not isinstance(result, dict):
+        if not isinstance(result, dict):
             return False
         count, jobs = result.get("total_count"), result.get("jobs")
-        if (type(count) is not int or not 0 <= count <= 1600 or not isinstance(jobs, list)
+        if (type(count) is not int or count < 0 or not isinstance(jobs, list)
                 or (total is not None and count != total)):
             return False
         total = count
@@ -3418,7 +3209,7 @@ def owned_active_artifact_job(authority, run, expected_run, api):
         if len(seen) == total:
             native_runner.require_owned_activation_file(registration)
             return len(active) == 1 and registration.read_bytes() == raw
-    return False
+        page += 1
 
 
 def artifact_run_active(authority, run, expected_run, api):
@@ -3474,7 +3265,7 @@ class GitHubArtifacts:
         if not re.fullmatch(r"[1-9][0-9]*", self.run):
             raise ValueError("A trusted workflow run is required")
         self.api = api or (lambda path: json.loads(subprocess.check_output(
-            ["gh", "api", path], env=self.gh_environment(), stderr=subprocess.PIPE, timeout=60)))
+            ["gh", "api", path], env=self.gh_environment(), stderr=subprocess.PIPE)))
         self.download = download or self.download_archive
         run = self.api(f"repos/{native_runner.REPOSITORY}/actions/runs/{self.run}")
         require_artifact_run_provenance(authority, run, self.run, self.api)
@@ -3489,7 +3280,7 @@ class GitHubArtifacts:
     def download_archive(self, artifact, path):
         with path.open("xb") as stream:
             subprocess.run(["gh", "api", f"repos/{native_runner.REPOSITORY}/actions/artifacts/{artifact['id']}/zip"],
-                           env=self.gh_environment(), stdout=stream, stderr=subprocess.PIPE, check=True, timeout=900)
+                           env=self.gh_environment(), stdout=stream, stderr=subprocess.PIPE, check=True)
             stream.flush()
             os.fsync(stream.fileno())
 
@@ -3521,19 +3312,15 @@ class GitHubArtifacts:
         legacy.owned_directory(root)
         archive, destination = root / "download.zip", root / "bundle"
         size = artifact.get("size_in_bytes")
-        reserve = self.authority.config["admission"]["disk_reserve"]
-        if type(size) is not int or size <= 0 or shutil.disk_usage(self.authority.cache).free - reserve < size:
-            raise ValueError("Disk reserve blocks artifact download")
+        if type(size) is not int or size <= 0:
+            raise ValueError("Artifact size metadata is invalid")
         self.download(artifact, archive)
-        limit = self.authority.config["admission"]["disk_per_worker"]
-        if archive.stat().st_size > limit or legacy.digest(archive) != checksum[7:]:
+        if legacy.digest(archive) != checksum[7:]:
             raise ValueError("Artifact archive differs from external GitHub digest or disk budget")
         legacy.owned_directory(destination)
         with zipfile.ZipFile(archive) as zipped:
             members, names = zipped.infolist(), set()
             expanded = sum(member.file_size for member in members)
-            if expanded > limit or shutil.disk_usage(self.authority.cache).free - reserve < expanded:
-                raise ValueError("Artifact expansion exceeds reserved disk budget")
             for member in members:
                 path = Path(member.filename)
                 key = member.filename.rstrip("/").casefold()
@@ -3588,7 +3375,7 @@ def workflow_matrix(items, plans):
 def workflow_manifest(plans, workers, store, head):
     if not plans or len(plans) > 2 or len({plan["runtime"]["mode"] for plan in plans}) != len(plans):
         raise ValueError("Workflow requires unique nonempty mode plans")
-    if (not workers or not set(workers) <= {"one", "two"} or len(set(workers)) != len(workers)
+    if (not workers or len(set(workers)) != len(workers)
             or not re.fullmatch(r"[0-9a-f]{40}", head)):
         raise ValueError("Workflow uses only reviewed worker instances")
     pending, expected, inventories, hosts, units = [], [], [], set(), []
@@ -3620,18 +3407,17 @@ def report_progress(plan, store, state, current=None, packed_target=None):
     record = {"mode": plan["runtime"]["mode"], "completed": complete, "total": len(plan["shards"]),
               "state": state, "current": current["id"] if current else None,
               "suites": suites, "max_runtime_seconds": SHARD_MAX_SECONDS,
-              "indivisible_over_target_ids": bool(current and len(current["methods"]) > (
-                  packed_target if packed_target is not None else
-                  ASAN_PACKED_ID_TARGET if plan["runtime"]["mode"] == "address" else PACKED_ID_TARGET))}
+              "indivisible_over_target_ids": bool(current and packed_target is not None
+                                                  and len(current["methods"]) > packed_target)}
     legacy.progress(json.dumps(record, sort_keys=True))
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with Path(os.environ["GITHUB_STEP_SUMMARY"]).open("a") as summary:
             summary.write("## " + record["mode"] + ": " + str(complete) + "/" + str(record["total"]) + " complete\n\n")
-            summary.write(state + "; current " + (record["current"] or "none") + ". Maximum native execution: 7200 seconds.\n\n")
+            summary.write(state + "; current " + (record["current"] or "none") + ". Native execution uses OS/toolchain defaults.\n\n")
             if suites:
                 summary.write("Whole cohorts: " + ", ".join(suites) + ".\n")
             if record["indivisible_over_target_ids"]:
-                summary.write("Indivisible suite/shared-process cohort exceeds 64 IDs. No method split or internal checkpoint is claimed. Timeout retains raw failure and blocks quality.\n")
+                summary.write("Indivisible suite/shared-process cohort exceeds the requested planning target; the complete cohort is preserved.\n")
     return record
 
 
@@ -3730,13 +3516,10 @@ def verify_owned_local_components(authority, anchor):
                 or activation.get("schema") != SCHEMA or type(activation.get("schema")) is not int
                 or config["host"] != authority.config["host"] or config["admission"] != entry["admission"]
                 or config["legacy_cache"] != authority.config["legacy_cache"]
-                or set(config["workers"]) != {"one"} or config["admission"]["explicit"] != 1
-                or config["admission"]["cpu_budget"] != 1):
+                or not config["workers"]):
             raise ValueError("Original local policy/source/mode/allocation differs")
         if set(config) - {"schema", "host", "cache", "legacy_cache", "workers", "admission", "planning"}:
             raise ValueError("Original local profile has unknown controls")
-        worker_limit(**config["admission"], ram_available=config["admission"]["ram_capacity"],
-                     disk_available=config["admission"]["disk_capacity"])
         positive(activation["expires_at"])
         for name, digest in activation["sources"].items():
             if name not in ("native_runner.py", "recoverable_shards.py", "sanitizer_checkpoints.py",
@@ -3754,7 +3537,7 @@ def verify_owned_local_components(authority, anchor):
                 or authority.output(["git", "rev-parse", binding["original"]["head"] + "^{tree}"], source_root) != binding["original"]["tree"]):
             raise ValueError("Original source checkout/tree is no longer clean committed H")
         cache, worker = owned_bridge_path(entry["cache"]), owned_bridge_path(entry["worker"])
-        if (str(cache) != config["cache"] or str(worker) != config["workers"]["one"] or not cache.is_dir()
+        if (str(cache) != config["cache"] or str(worker) not in config["workers"].values() or not cache.is_dir()
                 or any(a.is_relative_to(b) or b.is_relative_to(a)
                        for a in (source_root, cache, worker) for b in ci_spaces)
                 or any(a.is_relative_to(b) or b.is_relative_to(a) for a in (cache, worker) for b in original_spaces)):
@@ -3770,7 +3553,6 @@ def verify_owned_local_components(authority, anchor):
                 or fingerprint(plan["inventory"]) != activation["inventory_sha256"]
                 or len(plan["inventory"]) != activation["inventory_count"]
                 or len(plan["shards"]) != activation["shard_count"]
-                or any(len(row["methods"]) > LOCAL_PACKED_ID_TARGET and len(row["atoms"]) != 1 for row in plan["shards"])
                 or any(runtime[key] != anchor["runtime"][key] for key in ("toolchain", "sdk", "host", "os", "architecture", "opt_in_policy"))):
             raise ValueError("Original mode's full source/dependency/inventory/profile/runtime changed")
         parent = dict(activation["environment"])
@@ -3816,6 +3598,7 @@ def verify_owned_local_components(authority, anchor):
             authorization = trusted_json(attempt / "authorization.json", receipt["outputs"]["authorization.json"])
             if (authorization["session"]["expires_at"] > activation["expires_at"]
                     or authorization["workspace"] != str(source_root)
+                    or config['workers'].get(authorization['session']['worker']) != str(worker)
                     or authorization["execution_policy_sha256"] != execution_policy_digest(config)
                     or authorization["authorized_at"] >= activation["expires_at"]):
                 raise ValueError("Original historical local authority was invalid at native execution")
@@ -3858,8 +3641,6 @@ class NativeWorkflow:
             plan = validate_plan(trusted_json(bundle / item["path"], item["sha256"]))
             if plan["runtime"]["mode"] != mode:
                 raise ValueError("Workflow plan mode changed")
-            if any(len(row["methods"]) > PACKED_ID_TARGET and len(row["atoms"]) != 1 for row in plan["shards"]):
-                raise ValueError("Workflow shard packed more than sixty-four IDs across atomic units")
             plans.append(plan)
         expected = workflow_manifest(plans, sorted(self.authority.workers), self.store,
                                      self.authority.policy["approved_head"])
@@ -3880,9 +3661,6 @@ class NativeWorkflow:
                 continue
             legacy.owned_directory(destination.parent)
             size = sum(path.stat().st_size for path in source.rglob("*") if path.is_file())
-            budget = self.authority.admission()
-            if budget["disk_available"] - budget["disk_reserve"] < size:
-                raise ValueError("Disk reserve blocks frozen mode restoration")
             stage = destination.with_name(mode + ".restore-" + str(uuid.uuid4()))
             shutil.copytree(source, stage)
             writable_private_tree(stage)
@@ -4252,8 +4030,6 @@ def verify_local_plan(authority, plan, digest=None):
                 authority.policy_sha256.encode()).hexdigest()
             or (digest is not None and digest != authority.session["plan_sha256"])):
         raise ValueError("Local plan differs from its mode/source/profile/full-inventory approval")
-    if any(len(row["methods"]) > LOCAL_PACKED_ID_TARGET and len(row["atoms"]) != 1 for row in plan["shards"]):
-        raise ValueError("Local sanitizer packing exceeds its process memory profile")
     if authority.session["stage"] == "execute" and not set(authority.session["shards"]) <= {row["id"] for row in plan["shards"]}:
         raise ValueError("Local assigned shards are outside the exact full plan")
 
@@ -4281,16 +4057,8 @@ def local_component_content(plan, digest, store, head, policy_sha256, admission,
                 or processes.get("root", {}).get("pid") != child["pid"]
                 or not processes.get("root", {}).get("start")):
             raise ValueError("Local component process/image terminal proof is incomplete")
-        memory = processes.get("resident_memory", {})
-        if (memory.get("kind") != "sampled-owned-process-rss-v1" or memory.get("failure") is not None
-                or memory.get("mode") != plan["runtime"]["mode"]
-                or type(memory.get("helper_samples")) is not int or memory["helper_samples"] < 1
-                or type(memory.get("samples")) is not int or memory["samples"] < memory["helper_samples"]
-                or type(memory.get("high_water_bytes")) is not int or memory["high_water_bytes"] < 0
-                or memory.get("budget_bytes") != admission["peak_per_worker"]
-                or memory["high_water_bytes"] > memory["budget_bytes"]):
-            raise ValueError("Local sanitizer component lacks successful mode-specific resident-budget evidence")
-        maxima.append(memory["high_water_bytes"])
+        if processes.get("execution_resources") != "os-toolchain-defaults-v1":
+            raise ValueError("Local component execution resource policy differs")
         receipts[shard["id"]] = {"path": str(attempt), "sha256": legacy.digest(attempt / "result.json")}
         actual.extend(receipt["identity"]["methods"])
     if Counter(actual) != Counter(plan["inventory"]):
@@ -4311,12 +4079,12 @@ def local_component(authority, plan, digest, store, output):
     if not output.is_absolute() or output != output.resolve() or output.is_relative_to(authority.root) or output.exists():
         raise ValueError("Local component output must be fresh, physical and outside source")
     verify_local_plan(authority, plan, digest)
-    executor = NativeExecutor(authority, "one")
+    executor = NativeExecutor(authority,authority.session["worker"])
     executor.verify(plan["runtime"])
     if executor.unknown_live_helpers():
         raise ValueError("Unknown live native helpers block local component qualification")
     result = local_component_content(plan, digest, store, authority.policy["approved_head"],
-                                     authority.policy_sha256, authority.config["admission"], authority.workers["one"])
+                                     authority.policy_sha256, authority.config["admission"], authority.workers[authority.session["worker"]])
     authority.check_session("validate")
     if output.exists():
         raise ValueError("Local component output already exists")
@@ -4332,8 +4100,7 @@ def local_command(args):
     stage = {"local-prepare": "prepare", "local-run": "execute", "local-validate": "validate"}[args.command]
     if not args.policy or not args.local_session or not args.local_session_digest or args.mode not in MODES:
         raise ValueError("Local operations require an owned policy/session, separate digest and exact mode")
-    if not 0 < positive(args.timeout) <= SHARD_MAX_SECONDS:
-        raise ValueError("Local sanitizer operations retain the two-hour shard bound")
+    args.timeout = None
     require_physical_activation()
     native_runner.require_diagnostic_custody_clear()
     environment = local_environment()
@@ -4378,7 +4145,7 @@ def local_command(args):
             if args.output is None:
                 raise ValueError("Local validation requires a fresh component output")
             return local_component(authority, plan, args.digest, store, args.output)
-        executor = LocalExecutor(authority, "one")
+        executor = LocalExecutor(authority,authority.session["worker"])
         results = []
         for shard in plan["shards"]:
             if shard["id"] not in authority.session["shards"]:
@@ -4415,7 +4182,7 @@ def main():
     parser.add_argument("--mode", choices=MODES)
     parser.add_argument("--worker")
     parser.add_argument("--shard")
-    parser.add_argument("--timeout", type=float, default=1800)
+    parser.add_argument("--timeout", type=float, default=None, help="Deprecated; execution is uncapped")
     parser.add_argument("--artifact", type=Path)
     parser.add_argument("--artifact-digest")
     parser.add_argument("--phase", choices=("normal", "leaks"))
@@ -4445,7 +4212,7 @@ def main():
     authority = NativeAuthority(args.policy)
     authority.verify_request(args.mode, args.shard, args.worker, args.phase)
     store = Store(authority.cache)
-    positive(args.timeout)
+    args.timeout = None
     if args.command.startswith("workflow-"):
         workflow = NativeWorkflow(authority)
         if args.command == "workflow-checks":
@@ -4531,8 +4298,6 @@ def main():
                 else:
                     if store.matching(shard_identity(plan["runtime"], shard)) is None:
                         workflow.artifacts().restore_shard(plan, shard, store)
-                    if args.timeout > SHARD_MAX_SECONDS:
-                        raise ValueError("Native shards have a hard two-hour execution bound")
                     observation = report_progress(plan, store, "starting", shard)
                     executor = NativeExecutor(authority, args.worker)
                     executor.progress_context = {"validated_shards_completed": observation["completed"],
@@ -4571,7 +4336,7 @@ def main():
                            source["leaks"]["path"], source["leaks"]["sha256"])
     elif args.command == "pool":
         admission = authority.admission()
-        executors = [NativeExecutor(authority, name) for name in sorted(authority.workers)][:worker_limit(**admission)]
+        executors = [NativeExecutor(authority, name) for name in sorted(authority.workers)]
         result = run_pending(plans, store, executors, authority.policy["approved_head"], args.timeout, admission)
         if any("failed" in row for row in result):
             raise ValueError("Pool has failed/missing shard outcomes; retained evidence must be retried")

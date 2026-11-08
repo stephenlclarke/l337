@@ -13,7 +13,7 @@ SHA = re.compile(r"[0-9a-f]{40}")
 def git(repo, *args):
     return subprocess.check_output(
         ["git", "--no-optional-locks", *args], cwd=repo,
-        stderr=subprocess.DEVNULL, timeout=30)
+        stderr=subprocess.DEVNULL)
 
 
 def requires_build(repo, event_name, event):

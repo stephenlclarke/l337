@@ -74,8 +74,7 @@ class HistoricalEliteTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             historical.verify_historical(self.cask, download=True, root=self.root, opener=opener)
         opener.assert_called_once_with(
-            "https://github.com/stephenlclarke/elite/releases/download/v1.5.0/Elite-1.5.0-universal.zip",
-            timeout=60)
+            "https://github.com/stephenlclarke/elite/releases/download/v1.5.0/Elite-1.5.0-universal.zip")
 
     def test_default_historical_check_cannot_generate_an_unpublished_l337_cask(self):
         with patch.object(homebrew_cask, "ROOT", self.root), \
@@ -172,8 +171,7 @@ class HistoricalEliteTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             historical.verify_historical(current, download=True, root=self.root, opener=opener)
         opener.assert_called_once_with(
-            "https://github.com/stephenlclarke/elite/releases/download/v1.5.1/Elite-1.5.1-universal.zip",
-            timeout=60)
+            "https://github.com/stephenlclarke/elite/releases/download/v1.5.1/Elite-1.5.1-universal.zip")
         manifest, _ = historical.metadata(self.root, "1.5.1")
         response.read.assert_called_once_with(manifest["archiveBytes"] + 1)
 

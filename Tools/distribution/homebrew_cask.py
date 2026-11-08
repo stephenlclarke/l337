@@ -100,7 +100,7 @@ def existing_release(cask):
 
 def public_json(version: str, suffix: str) -> dict:
     url = f"{RELEASES}/v{version}/L337-{version}-universal{suffix}"
-    with urllib.request.urlopen(url, timeout=60) as response:
+    with urllib.request.urlopen(url) as response:
         data = response.read(2 * 1024 * 1024 + 1)
     if len(data) > 2 * 1024 * 1024:
         raise ValueError("Release metadata exceeds its bounded size")
@@ -131,7 +131,7 @@ def planned_release(options: argparse.Namespace, cask: Path) -> tuple[str, str, 
         size = manifest["archiveBytes"]
         if type(size) is not int or not 0 < size < 95 * 1024 * 1024:
             raise ValueError("Invalid public archive size")
-        with urllib.request.urlopen(release_url(version), timeout=60) as response:
+        with urllib.request.urlopen(release_url(version)) as response:
             archive = response.read(size + 1)
         if len(archive) != size or hashlib.sha256(archive).hexdigest() != manifest["sha256"]:
             raise ValueError("Public archive differs from the release plan and manifest")
@@ -204,7 +204,7 @@ def main():
         raise ValueError("Committed archive does not match its release manifest.")
     if options.verify_download or not options.check:
         url = f"{REPOSITORY}/{revision}/{relative}.zip" if legacy else release_url(version)
-        with urllib.request.urlopen(url, timeout=60) as response:
+        with urllib.request.urlopen(url) as response:
             downloaded = response.read()
         if (len(downloaded) != manifest["archiveBytes"]
                 or hashlib.sha256(downloaded).hexdigest() != manifest["sha256"]):

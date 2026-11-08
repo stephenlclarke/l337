@@ -17,7 +17,7 @@ import time
 import textwrap
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -186,7 +186,7 @@ class PlanningTests(Fixture):
         thread = shards.legacy.batch_command("fake-swift", [], "thread", self.root, METHODS)
         address = shards.legacy.batch_command("fake-swift", [], "address", self.root, METHODS)
         self.assertNotIn("--no-parallel", thread)
-        self.assertIn("--no-parallel", address)
+        self.assertNotIn("--no-parallel", address)
 
     def test_resource_audit_requires_matching_sources_and_is_not_implied_by_grouping(self):
         self.assertFalse(self.plan["shards"][0]["audited"])
@@ -378,28 +378,13 @@ class CheckpointTests(Fixture):
 
 
 class AdmissionTests(Fixture):
-    def test_static_slot_namespace_and_conservative_pending_running_headroom(self):
-        first = {**ADMISSION, "ram_available": 16}
+    def test_distinct_owned_workspaces_have_no_ram_disk_or_cpu_admission(self):
         second = FakeExecutor(self.root / "worker-2", self.runtimes)
-        with shards.reserve_worker(self.store, self.executor, self.runtimes["thread"], first, 5) as one:
-            with shards.reserve_worker(self.store, second, self.runtimes["address"], first, 5) as two:
-                self.assertNotEqual(one["path"], two["path"])
-                self.assertEqual(shards.load_json(two["path"])["state"], "pending")
-            # Free memory has fallen; reserve full future headroom instead of assuming current RSS is peak.
-            with self.assertRaises(ValueError):
-                with shards.reserve_worker(self.store, second, self.runtimes["address"],
-                                           {**first, "ram_available": 10}, 5):
-                    pass
-        growing = {**ADMISSION, "ram_capacity": 32, "ram_available": 32, "peak_per_worker": 12}
-        self.store = shards.Store(self.root / "growing-worker")
-        with shards.reserve_worker(self.store, self.executor, self.runtimes["thread"], growing, 5):
-            with self.assertRaises(ValueError):
-                with shards.reserve_worker(self.store, second, self.runtimes["address"],
-                                           {**growing, "ram_available": 22}, 5):
-                    pass
-            with shards.reserve_worker(self.store, second, self.runtimes["address"],
-                                       {**growing, "ram_available": 28}, 5):
-                pass
+        empty = {**ADMISSION,"explicit":0,"cpu_budget":0,"ram_available":0,"disk_available":0}
+        with shards.reserve_worker(self.store,self.executor,self.runtimes['thread'],empty,None) as first:
+            with shards.reserve_worker(self.store,second,self.runtimes['address'],empty,None) as other:
+                self.assertNotEqual(first['path'],other['path'])
+                self.assertEqual(shards.load_json(other['path'])['state'],'pending')
 
     def test_unknown_startup_claim_blocks_replacement_until_proven_exit_and_nonce_cas(self):
         budget = {**ADMISSION, "explicit": 1}
@@ -418,42 +403,24 @@ class AdmissionTests(Fixture):
             with self.assertRaises(ValueError):
                 shards.reservation_update(self.store, old, state="released")
 
-    def test_fresh_resource_observation_occurs_under_atomic_host_admission_lock(self):
-        def observe():
-            with self.assertRaises(BlockingIOError), shards.claim(self.store.root / "claims", "admission"):
-                pass
-            return ADMISSION
-        self.executor.observe_admission = observe
-        with shards.reserve_worker(self.store, self.executor, self.runtimes["thread"], ADMISSION, 5):
+    def test_workspace_reservation_does_not_sample_execution_resources(self):
+        self.executor.observe_admission = Mock(side_effect=AssertionError('No resource probe'))
+        with shards.reserve_worker(self.store,self.executor,self.runtimes['thread'],{},None):
             pass
+        self.executor.observe_admission.assert_not_called()
 
-    def test_unequal_mode_peaks_and_reserve_disk_host_policy_changes_are_rejected(self):
-        budget = {**ADMISSION, "ram_available": 16, "ram_reserve": 4, "peak_per_worker": 10}
-        plan = self.audited("thread", claim=None)
-        other = self.audited("address", claim=None)
-        entered, release = threading.Event(), threading.Event()
-        self.executor.pause = lambda: (entered.set(), release.wait(3))
-        second = FakeExecutor(self.root / "worker-2", self.runtimes)
-        with ThreadPoolExecutor(max_workers=1) as pool:
-            future = pool.submit(shards.run_shard, plan, plan["shards"][0]["id"], self.store,
-                                 self.executor, HEAD, 5, budget)
-            self.assertTrue(entered.wait(2))
-            try:
-                for difference in ({"peak_per_worker": 6}, {"ram_reserve": 2},
-                                   {"disk_reserve": 10}, {"disk_per_worker": 10}, {"cpu_budget": 1}):
-                    with self.assertRaisesRegex(ValueError, "policy changed"):
-                        shards.run_shard(other, other["shards"][0]["id"], self.store, second,
-                                         HEAD, 5, {**budget, **difference})
-            finally:
-                release.set()
-            future.result()
-        self.assertEqual(second.calls, 0)
-        changed = deepcopy(other)
-        changed["runtime"]["host"] = "host-B"
-        second.runtimes = {**self.runtimes, "address": changed["runtime"]}
-        changed = shards.make_plan(changed["runtime"], METHODS)
-        with self.assertRaisesRegex(ValueError, "policy changed"):
-            shards.run_shard(changed, changed["shards"][0]["id"], self.store, second, HEAD, 5, budget)
+    def test_resource_settings_do_not_gate_work_but_cache_host_identity_still_does(self):
+        first = self.audited('thread',claim=None)
+        second = self.audited('address',claim=None)
+        other = FakeExecutor(self.root/'worker-2',self.runtimes)
+        shards.run_shard(first,first['shards'][0]['id'],self.store,self.executor,HEAD,None,ADMISSION)
+        shards.run_shard(second,second['shards'][0]['id'],self.store,other,HEAD,None,
+                         {**ADMISSION,'cpu_budget':0,'ram_available':0,'disk_available':0})
+        changed=deepcopy(second['runtime']);changed['host']='host-B'
+        other.runtimes={**self.runtimes,'address':changed}
+        plan=shards.make_plan(changed,METHODS)
+        with self.assertRaisesRegex(ValueError,'Host worker identity'):
+            shards.run_shard(plan,plan['shards'][0]['id'],self.store,other,HEAD,None,{})
 
     def audited(self, mode, methods=METHODS, claim="shared-save"):
         resources = {shards.fingerprint(unit): {"sources": self.runtimes[mode]["inputs"],
@@ -461,50 +428,17 @@ class AdmissionTests(Fixture):
                      for unit in shards.legacy.partition(methods, mode, 1)}
         return shards.make_plan(self.runtimes[mode], methods, resources=resources)
 
-    def test_worker_refusal_preserves_exact_ram_disk_available_and_required_without_sampling(self):
-        gib = 1024 ** 3
-        original = dict(explicit=1, cpu_budget=1, ram_available=8*gib, ram_reserve=2*gib,
-                        peak_per_worker=6*gib, disk_available=120*gib, disk_reserve=40*gib,
-                        disk_per_worker=80*gib)
-        self.assertEqual(shards.worker_limit(**original), 1)
-        for changes, reasons in (({'ram_available': 8*gib-1}, ['ram']),
-                                 ({'disk_available': 120*gib-1}, ['disk']),
-                                 ({'ram_available': 8*gib-1, 'disk_available': 120*gib-1}, ['ram', 'disk'])):
-            bounds = {**original, **changes}
-            with self.subTest(changes=changes), self.assertRaises(ValueError) as refused:
-                shards.worker_limit(**bounds)
-            message = str(refused.exception)
-            prefix = 'RAM/disk admission reserve blocks a new worker: '
-            self.assertTrue(message.startswith(prefix))
-            record = json.loads(message[len(prefix):])
-            self.assertEqual(record['reasons'], reasons)
-            sample = record['sample']
-            self.assertEqual(sample['ram_available'], bounds['ram_available'])
-            self.assertEqual(sample['ram_required'], 8*gib)
-            self.assertEqual(sample['disk_available'], bounds['disk_available'])
-            self.assertEqual(sample['disk_required'], 120*gib)
-            self.assertEqual(sample['ram_reserve'], 2*gib)
-            self.assertEqual(sample['peak_per_worker'], 6*gib)
-            self.assertEqual(sample['disk_reserve'], 40*gib)
-            self.assertEqual(sample['disk_per_worker'], 80*gib)
-            self.assertIsNone(sample['cpu_observed'])
-            self.assertIsNone(sample['cpu_budget_configured'])
+    def test_legacy_worker_limit_has_no_project_resource_thresholds(self):
+        for changes in ({'explicit':0},{'explicit':1000},{'cpu_budget':0},{'ram_available':0},{'disk_available':0}):
+            self.assertIsNone(shards.worker_limit(**{**ADMISSION,**changes}))
 
-    def test_ram_cpu_disk_caps_and_cross_mode_pool_are_bounded(self):
-        self.assertEqual(shards.worker_limit(**ADMISSION), 2)
-        self.assertEqual(shards.worker_limit(**{**ADMISSION, "cpu_budget": 1}), 1)
-        self.assertEqual(shards.worker_limit(**{**ADMISSION, "ram_available": 10}), 1)
-        for change in ({"disk_available": 25}, {"ram_available": 5}, {"explicit": 3}):
-            with self.assertRaises(ValueError):
-                shards.worker_limit(**{**ADMISSION, **change})
-        second = FakeExecutor(self.root / "worker-2", self.runtimes)
-        plans = [self.audited(mode, claim=None) for mode in shards.MODES]
-        outcomes = shards.run_pending(plans, self.store, [self.executor, second], HEAD, 5, ADMISSION)
-        self.assertEqual(len(outcomes), 2)
-        self.assertFalse(any("failed" in outcome for outcome in outcomes), outcomes)
-        with self.assertRaises(ValueError):
-            shards.run_pending(plans, self.store, [self.executor, second], HEAD, 5,
-                               {**ADMISSION, "cpu_budget": 1})
+    def test_authorized_pool_uses_executor_defaults_without_a_project_worker_cap(self):
+        others=[FakeExecutor(self.root/('worker-'+str(i)),self.runtimes) for i in (2,3)]
+        plans=[self.audited(mode,claim=None) for mode in shards.MODES]
+        results=shards.run_pending(plans,self.store,[self.executor,*others],HEAD,None,
+                                  {**ADMISSION,'cpu_budget':0,'ram_available':0,'disk_available':0})
+        self.assertEqual(len(results),2)
+        self.assertFalse(any('failed' in row for row in results),results)
 
     def test_duplicate_shard_workspace_unknown_helper_and_live_incomplete_owner_block(self):
         for key in ("shard:" + self.plan["shards"][0]["id"], "workspace:" + str(self.executor.workspace)):
@@ -542,17 +476,84 @@ class AdmissionTests(Fixture):
                 two.result()
             self.assertTrue(second_entered.is_set())
 
-    def test_same_host_slots_are_shared_across_modes_and_controllers(self):
-        plan = self.audited("thread", claim=None)
-        other = self.audited("address", claim=None)
-        second = FakeExecutor(self.root / "worker-2", self.runtimes)
-        with shards.claim(self.store.root / "claims", "worker:0"), shards.claim(
-                self.store.root / "claims", "worker:1"):
-            with self.assertRaisesRegex(ValueError, "slots"):
-                self.run_one(plan)
-            with self.assertRaisesRegex(ValueError, "slots"):
-                self.run_one(other, second)
-        self.assertEqual(self.executor.calls + second.calls, 0)
+    def test_old_numeric_resource_slots_do_not_reserve_actual_worker_workspaces(self):
+        plan=self.audited('thread',claim=None);other=self.audited('address',claim=None)
+        second=FakeExecutor(self.root/'worker-2',self.runtimes)
+        with shards.claim(self.store.root/'claims','worker:0'),shards.claim(self.store.root/'claims','worker:1'):
+            self.run_one(plan)
+            self.run_one(other,second)
+        self.assertEqual(self.executor.calls+second.calls,2)
+
+
+class LegacyWorkspaceReservationTests(Fixture):
+    def legacy(self,workspace=None,state='unknown',attempt=True):
+        shards.legacy.owned_directory(self.store.root/'reservations')
+        location=self.store.root/'attempts'/'legacy-source'/'old-attempt'
+        if attempt:
+            shards.legacy.owned_directory(location)
+            shards.durable_json(location/'start.json',{'owner':self.executor.owner_identity()})
+            shards.durable_json(location/'processes.json',{'workspace':str((workspace or self.executor.workspace)/'thread'),
+                'running':False,'processes':{}})
+            shards.durable_json(location/'child.json',{'pid':4242})
+            shards.durable_json(location/'child-exit.json',{'pid':4242,'exit_code':0})
+        record={'schema':1,'nonce':'legacy-generation','state':state,
+            'owner':self.executor.owner_identity(),'attempt':str(location) if attempt else None}
+        path=self.store.root/'reservations'/'9.json';shards.durable_json(path,record)
+        return path,record,location
+
+    def test_live_unknown_and_missing_terminal_legacy_ownership_refuse_the_same_workspace(self):
+        for cause in ('live','unknown-helper','missing-attempt','missing-terminal'):
+            with self.subTest(cause=cause):
+                self.store=shards.Store(self.root/cause)
+                path,record,attempt=self.legacy(attempt=cause!='missing-attempt')
+                self.executor.exited=cause!='live';self.executor.unknown=cause=='unknown-helper'
+                if cause=='missing-terminal':(attempt/'child-exit.json').unlink()
+                raw=path.read_bytes()
+                with self.assertRaisesRegex(ValueError,'Legacy workspace'):
+                    with shards.reserve_worker(self.store,self.executor,self.runtimes['thread'],{},None):
+                        self.fail('Unresolved original workspace was admitted')
+                self.assertEqual(path.read_bytes(),raw)
+                self.assertFalse((path.parent/(shards.fingerprint(str(self.executor.workspace))+'.json')).exists())
+                self.assertEqual(self.executor.calls,0)
+        self.executor.exited=True;self.executor.unknown=False
+
+    def test_absent_legacy_records_do_not_create_a_numeric_worker_cap(self):
+        for i in range(4):
+            executor=FakeExecutor(self.root/('approved-worker-'+str(i)),self.runtimes)
+            with shards.reserve_worker(self.store,executor,self.runtimes['thread'],{},None):pass
+        self.assertEqual(len(list((self.store.root/'reservations').glob('*.json'))),4)
+        self.assertFalse(any(p.stem.isdecimal() for p in (self.store.root/'reservations').glob('*.json')))
+
+    def test_proven_legacy_terminal_is_reclaimed_without_rewriting_raw_record(self):
+        path,record,attempt=self.legacy();raw=path.read_bytes()
+        with patch.object(self.executor,'reclaimable',return_value=True) as reclaim,\
+                patch.object(self.executor,'proven_exited',return_value=True) as proved:
+            with shards.reserve_worker(self.store,self.executor,self.runtimes['thread'],{},None) as reservation:
+                self.assertNotEqual(reservation['path'],path)
+        reclaim.assert_called_once_with(record);proved.assert_called_once_with(attempt)
+        self.assertEqual(path.read_bytes(),raw)
+
+    def test_held_legacy_lease_refuses_even_if_stale_terminal_claims_reclaimable(self):
+        self.legacy()
+        with shards.claim(self.store.root/'claims','worker:9'),\
+                patch.object(self.executor,'reclaimable',return_value=True):
+            with self.assertRaisesRegex(ValueError,'lease remains active'):
+                with shards.reserve_worker(self.store,self.executor,self.runtimes['thread'],{},None):pass
+
+    def test_distinct_canonical_legacy_workspace_does_not_block_an_unrelated_worker(self):
+        path,_,_=self.legacy(workspace=self.root/'other-worker')
+        raw=path.read_bytes();self.executor.exited=False
+        with shards.claim(self.store.root/'claims','worker:9'):
+            with shards.reserve_worker(self.store,self.executor,self.runtimes['thread'],{},None):pass
+        self.assertEqual(path.read_bytes(),raw)
+
+    def test_missing_workspace_and_terminal_proof_cannot_hide_registered_old_helpers(self):
+        path,_,attempt=self.legacy();(attempt/'processes.json').unlink()
+        with patch.object(self.executor,'reclaimable',return_value=True),\
+                patch.object(self.executor,'proven_exited',return_value=True):
+            with self.assertRaisesRegex(ValueError,'terminal evidence is incomplete'):
+                with shards.reserve_worker(self.store,self.executor,self.runtimes['thread'],{},None):pass
+
 
 
 class PhaseTests(Fixture):
@@ -634,6 +635,20 @@ class ProcessTests(Fixture):
         return {"mode": mode, "shard": "a" * 64, "selected_method_count": 2,
                 "validated_shards_completed": 1, "shards_total": 3}
 
+    def test_long_fragmented_event_retains_complete_name_and_raw_bytes_without_parser_quota(self):
+        attempt=self.root/'long-event';attempt.mkdir()
+        name='case('+('x'*70000)+')'
+        data=('\u25c7 Test '+name+' started.\n'+'\u2714 Test '+name+' passed after 0.1 seconds.\n').encode()
+        with (attempt/'test.log').open('wb') as raw,patch.object(shards.legacy,'progress'),shards.ObservedTestProgress(
+                attempt,raw,self.progress_context(),clock=lambda:10) as capture:
+            for offset in range(0,len(data),8192):capture.feed(data[offset:offset+8192])
+            self.assertEqual(capture.counts['started'],1)
+            self.assertEqual(capture.counts['completed'],1)
+            self.assertFalse(capture.partial)
+        self.assertEqual((attempt/'test.log').read_bytes(),data)
+        events=[json.loads(line) for line in (attempt/'test-events.jsonl').read_text().splitlines()]
+        self.assertEqual([event['name'] for event in events],[name,name])
+
     def test_observed_fragmented_ansi_parameterized_and_parallel_events_are_not_proof(self):
         # Exact Swift Testing spelling from retained TSAN batch-0; Unicode is escaped in source.
         started = "\u25c7 Test celestialModeRendererEvidence() started.\n"
@@ -668,7 +683,7 @@ class ProcessTests(Fixture):
                 self.assertEqual(events[-1]["reported_seconds"], 0.387)
                 self.assertTrue(all(event["mode"] == mode for event in events))
 
-    def test_same_display_names_remain_ambiguous_and_truncated_records_do_not_complete(self):
+    def test_same_display_names_remain_ambiguous_and_corrupted_partial_records_do_not_complete(self):
         attempt = self.root / "ambiguous-progress"
         attempt.mkdir()
         with (attempt / "test.log").open("wb") as raw, patch.object(shards.legacy, "progress"), shards.ObservedTestProgress(
@@ -677,7 +692,10 @@ class ProcessTests(Fixture):
             capture.feed("\u2714 Test same(x:) passed after 1.0 seconds.\n".encode())
             self.assertEqual(len(capture.active), 2)
             capture.feed(b"x" * 70000)
+            capture.publish('interrupted',force=True)
+            self.assertTrue(shards.load_json(attempt/'test-progress.json')['partial_line'])
             capture.feed("\u2714 Test bogus() passed after 1.0 seconds.\n".encode())
+            capture.feed("bad-prefix\u2714 Test anotherBogus() passed after 1.0 seconds.\n".encode())
             self.assertEqual(capture.counts["completed"], 1)
             capture.publish("interrupted", force=True)
         events = [json.loads(line) for line in (attempt / "test-events.jsonl").read_text().splitlines()]
@@ -708,17 +726,17 @@ class ProcessTests(Fixture):
                 self.assertIn("validated shards 1/3", summary.read_text())
                 self.assertEqual(shards.load_json(attempt / "child-exit.json")["exit_code"], 0)
 
-    def test_progress_timeout_retains_partial_raw_events_and_no_success(self):
+    def test_natural_nonzero_exit_retains_partial_raw_events_without_old_deadline(self):
         for mode in shards.MODES:
             attempt = self.root / (mode + "-timeout-progress")
             attempt.mkdir()
-            script = "import time; print('\\u25c7 Test unfinished() started.'); time.sleep(10)"
+            script = "import time; print('\\u25c7 Test unfinished() started.'); time.sleep(.05); raise SystemExit(23)"
             with patch.object(shards.legacy, "progress"):
                 code = shards.execute_process([sys.executable, "-c", script], self.root, attempt,
                     .2, [], {"LANG": "C"}, isolate_environment=False, progress=self.progress_context(mode))
-            self.assertEqual(code, 124)
+            self.assertEqual(code, 23)
             value = shards.load_json(attempt / "test-progress.json")
-            self.assertEqual(value["state"], "timed-out")
+            self.assertEqual(value["state"], "failed")
             self.assertEqual(value["observed_counts"]["started"], 1)
             self.assertEqual(value["observed_counts"]["completed"], 0)
             self.assertEqual(value["observed_active"][0]["name"], "unfinished()")
@@ -905,7 +923,7 @@ shards.execute_process([sys.executable, '-c', "import time; print('\\u25c7 Test 
         script = """
 import json, os, pathlib, sys
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import recoverable_shards as shards
 from test_native_runner import owned_control_fixture
 from test_recoverable_shards import FakeExecutor, ADMISSION, HEAD
@@ -937,14 +955,15 @@ shards.run_shard(plan, plan['shards'][0]['id'], shards.Store(cache), executor,
             self.assertEqual(outcome["reused"], committed)
             self.assertEqual(self.executor.calls - before, 0 if committed else 1)
 
-    def test_timeout_kills_only_owned_python_session_and_retains_terminal_failure(self):
+    def test_legacy_timeout_is_not_enforced_and_actual_child_terminal_is_retained(self):
         attempt = self.root / "process"
         attempt.mkdir(mode=0o700)
-        code = shards.execute_process([sys.executable, "-c", "import time; time.sleep(10)"],
-                                      self.root, attempt, 0.1, [], os.environ)
-        self.assertEqual(code, 124)
+        code = shards.execute_process([sys.executable, "-c", "import time; time.sleep(0.05)"],
+                                      self.root, attempt, 0.001, [], os.environ)
+        self.assertEqual(code, 0)
+        self.assertFalse((attempt / "timeout.json").exists())
         terminal = shards.load_json(attempt / "child-exit.json")
-        self.assertEqual(terminal["exit_code"], 124)
+        self.assertEqual(terminal["exit_code"], 0)
         with self.assertRaises(ProcessLookupError):
             os.kill(terminal["pid"], 0)
 
@@ -1131,7 +1150,7 @@ class NativeAdapterTests(Fixture):
         self.assertEqual(runtime["host"], authority.config["host"])
         shards.validate_runtime(runtime)
         with patch.object(shards.shutil, "disk_usage", return_value=SimpleNamespace(free=100)):
-            self.assertEqual(authority.admission()["explicit"], 2)
+            self.assertEqual(authority.admission(),{})
 
     def test_native_preparation_reuses_one_build_per_mode_and_private_scratch_and_commands(self):
         authority, builder, builds, calls = self.prepared()
@@ -1159,7 +1178,7 @@ class NativeAdapterTests(Fixture):
             command, workspace = execute.call_args.args[:2]
             self.assertEqual(workspace, one.active_workspace)
             self.assertIn("--skip-build", command)
-            self.assertEqual("--no-parallel" in command, mode == "address")
+            self.assertNotIn("--no-parallel", command)
             self.assertEqual(command[command.index("--scratch-path") + 1], runtime["flags"][1])
         image = one.active_workspace / Path(builds["address"]["image"]).relative_to(authority.root)
         image.write_bytes(b"tampered image")
@@ -1252,8 +1271,8 @@ class NativeAdapterTests(Fixture):
         self.assertTrue(Path(restored["restored"]).is_dir())
         matrix = self.root / "pool-manifest.json"
         shards.durable_json(matrix, {"plans": [{"path": str(plan_path), "sha256": shards.legacy.digest(plan_path)}]})
-        with patch.object(shards, "NativeExecutor", return_value=executor):
-            # Admit one fake worker to avoid aliasing the same fake workspace into two workers.
+        with patch.object(shards,"NativeExecutor",side_effect=lambda a,name: executor if name=="one" else FakeExecutor(self.root/"transport-worker-2",{"thread":plan["runtime"]})):
+            # Each approved identity retains its own physical fake workspace.
             with patch.object(authority, "admission", return_value={**ADMISSION, "explicit": 1}):
                 outcome = invoke(["pool", "--input", str(matrix), "--digest", shards.legacy.digest(matrix),
                                   "--policy", str(self.root / "host-policy.json")])
@@ -1490,9 +1509,8 @@ class WorkflowTests(Fixture):
                 remote.fetch({**artifact, **changes})
         with self.assertRaises(ValueError):
             remote.fetch(artifact, "f" * 64)
-        authority.config["admission"]["disk_per_worker"] = 1
-        with self.assertRaises(ValueError):
-            remote.fetch(artifact)
+        authority.config["admission"]["disk_per_worker"]=1
+        self.assertTrue((remote.fetch(artifact)/'index.json').is_file())
         link = zipfile.ZipInfo("link")
         link.create_system, link.external_attr = 3, 0o120777 << 16
         data = io.BytesIO()
@@ -1796,13 +1814,13 @@ class AsanLowMemoryTests(Fixture):
         thread = ["--scratch-path", ".build/tsan", "--sanitize=thread"]
         low = ["--jobs", "1", "-Xswiftc", "-disable-batch-mode"]
         self.assertEqual(shards.sanitizer_build_flags("thread"), thread)
-        self.assertEqual(shards.sanitizer_build_flags("address"), address + low)
+        self.assertEqual(shards.sanitizer_build_flags("address"), address)
         old = shards.legacy.batch_command("fake-swift", address, "address", self.root, METHODS)
         new = shards.legacy.batch_command("fake-swift", address + low, "address", self.root, METHODS)
         start = new.index("--jobs")
         self.assertEqual(new[start:start + 4], low)
         self.assertEqual(new[:start] + new[start + 4:], old)
-        self.assertEqual(new.count("--no-parallel"), 1)
+        self.assertNotIn("--no-parallel",new)
         self.assertIn("--skip-build", new)
         self.assertEqual(shards.legacy.batch_command("fake-swift", thread, "thread", self.root, METHODS),
                          shards.legacy.batch_command("fake-swift", shards.sanitizer_build_flags("thread"), "thread", self.root, METHODS))
@@ -1829,7 +1847,7 @@ class AsanLowMemoryTests(Fixture):
         builder.build_only("address", 5)
         ready = authority.cache / "build-stage" / HEAD / "address/ready.json"
         value = shards.load_json(ready)
-        value["runtime"]["flags"] = ["--scratch-path", ".build/asan", "--sanitize=address"]
+        value["runtime"]["flags"] = ["--scratch-path", ".build/asan", "--sanitize=address","--jobs","1","-Xswiftc","-disable-batch-mode"]
         ready.parent.chmod(0o700)
         ready.chmod(0o600)
         shards.durable_json(ready, value)
@@ -1863,7 +1881,7 @@ class AsanLowMemoryTests(Fixture):
                                        ["fake-swift", "build", *flags, "--show-bin-path"]])
 
     def test_flags_bind_existing_plan_shard_and_receipt_identity_without_promoting_old_profile(self):
-        old_runtime = {**self.runtimes["address"], "flags": ["--scratch-path", ".build/asan", "--sanitize=address"]}
+        old_runtime = {**self.runtimes["address"], "flags": ["--scratch-path", ".build/asan", "--sanitize=address","--jobs","1","-Xswiftc","-disable-batch-mode"]}
         new_runtime = {**old_runtime, "flags": shards.sanitizer_build_flags("address")}
         old_plan = shards.make_plan(old_runtime, METHODS)
         new_plan = shards.make_plan(new_runtime, METHODS)
@@ -1903,7 +1921,7 @@ class AsanLowMemoryTests(Fixture):
 
 class PrerequisiteRawExportTests(unittest.TestCase):
     def fixture(self):
-        authority, free, root = ResourceRefusalEvidenceTests.fixture(self, ram=5)
+        authority, free, root = ResourceAdmissionDefaultsTests.fixture(self,ram=5)
         authority.environment["GITHUB_JOB"] = "native_checks"
         authority.environment.pop("ELITE_RECOVERABLE_REQUEST_MODE")
         return authority, free, root
@@ -1920,28 +1938,18 @@ class PrerequisiteRawExportTests(unittest.TestCase):
         shards.require_sealed(output)
         return manifest
 
-    def test_real_early_admission_refusal_exports_its_exact_bound_raw_sample_without_rerun(self):
-        authority, free, root = self.fixture()
-        source, output = root / "checks", root / "raw"
-        with patch.object(shards.shutil, "disk_usage", return_value=SimpleNamespace(free=free)) as disk, patch.object(
-                shards.legacy, "ensure_no_live_tests"), patch.object(shards, "execute_process") as never, patch("sys.stdout", io.StringIO()):
-            with self.assertRaisesRegex(ValueError, "RAM/disk admission reserve"):
-                shards.NativeWorkflow(authority).checks(source, 5)
-            original = next((authority.cache / "preparation").glob("*/resource-admission.json"))
-            raw = original.read_bytes()
-            with patch.object(authority, "admission", side_effect=AssertionError("Do not resample during export")):
-                shards.NativeWorkflow(authority).export_checks(source, output)
-        disk.assert_called_once()
-        never.assert_not_called()
-        self.assertEqual(len(authority.calls), 2)
-        self.assertTrue(source.is_dir())
-        self.assertEqual(list(source.iterdir()), [])
-        self.assertEqual((output / "preparation" / original.parent.name / original.name).read_bytes(), raw)
-        manifest = self.assert_raw(output)
-        self.assertEqual((manifest["checks_state"], manifest["checks_binding"]), ("missing", "absent"))
-        self.assertEqual((manifest["head"], manifest["role"], manifest["run_id"], manifest["run_attempt"]),
-                         (HEAD, "native_checks", "123", "2"))
-        self.assertFalse(any(path.name in {"result.json", "index.json", "commit.json", "ready.json"} for path in output.rglob("*")))
+    def test_historical_resource_refusal_exports_exact_raw_evidence_without_sampling_or_launch(self):
+        authority,free,root=self.fixture();source,output=root/'checks',root/'raw'
+        prior=authority.cache/'preparation'/'historical-refusal';prior.mkdir(parents=True)
+        shards.durable_json(prior/'launch.json',self.launch(authority))
+        original=prior/'resource-admission.json'
+        shards.durable_json(original,{'schema':1,'status':'refused','historical':True,'sample':{'ram_available':5}})
+        raw=original.read_bytes()
+        with patch.object(authority,'admission',side_effect=AssertionError('No resample')),patch.object(shards,'execute_process') as launch:
+            shards.NativeWorkflow(authority).export_checks(source,output)
+        launch.assert_not_called()
+        self.assertEqual((output/'preparation'/prior.name/original.name).read_bytes(),raw)
+        self.assert_raw(output)
 
     def test_cli_exports_missing_or_empty_checks_as_unqualified_without_sampling_or_execution(self):
         for empty in (False, True):
@@ -2041,7 +2049,7 @@ class PrerequisiteRawExportTests(unittest.TestCase):
                 exec(compile(gate, 'fake-final-gate', 'exec'), {})
 
 
-class ResourceRefusalEvidenceTests(unittest.TestCase):
+class ResourceAdmissionDefaultsTests(unittest.TestCase):
     def fixture(self, ram=10, disk=100, cpu_budget=2):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
@@ -2070,130 +2078,18 @@ class ResourceRefusalEvidenceTests(unittest.TestCase):
         authority.output, authority.snapshot = output, lambda: {}
         return authority, disk, root
 
-    def reports(self, authority):
-        return list((authority.cache / "preparation").glob("*/resource-admission.json"))
-
-    def test_ram_disk_cpu_and_zero_headroom_refusals_export_the_exact_sample_without_launch(self):
-        for ram, disk, cpu, reasons in ((5, 100, 2, ["ram"]), (10, 10, 2, ["disk"]),
-                                       (10, 100, 0.5, ["cpu"]), (2, 2, 2, ["ram", "disk"])):
-            with self.subTest(reasons=reasons):
-                authority, free, root = self.fixture(ram, disk, cpu)
-                log = io.StringIO()
-                with patch.object(shards.shutil, "disk_usage", return_value=SimpleNamespace(free=free)) as sample_disk, patch.object(
-                        shards.legacy, "ensure_no_live_tests"), patch.object(shards, "execute_process") as never, patch.object(
-                        shards.shutil, "which") as compiler, patch("sys.stdout", log):
-                    with self.assertRaises(ValueError):
-                        shards.NativeBuilder(authority).build_only("address", 5)
-                never.assert_not_called()
-                compiler.assert_not_called()
-                sample_disk.assert_called_once_with(authority.cache)
-                self.assertEqual(authority.calls, [["sysctl", "-n", "hw.logicalcpu"], ["vm_stat"]])
-                reports = self.reports(authority)
-                self.assertEqual(len(reports), 1)
-                record = shards.load_json(reports[0])
-                self.assertEqual(record["reasons"], reasons)
-                self.assertEqual(record["sample"], dict(explicit=1, cpu_budget=cpu, cpu_observed=4,
-                    cpu_budget_configured=cpu, cpu_required=1, ram_available=ram, ram_reserve=2,
-                    peak_per_worker=6, ram_capacity=100, ram_required=8, disk_available=disk,
-                    disk_reserve=2, disk_per_worker=20, disk_capacity=200, disk_required=22))
-                launch = shards.load_json(reports[0].with_name("launch.json"))
-                self.assertEqual((launch["head"], launch["mode"], launch["stage"], launch["status"]),
-                                 (HEAD, "address", "admission", "not-launched"))
-                self.assertEqual(json.loads(log.getvalue())["resource_admission"], record)
-                self.assertIn(json.dumps(record["reasons"]), (root / "summary").read_text())
-                exported = root / "raw-export"
-                shards.NativeWorkflow(authority).export_preparation("address", exported)
-                copied = exported / reports[0].parent.name / "resource-admission.json"
-                self.assertEqual(shards.load_json(copied), record)
-                manifest = shards.load_json(exported / "export.json")
-                self.assertEqual(manifest["outputs"][copied.relative_to(exported).as_posix()], shards.legacy.digest(copied))
-                shards.require_sealed(exported)
-                self.assertFalse(any(path.name in {"index.json", "commit.json", "ready.json", "build.json", "result.json", "child.json"}
-                                     for path in exported.rglob("*")))
-
-    def test_partial_sampling_errors_retain_only_completed_measurements_and_original_exception(self):
-        for failed in ("cpu", "ram", "disk"):
-            authority, free, root = self.fixture()
-            original = authority.output
-            error = OSError("FAKE_PRIVATE_PROBE_RESPONSE")
-            def output(command):
-                if (failed == "cpu" and command[0] == "sysctl") or (failed == "ram" and command[0] == "vm_stat"):
-                    authority.calls.append(command)
-                    raise error
-                return original(command)
-            authority.output = output
-            with patch.object(shards.shutil, "disk_usage", side_effect=error if failed == "disk" else None,
-                              return_value=SimpleNamespace(free=free)) as sample_disk, patch("sys.stdout", io.StringIO()):
-                try:
-                    authority.admission()
-                except OSError as actual:
-                    self.assertIs(actual, error)
-                else:
-                    self.fail("Sampling failure must still refuse")
-            record = shards.load_json(self.reports(authority)[0])
-            self.assertEqual(record["reasons"], ["sample-" + failed])
-            self.assertEqual(record["sample"]["cpu_observed"], None if failed == "cpu" else 4)
-            self.assertEqual(record["sample"]["ram_available"], 10 if failed == "disk" else None)
-            self.assertIsNone(record["sample"]["disk_available"])
-            self.assertEqual(sample_disk.call_count, int(failed == "disk"))
-            self.assertEqual(len(authority.calls), 1 if failed == "cpu" else 2)
-            self.assertNotIn("FAKE_PRIVATE", json.dumps(record))
-
-    def test_success_retains_the_existing_return_and_probe_count_without_failure_artifacts(self):
-        authority, free, root = self.fixture()
-        with patch.object(shards.shutil, "disk_usage", return_value=SimpleNamespace(free=free)) as disk, patch("sys.stdout", io.StringIO()) as log:
-            admitted = authority.admission()
-        self.assertEqual(admitted, {**authority.config["admission"], "cpu_budget": 2, "ram_available": 10, "disk_available": 100})
-        self.assertEqual(len(authority.calls), 2)
-        disk.assert_called_once()
-        self.assertEqual(self.reports(authority), [])
-        self.assertEqual(log.getvalue(), "")
-        self.assertFalse((root / "summary").exists())
-
-    def test_secret_bearing_exception_text_is_never_formatted_in_new_evidence(self):
-        class UnprintableError(ValueError):
-            def __str__(self):
-                raise AssertionError("Do not format exception text")
-        authority, free, root = self.fixture()
-        error = UnprintableError("FAKE_PRIVATE_PAYLOAD_TOKEN")
-        authority.output = lambda command: (_ for _ in ()).throw(error)
-        with patch.object(shards.shutil, "disk_usage") as disk, patch("sys.stdout", io.StringIO()) as log:
-            try:
-                authority.admission()
-            except UnprintableError as actual:
-                self.assertIs(actual, error)
-        disk.assert_not_called()
-        record = shards.load_json(self.reports(authority)[0])
-        self.assertEqual(record["category"], "ValueError")
-        self.assertNotIn("FAKE_PRIVATE", log.getvalue() + (root / "summary").read_text() + json.dumps(record))
-        poisoned = shards.admission_refusal({"ram_available": "FAKE_PRIVATE_VALUE"}, "FAKE_PRIVATE_CPU",
-                                            "FAKE_PRIVATE_SAMPLE", "FAKE_PRIVATE_STAGE", error)
-        self.assertNotIn("FAKE_PRIVATE", json.dumps(poisoned))
-        self.assertEqual(poisoned["reasons"], ["sample-unknown"])
-
-    def test_retention_failure_does_not_replace_the_refusal_or_repeat_a_sample(self):
-        authority, free, root = self.fixture(ram=5)
-        with patch.object(shards.shutil, "disk_usage", return_value=SimpleNamespace(free=free)) as disk, patch.object(
-                shards, "durable_json", side_effect=OSError("FAKE_PRIVATE_WRITE_ERROR")), patch("sys.stdout", io.StringIO()) as log:
-            with self.assertRaisesRegex(ValueError, "RAM/disk admission reserve"):
-                authority.admission()
-        self.assertEqual(len(authority.calls), 2)
-        disk.assert_called_once()
-        self.assertFalse(json.loads(log.getvalue())["raw_attempt_retained"])
-        self.assertNotIn("FAKE_PRIVATE", log.getvalue())
-
-    def test_invalid_nonfinite_caps_are_null_in_diagnostics_without_changing_refusal(self):
-        authority, free, root = self.fixture()
-        authority.config["admission"]["ram_capacity"] = float("inf")
-        # Keep the fake authorization serializable so this test isolates numeric diagnostic sanitization.
-        authority.authorization = lambda: {"schema": 1, "head": HEAD}
-        with patch.object(shards.shutil, "disk_usage", return_value=SimpleNamespace(free=free)), patch("sys.stdout", io.StringIO()):
-            with self.assertRaises(ValueError):
-                authority.admission()
-        record = shards.load_json(self.reports(authority)[0])
-        self.assertIsNone(record["sample"]["ram_capacity"])
-        self.assertEqual(record["reasons"], ["invalid-bound"])
-        json.dumps(record, allow_nan=False)
+    def test_admission_never_reads_or_publishes_resource_probe_or_secret_exception(self):
+        authority=object.__new__(shards.NativeAuthority)
+        authority.config={'admission':{'explicit':0,'cpu_budget':0,'ram_reserve':10**30}}
+        authority.phase_profile=lambda phase:{'build_profile':'toolchain-defaults-v1','admission':{}}
+        authority.output=Mock(side_effect=RuntimeError('secret-fixture-should-never-be-read'))
+        with patch.object(shards.native_runner,'require_diagnostic_custody_clear') as custody, \
+                patch.object(shards.shutil,'disk_usage',side_effect=AssertionError('No disk probe')), \
+                patch('sys.stdout',io.StringIO()) as output:
+            self.assertEqual(authority.admission('normal'),{})
+        custody.assert_called_once_with()
+        authority.output.assert_not_called()
+        self.assertEqual(output.getvalue(),'')
 
 
 class ActiveArtifactJobTests(unittest.TestCase):
@@ -2351,13 +2247,13 @@ class ActiveArtifactJobTests(unittest.TestCase):
         value.registration.unlink()
         self.refuse(value)  # No environment-supplied registration location is consulted.
 
-    def test_complete_pagination_rejects_duplicates_truncation_inconsistency_and_bounds(self):
+    def test_complete_pagination_rejects_identity_errors_without_page_or_elapsed_caps(self):
         value = self.fixture()
         queued = [dict(id=1000 + i, status="queued", runner_id=0) for i in range(100)]
         value.jobs = queued + value.jobs
         self.authorize(value)
         self.assertEqual(len(value.requests), 3)
-        for fault in ("duplicate", "duplicate-page", "ambiguous-later", "truncated-first", "truncated-last", "inconsistent-total", "over-limit", "malformed", "elapsed"):
+        for fault in ("duplicate", "duplicate-page", "ambiguous-later", "truncated-first", "truncated-last", "inconsistent-total", "malformed"):
             with self.subTest(fault=fault):
                 value = self.fixture()
                 jobs = queued + value.jobs
@@ -2375,19 +2271,14 @@ class ActiveArtifactJobTests(unittest.TestCase):
                     value.pages[1]["jobs"] = []
                 elif fault == "inconsistent-total":
                     value.pages[1]["total_count"] = 102
-                elif fault == "over-limit":
-                    value.pages[0]["total_count"] = 1601
-                elif fault == "malformed":
-                    value.pages[0] = dict(total_count=True, jobs=[])
-                else:
-                    with patch.object(shards.time, "monotonic", side_effect=[0, 0, 121]):
-                        self.refuse(value)
-                    continue
+                elif fault == 'malformed':
+                    value.pages[0]=dict(total_count=True,jobs=[])
                 self.refuse(value)
         value = self.fixture()
-        value.jobs = [dict(id=1000 + i, status="queued", runner_id=0) for i in range(1599)] + value.jobs
-        self.authorize(value)
-        self.assertEqual(len(value.requests), 17)  # One run request plus the sixteen bounded job pages.
+        value.jobs = [dict(id=1000 + i, status="queued", runner_id=0) for i in range(1700)] + value.jobs
+        with patch.object(shards.time,"monotonic",return_value=10000):
+            self.authorize(value)
+        self.assertEqual(len(value.requests),19)  # Complete1701-job inventory:18pages plus run metadata.
 
     def test_api_failures_refuse_without_logging_or_retry(self):
         for error in (OSError("FAKE_PRIVATE_API_PAYLOAD"), ValueError("FAKE_PRIVATE_API_PAYLOAD"),
@@ -2453,76 +2344,57 @@ class GranularityTests(Fixture):
         self.assertEqual(plan, reverse)
         self.assertEqual(sorted(m for row in plan["shards"] for m in row["methods"]), full)
         self.assertIn(sorted(appkit), [row["methods"] for row in plan["shards"]])
-        self.assertTrue(all(len(row["methods"]) <= shards.PACKED_ID_TARGET or len(row["atoms"]) == 1 for row in plan["shards"]))
+        shards.validate_plan(plan)
         self.assertTrue(all(row["methods"] != sorted(methods) for row in plan["shards"]))
         complete = shards.workflow_manifest([plan], ["one"], self.store, HEAD)
         self.assertTrue(all(entry["label"].endswith(entry["shard"][:8]) for entry in complete["matrix"]["include"]))
 
-    def test_indivisible_timeout_is_explicit_blocker_instead_of_automatic_replay(self):
-        methods = [f"L337CoreTests.Indivisible/case{i}()" for i in range(3)]
-        plan = shards.make_plan(self.runtimes["thread"], methods)
-        self.executor.exit_code = 124
-        self.executor.damage = lambda attempt: shards.durable_json(attempt / "timeout.json", {
-            "schema": shards.SCHEMA, "seconds": 5, "reason": "process wait deadline"})
-        with self.assertRaises(ValueError):
-            self.run_one(plan)
-        self.assertEqual(self.executor.calls, 1)
-        self.executor.exit_code = 0
-        with self.assertRaisesRegex(ValueError, "Indivisible cohort.*no automatic replay"):
-            self.run_one(plan)
-        self.assertEqual(self.executor.calls, 1)
-        self.assertTrue(list((self.store.root / "attempts").glob("*/*/failure.json")))
+    def test_historical_timeout_failure_is_retained_without_a_live_execution_deadline(self):
+        methods=[f'L337CoreTests.Indivisible/case{i}()' for i in range(3)]
+        plan=shards.make_plan(self.runtimes['thread'],methods)
+        self.executor.exit_code=124
+        self.executor.damage=lambda attempt:shards.durable_json(attempt/'timeout.json',
+            {'schema':shards.SCHEMA,'seconds':5,'reason':'process wait deadline'})
+        with self.assertRaises(ValueError):self.run_one(plan)
+        self.assertEqual(self.executor.calls,1)
+        failures=list((self.store.root/'attempts').glob('*/*/failure.json'))
+        self.assertTrue(failures)
+        retained={str(p):p.read_bytes() for p in failures}
+        self.executor.exit_code=0;self.executor.damage=None
+        result=self.run_one(plan)
+        self.assertFalse(result['reused'])
+        self.assertEqual(self.executor.calls,2)
+        for path,raw in retained.items():self.assertEqual(Path(path).read_bytes(),raw)
 
-    def test_authenticated_timeout_survives_cache_loss_and_blocks_only_same_identity_and_bound(self):
-        methods = [f"L337CoreTests.Indivisible/case{i}()" for i in range(3)]
-        plan = shards.make_plan(self.runtimes["thread"], methods)
-        identity = shards.shard_identity(plan["runtime"], plan["shards"][0])
-        self.executor.exit_code = 124
-        self.executor.damage = lambda attempt: shards.durable_json(attempt / "timeout.json", {
-            "schema": shards.SCHEMA, "seconds": 5, "reason": "process wait deadline"})
-        with self.assertRaises(ValueError):
-            self.run_one(plan)
-        exported = self.root / "timeout-export"
-        self.store.export_outcome(identity, exported)
-        payload = WorkflowTests.archive(self, {p.relative_to(exported).as_posix(): p.read_bytes() for p in exported.rglob("*") if p.is_file()})
-        authority = self.authority()
-        remote, _ = WorkflowTests.remote(self, authority, payload, "native-shard-thread-" + plan["shards"][0]["id"] + "-1")
-        fresh = shards.Store(self.root / "fresh-after-cache-loss")
-        self.assertFalse(remote.restore_shard(plan, plan["shards"][0], fresh))
-        executor = FakeExecutor(self.root / "fresh-worker", self.runtimes)
-        with self.assertRaisesRegex(ValueError, "Indivisible cohort.*no automatic replay"):
-            shards.run_shard(plan, plan["shards"][0]["id"], fresh, executor, HEAD, 5, ADMISSION)
-        self.assertEqual(executor.calls, 0)
+    def test_authenticated_historical_timeout_stays_failed_and_original_artifact_remains_exact(self):
+        methods=[f'L337CoreTests.Indivisible/case{i}()' for i in range(3)]
+        plan=shards.make_plan(self.runtimes['thread'],methods)
+        identity=shards.shard_identity(plan['runtime'],plan['shards'][0])
+        self.executor.exit_code=124
+        self.executor.damage=lambda attempt:shards.durable_json(attempt/'timeout.json',
+            {'schema':shards.SCHEMA,'seconds':5,'reason':'process wait deadline'})
+        with self.assertRaises(ValueError):self.run_one(plan)
+        exported=self.root/'timeout-export';self.store.export_outcome(identity,exported)
+        original=(exported/'last-attempt/timeout.json').read_bytes()
+        payload=WorkflowTests.archive(self,{p.relative_to(exported).as_posix():p.read_bytes() for p in exported.rglob('*') if p.is_file()})
+        authority=self.authority()
+        remote,_=WorkflowTests.remote(self,authority,payload,'native-shard-thread-'+plan['shards'][0]['id']+'-1')
+        fresh=shards.Store(self.root/'fresh-after-cache-loss')
+        self.assertFalse(remote.restore_shard(plan,plan['shards'][0],fresh))
         self.assertIsNone(fresh.matching(identity))
-        # A second cache loss still has the blocker, not a passed receipt.
-        again = self.root / "timeout-reexport"
-        fresh.export_outcome(identity, again)
-        self.assertTrue((again / "last-attempt/timeout.json").is_file())
-        self.assertFalse((again / "index.json").exists())
-        changed_bound = shards.run_shard(plan, plan["shards"][0]["id"], fresh, executor, HEAD, 6, ADMISSION)
-        self.assertFalse(changed_bound["reused"])
-        self.assertEqual(executor.calls, 1)
-        changed = shards.make_plan({**plan["runtime"], "image_sha256": "f" * 64}, methods)
-        wrong = shards.Store(self.root / "wrong-identity")
-        self.assertFalse(remote.restore_shard(changed, changed["shards"][0], wrong))
-        changed_identity = shards.shard_identity(changed["runtime"], changed["shards"][0])
-        with self.assertRaises(ValueError):
-            wrong.restore_failure(exported, changed_identity)
-        self.assertFalse((wrong.root / "timeout-blockers").exists())
-        ordinary = shards.Store(self.root / "ordinary-failure")
-        failed = FakeExecutor(self.root / "ordinary-worker", self.runtimes)
-        failed.exit_code = 1
-        with self.assertRaises(ValueError):
-            shards.run_shard(plan, plan["shards"][0]["id"], ordinary, failed, HEAD, 5, ADMISSION)
-        raw = self.root / "ordinary-export"
-        ordinary.export_outcome(identity, raw)
-        other_payload = WorkflowTests.archive(self, {p.relative_to(raw).as_posix(): p.read_bytes() for p in raw.rglob("*") if p.is_file()})
-        other_remote, _ = WorkflowTests.remote(self, authority, other_payload, "native-shard-thread-" + plan["shards"][0]["id"] + "-2")
-        retry = shards.Store(self.root / "ordinary-retry")
-        self.assertFalse(other_remote.restore_shard(plan, plan["shards"][0], retry))
-        normal_executor = FakeExecutor(self.root / "ordinary-retry-worker", self.runtimes)
-        shards.run_shard(plan, plan["shards"][0]["id"], retry, normal_executor, HEAD, 5, ADMISSION)
-        self.assertEqual(normal_executor.calls, 1)
+        again=self.root/'timeout-reexport';fresh.export_outcome(identity,again)
+        self.assertFalse((again/'last-attempt').exists())
+        self.assertEqual(shards.load_json(again/'failure.json')['status'],'missing')
+        self.assertEqual((exported/'last-attempt/timeout.json').read_bytes(),original)
+        self.assertFalse((again/'index.json').exists())
+        changed=shards.make_plan({**plan['runtime'],'image_sha256':'f'*64},methods)
+        wrong=shards.Store(self.root/'wrong-identity')
+        with self.assertRaises(ValueError):wrong.restore_failure(exported,shards.shard_identity(changed['runtime'],changed['shards'][0]))
+        executor=FakeExecutor(self.root/'fresh-worker',self.runtimes)
+        result=shards.run_shard(plan,plan['shards'][0]['id'],fresh,executor,HEAD,None,ADMISSION)
+        self.assertFalse(result['reused']);self.assertEqual(executor.calls,1)
+        self.assertIsNotNone(fresh.matching(identity))
+        self.assertEqual((exported/'last-attempt/timeout.json').read_bytes(),original)
 
     def test_each_mode_prepares_and_loads_without_other_mode_and_aggregate_requires_both(self):
         authority, builder, builds, calls = self.prepared()
@@ -2583,9 +2455,9 @@ class GranularityTests(Fixture):
             methods = [f"L337CoreTests.Huge/case{i}()" for i in range(70)]
             huge = shards.make_plan(self.runtimes["thread"], methods, max_methods=shards.PACKED_ID_TARGET)
             record = shards.report_progress(huge, self.store, "timed out", huge["shards"][0])
-            self.assertTrue(record["indivisible_over_target_ids"])
+            self.assertFalse(record["indivisible_over_target_ids"])
             self.assertEqual(record["completed"], 0)
-        self.assertIn("No method split", path.read_text())
+        self.assertIn("OS/toolchain defaults", path.read_text())
         self.assertIn("1/1 complete", path.read_text())
 
     def test_future_ci_preserves_required_name_and_real_normal_leak_gates(self):
@@ -2621,33 +2493,27 @@ class GranularityTests(Fixture):
 
 
 class AsanTestMemoryTests(Fixture):
-    def test_address_caps_all_planning_inputs_and_preserves_full_atomic_union(self):
-        solo = [f"L337CoreTests.C{i}/one()" for i in range(80)]
-        big = [f"L337CoreTests.Big/case{i}()" for i in range(170)]
-        salvage = [f"L337CoreTests.Salvage{i}/one()" for i in range(13)]
-        methods = sorted(solo + big + salvage)
-        for target in (None, 16, 64, 500):
-            plan = shards.make_plan(self.runtimes["address"], methods, [big, salvage], max_methods=target)
-            self.assertEqual(sorted(m for row in plan["shards"] for m in row["methods"]), methods)
-            self.assertIn(sorted(big), [row["methods"] for row in plan["shards"]])
-            self.assertTrue(any(set(salvage) <= set(row["methods"]) for row in plan["shards"]))
-            self.assertTrue(all(len(row["methods"]) <= 16 or len(row["atoms"]) == 1 for row in plan["shards"]))
-            shards.workflow_manifest([plan], ["one"], self.store, HEAD)
-        # Identical inventory/weights in thread mode retains the existing 64-ID packing.
-        thread = shards.make_plan(self.runtimes["thread"], solo,
-            history=shards.workflow_history(solo, "thread", []), max_methods=64)
-        self.assertEqual(sorted(len(row["methods"]) for row in thread["shards"]), [16, 64])
+    def test_address_packing_has_no_memory_ceiling_and_preserves_full_atomic_union(self):
+        solo=[f'L337CoreTests.C{i}/one()' for i in range(80)]
+        big=[f'L337CoreTests.Big/case{i}()' for i in range(170)]
+        salvage=[f'L337CoreTests.Salvage{i}/one()' for i in range(13)]
+        methods=sorted(solo+big+salvage)
+        for target in (None,16,64,500):
+            plan=shards.make_plan(self.runtimes['address'],methods,[big,salvage],max_methods=target)
+            self.assertEqual(sorted(m for row in plan['shards'] for m in row['methods']),methods)
+            self.assertTrue(any(set(big)<=set(row['methods']) for row in plan['shards']))
+            self.assertTrue(any(set(salvage)<=set(row['methods']) for row in plan['shards']))
+            shards.validate_plan(plan)
+            shards.workflow_manifest([plan],['one'],self.store,HEAD)
+        self.assertTrue(any(len(row['methods'])>16 and len(row['atoms'])>1 for row in plan['shards']))
 
-    def test_untrusted_old_packed_address_plan_is_refused_even_with_rehashed_identity(self):
-        methods = [f"L337CoreTests.C{i}/one()" for i in range(40)]
-        thread = shards.make_plan(self.runtimes["thread"], methods,
-            history=shards.workflow_history(methods, "thread", []), max_methods=64)
-        self.assertEqual(len(thread["shards"]), 1)
-        thread["runtime"] = self.runtimes["address"]
-        for row in thread["shards"]:
-            row["id"] = shards.fingerprint(shards.shard_identity(thread["runtime"], row))
-        with self.assertRaisesRegex(ValueError, "ASAN packing"):
-            shards.validate_plan(thread)
+    def test_large_address_plan_is_valid_but_missing_inventory_is_still_refused(self):
+        methods=[f'L337CoreTests.C{i}/one()' for i in range(40)]
+        plan=shards.make_plan(self.runtimes['address'],methods,history={shards.fingerprint([m]):1 for m in methods},max_methods=64)
+        self.assertEqual(len(plan['shards']),1)
+        shards.validate_plan(plan)
+        plan['inventory'].pop()
+        with self.assertRaises(ValueError):shards.validate_plan(plan)
 
     def monitor(self, mode="address", budget=4096):
         workspace = self.root / ("memory-worker-" + mode)
@@ -2682,129 +2548,87 @@ class AsanTestMemoryTests(Fixture):
             with self.assertRaises(ValueError):
                 shards.process_rows(bad, resident=True)
 
-    def test_high_water_sums_only_fresh_owned_descendants_and_retains_last_sample(self):
-        monitor, rows = self.monitor()
-        rows[90] = {**rows[10], "parent": 1, "start": "unrelated", "rss_bytes": 10**12}
+    def test_large_memory_is_ignored_but_only_fresh_owned_descendants_are_retained(self):
+        monitor,rows=self.monitor()
+        rows[20]['rss_bytes']=10**12
+        rows[90]={**rows[10],'parent':1,'start':'unrelated','rss_bytes':10**12}
         monitor.observe()
-        self.assertEqual(monitor.memory["high_water_bytes"], 3072)
-        rows[20]["rss_bytes"] = 512
+        self.assertIn(20,monitor.known)
+        self.assertNotIn(90,monitor.known)
+        self.assertIsNone(monitor.memory)
+        original=deepcopy(monitor.known[20])
+        rows[20]={**rows[20],'parent':1,'start':'reused'}
+        rows[21]={**rows[20],'parent':20}
         monitor.observe()
-        self.assertEqual(monitor.memory["last_bytes"], 1536)
-        self.assertEqual(monitor.memory["high_water_bytes"], 3072)
-        # A reused PID, plus its new children, cannot enter the retained owned tree.
-        rows[20] = {**rows[20], "parent": 1, "start": "reused", "rss_bytes": 10**12}
-        rows[21] = {**rows[20], "parent": 20}
-        monitor.observe()
+        self.assertEqual(monitor.known[20],original)
+        self.assertNotIn(21,monitor.known)
         rows.clear()
         self.assertTrue(monitor.finish(False))
-        record = shards.load_json(monitor.attempt / "processes.json")
-        self.assertEqual(record["resident_memory"]["high_water_bytes"], 3072)
-        self.assertEqual(record["resident_memory"]["helper_samples"], 2)
-        self.assertFalse(record["running"])
+        record=shards.load_json(monitor.attempt/'processes.json')
+        self.assertEqual(record['execution_resources'],'os-toolchain-defaults-v1')
+        self.assertNotIn('resident_memory',record)
+        self.assertFalse(record['running'])
 
-    def test_budget_refusal_retains_evidence_progress_and_cleans_only_reverified_identities(self):
-        monitor, rows = self.monitor(budget=3071)
+    def test_legacy_small_budget_never_signals_owned_or_reused_processes(self):
+        monitor,rows=self.monitor(budget=1)
         monitor.observe()
-        self.assertEqual(monitor.memory["high_water_bytes"], 3072)
-        self.assertIn("exceeds budget", monitor.memory["failure"])
-        # Simulate PID reuse between accounting and termination; use the real cleanup guard.
-        rows[20] = {**rows[20], "parent": 1, "start": "reused"}
-        sent = []
-        from crash_artifacts import cleanup_owned_identity
-        def safe_cleanup(identity, snapshot):
-            def signal_owned(pid, signum):
-                sent.append((pid, signum))
-                rows.pop(pid)
-            cleanup_owned_identity(identity, snapshot, send_signal=signal_owned)
-        with patch.object(shards, "cleanup_owned_identity", side_effect=safe_cleanup), patch.object(shards.legacy, "progress"):
-            self.assertTrue(monitor.cleanup_memory_failure(monitor.known))
-        self.assertEqual([pid for pid, _ in sent], [10])
-        record = shards.load_json(monitor.attempt / "processes.json")["resident_memory"]
-        self.assertEqual(record["budget_bytes"], 3071)
-        self.assertEqual(record["samples"], 1)
-        self.assertIn("exceeds budget", record["failure"])
-        self.assertFalse(monitor.finish(True))
+        rows[20]={**rows[20],'parent':1,'start':'reused'}
+        with patch.object(shards,'cleanup_owned_identity') as cleanup:
+            self.assertFalse(monitor.cleanup_memory_failure(monitor.known))
+        cleanup.assert_not_called()
+        self.assertIsNone(monitor.memory)
+        rows.clear()
+        self.assertTrue(monitor.finish(False))
 
-    def test_initial_budget_refusal_stops_owned_child_and_preserves_failed_exit(self):
-        monitor, rows = self.monitor(budget=3071)
-        rows[os.getpid()] = dict(parent=1, group=1, state="S", start="controller", command="fake controller")
-        cleaned = []
-        def cleanup(identity, snapshot):
-            self.assertTrue(shards.same_process(identity, snapshot().get(identity["pid"])))
-            cleaned.append(identity["pid"])
-            rows.pop(identity["pid"])
-        process = SimpleNamespace(pid=10, returncode=0, wait=lambda timeout=None: 0, poll=lambda: 0)
-        with patch.object(shards.subprocess, "Popen", return_value=process) as spawn, patch.object(
-                shards, "cleanup_owned_identity", side_effect=cleanup), patch.object(shards.legacy, "progress"):
-            code = shards.execute_process(["/fake/swift", "test"], monitor.workspace, monitor.attempt,
-                                           5, [], {}, monitor, isolate_environment=False)
-        self.assertEqual(code, 125)
-        self.assertEqual(cleaned, [10, 20])
-        spawn.assert_called_once()
-        self.assertEqual(shards.load_json(monitor.attempt / "child-exit.json")["exit_code"], 125)
-        record = shards.load_json(monitor.attempt / "processes.json")
-        self.assertFalse(record["running"])
-        self.assertEqual(record["resident_memory"]["high_water_bytes"], 3072)
-        self.assertIn("exceeds budget", record["resident_memory"]["failure"])
+    def test_small_legacy_budget_preserves_real_child_terminal(self):
+        monitor,rows=self.monitor(budget=1)
+        rows[os.getpid()]=dict(parent=1,group=1,state='S',start='controller',command='fake controller')
+        def wait(*args,**kwargs):
+            rows.pop(10,None);rows.pop(20,None)
+            return 23
+        process=SimpleNamespace(pid=10,returncode=23,wait=wait,poll=lambda:23)
+        with patch.object(shards.subprocess,'Popen',return_value=process),patch.object(shards,'cleanup_owned_identity') as cleanup:
+            code=shards.execute_process(['/fake/swift','test'],monitor.workspace,monitor.attempt,
+                                        0.001,[],{},monitor,isolate_environment=False)
+        self.assertEqual(code,23)
+        cleanup.assert_not_called()
+        self.assertEqual(shards.load_json(monitor.attempt/'child-exit.json')['exit_code'],23)
+        self.assertIsNone(monitor.memory)
 
-    def test_missing_rss_and_sampling_errors_fail_closed_with_raw_evidence(self):
-        monitor, rows = self.monitor()
-        rows[20].pop("rss_bytes")
-        with patch.object(shards.legacy, "progress") as progress:
+    def test_missing_rss_is_allowed_but_identity_sampling_errors_still_raise(self):
+        monitor,rows=self.monitor()
+        rows[20].pop('rss_bytes')
+        monitor.observe()
+        self.assertIsNone(monitor.memory)
+        def fail():raise ValueError('fake identity snapshot failure')
+        monitor.authority.snapshot=fail
+        with self.assertRaisesRegex(ValueError,'identity snapshot'):
             monitor.observe()
-        self.assertIn("incomplete", monitor.memory["failure"])
-        self.assertTrue(progress.called)
-        self.assertEqual(shards.load_json(monitor.attempt / "processes.json")["resident_memory"], monitor.memory)
-        monitor.authority.snapshot = lambda **kwargs: (_ for _ in ()).throw(ValueError("fake ps failure"))
-        with self.assertRaises(ValueError):
-            monitor.observe()
-        self.assertTrue(monitor.errors)
 
-    def test_background_sampler_refuses_growth_and_joins_before_final_evidence(self):
-        monitor, rows = self.monitor()
-        rows[os.getpid()] = dict(parent=1, group=1, state="S", start="controller", command="fake controller")
-        stopped, cleaned = threading.Event(), []
-        def cleanup(identity, snapshot):
-            self.assertTrue(shards.same_process(identity, snapshot().get(identity["pid"])))
-            cleaned.append(identity["pid"])
-            rows.pop(identity["pid"])
-            if identity["pid"] == 20:
-                stopped.set()
-        with patch.object(shards, "cleanup_owned_identity", side_effect=cleanup), patch.object(shards.legacy, "progress"):
+    def test_background_identity_monitor_joins_after_explicit_terminal(self):
+        monitor,rows=self.monitor()
+        rows[os.getpid()]=dict(parent=1,group=1,state='S',start='controller',command='fake controller')
+        with patch.object(shards,'cleanup_owned_identity') as cleanup:
             monitor.start(10)
-            rows[20]["rss_bytes"] = 4096
-            try:
-                self.assertTrue(stopped.wait(2), "fake sampler did not terminate its over-budget tree")
-            finally:
-                self.assertFalse(monitor.finish(True))
-        self.assertEqual(cleaned, [10, 20])
+            rows[20]['rss_bytes']=10**12
+            monitor.observe()
+            rows.pop(10);rows.pop(20)
+            self.assertTrue(monitor.finish(False))
+        cleanup.assert_not_called()
         self.assertFalse(monitor.thread.is_alive())
-        memory = shards.load_json(monitor.attempt / "processes.json")["resident_memory"]
-        self.assertGreaterEqual(memory["samples"], 2)
-        self.assertEqual(memory["high_water_bytes"], 5120)
+        self.assertIsNone(monitor.memory)
 
-    def test_snapshot_failure_retains_reason_and_cleanup_still_rechecks_fresh_identity(self):
-        monitor, rows = self.monitor()
-        def snapshot(resident=False):
-            if resident:
-                raise ValueError("fake missing resident column")
-            return deepcopy(rows)
-        monitor.authority.snapshot = snapshot
-        with patch.object(shards.legacy, "progress"):
-            with self.assertRaises(ValueError):
-                monitor.observe()
-        self.assertEqual(monitor.memory["failure"], "snapshot ValueError")
-        self.assertEqual(shards.load_json(monitor.attempt / "processes.json")["resident_memory"], monitor.memory)
+    def test_snapshot_failure_still_rechecks_fresh_identity_before_cleanup(self):
+        monitor,rows=self.monitor()
+        monitor.observe()
+        with patch.object(monitor.authority,'snapshot',side_effect=ValueError('fake identity failure')):
+            with self.assertRaisesRegex(ValueError,'identity failure'):monitor.observe()
         from crash_artifacts import cleanup_owned_identity
-        sent = []
-        def cleanup(identity, fresh_snapshot):
-            def signal_owned(pid, signum):
-                sent.append(pid)
-                rows.pop(pid)
-            cleanup_owned_identity(identity, fresh_snapshot, send_signal=signal_owned)
-        with patch.object(shards, "cleanup_owned_identity", side_effect=cleanup):
-            self.assertTrue(monitor.cleanup_memory_failure(monitor.known))
-        self.assertEqual(sent, [10])
+        original={'pid':20,**deepcopy(rows[20])}
+        rows[20]['start']='foreign-reused'
+        with patch('crash_artifacts.os.kill') as send:
+            cleanup_owned_identity(original,monitor.authority.snapshot)
+        send.assert_not_called()
 
     def test_authority_resident_snapshot_requests_one_ps_sample_without_changing_default(self):
         line = "10 1 10 S Wed Oct 28 10:00:00 2026 123 /fake/swift test"
@@ -2816,7 +2640,7 @@ class AsanTestMemoryTests(Fixture):
         self.assertEqual(shards.NativeAuthority.snapshot(authority, resident=True)[10]["rss_bytes"], 123*1024)
         self.assertNotIn("rss_bytes", shards.NativeAuthority.snapshot(authority)[10])
         self.assertEqual(calls, [["ps", "-ww", "-axo", "pid=,ppid=,pgid=,stat=,lstart=,rss=,command="],
-                                 ["ps", "-axo", "pid=,ppid=,pgid=,stat=,lstart=,command="]])
+                                 ["ps", "-ww", "-axo", "pid=,ppid=,pgid=,stat=,lstart=,command="]])
 
     def test_no_helper_resident_observation_cannot_qualify(self):
         monitor, rows = self.monitor()
@@ -2825,7 +2649,8 @@ class AsanTestMemoryTests(Fixture):
         rows.clear()
         with patch.object(shards.legacy, "progress"):
             self.assertFalse(monitor.finish(False))
-        self.assertEqual(monitor.memory["failure"], "no resident helper sample")
+        self.assertEqual(monitor.observed,{})
+        self.assertIsNone(monitor.memory)
 
     def test_non_address_monitor_never_requests_resident_or_adds_memory_evidence(self):
         monitor, rows = self.monitor(mode="thread")
@@ -2842,11 +2667,8 @@ class AsanTestMemoryTests(Fixture):
         gib = 1024**3
         bounds = {**ADMISSION, "explicit": 1, "cpu_budget": 1, "ram_capacity": 8*gib,
                   "ram_reserve": 2*gib, "peak_per_worker": 2*gib, "ram_available": 4*gib}
-        self.assertEqual(shards.worker_limit(**bounds), 1)
-        with self.assertRaises(ValueError):
-            shards.worker_limit(**{**bounds, "ram_available": 4*gib-1})
-        with self.assertRaises(ValueError):
-            shards.worker_limit(**{**bounds, "ram_available": int(4.6*gib), "peak_per_worker": 4*gib})
+        for available in (0,1,4*gib):
+            self.assertIsNone(shards.worker_limit(**{**bounds,'ram_available':available}))
         config = {"host": "fake-host", "admission": bounds}
         before = shards.execution_policy_digest(config)
         config["admission"] = {**bounds, "peak_per_worker": 4*gib}
@@ -2860,7 +2682,7 @@ class AsanTestMemoryTests(Fixture):
 
 class LocalSanitizerTests(Fixture):
     def controls(self, mode="address", stage="execute", launches=1, extra_environment=None, separate_shards=False,
-                 worker_budget=None, physical_home=None):
+                 worker_budget=None, physical_home=None, approved_workers=None, selected_worker="one"):
         import uuid
         directory = self.root / str(uuid.uuid4())
         directory.mkdir(mode=0o700)
@@ -2874,7 +2696,7 @@ class LocalSanitizerTests(Fixture):
             (repo / "Tools/CI" / name).write_bytes((Path(__file__).parent / name).read_bytes())
         gib = 1024**3
         config = dict(schema=1, host="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA", cache=str(directory / "cache"),
-            legacy_cache=str(home / "Library/EliteNativeCI/sanitizer-checkpoints"), workers={"one": str(directory / "worker")},
+            legacy_cache=str(home / "Library/EliteNativeCI/sanitizer-checkpoints"), workers={name:str(directory/("worker" if name=="one" else "worker-"+name)) for name in (approved_workers or ["one"])},
             admission=dict(explicit=1, cpu_budget=1, ram_capacity=20*gib, ram_reserve=2*gib,
                 peak_per_worker=2*gib if worker_budget is None else worker_budget,
                 disk_capacity=100*gib, disk_reserve=10*gib, disk_per_worker=20*gib))
@@ -2895,8 +2717,6 @@ class LocalSanitizerTests(Fixture):
         if mode == "address":
             child["ASAN_OPTIONS"] = "detect_leaks=0"
         flags = shards.sanitizer_build_flags(mode)
-        if mode == "thread":
-            flags += ["--jobs", "1", "-Xswiftc", "-disable-batch-mode"]
         runtime = {**self.runtimes[mode], "host": config["host"], "environment": shards.legacy.runtime_identity(child),
                    "phase_environment": shards.legacy.runtime_identity(phase_environment), "flags": flags}
         history = ({shards.fingerprint(unit): 600 for unit in shards.legacy.partition(METHODS, mode, 1)}
@@ -2905,7 +2725,7 @@ class LocalSanitizerTests(Fixture):
         plan_path = directory / "plan.json"
         shards.durable_json(plan_path, plan)
         session = dict(schema=1, kind="local-sanitizer-session-v1", id=str(uuid.uuid4()), head=HEAD,
-            policy_sha256=policy_sha, mode=mode, worker="one", stage=stage, expires_at=9000,
+            policy_sha256=policy_sha, mode=mode, worker=selected_worker, stage=stage, expires_at=9000,
             shards=[row["id"] for row in plan["shards"]] if stage == "execute" else None,
             plan_sha256=None if stage == "prepare" else shards.legacy.digest(plan_path),
             max_launches=0 if stage == "validate" else launches)
@@ -2974,9 +2794,7 @@ class LocalSanitizerTests(Fixture):
             processes = {"running": False, "workspace": str(authority.workers["one"] / plan["runtime"]["mode"]),
                 "root": {"pid": 4242, "start": "fake start"},
                 "observed_images": {"fake": {"sha256": plan["runtime"]["image_sha256"], "uuid": plan["runtime"]["image_uuid"]}}}
-            processes["resident_memory"] = dict(kind="sampled-owned-process-rss-v1", failure=None,
-                mode=plan["runtime"]["mode"], helper_samples=1, samples=1, high_water_bytes=1024,
-                budget_bytes=authority.config["admission"]["peak_per_worker"])
+            processes['execution_resources']='os-toolchain-defaults-v1'
             shards.durable_json(attempt / "processes.json", processes)
             shards.durable_json(attempt / "child-exit.json", {"pid": 4242, "exit_code": 0})
             return 0
@@ -2988,6 +2806,17 @@ class LocalSanitizerTests(Fixture):
             local_session_digest=value.session_sha, mode=value.session["mode"], timeout=5,
             input=value.plan_path, digest=shards.legacy.digest(value.plan_path),
             output=value.plan_path.with_name("component"))
+
+    def test_local_authority_accepts_all_approved_workers_but_refuses_unlisted_session_before_probes(self):
+        value=self.controls(approved_workers=['one','two','three'],selected_worker='three')
+        authority=self.authority(value)
+        self.assertEqual(set(authority.workers),{'one','two','three'})
+        self.assertEqual(authority.session['worker'],'three')
+        self.assertEqual(str(authority.workers['three']),value.policy['recoverable_shards']['workers']['three'])
+        invalid=self.controls(approved_workers=['one','two','three'],selected_worker='outside')
+        with self.assertRaisesRegex(ValueError,'unauthorized worker'):
+            self.authority(invalid)
+        self.assertEqual(invalid.calls,[])
 
     def test_both_modes_are_genuinely_local_with_independent_profiles_and_explicit_flags(self):
         for mode in shards.MODES:
@@ -3001,8 +2830,7 @@ class LocalSanitizerTests(Fixture):
             self.assertNotIn("TSAN_OPTIONS", child)
             self.assertEqual(authority.config["admission"]["peak_per_worker"], 2*1024**3)
             if mode == "thread":
-                self.assertEqual(value.plan["runtime"]["flags"], ["--scratch-path", ".build/tsan", "--sanitize=thread",
-                                                               "--jobs", "1", "-Xswiftc", "-disable-batch-mode"])
+                self.assertEqual(value.plan["runtime"]["flags"], ["--scratch-path", ".build/tsan", "--sanitize=thread"])
             self.assertFalse(any(c[0] == "gh" for c in value.calls))
 
     def test_held_activation_and_supplied_github_identities_refuse_before_file_or_probe(self):
@@ -3116,7 +2944,7 @@ class LocalSanitizerTests(Fixture):
             args.output = value.plan_path.with_name("fresh-plan.json")
             build = {"runtime": value.plan["runtime"], "inventory": METHODS, "shared_groups": []}
             def build_only(m, t):
-                self.assertEqual((m, t), (mode, 5))
+                self.assertEqual((m,t),(mode,None))
                 os.fstat(authority.control_descriptors[0])
                 with self.assertRaises(BlockingIOError), shards.file_claim(value.home / "Library/EliteNativeCI/recoverable-control.lock"):
                     self.fail("The common controller lease must remain held during preparation")
@@ -3247,7 +3075,7 @@ class LocalSanitizerTests(Fixture):
             self.assertEqual(result["inventory_sha256"], shards.fingerprint(METHODS))
             self.assertEqual(result["mode"], mode)
             self.assertIn("pending full quality", result["release_status"])
-            self.assertEqual(result["sampled_rss_high_water_bytes"], 1024)
+            self.assertIsNone(result["sampled_rss_high_water_bytes"])
             shards.require_sealed(output)
             with self.assertRaises(ValueError), patch.object(shards.NativeExecutor, "verify"), patch.object(
                     shards.NativeExecutor, "unknown_live_helpers", return_value=False):
@@ -3275,18 +3103,16 @@ class LocalSanitizerTests(Fixture):
                     shards.local_component(validation, value.plan, value.session["plan_sha256"], store,
                                            value.plan_path.with_name("component"))
 
-    def test_component_rejects_internally_committed_bad_rss_image_and_plan_evidence(self):
-        for mutation in ("rss-missing", "rss-over", "rss-zero", "image", "running", "plan"):
+    def test_component_rejects_internally_committed_bad_policy_image_and_plan_evidence(self):
+        for mutation in ("policy-missing", "policy-wrong", "image", "running", "plan"):
             value, authority, store, attempt = self.completed_local()
             validation = self.validation_authority(value)
             attempt.chmod(0o700)
             processes = shards.load_json(attempt / "processes.json")
-            if mutation == "rss-missing":
-                processes.pop("resident_memory")
-            elif mutation == "rss-over":
-                processes["resident_memory"]["high_water_bytes"] = processes["resident_memory"]["budget_bytes"] + 1
-            elif mutation == "rss-zero":
-                processes["resident_memory"]["helper_samples"] = 0
+            if mutation=='policy-missing':
+                processes.pop('execution_resources')
+            elif mutation=='policy-wrong':
+                processes['execution_resources']='old-resource-caps'
             elif mutation == "image":
                 processes["observed_images"]["fake"]["uuid"] = "wrong image"
             elif mutation == "running":
@@ -3384,43 +3210,36 @@ class LocalTsanMemoryTests(Fixture):
     fake_local_executor = LocalSanitizerTests.fake_local_executor
     validation_authority = LocalSanitizerTests.validation_authority
 
-    def test_authority_dispatch_changes_only_local_thread_build_flags(self):
-        value = self.controls("thread")
-        authority = self.authority(value)
-        original = ["--scratch-path", ".build/tsan", "--sanitize=thread"]
-        expected = original + ["--jobs", "1", "-Xswiftc", "-disable-batch-mode"]
-        self.assertEqual(authority.build_flags("thread"), expected)
-        self.assertEqual(shards.NativeAuthority.build_flags(authority, "thread"), original)
-        self.assertEqual(shards.sanitizer_build_flags("thread"), original)
-        self.assertEqual(shards.NativeAuthority.build_flags(authority, "address"),
-                         ["--scratch-path", ".build/asan", "--sanitize=address", "--jobs", "1", "-Xswiftc", "-disable-batch-mode"])
-        command = shards.legacy.batch_command("/fake/swift", expected, "thread", self.root, METHODS)
-        old = shards.legacy.batch_command("/fake/swift", original, "thread", self.root, METHODS)
-        position = command.index("--jobs")
-        self.assertEqual(command[:position] + command[position+4:], old)
-        self.assertNotIn("--no-parallel", command)  # Preserve Swift Testing/internal test concurrency.
+    def test_all_sanitizer_builds_use_default_resources_and_keep_mode_and_scratch_identity(self):
+        value=self.controls('thread');authority=self.authority(value)
+        for mode,scratch in [('thread','.build/tsan'),('address','.build/asan')]:
+            expected=['--scratch-path',scratch,'--sanitize='+mode]
+            self.assertEqual(shards.NativeAuthority.build_flags(authority,mode),expected)
+            self.assertEqual(shards.sanitizer_build_flags(mode),expected)
+        expected=['--scratch-path','.build/tsan','--sanitize=thread']
+        self.assertEqual(authority.build_flags('thread'),expected)
+        command=shards.legacy.batch_command('/fake/swift',expected,'thread',self.root,METHODS)
+        self.assertNotIn('--jobs',command)
+        self.assertNotIn('--no-parallel',command)
 
-    def test_local_old_flags_wrong_mode_and_oversized_plan_refuse_before_runtime_probe(self):
-        value = self.controls("thread")
-        authority = self.authority(value)
-        with patch.object(shards.NativeAuthority, "runtime") as never:
-            with self.assertRaises(ValueError):
-                authority.runtime(authority.root, "thread", self.image, shards.sanitizer_build_flags("thread"))
-            with self.assertRaises(ValueError):
-                authority.build_flags("address")
+    def test_local_wrong_flags_mode_or_inventory_refuse_but_large_complete_plan_is_allowed(self):
+        value=self.controls('thread');authority=self.authority(value)
+        wrong=[*shards.sanitizer_build_flags('thread'),'--unknown-option']
+        with patch.object(shards.NativeAuthority,'runtime') as never:
+            with self.assertRaises(ValueError):authority.runtime(authority.root,'thread',self.image,wrong)
+            with self.assertRaises(ValueError):authority.build_flags('address')
         never.assert_not_called()
-        old = deepcopy(value.plan)
-        old["runtime"]["flags"] = shards.sanitizer_build_flags("thread")
-        for row in old["shards"]:
-            row["id"] = shards.fingerprint(shards.shard_identity(old["runtime"], row))
-        with self.assertRaises(ValueError):
-            shards.verify_local_plan(authority, old, value.session["plan_sha256"])
-        methods = sorted(f"L337CoreTests.Small{i}/one()" for i in range(64))
-        plan = shards.make_plan(value.plan["runtime"], methods,
-            history=shards.workflow_history(methods, "thread", []), max_methods=64)
-        authority.activation.update(inventory_sha256=shards.fingerprint(methods), inventory_count=64, shard_count=1)
-        with self.assertRaisesRegex(ValueError, "packing exceeds"):
-            shards.verify_local_plan(authority, plan)
+        old=deepcopy(value.plan);old['runtime']['flags']=wrong
+        for row in old['shards']:row['id']=shards.fingerprint(shards.shard_identity(old['runtime'],row))
+        with self.assertRaises(ValueError):shards.verify_local_plan(authority,old,value.session['plan_sha256'])
+        methods=sorted(f'L337CoreTests.Small{i}/one()' for i in range(64))
+        plan=shards.make_plan(value.plan['runtime'],methods,
+            history=shards.workflow_history(methods,'thread',[]),max_methods=64)
+        authority.activation.update(inventory_sha256=shards.fingerprint(methods),inventory_count=64,shard_count=1)
+        authority.session['shards']=[row['id'] for row in plan['shards']]
+        shards.verify_local_plan(authority,plan)
+        plan['inventory'].pop()
+        with self.assertRaises(ValueError):shards.verify_local_plan(authority,plan)
 
     def test_local_thread16_retains_atomic_groups_and_global_thread64(self):
         value = self.controls("thread")
@@ -3432,7 +3251,7 @@ class LocalTsanMemoryTests(Fixture):
         history = shards.workflow_history(full, "thread", groups)
         plan = shards.make_plan(value.plan["runtime"], full, groups, history, max_methods=shards.LOCAL_PACKED_ID_TARGET)
         self.assertEqual(sorted(m for row in plan["shards"] for m in row["methods"]), full)
-        self.assertTrue(all(len(row["methods"]) <= 16 or len(row["atoms"]) == 1 for row in plan["shards"]))
+        self.assertTrue(any(len(row["methods"])>16 and len(row["atoms"])>1 for row in plan["shards"]))
         for group in groups:
             self.assertEqual(sum(set(group) <= set(row["methods"]) for row in plan["shards"]), 1)
         baseline = shards.make_plan(self.runtimes["thread"], solo,
@@ -3446,7 +3265,7 @@ class LocalTsanMemoryTests(Fixture):
         image = authority.root / ".build/tsan/Fake.xctest/Contents/MacOS/Fake"
         image.parent.mkdir(parents=True)
         image.write_bytes(self.image.read_bytes())
-        expected = ["--scratch-path", ".build/tsan", "--sanitize=thread", "--jobs", "1", "-Xswiftc", "-disable-batch-mode"]
+        expected = ["--scratch-path", ".build/tsan", "--sanitize=thread"]
         commands, original = [], authority.output
         def output(command, *args, **kwargs):
             if "--show-bin-path" in command:
@@ -3475,7 +3294,7 @@ class LocalTsanMemoryTests(Fixture):
                                         ["/fake/swift", "test", *expected, "list", "--skip-build"]])
             ready = authority.cache / "build-stage" / HEAD / "thread/ready.json"
             stale = shards.load_json(ready)
-            stale["runtime"]["flags"] = shards.sanitizer_build_flags("thread")
+            stale["runtime"]["flags"] = [*expected,"--unknown-option"]
             ready.parent.chmod(0o700)
             shards.durable_json(ready, stale)
             shards.seal(ready.parent)
@@ -3503,24 +3322,13 @@ class LocalTsanMemoryTests(Fixture):
         monitor.known[10] = deepcopy(root)
         with patch.object(shards, "image_uuids", return_value={"uuids": uuids}), patch.object(shards.legacy, "progress") as progress:
             monitor.observe()
-            self.assertEqual(monitor.memory["budget_bytes"], 3072)
-            self.assertEqual(monitor.memory["mode"], "thread")
-            self.assertIsNone(monitor.memory["failure"])
-            rows[20]["rss_bytes"] = 4096
+            self.assertIsNone(monitor.memory)
+            rows[20]['rss_bytes']=10**12
             monitor.observe()
-            self.assertEqual(monitor.memory["high_water_bytes"], 5120)
-            self.assertIn("tsan_resident_memory_refused", json.loads(progress.call_args.args[0]))
-        from crash_artifacts import cleanup_owned_identity
-        sent = []
-        def cleanup(identity, snapshot):
-            def signal_owned(pid, signum):
-                sent.append(pid)
-                rows.pop(pid)
-            cleanup_owned_identity(identity, snapshot, send_signal=signal_owned)
-        with patch.object(shards, "cleanup_owned_identity", side_effect=cleanup):
-            self.assertTrue(monitor.cleanup_memory_failure(monitor.known))
-        self.assertEqual(sent, [10, 20])
-        self.assertFalse(monitor.finish(True))
+            progress.assert_not_called()
+        rows.clear()
+        self.assertTrue(monitor.finish(False))
+        self.assertIsNone(monitor.memory)
 
     def test_nonlocal_or_unbound_thread_does_not_gain_local_rss_policy(self):
         value = self.controls("thread")
@@ -3533,19 +3341,19 @@ class LocalTsanMemoryTests(Fixture):
         monitor = shards.NativeMonitor(nonlocal_authority, self.root, self.root, value.plan["runtime"])
         self.assertIsNone(monitor.memory)
 
-    def test_thread_component_refuses_missing_wrong_mode_budget_and_over_budget_rss(self):
-        for mutation in ("missing", "mode", "budget", "over"):
+    def test_thread_component_refuses_missing_wrong_policy_or_image_lifecycle(self):
+        for mutation in ("missing", "policy", "image", "running"):
             value, authority, store, attempt = LocalSanitizerTests.completed_local(self, "thread")
             validation = self.validation_authority(value)
             processes = shards.load_json(attempt / "processes.json")
-            if mutation == "missing":
-                processes.pop("resident_memory")
-            elif mutation == "mode":
-                processes["resident_memory"]["mode"] = "address"
-            elif mutation == "budget":
-                processes["resident_memory"]["budget_bytes"] += 1
+            if mutation=='missing':
+                processes.pop('execution_resources')
+            elif mutation=='policy':
+                processes['execution_resources']='legacy-caps'
+            elif mutation=='image':
+                processes['observed_images']['fake']['uuid']='wrong'
             else:
-                processes["resident_memory"]["high_water_bytes"] = processes["resident_memory"]["budget_bytes"] + 1
+                processes['running']=True
             attempt.chmod(0o700)
             shards.durable_json(attempt / "processes.json", processes)
             receipt = shards.load_json(attempt / "result.json")
@@ -3554,7 +3362,7 @@ class LocalTsanMemoryTests(Fixture):
             shards.durable_json(attempt / "commit.json", {"schema": 1, "receipt_sha256": shards.legacy.digest(attempt / "result.json")})
             shards.seal(attempt)
             with patch.object(shards.NativeExecutor, "verify"), patch.object(shards.NativeExecutor, "unknown_live_helpers", return_value=False):
-                with self.subTest(mutation=mutation), self.assertRaisesRegex(ValueError, "mode-specific resident-budget"):
+                with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                     shards.local_component(validation, value.plan, value.session["plan_sha256"], store,
                                            value.plan_path.with_name("component"))
 
@@ -3752,65 +3560,50 @@ class OwnedQualityBridgeTests(Fixture):
                         exec(compile(gate, 'fake-normal-leaks-final-gate', 'exec'), {})
 
 
-    def test_independent_phase_memory_budget_and_image_lifecycle_refusals(self):
-        for phase in ('normal', 'leaks'):
-            profile = dict(build_profile='jobs1-nonbatch-v1', admission=dict(peak_per_worker=2048 if phase == 'normal' else 4096))
-            row = dict(start='fake-start', command='fake phase', parent=1, group=42, state='S')
-            identity = dict(phase=phase, image_sha256='a' * 64,
+    def test_independent_phase_policy_source_image_and_lifecycle_refusals(self):
+        for phase in ('normal','leaks'):
+            profile=dict(build_profile='toolchain-defaults-v1',admission={})
+            row=dict(start='fake-start',command='fake phase',parent=1,group=42,state='S')
+            identity=dict(phase=phase,image_sha256='a'*64,
                 image_uuid='UUID: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA (arm64) /fake/image')
-            origin = dict(tested_head=HEAD, authorization=dict(role='native_phase', phase=phase, head=HEAD, workspace='/fake/source'))
-            value = dict(child=dict(pid=42), terminal=dict(pid=42, exit_code=0), processes=dict(
-                running=False, workspace='/fake/source', root={'pid': 42, **row}, processes={'42': row},
-                observed_images={'fake': dict(sha256='a' * 64, uuid=shards.fingerprint({'arm64': 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'}))},
-                resident_memory=dict(kind='sampled-owned-process-rss-v1', mode=phase, phase_profile_sha256=shards.fingerprint(profile),
-                    failure=None, budget_bytes=profile['admission']['peak_per_worker'], samples=1,
-                    helper_samples=1 if phase == 'normal' else 0, high_water_bytes=1024, last_bytes=1024, last_phase_kind='runtime',
-                    last_budget_bytes=profile['admission']['peak_per_worker'])))
-            shards.validate_phase_memory(value, identity, profile, origin)
-            for mutation in [lambda v: v['processes']['resident_memory'].update(mode='address'),
-                             lambda v: v['processes']['resident_memory'].update(samples=0),
-                             lambda v: v['processes']['resident_memory'].update(last_phase_kind='compiler'),
-                             lambda v: v['processes']['resident_memory'].update(last_budget_bytes=1),
-                             lambda v: v['processes']['resident_memory'].update(last_bytes=1025),
-                             lambda v: v['processes']['resident_memory'].update(budget_bytes=1),
-                             lambda v: v['processes']['resident_memory'].update(high_water_bytes=9000),
-                             lambda v: v['processes']['resident_memory'].update(phase_profile_sha256='f' * 64),
-                             lambda v: v['processes'].update(running=True),
-                             lambda v: v['terminal'].update(exit_code=9),
-                             lambda v: v['processes']['root'].update(start='different-process')]:
-                changed = deepcopy(value)
-                mutation(changed)
-                with self.subTest(phase=phase), self.assertRaises(ValueError):
-                    shards.validate_phase_memory(changed, identity, profile, origin)
-            if phase == 'normal':
-                for mutation in [lambda v: v['processes']['resident_memory'].update(helper_samples=0),
-                                 lambda v: v['processes'].update(observed_images={})]:
-                    changed = deepcopy(value)
-                    mutation(changed)
-                    with self.assertRaises(ValueError):
-                        shards.validate_phase_memory(changed, identity, profile, origin)
+            origin=dict(tested_head=HEAD,authorization=dict(role='native_phase',phase=phase,head=HEAD,workspace='/fake/source'))
+            value=dict(child=dict(pid=42),terminal=dict(pid=42,exit_code=0),processes=dict(
+                running=False,workspace='/fake/source',root={'pid':42,**row},processes={'42':row},
+                execution_resources='os-toolchain-defaults-v1',phase=phase,phase_profile_sha256=shards.fingerprint(profile),
+                observed_images={'fake':dict(sha256='a'*64,uuid=shards.fingerprint({'arm64':'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'}))}))
+            shards.validate_phase_memory(value,identity,profile,origin)
+            for mutation in [lambda v:v['processes'].pop('execution_resources'),
+                             lambda v:v['processes'].update(execution_resources='legacy-caps'),
+                             lambda v:v['processes'].update(phase='address'),
+                             lambda v:v['processes'].update(phase_profile_sha256='f'*64),
+                             lambda v:v['processes'].update(running=True),
+                             lambda v:v['terminal'].update(exit_code=9),
+                             lambda v:v['processes']['root'].update(start='different-process'),
+                             lambda v:v['processes'].update(workspace='/foreign'),
+                             lambda v:v['child'].update(pid=43)]:
+                changed=deepcopy(value);mutation(changed)
+                with self.subTest(phase=phase),self.assertRaises(ValueError):
+                    shards.validate_phase_memory(changed,identity,profile,origin)
+            if phase=='normal':
+                for observed in ({},{'fake':dict(sha256='f'*64,uuid='wrong')}):
+                    changed=deepcopy(value);changed['processes']['observed_images']=observed
+                    with self.assertRaises(ValueError):shards.validate_phase_memory(changed,identity,profile,origin)
 
-    def test_each_phase_monitor_uses_only_its_explicit_budget_and_refuses_incomplete_or_over_budget_samples(self):
-        fixture = self.bridge()
-        authority = fixture.current
-        for phase in ('normal', 'leaks'):
-            attempt = self.root / ('monitor-' + phase)
-            attempt.mkdir(mode=0o700)
-            monitor = shards.NativeMonitor(authority, attempt, authority.root, phase=phase)
-            self.assertEqual(monitor.memory['budget_bytes'], authority.config['phase_profiles'][phase]['admission']['peak_per_worker'])
-            self.assertEqual(monitor.memory['phase_profile_sha256'], shards.fingerprint(authority.phase_profile(phase)))
-            observer = dict(parent=0, start='observer', command='fake observer', rss_bytes=0)
-            monitor.controller = {'pid': 41, **observer}
-            live = {42: dict(parent=41, command='fake phase', rss_bytes=monitor.memory['budget_bytes'] + 1)}
-            monitor.sample_memory(live, {41: observer, **live})
-            self.assertEqual(monitor.memory['failure'], 'owned process tree exceeds budget')
-            monitor = shards.NativeMonitor(authority, attempt, authority.root, phase=phase)
-            monitor.controller = {'pid': 41, **observer}
-            live = {42: dict(parent=41, command='fake phase')}
-            monitor.sample_memory(live, {41: observer, **live})
-            self.assertEqual(monitor.memory['failure'], 'incomplete resident sample')
-        with patch.object(authority, 'phase_profile', return_value=None), self.assertRaises(ValueError):
-            shards.NativeMonitor(authority, self.root, authority.root, phase='normal')
+    def test_each_phase_requires_its_authorized_profile_and_ignores_resident_memory(self):
+        fixture=self.bridge();authority=fixture.current
+        for phase in ('normal','leaks'):
+            attempt=self.root/('monitor-'+phase);attempt.mkdir(mode=0o700)
+            monitor=shards.NativeMonitor(authority,attempt,authority.root,phase=phase)
+            self.assertIsNone(monitor.memory)
+            self.assertEqual(monitor.profile,authority.phase_profile(phase))
+            monitor.sample_memory({42:dict(parent=41,command='fake phase',rss_bytes=10**12)})
+            monitor.persist()
+            record=shards.load_json(attempt/'processes.json')
+            self.assertEqual(record['phase'],phase)
+            self.assertEqual(record['phase_profile_sha256'],shards.fingerprint(monitor.profile))
+            self.assertNotIn('resident_memory',record)
+        with patch.object(authority,'phase_profile',return_value=None),self.assertRaises(ValueError):
+            shards.NativeMonitor(authority,self.root,authority.root,phase='normal')
     def phase_capsule(self, fixture, phase):
         authority, runtime = fixture.current, fixture.anchor['runtime']
         authority.environment.update(GITHUB_JOB='native_phase', ELITE_RECOVERABLE_REQUEST_PHASE=phase)
@@ -3823,7 +3616,7 @@ class OwnedQualityBridgeTests(Fixture):
             inventory=METHODS if phase == 'normal' else [], opt_in_policy={},
             flags=['--enable-code-coverage'] if phase == 'normal' else [], parallel=phase == 'normal',
             policy='normal-coverage-80-v1' if phase == 'normal' else 'leaks-at-exit-diagnostics-v1')
-        flags = ['--jobs', '1', '-Xswiftc', '-disable-batch-mode']
+        flags = []
         identity['build_profile'] = dict(kind='owned-phase-build-v1', phase=phase, profile=profile['build_profile'],
             policy_sha256=shards.native_runner.policy_digest(authority.policy), admission=shards.native_runner.phase_resource_admission(profile), flags=flags,
             argv=['/fake/swift', 'build', *(['--build-tests'] if phase == 'normal' else []), *identity['flags'], *flags])
@@ -3851,17 +3644,7 @@ class OwnedQualityBridgeTests(Fixture):
             workspace=str(authority.root), root={'pid': 42, **row}, processes={'42': row},
             observed_images={'fake': dict(sha256=identity['image_sha256'],
                 uuid=shards.fingerprint({'fake-arm64': 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'}))},
-            resident_memory=dict(kind='sampled-owned-process-rss-v1', mode=phase,
-                phase_profile_sha256=shards.fingerprint(profile), failure=None, budget_bytes=profile['admission']['peak_per_worker'],
-                samples=1, helper_samples=1 if phase == 'normal' else 0, high_water_bytes=1024, last_bytes=1024, last_phase_kind='runtime',
-                    last_budget_bytes=profile['admission']['peak_per_worker'])))
-        limits = shards.native_runner.phase_resource_limits(profile)
-        if limits['compiler'] != limits['runtime']:
-            memory['processes']['resident_memory'].update(
-                phase_limits_kind='closed-compiler-runtime-rss-v1', compiler_budget_bytes=limits['compiler'],
-                admission_peak_bytes=limits['admission'], compiler_samples=0, runtime_samples=1,
-                compiler_high_water_bytes=0, runtime_high_water_bytes=1024, last_budget_bytes=limits['runtime'],
-                last_phase_kind='runtime')
+            execution_resources='os-toolchain-defaults-v1',phase=phase,phase_profile_sha256=shards.fingerprint(profile)))
         verifier = SimpleNamespace(verify=lambda actual: self.assertEqual(actual, runtime), phase_origin=lambda a, i: origin)
         bundle = authority.cache / 'full-phases' / shards.phase_key(runtime, METHODS, phase, profile)
         bundle.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -3875,7 +3658,7 @@ class OwnedQualityBridgeTests(Fixture):
             bundle, checksum = self.phase_capsule(fixture, phase)
             profile = fixture.current.phase_profile(phase)
             changed = deepcopy(profile)
-            changed['admission']['peak_per_worker'] += 1
+            changed['build_profile']='unknown-profile'
             with self.assertRaises(ValueError):
                 shards.validate_phase(bundle, checksum, phase, fixture.anchor['runtime'], METHODS, changed)
             result = shards.load_json(bundle / 'attempt/result.json')
@@ -3947,7 +3730,7 @@ class OwnedQualityBridgeTests(Fixture):
                 patch.object(shards.shutil, 'disk_usage', return_value=SimpleNamespace(free=100 * 1024**3)):
             for phase in ('normal', 'leaks'):
                 observed = authority.admission(phase)
-                self.assertEqual(observed['peak_per_worker'], shards.native_runner.phase_resource_admission(authority.phase_profile(phase))['peak_per_worker'])
+                self.assertEqual(observed,{})
         authority.legacy_cache = Path(authority.config['legacy_cache'])
         authority.legacy_cache.mkdir(parents=True, exist_ok=True, mode=0o700)
         with patch.object(authority, 'admission', return_value={'explicit': 1}) as admission, \
@@ -3992,8 +3775,9 @@ class OwnedQualityBridgeTests(Fixture):
                 self.assertFalse(isolate_environment)
                 self.assertEqual(command[command.index('--profile-policy') + 1], str(policy_path))
                 self.assertEqual(command[command.index('--profile-policy-sha256') + 1], shards.legacy.digest(policy_path))
-                self.assertEqual(monitor.memory['mode'], phase)
-                self.assertEqual(monitor.memory['budget_bytes'], authority.phase_profile(phase)['admission']['peak_per_worker'])
+                self.assertIsNone(monitor.memory)
+                self.assertEqual(monitor.phase,phase)
+                self.assertEqual(monitor.profile,authority.phase_profile(phase))
                 fresh = Path(command[command.index('--cache') + 1]) / 'phases/fake/attempt'
                 fresh.parent.mkdir(parents=True, mode=0o700)
                 shutil.copytree(saved / 'attempt', fresh)
@@ -4014,224 +3798,6 @@ class OwnedQualityBridgeTests(Fixture):
             shards.validate_phase(destination, checksum, phase, fixture.anchor['runtime'], METHODS, authority.phase_profile(phase))
 
 
-class HostedClosedPhaseMemoryTests(unittest.TestCase):
-    """Exercise the actual hosted wrapper, authority and monitor with fake kernel rows only."""
-    def setUp(self):
-        temporary = tempfile.TemporaryDirectory(dir='/tmp')
-        self.addCleanup(temporary.cleanup)
-        self.root = Path(temporary.name).resolve()
-        self.gib = 1024 ** 3
-        self.bounds = dict(explicit=1, cpu_budget=1, ram_capacity=16*self.gib,
-            ram_reserve=2*self.gib, peak_per_worker=3*self.gib, disk_capacity=200*self.gib,
-            disk_reserve=40*self.gib, disk_per_worker=80*self.gib)
-        self.profile = dict(build_profile='jobs1-nonbatch-v1', admission=self.bounds)
-        self.available = 8*self.gib
-        self.calls = []
-        self.authority = SimpleNamespace(root=self.root, cache=self.root,
-            config={'admission': self.bounds}, phase_profile=lambda phase: self.profile,
-            environment={}, policy={'approved_head': HEAD}, authorization=lambda: {})
-        def output(command):
-            self.calls.append(command)
-            if command == ['sysctl', '-n', 'hw.logicalcpu']:return '4'
-            if command == ['vm_stat']:
-                return ('Mach Virtual Memory Statistics: (page size of 1 bytes)\n'
-                        + 'Pages free: '+str(self.available)+'.\nPages inactive: 0.\nPages speculative: 0.\n')
-            raise AssertionError('Unexpected real resource command: '+repr(command))
-        self.authority.output = output
-        self.authority.admission = lambda phase: shards.NativeAuthority.admission(self.authority, phase)
-
-    def rows(self):
-        def row(parent, command, rss=0):
-            return dict(parent=parent, command=command, rss_bytes=rss, start='fake-start', group=100, state='S')
-        return {55: row(0, '/bound/python3 observer.py', 17),
-                100: row(55, '/bound/python3 quality_phase_checkpoints.py normal'),
-                101: row(100, '/bound/toolchain/swift-build --build-tests --enable-code-coverage '
-                         '--jobs 1 -Xswiftc -disable-batch-mode'),
-                102: row(101, '/bound/toolchain/swift-frontend -frontend -c source.swift'),
-                104: row(55, 'ps -ww -axo pid=,ppid=,pgid=,stat=,lstart=,rss=,command=', 11)}
-
-    def monitor(self, name, rows):
-        attempt = self.root / name
-        attempt.mkdir()
-        monitor = shards.NativeMonitor(self.authority, attempt, self.root, phase='normal')
-        monitor.controller = {'pid': 55, **rows[55]}
-        monitor.root_identity = {'pid': 100, **rows[100]}
-        monitor.known = {100: rows[100]}
-        return monitor
-
-    def sample(self, monitor, rows):
-        self.authority.snapshot = lambda resident=False: rows
-        monitor.observe()
-
-    def test_actual_phase_admission_reserves_six_plus_two_without_mutating_policy(self):
-        for phase in ('normal', 'leaks'):
-            with patch.object(shards.native_runner, 'require_diagnostic_custody_clear'), \
-                    patch.object(shards.shutil, 'disk_usage', return_value=SimpleNamespace(free=120*self.gib)):
-                admitted = self.authority.admission(phase)
-                self.assertEqual(admitted['peak_per_worker'], 6*self.gib)
-                self.assertEqual(admitted['ram_reserve'], 2*self.gib)
-                self.assertEqual(self.bounds['peak_per_worker'], 3*self.gib)
-                self.available = 8*self.gib-1
-                with patch.object(shards.legacy, 'progress'), self.assertRaises(ValueError):
-                    self.authority.admission(phase)
-                self.available = 8*self.gib
-        self.assertEqual(self.calls.count(['vm_stat']), 4)
-        self.assertEqual(self.calls.count(['sysctl', '-n', 'hw.logicalcpu']), 4)
-        records = list(self.root.glob('preparation/*/resource-admission.json'))
-        self.assertEqual(len(records), 2)
-        for path in records:
-            sample = shards.load_json(path)['sample']
-            self.assertEqual(sample['ram_required'], 8*self.gib)
-            self.assertEqual(sample['ram_available'], 8*self.gib-1)
-
-    def test_actual_monitor_counts_observer_and_sampler_and_rechecks_runtime_after_compile(self):
-        rows = self.rows()
-        monitor = self.monitor('transition', rows)
-        rows[102]['rss_bytes'] = 6*self.gib-28
-        self.sample(monitor, rows)
-        self.assertIsNone(monitor.memory['failure'])
-        self.assertEqual(monitor.memory['last_budget_bytes'], 6*self.gib)
-        runtime = {pid: dict(row) for pid,row in rows.items() if pid not in (101,102)}
-        runtime[103] = dict(rows[102], parent=100, command='/bound/Tests.xctest', rss_bytes=3*self.gib-28)
-        self.sample(monitor, runtime)
-        self.assertIsNone(monitor.memory['failure'])
-        self.assertEqual(monitor.memory['last_budget_bytes'], 3*self.gib)
-        self.assertEqual(monitor.memory['compiler_samples'], 1)
-        self.assertEqual(monitor.memory['runtime_samples'], 1)
-        runtime[103]['rss_bytes'] += 1
-        self.sample(monitor, runtime)
-        self.assertEqual(monitor.memory['failure'], 'owned process tree exceeds budget')
-        self.assertEqual(monitor.memory['last_bytes'], 3*self.gib+1)
-
-    def test_strict_phase_also_counts_observer_sampler_and_refuses_missing_observer(self):
-        self.bounds['peak_per_worker'] = 2*self.gib
-        for delta, refused in ((0, False), (1, True), (28, True)):
-            rows = self.rows()
-            rows[102]['rss_bytes'] = 2*self.gib-28+delta
-            monitor = self.monitor('strict-'+str(delta), rows)
-            with self.subTest(delta=delta):
-                self.sample(monitor, rows)
-                self.assertEqual(monitor.memory['last_bytes'], 2*self.gib+delta)
-                self.assertEqual(monitor.memory['budget_bytes'], 2*self.gib)
-                self.assertEqual(monitor.memory['last_budget_bytes'], 2*self.gib)
-                self.assertEqual(monitor.memory['last_phase_kind'], 'runtime')
-                self.assertEqual(monitor.memory['failure'] is not None, refused)
-        rows = self.rows()
-        monitor = self.monitor('strict-missing-observer', rows)
-        del rows[55]
-        self.sample(monitor, rows)
-        self.assertEqual(monitor.memory['failure'], 'incomplete observer resident sample')
-        self.assertEqual(monitor.memory['samples'], 0)
-        rows = self.rows()
-        monitor = self.monitor('strict-unbound-observer', rows)
-        monitor.controller = None
-        self.sample(monitor, rows)
-        self.assertEqual(monitor.memory['failure'], 'incomplete observer resident sample')
-        self.assertEqual(monitor.memory['samples'], 0)
-        rows = self.rows()
-        monitor = self.monitor('strict-missing-observer-rss', rows)
-        del rows[55]['rss_bytes']
-        self.sample(monitor, rows)
-        self.assertEqual(monitor.memory['failure'], 'incomplete resident sample')
-
-    def test_strict_admission_keeps_its_own_peak_plus_unchanged_reserve(self):
-        self.bounds['peak_per_worker'] = 2*self.gib
-        self.available = 4*self.gib
-        with patch.object(shards.native_runner, 'require_diagnostic_custody_clear'), \
-                patch.object(shards.shutil, 'disk_usage', return_value=SimpleNamespace(free=120*self.gib)):
-            admitted = self.authority.admission('normal')
-            self.assertEqual(admitted['peak_per_worker'], 2*self.gib)
-            self.assertEqual(admitted['ram_reserve'], 2*self.gib)
-            self.available -= 1
-            with patch.object(shards.legacy, 'progress'), self.assertRaises(ValueError):
-                self.authority.admission('normal')
-        records = list(self.root.glob('preparation/*/resource-admission.json'))
-        self.assertEqual(len(records), 1)
-        sample = shards.load_json(records[0])['sample']
-        self.assertEqual(sample['ram_required'], 4*self.gib)
-        self.assertEqual(sample['ram_available'], 4*self.gib-1)
-        self.assertEqual(self.calls.count(['vm_stat']), 2)
-
-    def test_actual_monitor_rejects_compiler_one_byte_over_six_including_observer(self):
-        rows = self.rows()
-        rows[102]['rss_bytes'] = 6*self.gib-27
-        monitor = self.monitor('compiler-over', rows)
-        self.sample(monitor, rows)
-        self.assertEqual(monitor.memory['last_bytes'], 6*self.gib+1)
-        self.assertEqual(monitor.memory['failure'], 'owned process tree exceeds budget')
-
-    def test_actual_monitor_overlap_descendant_runtime_unknown_and_second_build_stay_at_three(self):
-        original = self.rows()
-        for index, (parent, command) in enumerate((
-                (100, '/bound/Tests.xctest'), (102, '/bound/L337'),
-                (102, '/bound/toolchain/swift-test --skip-build'),
-                (101, original[101]['command']), (100, '/bound/python3 unknown.py'))):
-            rows = {pid: dict(row) for pid,row in original.items()}
-            rows[102]['rss_bytes'] = 4*self.gib
-            rows[103] = dict(rows[102], parent=parent, command=command, rss_bytes=0)
-            monitor = self.monitor('unsafe-'+str(index), rows)
-            with self.subTest(command=command):
-                self.sample(monitor, rows)
-                self.assertEqual(monitor.memory['last_budget_bytes'], 3*self.gib)
-                self.assertEqual(monitor.memory['failure'], 'owned process tree exceeds budget')
-        rows = self.rows()
-        monitor = self.monitor('observer-over', rows)
-        rows[55]['rss_bytes'] = 3*self.gib+1
-        self.sample(monitor, rows)
-        self.assertEqual(monitor.memory['last_budget_bytes'], 3*self.gib)
-        self.assertIsNotNone(monitor.memory['failure'])
-
-    def test_phase_receipt_requires_separate_compiler_and_runtime_proof(self):
-        rows = self.rows();rows[102]['rss_bytes'] = 4*self.gib
-        monitor = self.monitor('receipt', rows)
-        self.sample(monitor, rows)
-        runtime = {pid: dict(row) for pid,row in rows.items() if pid not in (101,102)}
-        runtime[103] = dict(rows[102], parent=100, command='/bound/swiftpm-testing-helper', rss_bytes=2*self.gib)
-        # Only sample fake rows here; helper-image lifecycle has its existing separate tests.
-        live = {pid: row for pid,row in runtime.items() if pid not in (55,104)}
-        monitor.sample_memory(live, runtime)
-        row = rows[100]
-        identity = dict(phase='normal', image_sha256='a'*64,
-            image_uuid='UUID: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA (arm64) /fake/image')
-        origin = dict(tested_head=HEAD, authorization=dict(role='native_phase',phase='normal',head=HEAD,workspace=str(self.root)))
-        value = dict(child=dict(pid=100), terminal=dict(pid=100,exit_code=0), processes=dict(
-            running=False,workspace=str(self.root),root={'pid':100,**row},processes={'100':row},
-            observed_images={'fake':dict(sha256='a'*64,uuid=shards.fingerprint({'arm64':'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'}))},
-            resident_memory=deepcopy(monitor.memory)))
-        shards.validate_phase_memory(value,identity,self.profile,origin)
-        for changes in ({'runtime_high_water_bytes':3*self.gib+1},
-                        {'compiler_budget_bytes':3*self.gib}, {'admission_peak_bytes':3*self.gib},
-                        {'phase_limits_kind':'fixed-six'}, {'runtime_samples':0}, {'last_budget_bytes':6*self.gib+1}):
-            changed=deepcopy(value);changed['processes']['resident_memory'].update(changes)
-            with self.subTest(changes=changes),self.assertRaises(ValueError):
-                shards.validate_phase_memory(changed,identity,self.profile,origin)
-        runtime_only = deepcopy(value)
-        proof = runtime_only['processes']['resident_memory']
-        proof.update(samples=1, compiler_samples=0, compiler_high_water_bytes=0,
-            high_water_bytes=proof['runtime_high_water_bytes'])
-        shards.validate_phase_memory(runtime_only,identity,self.profile,origin)
-        mutations = [
-            {'last_phase_kind':'compiler', 'last_budget_bytes':6*self.gib},
-            {'last_phase_kind':'runtime', 'last_budget_bytes':6*self.gib},
-            {'last_phase_kind':'unknown'},
-            {'last_bytes':proof['high_water_bytes']+1},
-            {'last_bytes':3*self.gib+1},
-            {'last_bytes':-1}, {'last_bytes':True}, {'last_bytes':1.0}, {'last_bytes':None},
-            {'last_phase_kind':'compiler', 'last_budget_bytes':6*self.gib,'last_bytes':5*self.gib},
-        ]
-        for changes in mutations:
-            changed=deepcopy(runtime_only);changed['processes']['resident_memory'].update(changes)
-            with self.subTest(finalSample=changes), self.assertRaises(ValueError):
-                shards.validate_phase_memory(changed,identity,self.profile,origin)
-        # Also reject a last sample below the overall compiler high-water but
-        # above its own runtime high-water and within the runtime limit.
-        changed=deepcopy(value)
-        changed['processes']['resident_memory']['last_bytes'] += 1
-        with self.assertRaises(ValueError):
-            shards.validate_phase_memory(changed,identity,self.profile,origin)
-        # A large installed reservation cannot raise the runtime/test ceiling.
-        rotated=deepcopy(self.profile);rotated['admission']['peak_per_worker']=6*self.gib
-        self.assertEqual(shards.native_runner.phase_resource_limits(rotated)['runtime'],3*self.gib)
 
 
 if __name__ == "__main__":

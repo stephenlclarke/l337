@@ -33,7 +33,6 @@ jobs:
   authorize_native:
     name: Validate exact CI event and installed activation
     runs-on: ubuntu-latest
-    timeout-minutes: 2
     outputs:
       authorized: ${{ steps.authorize.outputs.authorized }}
       backend: ${{ steps.authorize.outputs.backend }}
@@ -97,15 +96,15 @@ jobs:
   fake-contracts:
     name: Fake ${{ matrix.suite }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     strategy:
       fail-fast: false
-      max-parallel: 2
       matrix:
         include:
+          - {module: test_execution_resource_defaults, suite: ExecutionResourceDefaultsTests}
           - {module: test_recoverable_shards, suite: PlanningTests}
           - {module: test_recoverable_shards, suite: CheckpointTests}
           - {module: test_recoverable_shards, suite: AdmissionTests}
+          - {module: test_recoverable_shards, suite: LegacyWorkspaceReservationTests}
           - {module: test_recoverable_shards, suite: PhaseTests}
           - {module: test_recoverable_shards, suite: ProcessTests}
           - {module: test_recoverable_shards, suite: NativeAdapterTests}
@@ -147,7 +146,6 @@ jobs:
     needs: fake-contracts
     if: always()
     runs-on: ubuntu-latest
-    timeout-minutes: 2
     steps:
       - name: Require every fake contract result
         env:
@@ -163,7 +161,6 @@ jobs:
     needs: [authorize_native, fake-aggregate]
     if: needs.authorize_native.outputs.authorized == 'true' && needs.fake-aggregate.result == 'success'
     runs-on: ${{ fromJSON('["self-hosted","macOS","ARM64","elite-native"]') }}
-    timeout-minutes: 360
     steps:
       -
         id: native_authorize
@@ -352,7 +349,6 @@ jobs:
     needs: [authorize_native, fake-aggregate, native_checks]
     if: always()
     runs-on: ubuntu-latest
-    timeout-minutes: 2
     env:
       AUTHORIZED: ${{ needs.authorize_native.outputs.authorized }}
       FAKES: ${{ needs.fake-aggregate.result }}
