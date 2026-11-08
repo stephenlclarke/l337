@@ -12,7 +12,8 @@ private func prepareActualC03NativeInterval(_ game: inout Game) throws
   try #require(game.nativeC03MotionPending != nil)
   let steering = game.prepareC03FreighterRoutePass(delta: 0.1)
   try #require(steering.refusedBodyIDs.isEmpty && !steering.recognizedBodyIDs.isEmpty)
-  let path = try #require(game.prepareCurrentNewtOuterMotion(delta: 0.1))
+  let preparedPath = game.prepareCurrentNewtOuterMotion(delta: 0.1)
+  let path = try #require(preparedPath)
   let frame = try #require(game.prepareCurrentNewtNPCFrame(path))
   return (path, frame)
 }

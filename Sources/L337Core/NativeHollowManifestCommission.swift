@@ -114,7 +114,8 @@ enum NativeHollowManifestCommission {
     }
     // G3 supplies the pure owned-actor predicate; it is not a life or scene-admission gate.
     // This consumer activates only with the coherent physical, route and native effect/life packet.
-    return instance.journal == expectedJournal(state) && admittedActorClaimsMatch(instance)
+    guard instance.journal == expectedJournal(state) else { return false }
+    return admittedActorClaimsMatch(instance)
   }
 }
 

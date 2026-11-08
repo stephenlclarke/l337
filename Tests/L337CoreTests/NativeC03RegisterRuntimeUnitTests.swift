@@ -34,7 +34,8 @@ func actualHollowRegisterRuntime() async throws -> (
     game.speed = 0
     game.screen = .front
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     let source = try #require(try game.retainedMissionActorAdmissionSources().first {
@@ -76,7 +77,7 @@ func selectActualHollowRegister(_ runtime: GameRuntime) async throws -> Game {
       $0.physical?.identity == admission.actor && $0.missionActorID == admission.logicalActor
     })
     let previous = game.commander.flightSimulation.pose
-    let centre = body.modelPoint(NativeC03RegisterGeometry.componentPosition
+    let centre = body.position + body.modelVector(NativeC03RegisterGeometry.componentPosition
       + .init(0, 0, NativeC03RegisterGeometry.plateHeight + 0.035))
     let normal = body.modelVector(.init(0, 0, 1))
     var pose = ShipPose(position: previous.systemPoint(centre + normal * 100))
@@ -172,7 +173,7 @@ struct NativeC03RegisterRuntimeUnitTests {
     var inventory = selected
     let owned = try #require(inventory.commander.equipmentInventory)
     // Negative-only epoch change; no equipment, data or positive receipt is constructed.
-    inventory.commander.equipmentInventory = try .init(
+    inventory.commander.savedEquipmentInventory = try .init(
       owner: owned.owner, activeHull: owned.activeHull, revision: owned.revision + 1, items: owned.items)
     #expect(!queued.isCurrent(in: inventory))
     #expect(selected.hollowManifestMission?.savedHollowManifest?.custodyRegister?.recovery == nil)
@@ -192,7 +193,7 @@ struct NativeC03RegisterRuntimeUnitTests {
       switch failure {
       case 0:
         let inventory = try #require(broken.commander.equipmentInventory)
-        broken.commander.equipmentInventory = try .init(
+        broken.commander.savedEquipmentInventory = try .init(
           owner: inventory.owner, activeHull: inventory.activeHull, revision: inventory.revision + 1,
           items: inventory.items.filter { $0.id != kit })
       case 1:
@@ -200,7 +201,8 @@ struct NativeC03RegisterRuntimeUnitTests {
       case 2:
         broken.bodies[index].scriptNPC?.components[NativeC03RegisterGeometry.component]?.energy = 0
       default:
-        broken.bodies[index].physical?.angularVelocity = broken.modelPose(of: broken.bodies[index]).orientation.z * 10
+        let angularVelocity = broken.modelPose(of: broken.bodies[index]).orientation.z * 10
+        broken.bodies[index].physical?.angularVelocity = angularVelocity
       }
       let before = broken.commander
       #expect(throws: (any Error).self) { try broken.recoverHollowManifestRegister() }
@@ -252,7 +254,8 @@ struct NativeC03RegisterRuntimeUnitTests {
     game.bodies = [.init(id: 0, hull: .station, position: .init(0, 0, 16000))]
     game.speed = 0
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     let flight = game.commander.flightSimulation

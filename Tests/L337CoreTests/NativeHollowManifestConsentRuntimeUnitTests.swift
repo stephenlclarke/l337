@@ -24,7 +24,8 @@ struct NativeHollowManifestConsentRuntimeUnitTests {
     game.speed = 0
     game.bodies = [.init(id: 0, hull: .station, position: .init(0, 0, 16000))]
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     try game.restoreScriptActors()
@@ -537,7 +538,7 @@ struct NativeHollowManifestConsentRuntimeUnitTests {
     try game.persistScriptActorsChecked()
     try game.restoreScriptActors()
     let prepared = try #require(
-      game.prepareHollowManifestConsentReply(
+      try game.prepareHollowManifestConsentReply(
         delta: 0.1,
         startTime: start.physicalTime, startPlayer: start.player))
     if reason == "zero-step" || reason == "wrong-start-player" {

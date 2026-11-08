@@ -55,7 +55,7 @@ extension NativeHollowManifestCommission {
       issue.valid(for: instance), let obligation = issue.obligation,
       issue.kind == .module(NativeHollowManifestKitDefinition.name),
       issue.loan, !issue.returnRemaining,
-      issue.items == [lab.facts.originalKit], issue.displacements.isEmpty,
+      issue.items == [lab.facts.originalKit], issue.displacements?.isEmpty == true,
       issue.legacyMissingItems == nil,
       obligation.source == lab.facts.issueSource,
       obligation.node == NativeHollowManifestKitDefinition.node,

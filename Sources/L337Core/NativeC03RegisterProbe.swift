@@ -62,7 +62,7 @@ enum NativeC03RegisterProbe {
     else { return nil }
     let player = game.commander.flightSimulation.pose
     let pose = game.modelPose(of: body)
-    let centre = body.modelPoint(NativeC03RegisterGeometry.componentPosition)
+    let centre = (body.position + body.modelVector(NativeC03RegisterGeometry.componentPosition))
     let normal = body.modelVector(.init(0, 0, 1))
     guard (centre * -1).dot(normal) > 0 else { return nil }
     let spacing = NativeC03RegisterGeometry.surfaceRange.lowerBound
@@ -85,7 +85,7 @@ enum NativeC03RegisterProbe {
       var heights: [Double] = []
       var directions: [Vector3] = []
       for offset in offsets {
-        let aim = body.modelPoint(NativeC03RegisterGeometry.componentPosition + centre + offset)
+        let aim = (body.position + body.modelVector(NativeC03RegisterGeometry.componentPosition + centre + offset))
         guard aim.finite, aim.length.isFinite, aim.length > 0 else { return nil }
         let direction = aim.unit
         for previous in directions {

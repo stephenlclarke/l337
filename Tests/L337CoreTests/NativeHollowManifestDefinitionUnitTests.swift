@@ -70,13 +70,14 @@ struct NativeHollowManifestDefinitionUnitTests {
         "accept", "inspect-freighters", "analyse-seals", "follow-carrier", "recover-register",
         "rescue-crew", "reconstruct-ledger", "choose-remedy", "return-equipment", "close-case",
       ])
-    #expect(
-      stages.map(\.location) == [
-        .init(galaxy: 1, system: 120), .init(galaxy: 1, system: 113),
-        .init(galaxy: 1, system: 27), .init(galaxy: 1, system: 182), .init(galaxy: 1, system: 34),
-        .init(galaxy: 1, system: 182), .init(galaxy: 1, system: 113),
-        .init(galaxy: 1, system: 27), .init(galaxy: 1, system: 120), .init(galaxy: 1, system: 120),
-      ])
+    let actualLocations = stages.map(\.location)
+    let expectedLocations: [SystemIdentity] = [
+      .init(galaxy: 1, system: 120), .init(galaxy: 1, system: 113),
+      .init(galaxy: 1, system: 27), .init(galaxy: 1, system: 182), .init(galaxy: 1, system: 34),
+      .init(galaxy: 1, system: 182), .init(galaxy: 1, system: 113),
+      .init(galaxy: 1, system: 27), .init(galaxy: 1, system: 120), .init(galaxy: 1, system: 120),
+    ]
+    #expect(actualLocations == expectedLocations)
     #expect(
       stages.map(\.authoredEvent) == [
         "mission_contact_confirmed", "entity_scan_completed", "mission_contact_confirmed",

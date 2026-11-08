@@ -142,7 +142,7 @@ struct NativeC03PassiveEvidenceUnitTests {
     // Aim at the real archive's side skin, away from its optical component. This controlled
     // viewpoint grants no damage/death receipt; the native laser must actually destroy it.
     let normal = body.modelVector(.init(1, 0, 0))
-    var pose = ShipPose(position: previous.systemPoint(body.modelPoint(.init(1, 0, 0)) + normal * 100))
+    var pose = ShipPose(position: previous.systemPoint((body.position + body.modelVector(.init(1, 0, 0))) + normal * 100))
     pose.orientation.z = previous.orientation.apply(normal * -1)
     pose.orientation.y = previous.orientation.apply(body.modelVector(.init(0, 1, 0)))
     pose.orientation.x = pose.orientation.y.cross(pose.orientation.z)
@@ -206,7 +206,7 @@ struct NativeC03PassiveEvidenceUnitTests {
       let previous = scene.commander.flightSimulation.pose
       // Controlled viewpoint at unchanged skin outside the original seal. Damage, weapon
       // cadence, native emission/death and ship-credit accounting remain real producers.
-      let point = body.modelPoint(.init(6.5, 1.5, 0))
+      let point = (body.position + body.modelVector(.init(6.5, 1.5, 0)))
       let normal = body.modelVector(.init(1, 0, 0))
       var pose = ShipPose(position: previous.systemPoint(point + normal * 300))
       pose.orientation.z = previous.orientation.apply(normal * -1)

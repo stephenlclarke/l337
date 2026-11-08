@@ -144,7 +144,7 @@ struct NativeC03ArchiveReaderUIUnitTests {
     // Negative value copies only. These are not real loss, transfer or trial producers.
     var missing = recovered
     let inventory = try #require(missing.commander.equipmentInventory)
-    missing.commander.equipmentInventory = try .init(owner: inventory.owner,
+    missing.commander.savedEquipmentInventory = try .init(owner: inventory.owner,
       activeHull: inventory.activeHull, revision: inventory.revision + 1,
       items: inventory.items.filter { $0.id != held.kit.serial })
     var trial = recovered

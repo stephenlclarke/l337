@@ -86,8 +86,8 @@ struct NativeHollowManifestCommissionUnitTests {
       let body = try #require(game.bodies.first { $0.id == bound.owned.body.id })
       #expect(body.physical?.identity == admission.original.actor)
       #expect(body.physical?.spawnIdentity == admission.spawn)
-      #expect(body.physical?.npc?.resources.energyCapacity == source.performance.energy)
-      #expect(body.physical?.npc?.resources.energyRecharge == source.performance.recharge)
+      #expect(body.physical?.npc?.resources?.energyCapacity == source.performance.energy)
+      #expect(body.physical?.npc?.resources?.energyRecharge == source.performance.recharge)
       #expect(life.original.operatingCrew == source.accommodation.operatingCrew)
       #expect(life.original.intrinsicCrewQuarters == source.accommodation.intrinsicCrewPlaces)
     }

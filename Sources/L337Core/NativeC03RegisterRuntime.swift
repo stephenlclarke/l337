@@ -106,7 +106,7 @@ extension Game {
       let player = commander.flightSimulation.player, player.entity == 0,
       player.system == admission.actor.system, player.visit == admission.actor.visit
     else { throw SaveError.invalidCommander }
-    let point = body.modelPoint(NativeC03RegisterGeometry.componentPosition)
+    let point = (body.position + body.modelVector(NativeC03RegisterGeometry.componentPosition))
     guard point.z > 0, atan2(hypot(point.x, point.y), point.z) <= NativeC03RegisterGeometry.maximumTargetAngle
     else { throw SaveError.invalidCommander }
     let pin = try hollowManifestInstalledCase()

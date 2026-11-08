@@ -106,7 +106,7 @@ struct NativeC03EvidenceReturnReceipt: Codable, Equatable, Sendable {
       f.physicalTime.isFinite, f.physicalTime >= remedy.facts.physicalTime, f.physicalTime <= 1e12,
       f.calendarSeconds.isFinite, f.calendarSeconds >= remedy.facts.calendarSeconds,
       f.calendarSeconds >= f.dock.calendarSeconds, f.calendarSeconds <= 1e12,
-      state.custodyRegister?.holder(in: state) == .institutionalRecipient(f.recipient)
+      file.evidenceReturn == self
     else { return false }
     return true
   }

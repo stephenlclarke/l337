@@ -121,7 +121,7 @@ struct NativeC03SealGeometryUnitTests {
       let point =
         NativeC03SealGeometry.componentPosition
         + NativeC03SealGeometry.componentOrientation.apply(local)
-      let hit = try #require(contact(game, origin: origin, point: point))
+      let hit = try #require(try contact(game, origin: origin, point: point))
       #expect(
         hit.hit.target == .body(id) && hit.victimPart == NativeC03SealGeometry.Slot.a.rawValue)
       #expect(hit.componentUUID == identity)
@@ -129,7 +129,7 @@ struct NativeC03SealGeometryUnitTests {
       #expect(NativeC03SealGeometry.surfaceRange.contains(hit.hit.distance))
       var bare = game
       bare.bodies[0].scriptNPC?.components[NativeC03SealGeometry.Slot.a.rawValue]?.energy = 0
-      let root = try #require(contact(bare, origin: origin, point: point))
+      let root = try #require(try contact(bare, origin: origin, point: point))
       #expect(root.victimPart == nil && root.componentUUID == nil)
       #expect(root.hit.distance > hit.hit.distance + 0.064)
     }
@@ -141,12 +141,12 @@ struct NativeC03SealGeometryUnitTests {
   ) throws {
     let (game, _, identity) = try scene(slot: slot)
     let body = try #require(game.bodies.first)
-    let plate = try #require(contact(game, origin: .init(400, -1, 0), point: .init(6.55, -1, 0)))
+    let plate = try #require(try contact(game, origin: .init(400, -1, 0), point: .init(6.55, -1, 0)))
     for relief in NativeC03SealGeometry.reliefs {
       let centre =
         NativeC03SealGeometry.componentPosition
         + NativeC03SealGeometry.componentOrientation.apply(relief.centre)
-      let hit = try #require(contact(game, origin: .init(400, centre.y, centre.z), point: centre))
+      let hit = try #require(try contact(game, origin: .init(400, centre.y, centre.z), point: centre))
       #expect(hit.victimPart == slot.rawValue && hit.componentUUID == identity)
       let height = (hit.hit.point - plate.hit.point).dot(body.modelVector(.init(1, 0, 0)))
       #expect(abs(height - relief.size.z) < 1e-7)
@@ -155,13 +155,13 @@ struct NativeC03SealGeometryUnitTests {
 
   @Test func parentAndOtherOpaqueActorRemainInCompetitionAndMissingSealFailsClosed() throws {
     var (game, id, _) = try scene()
-    let back = try #require(contact(game, origin: .init(-400, -1, 0), point: .init(6.55, -1, 0)))
+    let back = try #require(try contact(game, origin: .init(-400, -1, 0), point: .init(6.55, -1, 0)))
     #expect(back.hit.target == .body(id) && back.victimPart == nil)
     var occluder = try #require(game.bodies.first)
     occluder.id = id + 1000
     occluder.position.x += 100
     game.bodies.append(occluder)
-    let blocked = try #require(contact(game, origin: .init(400, -1, 0), point: .init(6.55, -1, 0)))
+    let blocked = try #require(try contact(game, origin: .init(400, -1, 0), point: .init(6.55, -1, 0)))
     #expect(blocked.hit.target == .body(occluder.id))
     game.bodies.removeLast()
     let digest = try #require(
@@ -181,7 +181,7 @@ struct NativeC03SealGeometryUnitTests {
     let origin = body.position + body.modelVector(.init(406.55, -1, 0))
     let before = game.commander
     let bodies = game.bodies
-    let reading = try #require(NativeC03SealProbe.measure(
+    let reading = try #require(try NativeC03SealProbe.measure(
       in: game, bodyID: id, component: component, slot: .a, origin: origin))
     #expect(reading.actor == body.physical?.identity && reading.component == component)
     #expect(reading.physicalTime == game.commander.flightSimulation.physicalTime)
@@ -224,7 +224,7 @@ struct NativeC03SealGeometryUnitTests {
     let (game, id, component) = try scene(slot: slot, rotated: true, originalMasterModel: true)
     let body = try #require(game.bodies.first)
     let origin = body.position + body.modelVector(.init(406.55, -1, 0))
-    let reading = try #require(NativeC03SealProbe.measure(
+    let reading = try #require(try NativeC03SealProbe.measure(
       in: game, bodyID: id, component: component, slot: slot, origin: origin))
     #expect(reading.surfaceRanges.count == 12)
     #expect(reading.surfaceRanges.allSatisfy(NativeC03SealGeometry.surfaceRange.contains))

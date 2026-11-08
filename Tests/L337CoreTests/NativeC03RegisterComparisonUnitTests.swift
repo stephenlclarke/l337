@@ -54,7 +54,7 @@ struct NativeC03RegisterComparisonUnitTests {
     let files = try ScriptFinanceTestFixture.files(commission.files.save.deletingLastPathComponent())
     var missingKit = recovered
     let inventory = try #require(missingKit.commander.equipmentInventory)
-    missingKit.commander.equipmentInventory = try .init(owner: inventory.owner,
+    missingKit.commander.savedEquipmentInventory = try .init(owner: inventory.owner,
       activeHull: inventory.activeHull, revision: inventory.revision + 1,
       items: inventory.items.filter { $0.id != held.kit.serial })
     #expect(throws: (any Error).self) { try missingKit.hollowManifestHeldRegisterData() }

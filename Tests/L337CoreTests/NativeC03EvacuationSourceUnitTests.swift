@@ -27,7 +27,8 @@ func actualHollowEvacuationContextGame() async throws -> (
     game.speed = 0
     game.screen = .front
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     return (game, commission)

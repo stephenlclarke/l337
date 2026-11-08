@@ -75,7 +75,7 @@ struct NativeC03WakeGeometryUnitTests {
     let before = game.commander
     let beforeBodies = game.bodies
     for distance in [250.2, 1499.8] {
-      let measured = try #require(NativeC03WakeProbe.measure(
+      let measured = try #require(try NativeC03WakeProbe.measure(
         in: game, bodyID: body.id, mark: mark, origin: origin(body, distance: distance)))
       #expect(measured.shapeValid && measured.mark == mark)
       #expect(measured.actor == body.physical?.identity)
@@ -93,7 +93,7 @@ struct NativeC03WakeGeometryUnitTests {
   @Test func occlusionWrongSideWrongPatternAndRangeRefuseAfterGenuineMeasurement() throws {
     var (game, body) = try scene(mark: .first, rotated: true)
     let point = origin(body)
-    _ = try #require(NativeC03WakeProbe.measure(in: game, bodyID: body.id, mark: .first, origin: point))
+    _ = try #require(try NativeC03WakeProbe.measure(in: game, bodyID: body.id, mark: .first, origin: point))
     #expect(try NativeC03WakeProbe.measure(
       in: game, bodyID: body.id, mark: .second, origin: point) == nil)
     let back = body.position + body.modelVector(.init(0, 0, -400))
@@ -118,7 +118,7 @@ struct NativeC03WakeGeometryUnitTests {
   @Test func aNamedSubstituteOrMissingPhysicalIdentityCannotSupplyTheMeasuredMesh() throws {
     var (game, body) = try scene(mark: .third)
     let point = origin(body)
-    _ = try #require(NativeC03WakeProbe.measure(in: game, bodyID: body.id, mark: .third, origin: point))
+    _ = try #require(try NativeC03WakeProbe.measure(in: game, bodyID: body.id, mark: .third, origin: point))
     let digest = try #require(body.scriptNPC?.fit.models[NativeC03WakeGeometry.Mark.third.model])
     game.commander.scriptState.geometry[digest] = NativeC03WakeGeometry.design(.first)
     #expect(try NativeC03WakeProbe.measure(

@@ -1,12 +1,5 @@
 import Foundation
 
-extension ScriptPackLibrary {
-  static var bundledHollowManifestDirectory: URL {
-    bundledGlassMeridianDirectory.deletingLastPathComponent()
-      .appendingPathComponent("l337-hollow-manifest")
-  }
-}
-
 extension Game {
   func hollowManifestContentUnavailable(_ pack: borrowing ScriptPack) -> String? {
     guard NativeHollowManifestCommission.matches(pack) else {

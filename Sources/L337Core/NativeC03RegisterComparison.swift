@@ -75,7 +75,8 @@ struct NativeC03RegisterComparison: Codable, Equatable, Sendable {
   func valid(in state: borrowing NativeHollowManifestState,
     contents: NativeC03CustodyRegisterContent) -> Bool
   {
-    shapeValid && self == (try? Self.examining(state, contents: contents))
+    guard shapeValid else { return false }
+    return self == (try? Self.examining(state, contents: contents))
   }
 }
 

@@ -57,7 +57,8 @@ func actualHollowLaboratoryRuntime() async throws -> (
     game.speed = 0
     game.bodies = [.init(id: 0, hull: .station, position: .init(0, 0, 16000))]
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     try game.restoreScriptActors()
