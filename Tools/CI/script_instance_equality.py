@@ -91,6 +91,72 @@ def stored_fields(body: str, type_name: str) -> list[str]:
     return fields
 
 
+def inspect_commander_equality(body: str, fields: list[str]) -> list[str]:
+    """Check both bounded borrowed-value and pointer equality implementations."""
+    compact = lambda text: re.sub(r"\s+", "", text)
+    # The existing Commander guards compare flight simulation before Bison,
+    # while storage declares the adjacent Bison field first. Preserve that
+    # authored short-circuit order; no other permutation is accepted.
+    comparison_fields = list(fields)
+    pair = ["savedBisonUnitAllocations", "savedFlightSimulation"]
+    if pair[0] not in fields or fields[fields.index(pair[0]):fields.index(pair[0]) + 2] != pair:
+        raise ValueError("Equality must retain the reviewed adjacent flight/Bison declarations")
+    index = fields.index(pair[0])
+    comparison_fields[index:index + 2] = reversed(pair)
+    names = {"equal" + field[0].upper() + field[1:]: field for field in comparison_fields}
+    signatures = {
+        "borrowed": "_lhs:borrowingSelf,_rhs:borrowingSelf",
+        "pointer": "_lhs:UnsafePointer<Self>,_rhs:UnsafePointer<Self>",
+    }
+    helpers = re.findall(
+        r"^  @inline\(never\)\n  private static func (equal\w+)\(\s*(.*?)\s*\)"
+        r"\s*->\s*Bool\s*\{\n(.*?)^  \}", body, re.M | re.S
+    )
+    if len(helpers) != len(re.findall(r"\bfunc equal\w+\(", body)):
+        raise ValueError("Equality helpers must retain separate frames and checked declarations")
+    seen = {kind: [] for kind in signatures}
+    for name, signature, implementation in helpers:
+        if name not in names:
+            raise ValueError("Equality must compare every stored field once in the reviewed comparison order")
+        field = names[name]
+        kind = next((key for key, value in signatures.items() if compact(signature) == value), None)
+        if kind is None:
+            raise ValueError("Equality must retain borrowed or pointer operand signatures")
+        if kind == "borrowed":
+            expected = f"""
+                let left = withUnsafePointer(to: lhs) {{ pointer in
+                  pointer.pointer(to: \\.{field})!.pointee
+                }}
+                let right = withUnsafePointer(to: rhs) {{ pointer in
+                  pointer.pointer(to: \\.{field})!.pointee
+                }}
+                return left == right
+            """
+        else:
+            expected = f"lhs.pointer(to: \\.{field})!.pointee == rhs.pointer(to: \\.{field})!.pointee"
+        if compact(implementation) != compact(expected):
+            raise ValueError("Equality must compare the same member on both operands without bypass")
+        seen[kind].append(field)
+    if any(members != comparison_fields for members in seen.values()):
+        raise ValueError("Equality must compare every stored field once in the reviewed comparison order")
+    expected = "".join(
+        f"guard {name}(lhs, rhs) else {{ return false }}" for name in names
+    ) + "return true"
+    entries = [
+        (r"public static func ==", signatures["borrowed"]),
+        (r"fileprivate static func storedValuesEqual", signatures["pointer"]),
+    ]
+    for declaration, signature in entries:
+        matches = re.findall(
+            rf"^  @inline\(never\)\n  {declaration}\s*\(\s*(.*?)\s*\)"
+            r"\s*->\s*Bool\s*\{\n(.*?)^  \}", body, re.M | re.S
+        )
+        if (len(matches) != 1 or compact(matches[0][0]) != signature
+                or compact(matches[0][1]) != compact(expected)):
+            raise ValueError("Equality must short circuit through every checked comparison")
+    return fields
+
+
 def inspect_equality(source: str, type_name: str = "ScriptInstanceValue") -> list[str]:
     """Check the private value's explicit equality against its stored declarations."""
     if type_name == "ScriptInstanceValue":
@@ -111,6 +177,8 @@ def inspect_equality(source: str, type_name: str = "ScriptInstanceValue") -> lis
             raise ValueError("Facade must store only its private payload")
         arguments = "lhs.payload, rhs.payload"
     fields = stored_fields(inventory_body, type_name)
+    if type_name == "Commander":
+        return inspect_commander_equality(body, fields)
     helpers = re.findall(
         r"private static func (equal\w+)\([^)]*\)\s*->\s*Bool\s*\{\s*"
         r"lhs\.(\w+)(!\.value)? == rhs\.(\w+)(!\.value)?\s*\}",

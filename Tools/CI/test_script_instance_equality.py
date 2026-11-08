@@ -1,5 +1,6 @@
 """Ensure the maintained equality inventory catches future omissions and ordering drift."""
 
+import re
 import unittest
 
 from script_instance_equality import COMMANDER_SOURCE, SOURCE, inspect_equality, inspect_instance_storage
@@ -84,9 +85,10 @@ class ScriptInstanceStorageInventoryTests(unittest.TestCase):
     def setUp(self):
         self.source = SOURCE.read_text()
         self.fields = inspect_instance_storage(self.source)
-        import re
         self.wrapped = set(re.findall(r"^    var (\w+): Field<[^\n]+>\?", self.source, re.M))
-        self.assertEqual(len(self.fields), 62)
+        self.assertEqual(len(self.fields), 64)
+        self.assertIn("savedHollowManifest", self.fields)
+        self.assertIn("savedTitheCommission", self.fields)
 
     def changed(self, before, after):
         self.assertIn(before, self.source)
@@ -172,6 +174,29 @@ class ScriptInstanceStorageInventoryTests(unittest.TestCase):
                 inspect_instance_storage(self.changed(before, after))
 
 
+
+    def test_new_mission_fields_retain_logical_equality_and_optional_codec(self):
+        for field, value_type in [
+            ("savedHollowManifest", "NativeHollowManifestState"),
+            ("savedTitheCommission", "NativeTitheCommissionState"),
+        ]:
+            for before, after, reason in [
+                (f"lhs.{field}!.value == rhs.{field}!.value",
+                 f"lhs.{field} == rhs.{field}", "logical field values"),
+                (f"lhs.{field}!.value == rhs.{field}!.value",
+                 f"lhs.{field}!.value == rhs.savedGlassMeridian!.value", "same member"),
+                (f"{field} = source.{field}", f"{field} = source.savedGlassMeridian",
+                 "same logical member"),
+                (f"{value_type}.self, forKey: .{field}",
+                 f"{value_type}.self, forKey: .savedGlassMeridian", "Codec"),
+                (f"try values.encodeIfPresent({field}!.value, forKey: .{field})",
+                 f"try values.encode({field}!.value, forKey: .{field})", "Codec"),
+                (f"{field} = Field<{value_type}>()", f"{field} = nil", "Default construction"),
+            ]:
+                with self.subTest(field=field, before=before), self.assertRaisesRegex(ValueError, reason):
+                    inspect_instance_storage(self.changed(before, after))
+
+
 class ScriptEngineEqualityInventoryTests(unittest.TestCase):
     def setUp(self):
         self.source = SOURCE.read_text()
@@ -238,6 +263,93 @@ class CommanderEqualityInventoryTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "explicit type"):
             inspect_equality(changed, "Commander")
+
+
+    def changed(self, before, after):
+        self.assertIn(before, self.source)
+        return self.source.replace(before, after, 1)
+
+    def test_both_current_equality_paths_cover_all_fields_in_the_same_order(self):
+        fields = inspect_equality(self.source, "Commander")
+        self.assertEqual(fields[0], "savedMemoryAtlasWatcherSourceStorage")
+        self.assertEqual(fields[-1], "finiteXYZzyCash")
+        self.assertIn("savedNativePeopleCustodyStorage", fields)
+
+    def test_entry_whitespace_does_not_change_the_checked_equality_contract(self):
+        expected = inspect_equality(self.source, "Commander")
+        for before, after in [
+            ("public static func == (", "public static func ==\n  ("),
+            ("fileprivate static func storedValuesEqual(",
+             "fileprivate static func storedValuesEqual ("),
+        ]:
+            with self.subTest(before=before):
+                self.assertEqual(inspect_equality(self.changed(before, after), "Commander"), expected)
+
+    def test_reviewed_flight_bison_order_is_preserved_in_both_entries(self):
+        fields = inspect_equality(self.source, "Commander")
+        position = fields.index("savedBisonUnitAllocations")
+        self.assertEqual(fields[position:position + 2],
+                         ["savedBisonUnitAllocations", "savedFlightSimulation"])
+        flight = "    guard equalSavedFlightSimulation(lhs, rhs) else { return false }\n"
+        bison = "    guard equalSavedBisonUnitAllocations(lhs, rhs) else { return false }\n"
+        self.assertEqual(self.source.count(flight + bison), 2)
+        for occurrence in (0, 1):
+            before = flight + bison
+            index = [match.start() for match in re.finditer(re.escape(before), self.source)][occurrence]
+            changed = self.source[:index] + bison + flight + self.source[index + len(before):]
+            with self.subTest(occurrence=occurrence), self.assertRaises(ValueError):
+                inspect_equality(changed, "Commander")
+
+    def test_borrowed_and_pointer_members_cannot_be_crossed_or_defaulted(self):
+        for before, after in [
+            ("withUnsafePointer(to: rhs)", "withUnsafePointer(to: lhs)"),
+            ("return left == right", "return true"),
+            (r"pointer.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee",
+             r"pointer.pointer(to: \.savedContracts)!.pointee"),
+            (r"rhs.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee",
+             r"rhs.pointer(to: \.savedContracts)!.pointee"),
+            ("_ lhs: borrowing Self, _ rhs: borrowing Self",
+             "_ lhs: Self, _ rhs: Self"),
+        ]:
+            with self.subTest(before=before), self.assertRaises(ValueError):
+                inspect_equality(self.changed(before, after), "Commander")
+
+    def test_each_entry_requires_every_guard_once_in_order_without_early_success(self):
+        first = "    guard equalSavedMemoryAtlasWatcherSourceStorage(lhs, rhs) else { return false }\n"
+        second = "    guard equalSavedContracts(lhs, rhs) else { return false }\n"
+        # Mutate either public borrowed equality or the later pointer entry.
+        for occurrence in (0, 1):
+            for old, new in [(first, ""), (first, first + first),
+                             (first + second, second + first), (first, "    return true\n" + first)]:
+                index = [match.start() for match in re.finditer(re.escape(old), self.source)][occurrence]
+                changed = self.source[:index] + new + self.source[index + len(old):]
+                with self.subTest(occurrence=occurrence, replacement=new), self.assertRaises(ValueError):
+                    inspect_equality(changed, "Commander")
+
+    def test_neither_helper_family_accepts_extra_logic_or_a_changed_comparison(self):
+        pointer = (r"lhs.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee == "
+                   r"rhs.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee")
+        for before, after in [
+            ("return left == right", "return left == right || true"),
+            ("return left == right", "return left != right"),
+            ("let left = withUnsafePointer(to: lhs)",
+             "let unusedFixture = true\n    let left = withUnsafePointer(to: lhs)"),
+            (pointer, pointer + " || true"),
+            (pointer, pointer.replace(" == ", " != ")),
+            ("_ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>\n  ) -> Bool {\n    lhs.pointer",
+             "_ lhs: UnsafePointer<Self>, _ rhs: borrowing Self\n  ) -> Bool {\n    lhs.pointer"),
+        ]:
+            with self.subTest(before=before, after=after), self.assertRaises(ValueError):
+                inspect_equality(self.changed(before, after), "Commander")
+
+    def test_duplicate_missing_and_unbounded_helper_frames_are_rejected(self):
+        helper = "equalSavedMemoryAtlasWatcherSourceStorage"
+        for before, after in [
+            (f"  @inline(never)\n  private static func {helper}(", f"  private static func {helper}("),
+            (f"  private static func {helper}(", "  private static func equalMissingFixture("),
+        ]:
+            with self.subTest(before=before), self.assertRaises(ValueError):
+                inspect_equality(self.changed(before, after), "Commander")
 
 
 if __name__ == "__main__":

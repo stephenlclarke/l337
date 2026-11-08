@@ -170,7 +170,9 @@ class PlanningTests(Fixture):
         root = Path(__file__).resolve().parents[2]
         manifest = shards.load_json(root / "Tools/CI/sanitizer_groups.json")
         self.assertEqual([(len(group["members"]), len(group["sources"]))
-                          for group in manifest["groups"]], [(190, 37), (12, 2)])
+                          for group in manifest["groups"]], [(191, 38), (12, 2)])
+        self.assertEqual([group["name"] for group in manifest["groups"]],
+                         ["appkit-shared-process", "salvage-shared-release"])
         methods = []
         for group in manifest["groups"]:
             for member in group["members"]:
@@ -181,8 +183,18 @@ class PlanningTests(Fixture):
         policy = shards.legacy.grouping_policy(root, methods, "thread", 1)
         for mode in shards.MODES:
             plan = shards.make_plan(self.runtimes[mode], methods, policy["shared_groups"])
+            scheduled = [method for row in plan["shards"] for method in row["methods"]]
+            self.assertCountEqual(scheduled, methods)
             for group in policy["shared_groups"]:
                 self.assertEqual(sum(set(group) <= set(row["methods"]) for row in plan["shards"]), 1)
+        with self.assertRaisesRegex(ValueError, "discovered inventory"):
+            shards.legacy.grouping_policy(root, methods[1:], "thread", 1)
+        source = root / next(iter(manifest["groups"][0]["sources"]))
+        digest = shards.legacy.digest
+        with patch.object(shards.legacy, "digest", side_effect=lambda path:
+                          "0" * 64 if path == source else digest(path)):
+            with self.assertRaisesRegex(ValueError, "grouping review"):
+                shards.legacy.grouping_policy(root, methods, "thread", 1)
         thread = shards.legacy.batch_command("fake-swift", [], "thread", self.root, METHODS)
         address = shards.legacy.batch_command("fake-swift", [], "address", self.root, METHODS)
         self.assertNotIn("--no-parallel", thread)
