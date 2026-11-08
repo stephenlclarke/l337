@@ -149,7 +149,7 @@ extension Display {
       clue = nil
     }
     if let clue { rows += [("", .cyan), (clue, .cyan)] }
-    if game.commander.executive && game.docked && star.name == "LAVE" {
+    if game.commander.executive && game.docked && star.original?.key == "G01-S007" {
       rows.append(("XYZZY HOME PORT", .cyan))
     }
     return rows

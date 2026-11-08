@@ -951,6 +951,17 @@ METHODS = {
         "originalImpalaNeedsOneActualPaidCrewMemberAndRetainsCurrentColdLoad",
         "originalImpalaActualPaidFittingUsesNativeBudgetAndSurvivesCurrentSave",
     ),
+    'M03IdentityUnitTests': (
+        'freshValuesRetainApprovedCommanderWorldShipMoneyAndFullFuel',
+        'approvedContactsKeepExactRolesAndGalaxySelectionWithoutInventedNames',
+        'noticeAndPackTemplatesUseSameApprovedContactsAndPreserveChosenCommander',
+        'bothStartupProjectionsUseCurrentTitleAndKeepTruthfulBuildAttribution',
+        'homePortUsesOriginalWorldIdentityRatherThanPredecessorNameOrOtherGalaxy',
+    ),
+    'ShowroomNavigationHintUnitTests': (
+        'specificationArrowHintsFollowActualWindowAndHelpReturnContext',
+        'browseAndSearchKeepSelectionHintsInsteadOfInactiveSpecArrows',
+    ),
 }
 
 

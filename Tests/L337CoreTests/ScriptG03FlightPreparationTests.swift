@@ -93,6 +93,36 @@ struct ScriptG03FlightPreparationTests {
     #expect(try ScriptFinanceTestFixture.files(storage.directory) == files)
   }
 
+  @Test func everyPaidReceiptMatchesTheActualQuotedCurrentShopPriceAndOrder() throws {
+    var game = try ScriptProcurementFixture.freshG03FlightGame()
+    let names = [
+      TargetingTier.basic.equipmentName, TargetingTier.advanced.equipmentName,
+      TargetingTier.docking.equipmentName, ShieldBooster.pulse.equipmentName, "Extra Energy Unit",
+    ]
+    let expected = try names.map { name -> Int in
+      let item = try #require(Equipment.all.first { $0.name == name })
+      return game.shopPrice(item)
+    }
+    let before = game.commander
+    try game.prepareG03FlightEquipment()
+    let history = try #require(game.commander.equipmentPurchaseHistory)
+    #expect(game.commander.credits == before.credits - expected.reduce(0, +))
+    #expect(game.commander.equipmentOwnerID == before.equipmentOwnerID)
+    #expect(game.commander.hullInstanceID == before.hullInstanceID)
+    #expect(game.commander.cargo == before.cargo && game.commander.fuel == before.fuel)
+    try #require(history.paid.count == names.count)
+    #expect(Set(history.paid.map(\.transaction)).count == names.count)
+    for (index, receipt) in history.paid.enumerated() {
+      #expect(receipt.node.key == names[index] && receipt.price == expected[index])
+      #expect(receipt.owner == before.equipmentOwnerID)
+      #expect(receipt.binding.request.offer.node == receipt.node)
+      #expect(receipt.binding.historyRevision == UInt64(index))
+      #expect(
+        receipt.binding.snapshot.funds
+          == before.credits - expected.prefix(index).reduce(0, +))
+    }
+  }
+
   @Test func lowerTechnologyShopRefusesWithoutPublishingTheFourEarlierPurchases() throws {
     // Controlled fresh initialization at the original failing shop; no journey is claimed.
     var game = Game(executive: false)

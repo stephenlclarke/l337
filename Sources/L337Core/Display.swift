@@ -224,12 +224,12 @@ public enum Display {
     frame.line(0, 20, 255, 20)
   }
   private static func title(_ game: Game, into frame: inout Frame) {
-    frame.centered("E L I T E", 22)
+    frame.centered(NewCommanderDefaults.title, 22)
     // Keep the complete rotating hull between the title and version text.
     var ship = SpaceBody(id: 0, hull: .cobra, position: .init(0, 0, 280))
     ship.rotation = game.time * 0.6
     draw(ship, game: game, into: &frame, mesh: L337Branding.titleMesh)
-    frame.centered("RIGHT-ON COMMANDER VERSION", 163)
+    frame.centered("SPACE TRADING, EXPLORATION AND DISCOVERY", 163)
     frame.centered("PRESS SPACE COMMANDER", 190)
     frame.centered(BuildIdentity.current.versionLine, 208)
     frame.centered(BuildIdentity.repository, 218)
@@ -560,7 +560,7 @@ public enum Display {
       }
     }
     if game.commander.executive && game.docked {
-      if star.name == "LAVE" { frame.text("XYZZY HOME PORT", 8, 150) }
+      if star.original?.key == "G01-S007" { frame.text("XYZZY HOME PORT", 8, 150) }
       if star.name == "RIEDQUAT" { frame.text("XYZZY: INFINITE RANGE", 8, 150) }
     }
   }
