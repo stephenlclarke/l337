@@ -1,0 +1,25 @@
+# Original Assembly native opening. This module supplies briefing text only.
+# Native berth, trade and issue producers own acceptance and reference custody.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.assembly-of-orbits"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2"]
+priority = 590
+source = "Original C23 opening from Meridian c70110b292077588a0855fb48127adfb1b611c9d; assembly-of-orbits.json SHA256 7ffa8831f6a912e6c30d43453624c4bfb66f4cd0cedd8e76df8259c7d73cf514. No survey, consent, witness, settlement, payment or clue is produced by this Lua module."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "assembly-of-orbits"
+title = "An Assembly of Orbits"
+briefing = "VOSS: A share certificate cannot stand in for the people on the next shift.\n\nA cluster of orbital homes must share a single transfer corridor during a maintenance season. Old voting records count property shares but omit the crews who keep the corridor open. The commander verifies real occupancy and operating work, escorts delegates and establishes either rotating worker stewardship or publicly bounded berth representation.\n\nAt Irkenan in Galaxy 7, after one ordinary trade. No imported score gate or source campaign prerequisite. The reference loan needs one tonne of free hold. The original reference is collected here before the survey departure. The settlement choice is made with actual arrived delegates at the witness receiver; final return/audit remains at this issuer."
+destination = "Galaxy 7 / Irkenan / Darik / Brekudek / Kagakon / original Irkenan audit"
+reward = "7700 CR only after actual observations, living witness receiving, both selected settlement proofs and original reference return. The absent seat clue accompanies successful terminal settlement."
+milestones = ["Accept An Assembly of Orbits at Irkenan.", "Collect the identified one-tonne reference instrument from Marshal Nera Voss.", "Compare three consented occupancy/work registers with real corridor-slot use.", "Run two independent capacity tests with the onboard assembly console; submit all five identified proposals.", "Verify actual safe transit and living reception of the consenting delegate tender to the neutral assembly berth.", "At the actual witness receiving station, choose the settlement with the arrived authorised operator delegates.", "Verify both independent proofs for the selected settlement.", "Return the reference instrument and confirm all physical receiving and settlement receipts.", "Confirm successful completion, the recorded settlement and the once-only fee."]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"

@@ -69,9 +69,7 @@ extension Game {
 
   /// Match the rendered mesh's model transform, including its visible rotation.
   func modelPose(of body: SpaceBody) -> ShipPose {
-    withReadOnlyCommander { commander in
-      Self.modelPose(of: body, player: commander.flightSimulation.pose)
-    }
+    Self.modelPose(of: body, player: storedFlightSimulation().pose)
   }
 
   static func modelPose(of body: borrowing SpaceBody, player: ShipPose) -> ShipPose {

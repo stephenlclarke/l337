@@ -27,7 +27,7 @@ struct NativeInductionArkSource: Sendable {
       let original = OriginalFleetDefinitionData.definition(for: Self.hull),
       let performance = original.nativePerformance, performance.valid,
       performance.cargo >= Self.seedTonnes,
-      let physical = try? OriginalHullPhysicalContract.haflinger.get()
+      let physical = try? OriginalHullPhysicalContract.saiga.get()
     else { throw SaveError.invalidCommander }
     guard reserve?.valid(permission: permission) ?? true else { throw SaveError.invalidCommander }
     issue = reserve == nil ? .original : .reserve
@@ -61,7 +61,7 @@ struct NativeInductionArkSource: Sendable {
       let performance = original.nativePerformance, performance.valid
     else { throw SaveError.invalidCommander }
     return try definition(
-      physical: OriginalHullPhysicalContract.haflinger.get(), performance: performance)
+      physical: OriginalHullPhysicalContract.saiga.get(), performance: performance)
   }
 
   /// Keep source units explicit: ordinary flight uses 18 m/s per speed unit and 0.1 LY per fuel unit.
@@ -69,7 +69,7 @@ struct NativeInductionArkSource: Sendable {
     physical: OriginalHullPhysicalContract, performance: ShipPerformance
   ) throws -> ScriptNPCDefinition {
     let definition = ScriptNPCDefinition(
-      id: "induction-original-seed-ark", name: "Registered Enlirin seed ark / Haflinger",
+      id: "induction-original-seed-ark", name: "Registered Enlirin seed ark / Saiga",
       source: "Original SH061 specifications " + physical.specificationSHA256,
       basis: physical.unitBasis
         + " Existing native flight conversion: speed/acceleration x18; fuel x0.1 LY. One finite internal fitted drive uses the original hull energy ceiling. Finite 40t custodian seed stores and six crew are separate from the player key and cabins.",
@@ -95,7 +95,7 @@ struct NativeInductionArkSource: Sendable {
   var models: [String: ShipDesign] { [Self.model: physical.model.nativeDesign] }
 
   private static let authenticatedModels: Result<[String: String], any Error> = Result {
-    let original = try OriginalHullPhysicalContract.haflinger.get().model.nativeDesign
+    let original = try OriginalHullPhysicalContract.saiga.get().model.nativeDesign
     return [model: ScriptPackLibrary.hash(try ScriptPackLibrary.canonicalGeometry(original))]
   }
 

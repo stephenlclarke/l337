@@ -131,69 +131,80 @@ private struct OwnedEquipmentObserverFixture {
   func clean() { try? FileManager.default.removeItem(at: folder) }
 }
 
-/// These event fixtures intentionally observe a stock Cobra exchange, independent of fresh defaults.
-private func ownedObserverStockCobraGame() throws -> Game {
-  var commander = Commander()
-  commander.shipID = "SH023"
-  commander.fuel = commander.fuelCapacity
-  commander.missiles = 4
-  try commander.prepareEquipment(legacy: false)
-  var game = Game(executive: false)
-  game.commander = commander
-  game.commander.mirrorFittedEquipment()
-  try game.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
-  game.energy = game.commander.performance.energy
-  game.frontShield = game.commander.shieldCapacity
-  game.rearShield = game.commander.rearShieldCapacity
-  try #require(game.commander.valid && game.commander.shipID == "SH023")
-  try #require(game.commander.fuel == 70 && game.commander.missiles == 4)
-  game.screen = .inventory
-  return game
+/// Establish the same earned Okapi fabrication and current main-station custody as the journey.
+private func preparedOwnedObserver(
+  _ pack: ScriptPack, storage: NativeStationTestStorage
+) async throws -> (GameRuntime, UUID) {
+  let runtime = try await NativeOkapiAcquisitionJourneyFixture.preparedExchangeRuntime(
+    storage: storage)
+  let instance = try await runtime.scriptCommand { game in
+    try #require(game.nativeMainStationDockEvidenceIsCurrent)
+    try #require(game.commander.fleetBlueprintAcquisition(for: "SH029") != nil)
+    try #require(game.commander.shipID == NewCommanderDefaults.shipID)
+    let missile = try #require(Equipment.all.first { $0.name == "Missile" })
+    let ammunition = try game.quoteEquipmentPurchase(missile)
+    try #require(ammunition.purchase.requiredDebit > 0)
+    let purchased = try game.applyEquipmentPurchase(ammunition)
+    try #require(purchased && game.commander.missiles == 4)
+    game.scriptPacks.append(pack)
+    let instance = try game.acceptScriptMission(pack)
+    game.screen = .showroom
+    game.showroom.selection = "SH029"
+    return instance
+  }
+  return (runtime, instance)
 }
 
-@Test func scriptsObserveOnlyCommittedHullRefitAndActualAmmunitionEvents() throws {
+@Test func scriptsObserveOnlyCommittedHullRefitAndActualAmmunitionEvents() async throws {
   let fixture = try OwnedEquipmentObserverFixture()
   defer { fixture.clean() }
-  let pack = fixture.pack
-  var game = try ownedObserverStockCobraGame()
-  game.scriptPacks = [pack]
-  game.commander.credits = 10_000_000
-  let id = try game.acceptScriptMission(pack)
-  game.screen = .showroom
-  game.showroom.selection = "SH013"
-  game.key("showroom-trade")
-  game.key("return")
-  #expect(game.commander.scriptState.instances[id]?.data["changes"] == .integer(0))
-  game.key("showroom-trade")
-  game.key("right")
-  game.key("return")
-  let state = try #require(game.commander.scriptState.instances[id])
+  let storage = try NativeStationTestStorage()
+  defer { storage.clean() }
+  let (runtime, id) = try await preparedOwnedObserver(fixture.pack, storage: storage)
+  await runtime.key("showroom-trade")
+  await runtime.key("return")
+  #expect(await runtime.snapshot().commander.scriptState.instances[id]?.data["changes"] == .integer(0))
+  await runtime.key("showroom-trade")
+  await runtime.key("right")
+  try #require(await runtime.snapshot().shipTradeQuote?.allowed == true)
+  await runtime.key("return")
+  let afterTrade = await runtime.snapshot()
+  let state = try #require(afterTrade.commander.scriptState.instances[id])
   #expect(state.suspension == nil && state.data["changes"] == .integer(1))
-  #expect(state.data["previous"] == .string("SH023") && state.data["ship"] == .string("SH013"))
-  #expect(state.data["loaded"] == .integer(4))
-  let round = try #require(missionHighestRound(game.commander))
-  try missionStorePhysical(round, in: &game)
-  #expect(game.commander.scriptState.instances[id]?.data["fits"] == .integer(1))
-  #expect(
-    game.commander.scriptState.instances[id]?.data["fit_item"] == .string(round.id.uuidString))
-  #expect(game.commander.scriptState.instances[id]?.data["fitted"] == .bool(false))
-  let held = try #require(game.commander.equipmentInventory?.items.first { $0.id == round.id })
-  let fit = try #require(game.inventoryActionPreview(for: .equipment(held)).command)
-  let applied = game.performInventoryCommand(fit)
-  try #require(applied)
-  game.drainScriptEvents()
-  #expect(game.commander.scriptState.instances[id]?.data["fits"] == .integer(2))
-  #expect(game.commander.scriptState.instances[id]?.data["fit_item"] == .string(held.id.uuidString))
-  #expect(game.commander.scriptState.instances[id]?.data["fitted"] == .bool(true))
-  let spent = try #require(missionHighestRound(game.commander))
-  game.launch()
-  game.bodies = [SpaceBody(id: 1, hull: .sidewinder, position: .init(0, 0, 800))]
-  game.missileArmed = true
-  let fired = game.fireMissile()
-  #expect(fired)
-  game.drainScriptEvents()
-  #expect(game.commander.scriptState.instances[id]?.data["shots"] == .integer(1))
-  #expect(game.commander.scriptState.instances[id]?.data["spent"] == .string(spent.id.uuidString))
+  #expect(state.data["previous"] == .string(NewCommanderDefaults.shipID))
+  #expect(state.data["ship"] == .string("SH029") && state.data["loaded"] == .integer(4))
+
+  try await runtime.scriptCommand { game in
+    let round = try #require(missionHighestRound(game.commander))
+    try missionStorePhysical(round, in: &game)
+    #expect(game.commander.scriptState.instances[id]?.data["fits"] == .integer(1))
+    #expect(game.commander.scriptState.instances[id]?.data["fit_item"] == .string(round.id.uuidString))
+    #expect(game.commander.scriptState.instances[id]?.data["fitted"] == .bool(false))
+    let held = try #require(game.commander.equipmentInventory?.items.first { $0.id == round.id })
+    let fit = try #require(game.inventoryActionPreview(for: .equipment(held)).command)
+    let applied = game.performInventoryCommand(fit)
+    try #require(applied)
+    game.drainScriptEvents()
+    #expect(game.commander.scriptState.instances[id]?.data["fits"] == .integer(2))
+    #expect(game.commander.scriptState.instances[id]?.data["fit_item"] == .string(held.id.uuidString))
+    #expect(game.commander.scriptState.instances[id]?.data["fitted"] == .bool(true))
+  }
+  await runtime.key("0")
+  try await runtime.scriptCommand { game in
+    try #require(!game.docked)
+    let spent = try #require(missionHighestRound(game.commander))
+    let target = game.nextBodyID
+    game.nextBodyID += 1
+    game.bodies = [SpaceBody(id: target, hull: .viper, position: .init(0, 0, 800))]
+    game.ensurePhysicalActors()
+    game.weaponsTargetID = target
+    game.missileArmed = true
+    let fired = game.fireMissile()
+    try #require(fired)
+    game.drainScriptEvents()
+    #expect(game.commander.scriptState.instances[id]?.data["shots"] == .integer(1))
+    #expect(game.commander.scriptState.instances[id]?.data["spent"] == .string(spent.id.uuidString))
+  }
   try (fixture.original + "\n[[handlers]]\nevent=\"ship.changed\"\nfunction=\"changed\"\n").write(
     to: fixture.manifest, atomically: true, encoding: .utf8)
   #expect(throws: MissionPackError.self) {
@@ -224,14 +235,24 @@ private func ownedObserverStockCobraGame() throws -> Game {
 }
 
 @Test func stowingAnExpansionOrTankNeverDiscardsCargoOrFuel() throws {
-  var game = try missionGearGame()
+  var game = Game(executive: false)
+  try #require(
+    game.commander.shipID == NewCommanderDefaults.shipID && game.commander.shipID == "SH025")
+  try game.commander.prepareEquipment(legacy: false)
+  game.commander.mirrorFittedEquipment()
+  try game.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
+  game.screen = .inventory
+  let current = try #require(OriginalFleetR3Fitting.contract(for: game.commander.ship))
+  let native = try #require(current.performance)
+  try #require(game.commander.nativePerformance == native && game.commander.valid)
   try game.commander.grantEquipment(
     "Large Cargo Bay", at: .utility(.cargoExpansion), provenance: .grant("stowage-fixture"))
   try game.commander.grantEquipment(
     FuelStorage.equipmentName, at: .fuelStorage(0), provenance: .grant("stowage-fixture"))
-  // The retained SH023 catalogue has a 30t native hold plus a 15t expansion.
+  // Use the current owned starter's 92t hold and separately fitted 35t expansion.
   // Put one actual tonne beyond the unexpanded hold before testing refusal.
-  #expect(game.commander.nativePerformance.cargo == 30)
+  try #require(native.cargo == 92 && native.cargoExpansion == 35 && native.fuel == 130)
+  #expect(game.commander.nativePerformance.cargo == 92)
   game.commander.cargo[0] = game.commander.nativePerformance.cargo + 1
   #expect(game.commander.cargoTonnes > game.commander.nativePerformance.cargo)
   #expect(game.commander.cargoTonnes <= game.commander.standardCargoCapacity)
@@ -326,10 +347,11 @@ private func ownedObserverStockCobraGame() throws -> Game {
 {
   var game = try missionGearGame(missiles: 4)
   game.screen = .showroom
-  game.showroom.selection = "SH013"
+  game.showroom.selection = "SH029"
   game.commander.credits = 10_000_000
   let before = game.commander
   let first = try #require(game.shipTradeQuote)
+  try #require(first.allowed)
   let second = try #require(game.shipTradeQuote)
   let firstProjection = try game.commander.projectedEquipmentTransfer(to: first.selected.id)
   let secondProjection = try game.commander.projectedEquipmentTransfer(to: second.selected.id)
@@ -342,15 +364,62 @@ private func ownedObserverStockCobraGame() throws -> Game {
 
 @Test func nativeProfilesCountLoadedWeaponsWithoutIncludingStoredCustodyOrCreatingEquipment() throws
 {
-  var game = try missionGearGame(missiles: 4)
+  var game = Game(executive: false)
+  try #require(
+    game.commander.shipID == NewCommanderDefaults.shipID && game.commander.shipID == "SH025")
+  try game.commander.prepareEquipment(legacy: false)
+  game.commander.mirrorFittedEquipment()
+  try game.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
+  game.screen = .inventory
+  let current = try #require(OriginalFleetR3Fitting.contract(for: game.commander.ship))
+  let native = try #require(current.performance)
+  try #require(game.commander.nativePerformance == native && game.commander.valid)
+  try #require(native.missiles == 9 && native.facings == 15)
+  try #require(
+    !game.commander.unlimitedCash && game.commander.credits == NewCommanderDefaults.credits)
+  try #require(game.commander.missiles == 3)
+  let inventoryBeforePurchase = try #require(game.commander.equipmentInventory)
+  let historyBeforePurchase = try #require(game.commander.equipmentPurchaseHistory)
+  try #require(game.commander.fittedEquipment(at: .missilePylon(3)) == nil)
+  game.screen = .equipment
+  game.selection = try #require(Equipment.all.firstIndex { $0.name == "Missile" })
+  let missile = Equipment.all[game.selection]
+  let beforePurchase = game.commander
+  let quote = try game.quoteEquipmentPurchase(missile)
+  try #require(game.commander == beforePurchase)
+  try #require(
+    quote.purchase.requiredDebit > 0 && quote.purchase.requiredDebit <= beforePurchase.credits)
+  try #require(quote.purchase.requiredDebit == game.shopPrice(missile))
+  let context = try #require(game.equipmentPurchaseContext)
+  let result = game.performEquipmentMutation(.purchase(context))
+  let purchased = try #require(game.commander.fittedEquipment(at: .missilePylon(3)))
+  #expect(result == .applied(.purchase(
+    item: missile.name, physicalItem: purchased.id, fitted: true)))
+  let paidHistory = try #require(game.commander.equipmentPurchaseHistory)
+  let receipt = try #require(paidHistory.paid.first { $0.binding.request.newItem == purchased.id })
+  #expect(
+    purchased.provenance
+      == .paid(owner: inventoryBeforePurchase.owner, transaction: receipt.transaction))
+  #expect(receipt.owner == inventoryBeforePurchase.owner && receipt.node == purchased.node)
+  #expect(receipt.price == quote.purchase.requiredDebit)
+  #expect(paidHistory.paid.count == historyBeforePurchase.paid.count + 1)
+  #expect(game.commander.credits == beforePurchase.credits - quote.purchase.requiredDebit)
+  let inventoryAfterPurchase = try #require(game.commander.equipmentInventory)
+  #expect(inventoryAfterPurchase.owner == inventoryBeforePurchase.owner)
+  #expect(inventoryAfterPurchase.activeHull == inventoryBeforePurchase.activeHull)
+  #expect(Set(inventoryAfterPurchase.items.map(\.id))
+    == Set(inventoryBeforePurchase.items.map(\.id)).union([purchased.id]))
+  #expect(game.commander.missiles == 4 && game.commander.valid)
+  game.screen = .inventory
   try game.commander.grantEquipment(
     LaserKind.beam.equipmentName, at: .laser(.rear), provenance: .grant("profile count fixture"))
   let full = game.commander.gameShipProfile
   #expect(full.fields.first { $0.key == "fitted_missiles" }?.number == 4)
   #expect(full.fields.first { $0.key == "fitted_lasers" }?.number == 2)
-  #expect(full.fields.first { $0.key == "missile_capacity" }?.number == 4)
+  #expect(full.fields.first { $0.key == "missile_capacity" }?.number == 9)
   #expect(full.fields.first { $0.key == "laser_facings" }?.number == 4)
   let round = try #require(missionHighestRound(game.commander))
+  try #require(round == purchased)
   let front = try #require(game.commander.fittedEquipment(at: .laser(.front)))
   try missionStorePhysical(round, in: &game)
   try missionStorePhysical(front, in: &game)
@@ -361,6 +430,10 @@ private func ownedObserverStockCobraGame() throws -> Game {
   #expect(game.commander == before)
   #expect(game.commander.equipmentInventory?.items.first { $0.id == round.id }?.location == nil)
   #expect(game.commander.equipmentInventory?.items.first { $0.id == front.id }?.location == nil)
+  #expect(game.commander.equipmentInventory?.items.first { $0.id == purchased.id }
+    == purchased.moved(to: nil))
+  #expect(game.commander.equipmentPurchaseHistory == paidHistory)
+  #expect(game.commander.credits == beforePurchase.credits - quote.purchase.requiredDebit)
   let legacy = Commander()
   #expect(legacy.gameShipProfile.fields.first { $0.key == "fitted_missiles" }?.number == 3)
   #expect(legacy.gameShipProfile.fields.first { $0.key == "fitted_lasers" }?.number == 1)
@@ -378,7 +451,8 @@ func hullExchangeRefusalsAndCancellationPublishNeitherPhysicalChangesNorScriptEv
   game.commander.credits = 10_000_000
   let id = try game.acceptScriptMission(fixture.pack)
   game.screen = .showroom
-  game.showroom.selection = "SH013"
+  game.showroom.selection = "SH029"
+  try #require(game.shipTradeQuote?.allowed == true)
   game.key("showroom-trade")
   try #require(game.showroom.trading)
   switch reason {
@@ -430,44 +504,37 @@ func hullChangeEventAndOwnedFitShareTheirActualActorWriterCommitOrRollback(faili
 {
   let fixture = try OwnedEquipmentObserverFixture()
   defer { fixture.clean() }
-  var game = try ownedObserverStockCobraGame()
-  game.scriptPacks = [fixture.pack]
-  game.commander.credits = 10_000_000
-  let id = try game.acceptScriptMission(fixture.pack)
-  game.screen = .showroom
-  game.showroom.selection = "SH013"
-  game.key("showroom-trade")
-  game.key("right")
-  try #require(
-    game.showroom.trading && game.showroom.confirmTrade && game.shipTradeQuote?.allowed == true)
-  let parent = fixture.folder.appendingPathComponent("save")
-  let save = parent.appendingPathComponent("commander.json")
-  if failing { try Data("blocked save parent".utf8).write(to: parent) }
-  let runtime = GameRuntime(game: game, saveURL: save)
-  if !failing { try await runtime.save(to: save) }
+  let storage = try NativeStationTestStorage()
+  defer { storage.clean() }
+  let (runtime, id) = try await preparedOwnedObserver(fixture.pack, storage: storage)
+  await runtime.key("showroom-trade")
+  await runtime.key("right")
   let before = await runtime.snapshot()
-  let files = try ownedObserverSavedFiles(fixture.folder)
+  try #require(
+    before.showroom.trading && before.showroom.confirmTrade && before.shipTradeQuote?.allowed == true)
+  let files = try ownedObserverSavedFiles(storage.directory)
+  if failing { try storage.blockWriter() }
   await runtime.key("return")
   let after = await runtime.snapshot()
   if failing {
     #expect(after.commander == before.commander && after.bodies == before.bodies)
     #expect(after.showroom.trading == before.showroom.trading && after.screen == before.screen)
-    #expect(try ownedObserverSavedFiles(fixture.folder) == files)
+    #expect(try ownedObserverSavedFiles(storage.backup) == files)
     #expect(after.message == "MISSION SAVE FAILED - ACTION NOT COMMITTED")
   } else {
-    #expect(after.commander.shipID == "SH013" && !after.showroom.trading)
+    #expect(after.commander.shipID == "SH029" && !after.showroom.trading)
     #expect(after.commander.scriptState.instances[id]?.data["changes"] == .integer(1))
-    #expect(after.commander.scriptState.instances[id]?.data["previous"] == .string("SH023"))
-    #expect(after.commander.scriptState.instances[id]?.data["ship"] == .string("SH013"))
+    #expect(after.commander.scriptState.instances[id]?.data["previous"] == .string(NewCommanderDefaults.shipID))
+    #expect(after.commander.scriptState.instances[id]?.data["ship"] == .string("SH029"))
     #expect(after.commander.scriptState.instances[id]?.data["loaded"] == .integer(4))
     #expect(after.commander.scriptState.instances[id]?.data["fits"] == .integer(0))
     let nextEvent = after.commander.scriptState.nextEvent
     await runtime.key("return")
     #expect(await runtime.snapshot().commander.scriptState.nextEvent == nextEvent)
-    let restored = GameRuntime(game: game)
-    try await restored.load(from: save)
+    let restored = GameRuntime(game: before)
+    try await restored.load(from: storage.url)
     let reloaded = await restored.snapshot()
-    #expect(reloaded.commander.shipID == "SH013")
+    #expect(reloaded.commander.shipID == "SH029")
     #expect(reloaded.commander.scriptState.instances[id]?.data["changes"] == .integer(1))
     #expect(reloaded.commander.scriptState.pendingEvents.allSatisfy { $0.kind != "ship.changed" })
     #expect(reloaded.commander.valid)

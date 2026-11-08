@@ -10,7 +10,10 @@ struct NativeCrewCaptureTests {
     var game = try NativePeopleTestFixture.withinWindow()
     let source = try NativePeopleTestFixture.source(game)
     let original = try #require(game.commander.savedEMPState?.records[source])
-    game.commander.cargo[0] = game.commander.standardCargoCapacity - 2
+    let availableCaptureTonnes = game.freeNativePeopleTonnes
+    try #require(availableCaptureTonnes >= 2)
+    game.commander.cargo[0] += availableCaptureTonnes - 2
+    try #require(game.freeNativePeopleTonnes == 2 && game.commander.valid)
     try NativePeopleTestFixture.aimCutter(&game)
     let runtime = GameRuntime(game: game, saveURL: storage.url)
     let captured = await NativePeopleTestFixture.capture(runtime)
@@ -81,20 +84,73 @@ struct NativeCrewCaptureTests {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
     var game = try NativePeopleTestFixture.withinWindow()
-    game.commander.cargo[0] = game.commander.standardCargoCapacity - 1
+    let availableCaptureTonnes = game.freeNativePeopleTonnes
+    try #require(availableCaptureTonnes >= 1)
+    game.commander.cargo[0] += availableCaptureTonnes - 1
+    try #require(game.freeNativePeopleTonnes == 1 && game.commander.valid)
     try NativePeopleTestFixture.aimCutter(&game)
+    let source = try NativePeopleTestFixture.source(game)
     let runtime = GameRuntime(game: game, saveURL: storage.url)
     try await runtime.save(to: storage.url)
     let files = try ScriptFinanceTestFixture.files(storage.directory)
     let time = await runtime.snapshot().commander.flightSimulation.physicalTime
+    let original = try #require(await runtime.snapshot().commander.savedEMPState?.records[source])
     try storage.blockWriter()
     let failed = await NativePeopleTestFixture.capture(runtime)
     #expect(failed.commander.flightSimulation.physicalTime > time)
     #expect(failed.commander.nativePeople == nil && failed.commander.cargo[3] == 0)
     #expect(try ScriptFinanceTestFixture.files(storage.backup) == files)
+    let failedRecord = try #require(failed.commander.savedEMPState?.records[source])
+    #expect(failedRecord.crewCaptures == original.crewCaptures)
+    #expect(
+      failedRecord.crewTotal == original.crewTotal
+        && failedRecord.lostCrewCount == original.lostCrewCount)
+    expectOriginalEMPCrewConserved(failedRecord)
     try storage.restoreWriter()
+    let retryBefore = await runtime.snapshot()
+    let body = try #require(retryBefore.bodies.first { $0.physical?.empSource == source })
+    let context = try #require(retryBefore.gameplayContext())
+    try #require(retryBefore.hasNativeRescueTools && retryBefore.freeNativePeopleTonnes == 1)
+    try #require(retryBefore.selectedFlightTool == .salvageCutter && retryBefore.screen == .front)
+    try #require(retryBefore.nativeCrewCaptureAvailable(body, context: context))
+    let contact = try retryBefore.nearestMissionCollision(
+      from: .init(0, 0, 0), direction: .init(0, 0, 1), range: 300, radius: 0, includePlayer: false)
+    try #require(contact?.hit.target == .body(body.id))
+    // Restoring the filesystem alone cannot retry this still-present interaction.
+    let blocked = await NativePeopleTestFixture.capture(runtime)
+    #expect(
+      blocked.commander.flightSimulation.physicalTime
+        > retryBefore.commander.flightSimulation.physicalTime)
+    #expect(blocked.commander.nativePeople == nil && blocked.commander.cargo[3] == 0)
+    let blockedRecord = try #require(blocked.commander.savedEMPState?.records[source])
+    #expect(blockedRecord.crewCaptures == failedRecord.crewCaptures)
+    #expect(
+      blockedRecord.crewTotal == original.crewTotal
+        && blockedRecord.lostCrewCount == original.lostCrewCount)
+    #expect(blocked.commander.credits == retryBefore.commander.credits)
+    #expect(blocked.commander.equipmentPurchaseHistory == retryBefore.commander.equipmentPurchaseHistory)
+    expectOriginalEMPCrewConserved(blockedRecord)
     try await runtime.save(to: storage.url)
+    let ready = await runtime.snapshot()
+    let readyRecord = try #require(ready.commander.savedEMPState?.records[source])
+    let ordinal = try #require(readyRecord.aboardOrdinals.first)
     let rescued = await NativePeopleTestFixture.capture(runtime)
     #expect(rescued.commander.nativeCaptiveCount == 1 && rescued.commander.valid)
+    let capturedRecord = try #require(rescued.commander.savedEMPState?.records[source])
+    let receipt = try #require(capturedRecord.crewCaptures.last)
+    #expect(capturedRecord.crewCaptures.count == readyRecord.crewCaptures.count + 1)
+    #expect(receipt.ordinals == [ordinal] && receipt.count == 1 && receipt.valid(record: capturedRecord))
+    let held = try #require(rescued.commander.nativePeople?.heldCaptives)
+    #expect(
+      held.count == 1
+        && held.first?.person.emp == EMPCrewIdentity(source: source, ordinal: ordinal))
+    #expect(
+      capturedRecord.crewTotal == original.crewTotal
+        && capturedRecord.lostCrewCount == original.lostCrewCount)
+    expectOriginalEMPCrewConserved(capturedRecord)
+    let again = await NativePeopleTestFixture.capture(runtime)
+    #expect(again.commander.nativeCaptiveCount == 1 && again.commander.cargo[3] == 1)
+    #expect(again.commander.savedEMPState?.records[source]?.crewCaptures == capturedRecord.crewCaptures)
+    #expect(again.commander.nativePeople?.heldCaptives == held)
   }
 }

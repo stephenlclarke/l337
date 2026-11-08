@@ -4,17 +4,14 @@ import Testing
 @testable import L337Core
 
 @Test func xyzzyFitsClarkeAndCyclesDisplayWhilePreservingProgress() async throws {
-  var game = Game(executive: false)
-  // This controlled unit fixture exercises the stock Cobra, independently of the fresh starter.
-  game.commander.shipID = "SH023"
-  game.commander.fuel = game.commander.fuelCapacity
-  game.energy = game.commander.performance.energy
-  game.frontShield = game.commander.shieldCapacity
-  game.rearShield = game.commander.rearShieldCapacity
-  game.commander.name = "JAMESON"
-  #expect(game.commander.name == "JAMESON" && game.commander.shipDisplayStyle == .shadedPanels)
-  game.key("return")
-  game.launch()
+  let startup = GameRuntime(game: Game(executive: false))
+  try await startup.startNewCommander()
+  var game = await startup.snapshot()
+  #expect(game.commander.name == "Rowan Calder" && game.commander.shipID == "SH025")
+  #expect(game.commander.shipDisplayStyle == .shadedPanels)
+  game.screen = .status
+  game.key("0")
+  try #require(!game.docked)
   game.commander.credits = 1234
   game.commander.cargo[0] = 3
   game.frontShield = 1
@@ -23,10 +20,19 @@ import Testing
   try game.commander.prepareEquipment()
   let beforeGrant = try #require(game.commander.equipmentInventory)
   for key in "xyzzy" { game.key(String(key)) }
-  #expect(game.commander.name == "CLARKE")
-  let maximumDevices = Equipment.maximumHardware.subtracting(["Fuel", "Missile"])
+  #expect(game.commander.name == "CLARKE" && game.commander.shipID == "SH025")
+  let maximumDevices = Equipment.maximumHardware.subtracting(["Fuel", "Missile", "Mining Laser"])
   #expect(game.commander.equipment == maximumDevices)
   let inventory = try #require(game.commander.equipmentInventory)
+  let fuelCells = inventory.items.filter { $0.node.key == FuelStorage.equipmentName }
+  #expect(fuelCells.count == FuelStorage.maximumCount && fuelCells.allSatisfy { $0.provenance == .xyzzy })
+  #expect(game.commander.navigationTier == .military)
+  var unsupported = game.commander
+  #expect(throws: OwnedEquipmentError.self) {
+    try unsupported.grantEquipment(
+      LaserKind.mining.equipmentName, at: .utility(.miningLaser), provenance: .xyzzy)
+  }
+  #expect(unsupported == game.commander)
   let fittedNames = Set(inventory.items.filter { $0.location != nil }.map(\.node.key))
   #expect(maximumDevices.isSubset(of: fittedNames))
   #expect(inventory.owner == beforeGrant.owner && inventory.activeHull == beforeGrant.activeHull)
@@ -40,10 +46,12 @@ import Testing
   #expect(Set(inventory.items.map(\.id)).count == inventory.items.count)
   #expect(game.commander.equipmentPurchaseHistory?.paid.isEmpty == true)
   #expect(game.commander.credits == Commander.xyzzyStartingCredits && game.commander.cargo[0] == 3)
-  #expect(game.commander.missiles == 4 && game.commander.fuel == game.commander.fuelCapacity)
+  #expect(game.commander.missiles == game.commander.missileCapacity
+      && game.commander.fuel == game.commander.fuelCapacity)
   #expect(
     game.frontShield == game.commander.shieldCapacity
-      && game.rearShield == game.commander.shieldCapacity && game.energy == 256)
+      && game.rearShield == game.commander.rearShieldCapacity
+      && game.energy == game.commander.performance.energy)
   for expected in [
     ShipDisplayStyle.whiteWireframe, .colourWireframe, .shadedPanels, .whiteWireframe,
   ] {
@@ -82,8 +90,10 @@ import Testing
   #expect(
     game.commander.unlimitedMissiles && game.commander.missiles == game.commander.missileCapacity)
   try game.commander.validateEquipmentState()
+  game.commander.name = "CUSTOM"
   let beforeReentry = game.commander
   var expectedReentry = beforeReentry
+  expectedReentry.name = "CLARKE"
   expectedReentry.fuel = expectedReentry.fuelCapacity
   expectedReentry.missiles = expectedReentry.missileCapacity
   for key in "xyzzy" { game.key(String(key)) }
@@ -91,6 +101,29 @@ import Testing
   #expect(game.commander.credits == Commander.xyzzyStartingCredits - 123)
   #expect(game.commander.equipmentInventory == beforeReentry.equipmentInventory)
   #expect(game.commander.equipmentPurchaseHistory == beforeReentry.equipmentPurchaseHistory)
+}
+
+@Test func xyzzyActivationAndRefitRefusalPreserveCommanderState() {
+  var game = Game(executive: false)
+  game.screen = .status
+  let before = game.commander
+  for key in "xyzzy" { game.key(String(key)) }
+  #expect(game.commander == before && game.message == "MAXIMUM REFIT REFUSED")
+  #expect(game.screen == .secret)
+  game.notify("C REFIT PROBE", voiced: false)
+  game.key("c")
+  #expect(game.commander == before && game.message == "MAXIMUM REFIT REFUSED")
+}
+
+@Test func ordinaryStarterFittingCannotUseTheSecretFuelException() throws {
+  var commander = Commander()
+  try commander.prepareEquipment(legacy: false)
+  let before = commander
+  #expect(throws: EquipmentRuntimeError.incompatibleFit) {
+    try commander.grantEquipment(
+      FuelStorage.equipmentName, at: .fuelStorage(0), provenance: .grant("ordinary fitting probe"))
+  }
+  #expect(commander == before)
 }
 
 /// Project the retained pre-load scene's fresh RRS bindings without reading the loaded result.
@@ -137,12 +170,14 @@ private func displayColdCommanderExpectation(_ original: Game) throws -> Command
   #expect(throws: DecodingError.self) { try JSONDecoder().decode(Commander.self, from: invalid) }
 }
 
-@Test func coloursPreserveWireGeometryAndPanelsAreOpaqueAndClipped() {
-  var game = Game(executive: false)
-  game.screen = .front
-  for hull in Hull.allCases {
+@Test func coloursPreserveWireGeometryAndPanelsAreOpaqueAndClipped() throws {
+  var game = try currentRendererSourceGame()
+  for source in try currentRendererMeshSources() {
+    let hull = source.hull
+    let original = try currentRendererSourceBody(
+      source, game: &game, minimumDistance: 400, rotation: 0)
     for angle in [0.0, Double.pi / 2, 2.3] {
-      var body = SpaceBody(id: 0, hull: hull, position: .init(0, 0, 400))
+      var body = original
       body.rotation = angle
       game.bodies = [body]
       game.commander.shipDisplayStyle = .whiteWireframe
@@ -193,7 +228,7 @@ private func displayColdCommanderExpectation(_ original: Game) throws -> Command
   var game = Game(executive: false)
   game.screen = .front
   game.commander.shipDisplayStyle = .shadedPanels
-  let near = SpaceBody(id: 1, hull: .cobra, position: .init(0, 0, 400))
+  let near = SpaceBody(id: 1, hull: .viper, position: .init(0, 0, 400))
   let far = SpaceBody(id: 2, hull: .cargo, position: .init(0, 0, 800))
   game.bodies = [near]
   let single = Display.render(game)
@@ -270,7 +305,7 @@ private func displayColdCommanderExpectation(_ original: Game) throws -> Command
 @Test func galleryHelpDescribesActualCampaignNavigationAndAvailableActions() throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (parent, child) = try fixture.start(&game)
   try fixture.select(child, game: &game)
   let commander = game.commander
@@ -309,6 +344,7 @@ private func displayColdCommanderExpectation(_ original: Game) throws -> Command
   game.commander.cargo[0] = 2
   game.missionPacks = .init(entries: [], errors: [])
   game.scriptPacks = []
+  try game.commander.prepareEquipment(legacy: false)
   let original = game.commander
   let entry = try #require(game.selectedGalleryMission)
   #expect(entry.trialDigest == NativePeopleGallery.digest && entry.status == .available)

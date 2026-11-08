@@ -1,0 +1,31 @@
+# Prepare an inert legacy NPC motion decision
+
+## Change
+
+Add a read-only opening projection derived literally from the existing enemyAction and Blackjack motion. It captures current source/intent and frame facts without changing any Game or allocating authority. The existing controllers remain byte-exact as actual ordinary behavior and as test controls. G1 can consume the proposed canonical path in native preparation while retaining actual effects at their attained phase.
+
+The return value contains driver, current body/physical actor/intention/Blackjack UUID, actual opening epoch/time, duration, before/after view position and canonical start/end/velocity. worldPosition samples the same one prepared linear displacement and refuses times outside it. It does not repeat pursuit/damping per cut, retarget, rotate the model, modify stored velocity, predict RNG, or carry a beam/damage/recharge/cooldown permission.
+
+## Existing behavior that G1 must retain
+
+1. Select the original real legacy cohort once: hostile live bodies with no spawn identity in work planning; preserve the normal manual path's existing mission-instance exclusion. Rejoin the actual actor/epoch/current intent at attained time. A descriptor is not actor admission, and a dead, disabled, retargeted, culled or replaced body cannot be resurrected from it.
+2. Use the correct selected frame. Old work planning computes its linear AI displacement before the player proof. Normal manual pursuit follows its camera transform. Rebase only actual body geometry into that selected frame, convert the prepared displacement to canonical space once, and project samples through actual attained cameras. The opening physical clock stays actual; no future Game or proof token is supplied.
+3. Ordinary pursuit retains its actual allocated current-player engagement guard. Apply native-speed radial movement with factor18 when available, otherwise the original X/Y damping and Z-above300 step. Its ordinary physical velocity is the displacement divided by the positive interval. Keep the current native beam guard and post-movement range check at the actual retained position; do not run enemyAction again after already applying the displacement.
+4. Blackjack retains its existing role exception even when an actual nonplayer assault retargeted its ordinary NPC intention. Its source speed is already in motion units, its beam range uses the opening pre-movement distance, and its existing recharge/cooldown/fire ordering stays actual once. Do not copy a projected energy/cooldown or reuse the ordinary post-move range rule. Old Blackjack does not write physical.velocity; the work obstacle's displacement-derived velocity is a separate geometry fact.
+5. navalTactics remains wholly actual: its eighth-loop condition, candidate order, one-unit ordinary recharge, half-energy test, random-byte sequence, finite ammunition, ECM guard and admitted missile/Thargon births remain in the original owner. No tactic or random draw is run during pure preparation. A T1 birth gets no earlier motion or spin. A zero available interval means no preceding path, not removal of the actual birth.
+6. Retain exactly one actual tactics/effects phase. The original workScenePlanned flag suppresses later naval/legacy calls only because that old path already ran them. The native path must not mark those effects as completed merely because it prepared a curve. It must also avoid calling the wholesale old planner or enemy driver per cut, which would move/fire/draw randomness repeatedly.
+7. Keep actual work obstacle geometry, model-spin envelopes, source meshes and collision acceptance with their existing owners. The new descriptor supplies no hull, mesh, collision proof, future source role or native effect authority. Real contact can truncate its motion; only the retained actor and attained phase can support later effects.
+
+The remaining minimal owner seam is an actual effects-only phase under G1's existing outer opening/retained-endpoint join. Its ordinary branch retains the original post-move beam clause; its Blackjack branch retains actual recharge/cooldown and opening-distance beam clause; navalTactics remains once in its current owner. This packet intentionally does not introduce an unbound public effect-commit API or bypass source/clock guards.
+
+## Source-authored tests
+
+- Existing invalid-intent and actual nonplayer-retarget refusal cases now also require a nil proposal and unchanged state. Every original action and assertion remains.
+- Near/far ordinary preparation changes no commander/world/body/resource/allocator/work flag or future RNG stream. The unchanged original controller supplies the actual movement/velocity and near firing control. One prepared path is sampled across cuts without repeating the AI step.
+- Scalar tests preserve the fallback300 threshold and radial non-overshoot without granting any hull or role.
+- The existing Blackjack fixture and actual assault produce a genuine nonplayer engagement. Pure preparation retains the old Blackjack exception but defers all recharge/cooldown/RNG/fire. The unchanged controller supplies its position, recharge, pulse cooldown and unchanged stored velocity.
+- Starting just outside1500 and moving inside does not precredit a Blackjack shot, because the actual original driver checks pre-movement distance. Selected-camera data matches an actual existing reframe plus unchanged controller without advancing the source clock or preparing a future production Game.
+
+## Validation and limits
+
+Four paths in isolated TMP only. External FIRST and frame-choice notes pin current maintained inputs before afterimages. Source checks compare the engagement guard and ordinary/Blackjack arithmetic to their exact old source, preserve all old kernel files, and reconstruct every original test before the appended cases by removing only the added read-only refusals. Forward/inverse Git text replay and scoped Markdown/whitespace must pass before handoff. Tests remain UNCOMPILED/UNRUN; no native, performance, integrated build or game acceptance is claimed. G1 owns the actual native adoption/tests; Root owns the sole ledger and same whole-review route. [Issue](ISSUE-legacy-flight-decision.md).

@@ -3,13 +3,13 @@ extension Game {
   mutating func navalTactics() {
     let candidates = bodies.filter {
       $0.hostile && $0.energy > 0 && !isEMPDisabled($0) && $0.missionInstanceID == nil
-        && ($0.hull.navalEnergy != nil || $0.blackjackRole != nil)
+        && ($0.nativeNavalCombat?.energy != nil || $0.blackjackRole != nil)
     }
     .map(\.id)
     for id in candidates {
       guard let index = bodies.firstIndex(where: { $0.id == id }),
         let maximum = bodies[index].blackjackRole.map({ _ in BlackjackTarget.energy })
-          ?? bodies[index].hull.navalEnergy
+          ?? bodies[index].nativeNavalCombat?.energy
       else { continue }
       if bodies[index].blackjackRole == nil {
         bodies[index].energy = min(maximum, bodies[index].energy + 1)
@@ -21,8 +21,9 @@ extension Game {
       let position = bodies[index].position
       if bodies[index].hull == .thargoid {
         guard bodies.count < (commander.executive ? 18 : 10) else { continue }
-        bodies[index].missiles -= 1
-        addNavalShip(.thargon, position: position)
+        if addNavalShip(.thargon, position: position) {
+          bodies[index].missiles -= 1
+        }
       } else if launchGameplayNPCMissile(bodyID: id) {
         notify("INCOMING MISSILE", voiced: false)
       }

@@ -148,7 +148,11 @@ public enum TargetTelemetry {
     catalogueShipID: String?, missionName: String?, fallbackHull: Hull
   ) -> String {
     if let missionName, !missionName.isEmpty { return missionName }
-    if let catalogueShipID, let ship = ShipCatalogue.ship(catalogueShipID) { return ship.name }
+    if let catalogueShipID {
+      if let ship = ShipCatalogue.ship(catalogueShipID) { return ship.name }
+      // A failed explicit identity is not an untagged native archetype observation.
+      if fallbackHull.isTargetShip { return "Unidentified craft" }
+    }
     return fallbackHull.modelName
   }
 

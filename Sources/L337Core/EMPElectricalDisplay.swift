@@ -20,6 +20,10 @@ extension Game {
       case .released: break
       }
     }
+    if let bank = empModuleBankReadouts.first(where: { $0.fitted }) {
+      lines.append(bank.bankLine)
+      lines.append(bank.rechargeLine)
+    }
     return lines
   }
 }

@@ -1,0 +1,160 @@
+{
+  "status": "FIRST_FROZEN_CURRENT31_STATION_POLICE_SOURCE_PROPOSAL_PENDING_EXACT_ROOT_SHARED_RESERVATION_NO_REPO_EDITS",
+  "beforeCommit": "e67fce7095a5f54d329d6e05a11faf24ca3c0de7",
+  "newPolicy": "Root newly adopts SH031 Kite Interceptor station police and nativeHull=viper. This is not original role, ambient deployment, pre-existing binding, native qualification, occupied mass or real crew issuance.",
+  "pins": [
+    {
+      "path": "Sources/L337Core/StationSecurity.swift",
+      "bytes": 17990,
+      "sha256": "bd41b2b0e1bb431a8b921c3e4d7ad641d2db9883c94ce965e7ba3fb57fb55cb3"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 27877,
+      "sha256": "69d77381074b409e1fc6c3d185f74a149317711356b1942004dff8d62685b352"
+    },
+    {
+      "path": "Sources/L337Core/GameplayContracts.swift",
+      "bytes": 10021,
+      "sha256": "b0511a970309fd3a9727ae66e376c165d365616eb31b99fa824b052f1d8bf830"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 13095,
+      "sha256": "2c4fb920dcbd950d7a4cb8cbd372ad517a73e0dd8067d481caf09f9b00a8ca55"
+    },
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 29518,
+      "sha256": "956db838f2da99ca0d4e07154caea688eb89f618f55d8ec89bbec1aa91d57b23"
+    },
+    {
+      "path": "Sources/L337Core/EMPSourceCustody.swift",
+      "bytes": 5355,
+      "sha256": "b711a926156a536a31f8c42e519fcb872d2aa2309d5c02dfefab47ff38973714"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18382,
+      "sha256": "4e0b6190bc1abb8bc8b19ee255e21d28c4b0fbd1c594dbd19cadb10071803df4"
+    },
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH031.toml",
+      "bytes": 393056,
+      "sha256": "c4cefcf0cd8cfb1c80dfcb3780ec8d1a62f0489d3561c99d5946f4215c57cbba"
+    },
+    {
+      "path": "Sources/L337Core/OriginalPlayerHullActivation.swift",
+      "bytes": 10449,
+      "sha256": "881bef97be9a76c3984d7973f5c782c1cac077e02f184934307545b73562294d"
+    },
+    {
+      "path": "Sources/L337Core/OriginalKiteInterceptorActivation.swift",
+      "bytes": 1462,
+      "sha256": "ec7984ed153d142d5420c709c9deea69dd3653140063f7de34023b99cfc6d50b"
+    },
+    {
+      "path": "Sources/L337Core/OriginalHullPhysicalContract.swift",
+      "bytes": 20949,
+      "sha256": "4dfc05d6d886dc85ab48ea6071f735bf02f031c0874960518805afb542c51be2"
+    },
+    {
+      "path": "Sources/L337Core/ShipCatalogue.swift",
+      "bytes": 12862,
+      "sha256": "d6a777a426b9958bc6539bb27c2d53b3ee76e390b20039eab2a144966f5d8d03"
+    },
+    {
+      "path": "Sources/L337Core/ShipRawMeshCache.swift",
+      "bytes": 1626,
+      "sha256": "13879bfe6a2dd5871c5a26532e82231f25087401966931e6cce99ea8ac8ce23b"
+    },
+    {
+      "path": "Sources/L337Core/GameplayWeapons.swift",
+      "bytes": 14593,
+      "sha256": "bf5872f8822f1548e03697d6e807745879801d59465c848a804af2ea9176e731"
+    },
+    {
+      "path": "Sources/L337Core/GameplayScene.swift",
+      "bytes": 19299,
+      "sha256": "d77daeba9bf94d6d1796e75a1948fdeb7b05998e0871deda20b1c744263df362"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36134,
+      "sha256": "ea48568940ba3b1dd6e45c3777db50f163fd0e203d00a63610075ef0979b21df"
+    },
+    {
+      "path": "Sources/L337Core/ScriptNPCAssets.swift",
+      "bytes": 6648,
+      "sha256": "2519e2efcae2e92fdcadad2fe998c0dcec87a387720e354b75952c27f7f19873"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+      "bytes": 283481,
+      "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationSecurityTests.swift",
+      "bytes": 18084,
+      "sha256": "f09a523ee28dd6e8bf5fef33272a30cf598ea85b050fe0efca949aa05ce002ff"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalKiteInterceptorUnitTests.swift",
+      "bytes": 3264,
+      "sha256": "08ef5c408da9dc9dec35e9ceac81e9b1f5723eeffab17abc5ce950180d472b80"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "bytes": 34542,
+      "sha256": "8f0de4f3df68dff3a76efef0d593dd7be5873049893fb3b66e3c91ab74b84416"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 28518,
+      "sha256": "5f7a08c3db6ba77639b85211f20e05ced849cc752de59b0db8c1d194d65f1356"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 150579,
+      "sha256": "7f46d4e3fd7be24ee55791d08edff749d9dd0ce1ec2b3eff2200e8fb7281e473"
+    }
+  ],
+  "literalHunks": "/tmp/elite-g4-current-station-police-source-child/literal-hunks.json",
+  "newSource": {
+    "path": "/tmp/elite-g4-current-station-police-source-child/StationPoliceSource.swift.proposed",
+    "bytes": 4584,
+    "sha256": "d6d4534296bec2dacabe62b2580649a5d5e78013ae721aa75ef8f61cfabba4c7"
+  },
+  "resourceSuccessor": {
+    "sha256": "13e4d6b94a801c84dd89b9f4af9c8ba21151a33782b7e9a98c03ef503302772f",
+    "proof": "Whole predecessor restored by removing only added nativeHull header. Every coordinate/index/material/UV/license/unit/physical-source byte exact. Existing31 resource hash pin updated only to exact metadata successor; original specification/model pins and scale1 untouched. No geometry parse/evaluation."
+  },
+  "requestSourceDesign": "Smallest added actual custody key: recoveredSecuritySource ActorIdentity optional on SpawnRequest. Existing request identity is newly allocated and has no original custody source, so ambiguous recovered records cannot be authenticated without this real source key. No origin enum/framework/new receipt format; key alone no authority. Fresh uses actual same-epoch/sequence/atomic pending wave plus exact current31 profile/stock; recovery uses existing nativeEMPCustodyRecord kernel receipt/owner, explicit original/current catalogue, exact retained condition/request and duplicate-source refusal. No stock reapplication for recovery.",
+  "ledgerBoundary": "Existing security branch requires police/viper/member<8; current31 strict snapshot source/profile/fuel/missile/cargo guard already binds actual hull mechanics. No ledger/provider edit proposed. Verify new source binding with scene/cold security fixture.",
+  "reverseLookupBoundary": "Only direct production fresh hull:viper constructor is StationSecurity. Generic native adoption and mission/provider ownership unchanged. New EMP pure source resolver blocks nil-ID viper inference before eligibility/apply/facts; explicit current R3 owners required. Other Cobra/etc source selection remains exact. All renderer/collision/current source/native reverse lookup and physical model consumers pinned for proof/tests.",
+  "tests": {
+    "existingStationSecurityMethod": "Only stationAlarmLaunchesThreeThenBoundedWavesAtTheActualExit: make throws, resolve current31 source/stock, add exact catalogue/resources/generated provenance assertions within existing request loop. Every old count/key/law/pose/velocity/wavecap assertion unchanged. Other existing station methods exact.",
+    "existingKiteMethod": "Exact literal extension of physicalPlayerAndSourceNotesKeepCompleteApprovedGeometryAndAppearance to include current native.viper reverse binding/native mesh in original96vertex160face/appearance/frame/port provenance oracles.",
+    "newIndependentSuite": "New StationPoliceSourceTests: actual controller queued source31 wave ownership, same-source stock positive, forged/no pending/wrong epoch/source/stock/custody-key refusal without commander/body/cursor changes; metadata/native raw/player/render/collision/profile equality; nil-source.viper EMP refusal and explicit31 pass, distinct nonviper source behavior retained. Real paid EMP helper + controlled current31 protected nontraffic body, genuine disable/recovery record/custody receipt, controlled absent-body archive boundary through persistEMPState, exact real spent fuel/damage/resources recovery request succeeds, source/missing-key/energy/stock tampering refuses, duplicate recovered-source atomic admission refuses without mutation. Controlled unit evidence, not earned journey. No fabricated receipt/people/stock reset.",
+    "heldExistingEMPTwoMethods": "EMPTravelAndSecurityTests healthy assigned officer method453 and actual assigned source/law method496 are READONLY HELD for Root/MC1 overlap coordination. Current old SH136/180/255 assertions must eventually use authenticated31 actual performance/source, retaining all real paid gear/law/shield-first/crew/deadline/ejection/death/roundtrip oracles. No edits reserved or applied to this file or global paid/EMP helpers."
+  },
+  "reservationRequested": [
+    "StationSecurity exact queue/three callsites/readonly pending proof hunks",
+    "GameplayAdmission exact source guard/per-batch recovered identity uniqueness",
+    "GameplayContracts one actual recovered custody source field",
+    "EMPRecoveryRuntime one constructor custody source argument",
+    "EMPElectricalRuntime three source expressions only; MC1 overlap check required, no kernel arithmetic/state/order change",
+    "SH031 header + exact current resource hash pin",
+    "Kite existing test literal mesh list assertion; station one existing method/new suite bounded scope"
+  ],
+  "execution": "All proposals outside repo; no Swift/compiler/tests/make/native/geometry/creator/process execution. G1 only; source and tests remain UNCOMPILED UNRUN. No actual current overlay requested.",
+  "literal-hunks.jsonPin": {
+    "bytes": 8285,
+    "sha256": "bea5b70bf1c286817be78d440559514d6b4b0f00c351f340deebfeb71f6bd534"
+  }
+}

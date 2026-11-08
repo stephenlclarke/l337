@@ -12,6 +12,7 @@ extension Display {
     case .chart, .shortChart: map(game, width: width, height: height)
     case .navigation: navigation(game, width: width, height: height)
     case .library: referenceLibrary(game, width: width, height: height)
+    case .journal: c01InquiryJournal(game, width: width, height: height)
     case .gallery: gallery(game, width: width, height: height)
     case .contracts: contractBoard(game, width: width, height: height)
     case .handoff: blackjackHandoff(game, width: width, height: height)
@@ -157,12 +158,12 @@ extension Display {
     frame.compactTitle("INCOMING MESSAGE", layout: layout)
     guard game.missionElapsed >= 2, let notice = game.missionNotice else { return }
     let page = min(game.missionPage, notice.pages.count - 1)
-    if notice.showsShip {
+    if notice.showsShip, let mesh = AegisPrototype.mesh {
       var ship = SpaceBody(id: 0, hull: .constrictor, position: .init(0, 0, 600))
       ship.rotation = game.time * 0.6
       draw(
         ship, game: game, into: &frame,
-        projection: .init(center: .init(frame.canvas.width / 2, 88), focal: 360))
+        projection: .init(center: .init(frame.canvas.width / 2, 88), focal: 360), mesh: mesh)
     }
     frame.compactRows(
       notice.pages[page].map { ($0, .white) }, layout: layout,

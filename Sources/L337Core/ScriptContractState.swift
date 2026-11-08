@@ -6,7 +6,8 @@ public struct ContractStationIdentity: Codable, Sendable, Equatable {
   public let stationClass: String
   public var key: String { "\(stationClass):\(galaxy):\(system)" }
   var valid: Bool {
-    (0..<8).contains(galaxy) && (0...256).contains(system) && stationClass == "main-orbital"
+    ((0..<8).contains(galaxy) && (0...256).contains(system) && stationClass == "main-orbital")
+      || NativeOriginalSealedDispatchOrigin.site(for: self) != nil
   }
 }
 public struct ScriptBoardDefinition: Codable, Sendable {
@@ -76,6 +77,7 @@ public struct ScriptContractBoard: Codable, Sendable, Equatable {
   public var courierGeneration: ScriptCourierGeneration? = nil
   public var cacheKey: String { digest + "/" + id + "/" + station.key }
   var valid: Bool {
+    guard NativeOriginalSealedDispatchOrigin.allows(self) else { return false }
     if freightGeneration != nil { return ScriptFreightGeneration.valid(self) }
     guard
       !offers.contains(where: { $0.freightPlan != nil || ScriptFreightPlan.isMarked($0.parameters) }
@@ -129,6 +131,7 @@ public struct ScriptContractJob: Codable, Sendable, Equatable {
   public var settlementAmount: Int?
   public var settledAt: Double?
   var valid: Bool {
+    guard NativeOriginalSealedDispatchOrigin.allows(self) else { return false }
     if offer.freightPlan != nil { return ScriptFreightGeneration.valid(self) }
     guard !ScriptFreightPlan.isMarked(offer.parameters) else { return false }
     if clock == .missionCalendar, offer.courier == nil {
@@ -177,12 +180,21 @@ public struct ScriptContractJob: Codable, Sendable, Equatable {
   }
 }
 public struct ScriptContractState: Codable, Sendable, Equatable {
+  private enum CodingKeys: String, CodingKey { case boards }
+  public init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, ["boards"])
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    let boardKeys = try c.nestedContainer(keyedBy: NativeUtilityCoding.Key.self, forKey: .boards)
+    guard boardKeys.allKeys.count <= 128 else { throw SaveError.invalidCommander }
+    boards = try c.decode([String: ScriptContractBoard].self, forKey: .boards)
+    guard valid else { throw SaveError.invalidCommander }
+  }
+
   public var boards: [String: ScriptContractBoard] = [:]
-  var rrs: RRSCourierLedger?
   public init() {}
   var valid: Bool {
     let identities = boards.values.flatMap { $0.offers.map(\.id) }
-    return (rrs?.valid ?? true) && boards.count <= 128 && Set(identities).count == identities.count
+    return boards.count <= 128 && Set(identities).count == identities.count
       && boards.allSatisfy { $0.key == $0.value.cacheKey && $0.value.valid }
   }
 }
@@ -236,9 +248,10 @@ extension Commander {
   }
   var contractsValid: Bool {
     guard OriginalServiceReservationPolicy.valid(scriptState),
-      contracts.valid, contracts.rrs?.valid(for: self) ?? true
+      contracts.valid
     else { return false }
     for board in contracts.boards.values {
+      guard originalSealedOriginRecord(for: board.station) else { return false }
       if board.freightGeneration != nil {
         guard ScriptFreightGeneration.valid(board),
           board.offers.allSatisfy({ $0.freightPlan?.owner == equipmentOwnerID })
@@ -269,6 +282,7 @@ extension Commander {
         (!OriginalServiceReservationPolicy.isContractDefinition(instance.definition)
         || job.boardRevision <= OriginalContractOfferPolicy.maximumRevision)
         && job.valid && procurementStateValid(instance) && freightStateValid(instance)
+        && originalSealedOriginHistoryValid(instance)
         && job.digest == instance.digest && job.version == instance.version
         && instance.id == Game.contractJobIdentity(job.offer.id)
         && instance.definition.hasPrefix(job.provider + "/")

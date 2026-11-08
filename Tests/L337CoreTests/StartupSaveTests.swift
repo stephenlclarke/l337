@@ -177,6 +177,7 @@ struct StartupSaveTests {
 
   @Test func xyzzyLegalResetPersistsWithoutChangingMissionOrOtherCommanderState() async throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .secret
     game.commander.legal = 99
     game.commander.xyzzyActive = true

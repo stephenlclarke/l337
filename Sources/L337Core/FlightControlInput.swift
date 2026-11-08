@@ -40,6 +40,7 @@ extension Game {
   /// A stopped work session must publish before clocks, actor restoration or physics can advance.
   /// Physical Return may remain held after a safety interruption without admitting more work.
   mutating func admitFlightWorkAdvance(controls: Controls) -> Bool {
+    do { try requireQualifiedOriginalHullClaims() } catch { return false }
     if !controls.fire || workFireSuspended || paused || !screen.isFlight
       || selectedFlightTool != .salvageCutter
     {
@@ -58,6 +59,9 @@ extension Game {
   /// This transient stop may precede a refused native command; it grants no persistent action.
   mutating func interruptFlightTool() {
     interruptInductionUtilityWork()
+    interruptIsolationWork()
+    interruptC01LaneRepairWork()
+    interruptC01ClinicReview()
     // Only a held trigger needs a release/repress latch. Idle selection and launch
     // must not invent a stop, and an existing damage/impact stop must survive.
     if flightTrigger.held { workFireSuspended = true }
@@ -72,6 +76,7 @@ extension Game {
     interruptFlightTool()
     guard FlightControlInput.action(for: token) == .releaseHold else { return false }
     inductionUtilityWorkRuntime.contact = nil
+    isolationWorkRuntime.contact = nil
     let engaged = autoPilot.targetID != nil || workGuidance != nil || workBraking != nil
     cancelAutoTarget()
     if engaged {

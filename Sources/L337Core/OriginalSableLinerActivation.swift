@@ -4,7 +4,7 @@ import Foundation
 enum OriginalSableLinerActivation {
   static let id = "SH012"
   static let specificationSHA256 =
-    "c297a5eb32c875abd4bd8a54de8f0d66a4be0762bee53f50d124b46969c1de04"
+    "a59ed199acd7c681bc4e590076b0853d19db9724c777c0aee483878d30fcb0df"
 
   enum Failure: Error { case unsupportedDefinition }
 

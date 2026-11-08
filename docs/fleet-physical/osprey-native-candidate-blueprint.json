@@ -1,0 +1,175 @@
+{
+  "schema": "l337.closed-family-native-tessellation-proposal/1",
+  "id": "osprey-four-actual-members-complete30part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH152",
+      "name": "Osprey Scout",
+      "r3ContractSHA256": "0ac6d029f0fd74af9ea5567b2f047ffa011a9902c97a2ea2639d26b0c6dc4026",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH152-design.toml",
+        "bytes": 708249,
+        "sha256": "72139a9ccf2ee7df38ffafce1f17bb823f639e7fdefbc4e027e815edb263e02c"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH152.toml",
+        "bytes": 732360,
+        "sha256": "4c215d8d2bff13550b8c0bb53e9980853d0573b5c4d478f38885c07260604854"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH152.json",
+        "bytes": 113282,
+        "sha256": "ab47e73342a7d64dd31ad34c6e3f979b52662e1d0795251e0ad88e3d54213f80"
+      },
+      "declaredOriginalNativeFaces": 1384,
+      "originalComponents": 30,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own original resource remains pending, no family/source/crew substitution"
+    },
+    {
+      "id": "SH153",
+      "name": "Osprey Strike",
+      "r3ContractSHA256": "427aa1f5f2f0a41dc45834002c9efcb2e918a1942aa156f4f1000ca470b3f1b6",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH153-design.toml",
+        "bytes": 722277,
+        "sha256": "9ccb8ce4115e6f93a7fa06618e6ca2c001761b6d3135fbca477e7d1acb6be085"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH153.toml",
+        "bytes": 746361,
+        "sha256": "953256bd24d90a05e47b54ba0515b0b3e4fc1927f8a9b8e0e3712f9a07386ca4"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH153.json",
+        "bytes": 113282,
+        "sha256": "066e6397ae5ed1894f05f961d1afd7264b9c8dfcdb9934df19399859d8cc71e4"
+      },
+      "declaredOriginalNativeFaces": 1384,
+      "originalComponents": 30,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own original resource remains pending, no family/source/crew substitution"
+    },
+    {
+      "id": "SH154",
+      "name": "Osprey Patrol",
+      "r3ContractSHA256": "9b7c879723fd2b465f06efe8d06c5a6516ba7758485200f583930461ec773472",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH154-design.toml",
+        "bytes": 721613,
+        "sha256": "e629276d66b367e05424ec84ab029be99558b41b76f6670e775c031030f6d790"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH154.toml",
+        "bytes": 745715,
+        "sha256": "fb753ab358bf556b117eec537f022683abd7c5ff7cf5bdfac9472513e81c34e9"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH154.json",
+        "bytes": 113282,
+        "sha256": "43ad7ac0637be3af9fecd568f8359c2954ab134eb80be59912f908d7c8216dba"
+      },
+      "declaredOriginalNativeFaces": 1384,
+      "originalComponents": 30,
+      "nativeCrew": 2,
+      "conversionCrew": 2,
+      "status": "Own original resource remains pending, no family/source/crew substitution"
+    },
+    {
+      "id": "SH155",
+      "name": "Osprey Support",
+      "r3ContractSHA256": "c01b5c1545db7cd07860f71f43158bfde32b4eab4fd147aa96f73d63bedaf992",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH155-design.toml",
+        "bytes": 722201,
+        "sha256": "63ddbc6a3f6e21dbd1641b8fd703297bfac0403e724b4926be46f2e57346fddb"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH155.toml",
+        "bytes": 746349,
+        "sha256": "75a220eb88647dbbc3a6e9eaf899d54163de49e806a7c983fdead99e070b5a80"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH155.json",
+        "bytes": 113282,
+        "sha256": "b7286cc9d3164bf00906c2eafa7ca19c62c7f7369ae34070bff399cefe880029"
+      },
+      "declaredOriginalNativeFaces": 1384,
+      "originalComponents": 30,
+      "nativeCrew": 6,
+      "conversionCrew": 6,
+      "status": "Own original resource remains pending, no family/source/crew substitution"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/osprey-native-candidate-recipe.py",
+    "bytes": 11604,
+    "sha256": "0e9db3aebff41334fc2070eb61de215123429f78f0e5a89d6df332cf249cde31"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/osprey-native-candidate-tests.py",
+    "bytes": 13891,
+    "sha256": "dfa020a2e29e72ae21d67df5aeff7a97f18c82b595d3d3f56ee8bb58199801ef"
+  },
+  "limit": 512,
+  "sampling": {
+    "allLoftSides": 3,
+    "halfBoomSegments": 2,
+    "halfBoomMinorSamples": 4,
+    "allPodStationsRetained": 5,
+    "allDriveStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      1,
+      2,
+      7,
+      13,
+      18,
+      21,
+      22,
+      24,
+      25
+    ],
+    "unchangedFixedPartsPerMember": 20,
+    "status": "NEW coarse two-span halfbooms/all-triangular loft proposals; actual output count/full continuous source-profile/void/material/UV fidelity UNKNOWN and may fail qualification"
+  },
+  "retained": [
+    "BOTH complete original halfbooms/tubes/BOTH caps each/actual range0..pi, genuine rotation(oldZ+sidebeam*.36,oldY+.10,-oldX), tube.14/rxlength*.44/ry.65",
+    "BOTH full5station sidepod envelopes/endcaps and centralbody/endcaps, ALL TWELVE analytical wells",
+    "Full original aft bridge, complete5station cockpit/support and both complete connected drives/casings/luminous recesses; original drive rings/radii stay",
+    "ALL FOUR original military mount structures, own mark0/1/2/3 dimensions, exact cobalt-cream appearance/source fields and full regenerated UVs"
+  ],
+  "coordinates": "Original RECIPES[SH152] base length3.9/beam2.40 with genuine allfourfamily[152153154155] marks0..3. Source frame/axes/origin/units retained; no recenter/rescale/calibration inference.",
+  "runtime": "Own original resources/R3/native-conversion crews1/1/2/6 and runtime/source/fitting/EMP/acquisition/save/mission guards unchanged. Current155Support validated; archive155Carrier is provenance only, no alias. No paid guns/attackorigins/hardware/power/people/source/actor/blueprint authority.",
+  "stopRules": [
+    "Closed explicit four actual IDs with own hashes; reject names/family/prefix/othermember substitutions",
+    "All30 original parts/materials retained, especially BOTH halfbooms/BOTH caps each/ALL12wells/ALL4mounts/full pods/drives",
+    "All20 own fixed components exact original vertices/localfaces/materialsequence/UVs",
+    "All FIVE original pod stations and TWO drive rings/radii remain; booms preserve actual angular endpoints/rotation/tube/caps",
+    "Actual complete output must satisfy512/genuine closure/winding or refuse without omission/waiver",
+    "Full coarse boom/loft continuous source-profile/void/material/UV/native fidelity requires actual G1 assessment and may reject, no automatic cap/fidelity acceptance"
+  ],
+  "blocker": {
+    "missing": "Actual output/fidelity/native evidence and authentic occupied/installed hardware/people/power/empty-loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate/check each own30part/exact20fixed/ALL12wells/mounts/bothboomcaps-gap-axis-offset-extrema/podprofiles/drive rings-radii/UV/crossmember rejection then assess full continuous boom/loft/source/native fidelity. Reject unfaithful proposal without waiver. G4 continues independent originals."
+  }
+}

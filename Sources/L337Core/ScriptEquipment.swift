@@ -75,6 +75,16 @@ extension Game {
       guard definition.kind?.canonicalNode != NativeIsolationProgrammerDefinition.node else {
         throw MissionPackError("Use Lerr's actual authorized programmer issue and return.")
       }
+      guard definition.kind?.canonicalNode != NativeUnderTowReferenceDefinition.node else {
+        throw MissionPackError("Use Penn's actual Under Tow original reference issue and return.")
+      }
+      guard definition.kind?.canonicalNode != NativeAssemblyReferenceDefinition.node else {
+        throw MissionPackError("Collect Voss's original Assembly reference through the native service.")
+      }
+      guard definition.id != NativeMemoryAtlasWatcherSource.resource,
+        definition.name != NativeMemoryAtlasWatcherSource.name,
+        definition.kind?.canonicalNode != NativeMemoryAtlasWatcherSource.node
+      else { throw MissionPackError("Use the actual Reris atlas reference loan and same-original return.") }
       let allowed: Set<String>
       switch op {
       case "gear.issue": allowed = ["op", "id", "gear", "fit"]

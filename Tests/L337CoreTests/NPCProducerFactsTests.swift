@@ -35,7 +35,7 @@ struct NPCProducerFactsTests {
     return director.advance(context: context(seed: seed, time: 120)).batches.flatMap(\.requests)
   }
 
-  @Test func generatedCraftCarryActualFactsCatalogueAndRoleLoadoutWithoutStockResources() throws {
+  @Test func generatedCraftCarryActualSourcePoolsCatalogueAndRoleFacts() throws {
     // This case isolates role defaults; government-zero overrides have separate actual-policy coverage.
     func roleContext(seed: UInt64, time: Double) -> EncounterContext {
       let original = context(seed: seed, time: time)
@@ -60,9 +60,13 @@ struct NPCProducerFactsTests {
         #expect(npc.legalProvenance == .generated)
         #expect(npc.cargoProvenance == .generated)
         #expect(npc.routeProvenance == .generated)
-        #expect(npc.resources == nil)
+        let catalogue = try #require(request.catalogueShipID)
+        let ship = try #require(ShipCatalogue.ship(catalogue))
+        let performance = try #require(ship.game)
+        let stock = try #require(NPCResources.stock(performance))
+        #expect(!OriginalDetailedHullStage.blocksRuntime(catalogue))
+        #expect(npc.resources == stock)
         #expect(npc.hasFuelScoops == (npc.role == .miner || npc.role == .pirate))
-        let ship = try #require(ShipCatalogue.nativeShip(request.hull))
         #expect(request.catalogueShipID == ship.id)
         #expect(request.priority == .ordinary && request.identity.producer == .ambient)
         #expect(request.rock == nil && request.payload == nil)

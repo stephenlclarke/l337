@@ -1,0 +1,19 @@
+{
+  "status": "ONE_BOUNDED_SOURCE_OWNERSHIP_METADATA_PASS_NO_NUMERICAL_ENGINEERING",
+  "records": [
+    "SH061",
+    "SH029"
+  ],
+  "stops": [],
+  "operations": {
+    "designParses": 2,
+    "partRecords": 224,
+    "faceIndexChecks": 29616,
+    "faceMaterialChecks": 9872
+  },
+  "coordinateConversions": 0,
+  "spanAreaCentroidMassTensorEvaluations": 0,
+  "geometryWrites": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "nativeCompilerRendererTests": 0
+}

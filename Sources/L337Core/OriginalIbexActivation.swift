@@ -4,7 +4,7 @@ import Foundation
 enum OriginalIbexActivation {
   static let id = "SH027"
   static let specificationSHA256 =
-    "8683efc69a92c85add48be7022fa1a76040b4407413c5c2a349156d47425b2ed"
+    "7b038e5e6675b715d56d0ffbecf5ebaed4dd0216109c63aaf5c7dd990efa1aa8"
 
   enum Failure: Error { case unsupportedDefinition }
 

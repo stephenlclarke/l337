@@ -1,0 +1,24 @@
+{
+  "status": "IMMUTABLE_METADATA_COUNT_CORRECTION_NO_SOURCE_OR_TEST_CHANGES",
+  "corrects": {
+    "path": "docs/fleet-physical/current-r3-authoring-workflow-first.json",
+    "bytes": 1002,
+    "sha256": "9748151c7ca6d61fe3374d4910632b8b1c551bf0f5122e3c1f35abdafdfec7a0",
+    "frozenCommit": "e2f2bda1e1675d4a9de2c4a55da2a4bcb6342576"
+  },
+  "incorrectStatement": "Preserve first five historical balance fixture methods byte-exact",
+  "correctStatement": "FOUR retained historical balance fixture methods; SIX original total minus TWO changed maintained-resource methods equals FOUR.",
+  "retainedMethodNames": [
+    "test_effective_cargo_overlay_preserves_archives_geometry_and_other_performance",
+    "test_retained_cabin_hold_and_crew_are_not_deleted_to_advertise_more_cargo",
+    "test_staged_import_and_direct_writer_use_identical_project_fields",
+    "test_capacity_reduction_and_invented_missing_mechanics_are_rejected"
+  ],
+  "retainedPrefixByteExact": true,
+  "oldWholeTestSHA256": "0fba4713bbb5f2660ef94a30f04830459350153a4e7a86042f82a5418980a266",
+  "currentWholeTestSHA256": "cee84c1fc63d1721663165f9741159a96c5292963351af30a1d02f1fc760b344",
+  "frozenFIRSTUnmodified": true,
+  "sourceOrTestEdits": 0,
+  "nativeOrTestExecution": 0,
+  "reason": "SAME G2 source review bookkeeping correction only; no native qualification or acceptance inference."
+}

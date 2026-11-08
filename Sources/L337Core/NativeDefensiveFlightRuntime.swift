@@ -2,11 +2,7 @@ import Foundation
 
 extension Game {
   var activeDefensiveFlight: (instance: ScriptInstance, state: NativeDefensiveFlightState)? {
-    for instance in commander.scriptState.instances.values
-    where instance.definition == NativeDefensiveFlight.stateID && instance.outcome == .active {
-      if let state = instance.savedDefensiveFlight { return (instance, state) }
-    }
-    return nil
+    storedActiveDefensiveFlight()
   }
 
   mutating func beginDefensiveFlightIfNeeded() {

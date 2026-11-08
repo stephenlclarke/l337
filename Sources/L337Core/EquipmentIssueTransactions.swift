@@ -323,6 +323,13 @@ public enum EquipmentIssueTransactions {
     else { throw OwnedEquipmentError.unknownNode }
     var items = inventory.items
     for device in request.devices {
+      if node == EMPModuleGradePolicy.node {
+        guard let seed = device.empIssueSeed,
+          seed.matches(source: request.source, command: request.command, device: device)
+        else { throw EquipmentIssueError.invalidRequest }
+      } else if device.empIssueSeed != nil {
+        throw EquipmentIssueError.invalidRequest
+      }
       if let condition = device.nativeRepairLoopCondition {
         guard case .failed(let unit) = condition,
           request.source.resource == WayfarerRepairLoopDefinition.gearKey,
@@ -367,7 +374,8 @@ public enum EquipmentIssueTransactions {
           preferredSlot: device.preferredSlot,
           retainedLegacyState: device.originalEquipmentName.map {
             .init(conditionBasisPoints: 10000, modifications: [:], originalEquipmentName: $0)
-          }, nativeRepairLoopCondition: device.nativeRepairLoopCondition))
+          }, nativeRepairLoopCondition: device.nativeRepairLoopCondition,
+          empBank: device.empIssueSeed?.bank, empGrades: device.empIssueSeed?.grades))
     }
     var displacements: [EquipmentIssueDisplacement] = []
     if case .fitAll(let plans) = request.fitting {

@@ -1,0 +1,11 @@
+{
+  "status": "OWN_SIX_DOMAIN_INTEGER_CORRESPONDENCE_SOURCE_FROZEN_BEFORE_PASS",
+  "authoringSourceSHA256": "b072bc728ce01e58d977ad05812ef9fe220f14d64d9f515fa42d2e05e27f9a6d",
+  "sourceFrontierSHA256": "dbb80a0f9fc19d7d59e2a8dff5f6477eb79b4c488a6f7a65f3024a3cd9b7d52e",
+  "scope": "Six exact creator domains; append counts/material/index ownership only. Drone shell boundaries use explicit source material-domain transitions; Medusa projected dot inventory uses emitted integer suffix counts without reevaluating curves or arc lengths.",
+  "coordinateConversions": 0,
+  "spanAreaMassTensorEvaluations": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "geometryWrites": 0,
+  "nativeCompilerRendererTests": 0
+}

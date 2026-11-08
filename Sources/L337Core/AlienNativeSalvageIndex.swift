@@ -17,6 +17,13 @@ struct AlienNativeSalvageIndex: Sendable {
     let receipt: AlienStorageCompanionCollection
   }
 
+  struct ReceivedStructure: Sendable {
+    let record: AlienStorageCompanion
+    let item: SalvageLootItem
+  }
+
+  /// Retained intake facts, indexed once when custody changes; no scene or unlock authority.
+  let receivedStructure: [String: [ReceivedStructure]]
   let native: NativeSalvagePlanView
   let sections: Set<WreckSectionIdentity>
   let pending: [SalvageLotIdentity: Pending]
@@ -25,6 +32,7 @@ struct AlienNativeSalvageIndex: Sendable {
   let missileResearch: [AlienMissileResearchReceipt]
 
   init(_ records: [AlienStorageWorldRecord]) throws {
+    var receivedStructure: [String: [ReceivedStructure]] = [:]
     var sections: Set<WreckSectionIdentity> = []
     var pending: [SalvageLotIdentity: Pending] = [:]
     var storedTechnology: [UUID: StoredTechnology] = [:]
@@ -73,6 +81,19 @@ struct AlienNativeSalvageIndex: Sendable {
           value = nil
         }
       case .companion(let item):
+        if case .structural = item.origin, case .collected = item.state,
+          let plan = plans[item.plan], native.inspections[plan.plan.section] != nil,
+          let wreck = native.wrecks[plan.plan.section.wreck]
+        {
+          if emissions[item.plan] == nil {
+            emissions[item.plan] = try native.emissions(for: plan)
+          }
+          guard let original = emissions[item.plan]?[item.origin] else {
+            throw AlienStorageError.invalidJoin
+          }
+          receivedStructure[wreck.catalogueShipID, default: []].append(
+            .init(record: item, item: original))
+        }
         if case .researched(_, let research) = item.state { missileResearch.append(research) }
         if case .pending(let lot, let time, let offer, let binding) = item.state {
           value = .init(
@@ -112,6 +133,7 @@ struct AlienNativeSalvageIndex: Sendable {
         }
       }
     }
+    self.receivedStructure = receivedStructure
     self.native = native
     self.sections = sections
     self.pending = pending

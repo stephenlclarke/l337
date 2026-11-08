@@ -3,7 +3,7 @@ import Foundation
 /// Closed G06 predicates consume existing native actor, station-choice and payment records.
 enum OriginalVerifiedWarrant {
   static let stateID = "l337.contract/verified-warrant"
-  static let digest = "f125be8200d0dd3ae834f2dc4cd52da46f7c571de7e67cbec61f76c7beab9911"
+  static let digest = "4c537af7b74735cfa73cf3a8f82d21211434dcf087c28fa5e03b27d727fea890"
   static let issuer = ContractStationIdentity(galaxy: 0, system: 7, stationClass: "main-orbital")
   static let objective = SystemIdentity(galaxy: 0, system: 185)
   static let encounterID = "verified-hostile"

@@ -3,6 +3,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct NativeMeasuredExtractionSaveTests {
   @Test(
@@ -275,7 +276,6 @@ private func measuredPositiveFailure(_ bytes: Data, pointer: ScriptSavePointer, 
     rawFieldsPass = true
   } catch { rawFieldsPass = false }
   let decoder = ScriptValueStorage.decoder(typed: pointer.valueCodec == ScriptValueStorage.codec)
-  decoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true
   let decoded = try? decoder.decode(ScriptEngineState.self, from: bytes)
   var facts = "rawFieldsPass=\(rawFieldsPass) typedDecodePass=\(decoded != nil)"
   if let decoded {

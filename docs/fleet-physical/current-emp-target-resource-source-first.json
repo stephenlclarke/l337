@@ -1,0 +1,46 @@
+{
+  "status": "FIRST_CURRENT_EMP_TARGET_SOURCE_RESOURCE_ELIGIBILITY_NO_EDITS",
+  "beforeCommit": "165167224df7c6d065962b945250e73c297efa57",
+  "pins": [
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 29427,
+      "sha256": "46458f06e42cd4fa6e072d81c78843c7b997b481b592cd0b05177b03aca9be9f"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18548,
+      "sha256": "693623abd1436400efd66d30316e999f08aa02569cc46c1850aff7ad989727ca"
+    },
+    {
+      "path": "Sources/L337Core/StationPoliceSource.swift",
+      "bytes": 4700,
+      "sha256": "71070f49f77b9d424a0071f2d3ed9ada4e968d2ff1508a46f1ab1c44a0f7bf00"
+    },
+    {
+      "path": "Sources/L337Core/EMPSourceCustody.swift",
+      "bytes": 5355,
+      "sha256": "b711a926156a536a31f8c42e519fcb872d2aa2309d5c02dfefab47ff38973714"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    }
+  ],
+  "sourcePath": "Sources/L337Core/EMPElectricalRuntime.swift",
+  "before": "      let catalogue = StationPoliceSource.empCatalogueID(for: body),\n      let ship = ShipCatalogue.ship(catalogue), EMPState.hasSupportedCrew(ship),\n      SalvageCatalogue.empProfile(catalogueShipID: catalogue) != nil,\n      npc.resources?.valid == true",
+  "proposedAfter": "      let catalogue = physical.catalogueShipID,\n      let ship = ShipCatalogue.ship(catalogue), EMPState.hasSupportedCrew(ship),\n      SalvageCatalogue.empProfile(catalogueShipID: catalogue) != nil,\n      npc.resources?.valid == true,\n      NPCPersistenceSnapshot.currentCatalogueSourceIsValid(\n        catalogueShipID: catalogue, hull: body.hull, npc: npc, missiles: body.missiles)",
+  "finding": "empPulseEligible currently trusts generic resources.valid and a catalogue helper permitting nonviper reverse lookup. A current ID with legacy/foreign capacities or unknown fuel can be presented eligible, unlike current persistence/emission/update/telemetry source gates. Require explicit actual ID and existing full current resource predicate before charging/effects. This is source reasoning, not an observed executed failure.",
+  "scope": "Only current target source clauses inside empPulseEligible; actual physical catalogueID instead of inferredID, unchanged shared currentCatalogueSourceIsValid(actualid,hull,npc,missiles). Preserve every ownership/mission/protection/hull/existingCrew/salvage guard, costs, charge10, bank2, pulse/records/crew/ejection/schema/power algorithms. This is necessary target-source validity, not complete EMP/hardware/people authorization.",
+  "testPath": "Tests/L337CoreTests/EMPCurrentTargetSourceTests.swift",
+  "testScope": "One NEW6variant method current/wrong-profile/unknown-fuel/missile-overflow/missing-source/unknown-source. Mandatory actual runtime source025 and stock/declaredcrew/salvage profile; actual Game launch/allocated ordinary current target. Current source must be target-eligible as baseline; corrupted generic-valid target false, read-only commander/body/clock/equipment conserved. No actualEMPshot/charge/pod/people/record/paidpermission claimed, no fakeincident/source or hull substitute/native025waiver. Existing EMP tests immutable.",
+  "remainingScope": "Current crewless125 acquisition and actual people/hardware/power remain OPEN. Current-resource enforcement makes the legacyEnergyOnly NPC bootstrap inside applyEMPPulse unreachable for newly eligible current targets; flag for Root bounded coupled cleanup decision, do not silently edit legacy event/record schemas or other owners. This proposal only eligibility, no backward reader/migration feature added.",
+  "coordination": "Shared EMPElectricalRuntime with G1 EMP kernel; Root exact helper overlap/adoption required before edit. No C01/Bridge/Weapons/Game/Runtime/render/occlusion or researcher emitter changes.",
+  "limits": "All UNCOMPILED UNRUN; source lookup may initialize geometry cache/runtime cost unmeasured. No compiler/native/model/numeric/geometry execution byG4, no actual actor/geometry/crew/loadedphysics/journey acceptance."
+}

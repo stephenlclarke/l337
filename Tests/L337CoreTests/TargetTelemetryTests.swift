@@ -116,6 +116,20 @@ private func telemetryFields(
   #expect(fields.first { $0.label == "Fuel" }?.value == "Unknown")
 }
 
+@Test func nativeHullLabelsUseCurrentSourcesWithoutPredecessorAliases() throws {
+  let starter = try #require(ShipCatalogue.ship("SH025"))
+  let police = try #require(ShipCatalogue.nativeShip(.viper))
+  #expect(starter.name == "Peregrine Mk V")
+  #expect(police.id == "SH031" && police.name == "Kite Interceptor")
+  #expect(TT.modelName(catalogueShipID: starter.id, missionName: nil, fallbackHull: .cobra)
+    == starter.name)
+  #expect(Hull.viper.modelName == police.name)
+  for hull in [Hull.cobra, .sidewinder, .constrictor, .thargoid, .thargon] {
+    try #require(ShipCatalogue.nativeShip(hull) == nil)
+    #expect(hull.modelName == "Unidentified craft")
+  }
+}
+
 @Test func targetTelemetryModelUsesActualCatalogueAndMissionOverrides() throws {
   let ship = try #require(ShipCatalogue.all.first { $0.name != Hull.cobra.modelName })
   #expect(
@@ -126,6 +140,30 @@ private func telemetryFields(
   #expect(
     TT.modelName(catalogueShipID: "missing", missionName: "", fallbackHull: .cobra)
       == Hull.cobra.modelName)
+}
+
+@Test func unresolvedShipIdentityCannotBorrowTheAdmittedKiteArchetypeName() throws {
+  let kite = try #require(ShipCatalogue.nativeShip(.viper))
+  try #require(kite.id == "SH031" && kite.name == "Kite Interceptor")
+  #expect(TT.modelName(catalogueShipID: kite.id, missionName: nil, fallbackHull: .viper) == kite.name)
+  #expect(TT.modelName(catalogueShipID: nil, missionName: nil, fallbackHull: .viper) == kite.name)
+  for id in ["missing", "", "sh031", "SH031-extra"] {
+    try #require(ShipCatalogue.ship(id) == nil)
+    #expect(TT.modelName(catalogueShipID: id, missionName: nil, fallbackHull: .viper)
+      == "Unidentified craft")
+    #expect(TT.modelName(catalogueShipID: id, missionName: "Protected target", fallbackHull: .viper)
+      == "Protected target")
+    for hull in Hull.allCases {
+      let expected = hull.isTargetShip ? "Unidentified craft" : hull.modelName
+      #expect(TT.modelName(catalogueShipID: id, missionName: "", fallbackHull: hull) == expected)
+      #expect(TT.modelName(catalogueShipID: nil, missionName: nil, fallbackHull: hull) == hull.modelName)
+    }
+  }
+  // Every real current catalogue label remains its own name, including authored pending
+  // entries. Naming a resource is not physical source adoption or observation authority.
+  for ship in ShipCatalogue.all {
+    #expect(TT.modelName(catalogueShipID: ship.id, missionName: nil, fallbackHull: .viper) == ship.name)
+  }
 }
 
 @Test func targetTelemetrySnapshotsFollowNPCManifestAndRouteWithoutPlayerInput() {

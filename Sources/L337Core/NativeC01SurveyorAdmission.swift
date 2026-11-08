@@ -7,6 +7,24 @@ extension NativeC01Surveyor {
   ) -> ScriptEncounterDefinition? {
     if pack.digest == NativeGlassMeridian.digest,
       pack.manifest.stateID == NativeGlassMeridian.stateID,
+      let definition = NativeC01ClinicEscort.definition(state, id: id)
+    {
+      return definition
+    }
+    if pack.digest == NativeGlassMeridian.digest,
+      pack.manifest.stateID == NativeGlassMeridian.stateID,
+      let definition = NativeC01LaneRepair.definition(state, id: id)
+    {
+      return definition
+    }
+    if pack.digest == NativeGlassMeridian.digest,
+      pack.manifest.stateID == NativeGlassMeridian.stateID,
+      let definition = NativeC01TimingStandard.definition(state, id: id)
+    {
+      return definition
+    }
+    if pack.digest == NativeGlassMeridian.digest,
+      pack.manifest.stateID == NativeGlassMeridian.stateID,
       let definition = definition(state, id: id)
     {
       return definition
@@ -28,6 +46,8 @@ extension NativeC01Surveyor {
   ) -> [ScriptNPCDefinition] {
     guard definition(copy state, id: encounter) != nil else { return original }
     return original + [profile(recorder: false), profile(recorder: true)]
+      + NativeC01TimingStandard.profiles(state) + NativeC01LaneRepair.profiles(state)
+      + NativeC01ClinicEscort.profiles(state)
   }
 
   @inline(never)
@@ -46,8 +66,31 @@ extension NativeC01Surveyor {
       let additions = try? models.get()
     else { return pack.models }
     return pack.models.merging(additions) { _, native in native }
+      .merging(NativeC01TimingStandard.designs(state)) { _, native in native }
+      .merging(NativeC01LaneRepair.designs(state)) { _, native in native }
+      .merging(NativeC01ClinicEscort.designs(state)) { _, native in native }
   }
   static func preparedOrientation(state: ScriptInstance, actor: ScriptOwnedActor) -> Basis3? {
+    if let leaf = state.savedGlassMeridian?.clinicEscort {
+      let ordinal = NativeC01ClinicEscort.stockOrdinal(alias: actor.alias)
+      if NativeC01ClinicEscort.original(actor, source: leaf.source, ordinal: ordinal) {
+        return leaf.birth.cradle.orientation.relative(to: leaf.birth.reference.orientation)
+      }
+    }
+    if let leaf = state.savedGlassMeridian?.laneRepair,
+      NativeC01LaneRepair.Target.allCases.contains(where: {
+        NativeC01LaneRepair.original(actor, source: leaf.source, target: $0)
+      })
+    {
+      return Basis3().relative(to: leaf.source.reference.orientation)
+    }
+    if let leaf = state.savedGlassMeridian?.timingStandard,
+      NativeC01TimingStandard.Part.allCases.contains(where: {
+        NativeC01TimingStandard.original(actor, source: leaf.source, part: $0)
+      })
+    {
+      return Basis3().relative(to: leaf.source.reference.orientation)
+    }
     guard let source = state.savedGlassMeridian?.surveyor?.source,
       original(actor, mission: state.id, recorder: actor.alias == aliases[1])
     else { return nil }
@@ -68,8 +111,8 @@ extension Game {
       NativeC01Surveyor.nativeValid(
         physical, recorder: actor.alias == NativeC01Surveyor.aliases[1]),
       physical.identity.system == systemIdentity,
-      physical.identity.visit == commander.flightSimulation.visit,
-      physical.identity.entity > 1, physical.identity.entity < commander.flightSimulation.nextActor,
+      physical.identity.visit == storedFlightSimulation().visit,
+      physical.identity.entity > 1, physical.identity.entity < storedFlightSimulation().nextActor,
       body.scriptNPC?.fit == actor.body.scriptNPC?.fit
     else { return nil }
     var actual = actor
@@ -86,7 +129,7 @@ extension Game {
       return (NativeC01SurveyorGeometry.recorder.rawMesh, 8)
     }
     guard let geometry = try? NativeC01SurveyorGeometry.harrier.get() else { return nil }
-    return (geometry.collision, 18_000)
+    return (geometry.collision, geometry.dryMass)
   }
   func isC01Surveyor(_ body: SpaceBody) -> Bool {
     guard let mission = glassMeridianMission, body.missionInstanceID == mission.id,
@@ -131,7 +174,7 @@ extension Game {
       var body = SpaceBody(
         id: -1, hull: .cobra, position: .init(spec.x, spec.y, spec.z), hostile: false)
       body.orientation = Basis3().relative(to: source.reference.orientation)
-      body.energy = profile.energy
+      body.energy = ordinal == 1 ? profile.energy : 64
       body.missiles = 0
       body.ecmEnabled = false
       body.rotationRate = 0
@@ -180,6 +223,8 @@ extension Game {
     _ a: SpawnRequest, _ first: MissionActorAdmissionTemplate,
     _ b: SpawnRequest, _ second: MissionActorAdmissionTemplate
   ) -> Bool {
+    if c01ClinicPreparedPairSeparated(a, first, b, second) { return true }
+    if c01TimingStandardPairSeparated(a, first, b, second) { return true }
     guard let id = first.canonicalBody.missionInstanceID,
       second.canonicalBody.missionInstanceID == id,
       let mission = commander.scriptState.instances[id],
@@ -208,6 +253,7 @@ extension Game {
   func c01SurveyorRetainedPairSeparated(
     _ request: SpawnRequest, _ template: MissionActorAdmissionTemplate, _ body: SpaceBody
   ) -> Bool {
+    if c01TimingStandardRetainedPairSeparated(request, template, body) { return true }
     guard let other = c01SurveyorActor(body),
       let mission = template.canonicalBody.missionInstanceID, mission == body.missionInstanceID,
       let owner = commander.scriptState.instances[mission],

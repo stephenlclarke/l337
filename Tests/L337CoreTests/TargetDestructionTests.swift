@@ -2,13 +2,17 @@ import Testing
 
 @testable import L337Core
 
-private func lockedGame() -> Game {
+private func lockedGame() throws -> Game {
   var game = Game(executive: false)
-  game.commander.installTargetingComputer(.military)
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.military.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
   game.launch()
   game.speed = 0
   #expect(game.commander.targetingTier == .military)
-  game.bodies = [.init(id: 42, hull: .cobra, position: .init(0, 0, 1000), hostile: true)]
+  let target = try exactCombatFixtureBody(&game, id: 42, position: .init(0, 0, 1000), hostile: true)
+  game.bodies = [target]
   game.key("tab")
   #expect(game.autoPilot.targetID == 42 && game.weaponsTargetID == 42)
   return game
@@ -16,8 +20,8 @@ private func lockedGame() -> Game {
 private func announcements(_ game: Game, _ text: String) -> Int {
   game.ecmControl.events.filter { $0.announcement == .gameplay(text) }.count
 }
-@Test func playerLaserKillClearsLocksAndAnnouncesDestructionOnceAlongsideRankReward() {
-  var game = lockedGame()
+@Test func playerLaserKillClearsLocksAndAnnouncesDestructionOnceAlongsideRankReward() throws {
+  var game = try lockedGame()
   game.commander.kills = 7
   game.bodies[0].energy = 1
   var controls = Controls()
@@ -34,7 +38,7 @@ private func announcements(_ game: Game, _ text: String) -> Int {
 @Test(arguments: 0..<3)
 func playerImmediateAndTravellingMissilesAndBombCarryKillAttribution(_ mode: Int) throws {
   do {
-    var game = lockedGame()
+    var game = try lockedGame()
     if mode == 2 {
       try game.commander.grantEquipment(
         "Energy Bomb", at: .utility(.energyBomb), provenance: .grant("kill attribution fixture"))
@@ -42,7 +46,7 @@ func playerImmediateAndTravellingMissilesAndBombCarryKillAttribution(_ mode: Int
       game.energyBomb()
     } else {
       game.bodies[0].ecmEnabled = mode == 1
-      game.bodies[0].position = .init(0, 0, 100)
+      game.bodies[0].position = .init(0, 0, 90)
       let target = try #require(game.bodies[0].physical?.identity)
       let player = try #require(game.commander.flightSimulation.player)
       game.key("t")
@@ -71,16 +75,25 @@ func playerImmediateAndTravellingMissilesAndBombCarryKillAttribution(_ mode: Int
     #expect(announcements(game, "TARGET LOST") == 0)
   }
 }
-@Test func thirdPartyDestructionRangeLossAndDespawnCannotClaimPlayerKill() {
-  for mode in 0..<3 { verifyThirdPartyRemoval(mode: mode) }
-  verifyManualTargetCancellation()
+@Test func thirdPartyDestructionRangeLossAndDespawnCannotClaimPlayerKill() throws {
+  for mode in 0..<3 { try verifyThirdPartyRemoval(mode: mode) }
+  try verifyManualTargetCancellation()
 }
-private func verifyThirdPartyRemoval(mode: Int) {
-  var game = lockedGame()
+private func verifyThirdPartyRemoval(mode: Int) throws {
+  var game = try lockedGame()
   if mode == 0 {
     game.bodies[0].energy = 0
   } else if mode == 1 {
+    let sourceID = try #require(game.bodies[0].physical?.catalogueShipID)
+    let source = try #require(OriginalFleetRuntimeHullSource.source(for: sourceID))
+    let stock = try #require(NPCResources.stock(source.performance))
+    game.bodies[0].physical?.npc?.resources = stock
     game.bodies[0].position.z = 100_000
+    let context = try #require(game.gameplayContext())
+    let snapshot = NPCPersistenceSnapshot.capture(
+      body: game.bodies[0], pose: game.commander.flightSimulation.pose,
+      physicalTime: context.physicalTime, protection: context.protection)
+    try #require(snapshot != nil)
   } else {
     game.bodies = []
   }
@@ -91,9 +104,10 @@ private func verifyThirdPartyRemoval(mode: Int) {
   #expect(announcements(game, "TARGET LOST") == 1)
   #expect(announcements(game, "TARGET DESTROYED - YOUR KILL") == 0)
 }
-private func verifyManualTargetCancellation() {
-  var game = lockedGame()
-  game.bodies.append(.init(id: 43, hull: .cobra, position: .init(10, 0, 1200)))
+private func verifyManualTargetCancellation() throws {
+  var game = try lockedGame()
+  let target = try exactCombatFixtureBody(&game, id: 43, position: .init(10, 0, 1200))
+  game.bodies.append(target)
   game.key("tab")
   game.key("q")
   #expect(

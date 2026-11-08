@@ -10,6 +10,10 @@ private func pulseCommander(_ energy: String? = nil) throws -> Commander {
     try commander.grantEquipment(
       energy, at: .energy, provenance: .grant("pulse profile regression"))
   }
+  try commander.grantEquipment(Equipment.empPirateBlaster, at: .utility(.empPirateBlaster),
+    provenance: .grant("current pulse profile"))
+  let emp = try #require(commander.fittedEquipment(at: .utility(.empPirateBlaster)))
+  #expect(emp.empGrades == .base && emp.empBank?.remaining == 0)
   return commander
 }
 
@@ -96,22 +100,20 @@ struct EMPPulseProfileTests {
     #expect(profile.power == 48 && profile.range == 4500)
   }
 
-  @Test func existingExplicitLegacyMigrationRetainsItsActualEnergyGrade() throws {
-    for (names, power) in [
-      (["Extra Energy Unit"], 48.0),
-      (["Extra Energy Unit", Equipment.navalEnergyUnit], 64.0),
+  @Test("Current typed energy fits retain48/64; an unowned name set grants no pulse authority")
+  func existingExplicitLegacyMigrationRetainsItsActualEnergyGrade() throws {
+    for (names, fitted, power) in [
+      (["Extra Energy Unit"], "Extra Energy Unit", 48.0),
+      (["Extra Energy Unit", Equipment.navalEnergyUnit], Equipment.navalEnergyUnit, 64.0),
     ] {
-      var commander = Commander()
-      commander.equipment.formUnion(names)
-      #expect(throws: EMPPulseProfileError.missingEnergySystem) {
-        try EMPPulseProfile.resolve(for: commander)
-      }
-      try commander.prepareEquipment()
+      var unowned = Commander()
+      unowned.equipment.formUnion(names)
+      #expect(throws: (any Error).self) { try EMPPulseProfile.resolve(for: unowned) }
+      let commander = try pulseCommander(fitted)
       let before = commander
-      let profile = try EMPPulseProfile.resolve(for: commander)
-      #expect(profile.power == power && commander == before)
-      #expect(
-        commander.equipmentInventory?.items.filter { $0.location?.slot == .energy }.count == 1)
+      #expect(try EMPPulseProfile.resolve(for: commander).power == power)
+      #expect(commander == before)
+      #expect(commander.equipmentInventory?.items.filter { $0.location?.slot == .energy }.count == 1)
     }
   }
 

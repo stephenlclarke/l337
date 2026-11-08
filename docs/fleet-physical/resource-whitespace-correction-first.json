@@ -1,0 +1,205 @@
+{
+  "kind": "bounded-source-whitespace-correction",
+  "maximumRows": 49,
+  "maximumWrites": 49,
+  "reason": "git diff --check found one terminal blank line per authored TOML; no semantic or geometry change",
+  "firstResultSHA256": "c615ccc292b2f2c5b57139fc7bafa52b566fd56b3e772993fd1d8c941bb8ddca",
+  "before": [
+    {
+      "id": "SH036",
+      "sha256": "6689d0096acad167543b8826c922b6160ef88d66a1badcaa72349a541f538006"
+    },
+    {
+      "id": "SH041",
+      "sha256": "22e5b4907c4ecbb6e78664bd3a956336a9a24bd6ad20fb2d2a27c1629b97f56c"
+    },
+    {
+      "id": "SH042",
+      "sha256": "bee6082b6637897c8b6c01deaa72b7bfb57b4b9091675ecc6ab0eed4f4e96cda"
+    },
+    {
+      "id": "SH043",
+      "sha256": "a40da9abf9d13b831f1faa173902a1a62398ac07dc982901d30bda476fa115de"
+    },
+    {
+      "id": "SH044",
+      "sha256": "e6b3f64fdf16863b586f22d5d0493377b8828a79c1c59cbd8d6db741c7449823"
+    },
+    {
+      "id": "SH045",
+      "sha256": "43182794d0342e6c65958bab189fc67f1247b2cc61f2a666cc32e472f6504d98"
+    },
+    {
+      "id": "SH046",
+      "sha256": "92758c4d727dfa1c23b3b3a2cfcf4501b88ee6ffc4b9758e071195a971daac46"
+    },
+    {
+      "id": "SH047",
+      "sha256": "24b749d2780a46bbd3fbb3997b64fd4334633542dd4279c32128d0c219a51645"
+    },
+    {
+      "id": "SH054",
+      "sha256": "5f93ed4ba1ba1c90b79af731ffa3ce5a2f4c2aaa80c9b3db207586f19bbc1ead"
+    },
+    {
+      "id": "SH055",
+      "sha256": "8c0d2346967ce3e5055ec37a0314ee54342696451f1b86edaf0552d968920660"
+    },
+    {
+      "id": "SH056",
+      "sha256": "347a1f45d6adfb2a0769756febc40640640953f926b3227c4b1760b7c2421289"
+    },
+    {
+      "id": "SH057",
+      "sha256": "4b68aa50a9d6e952b0e4d30b216a197d6bf4f766e48a9243aef3dccfaa5a1bd0"
+    },
+    {
+      "id": "SH058",
+      "sha256": "76c59c86782267ba9672d9a0a41a3f2bba95e37bbc7ba3b31eebf476752f84b5"
+    },
+    {
+      "id": "SH059",
+      "sha256": "dbf0b83a1183b73e98bdd0322baedace45511ce123a389bf7547d08c42cfe34f"
+    },
+    {
+      "id": "SH062",
+      "sha256": "3272be06c35b5a7b744f90ec87215c76af75b1c1d1d419556c8952742a865a2f"
+    },
+    {
+      "id": "SH064",
+      "sha256": "6d1dcce75abd4eb35bf156bc868eed1b1c9baf5e19904ac15868b503fd8a1291"
+    },
+    {
+      "id": "SH065",
+      "sha256": "10709b9d12c7441202232edb4f63790ebaef43c3afa6481f9f4b4e6bfa0e2cc3"
+    },
+    {
+      "id": "SH068",
+      "sha256": "20568dc0615f3887f5223ec5a98c73a3fe188e79dfde31117af5615614db315d"
+    },
+    {
+      "id": "SH069",
+      "sha256": "27f905d132b4afd54756f87a5f1b83f98a6d047520548904bfc60f3736f367f4"
+    },
+    {
+      "id": "SH070",
+      "sha256": "7127d6249b258b0eebfd30a92818eea8b5e0748be52fabf02c1a82768281b983"
+    },
+    {
+      "id": "SH074",
+      "sha256": "43f60afadfddae595af5bacac0149b0d009f48665cdf40a9bf68129e12d24f35"
+    },
+    {
+      "id": "SH075",
+      "sha256": "3c7e2fdadfd348376728d0de66993d2cf85a51841e39c8d023468fc2176dfcf0"
+    },
+    {
+      "id": "SH077",
+      "sha256": "8bac19fdba0aac9ffd09692fa5dd6853b060b07eee208e90d1b15f7d97dd7b0a"
+    },
+    {
+      "id": "SH078",
+      "sha256": "e9995c785c8b4b8a6f7de0ae31976b3e1ac954c829f444101d11b04bee05a807"
+    },
+    {
+      "id": "SH079",
+      "sha256": "85d346511c8d81e09bc204c92c6fd23f2ac57c001691ac7f068367faaac9879c"
+    },
+    {
+      "id": "SH080",
+      "sha256": "a9b0afa1ce276bf355198f61fecd26826fa7374a08697f6053d33412a374c66d"
+    },
+    {
+      "id": "SH081",
+      "sha256": "5e96d9c4ee129363f579c70acf87f2a88c2eea3ae3f4bcca1148d56d5a1a0e8b"
+    },
+    {
+      "id": "SH083",
+      "sha256": "6b80f6009391b0cec6a56584c9d05ebaf66c3594be009fbdb31c4509a9874998"
+    },
+    {
+      "id": "SH084",
+      "sha256": "e71c024bfdf77c9c9d145844fd041ba6d066f2f8aaa32d09d3270fe419122e7b"
+    },
+    {
+      "id": "SH085",
+      "sha256": "42f6945425581a008bbb1bbe613ec5e8bf34c2c5de4564b28005a7fbbf530401"
+    },
+    {
+      "id": "SH091",
+      "sha256": "e1ff2a18849307eeb56da3aba7cb38dd5a9810398e85e7c3e2a59f54fcdcf59f"
+    },
+    {
+      "id": "SH093",
+      "sha256": "bd38298ebeb5518c59e7eb4341e10fd7c11285e62243234cca6b2c74653aa1da"
+    },
+    {
+      "id": "SH101",
+      "sha256": "4f5531f9ea7caf5d7029f246ac680a28aed6aa95b179b244fff48d2714531c9f"
+    },
+    {
+      "id": "SH109",
+      "sha256": "946a7861ea7f565706f213399508047281af96e6d462c6d08cdf38e4db0404b2"
+    },
+    {
+      "id": "SH110",
+      "sha256": "5036f046db40143d10fecd320b98be41baf6adfe68c0c61f88ef4e7b6bb6d268"
+    },
+    {
+      "id": "SH111",
+      "sha256": "9bea56e10de0ac8db602957bc3e8e998de4fbffde0d797c3110718b0fa4948f3"
+    },
+    {
+      "id": "SH126",
+      "sha256": "66fd314540d41d293402b56d22b36c979feded2ea06a7a770ff8d080835224d4"
+    },
+    {
+      "id": "SH129",
+      "sha256": "eef015d33d5376ee0856e137f2c4fcb3358fa38e9353c78b961eadf5355e2b38"
+    },
+    {
+      "id": "SH130",
+      "sha256": "2b4738500fcb798150cb37d191f7741fb12b8db4c29c7f4142cd7759f49631ea"
+    },
+    {
+      "id": "SH131",
+      "sha256": "9226b4c2a83746f95aa6e8eb62aa44ac7d1529740affddd63c2377890b26996d"
+    },
+    {
+      "id": "SH132",
+      "sha256": "837e84ab13f474d9acaf3f1808bb4c0ecb8ba6980969a3daa0703b09d3270fc4"
+    },
+    {
+      "id": "SH133",
+      "sha256": "a6d72b8621ef4b3ade6094435a6cced35bdb517d15d3d214778e78005d9b913c"
+    },
+    {
+      "id": "SH134",
+      "sha256": "61a7b8e1e1119fb939869e7efd7c6fea4131555b3f29a044c9fc030d49ddca51"
+    },
+    {
+      "id": "SH135",
+      "sha256": "8982fa669a4fc601aa568cf16521d94ba33afa75a7a819d856558c717f42d830"
+    },
+    {
+      "id": "SH140",
+      "sha256": "684bce0b4c37cf62eadef3ee01d2e8a7643bad22b725929a9936b85d97bac7fd"
+    },
+    {
+      "id": "SH144",
+      "sha256": "7a739fa56caac588926aa2774eb80ef2547dbf6f549c2e728bd393516ac87ae2"
+    },
+    {
+      "id": "SH145",
+      "sha256": "1f846e8f5a30637d4fe38bf729f4b9dc7b841469329448c41c26f6e5fc349c58"
+    },
+    {
+      "id": "SH146",
+      "sha256": "8a721a3dbd9ac5e81abf5866aeaf186f625aa5831c936f140571032965e8f6b2"
+    },
+    {
+      "id": "SH147",
+      "sha256": "590df4e8e8751ec861a2314dc3b61d50db519e48e8095590f621f80d461ced79"
+    }
+  ]
+}

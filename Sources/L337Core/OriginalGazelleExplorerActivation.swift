@@ -4,7 +4,7 @@ import Foundation
 enum OriginalGazelleExplorerActivation {
   static let id = "SH019"
   static let specificationSHA256 =
-    "b238e019f63d5675f48ddb8e4bcb0339fc9ca5b7b582dc996348e52eac10dc2e"
+    "9eb70cd7503964f5613f86cd6ceec2cf34f64598e8018779380fc6eca5b08a04"
 
   enum Failure: Error { case unsupportedDefinition }
 

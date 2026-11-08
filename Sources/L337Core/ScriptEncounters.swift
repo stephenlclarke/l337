@@ -108,15 +108,72 @@ public struct ScriptEncounterDefinition: Codable, Sendable {
 public enum ScriptActorPresence: String, Codable, Sendable {
   case prepared, present, outside, unloaded, destroyed, inTransit, arrivalPending
 }
-public struct ScriptOwnedActor: Codable, Sendable, Equatable {
-  public let identity: UUID
-  public let alias: String
-  /// Canonical pose is relative to the main station's non-spinning reference basis.
-  public var body: SpaceBody
-  public var presence: ScriptActorPresence
-  public var destroyedByPlayer: Bool?
-  /// Relocation requires a retained successful native transit arrival; nil is the declared origin.
+private struct ScriptOwnedActorValue: Codable, Sendable, Equatable {
+  let identity: UUID
+  let alias: String
+  var body: SpaceBody
+  var presence: ScriptActorPresence
+  var destroyedByPlayer: Bool?
   var transitLocation: SystemIdentity?
+}
+
+/// Actor copies retain a COW value instead of an inline physical body tree.
+public struct ScriptOwnedActor: Codable, Sendable, Equatable {
+  private var storage: [ScriptOwnedActorValue]
+
+  init(
+    identity: UUID, alias: String, body: SpaceBody, presence: ScriptActorPresence,
+    destroyedByPlayer: Bool? = nil, transitLocation: SystemIdentity? = nil
+  ) {
+    storage = [
+      .init(
+        identity: identity, alias: alias, body: body, presence: presence,
+        destroyedByPlayer: destroyedByPlayer, transitLocation: transitLocation)
+    ]
+  }
+
+  public init(from decoder: any Decoder) throws {
+    storage = [try ScriptOwnedActorValue(from: decoder)]
+  }
+
+  public func encode(to encoder: any Encoder) throws {
+    try storage[0].encode(to: encoder)
+  }
+
+  public static func == (lhs: Self, rhs: Self) -> Bool {
+    // Compare all fields even for a shared buffer, including NaN-bearing body values.
+    lhs.storage[0] == rhs.storage[0]
+  }
+
+  public var identity: UUID {
+    _read { yield storage[0].identity }
+  }
+
+  public var alias: String {
+    _read { yield storage[0].alias }
+  }
+
+  /// Canonical pose is relative to the main station's non-spinning reference basis.
+  public var body: SpaceBody {
+    _read { yield storage[0].body }
+    _modify { yield &storage[0].body }
+  }
+
+  public var presence: ScriptActorPresence {
+    _read { yield storage[0].presence }
+    _modify { yield &storage[0].presence }
+  }
+
+  public var destroyedByPlayer: Bool? {
+    _read { yield storage[0].destroyedByPlayer }
+    _modify { yield &storage[0].destroyedByPlayer }
+  }
+
+  /// Relocation requires a retained successful native transit arrival; nil is the declared origin.
+  var transitLocation: SystemIdentity? {
+    _read { yield storage[0].transitLocation }
+    _modify { yield &storage[0].transitLocation }
+  }
   func location(in encounter: ScriptOwnedEncounter) -> SystemIdentity {
     transitLocation ?? .init(galaxy: encounter.galaxy, system: encounter.system)
   }
@@ -146,7 +203,6 @@ public struct ScriptOwnedEncounter: Codable, Sendable, Equatable {
   public let system: Int
   public var admitted = false
   public var actors: [String: ScriptOwnedActor]
-  var legacyProvenance: LegacyMissionEncounterProvenance? = nil
   public var destroyed: Bool {
     admitted && !actors.isEmpty && actors.values.allSatisfy { $0.presence == .destroyed }
   }
@@ -381,13 +437,49 @@ extension MissionActorAdmissionSource {
         // These are the actual staged native addresses and conserved inertia, before any commit.
         actor.body.physical = physical
       }
+      if definition == NativeGlassMeridian.stateID, packDigest == NativeGlassMeridian.digest,
+        encounterID == NativeC01TimingStandard.encounter
+      {
+        guard let part = NativeC01TimingStandard.Part(rawValue: actor.alias),
+          let admitted = nativeBodies.first(where: {
+            $0.missionActorID == actorID && $0.missionInstanceID == instanceID && $0.id == bodyID
+          }), let physical = admitted.physical,
+          admitted.scriptNPC?.fit == actor.body.scriptNPC?.fit,
+          NativeC01TimingStandard.nativeValid(physical, part: part)
+        else { throw NativeMissionActorAdmissionError.invalidCondition }
+        actor.body.physical = physical
+      }
+      if definition == NativeGlassMeridian.stateID, packDigest == NativeGlassMeridian.digest,
+        encounterID == NativeC01LaneRepair.encounter
+      {
+        guard let target = NativeC01LaneRepair.Target(rawValue: actor.alias),
+          let admitted = nativeBodies.first(where: {
+            $0.missionActorID == actorID && $0.missionInstanceID == instanceID && $0.id == bodyID
+          }), let physical = admitted.physical,
+          admitted.scriptNPC?.fit == actor.body.scriptNPC?.fit,
+          NativeC01LaneRepair.nativeValid(physical, target: target)
+        else { throw NativeMissionActorAdmissionError.invalidCondition }
+        actor.body.physical = physical
+      }
+      if definition == NativeGlassMeridian.stateID, packDigest == NativeGlassMeridian.digest,
+        encounterID == NativeC01ClinicEscort.sourceEncounter
+      {
+        let cradle = actor.alias == NativeC01ClinicEscort.cradleTarget
+        guard cradle || NativeC01ClinicEscort.stockOrdinal(alias: actor.alias) != nil,
+          let admitted = nativeBodies.first(where: {
+            $0.missionActorID == actorID && $0.missionInstanceID == instanceID && $0.id == bodyID
+          }), let physical = admitted.physical,
+          admitted.scriptNPC?.fit == actor.body.scriptNPC?.fit,
+          NativeC01ClinicEscort.nativeValid(physical, cradle: cradle)
+        else { throw NativeMissionActorAdmissionError.invalidCondition }
+        actor.body.physical = physical
+      }
       actor.body.id = bodyID
       actor.presence = .present
       updated.actors[alias] = actor
     }
     if mode == .prepared {
       updated.admitted = true
-      updated.legacyProvenance = updated.legacyProvenance?.afterAdmission()
     }
     guard updated.valid else { throw MissionPackError("Native actor retention patch is invalid.") }
     return .init(source: self, updated: updated)
@@ -561,8 +653,7 @@ extension Game {
     }
     let template = try Self.missionActorAdmissionTemplate(
       actor, specification: spec, npcDefinitions: pack.manifest.npcs ?? [],
-      installedModels: pack.models, geometry: withReadOnlyScriptState { $0.geometry },
-      legacy: nil)
+      installedModels: pack.models, geometry: withReadOnlyScriptState { $0.geometry })
     return .init(
       mode: .retained, authority: .transit(legID), instance: owner, pack: pack,
       encounter: encounter, definition: definition, actors: [template],
@@ -693,9 +784,6 @@ extension Game {
       installedEncounter = currentMissionActorAdmissionInstalledEncounter(
         instanceID: state.id, encounterID: encounter.id)
     }
-    try Self.validateMissionActorAdmissionLegacy(
-      state: state, encounter: encounter, installedEncounter: installedEncounter,
-      legacy: encounter.legacyProvenance)
     let templates = try Self.constructMissionActorAdmissionTemplates(
       original: self, mode: mode, pack: pack, state: state,
       encounter: encounter, definition: definition,
@@ -713,11 +801,10 @@ extension Game {
     definition: borrowing ScriptEncounterDefinition,
     geometry: borrowing [String: ShipDesign]
   ) throws -> [MissionActorAdmissionTemplate] {
-    let legacy = encounter.legacyProvenance
     var templates: [MissionActorAdmissionTemplate] = []
     for spec in definition.actors.sorted(by: { $0.id < $1.id }) {
-      let actor = try Self.validatedMissionActorAdmissionActor(
-        spec, encounter: encounter, instanceID: state.id, packDigest: pack.digest, legacy: legacy,
+      var actor = try Self.validatedMissionActorAdmissionActor(
+        spec, encounter: encounter, instanceID: state.id, packDigest: pack.digest,
         glassMeridian: state.savedGlassMeridian)
       if mode == .retained {
         if actor.location(in: encounter) != original.missionActorAdmissionSystemIdentity
@@ -725,17 +812,17 @@ extension Game {
         {
           continue
         }
+        actor = try original.isolationWorkRetainedActor(actor, in: state)
       }
       let template = try Self.missionActorAdmissionTemplate(
         actor, specification: spec,
         npcDefinitions: NativeC01Surveyor.profiles(pack: pack, state: state),
         installedModels: NativeC01Surveyor.designs(pack: pack, state: state), geometry: geometry,
-        legacy: legacy?.actors[spec.id],
         initialNativeCondition: mode == .prepared
           ? try Self.preparedNativeMissionResources(state: state, actor: actor) : nil)
       if mode == .prepared {
         try Self.validatePreparedMissionActorCondition(
-          actor, spec: spec, template: template, legacy: legacy,
+          actor, spec: spec, template: template,
           mechanicallyDisabled: NativeInductionCrewLogPack.mechanicallyDisabled(
             actor, state: state),
           preparedOrientation: NativeC01Surveyor.preparedOrientation(state: state, actor: actor)
@@ -749,6 +836,20 @@ extension Game {
   private static func preparedNativeMissionResources(
     state: borrowing ScriptInstance, actor: ScriptOwnedActor
   ) throws -> NPCState? {
+    if NativeIsolationWorkPack.marked(state) {
+      return try NativeIsolationWorkPack.initialResources(state: state, actor: actor)
+    }
+    if state.definition == NativeGlassMeridian.stateID, state.digest == NativeGlassMeridian.digest,
+      actor.alias == NativeC01Surveyor.aliases[0]
+    {
+      return try NativeC01Surveyor.initialResources(state: state, actor: actor)
+    }
+    if let resources = try NativeC01ClinicEscort.initialResources(state: state, actor: actor) {
+      return resources
+    }
+    if let resources = try NativeC01LaneRepair.initialResources(state: state, actor: actor) {
+      return resources
+    }
     if NativeInductionUtilityPack.marked(state) {
       return try NativeInductionUtilityPack.initialResources(state: state, actor: actor)
     }
@@ -772,32 +873,15 @@ extension Game {
       installedBaseEncounter: installedEncounter)
   }
 
-  /// Finish full legacy comparison before any per-actor construction frame starts.
-  @inline(never)
-  private static func validateMissionActorAdmissionLegacy(
-    state: borrowing ScriptInstance, encounter: borrowing ScriptOwnedEncounter,
-    installedEncounter: ScriptOwnedEncounter?, legacy: borrowing LegacyMissionEncounterProvenance?
-  ) throws {
-    if let legacy = copy legacy {
-      guard legacy.matches(owner: state, encounter: encounter),
-        installedEncounter == copy encounter
-      else {
-        throw MissionPackError("Historical actor provenance differs from its installed owner.")
-      }
-    }
-  }
-
   /// Return the same selected actor after its identity/body-read temporaries have ended.
   @inline(never)
   private static func validatedMissionActorAdmissionActor(
     _ spec: ScriptActorDefinition, encounter: ScriptOwnedEncounter, instanceID: UUID,
-    packDigest: String, legacy: LegacyMissionEncounterProvenance?,
+    packDigest: String,
     glassMeridian: NativeGlassMeridianState? = nil
   ) throws -> ScriptOwnedActor {
     guard let actor = encounter.actors[spec.id], actor.alias == spec.id,
-      legacy?.actors[spec.id]?.identity == actor.identity
-        || actor.identity
-          == ScriptIdentity.uuid(
+      actor.identity == ScriptIdentity.uuid(
             "script-actor-v2:\(instanceID):\(packDigest):\(encounter.id):\(spec.id)")
         || NativeGlassMeridian.authorizesReplacement(
           glassMeridian, actor: actor,
@@ -812,21 +896,17 @@ extension Game {
   @inline(never)
   private static func validatePreparedMissionActorCondition(
     _ actor: ScriptOwnedActor, spec: ScriptActorDefinition,
-    template: MissionActorAdmissionTemplate, legacy: LegacyMissionEncounterProvenance?,
+    template: MissionActorAdmissionTemplate,
     mechanicallyDisabled: Bool = false, preparedOrientation: Basis3? = nil
   ) throws {
     try validatePreparedMissionActorPose(
       actor, spec: spec, orientation: preparedOrientation ?? Basis3())
-    if legacy != nil {
-      try validatePreparedMissionActorLegacy(actor, spec: spec, legacy: legacy)
+    try validatePreparedMissionActorEnergy(
+      actor, template: template, mechanicallyDisabled: mechanicallyDisabled)
+    if let resources = preparedMissionActorNPCResources(actor) {
+      try validatePreparedMissionActorNPCResources(resources)
     } else {
-      try validatePreparedMissionActorEnergy(
-        actor, template: template, mechanicallyDisabled: mechanicallyDisabled)
-      if let resources = preparedMissionActorNPCResources(actor) {
-        try validatePreparedMissionActorNPCResources(resources)
-      } else {
-        try validatePreparedMissionActorClassicResources(actor)
-      }
+      try validatePreparedMissionActorClassicResources(actor)
     }
   }
 
@@ -844,24 +924,19 @@ extension Game {
   }
 
   @inline(never)
-  private static func validatePreparedMissionActorLegacy(
-    _ actor: borrowing ScriptOwnedActor, spec: ScriptActorDefinition,
-    legacy: LegacyMissionEncounterProvenance?
-  ) throws {
-    guard legacy?.actors[spec.id]?.prepared == (copy actor) else {
-      throw MissionPackError(
-        "Prepared historical condition differs from its imported snapshot.")
-    }
-  }
-
-  @inline(never)
   private static func validatePreparedMissionActorEnergy(
     _ actor: borrowing ScriptOwnedActor, template: borrowing MissionActorAdmissionTemplate,
     mechanicallyDisabled: Bool = false
   ) throws {
-    guard actor.body.energy == template.maximumHullEnergy,
+    let maximumHullEnergy = template.maximumHullEnergy
+    let expectedEnergy =
+      NativeC01Surveyor.isPreparedDisabledHarrier(actor) ? 64 : maximumHullEnergy
+    guard actor.body.energy == expectedEnergy,
       template.parts.allSatisfy({ part in
-        mechanicallyDisabled && part.alias == "drive"
+        if part.alias == nil {
+          return part.energy == expectedEnergy && part.maximumEnergy == maximumHullEnergy
+        }
+        return mechanicallyDisabled && part.alias == "drive"
           ? part.energy == 0 && !part.solid : part.energy == part.maximumEnergy
       })
     else {
@@ -967,8 +1042,7 @@ extension Game {
     _ installed: ShipDesign, scale: Double, offset: Vector3, pose: Basis3
   ) -> Mesh {
     let raw: Mesh
-    if installed.source.hasSuffix("; C01 mission-only 65m fore-aft uniform calibration"),
-      let geometry = try? NativeC01SurveyorGeometry.harrier.get(), installed == geometry.design
+    if let geometry = try? NativeC01SurveyorGeometry.harrier.get(), installed == geometry.design
     {
       raw = geometry.collision
     } else {
@@ -989,14 +1063,14 @@ extension Game {
   private static func missionActorAdmissionTemplate(
     _ actor: ScriptOwnedActor, specification: ScriptActorDefinition,
     npcDefinitions: [ScriptNPCDefinition], installedModels: [String: ShipDesign],
-    geometry: [String: ShipDesign], legacy: LegacyMissionActorProvenance?,
+    geometry: [String: ShipDesign],
     initialNativeCondition: NPCState? = nil
   ) throws -> MissionActorAdmissionTemplate {
     let fit = try validateMissionActorAdmissionFit(
       actor, specification: specification, npcDefinitions: npcDefinitions)
     return try constructMissionActorAdmissionTemplate(
       actor, specification: specification, fit: fit, installedModels: installedModels,
-      geometry: geometry, legacy: legacy, initialNativeCondition: initialNativeCondition)
+      geometry: geometry, initialNativeCondition: initialNativeCondition)
   }
 
   /// Full structural equality finishes before any mesh, bounds or canonical-body frame starts.
@@ -1025,11 +1099,11 @@ extension Game {
   private static func constructMissionActorAdmissionTemplate(
     _ actor: ScriptOwnedActor, specification: ScriptActorDefinition,
     fit: MissionActorAdmissionFit, installedModels: [String: ShipDesign],
-    geometry: [String: ShipDesign], legacy: LegacyMissionActorProvenance?,
+    geometry: [String: ShipDesign],
     initialNativeCondition: NPCState? = nil
   ) throws -> MissionActorAdmissionTemplate {
     let constructed = try constructMissionActorAdmissionParts(
-      actor, fit: fit, installedModels: installedModels, geometry: geometry, legacy: legacy)
+      actor, fit: fit, installedModels: installedModels, geometry: geometry)
     return try finalizeMissionActorAdmissionTemplate(
       actor, specification: specification, parts: constructed.parts,
       maximumEnergy: constructed.maximumEnergy, initialNativeCondition: initialNativeCondition)
@@ -1044,8 +1118,7 @@ extension Game {
   @inline(never)
   private static func constructMissionActorAdmissionParts(
     _ actor: ScriptOwnedActor, fit: MissionActorAdmissionFit,
-    installedModels: [String: ShipDesign], geometry: [String: ShipDesign],
-    legacy: LegacyMissionActorProvenance?
+    installedModels: [String: ShipDesign], geometry: [String: ShipDesign]
   ) throws -> MissionActorAdmissionParts {
     var parts: [MissionActorAdmissionPart] = []
     let maximumEnergy: Double
@@ -1061,9 +1134,7 @@ extension Game {
             geometry: geometry, scale: definition.scale, offset: .init(0, 0, 0), pose: Basis3())))
       for spec in definition.components ?? [] {
         guard let state = npc.components[spec.id],
-          legacy?.components[spec.id] == state.identity
-            || state.identity
-              == ScriptIdentity.uuid("script-component-v2:\(actor.identity):\(spec.id)")
+          state.identity == ScriptIdentity.uuid("script-component-v2:\(actor.identity):\(spec.id)")
         else { throw MissionPackError("Retained component identity differs from its owner.") }
         parts.append(
           .init(
@@ -1075,11 +1146,14 @@ extension Game {
               offset: spec.position * definition.scale, pose: spec.orientation)))
       }
     case .classic(let hull):
+      guard hull != .constrictor, let mesh = ShipCatalogue.nativeMesh(hull) else {
+        throw MissionPackError("Classic hull \(hull.rawValue) has no exact mission geometry.")
+      }
       maximumEnergy = hull.navalEnergy ?? 100
       parts.append(
         .init(
           alias: nil, componentID: nil, energy: actor.body.energy, maximumEnergy: maximumEnergy,
-          solid: true, mesh: Mesh.hull(hull)))
+          solid: true, mesh: mesh))
     }
     return .init(parts: parts, maximumEnergy: maximumEnergy)
   }
@@ -1349,13 +1423,28 @@ extension Game {
       Self.publishPendingScriptEncounter(attempt, id: id, state: &state)
       switch reason {
       case .unavailableArrival:
-        return pending("Enter the declared system in flight with its main station available.")
+        return pending("unavailableArrival")
       case .outsideLocalBubble:
-        return pending("The complete cohort must fit the currently loaded space region.")
-      case .nativeUnits, .allocatorCapacity:
-        return pending("The whole encounter needs more native actor capacity.")
-      case .native:
-        return pending("The whole encounter awaits native capacity or unobstructed placement.")
+        return pending("outsideLocalBubble")
+      case .nativeUnits:
+        return pending("nativeUnits")
+      case .allocatorCapacity:
+        return pending("allocatorCapacity")
+      case .native(let refusal):
+        switch refusal {
+        case .staleContext:
+          return pending("native.staleContext")
+        case .populationLimit:
+          return pending("native.populationLimit")
+        case .reservedCapacity:
+          return pending("native.reservedCapacity")
+        case .missionSuppression:
+          return pending("native.missionSuppression")
+        case .unsafePosition:
+          return pending("native.unsafePosition")
+        case .unqualifiedOriginalHull:
+          return pending("native.unqualifiedOriginalHull")
+        }
       }
     case .unchanged:
       throw MissionPackError("A fresh prepared cohort requires complete native admission.")
@@ -1364,6 +1453,7 @@ extension Game {
       try Self.stageScriptEncounterRetention(attempt, id: id, state: state)
       _ = try commitMissionActorAdmission(plan)
       Self.publishStagedScriptEncounter(attempt, state: &state)
+      try recordIsolationWorkAdmission(in: &state)
       return (
         "encounter.admitted",
         [
@@ -1446,6 +1536,7 @@ extension Game {
             saved.location(in: encounter) == systemIdentity,
             let body = actual[saved.identity], body.missionInstanceID == instanceID
           else { continue }
+          captureIsolationWorkPose(body, in: &instance)
           saved.body = body
           saved.body.energy = max(0, body.energy)
           saved.body.position = anchor.orientation.inverse(body.position - anchor.position)
@@ -1545,6 +1636,8 @@ extension Game {
       }
       encounter.actors[alias] = actor
       instance.ownedEncounters[key] = encounter
+      captureIsolationWorkPose(body, in: &instance)
+      if destroyed { recordIsolationWorkModuleLoss(body, in: &instance) }
       commander.scriptState.instances[instanceID] = instance
       emitScriptEvent(
         destroyed ? "actor.destroyed" : "actor.removed",
@@ -1618,7 +1711,7 @@ extension Game {
     let template = try Self.missionActorAdmissionTemplate(
       actor, specification: spec,
       npcDefinitions: pack.manifest.npcs ?? [], installedModels: pack.models,
-      geometry: commander.scriptState.geometry, legacy: nil)
+      geometry: commander.scriptState.geometry)
     return .init(
       mode: .retained, authority: .inductionArkBerth(id), instance: owner, pack: pack,
       encounter: encounter, definition: definition, actors: [template],
@@ -1676,7 +1769,7 @@ extension Game {
     let template = try Self.missionActorAdmissionTemplate(
       actor, specification: spec,
       npcDefinitions: pack.manifest.npcs ?? [], installedModels: pack.models,
-      geometry: commander.scriptState.geometry, legacy: nil)
+      geometry: commander.scriptState.geometry)
     return .init(
       mode: .retained, authority: .inductionRescueBerth(id), instance: owner, pack: pack,
       encounter: encounter, definition: definition, actors: [template],
@@ -1696,5 +1789,83 @@ extension Game {
       NativeGlassMeridian.readingsValid(opening), NativeGlassMeridian.lossesValid(opening)
     else { throw NativeMissionActorAdmissionError.invalidTemplate }
     return try preparedMissionActorAdmissionSource(pack: pack, state: state, encounter: encounter)
+  }
+}
+
+extension Game {
+  func c01TimingStandardAdmissionSource(
+    pack: ScriptPack, state: ScriptInstance,
+    encounter: ScriptOwnedEncounter
+  ) throws -> MissionActorAdmissionSource {
+    guard pack.manifest.stateID == NativeGlassMeridian.stateID,
+      pack.digest == NativeGlassMeridian.digest,
+      NativeC01TimingStandard.definition(state, id: encounter.id) != nil,
+      let opening = state.savedGlassMeridian, let leaf = opening.timingStandard,
+      NativeC01TimingStandardSave.historyJoins(leaf, mission: state, commander: commander),
+      opening.surveyor?.held == true, leaf.capture == nil, leaf.loss == nil
+    else {
+      throw NativeMissionActorAdmissionError.invalidTemplate
+    }
+    return try preparedMissionActorAdmissionSource(pack: pack, state: state, encounter: encounter)
+  }
+}
+
+extension Game {
+  func c01LaneRepairAdmissionSource(
+    pack: ScriptPack, state: ScriptInstance, encounter: ScriptOwnedEncounter
+  ) throws -> MissionActorAdmissionSource {
+    guard pack.manifest.stateID == NativeGlassMeridian.stateID,
+      pack.digest == NativeGlassMeridian.digest,
+      NativeC01LaneRepair.definition(state, id: encounter.id) != nil,
+      let opening = state.savedGlassMeridian, let leaf = opening.laneRepair,
+      NativeC01LaneRepairSave.historyJoins(leaf, mission: state, commander: commander),
+      opening.surveyor?.held == true, opening.timingStandard?.held == true,
+      leaf.installation == nil
+    else { throw NativeMissionActorAdmissionError.invalidTemplate }
+    return try preparedMissionActorAdmissionSource(pack: pack, state: state, encounter: encounter)
+  }
+}
+
+extension Game {
+  func c01ClinicSourceAdmissionSource(
+    pack: ScriptPack, state: ScriptInstance, encounter: ScriptOwnedEncounter
+  ) throws -> MissionActorAdmissionSource {
+    guard pack.manifest.stateID == NativeGlassMeridian.stateID,
+      pack.digest == NativeGlassMeridian.digest,
+      encounter.id == NativeC01ClinicEscort.sourceEncounter,
+      NativeC01ClinicEscort.definition(state, id: encounter.id) != nil,
+      let opening = state.savedGlassMeridian, let leaf = opening.clinicEscort,
+      NativeC01ClinicEscortSave.historyJoins(leaf, mission: state, commander: commander),
+      opening.surveyor?.held == true, opening.laneRepair?.installation != nil,
+      leaf.arrival == nil
+    else { throw NativeMissionActorAdmissionError.invalidTemplate }
+    return try preparedMissionActorAdmissionSource(pack: pack, state: state, encounter: encounter)
+  }
+}
+
+
+extension ScriptOwnedEncounter {
+  private enum CodingKeys: String, CodingKey, CaseIterable { case id, galaxy, system, admitted, actors }
+
+  public init(from decoder: any Decoder) throws {
+    let fields = try decoder.container(keyedBy: EncounterRecordKey.self)
+    guard Set(fields.allKeys.map(\.stringValue)).isSubset(of: Set(CodingKeys.allCases.map(\.rawValue)))
+    else { throw SaveError.invalidCommander }
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    let actors = try values.nestedContainer(keyedBy: EncounterRecordKey.self, forKey: .actors)
+    guard (1...128).contains(actors.allKeys.count) else { throw SaveError.invalidCommander }
+    self.init(
+      id: try values.decode(String.self, forKey: .id),
+      galaxy: try values.decode(Int.self, forKey: .galaxy),
+      system: try values.decode(Int.self, forKey: .system),
+      admitted: try values.decode(Bool.self, forKey: .admitted),
+      actors: try values.decode([String: ScriptOwnedActor].self, forKey: .actors))
+  }
+
+  private struct EncounterRecordKey: CodingKey {
+    let stringValue: String
+    var intValue: Int? { nil }
+    init?(stringValue: String) { self.stringValue = stringValue }
+    init?(intValue: Int) { return nil }
   }
 }

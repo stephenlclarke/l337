@@ -5,6 +5,7 @@ public struct StationNavigation: Sendable, Equatable {
   public let stationID: Int
   public let distance: Double
   public let viewPosition: Vector3
+  let dockingLines: [String]
   public var bearingDegrees: Double { atan2(viewPosition.x, viewPosition.z) * 180 / .pi }
   public var elevationDegrees: Double {
     atan2(viewPosition.y, hypot(viewPosition.x, viewPosition.z)) * 180 / .pi
@@ -70,19 +71,44 @@ extension Game {
     guard let station = selected ?? main ?? nearest else { return nil }
     return .init(
       stationID: station.id, distance: station.position.length,
-      viewPosition: viewPosition(station.position))
+      viewPosition: viewPosition(station.position),
+      dockingLines: screen == .front && station.id == 0 ? station.manualDockingLines : [])
+  }
+}
+
+extension SpaceBody {
+  fileprivate var manualDockingLines: [String] {
+    guard position.z > 0, position.length <= 1000 else { return [] }
+    let normal = entranceNormal
+    let port = entrancePosition
+    let phase = dockingRollPhase
+    let rate = dockingMatchRollRate
+    let depth = (port * -1).dot(normal)
+    guard depth.isFinite, phase.isFinite, rate.isFinite else { return [] }
+    if depth < 0 && normal.z >= 0 { return ["PORT ON FAR SIDE"] }
+    guard normal.z < -0.98 else { return ["FACE THE PORT"] }
+    let phaseDegrees = abs(phase) * 180 / .pi
+    let rateDegrees = abs(rate) * 180 / .pi
+    let phaseLine =
+      dockingPhaseAligned
+      ? "PORT ROLL ALIGNED"
+      : String(format: "PORT ROLL %@ %.1f DEG", phase < 0 ? "CCW" : "CW", phaseDegrees)
+    let rateLine = String(
+      format: "MATCH SPIN %@ %.1f DEG/S", rate < 0 ? "CCW" : "CW", rateDegrees)
+    return [phaseLine, rateLine]
   }
 }
 
 extension Display {
   static func stationDirection(_ game: Game, layout: CockpitLayout, into frame: inout Frame) {
     guard let navigation = game.stationNavigation else { return }
-    let lines = [
-      navigation.distanceText, navigation.bearingText(layout: layout), navigation.elevationText,
-    ]
+    let lines =
+      [
+        navigation.distanceText, navigation.bearingText(layout: layout), navigation.elevationText,
+      ] + navigation.dockingLines
     let row = ceil(layout.font * 7) + 5
     let width = Double(lines.map(\.count).max() ?? 0) * 6 * layout.font + 44
-    let height = row * 3 + 8
+    let height = row * Double(lines.count) + 8
     if let bounds = stationCueBounds(width: width, height: height, layout: layout, frame: frame) {
       frame.graphics.append(
         .panel(
@@ -98,13 +124,23 @@ extension Display {
           scale: layout.font, ink: .yellow)
       }
     } else {
-      // Extremely crowded flight overlays still retain a compact header cue.
-      let yaw = Int(abs(navigation.bearingDegrees).rounded())
-      let pitch = Int(abs(navigation.elevationDegrees).rounded())
-      let line =
-        navigation.distanceText + (navigation.behind ? " BEHIND" : "")
-        + " \(navigation.bearingDegrees >= 0 ? "R" : "L")\(yaw)"
-        + " \(navigation.elevationDegrees >= 0 ? "U" : "D")\(pitch)"
+      // Keep the docking instructions in the header when the flight view is crowded.
+      let line: String
+      if navigation.dockingLines.isEmpty {
+        let yaw = Int(abs(navigation.bearingDegrees).rounded())
+        let pitch = Int(abs(navigation.elevationDegrees).rounded())
+        line =
+          navigation.distanceText + (navigation.behind ? " BEHIND" : "")
+          + " \(navigation.bearingDegrees >= 0 ? "R" : "L")\(yaw)"
+          + " \(navigation.elevationDegrees >= 0 ? "U" : "D")\(pitch)"
+      } else {
+        line = navigation.dockingLines.map {
+          $0.replacingOccurrences(of: "PORT ROLL ", with: "ROLL ")
+            .replacingOccurrences(of: "MATCH SPIN ", with: "SPIN ")
+            .replacingOccurrences(of: " DEG/S", with: "")
+            .replacingOccurrences(of: " DEG", with: "")
+        }.joined(separator: "/")
+      }
       frame.label(
         line, max(12, layout.width - 12 - Double(line.count) * 6 * layout.font), 8,
         scale: layout.font, ink: .yellow)

@@ -48,7 +48,7 @@ extension Game {
     parent.revision += 1
     parent.acknowledge(sequence)
     parent.journal.append(
-      "Cevilis's custodian confirmed the original rescue launch's still-unissued1000CR fuel escrow and one planned uncrewed Burro reserve with a separate future1000CR issue. No player cash, station fuel, hull, equipment, people, recorder or stage progress was granted."
+      "Cevilis's custodian confirmed the original rescue launch's still-unissued1000CR fuel escrow and one planned uncrewed Okapi reserve with a separate future1000CR issue. No player cash, station fuel, hull, equipment, people, recorder or stage progress was granted."
     )
     commander.scriptState.nextEvent = sequence
     commander.scriptState.instances[parent.id] = parent

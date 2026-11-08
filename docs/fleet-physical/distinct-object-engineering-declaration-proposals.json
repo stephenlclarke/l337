@@ -1,0 +1,1030 @@
+{
+  "status": "ONE_NINE_OBJECT_NEW_ENGINEERING_PROPOSAL_BATCH_NOT_ADOPTED_NO_CALCULATION",
+  "basis": "Explicit optional new engineering layout declarations; source functions, proposed functions and genuine object contracts remain distinct. No biological, human, zero-population, generic drive or port inference.",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "otherLarvaalProposal": "larvaal-object-role-proposal.json",
+  "coordinateAreaMassTensorEvaluations": 0,
+  "geometryWrites": 0,
+  "nativeExecutions": 0,
+  "rows": [
+    {
+      "id": "SH040",
+      "name": "Newt Escape Pod",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "f0a2f7b763aa35cc65022cf5485eb5c91f742147782d34125ff6c24bf9b72e1c",
+      "sourceSHA256": "94125f9da5db004437ac784ba47be3267271fe2401cf506f9a3715f2b2e3ae3a",
+      "ownershipRecord": "creator-ownership-records/SH040.json",
+      "ownershipRecordSHA256": "92ebb4fd0ee16dc98ae27acdfce184807461f28c222f6ba6518cfdcef4c89c9d",
+      "currentObjectKind": "capsule",
+      "currentOrigin": "human",
+      "currentR3Staffing": {
+        "basis": "new-per-hull-design-layout-estimate; not-historical-crew-or-E01",
+        "minimumOperatingCrewIncludingCommander": 1,
+        "intrinsicCrewPlaces": 1,
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1,
+        "initialPurchasedCabins": 0,
+        "cabinModuleMassTonnes": 5,
+        "cabinModuleEquipmentUnits": 1,
+        "maximumPhysicalCabinModules": 0,
+        "holdBasis": "Cargo is usable empty hold after intrinsic crew/core structure; purchased modules consume this hold."
+      },
+      "currentEnvironment": null,
+      "newNativeModeProposal": "Use exact declared nativeAutonomous/nativeCrew and separate conversion counts",
+      "sourcePropulsionEstablished": true,
+      "newPropulsionFunctionProposal": false,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 2,
+          "eachKg": 900,
+          "exactComponents": [
+            {
+              "index": 5,
+              "name": "seed explicit drive 0/propulsion casing",
+              "faceStart": 2788,
+              "faceCount": 92
+            },
+            {
+              "index": 7,
+              "name": "seed explicit drive 1/propulsion casing",
+              "faceStart": 2972,
+              "faceCount": 92
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "body primary pressure envelope",
+              "faceStart": 0,
+              "faceCount": 236
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "body primary pressure envelope",
+              "faceStart": 0,
+              "faceCount": 236
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic crew/conversion environment assemblies",
+          "count": 1,
+          "eachKg": 120,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "body primary pressure envelope",
+              "faceStart": 0,
+              "faceCount": 236
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Current R3 expressly declares native staff/autonomy; actual identities/provider still required",
+      "sourceNegativeRole": null,
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    },
+    {
+      "id": "SH124",
+      "name": "Larvaal Warship",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "851502c15a6922797e9c650e8a126fd73ce7ccc76f5e1419a870625c72abe21e",
+      "sourceSHA256": "1715f8fc7da8e0a7e3c0c17534087477b443508c174a0a4da4eb158829438732",
+      "ownershipRecord": "creator-ownership-records/SH124.json",
+      "ownershipRecordSHA256": "653b81868573a72167bbf6fa83182d81649e0b49c2358a11beca34fc5fc14a8a",
+      "currentObjectKind": "ship",
+      "currentOrigin": "larvaal",
+      "currentR3Staffing": {
+        "basis": "new-per-hull-design-layout-estimate; not-historical-crew-or-E01",
+        "minimumOperatingCrewIncludingCommander": 4,
+        "intrinsicCrewPlaces": 4,
+        "nativeAutonomous": false,
+        "nativeCrew": 4,
+        "playerConversionCrew": 4,
+        "initialPurchasedCabins": 0,
+        "cabinModuleMassTonnes": 5,
+        "cabinModuleEquipmentUnits": 1,
+        "maximumPhysicalCabinModules": 5,
+        "holdBasis": "Cargo is usable empty hold after intrinsic crew/core structure; purchased modules consume this hold."
+      },
+      "currentEnvironment": null,
+      "newNativeModeProposal": "Use exact declared nativeAutonomous/nativeCrew and separate conversion counts",
+      "sourcePropulsionEstablished": false,
+      "newPropulsionFunctionProposal": true,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 1,
+          "eachKg": 900,
+          "exactComponents": [
+            {
+              "index": 7,
+              "name": "alien luminous aft organ",
+              "faceStart": 3484,
+              "faceCount": 236
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed alien lobe",
+              "faceStart": 0,
+              "faceCount": 1152
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed alien lobe",
+              "faceStart": 0,
+              "faceCount": 1152
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty fuel containment and transfer assembly",
+          "count": 1,
+          "eachKg": 180,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed alien lobe",
+              "faceStart": 0,
+              "faceCount": 1152
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic crew/conversion environment assemblies",
+          "count": 4,
+          "eachKg": 120,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed alien lobe",
+              "faceStart": 0,
+              "faceCount": 1152
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty equipment or service interface assembly",
+          "count": 1,
+          "eachKg": 140,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed alien lobe",
+              "faceStart": 0,
+              "faceCount": 1152
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty organic launcher equivalent, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed alien lobe",
+              "faceStart": 0,
+              "faceCount": 1152
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Current R3 expressly declares native staff/autonomy; actual identities/provider still required",
+      "sourceNegativeRole": null,
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    },
+    {
+      "id": "SH156",
+      "name": "Lion Bastion",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "9f023a5547867793485716c3a19a2ee73edc08988d6666ec6dadbdb8568b1bfc",
+      "sourceSHA256": "9a1147d23fa4a9e514afad7f5d9264746ff135f12729de23878750f4d7f1870d",
+      "ownershipRecord": "creator-ownership-records/SH156.json",
+      "ownershipRecordSHA256": "d88358400e1da3f46661de5dd0e149042afe9d2443d042d464efbf42492a3e6c",
+      "currentObjectKind": "platform",
+      "currentOrigin": "human",
+      "currentR3Staffing": null,
+      "currentEnvironment": {
+        "playerCrewRequired": false,
+        "purchasePolicy": "never",
+        "physicalService": "weapons-platform"
+      },
+      "newNativeModeProposal": "New proposed automated-object operation; not inferred from playerCrewRequired=false. Actual native population remains unissued until an actual provider declares it.",
+      "sourcePropulsionEstablished": false,
+      "newPropulsionFunctionProposal": false,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 0,
+          "eachKg": 900,
+          "exactComponents": [],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "dock lateral structural member 0",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "dock lateral structural member 0",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty equipment or service interface assembly",
+          "count": 1,
+          "eachKg": 140,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "dock lateral structural member 0",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Unissued; playerCrewRequired=false does not mean zero native people.",
+      "sourceNegativeRole": null,
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    },
+    {
+      "id": "SH161",
+      "name": "Wolf Citadel",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "354edb2f79b3b82e39dda176b9b68a6407172467547381e0a873665cb9d5e53b",
+      "sourceSHA256": "0335361ca8aac1cc868e380b3312e2ffb222318803329f5a10c70a21cdf89621",
+      "ownershipRecord": "creator-ownership-records/SH161.json",
+      "ownershipRecordSHA256": "9e5b1202d19f0831e195e4ace107d8ba0677721066cafdb33d87914f259f7817",
+      "currentObjectKind": "station",
+      "currentOrigin": "human",
+      "currentR3Staffing": null,
+      "currentEnvironment": {
+        "playerCrewRequired": false,
+        "purchasePolicy": "never",
+        "physicalService": "station-services"
+      },
+      "newNativeModeProposal": "New proposed automated-object operation; not inferred from playerCrewRequired=false. Actual native population remains unissued until an actual provider declares it.",
+      "sourcePropulsionEstablished": true,
+      "newPropulsionFunctionProposal": false,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 2,
+          "eachKg": 900,
+          "exactComponents": [
+            {
+              "index": 84,
+              "name": "engine_pair/negative side/propulsion casing",
+              "faceStart": 1600,
+              "faceCount": 92
+            },
+            {
+              "index": 87,
+              "name": "engine_pair/positive side/propulsion casing",
+              "faceStart": 1796,
+              "faceCount": 92
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "twin spine pressure envelope",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "twin spine pressure envelope",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty equipment or service interface assembly",
+          "count": 1,
+          "eachKg": 140,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "twin spine pressure envelope",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Unissued; playerCrewRequired=false does not mean zero native people.",
+      "sourceNegativeRole": null,
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    },
+    {
+      "id": "SH162",
+      "name": "Larvaal Probe",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "243c15f460f4c990a2e4d9573ab6ea4ae24168477c68d7345139e1fe6dc28e59",
+      "sourceSHA256": "14d4e261029ca1fcf61a2688c43c192e17c7e523a268ffb9c9b726b087b14151",
+      "ownershipRecord": "creator-ownership-records/SH162.json",
+      "ownershipRecordSHA256": "ef6d13792449a7d3999f334067e5d17bc53f88c37b6e5f1d703ad51d32e748a3",
+      "currentObjectKind": "other",
+      "currentOrigin": "larvaal",
+      "currentR3Staffing": null,
+      "currentEnvironment": {
+        "playerCrewRequired": false,
+        "purchasePolicy": "never",
+        "physicalService": "mission-probe"
+      },
+      "newNativeModeProposal": "New proposed automated-object operation; not inferred from playerCrewRequired=false. Actual native population remains unissued until an actual provider declares it.",
+      "sourcePropulsionEstablished": false,
+      "newPropulsionFunctionProposal": false,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 0,
+          "eachKg": 900,
+          "exactComponents": [],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "alien probe primary envelope",
+              "faceStart": 0,
+              "faceCount": 236
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "alien probe primary envelope",
+              "faceStart": 0,
+              "faceCount": 236
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Unissued; playerCrewRequired=false does not mean zero native people.",
+      "sourceNegativeRole": null,
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    },
+    {
+      "id": "SH164",
+      "name": "Toad Drug Factory",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "29b8cae2acf68eee7f05547c5c0487dceb866c4ba6d3280da5d20b68e55fa4cf",
+      "sourceSHA256": "b1563bbc135d0c6ec1ea44ccceabf8f3677363030bbf5af816a7a78d0c51c4e4",
+      "ownershipRecord": "creator-ownership-records/SH164.json",
+      "ownershipRecordSHA256": "f863f1d1352a0ac93a1db7bc3ec07cd4825e2a988ce52658f8d1efe3035ec52f",
+      "currentObjectKind": "station",
+      "currentOrigin": "human",
+      "currentR3Staffing": null,
+      "currentEnvironment": {
+        "playerCrewRequired": false,
+        "purchasePolicy": "never",
+        "physicalService": "station-services"
+      },
+      "newNativeModeProposal": "New proposed automated-object operation; not inferred from playerCrewRequired=false. Actual native population remains unissued until an actual provider declares it.",
+      "sourcePropulsionEstablished": false,
+      "newPropulsionFunctionProposal": false,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 0,
+          "eachKg": 900,
+          "exactComponents": [],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "dock lateral structural member 0",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "dock lateral structural member 0",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty equipment or service interface assembly",
+          "count": 1,
+          "eachKg": 140,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "dock lateral structural member 0",
+              "faceStart": 0,
+              "faceCount": 12
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Unissued; playerCrewRequired=false does not mean zero native people.",
+      "sourceNegativeRole": null,
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    },
+    {
+      "id": "SH123",
+      "name": "Larvaal Sovereign",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "113645d823bf6ad3e81a10fad4e854a0e64363cc6454fc23332cded47a203d6a",
+      "sourceSHA256": "a430c5e8946db1d2f27d5030ae3f245f0838e52f2dadf1409323a16fc1c67499",
+      "ownershipRecord": "distinct-creator-ownership-records/SH123.json",
+      "ownershipRecordSHA256": "49c0953a0bf0afb144c98125658c8594833fd2bdebac4882987f13cec5acd4c0",
+      "currentObjectKind": "ship",
+      "currentOrigin": "larvaal",
+      "currentR3Staffing": {
+        "basis": "new-per-hull-design-layout-estimate; not-historical-crew-or-E01",
+        "minimumOperatingCrewIncludingCommander": 18,
+        "intrinsicCrewPlaces": 18,
+        "nativeAutonomous": false,
+        "nativeCrew": 18,
+        "playerConversionCrew": 18,
+        "initialPurchasedCabins": 0,
+        "cabinModuleMassTonnes": 5,
+        "cabinModuleEquipmentUnits": 1,
+        "maximumPhysicalCabinModules": 36,
+        "holdBasis": "Cargo is usable empty hold after intrinsic crew/core structure; purchased modules consume this hold."
+      },
+      "currentEnvironment": null,
+      "newNativeModeProposal": "Use exact declared nativeAutonomous/nativeCrew and separate conversion counts",
+      "sourcePropulsionEstablished": false,
+      "newPropulsionFunctionProposal": true,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 1,
+          "eachKg": 900,
+          "exactComponents": [
+            {
+              "index": 8,
+              "name": "central living core",
+              "faceStart": 56448,
+              "faceCount": 7488
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "negative side/longitudinal crescent carapace",
+              "faceStart": 0,
+              "faceCount": 6912
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "negative side/longitudinal crescent carapace",
+              "faceStart": 0,
+              "faceCount": 6912
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty fuel containment and transfer assembly",
+          "count": 1,
+          "eachKg": 180,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "negative side/longitudinal crescent carapace",
+              "faceStart": 0,
+              "faceCount": 6912
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic crew/conversion environment assemblies",
+          "count": 18,
+          "eachKg": 120,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "negative side/longitudinal crescent carapace",
+              "faceStart": 0,
+              "faceCount": 6912
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty equipment or service interface assembly",
+          "count": 1,
+          "eachKg": 140,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "negative side/longitudinal crescent carapace",
+              "faceStart": 0,
+              "faceCount": 6912
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty organic launcher equivalent, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "negative side/longitudinal crescent carapace",
+              "faceStart": 0,
+              "faceCount": 6912
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Current R3 expressly declares native staff/autonomy; actual identities/provider still required",
+      "sourceNegativeRole": "Creator explicitly declares Sovereign rear organs sensory, not engine pods",
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    },
+    {
+      "id": "SH125",
+      "name": "Larvaal Drone",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "66671c43983362d99fa0ecbc361fe224db0a7ac50799fd7d35cedb4d3fa4506e",
+      "sourceSHA256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1",
+      "ownershipRecord": "distinct-creator-ownership-records/SH125.json",
+      "ownershipRecordSHA256": "e7ca2843dec75a90851abd9b2ca427f03096bc4459be6d80dbe74e6f7771baea",
+      "currentObjectKind": "ship",
+      "currentOrigin": "larvaal",
+      "currentR3Staffing": {
+        "basis": "new-per-hull-design-layout-estimate; not-historical-crew-or-E01",
+        "minimumOperatingCrewIncludingCommander": 1,
+        "intrinsicCrewPlaces": 1,
+        "nativeAutonomous": true,
+        "nativeCrew": 0,
+        "playerConversionCrew": 1,
+        "initialPurchasedCabins": 0,
+        "cabinModuleMassTonnes": 5,
+        "cabinModuleEquipmentUnits": 1,
+        "maximumPhysicalCabinModules": 3,
+        "holdBasis": "Cargo is usable empty hold after intrinsic crew/core structure; purchased modules consume this hold."
+      },
+      "currentEnvironment": null,
+      "newNativeModeProposal": "Use exact declared nativeAutonomous/nativeCrew and separate conversion counts",
+      "sourcePropulsionEstablished": false,
+      "newPropulsionFunctionProposal": true,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 1,
+          "eachKg": 900,
+          "exactComponents": [
+            {
+              "index": 4,
+              "name": "single complete gold core sphere",
+              "faceStart": 12384,
+              "faceCount": 6768
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed jade shell source interval 0",
+              "faceStart": 0,
+              "faceCount": 4464
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed jade shell source interval 0",
+              "faceStart": 0,
+              "faceCount": 4464
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty fuel containment and transfer assembly",
+          "count": 1,
+          "eachKg": 180,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed jade shell source interval 0",
+              "faceStart": 0,
+              "faceCount": 4464
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic crew/conversion environment assemblies",
+          "count": 1,
+          "eachKg": 120,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed jade shell source interval 0",
+              "faceStart": 0,
+              "faceCount": 4464
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty equipment or service interface assembly",
+          "count": 1,
+          "eachKg": 140,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed jade shell source interval 0",
+              "faceStart": 0,
+              "faceCount": 4464
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty organic launcher equivalent, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "closed jade shell source interval 0",
+              "faceStart": 0,
+              "faceCount": 4464
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Current R3 expressly declares native staff/autonomy; actual identities/provider still required",
+      "sourceNegativeRole": null,
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    },
+    {
+      "id": "SH171",
+      "name": "Medusa",
+      "status": "EXPLICIT_NEW_ENGINEERING_OBJECT_DECLARATION_PROPOSAL_NOT_ADOPTED",
+      "contractSHA256": "f1e1365586a3723bed5a87f1041d086ab7a7dd3c4ce9d665c6fedce1b39eb48f",
+      "sourceSHA256": "d093d9fb10c2319b93f807cf2b02977fa6df91c37e6735df5da33df886216e5b",
+      "ownershipRecord": "distinct-creator-ownership-records/SH171.json",
+      "ownershipRecordSHA256": "0fab4ca06ec2a1224287086de2cb7be86e52e5ae60e366de78da3d2dc031f9cc",
+      "currentObjectKind": "ship",
+      "currentOrigin": "larvaal",
+      "currentR3Staffing": {
+        "basis": "new-per-hull-design-layout-estimate; not-historical-crew-or-E01",
+        "minimumOperatingCrewIncludingCommander": 1,
+        "intrinsicCrewPlaces": 1,
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1,
+        "initialPurchasedCabins": 0,
+        "cabinModuleMassTonnes": 5,
+        "cabinModuleEquipmentUnits": 1,
+        "maximumPhysicalCabinModules": 4,
+        "holdBasis": "Cargo is usable empty hold after intrinsic crew/core structure; purchased modules consume this hold."
+      },
+      "currentEnvironment": null,
+      "newNativeModeProposal": "Use exact declared nativeAutonomous/nativeCrew and separate conversion counts",
+      "sourcePropulsionEstablished": true,
+      "newPropulsionFunctionProposal": false,
+      "proposedEmptySystems": [
+        {
+          "kind": "local manoeuvring/field/attitude mechanism equivalent",
+          "count": 8,
+          "eachKg": 900,
+          "exactComponents": [
+            {
+              "index": 7,
+              "name": "curved seed propulsion organ 0",
+              "faceStart": 12644,
+              "faceCount": 2012
+            },
+            {
+              "index": 14,
+              "name": "curved seed propulsion organ 1",
+              "faceStart": 21400,
+              "faceCount": 2012
+            },
+            {
+              "index": 21,
+              "name": "curved seed propulsion organ 2",
+              "faceStart": 30156,
+              "faceCount": 2012
+            },
+            {
+              "index": 28,
+              "name": "curved seed propulsion organ 3",
+              "faceStart": 38912,
+              "faceCount": 2012
+            },
+            {
+              "index": 35,
+              "name": "curved seed propulsion organ 4",
+              "faceStart": 47668,
+              "faceCount": 2012
+            },
+            {
+              "index": 42,
+              "name": "curved seed propulsion organ 5",
+              "faceStart": 56424,
+              "faceCount": 2012
+            },
+            {
+              "index": 49,
+              "name": "curved seed propulsion organ 6",
+              "faceStart": 65180,
+              "faceCount": 2012
+            },
+            {
+              "index": 56,
+              "name": "curved seed propulsion organ 7",
+              "faceStart": 73936,
+              "faceCount": 2012
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic power assembly",
+          "count": 1,
+          "eachKg": 750,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "central grown seed carapace",
+              "faceStart": 0,
+              "faceCount": 5180
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "control and sensing assembly",
+          "count": 1,
+          "eachKg": 90,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "central grown seed carapace",
+              "faceStart": 0,
+              "faceCount": 5180
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty fuel containment and transfer assembly",
+          "count": 1,
+          "eachKg": 180,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "central grown seed carapace",
+              "faceStart": 0,
+              "faceCount": 5180
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty intrinsic crew/conversion environment assemblies",
+          "count": 1,
+          "eachKg": 120,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "central grown seed carapace",
+              "faceStart": 0,
+              "faceCount": 5180
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty equipment or service interface assembly",
+          "count": 1,
+          "eachKg": 140,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "central grown seed carapace",
+              "faceStart": 0,
+              "faceCount": 5180
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        },
+        {
+          "kind": "empty organic launcher equivalent, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "exactComponents": [
+            {
+              "index": 0,
+              "name": "central grown seed carapace",
+              "faceStart": 0,
+              "faceCount": 5180
+            }
+          ],
+          "anchorRule": "Uncomputed exact owned component area centroid; no occupied geometry is granted."
+        }
+      ],
+      "nativePopulationStatus": "Current R3 expressly declares native staff/autonomy; actual identities/provider still required",
+      "sourceNegativeRole": null,
+      "unissuedDomains": [
+        "Actual native producer and population/custody",
+        "Actual occupied people, cabins and paid equipment",
+        "Native collision/material/void qualification",
+        "Actual service/port/finite approach rights"
+      ],
+      "physicsEvaluations": 0,
+      "noRightsGranted": true
+    }
+  ]
+}

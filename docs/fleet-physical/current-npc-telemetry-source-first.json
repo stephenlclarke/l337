@@ -1,0 +1,58 @@
+{
+  "status": "FIRST_CURRENT_NPC_RESOURCE_FACTS_SOURCE_GUARD_NO_EDITS",
+  "beforeCommit": "3ec7e6d0b734bfa746befdef24fca8a8355e3235",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCResourceRuntime.swift",
+      "bytes": 3320,
+      "sha256": "dc45a5957cf3be717c7f6e81eb8aebf56d5464a4e0571e8a9f1eaa0c78c082be"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Sources/L337Core/TargetTelemetry.swift",
+      "bytes": 6843,
+      "sha256": "a0d2cf9056179da297dffddd9ea6c6682a39117b3883c34c82c181688b3d0f9e"
+    },
+    {
+      "path": "Tests/L337CoreTests/TargetTelemetryTests.swift",
+      "bytes": 6834,
+      "sha256": "7f0ae717209d0af373766a0d31cb2ef9052a1597d61e397f59c09048bc5a693d"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCResourceTests.swift",
+      "bytes": 12530,
+      "sha256": "76a36932ca58f35a36f27ea963eb0f8dc4de995a976d51c78dc7d1010c4e8c61"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCCurrentResourceAdvanceTests.swift",
+      "bytes": 3353,
+      "sha256": "1f009670de37fcf3cf76b380f7120c74347e567ad08ee29ed3355fcdd7558fdc"
+    }
+  ],
+  "sourcePath": "Sources/L337Core/NPCResourceRuntime.swift",
+  "edits": [
+    [
+      "    let npc = body.physical?.npc\n    let route: TargetTelemetry.RouteProvenance?",
+      "    let npc = body.physical?.npc\n    let resources: TargetTelemetry.Resources?\n    if let npc, let actual = npc.resources, actual.valid {\n      if npc.role != .mission, let id = body.physical?.catalogueShipID,\n        !NPCPersistenceSnapshot.currentCatalogueSourceIsValid(\n          catalogueShipID: id, hull: body.hull, npc: npc, missiles: body.missiles)\n      {\n        resources = nil\n      } else {\n        resources = actual.telemetry\n      }\n    } else {\n      resources = nil\n    }\n    let route: TargetTelemetry.RouteProvenance?"
+    ],
+    [
+      "      resources: npc?.resources?.valid == true ? npc?.resources?.telemetry : nil)",
+      "      resources: resources)"
+    ]
+  ],
+  "finding": "telemetryFacts currently publishes any generic-valid NPC resource profile despite a contradictory explicit current source. A foreign energy-only profile can display zero shields for a current hull whose native capacities differ; unknown current source can expose unsupported numerical readings. Existing formatter already represents nil resources as Unknown, not zero.",
+  "scope": "Only resources field sourcing for ordinary nonmission explicitID actors. Reuse unchanged currentCatalogueSourceIsValid predicate; validated actual consumed readings retained, invalid current-source resource readings become nil/Unknown. Mission/nil-ID existing behavior and all cargo/route/legal/hostile facts, field formatting/tier/observer-hardware policy untouched. No NPC state/stock refill/visibility/geometry/frame admission change.",
+  "testPath": "Tests/L337CoreTests/NPCCurrentTelemetrySourceTests.swift",
+  "testScope": "One NEW6variant method current-full/current-spent/wrong-profile/unknown-fuel/missile-overflow/unknown-source. Mandatory current025 source/stock and actual launched controlled current trader body. Positive resources must equal actual supplied tracked telemetry (including spent values), never maxima; malformed current resource facts nil. Existing pure formatter supplied military tier must show Front shield/Rear shield/Laser heat/Fuel Unknown (not0), without fitting/claiming that observer device. Compare cargo/route/legal/hostile facts to valid baseline; all existing telemetry/resource/beam tests unchanged.",
+  "coordination": "NPCResourceRuntime is G4 owned, but telemetry data can feed researcher C02 observation; send exact hunk before any potentially shared interface change. No C02 source/emitter/hardware acquisition code or TargetTelemetry implementation changes proposed. Root overlap/adoption before edits if researcher has intersecting owned hunk.",
+  "limits": "No aftercode/mutations yet. Necessary mechanical-source data check, not actual optical observation, installed targeting/mining kit, hardware power, ownership issuer, source025/native/crew/loadedphysics/journey qualification. Source resolver may initialize geometry cache; runtime cost unmeasured; all UNCOMPILED UNRUN and G1 sole executor."
+}

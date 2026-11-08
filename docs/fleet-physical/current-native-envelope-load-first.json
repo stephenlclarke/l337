@@ -1,0 +1,99 @@
+{
+  "status": "FIRST_EXACT_NATIVE_ENVELOPE_ONLY_FILE_LOAD_PROPOSAL_NO_EDITS",
+  "beforeCommit": "14f19b43c9245df7b7e504b8ac028555d48bd5ab",
+  "pins": [
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 179788,
+      "sha256": "4deeccae23639e71125f46fb3d13008aac7959bd4894eba3bb845563bc29cf09"
+    },
+    {
+      "path": "Tests/L337CoreTests/EquipmentRuntimeTransactionTests.swift",
+      "bytes": 17360,
+      "sha256": "da4a0dcac745a20cc855c8d087f3352e566bc056c079257683e4b62021e6b357"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptPledgeTests.swift",
+      "bytes": 49041,
+      "sha256": "3e2990ebb92c38444bf507a9db7155cc8b1cbd6139aa5f350f3af334d9733eeb"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "bytes": 63103,
+      "sha256": "5354d9006d9373d107fafebac939d6f3b3c968cda22465d1b6100e0f71379461"
+    },
+    {
+      "path": "Sources/L337Core/ScriptSaveJSONPreflight.swift",
+      "bytes": 12373,
+      "sha256": "461f82f79c8729a6b817aad731040fc479ef9cfd26da599126a5d0dadeb4efb2"
+    },
+    {
+      "path": "Tests/L337CoreTests/RawNativeSaveAuthorityTests.swift",
+      "bytes": 9180,
+      "sha256": "61c2d65702386ccad9a93015feeeb7085c5b16d62321b57b9b1eaa96d4e1d6c7"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeSavePolicyMigrationTests.swift",
+      "bytes": 3370,
+      "sha256": "ae4fb02bae1d7397891598d5877977af8afe919cb7257c842425d40e3f45d639"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPCurrentCatalogueReleaseTests.swift",
+      "bytes": 17079,
+      "sha256": "3124b53b09e84993f2342db79645d1e21d05475a2651313653964693027449c8"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 6985,
+      "sha256": "d829716c2742e9a3d748a6e04bdd40225be602468ec776b79b131f77b8795dee"
+    }
+  ],
+  "edits": [
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "old": "    try ScriptSaveJSONPreflight.rejectCourierFields(data, location: .rawCommander)\n    try ScriptSaveJSONPreflight.validateFreightFields(data, part: .commander)\n    try AlienStorageVersionedSave.rejectFields(data)\n    try EMPVersionedSave.rejectFields(data, part: .commander)\n    try NativePeopleVersionedSave.rejectFields(data)\n    try RingMiningVersionedSave.rejectFields(data)\n    try ElectricalVersionedSave.rejectFields(data)\n    try HyperspaceDriveVersionedSave.rejectFields(data)\n    try ScriptFinanceVersionedSave.rejectFields(data, part: .commander)\n    var commander = try ScriptValueStorage.decoder(typed: false).decode(Commander.self, from: data)\n    // Native pledge evidence belongs to versioned missions chunks.\n    guard commander.scriptState.pledgeLedger == nil,\n      commander.scriptState.instances.values.allSatisfy({ $0.pledgeReceiptID == nil })\n    else { throw SaveError.invalidCommander }\n    let original = commander\n    commander.migrateLegacyPassengerMarker()\n    var candidate = game\n    guard candidate.load(commander) else { throw SaveError.invalidCommander }\n    candidate.pendingNewSaveDestination = nil\n    candidate.newCommanderSaveReceipt = nil\n    try candidate.rebindNativeStationsAfterLoad()\n    if candidate.requiresScriptDurability { migrateScriptCalendar(&candidate) }\n    candidate.suspendUnavailableScriptContent(navigationBinding: navigationBinding)\n    guard candidate.commander.valid else { throw SaveError.invalidCommander }\n    if persistMigrations && candidate.commander != original {\n      try Self.writeCommander(&candidate, to: url, navigationBinding: navigationBinding)\n    }\n    game = candidate\n    controls = Controls()\n    scriptSaveURL = url\n    game.scriptDurabilityAvailable = true",
+      "new": "    throw SaveError.invalidCommander"
+    },
+    {
+      "path": "Tests/L337CoreTests/EquipmentRuntimeTransactionTests.swift",
+      "old": "  @Test func failedMigrationWritePreservesTheRunningCommanderAndOriginalSaveBytes() async throws {\n    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)\n    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)\n    let url = directory.appendingPathComponent(\"commander.json\")\n    let legacy = try JSONEncoder().encode(Commander())\n    try legacy.write(to: url)\n    let runtime = GameRuntime(game: try equipmentShopGame(useOwnedStarter: true))\n    let before = await runtime.snapshot()\n    try FileManager.default.setAttributes([.posixPermissions: 0o500], ofItemAtPath: directory.path)\n    defer {\n      try? FileManager.default.setAttributes(\n        [.posixPermissions: 0o700], ofItemAtPath: directory.path)\n      try? FileManager.default.removeItem(at: directory)\n    }\n    await #expect(throws: (any Error).self) { try await runtime.load(from: url) }\n    let after = await runtime.snapshot()\n    #expect(after.commander == before.commander && after.screen == before.screen)\n    #expect(try Data(contentsOf: url) == legacy)\n  }",
+      "new": "  @Test func nonEnvelopeFileRefusalPreservesTheRunningCommanderAndOriginalSaveBytes() async throws {\n    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)\n    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)\n    defer { try? FileManager.default.removeItem(at: directory) }\n    let url = directory.appendingPathComponent(\"commander.json\")\n    let input = directory.appendingPathComponent(\"unwrapped-current.json\")\n    let initial = try equipmentShopGame(useOwnedStarter: true)\n    var unwrapped = initial.commander\n    unwrapped.name = \"UNWRAPPED CURRENT INPUT\"\n    let bytes = try JSONEncoder().encode(unwrapped)\n    try #require(try JSONDecoder().decode(Commander.self, from: bytes) == unwrapped)\n    try bytes.write(to: input)\n    let runtime = GameRuntime(game: initial, saveURL: url)\n    try await runtime.save(to: url)\n    let before = await runtime.snapshot()\n    let pointer = try Data(contentsOf: url)\n    let files = try ScriptFinanceTestFixture.files(directory)\n    await #expect(throws: SaveError.invalidCommander) { try await runtime.load(from: input) }\n    let after = await runtime.snapshot()\n    #expect(after.commander == before.commander && after.screen == before.screen)\n    #expect(after.bodies == before.bodies && after.time == before.time)\n    #expect(after.gameplayRevision == before.gameplayRevision)\n    #expect(await runtime.scriptSaveURL == url)\n    #expect(try Data(contentsOf: input) == bytes)\n    #expect(try Data(contentsOf: url) == pointer)\n    #expect(try ScriptFinanceTestFixture.files(directory) == files)\n  }"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptPledgeTests.swift",
+      "old": "@Test(arguments: [false, true])\nfunc pledgeRawLegacyWithoutNativeEvidenceStillLoadsWithoutInventedStanding(persistMigrations: Bool)\n  async throws\n{\n  let fixture = try PledgeFixture()\n  defer { fixture.clean() }\n  var legacy = Commander()\n  legacy.name = \"OLD OWNER\"\n  legacy.credits = 12345\n  legacy.cargo[Game.pledgeFood] = 1\n  let bytes = try JSONEncoder().encode(legacy)\n  let input = fixture.directory.appendingPathComponent(\"genuine-legacy.json\")\n  try bytes.write(to: input)\n  let runtime = GameRuntime(game: fixture.game(), saveURL: fixture.save)\n  try await runtime.load(from: input, persistMigrations: persistMigrations)\n  let loaded = await runtime.snapshot()\n  #expect(loaded.commander.name == legacy.name && loaded.commander.credits == legacy.credits)\n  #expect(\n    loaded.commander.cargo == legacy.cargo && loaded.commander.scriptState.pledgeLedger == nil)\n  #expect(loaded.commander.scriptState.instances.values.allSatisfy { $0.pledgeReceiptID == nil })\n  #expect(await runtime.scriptSaveURL == input)\n  if !persistMigrations { #expect(try Data(contentsOf: input) == bytes) }\n}\n",
+      "new": "@Test(arguments: [false, true])\nfunc pledgeCurrentNativeEnvelopeLoadsWithoutInventedStanding(persistMigrations: Bool) async throws {\n  let fixture = try PledgeFixture()\n  defer { fixture.clean() }\n  let initial = fixture.game()\n  var current = initial\n  current.commander.name = \"CURRENT NATIVE OWNER\"\n  current.commander.credits = 12345\n  current.commander.cargo[Game.pledgeFood] = 1\n  let writer = GameRuntime(game: current, saveURL: fixture.save)\n  try await writer.save(to: fixture.save)\n  let saved = await writer.snapshot()\n  let bytes = try Data(contentsOf: fixture.save)\n  _ = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)\n  let files = try ScriptFinanceTestFixture.files(fixture.directory)\n  try #require(initial.commander.name != saved.commander.name)\n  let runtime = GameRuntime(game: initial)\n  try await runtime.load(from: fixture.save, persistMigrations: persistMigrations)\n  let loaded = await runtime.snapshot()\n  #expect(loaded.commander.name == saved.commander.name && loaded.commander.credits == saved.commander.credits)\n  #expect(loaded.commander.cargo == saved.commander.cargo && loaded.commander.scriptState.pledgeLedger == nil)\n  #expect(loaded.commander.shipID == saved.commander.shipID)\n  #expect(loaded.commander.equipmentInventory == saved.commander.equipmentInventory)\n  #expect(loaded.commander.scriptState.instances.values.allSatisfy { $0.pledgeReceiptID == nil })\n  #expect(await runtime.scriptSaveURL == fixture.save)\n  #expect(try Data(contentsOf: fixture.save) == bytes)\n  #expect(try ScriptFinanceTestFixture.files(fixture.directory) == files)\n}\n"
+    }
+  ],
+  "proposedFiles": [
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "draftPath": "/tmp/elite-g4-current-native-envelope-conservation-FIRST/Game.swift",
+      "bytes": 178083,
+      "sha256": "4fefd280600f2bfed47d23d67a4752e8012d3c9a6f4d46cb8dc374e799e1582e"
+    },
+    {
+      "path": "Tests/L337CoreTests/EquipmentRuntimeTransactionTests.swift",
+      "draftPath": "/tmp/elite-g4-current-native-envelope-conservation-FIRST/EquipmentRuntimeTransactionTests.swift",
+      "bytes": 17879,
+      "sha256": "1474e16681573f782ca5da69c06282bdee21917d0730adefe41399eb13a1e004"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptPledgeTests.swift",
+      "draftPath": "/tmp/elite-g4-current-native-envelope-conservation-FIRST/ScriptPledgeTests.swift",
+      "bytes": 49543,
+      "sha256": "59fa382dee9d9dd82079267627cd8a1a6059672f8eab1dfd6698c574a1dcbc40"
+    }
+  ],
+  "scope": "Only raw/unversioned fallback suffix in GameRuntime.loadNativeCommander after existing native pointer branch/Gallery guard. Replace superseded raw Commander parsing/migratePassengerMarker/calendar/native-rebind/republication chain with existing SaveError.invalidCommander. Current native pointer/schema dispatch, gallery namespace checks, source preparation, context commit, controls/saveURL and errors remain byte-exact; no universal version whitelist/new schema/source changes. G1 Game.swift exact shared reservation required.",
+  "tests": "Only two existing methods replaced. Obsolete failed legacy migration-write case becomes structurally valid current Commander without envelope rejection, whole live commander/screen/bodies/time/revision/save destination and original input/current pointer/allfiles conserved. Other current purchase/write failure tests unchanged. Old raw positive pledge case becomes genuine existing writer native envelope load from distinct original seed; same name/funds/cargo/no invented standing/receipt, plus actual equipment/ship and strict pointer/allfiles conservation. Both existing persistMigrations API variants retained without historical acceptance. Existing raw native-authority rejection/current native dock reload tests readonly.",
+  "assertionMapping": "Remove obsolete migration write/pchmod setup because that reader is deleted; retain and strengthen whole context/input-byte failure assertions as current native-envelope rejection. Replace obsolete raw acceptance with actual current writer/cold load positive and exact no-rewrite property. No private receipt/hardware/people factory or silent new-positive seeded-after load.",
+  "unfinished": "Deep ScriptSaveStore.read historical/feature-version dispatch and remaining current-branch policy migrations/rejector helpers explicitly next required cleanup. Newer feature envelopes encode legitimate current state/mode claims too; do not erase those checks or simply whitelist highest version without exact current feature contracts. NPC typed resource/crew/current EMP publisher work readonly.",
+  "limits": "SOURCE ONLY UNCOMPILED UNRUN; actual fixture/current save writer/readiness/cold-load/no-rewrite prerequisites unverified and may fail honestly. No actual game/native/people/hardware/loaded physics/journey/CI/release qualification. No parser/compiler/native/model/geometry execution, G1 only executor.",
+  "supersedesUnreservedDraft": {
+    "path": "/tmp/elite-g4-current-native-envelope-only-load-FIRST/FIRST.json",
+    "bytes": 12748,
+    "sha256": "55ab74090be8d1cf0dd5cd5f029a0da56611c932bc28af188d38ad0466be8d09",
+    "change": "Only two independent strict byte assertions expressed separately; same required conservation."
+  }
+}

@@ -24,10 +24,12 @@ return {
   end,
   contact = function(e, w, d)
     local commands = {}
-    if w.docked and w.main_station then
-      if w.galaxy == w.contract.destination_galaxy and w.system == w.contract.destination_system then
+    if w.docked then
+      if w.main_station and w.galaxy == w.contract.destination_galaxy
+        and w.system == w.contract.destination_system then
         commands = {{op = "dialogue.offer", id = "sealed-dispatch-receiver"}}
-      elseif w.station_id == w.contract.station_id then
+      elseif (w.main_station and w.station_id == w.contract.station_id)
+        or w.sealed_dispatch_origin == w.contract.station_id then
         commands = {{op = "dialogue.offer", id = "sealed-dispatch-sender"}}
       end
     end

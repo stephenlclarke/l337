@@ -3,13 +3,24 @@ import Testing
 
 @testable import L337Core
 
+/// Default ordinary target for controlled EMP unit scenes. Explicit two-person,
+/// alien and police cases retain their own original source requirements.
+enum EMPUnitTargetCatalogue {
+  static let ordinary = "SH029"
+  /// Current declared two-person source for controlled custody and capacity unit scenes.
+  static let twoPerson = "SH004"
+}
+
 /// Real owned equipment and an ordinary catalogue-backed actor, not a pre-disabled or synthetic wreck.
-func empFixture(catalogue: String = "SH023", hostile: Bool = false, police: Bool = false) throws
+func empFixture(catalogue: String = EMPUnitTargetCatalogue.ordinary, hostile: Bool = false, police: Bool = false) throws
   -> Game
 {
   var game = Game(executive: false)
-  // This controlled salvage-capable fixture needs a real work-tool hull, unlike fresh SH025.
-  game.commander.shipID = "SH023"
+  // Keep the initial starter, whose current fit supports the three required utility devices.
+  try #require(game.commander.shipID == "SH025")
+  let fitting = try #require(OriginalFleetR3Fitting.contract(for: game.commander.ship)?.fitting)
+  try #require(fitting.utilityMounts == 3)
+  try #require(game.commander.nativePerformance.workTools?.contains(.salvageCutter) == true)
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
   game.rearShield = game.commander.rearShieldCapacity
@@ -24,45 +35,11 @@ func empFixture(catalogue: String = "SH023", hostile: Bool = false, police: Bool
     try game.commander.grantEquipment(name, at: slot, provenance: .grant("EMP regression"))
   }
   game.launch()
-  game.speed = 0
-  game.bodies = []
-  game.celestials = []
-  game.miningFields = []
-  game.salvageSites = []
-  game.commander.npcPersistence = .init()
-  let id = police ? try #require(ShipCatalogue.nativeShip(.viper)?.id) : catalogue
-  let ship = try #require(ShipCatalogue.ship(id))
-  let performance = try #require(ship.game)
-  var body = SpaceBody(
-    id: 42, hull: police ? .viper : .cobra, position: .init(0, 0, 1000), hostile: hostile)
-  body.rotationRate = 0
-  body.energy = min(77, performance.energy * 0.6)
-  game.bodies = [body]
-  game.nextBodyID = max(game.nextBodyID, 43)
-  game.ensurePhysicalActors()
-  game.bodies[0].physical?.catalogueShipID = id
-  game.bodies[0].physical?.velocity = .init(15, -2, 5)
-  game.bodies[0].physical?.angularVelocity = .init(0, 0.1, 0.2)
-  game.bodies[0].physical?.canonicalSpin = true
-  game.bodies[0].physical?.npc?.resources = .stock(performance)
-  game.bodies[0].physical?.npc?.ordinaryCargo = [.init(commodity: .food, quantity: 2)]
-  game.bodies[0].physical?.npc?.cargoProvenance = .recorded
-  game.bodies[0].physical?.npc?.legalProvenance = .recorded
-  let npcFuel = try #require(game.bodies[0].physical?.npc?.resources?.fuel)
-  let reachable = game.knownSystems.filter {
-    let distance = game.currentSystem.distance(to: $0)
-    return $0.id != game.commander.system && $0.id != Plugh.systemID
-      && distance > 0 && distance <= performance.jump
-      && Int(ceil(distance * 10)) <= npcFuel
-  }.sorted {
-    let left = game.currentSystem.distance(to: $0)
-    let right = game.currentSystem.distance(to: $1)
-    return left == right ? $0.id < $1.id : left < right
+  try prepareEMPUnitScene(&game)
+  try withEMPUnitWriter(&game) { scene, publish, file in
+    try earnEMPUnitBank(&scene, publish: publish, file: file)
   }
-  let destination = try #require(reachable.first)
-  let destinationSystem = SystemIdentity(galaxy: game.commander.galaxy, system: destination.id)
-  game.bodies[0].physical?.npc?.destination = destinationSystem
-  game.bodies[0].physical?.npc?.routeProvenance = .recorded
+  try insertEMPUnitTarget(&game, catalogue: catalogue, hostile: hostile, police: police)
   game.selectFlightTool(.empPirateBlaster)
   try #require(game.commander.valid)
   return game
@@ -72,46 +49,44 @@ struct EMPPirateBlasterTests {
   @Test func realMeshHitDisablesWithoutDamageOrRewardAndRepeatedHitsAreIdempotent() throws {
     var game = try empFixture()
     let before = game.commander
-    let body = game.bodies[0]
-    let energy = game.energy
-    let heat = game.laserHeat
-    let empResult = try releaseDamagedEMPBoundary(&game)
-    #expect(empResult)
-    let disabled = try #require(game.bodies.first { $0.id == body.id })
+    let original = game.bodies[0]
+    try #require(try releaseDamagedEMPBoundary(&game))
+    let result = try #require(game.currentEMPPulseBeforeResult())
+    let disabled = try #require(game.bodies.first { $0.id == original.id })
+    try expectEMPPrimaryLaw(result, body: disabled)
     let source = try #require(disabled.physical?.empSource)
     let record = try #require(game.commander.savedEMPState?.records[source])
+    let boundary = record.custody.original.body
     #expect(record.valid && game.commander.valid)
-    #expect(
-      disabled.energy == body.energy
-        && disabled.physical?.npc?.resources?.fuel == body.physical?.npc?.resources?.fuel
-        && disabled.physical?.npc?.resources?.electrical?.remaining == 0)
-    #expect(disabled.physical?.identity == body.physical?.identity)
-    #expect(disabled.position == body.position && disabled.orientation == body.orientation)
-    #expect(disabled.physical?.velocity == body.physical?.velocity)
-    #expect(disabled.physical?.angularVelocity == body.physical?.angularVelocity)
+    #expect(disabled.physical?.identity == original.physical?.identity)
+    #expect(disabled.position == boundary.position && disabled.orientation == boundary.orientation)
+    #expect(disabled.physical?.velocity == boundary.physical?.velocity)
+    #expect(disabled.physical?.angularVelocity == boundary.physical?.angularVelocity)
+    #expect(disabled.physical?.npc?.resources?.fuel == boundary.physical?.npc?.resources?.fuel)
+    #expect(disabled.physical?.npc?.resources?.electrical?.remaining == 0)
     #expect(game.commander.credits == before.credits && game.commander.kills == before.kills)
     #expect(game.commander.cargo == before.cargo && disabled.destroyedByPlayer == nil)
-    #expect(game.energy == energy && game.laserHeat == heat + Game.empHeatCost)
-    #expect(
-      game.commander.savedPlayerElectrical?.remaining == before.performance.energy
-        - Game.empEnergyCost)
-    #expect(game.fireCooldown == Game.empCooldown)
+    #expect(game.laserHeat == Game.empHeatCost && game.fireCooldown == Game.empCooldown)
     #expect(record.disableIncident.kind == .emp && record.disableIncident.outcome == .hit)
-    #expect(record.disableIncident.victim == body.physical?.identity)
+    #expect(record.disableIncident.victim == original.physical?.identity)
     #expect(game.commander.legal > before.legal)
     #expect(record.crewAboard == record.crewTotal && record.pods.isEmpty)
-    let cutterResult = game.fireSalvageCutter(delta: 0.1)
-    #expect(!cutterResult)
+    let cutterFired = game.fireSalvageCutter(delta: 0.1)
+    #expect(!cutterFired)
     game.fireCooldown = 0
     game.advanceEMPCharge(triggerHeld: false)
+    try withEMPUnitWriter(&game) { scene, publish, file in
+      try earnEMPUnitBank(&scene, publish: publish, file: file)
+    }
+    let stillDisabled = try #require(game.bodies.first { $0.id == original.id })
+    try #require(game.isEMPDisabled(stillDisabled) && game.currentEMPPlayerModule()?.empBank?.remaining == 8)
+    try #require(game.postedEMPPlayerElectrical() != nil)
     let once = game.commander
     let remaining = game.energy
-    let empResult2 = game.fireEMPPirateBlaster()
-    #expect(!empResult2)
+    let empFired = game.fireEMPPirateBlaster()
+    #expect(!empFired)
     #expect(game.commander == once && game.energy == remaining)
-    #expect(
-      !game.message.contains("DESTROYED")
-        && game.dischargeAudio.events.last?.tool == .empPirateBlaster)
+    #expect(!game.message.contains("DESTROYED") && game.dischargeAudio.events.last?.tool == .empPirateBlaster)
   }
 
   @Test(arguments: [false, true])
@@ -124,10 +99,11 @@ struct EMPPirateBlasterTests {
     } else {
       game.bodies[0].position.x = 1500
     }
+    try #require(game.currentEMPPlayerModule()?.empBank?.remaining == 8 && game.postedEMPPlayerElectrical() != nil)
     let before = game.commander
     let bodies = game.bodies
     let energy = game.energy
-    let empResult = try releaseDamagedEMPBoundary(&game)
+    let empResult = game.fireEMPPirateBlaster()
     #expect(!empResult)
     #expect(game.commander == before && game.bodies == bodies && game.energy == energy)
     #expect(game.commander.savedEMPState == nil)
@@ -174,16 +150,22 @@ struct EMPPirateBlasterTests {
     #expect(record.custody.kind == .police && record.custody.valid && record.valid)
     #expect(record.custody.original.body.physical?.npc?.role == .police)
     #expect(record.disableIncident.victimRole == .police && game.commander.legal > before)
-    #expect(game.commander.npcPersistence.count == 0)
+    let logical = record.custody.logical
+    #expect(logical == record.disableIncident.victim)
+    #expect(logical == record.custody.original.body.physical?.identity)
+    #expect(game.commander.npcPersistence.snapshot(for: logical) == nil)
+    #expect(game.commander.npcPersistence.binding(for: logical) == nil)
+    #expect(game.commander.npcPersistence.logicalIdentity(for: logical) == nil)
   }
 
   @Test func missionProtectedAndAlienModelsCannotBecomeHumanDerelicts() throws {
     for alien in [false, true] {
-      var game = try empFixture(catalogue: alien ? "SH123" : "SH023")
+      var game = try empFixture(catalogue: alien ? "SH123" : EMPUnitTargetCatalogue.ordinary)
       if !alien { game.bodies[0].physical?.npc?.role = .mission }
+      try #require(game.currentEMPPlayerModule()?.empBank?.remaining == 8 && game.postedEMPPlayerElectrical() != nil)
       let before = game.commander
       let bodies = game.bodies
-      let empResult = try releaseDamagedEMPBoundary(&game)
+      let empResult = game.fireEMPPirateBlaster()
       #expect(!empResult)
       #expect(game.commander == before && game.bodies == bodies)
       #expect(game.commander.savedEMPState == nil)
@@ -191,7 +173,7 @@ struct EMPPirateBlasterTests {
   }
 
   @Test func fullActorCapacityKeepsEveryActualCrewMemberAboardUntilPodsAreAdmitted() throws {
-    var game = try empFixture(catalogue: "SH001")
+    var game = try empFixture(catalogue: EMPUnitTargetCatalogue.twoPerson)
     game.bodies[0].physical?.velocity = .init(0, 0, 0)
     game.bodies[0].physical?.angularVelocity = .init(0, 0, 0)
     let empResult = try releaseDamagedEMPBoundary(&game)

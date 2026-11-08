@@ -1,0 +1,147 @@
+{
+  "schema": "l337.closed-family-native-tessellation-proposal/1",
+  "id": "peregrine-three-peer-members-complete27part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH022",
+      "name": "Peregrine Mk I",
+      "r3ContractSHA256": "f8502a924dca78b9274ae9ad282cb3d9636ce094087a2ab4365aae7f733a736d",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH022-design.toml",
+        "bytes": 523289,
+        "sha256": "60cd55b2c752e53200a950ad9481c6f49bd6e9eed228071abb2d8794ed0a6979"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH022.toml",
+        "bytes": 547365,
+        "sha256": "a4e2830603cded5e8c2435819dcd554b1475096f0b519d2bdcdfd5da3473034d"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH022.json",
+        "bytes": 109905,
+        "sha256": "a538a93634755431ca49b780f8e7d5f6485c9cfb13786130aaf82cf19a1ed5c6"
+      },
+      "declaredOriginalNativeFaces": 964,
+      "originalComponents": 27,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own original resource remains pending; no family/source/crew/SH025 substitution"
+    },
+    {
+      "id": "SH023",
+      "name": "Peregrine Mk III",
+      "r3ContractSHA256": "ecdb62da81e8b87f802dd92f60374dc4375375575855971b0bb25fb3ba0a679f",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH023-design.toml",
+        "bytes": 533612,
+        "sha256": "b6fa2593479b011b08fe7818874da9263cc671d01270619081183f578c7ebbb3"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH023.toml",
+        "bytes": 557699,
+        "sha256": "3724c6aba40f20ee90c39380279ecc0d657cd5442867a1240f1624f4cee57457"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH023.json",
+        "bytes": 109905,
+        "sha256": "303caecc8c44ad16f2e98f1909d18a51a911d800382b7ce5d54a2dac99d3699f"
+      },
+      "declaredOriginalNativeFaces": 964,
+      "originalComponents": 27,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own original resource remains pending; no family/source/crew/SH025 substitution"
+    },
+    {
+      "id": "SH024",
+      "name": "Peregrine Mk IV",
+      "r3ContractSHA256": "2117edc243ad7386d00555caa6c05bf155f0d91f32af288d04c5e67ee914844c",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH024-design.toml",
+        "bytes": 533742,
+        "sha256": "3148e8e17afe9a7be6e903cb563afd5e9547a4bb5c4f6267def86fbc78f37dbf"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH024.toml",
+        "bytes": 557872,
+        "sha256": "1f51038d878610b3e43961380ce0cdabea70825a7bda3f799632165e6bf7b643"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH024.json",
+        "bytes": 109905,
+        "sha256": "00e74fb27ad9ca85783ee8747e6170aedc590a0b1c2f1745fd1248152bcd4c4b"
+      },
+      "declaredOriginalNativeFaces": 964,
+      "originalComponents": 27,
+      "nativeCrew": 2,
+      "conversionCrew": 2,
+      "status": "Own original resource remains pending; no family/source/crew/SH025 substitution"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/peregrine-peer-native-candidate-recipe.py",
+    "bytes": 10094,
+    "sha256": "2ef1cecb85127fe6294535a82d6fad18564e1575c02a8fcfb2819ebf6db2de8c"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/peregrine-peer-native-candidate-tests.py",
+    "bytes": 11591,
+    "sha256": "2bd7bebc6d9cc2b721f8077fb0d317a2a6989032a55e1bbea099d98d6ad76905"
+  },
+  "limit": 512,
+  "sampling": {
+    "bodyAndCockpitLoftSides": 4,
+    "driveLoftSides": 3,
+    "allPodStationsRetained": 5,
+    "allDriveStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      13,
+      19,
+      22,
+      23,
+      25,
+      26
+    ],
+    "unchangedFixedPartsPerMember": 19,
+    "status": "NEW angular approximations including coarse triangular drives only; actual output count/full source-profile/void/material/UV fidelity UNKNOWN and may fail qualification"
+  },
+  "retained": [
+    "BOTH original five-station forkpod envelopes/endcaps and complete5station centralbody/endcaps",
+    "ALL TWELVE analytical recessed wells, BOTH full longitudinal shoulder envelopes, aft bridge and full lowerprow box",
+    "Full cockpit/support and both connected complete drive supports/casings/luminous recesses; original BOTH drive rings/radii stay",
+    "Own mark0/1/2 dimensions, cobalt-cream palette/emission/material/texture/license/source and complete regenerated UVs"
+  ],
+  "coordinates": "Original RECIPES[SH022] base length3.2/beam2.15 times original mark0/1/2 over genuinefourfamily[022023024025]; explicitIDs022024 only. Separate025method/resource stays unchanged. No recenter/rescale/unit/calibration inference.",
+  "runtime": "Own original per-ID resources/R3/native-conversion crews1/1/2 and all runtime/source/fitting/EMP/acquisition/save/mission guards unchanged. No025/cobra alias, installed hardware/power/people/paidkit/source/actor/blueprint authority.",
+  "stopRules": [
+    "Explicit closed three peer IDs with ownsource/resource/R3 hashes; refuse names/family/prefix/othermember/025 substitution",
+    "All27 original parts/material sets remain, especially BOTH shoulders/ALL12wells/full lowerprow",
+    "All19 own fixed components exact original vertices/localfaces/materialsequence/UVs; all3pod profiles and original drive rings/radii remain",
+    "Complete actual output must fit512 and genuine closure/winding or refuse without omission/waiver",
+    "Coarse triangular drives/full curved-source/profile/void/material/UV/native qualification require actual G1 evidence and may reject; no cap or fidelity acceptance inferred",
+    "Existing separate025source method/pins/resource unchanged; historical516 lowerbound stays conditional"
+  ],
+  "blocker": {
+    "missing": "Actual output/fidelity/native evidence and authentic occupied/installed hardware/people/power/empty-loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 explicitly generate/check each own27part/exact19fixed/all12wells/shoulders/lowerprow/markpodprofiles/drive3rings-radii/UV/crossmember rejection then assess full coarse-drive/source/native fidelity. G4 continues independent originals."
+  }
+}

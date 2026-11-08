@@ -96,7 +96,8 @@ extension Game {
     }
     resolveCourierTerminals()
     resolveFreightTerminals()
-    guard docked, dockedAtMainStation, !paused, let definition = pack.manifest.board,
+    guard docked, !paused, let origin = contractBoardStation(for: pack),
+      let definition = pack.manifest.board,
       scriptUnavailable(pack) == nil,
       [.local, .flight, .calendar, .missionCalendar].contains(definition.clock)
     else {
@@ -107,7 +108,7 @@ extension Game {
     {
       throw MissionPackError("Station Aid pledges do not support this synthetic host site.")
     }
-    let key = pack.digest + "/" + definition.id + "/" + contractStation.key
+    let key = pack.digest + "/" + definition.id + "/" + origin.key
     let revision = try contractRevision(definition, pack: pack)
     if commander.contracts.boards[key]?.revision == revision { return key }
     guard commander.contracts.boards[key] != nil || commander.contracts.boards.count < 128 else {
@@ -122,7 +123,7 @@ extension Game {
       draws.append(.integer(Int64(seed >> 32)))
     }
     let courierGeneration = try pack.manifest.courier.map { _ in
-      try ScriptCourierGeneration(origin: contractStation, commander: commander, seed: initialSeed)
+      try ScriptCourierGeneration(origin: origin, commander: commander, seed: initialSeed)
     }
     if pack.manifest.procurement != nil, !nativeMainStationDockEvidenceIsCurrent {
       throw MissionPackError("Procurement boards require the current actual main station dock.")
@@ -154,7 +155,7 @@ extension Game {
     if let declaration = pack.manifest.courier, let courierGeneration {
       world["courier_plan"] = courierGeneration.plan(declaration)
     }
-    world["station_id"] = .string(contractStation.key)
+    world["station_id"] = .string(origin.key)
     world["board_revision"] = .integer(revision)
     world["board_seed_u32"] = .integer(Int64(Self.pledgeProfileSeed(initialSeed)))
     world["offer_draws"] = .array(draws)
@@ -209,7 +210,7 @@ extension Game {
     }
     let board = ScriptContractBoard(
       id: definition.id, provider: pack.manifest.id, version: pack.manifest.version,
-      digest: pack.digest, title: definition.title, station: contractStation, revision: revision,
+      digest: pack.digest, title: definition.title, station: origin, revision: revision,
       seed: initialSeed, clock: definition.clock, period: definition.period,
       group: pack.manifest.id + "/" + (definition.exclusiveGroup ?? definition.id), offers: offers,
       freightGeneration: freightGeneration, courierGeneration: courierGeneration)
@@ -337,10 +338,10 @@ extension Game {
   private mutating func prepareCurrentContractAcceptance(
     board key: String, offer id: UUID, confirmationToken: UUID
   ) throws -> ContractAcceptancePreflight {
-    guard docked, dockedAtMainStation, !paused, let board = commander.contracts.boards[key],
-      board.station == withReadOnlyStoredGame({ $0.contractStation }),
+    guard docked, !paused, let board = commander.contracts.boards[key],
       let index = board.offers.firstIndex(where: { $0.id == id }),
       let pack = scriptPacks.first(where: { $0.digest == board.digest }),
+      board.station == withReadOnlyStoredGame({ $0.contractBoardStation(for: pack) }),
       let definition = pack.manifest.board,
       withReadOnlyStoredGame({ $0.scriptUnavailable(pack) }) == nil
     else {
@@ -506,10 +507,15 @@ extension Game {
     else {
       throw MissionPackError("Courier confirmation cannot start in this context.")
     }
+    let origin = nativeOriginalSealedDispatchOrigin(for: preparation.pack)
+    guard preparation.job.station.stationClass == "main-orbital"
+      || origin?.station == preparation.job.station
+    else { throw MissionPackError("The original dispatch dock changed before issue.") }
     return .init(
       kind: .issue, instance: preparation.instanceID,
       item: ScriptCourierCustody.itemIdentity(preparation.instanceID),
-      proof: courierProof(token: confirmationToken.uuidString, revision: 0), job: preparation.job)
+      proof: courierProof(token: confirmationToken.uuidString, revision: 0, origin: origin),
+      job: preparation.job, originalOrigin: origin)
   }
 
   @inline(never)
@@ -592,8 +598,9 @@ extension Game {
     return instanceID
   }
   mutating func declineContract(board key: String, offer id: UUID) throws {
-    guard docked, dockedAtMainStation, !paused, let board = commander.contracts.boards[key],
-      board.station == contractStation,
+    guard docked, !paused, let board = commander.contracts.boards[key],
+      let pack = scriptPacks.first(where: { $0.digest == board.digest }),
+      board.station == contractBoardStation(for: pack),
       let index = board.offers.firstIndex(where: { $0.id == id }),
       board.offers[index].status == .available,
       try contractRevision(board) == board.revision
@@ -672,6 +679,9 @@ extension GameRuntime {
     try scriptCommand { try $0.confirmContract(quote) }
   }
   public func declineContract(board key: String, offer id: UUID) throws {
+    guard scriptPublisher() != nil else {
+      throw MissionPackError("Choose a writable commander save before declining a contract offer.")
+    }
     try scriptCommand { try $0.declineContract(board: key, offer: id) }
   }
 }

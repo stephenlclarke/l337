@@ -4,23 +4,21 @@ import Testing
 @testable import L337Core
 
 struct NativeStationAutoDockTests {
-  @Test(arguments: NativeStationGeometry.Kind.allCases)
+  @Test(arguments: OriginalStationSite.allCases)
   func actualRSelectionFliesMisalignedCraftFromBeyondApproachIntoTheSelectedStation(
-    kind: NativeStationGeometry.Kind
+    site: OriginalStationSite
   ) async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try nativeAutoDockStart(kind)
-    try await verifyActualNativeAutoDock(&game, kind: kind, storage: storage)
+    var game = try nativeAutoDockStart(site)
+    try await verifyActualNativeAutoDock(&game, site: site, storage: storage)
   }
 }
 
-private func nativeAutoDockStart(_ kind: NativeStationGeometry.Kind) throws -> Game {
-  var game = try NativeStationTestFixture.launched()
+private func nativeAutoDockStart(_ site: OriginalStationSite) throws -> Game {
+  var game = try NativeStationTestFixture.launched(system: site.system, withDockingComputer: true)
   let before = game.commander
   let limits = game.workLimits
-  try game.commander.grantEquipment(
-    TargetingTier.docking.equipmentName, at: .targetingCore, provenance: .legacyUnknown)
   try #require(game.commander.hasAutomaticDocking)
   #expect(
     game.commander.fittedEquipment(at: .targetingCore)?.node.key
@@ -28,9 +26,10 @@ private func nativeAutoDockStart(_ kind: NativeStationGeometry.Kind) throws -> G
   #expect(game.workLimits == limits && game.commander.shipID == before.shipID)
   #expect(game.commander.credits == before.credits && game.commander.cargo == before.cargo)
   #expect(game.commander.equipmentPurchaseHistory == before.equipmentPurchaseHistory)
-  let body = try #require(
-    game.bodies.first { $0.nativeStationIdentity?.definition == kind.sourceDefinition })
-  let identity = try #require(body.nativeStationIdentity)
+  let owner = try #require(game.commander.equipmentOwnerID)
+  let identity = site.identity(world: owner)
+  let body = try #require(game.bodies.first { $0.nativeStationIdentity == identity })
+  try #require(body.nativeStationIdentity == identity && game.nativeStationBodyIsCurrent(body))
   let saved = try #require(game.commander.nativeStations?.pose(for: identity))
   let orientation = try #require(
     saved.orientation(at: game.commander.flightSimulation.physicalTime))
@@ -70,10 +69,11 @@ private func nativeAutoDockStart(_ kind: NativeStationGeometry.Kind) throws -> G
 }
 
 private func verifyActualNativeAutoDock(
-  _ game: inout Game, kind: NativeStationGeometry.Kind, storage: NativeStationTestStorage
+  _ game: inout Game, site: OriginalStationSite, storage: NativeStationTestStorage
 ) async throws {
-  let station = try #require(
-    game.bodies.first { $0.nativeStationIdentity?.definition == kind.sourceDefinition })
+  let owner = try #require(game.commander.equipmentOwnerID)
+  let expected = site.identity(world: owner)
+  let station = try #require(game.bodies.first { $0.nativeStationIdentity == expected })
   let identity = try #require(station.nativeStationIdentity)
   let actor = try #require(station.physical?.identity)
   let main = try #require(game.bodies.first { $0.id == 0 })
@@ -174,7 +174,7 @@ private func verifyActualNativeAutoDock(
   #expect(
     game.docked && !game.dockedAtMainStation && healthy,
     Comment(
-      rawValue: "\(kind): phases=\(phases.sorted()), status=\(game.autoPilot.status), "
+      rawValue: "\(site): phases=\(phases.sorted()), status=\(game.autoPilot.status), "
         + "goal=\(game.autoPilot.positionError), facing=\(game.autoPilot.facingError), "
         + "phase=\(game.autoPilot.phaseError), rate=\(game.autoPilot.rateError)"))
   #expect(sawApproach && sawAlignment && sawAlignedFinal && sawRollCorrection)
@@ -189,8 +189,12 @@ private func verifyActualNativeAutoDock(
   #expect(receipt.commanderOwner == property.equipmentOwnerID && receipt.sequence == 1)
   #expect(game.commander.nativeStations?.currentMainDock == nil)
   #expect(game.nativeStationDockEvidenceIsCurrent && crossingWasSlow)
-  let board = try #require(await runtime.nativeStationBoardContext())
-  #expect(board.service.receipt == receipt && game.acceptsNativeStationBoardContext(board))
+  if site == .remoteUtility {
+    #expect(await runtime.nativeStationBoardContext() == nil)
+  } else {
+    let board = try #require(await runtime.nativeStationBoardContext())
+    #expect(board.service.receipt == receipt && game.acceptsNativeStationBoardContext(board))
+  }
   #expect(game.commander.credits == property.credits && game.commander.cargo == property.cargo)
   #expect(game.commander.equipmentInventory == property.equipmentInventory)
   #expect(game.commander.equipmentPurchaseHistory == property.equipmentPurchaseHistory)

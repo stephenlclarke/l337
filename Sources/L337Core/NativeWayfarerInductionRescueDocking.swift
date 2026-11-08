@@ -12,7 +12,7 @@ extension Game {
       let station = bodies.first(where: { $0.id == 0 && $0.hull == .station && $0.energy > 0 }),
       case .living = nativeOriginalMainStationDestination,
       needsInductionRescueDock(flight, body: body),
-      let physical = try? OriginalHullPhysicalContract.burro.get()
+      let physical = try? OriginalHullPhysicalContract.okapi.get()
     else { return nil }
     return nativeCustodianDockGuidance(
       body, profile: profile, delta: delta,
@@ -25,7 +25,7 @@ extension Game {
       return fuel < flight.authorization.route.distancesLY[hop.hop]
     }
     guard let last = flight.legs.last,
-      commander.scriptState.wormholeTransit?.legs[last.leg]?.phase == .arrived
+      nativeTransitStoredLedger()?.legs[last.leg]?.phase == .arrived
     else { return false }
     return last.hop == flight.authorization.route.distancesLY.count - 1
       && systemIdentity == NativeInductionCrewLogSource.receiver

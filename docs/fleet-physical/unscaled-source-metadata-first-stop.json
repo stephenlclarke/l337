@@ -1,0 +1,11 @@
+{
+  "status": "AUTHOR_METADATA_SELECTION_ERROR_STOPPED_BEFORE_ANY_NUMERIC_EVALUATION",
+  "id": "SH001",
+  "sourceSHA256": "5a5c99c1ab2c481e0891a90a18f9376b054709f14604c2fa5a45771d4d2817fe",
+  "reason": "Two materials declarations belong to separate detailed/native tables; initial metadata extraction incorrectly assumed one.",
+  "headerParses": 1,
+  "materialParses": 0,
+  "geometryEvaluations": 0,
+  "outputWrites": 0,
+  "nextSourceScope": "Read each explicitly named design/nativeDesign material declaration independently; no geometry values read or converted."
+}

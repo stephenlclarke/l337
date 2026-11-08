@@ -1,0 +1,19 @@
+{
+  "status": "RAW_TEXT_ATTRIBUTION_ONLY_NO_OWNERSHIP_RETRY",
+  "sourcePin": {
+    "path": "Sources/L337Core/Resources/Ships/SH025.toml",
+    "bytes": 690857,
+    "sha256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883"
+  },
+  "currentNativeVertexDeclarationBracketCount": 536,
+  "currentNativeFaceDeclarationBracketCount": 964,
+  "vertexGuardWithin4096": true,
+  "faceGuardWithin512": false,
+  "nativeLicenseLiteral": "license = \"MIT\"",
+  "nativeAppearanceLicenseLiteral": "appearanceLicense = \"MIT\"",
+  "tomlParses": 0,
+  "coordinateConversions": 0,
+  "geometryAreaMassTensorEvaluations": 0,
+  "indexOwnershipReruns": 0,
+  "nativeCompilerTests": 0
+}

@@ -160,7 +160,7 @@ struct WayfarerRecordRecoveryState: Codable, Sendable, Equatable {
 
 enum WayfarerRecordRecovery {
   static let stateID = "l337.wayfarer-service/record-recovery"
-  static let digest = "460df445d7249498185e0ef150366b91eafddfdfc651968182cf487f9e208578"
+  static let digest = "3778e99aa750165c54ea1ac85c765aacdf7d7748d401071a58c1b6436a40e165"
   static let batch = "cedamar-flight-record-01"
   static let boardID = "record-recovery"
   static let encounterID = "w05-wreck"
@@ -171,8 +171,8 @@ enum WayfarerRecordRecovery {
   static let objective = ContractStationIdentity(
     galaxy: 0, system: 241, stationClass: "main-orbital")
   static let reward = 6500
-  static let packageGeometry = "5362f0948c8a6f1b2acc770b100f746ff3f55799db7c0c53261f02943c6a680e"
-  static let cradleGeometry = "6bd163387c2fa30eaa34027add90ebb9eb377e87b46b996afd6979beaadfd813"
+  static let packageGeometry = OriginalScriptedMuskox.geometrySHA256
+  static let cradleGeometry = OriginalScriptedMuskox.cradleGeometrySHA256
 
   static func sourceIdentity(_ owner: NativeMainStationIdentity) -> UUID {
     ScriptIdentity.uuid("record-recovery-source-v1:\(owner.world):\(owner.resource):\(batch)")

@@ -10,11 +10,11 @@ struct NativeWayfarerInductionCrewLogSourceUnitTests {
     return try f.f.parent.registeringArk(f.f.link).receivingSeedArk(f.receipt())
   }
 
-  @Test func exactBurroMetreSourceKeepsOriginalPerformanceAndSeparateMechanicalFailure() throws {
+  @Test func exactOkapiMetreSourceKeepsOriginalPerformanceAndSeparateMechanicalFailure() throws {
     let source = try NativeInductionCrewLogSource(parent: parent())
     let original = try #require(
       OriginalFleetDefinitionData.definition(for: "SH029")?.nativePerformance)
-    #expect(source.physical.id == "SH029" && source.physical.name == "Burro")
+    #expect(source.physical.id == "SH029" && source.physical.name == "Okapi")
     #expect(source.physical.metresPerSourceUnit == 1 && source.ship.scale == 1)
     #expect(source.physical.physicalMesh.vertices == source.physical.model.displayMesh.vertices)
     #expect((source.physical.envelope.dimensions - Vector3(20, 10.04, 34.09)).length < 1e-9)

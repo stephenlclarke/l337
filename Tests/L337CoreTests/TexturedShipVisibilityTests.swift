@@ -50,7 +50,10 @@ struct TexturedShipVisibilityTests {
 }
 
 private func verifyTexturedHullVisibility(_ game: inout Game, id: String) throws {
-  game.commander.installTargetingComputer(.basic)
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.basic.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
   game.launch()
   game.speed = 0
   #expect(game.commander.targetingTier == .basic)

@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "id": "SH114",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "52fa731ac2d363006a35c0dd4a7318b5e94cf51892f0e6abae6f70bb01c94143",
+  "detailedSourceSHA256": "d999e2f3324a8a593191765c20fcd48c03ed17fefa102d4ed1156710685d51f0",
+  "componentSourceSHA256": "f71459dc1dda6040a8014bd8dc9426e6a618bb3093c27b899ab041aaee606e51",
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "coordinateUnits": "metres",
+  "metresPerSourceUnit": 1,
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 4153.756202461508,
+  "stockMassKg": 58152.586834461064,
+  "intrinsicHardwareMassKg": 3480.0,
+  "unroundedMassKg": 61632.586834461064,
+  "roundingReserveKg": 0.41316553893557284,
+  "dryMassKilograms": 61633,
+  "centreOfMassMetres": [
+    1.8271725797138114e-17,
+    -1.1307008956236666e-15,
+    0.12981029680554995
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    11248970.482148286,
+    -1.5455023325945063e-11,
+    -2.8566095464951098e-12,
+    -1.5455023325945063e-11,
+    5032879.523755293,
+    -1.2546154453404363e-10,
+    -2.8566095464951098e-12,
+    -1.2546154453404363e-10,
+    7393677.073274053
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    11250009.03519014,
+    -1.5455023325945063e-11,
+    -3.0027932998147413e-12,
+    -1.5455023325945063e-11,
+    5033918.076797149,
+    -1.1641532182693481e-10,
+    -3.0027932998147413e-12,
+    -1.1641532182693481e-10,
+    7393677.073274053
+  ],
+  "reserveLocationMetres": [
+    1.8271725797138114e-17,
+    -1.1307008956236666e-15,
+    0.12981029680554995
+  ],
+  "positiveLeadingPrincipalMinors": [
+    11248970.482148286,
+    56614713202931.82,
+    4.185909070185028e+20
+  ],
+  "zeroAreaSourceFaces": 0,
+  "stockComponents": [
+    {
+      "name": "upright sagittal guard",
+      "areaSquareMetres": 1662.8064579575505,
+      "stockMassKg": 23279.29041140565,
+      "areaCentroidMetres": [
+        -8.679843195855263e-19,
+        -1.419888810792754e-15,
+        7.905334110686639e-17
+      ],
+      "massFirst": [
+        1.0027534358414414e-12,
+        6.892264536872972e-13,
+        4.774847184307873e-12
+      ],
+      "massSecond": [
+        69479.03497051193,
+        -7.389644451905042e-13,
+        -3.126388037344441e-13,
+        -7.389644451905042e-13,
+        4059627.0905163498,
+        2.4277824195451103e-10,
+        -3.126388037344441e-13,
+        2.4277824195451103e-10,
+        2865895.0404404
+      ],
+      "verificationSecond": [
+        69479.03497051186,
+        8.570921750106208e-13,
+        -8.526512829121202e-14,
+        -6.208367153703875e-13,
+        4059627.090516346,
+        -3.1320723792305216e-11,
+        7.673861546209082e-13,
+        -3.495870259939693e-11,
+        2865895.0404403973
+      ]
+    },
+    {
+      "name": "smooth upper lower guard lobe",
+      "areaSquareMetres": 798.7119004993617,
+      "stockMassKg": 11181.966606991064,
+      "areaCentroidMetres": [
+        -3.892047266363377e-18,
+        -10.000000000000016,
+        -1.0000000000000007
+      ],
+      "massFirst": [
+        -7.005507285384738e-13,
+        -111819.66606991073,
+        -11181.96660699106
+      ],
+      "massSecond": [
+        182448.61922961488,
+        3.2951419370874646e-12,
+        1.1599610161283636e-12,
+        3.2951419370874646e-12,
+        1240485.9888033357,
+        111819.66606991086,
+        1.1599610161283636e-12,
+        111819.66606991086,
+        467738.04535956454
+      ],
+      "verificationSecond": [
+        182448.6192296153,
+        5.423217430688965e-12,
+        1.9912960169676808e-12,
+        7.355893671956437e-12,
+        1240485.988803332,
+        111819.66606991051,
+        3.5571545708990016e-12,
+        111819.66606991045,
+        467738.0453595648
+      ]
+    },
+    {
+      "name": "inward luminous gland",
+      "areaSquareMetres": 95.26371718903748,
+      "stockMassKg": 1333.6920406465256,
+      "areaCentroidMetres": [
+        -1.3384127687489367e-18,
+        -4.999999999999999,
+        9.0
+      ],
+      "massFirst": [
+        5.731526364627371e-15,
+        -6668.460203232626,
+        12003.22836581872
+      ],
+      "massSecond": [
+        3407.9083664570903,
+        9.053868765818152e-14,
+        -2.5490720645393594e-13,
+        9.053868765818152e-14,
+        35841.99021631355,
+        -60016.141829093656,
+        -2.5490720645393594e-13,
+        -60016.141829093656,
+        112282.1586239031
+      ],
+      "verificationSecond": [
+        3407.908366457104,
+        6.386557949156213e-14,
+        -2.4924506902834764e-13,
+        -3.524958103184872e-15,
+        35841.990216313636,
+        -60016.1418290937,
+        -1.9684254226604025e-13,
+        -60016.14182909369,
+        112282.15862390303
+      ]
+    },
+    {
+      "name": "smooth upper lower guard lobe",
+      "areaSquareMetres": 798.7119004993617,
+      "stockMassKg": 11181.966606991064,
+      "areaCentroidMetres": [
+        1.3900168808440633e-17,
+        10.000000000000023,
+        -1.0000000000000007
+      ],
+      "massFirst": [
+        6.352696146905146e-13,
+        111819.66606991066,
+        -11181.966606991056
+      ],
+      "massSecond": [
+        182448.61922961485,
+        1.4146905868983595e-11,
+        2.524203068787756e-12,
+        1.4146905868983595e-11,
+        1240485.988803335,
+        -111819.66606991098,
+        2.524203068787756e-12,
+        -111819.66606991098,
+        467738.04535956454
+      ],
+      "verificationSecond": [
+        182448.61922961526,
+        3.998579245489964e-12,
+        -2.7835511673401925e-12,
+        2.8324009804236994e-12,
+        1240485.988803332,
+        -111819.6660699099,
+        -3.9461767187276564e-12,
+        -111819.66606990996,
+        467738.0453595648
+      ]
+    },
+    {
+      "name": "inward luminous gland",
+      "areaSquareMetres": 95.26371718903746,
+      "stockMassKg": 1333.6920406465256,
+      "areaCentroidMetres": [
+        9.924285156029532e-19,
+        5.000000000000001,
+        8.999999999999998
+      ],
+      "massFirst": [
+        -1.3739009929736312e-15,
+        6668.4602032326275,
+        12003.22836581872
+      ],
+      "massSecond": [
+        3407.9083664570903,
+        4.1244785364824565e-14,
+        1.4299672557172016e-13,
+        4.1244785364824565e-14,
+        35841.99021631354,
+        60016.14182909364,
+        1.4299672557172016e-13,
+        60016.14182909364,
+        112282.1586239031
+      ],
+      "verificationSecond": [
+        3407.908366457104,
+        -8.743006318923108e-14,
+        1.4865886299730846e-13,
+        4.363176486776865e-14,
+        35841.99021631367,
+        60016.14182909369,
+        -2.631228568361621e-14,
+        60016.141829093685,
+        112282.15862390304
+      ]
+    },
+    {
+      "name": "central golden reserve",
+      "areaSquareMetres": 702.9985091271591,
+      "stockMassKg": 9841.979127780232,
+      "areaCentroidMetres": [
+        5.29646993627283e-17,
+        3.707208166585672e-17,
+        -0.9999999999999993
+      ],
+      "massFirst": [
+        1.8607337892717624e-13,
+        9.019868185689006e-13,
+        -9841.979127780107
+      ],
+      "massSecond": [
+        147600.96727787482,
+        -1.3903322937380835e-12,
+        -2.540190280342358e-13,
+        -1.3903322937380835e-12,
+        147600.96727787482,
+        -5.03552755048986e-12,
+        -2.540190280342358e-13,
+        -5.03552755048986e-12,
+        273389.5709492829
+      ],
+      "verificationSecond": [
+        147600.96727787552,
+        2.4530377729092834e-12,
+        -1.6298074001497298e-12,
+        1.4183116486821135e-12,
+        147600.96727787537,
+        1.1142364808591765e-11,
+        6.439293542825908e-13,
+        5.621822452006597e-12,
+        273389.57094928186
+      ]
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 2,
+      "anchorName": "inward luminous gland",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -1.3384127687489367e-18,
+        -4.999999999999999,
+        9.0
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 4,
+      "anchorName": "inward luminous gland",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        9.924285156029532e-19,
+        5.000000000000001,
+        8.999999999999998
+      ]
+    },
+    {
+      "name": "Empty intrinsic power system",
+      "count": 1,
+      "eachKg": 750,
+      "anchorComponent": 0,
+      "anchorName": "upright sagittal guard",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 750,
+      "anchorMetres": [
+        -8.679843195855263e-19,
+        -1.419888810792754e-15,
+        7.905334110686639e-17
+      ]
+    },
+    {
+      "name": "Empty fuel-containment and transfer system",
+      "count": 1,
+      "eachKg": 180,
+      "anchorComponent": 0,
+      "anchorName": "upright sagittal guard",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 180,
+      "anchorMetres": [
+        -8.679843195855263e-19,
+        -1.419888810792754e-15,
+        7.905334110686639e-17
+      ]
+    },
+    {
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+      "count": 3,
+      "eachKg": 120,
+      "anchorComponent": 0,
+      "anchorName": "upright sagittal guard",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 360,
+      "anchorMetres": [
+        -8.679843195855263e-19,
+        -1.419888810792754e-15,
+        7.905334110686639e-17
+      ]
+    },
+    {
+      "name": "Control and sensing system",
+      "count": 1,
+      "eachKg": 90,
+      "anchorComponent": 0,
+      "anchorName": "upright sagittal guard",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 90,
+      "anchorMetres": [
+        -8.679843195855263e-19,
+        -1.419888810792754e-15,
+        7.905334110686639e-17
+      ]
+    },
+    {
+      "name": "Empty carried-equipment interfaces",
+      "count": 1,
+      "eachKg": 140,
+      "anchorComponent": 0,
+      "anchorName": "upright sagittal guard",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 140,
+      "anchorMetres": [
+        -8.679843195855263e-19,
+        -1.419888810792754e-15,
+        7.905334110686639e-17
+      ]
+    },
+    {
+      "name": "Empty launcher system, no ammunition",
+      "count": 1,
+      "eachKg": 160,
+      "anchorComponent": 0,
+      "anchorName": "upright sagittal guard",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 160,
+      "anchorMetres": [
+        -8.679843195855263e-19,
+        -1.419888810792754e-15,
+        7.905334110686639e-17
+      ]
+    }
+  ],
+  "operations": {
+    "coordinateConversions": 13134,
+    "faceIndexChecks": 26208,
+    "triangleAreaEvaluations": 8736,
+    "analyticMomentEvaluations": 8736,
+    "quadratureMomentEvaluations": 26208,
+    "hardwareAllocations": 8,
+    "sourceParses": 1,
+    "resultRecords": 1
+  },
+  "sourceGeometryNotEdited": true,
+  "nativeQualification": "UNRUN; source budget never activates a hull"
+}

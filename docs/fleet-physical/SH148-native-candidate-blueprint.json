@@ -1,0 +1,97 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH148-complete24part-native-candidate-v1",
+  "ship": "SH148",
+  "name": "Morepork",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "2912c2fce8d5640f03b3847d8cdbe8f3bbcaff8981790a65ba9637160728bc57",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH148-design.toml",
+    "bytes": 391904,
+    "sha256": "c662ad791478a0709e2e136bcb70e3292665d48ac52d06c67e13a20d07879ecc"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH148.toml",
+    "bytes": 416005,
+    "sha256": "d18070d603fd8331ea36797a691bcb5b3287d0e66effa5a0b5f191b686f8bb94"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH148.json",
+    "bytes": 81093,
+    "sha256": "7c794227681b584af47792f1ef0ef4b813a299272edf74fbb7f4b99749f175ef"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH148-native-candidate-recipe.py",
+    "bytes": 8263,
+    "sha256": "1d5c02c44f1272222d89f5952a4a79ef1020f0df20b23f8dbfc32319257e956e"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH148-native-candidate-tests.py",
+    "bytes": 7799,
+    "sha256": "c1f34ab96e083185b165418c6f5b126c4682abe0912e425c7bc46556ae1c416f"
+  },
+  "baseline": {
+    "declaredNativeFaces": 792,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "bodyLoftSides": 6,
+    "cockpitOnlySides": 4,
+    "driveLoftSides": 6,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      12,
+      15,
+      16,
+      18,
+      19
+    ],
+    "unchangedFixedOriginalParts": 17,
+    "status": "NEW component-specific angular approximations only; actual output count/full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "BOTH complete original5station pressure envelopes/endcaps, no removed station/profile",
+    "Primary body atorigin,length*.92,width.39,height.27 and upper shielded envelope at(0,.30,.08),length*.67,widthbeam*.48,height.13",
+    "ALL EIGHT analytical recessed wells using each own original station geometry/length/width",
+    "BOTH vertical aft supports, full cockpit glazing/structural crossmember",
+    "Both connected full drive supports/casings/luminous recesses at xbeam*.42/radius.20",
+    "ALL four military mount structures, not installed guns/paid devices",
+    "Exact original navy-copper palette/material/emission/textures/license/source; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Original length2.7/beam2.55/source axes/coordinates/origin/units retained. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Morepork R3/name/game remain pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "Envelope/shield/mount names grant no actual pressure/shield-system/hardware/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All24 original positive components/material sets stay, especially both complete envelopes/all8wells/fins/mounts/drives",
+    "All FIVE original stations per pod and TWO per drive remain; cockpit-only sampler must restore before drives",
+    "Complete actual output must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require17 fixed components exact original vertices/localfaces/material sequence/UVs",
+    "Full actual curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run24part/exact17fixed/all8wells/station-count/sampling-restoration/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

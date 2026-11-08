@@ -2,9 +2,10 @@ import Testing
 
 @testable import L337Core
 
-@Test func cockpitKeepsLabelsReadableWithinWindowAndUsesFullWidth() {
+@Test func cockpitKeepsLabelsReadableWithinWindowAndUsesFullWidth() throws {
   var game = Game(executive: false)
   game.commander.shipDisplayStyle = .whiteWireframe
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.bodies[1].position = .init(0, 0, 500)
   for width in [512.0, 768, 1024, 1512, 2560] {
@@ -38,6 +39,7 @@ import Testing
 @Test func missileIconsExpressZeroFiniteUnlimitedAndArmedWithoutOnlyColour() throws {
   var game = Game(executive: false)
   game.commander.missiles = 0
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   for count in 0...4 {
     if count > 0 {
@@ -113,6 +115,7 @@ private func addControlledScoopBody(_ game: inout Game, hull: Hull) -> Int {
 
 @Test func xyzzyFuelScoopsAreFittedAndCollectCargoOnlyThroughTheLowerScoop() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   try #require(!game.docked && game.commander.valid)
   game.speed = 0
@@ -183,9 +186,12 @@ private func addControlledScoopBody(_ game: inout Game, hull: Hull) -> Int {
   #expect(game.commander.valid)
 }
 
-@Test func assistanceHUDKeepsTargetAndFlightWarningsVisibleWithinTheViewport() {
+@Test func assistanceHUDKeepsTargetAndFlightWarningsVisibleWithinTheViewport() throws {
   var game = Game(executive: false)
-  game.commander.installTargetingComputer(.military)
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.military.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
   game.launch()
   game.commander.xyzzyActive = true
   game.commander.autoTarget = true

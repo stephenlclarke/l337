@@ -1,0 +1,979 @@
+{
+  "status": "CONCRETE_NEW_ENGINEERING_ROLE_PROPOSAL_FOR_ROOT_DISPOSITION_NOT_ADOPTED",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "purpose": "Explicitly name per-ID new intrinsic systems and propulsion allocations for the eleven currently unissued Larvaal sources; source labels alone do not establish their biological function.",
+  "coordinateAreaMassTensorEvaluations": 0,
+  "nativeExecutions": 0,
+  "rows": [
+    {
+      "id": "SH112",
+      "name": "Larvaal Warden",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "cbcdc5e45436d78d490b00f76b8e3f430e963fb5204cd6162f51fc802ad8674b",
+      "source": {
+        "id": "SH112",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-design.toml",
+        "geometrySHA256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1",
+        "geometryBytes": 880289,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-components.json",
+        "componentSHA256": "8e92b8b5b65efa8bbd8544e7270d980c9d4b39d2033ca1e32a39a4b652d10bc3",
+        "componentBytes": 1849,
+        "detailedComponents": 6,
+        "detailedFaceBound": 6816,
+        "detailedVertexBound": 3418
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "broad closed protective mantle",
+        "faceStart": 0,
+        "faceCount": 1536
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 3,
+          "exactSourceName": "small inner organ",
+          "faceStart": 3456,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 5,
+          "exactSourceName": "small inner organ",
+          "faceStart": 5376,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 2,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 2,
+        "playerConversionCrew": 2
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH113",
+      "name": "Larvaal Ravager",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "1a86eadf7eae395da5bf6f1329cc56d4bf24e14f97bfa34a39b598ed6ff3062f",
+      "source": {
+        "id": "SH113",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-design.toml",
+        "geometrySHA256": "5e9d7670be4b1997ad270d55f1cbecb1009eafc697ab4ddd2df1b34cc7a9e007",
+        "geometryBytes": 808399,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-components.json",
+        "componentSHA256": "47a627f4f7e90e3bf639b346bdbf4cf2944b97124cd71b6a0d17ee1bf2d3eabb",
+        "componentBytes": 1863,
+        "detailedComponents": 6,
+        "detailedFaceBound": 6136,
+        "detailedVertexBound": 3080
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "swept dorsal carapace",
+        "faceStart": 0,
+        "faceCount": 480
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 5,
+          "exactSourceName": "stern gold organ",
+          "faceStart": 4696,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 1,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH114",
+      "name": "Larvaal Sentinel",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "52fa731ac2d363006a35c0dd4a7318b5e94cf51892f0e6abae6f70bb01c94143",
+      "source": {
+        "id": "SH114",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-design.toml",
+        "geometrySHA256": "d999e2f3324a8a593191765c20fcd48c03ed17fefa102d4ed1156710685d51f0",
+        "geometryBytes": 1135060,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-components.json",
+        "componentSHA256": "f71459dc1dda6040a8014bd8dc9426e6a618bb3093c27b899ab041aaee606e51",
+        "componentBytes": 1878,
+        "detailedComponents": 6,
+        "detailedFaceBound": 8736,
+        "detailedVertexBound": 4378
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "upright sagittal guard",
+        "faceStart": 0,
+        "faceCount": 1536
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 2,
+          "exactSourceName": "inward luminous gland",
+          "faceStart": 2976,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 4,
+          "exactSourceName": "inward luminous gland",
+          "faceStart": 5856,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 3,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 3,
+        "playerConversionCrew": 3
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH115",
+      "name": "Larvaal Lancer",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "6ed36170e9691f0f12aaf19b49eb0eeee314135c1931af965806c823dac7bf45",
+      "source": {
+        "id": "SH115",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-design.toml",
+        "geometrySHA256": "9b38f9641e6503b8aa2a7430f81d91c6f6870bc28f0c9dc13baee16397b01ab2",
+        "geometryBytes": 811798,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-components.json",
+        "componentSHA256": "ab757c36e7dc8d09fba3bf129cf670fad4db02b11984ea282ccdd50d4aa422ab",
+        "componentBytes": 1873,
+        "detailedComponents": 6,
+        "detailedFaceBound": 6184,
+        "detailedVertexBound": 3104
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "single smooth tapered lance",
+        "faceStart": 0,
+        "faceCount": 480
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 2,
+          "exactSourceName": "small rear green organ",
+          "faceStart": 1172,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 4,
+          "exactSourceName": "small rear green organ",
+          "faceStart": 3304,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 1,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH116",
+      "name": "Larvaal Broodlord",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "0ac287f26c28101ac8999e38dc9a7b26a145370ccdaa248ba6d7eed04afe1fb2",
+      "source": {
+        "id": "SH116",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-design.toml",
+        "geometrySHA256": "62153467e98fbf3e98a095a50bfc536227d322345d74a6a048e720b65c9fed73",
+        "geometryBytes": 921446,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-components.json",
+        "componentSHA256": "efe5e0d62c7da1368080cabc2d03946d7a455ed265ffbde6eca04703cd3edc6a",
+        "componentBytes": 1923,
+        "detailedComponents": 6,
+        "detailedFaceBound": 7048,
+        "detailedVertexBound": 3536
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "broad smooth dorsal hood",
+        "faceStart": 0,
+        "faceCount": 1440
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 3,
+          "exactSourceName": "recessed lower tendril organ",
+          "faceStart": 3524,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 5,
+          "exactSourceName": "recessed lower tendril organ",
+          "faceStart": 5608,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 5,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 5,
+        "playerConversionCrew": 5
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH117",
+      "name": "Larvaal Provoker",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "d3bd98bd547c59cf62b6c1891f1fe3554754a140796f1dbb2060b89369ac6442",
+      "source": {
+        "id": "SH117",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-design.toml",
+        "geometrySHA256": "9a48f2e812240a38f2b90ea0333eda83f8032b0472dcba9fcb694931cc0a902e",
+        "geometryBytes": 973424,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-components.json",
+        "componentSHA256": "135d71d900fa087677ebbeeb5a03b9496a7888f89339aefb8209d69ebb92af64",
+        "componentBytes": 1841,
+        "detailedComponents": 6,
+        "detailedFaceBound": 7480,
+        "detailedVertexBound": 3752
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "opposed open crescent",
+        "faceStart": 0,
+        "faceCount": 1340
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 1,
+          "exactSourceName": "inner crescent organ",
+          "faceStart": 1340,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 3,
+          "exactSourceName": "inner crescent organ",
+          "faceStart": 4120,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 1,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH118",
+      "name": "Larvaal Reaver",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "960a541ea826d2cb8634794e52772874570d4d9e7dc5dc949527ec1db41d80f7",
+      "source": {
+        "id": "SH118",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-design.toml",
+        "geometrySHA256": "65a9c46ec8547b76bc94aa261668b05f6a651bd39ee735c671d90f338be6f0e6",
+        "geometryBytes": 1999661,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-components.json",
+        "componentSHA256": "93637233a52a586243e7f998c435e12a2d01a9d0f1ea2b3d112ee05cd1272820",
+        "componentBytes": 4250,
+        "detailedComponents": 14,
+        "detailedFaceBound": 15360,
+        "detailedVertexBound": 7708
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "thin central jade blade",
+        "faceStart": 0,
+        "faceCount": 480
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 3,
+          "exactSourceName": "inward leaf glow",
+          "faceStart": 2400,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 6,
+          "exactSourceName": "inward leaf glow",
+          "faceStart": 5760,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 9,
+          "exactSourceName": "inward leaf glow",
+          "faceStart": 9120,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 12,
+          "exactSourceName": "inward leaf glow",
+          "faceStart": 12480,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 2,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 2,
+        "playerConversionCrew": 2
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH119",
+      "name": "Larvaal Wraith",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "f44ea27d0015ea2fdc28491277d4d5fc2625f66a597670db8351c68211dd91f3",
+      "source": {
+        "id": "SH119",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-design.toml",
+        "geometrySHA256": "3d7d4b77a9f9c44ff9b15c3cf379bf68b4ca0106628a59eaae978e59394fa7d1",
+        "geometryBytes": 1077700,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-components.json",
+        "componentSHA256": "3a787daecebc52105fb6547440a19e1fc5edb3805821cf44da73fb3bf2a90b35",
+        "componentBytes": 2205,
+        "detailedComponents": 7,
+        "detailedFaceBound": 8160,
+        "detailedVertexBound": 4094
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "thin laminar jade mantle",
+        "faceStart": 0,
+        "faceCount": 1440
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 3,
+          "exactSourceName": "aft lower green organ",
+          "faceStart": 3360,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 6,
+          "exactSourceName": "aft lower green organ",
+          "faceStart": 6720,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 1,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH120",
+      "name": "Larvaal Seeker",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "b510e195c30517d6ad5cd4a04277612fdb4800198dffc8f01c695a95573f2eaf",
+      "source": {
+        "id": "SH120",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-design.toml",
+        "geometrySHA256": "4968b8ce9ac6fc316fe67b58dd04e7fb2297ab8d40aa20e8322a26540437fedc",
+        "geometryBytes": 872098,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-components.json",
+        "componentSHA256": "656d34be6678c64aa07043d0a0ccfaaae80feaedda6344b76fcce834097edfa4",
+        "componentBytes": 1867,
+        "detailedComponents": 6,
+        "detailedFaceBound": 6816,
+        "detailedVertexBound": 3418
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "tall forward sensing vault",
+        "faceStart": 0,
+        "faceCount": 1536
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 3,
+          "exactSourceName": "inward sensing gland",
+          "faceStart": 3456,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "index": 5,
+          "exactSourceName": "inward sensing gland",
+          "faceStart": 5376,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 2,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 2,
+        "playerConversionCrew": 2
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH121",
+      "name": "Larvaal Mender",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "48146ed3f79c033f8b3b6342c9642cfaaf62c949ec6a479e28a22e0a88a6d270",
+      "source": {
+        "id": "SH121",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-design.toml",
+        "geometrySHA256": "f205cf86f74b26cc75542f65a940aa92f287d24c58d53d4e250ba6e24a05218b",
+        "geometryBytes": 1113768,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-components.json",
+        "componentSHA256": "9df9ef2f2f5cf136111aaca92e4ebb1404b7a96d3dd3ee0fb30facaf924b1b3b",
+        "componentBytes": 1863,
+        "detailedComponents": 6,
+        "detailedFaceBound": 8540,
+        "detailedVertexBound": 4282
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "forward open repair cradle",
+        "faceStart": 0,
+        "faceCount": 1340
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 1,
+          "exactSourceName": "short rear living body",
+          "faceStart": 1340,
+          "faceCount": 1440,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 4,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 4,
+        "playerConversionCrew": 4
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    },
+    {
+      "id": "SH122",
+      "name": "Larvaal Harvester",
+      "status": "NEW_OBJECT_ROLE_PROPOSAL_NOT_ADOPTED_NO_CALCULATION",
+      "contractSHA256": "65f2ecb53a56251a6b3e38f5d459f636732bfdb017ae341a32aef0361d32d6f3",
+      "source": {
+        "id": "SH122",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-design.toml",
+        "geometrySHA256": "c0392366f0a900584961def6feed02002cced6a9760fa0178518f2f020600556",
+        "geometryBytes": 1588487,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-components.json",
+        "componentSHA256": "76599c75eabb8c2499cd8a8ce76a93fe47774e6f21f71fba6bc779951b1d7090",
+        "componentBytes": 2837,
+        "detailedComponents": 9,
+        "detailedFaceBound": 12096,
+        "detailedVertexBound": 6064
+      },
+      "primary": {
+        "index": 0,
+        "exactSourceName": "open circular collection mouth",
+        "faceStart": 0,
+        "faceCount": 1536
+      },
+      "proposedPropulsionAllocations": [
+        {
+          "index": 1,
+          "exactSourceName": "smooth rear processing body",
+          "faceStart": 1536,
+          "faceCount": 480,
+          "newRole": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "mechanismKg": 900,
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        }
+      ],
+      "proposedEmptyIntrinsicSystems": [
+        {
+          "newRole": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750
+        },
+        {
+          "newRole": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180
+        },
+        {
+          "newRole": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 4,
+          "eachKg": 120
+        },
+        {
+          "newRole": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90
+        },
+        {
+          "newRole": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140
+        },
+        {
+          "newRole": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160
+        }
+      ],
+      "intrinsicSystemAnchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "proposedSurfaceBudget": "New opaque load-bearing/organ-envelope engineering stock equivalent14 kg/m2 on exact named source surfaces; no glazing claim and no recovered tissue density. Detailed material-role declaration still required before computation.",
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 4,
+        "playerConversionCrew": 4
+      },
+      "notEstablished": [
+        "Biological function/tissue density",
+        "Native mechanism or material/void qualification",
+        "Occupied compartments or paid crew/cabins/equipment",
+        "Source span, area, COM, mass or tensor values"
+      ]
+    }
+  ]
+}

@@ -45,10 +45,19 @@ struct NewCommanderDefaultsTests {
     #expect(ship.geometryContext.contains("project estimate"))
     #expect(ship.geometryContext.contains("not an authored measurement"))
     #expect(MainStationGeometry.docking.fits(mesh))
-    #expect(NativeStationGeometry.waystation.docking.fits(mesh))
-    #expect(NativeStationGeometry.headquarters.docking.fits(mesh))
-    #expect(NativeStationGeometry.waystation.exit(for: mesh) != nil)
-    #expect(NativeStationGeometry.headquarters.exit(for: mesh) != nil)
+    let sources = try NativeStationSource.requireBindings()
+    #expect(Set(sources.map(\.site)) == Set(OriginalStationSite.allCases))
+    for source in sources {
+      let expectedFit: Bool
+      switch source.site {
+      case .salamander: expectedFit = false
+      case .frog, .dhole, .remoteUtility: expectedFit = true
+      }
+      let fits = source.geometry.docking.fits(mesh)
+      #expect(fits == expectedFit, "\(source.site) default hull")
+      let hasExit = source.geometry.exit(for: mesh) != nil
+      #expect(hasExit == expectedFit, "\(source.site) default exit")
+    }
     for mount in LaserMount.allCases { #expect(commander.nativePerformance.supports(mount)) }
     #expect(commander.missileCapacity == 9)
     #expect(commander.laser(on: .front) == .pulse)
@@ -84,6 +93,7 @@ struct NewCommanderDefaultsTests {
     game.commander.name = "Saved Pilot"
     game.commander.credits = 32123
     game.commander.fuel = 83
+    try game.commander.prepareEquipment(legacy: false)
     let writer = GameRuntime(game: game)
     try await writer.save(to: url)
     let saved = await writer.snapshot()
@@ -104,7 +114,7 @@ struct NewCommanderDefaultsTests {
     #expect(continued.screen == .status && continued.commander == loaded.commander)
   }
 
-  @Test func continuePreservesCurrentImplicitShipIdentityAndOwnedEquipment() async throws {
+  @Test func continuePreservesCurrentExplicitShipIdentityAndOwnedEquipment() async throws {
     var commander = Commander()
     commander.name = "Existing Pilot"
     commander.shipID = "SH023"
@@ -113,18 +123,26 @@ struct NewCommanderDefaultsTests {
     try commander.prepareEquipment(legacy: false)
     let encoded = try JSONEncoder().encode(commander)
     var object = try #require(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+    let explicit = try JSONDecoder().decode(Commander.self, from: encoded)
     object.removeValue(forKey: "ownedShipID")
-    let implicit = try JSONDecoder().decode(
-      Commander.self, from: JSONSerialization.data(withJSONObject: object))
-    #expect(implicit.shipID == "SH023" && implicit.valid)
-    #expect(implicit.name == commander.name && implicit.credits == commander.credits)
-    #expect(implicit.equipmentInventory == commander.equipmentInventory)
-    #expect(implicit.equipmentPurchaseHistory == commander.equipmentPurchaseHistory)
+    let missingIdentity = try JSONSerialization.data(withJSONObject: object)
+    #expect(throws: DecodingError.self) {
+      try JSONDecoder().decode(Commander.self, from: missingIdentity)
+    }
+    object["ownedShipID"] = NSNull()
+    let nullIdentity = try JSONSerialization.data(withJSONObject: object)
+    #expect(throws: DecodingError.self) {
+      try JSONDecoder().decode(Commander.self, from: nullIdentity)
+    }
+    #expect(explicit.shipID == "SH023" && explicit.valid)
+    #expect(explicit.name == commander.name && explicit.credits == commander.credits)
+    #expect(explicit.equipmentInventory == commander.equipmentInventory)
+    #expect(explicit.equipmentPurchaseHistory == commander.equipmentPurchaseHistory)
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     defer { try? FileManager.default.removeItem(at: directory) }
     let url = directory.appendingPathComponent("commander.json")
     var game = Game(executive: false)
-    game.commander = implicit
+    game.commander = explicit
     let writer = GameRuntime(game: game)
     try await writer.save(to: url)
     let saved = await writer.snapshot()

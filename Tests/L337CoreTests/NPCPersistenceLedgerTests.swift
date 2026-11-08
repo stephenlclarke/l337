@@ -10,7 +10,7 @@ private func persistenceExpect(_ condition: Bool, sourceLocation: SourceLocation
 
 private func persistenceRequire<T>(_ value: T?) throws -> T { try #require(value) }
 
-private func persistenceBody(_ entity: UInt64 = 2, visit: UInt64 = 1) -> SpaceBody {
+private func persistenceBody(_ entity: UInt64 = 2, visit: UInt64 = 1) throws -> SpaceBody {
   var body = SpaceBody(id: Int(entity), hull: .cobra, position: .init(10, 20, 30), hostile: true)
   body.orientation.rotate(pitch: 0.1, roll: 0.2, yaw: 0.3)
   body.rotation = 0.7
@@ -26,16 +26,20 @@ private func persistenceBody(_ entity: UInt64 = 2, visit: UInt64 = 1) -> SpaceBo
       .init(commodity: .gold, quantity: 17), .init(commodity: .narcotics, quantity: 2),
     ],
     legalProvenance: .recorded, cargoProvenance: .generated, routeProvenance: .inferredLocal)
-  npc.resources = .init(
-    profile: .nativeHull, energyCapacity: 100, energyRecharge: 2,
-    frontCapacity: 80, rearCapacity: 80, shieldRecharge: 1,
-    frontShield: 17, rearShield: 23, laserHeat: 51, heatCapacity: 240, heatCooling: 12,
-    fuel: 13, fuelCapacity: 70, scoopRemainder: 0.3)
+  // Controlled damaged pools on the current source, never fabricated hull capacities.
+  let source = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH025"))
+  var resources = try persistenceRequire(NPCResources.stock(source.performance))
+  resources.frontShield = 17
+  resources.rearShield = 23
+  resources.laserHeat = 51
+  resources.fuel = 13
+  resources.scoopRemainder = 0.3
+  npc.resources = resources
   npc.hasFuelScoops = true
   body.physical = .init(
     identity: crimeTestID(entity, visit: visit), population: .pirate, npc: npc,
     velocity: .init(4, 5, 6), laserCooldown: 0.45,
-    catalogueShipID: "SH001", angularVelocity: .init(0.01, 0.02, 0.03))
+    catalogueShipID: "SH025", angularVelocity: .init(0.01, 0.02, 0.03))
   return body
 }
 
@@ -44,7 +48,7 @@ private func persistenceSnapshot(_ entity: UInt64 = 2, time: Double = 10) throws
 {
   try persistenceRequire(
     NPCPersistenceSnapshot.capture(
-      body: persistenceBody(entity), pose: ShipPose(), physicalTime: time, protection: .init()))
+      body: try persistenceBody(entity), pose: ShipPose(), physicalTime: time, protection: .init()))
 }
 
 private func persistenceRoundtrip(_ ledger: NPCPersistenceLedger) throws -> NPCPersistenceLedger {
@@ -136,7 +140,7 @@ struct NPCPersistenceLedgerTests {
   }
 
   @Test func actualBodyCaptureRetainsWorldPoseResourcesAndCatalogueAcrossCodableRoundtrip() throws {
-    let body = persistenceBody()
+    let body = try persistenceBody()
     var pose = ShipPose(position: .init(1000, 2000, 3000))
     pose.orientation.rotate(pitch: 0.4, roll: -0.3, yaw: 0.6)
     let snapshot = try persistenceRequire(
@@ -146,7 +150,7 @@ struct NPCPersistenceLedgerTests {
     #expect(snapshot.orientation == body.orientation.transformed(by: pose.orientation))
     #expect(snapshot.npc == body.physical?.npc && snapshot.energy == 34)
     #expect(snapshot.missiles == 1 && snapshot.ecmEnabled && snapshot.hostile)
-    #expect(snapshot.laserCooldown == 0.45 && snapshot.catalogueShipID == "SH001")
+    #expect(snapshot.laserCooldown == 0.45 && snapshot.catalogueShipID == "SH025")
     #expect(snapshot.rotation == 0.7 && snapshot.rotationRate == 0.2)
     #expect(
       snapshot.velocity == .init(4, 5, 6) && snapshot.angularVelocity == .init(0.01, 0.02, 0.03))
@@ -173,7 +177,7 @@ struct NPCPersistenceLedgerTests {
     #expect(rebind.logicalIdentity == original.actor && rebind.actor == crimeTestID(100))
     var pose = ShipPose(position: .init(-900, 300, 400))
     pose.orientation.rotate(pitch: -0.2, roll: 0.5, yaw: 0.8)
-    var restored = persistenceBody(100)
+    var restored = try persistenceBody(100)
     restored.energy = 100
     restored.missiles = 4
     restored.ecmEnabled = false
@@ -181,7 +185,7 @@ struct NPCPersistenceLedgerTests {
     #expect(restored.energy == 34 && restored.missiles == 1 && restored.ecmEnabled)
     #expect(restored.physical?.npc == original.npc && restored.physical?.laserCooldown == 0.45)
     let actualWorld = pose.orientation.apply(restored.modelVector(.init(0, 0, 1)))
-    let originalWorld = persistenceBody().modelVector(.init(0, 0, 1))
+    let originalWorld = try persistenceBody().modelVector(.init(0, 0, 1))
     #expect((actualWorld - originalWorld).length < 1e-10)
     #expect((pose.systemPoint(restored.position) - original.position).length < 1e-10)
     persistenceExpect(ledger.acknowledge(receipts: [receipt, receipt]).isEmpty)
@@ -317,7 +321,7 @@ struct NPCPersistenceLedgerTests {
   }
 
   @Test func missionProtectedAndNonShipBodiesAreExcludedWithoutOrdinaryFallbacks() throws {
-    let ordinary = persistenceBody()
+    let ordinary = try persistenceBody()
     var variants: [SpaceBody] = []
     var body = ordinary
     body.navalTarget = true
@@ -438,7 +442,8 @@ struct NPCPersistenceLedgerTests {
   @Test func invalidSnapshotAndMismatchedRestoreRefuseWithoutMutation() throws {
     let original = try persistenceSnapshot()
     var ledger = NPCPersistenceLedger()
-    for invalidEnergy in [Double.nan, -1, 0, 101] {
+    let capacity = try persistenceRequire(original.npc.resources).energyCapacity
+    for invalidEnergy in [Double.nan, -1, 0, capacity + 1] {
       var invalid = original
       invalid.energy = invalidEnergy
       persistenceExpect(ledger.capture(invalid, protection: .init()) == .refused(.invalidSnapshot))
@@ -454,7 +459,7 @@ struct NPCPersistenceLedgerTests {
       ledger.acknowledge(receipts: [
         .init(request: request.identity, actor: crimeTestID(30), refusal: nil)
       ]).first)
-    var mismatch = persistenceBody(31)
+    var mismatch = try persistenceBody(31)
     let before = mismatch
     persistenceExpect(!rebind.restore(body: &mismatch, pose: .init()))
     #expect(mismatch == before)
@@ -462,6 +467,373 @@ struct NPCPersistenceLedgerTests {
     invalidPose.orientation.x = .init(0, 0, 0)
     #expect(
       NPCPersistenceSnapshot.capture(
-        body: persistenceBody(), pose: invalidPose, physicalTime: 10, protection: .init()) == nil)
+        body: try persistenceBody(), pose: invalidPose, physicalTime: 10, protection: .init()) == nil)
+  }
+}
+
+extension NPCPersistenceLedgerTests {
+  @Test func currentDeclaredNativeBindingRejectsMatchingWrongTagBeforeCaptureAndRebind() throws {
+    let source = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH031"))
+    let hull = try persistenceRequire(source.ship.nativeHull)
+    let stock = try persistenceRequire(NPCResources.stock(source.performance))
+    try #require(hull == .viper && stock.fuel != nil)
+    var npc = NPCState(role: .police, origin: crimeTestSystem, destination: crimeTestSystem)
+    npc.resources = stock
+    var body = SpaceBody(id: 2, hull: hull, position: .init(10, 20, 30))
+    body.energy = stock.energyCapacity
+    body.missiles = 0
+    body.physical = .init(
+      identity: crimeTestID(2), population: .police, npc: npc, catalogueShipID: source.ship.id)
+    let snapshot = try persistenceRequire(NPCPersistenceSnapshot.capture(
+      body: body, pose: .init(), physicalTime: 10, protection: .init()))
+    try #require(snapshot.valid && snapshot.hull == hull && snapshot.npc.resources == stock)
+    let cold = try JSONDecoder().decode(
+      NPCPersistenceSnapshot.self, from: JSONEncoder().encode(snapshot))
+    #expect(cold == snapshot && cold.valid)
+    var ledger = NPCPersistenceLedger()
+    #expect(ledger.capture(cold, protection: .init()) == .registered(cold.actor))
+    ledger.cull(actor: cold.actor)
+    ledger = try persistenceRoundtrip(ledger)
+    let request = try persistenceRequire(
+      ledger.pendingSpawnRequests(context: crimeTestContext(20)).first)
+    try #require(request.hull == hull && request.catalogueShipID == source.ship.id)
+    let receipt = SpawnReceipt(request: request.identity, actor: crimeTestID(30), refusal: nil)
+    let rebind = try persistenceRequire(ledger.acknowledge(receipts: [receipt]).first)
+    let acknowledged = ledger
+    var target = SpaceBody(id: 30, hull: hull, position: .init(40, 50, 60))
+    target.energy = stock.energyCapacity
+    target.missiles = 0
+    target.physical = .init(
+      identity: crimeTestID(30), population: .police, npc: npc, catalogueShipID: source.ship.id)
+    for wrong in [Hull.cobra, .sidewinder] {
+      try #require(wrong != hull)
+      var invalid = snapshot
+      invalid.hull = wrong
+      #expect(!invalid.valid)
+      let invalidCold = try JSONDecoder().decode(
+        NPCPersistenceSnapshot.self, from: JSONEncoder().encode(invalid))
+      #expect(invalidCold == invalid && !invalidCold.valid)
+      #expect(ledger.capture(invalidCold, protection: .init()) == .refused(.invalidSnapshot))
+      #expect(ledger == acknowledged)
+      var wrongBody = target
+      wrongBody.hull = wrong
+      let unchanged = wrongBody
+      try #require(wrongBody.hull == invalidCold.hull)
+      try #require(wrongBody.physical?.identity == rebind.actor)
+      try #require(wrongBody.physical?.catalogueShipID == invalidCold.catalogueShipID)
+      #expect(NPCPersistenceSnapshot.capture(
+        body: wrongBody, pose: .init(), physicalTime: 20, protection: .init()) == nil)
+      let wrongRebind = NPCRebind(
+        logicalIdentity: rebind.logicalIdentity, actor: rebind.actor, snapshot: invalidCold)
+      #expect(!wrongRebind.restore(body: &wrongBody, pose: .init()))
+      #expect(wrongBody == unchanged && ledger == acknowledged)
+    }
+    #expect(rebind.restore(body: &target, pose: .init()))
+    #expect(target.position == snapshot.position && target.orientation == snapshot.orientation)
+    #expect(target.energy == snapshot.energy && target.missiles == snapshot.missiles)
+    #expect(target.physical?.npc == snapshot.npc && target.physical?.npc?.resources == stock)
+    #expect(target.physical?.catalogueShipID == source.ship.id && ledger == acknowledged)
+  }
+
+  @Test func rebindRefusesDistinctPhysicalOwnersBeforeAnyBodyMutation() throws {
+    let source = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH031"))
+    let stock = try persistenceRequire(NPCResources.stock(source.performance))
+    let hull = try persistenceRequire(source.ship.nativeHull)
+    var npc = NPCState(role: .pirate, origin: crimeTestSystem, destination: crimeTestSystem)
+    npc.resources = stock
+    npc.resources?.fuel = 0
+    var originalBody = SpaceBody(id: 2, hull: hull, position: .init(10, 20, 30))
+    originalBody.energy = 1
+    originalBody.missiles = 0
+    originalBody.physical = .init(
+      identity: crimeTestID(2), population: .pirate, npc: npc, catalogueShipID: source.ship.id)
+    let snapshot = try persistenceRequire(NPCPersistenceSnapshot.capture(
+      body: originalBody, pose: .init(), physicalTime: 10, protection: .init()))
+    var ledger = NPCPersistenceLedger()
+    #expect(ledger.capture(snapshot, protection: .init()) == .registered(snapshot.actor))
+    ledger.cull(actor: snapshot.actor)
+    let request = try persistenceRequire(
+      ledger.pendingSpawnRequests(context: crimeTestContext(20)).first)
+    let receipt = SpawnReceipt(request: request.identity, actor: crimeTestID(30), refusal: nil)
+    let rebind = try persistenceRequire(ledger.acknowledge(receipts: [receipt]).first)
+    let acknowledged = ledger
+    var target = SpaceBody(id: 30, hull: originalBody.hull, position: .init(40, 50, 60))
+    target.energy = stock.energyCapacity
+    target.physical = .init(
+      identity: crimeTestID(30), population: .pirate, npc: npc, catalogueShipID: source.ship.id)
+    var protectedTargets = Array(repeating: target, count: 6)
+    protectedTargets[0].physical?.npc = nil
+    protectedTargets[1].physical?.empSource = crimeTestID(50)
+    protectedTargets[2].physical?.blocksNavalEncounter = true
+    protectedTargets[3].physical?.rock = .init(system: crimeTestSystem, field: 1, rock: 1)
+    protectedTargets[4].physical?.payload = .wreck(crimeTestID(50), lot: 1)
+    protectedTargets[5].blackjackIdentity = UUID(uuidString: "00000000-0000-0000-0000-000000000006")
+    try #require(protectedTargets[5].blackjackRole == nil
+      && protectedTargets[5].blackjackIdentity != nil)
+    for var protected in protectedTargets {
+      try #require(protected.hull == snapshot.hull && protected.physical?.identity == receipt.actor)
+      try #require(protected.physical?.catalogueShipID == snapshot.catalogueShipID)
+      let before = protected
+      #expect(!rebind.restore(body: &protected, pose: .init()))
+      #expect(protected == before && protected.physical == before.physical)
+      #expect(ledger == acknowledged)
+    }
+    #expect(rebind.restore(body: &target, pose: .init()))
+    #expect(target.position == snapshot.position && target.energy == snapshot.energy)
+    #expect(target.physical?.npc == snapshot.npc && target.missiles == snapshot.missiles)
+    #expect(target.physical?.catalogueShipID == source.ship.id && ledger == acknowledged)
+  }
+
+  @Test func currentCatalogueRequiresKnownFuelAndRetainsEmptyTankAcrossColdRebind() throws {
+    let source = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH031"))
+    let stock = try persistenceRequire(NPCResources.stock(source.performance))
+    let hull = try persistenceRequire(source.ship.nativeHull)
+    try #require(stock.fuel == source.performance.fuel && source.performance.fuel > 0)
+    var npc = NPCState(role: .pirate, origin: crimeTestSystem, destination: crimeTestSystem)
+    npc.resources = stock
+    var body = SpaceBody(id: 2, hull: hull, position: .init(10, 20, 30))
+    body.energy = stock.energyCapacity
+    body.missiles = 0
+    body.physical = .init(
+      identity: crimeTestID(2), population: .pirate, npc: npc, catalogueShipID: source.ship.id)
+    let full = try persistenceRequire(NPCPersistenceSnapshot.capture(
+      body: body, pose: .init(), physicalTime: 10, protection: .init()))
+    #expect(full.npc.resources?.fuel == source.performance.fuel)
+    body.physical?.npc?.resources?.fuel = 0
+    let empty = try persistenceRequire(NPCPersistenceSnapshot.capture(
+      body: body, pose: .init(), physicalTime: 10, protection: .init()))
+    var ledger = NPCPersistenceLedger()
+    #expect(ledger.capture(empty, protection: .init()) == .registered(empty.actor))
+    ledger.cull(actor: empty.actor)
+    let before = ledger
+    var missing = empty
+    missing.npc.resources?.fuel = nil
+    #expect(missing.npc.resources?.valid == true && !missing.valid)
+    #expect(ledger.capture(missing, protection: .init()) == .refused(.invalidSnapshot))
+    let updatedMissing = ledger.updateUnbound(logicalIdentity: empty.actor, snapshot: missing)
+    #expect(!updatedMissing)
+    #expect(ledger == before)
+    var missingBody = body
+    missingBody.physical?.npc?.resources?.fuel = nil
+    let beforeBody = missingBody
+    #expect(NPCPersistenceSnapshot.capture(
+      body: missingBody, pose: .init(), physicalTime: 10, protection: .init()) == nil)
+    #expect(missingBody == beforeBody)
+    ledger = try persistenceRoundtrip(ledger)
+    #expect(ledger.snapshot(for: empty.actor) == empty)
+    let request = try persistenceRequire(
+      ledger.pendingSpawnRequests(context: crimeTestContext(20)).first)
+    #expect(request.npc?.resources?.fuel == 0)
+    let receipt = SpawnReceipt(request: request.identity, actor: crimeTestID(30), refusal: nil)
+    let rebind = try persistenceRequire(ledger.acknowledge(receipts: [receipt]).first)
+    var restored = SpaceBody(id: 30, hull: body.hull, position: .init(0, 0, 0))
+    restored.physical = .init(
+      identity: crimeTestID(30), population: .pirate, npc: npc, catalogueShipID: source.ship.id)
+    #expect(rebind.restore(body: &restored, pose: .init()))
+    #expect(restored.physical?.npc?.resources == empty.npc.resources)
+    #expect(restored.physical?.npc?.resources?.fuel == 0)
+    #expect(restored.energy == empty.energy && restored.missiles == empty.missiles)
+    #expect(restored.physical?.catalogueShipID == source.ship.id)
+  }
+
+  @Test func currentCatalogueCargoCountsOnlyTonneAllocationAndRejectsOverflowBeforeMutation() throws {
+    let source = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH031"))
+    let stock = try persistenceRequire(NPCResources.stock(source.performance))
+    let hull = try persistenceRequire(source.ship.nativeHull)
+    let capacity = source.performance.cargo
+    try #require(capacity > 1 && capacity < Int.max)
+    try #require(CommodityIdentity.food.unit == "t" && CommodityIdentity.alloys.unit == "t")
+    try #require(CommodityIdentity.gold.unit != "t")
+    var npc = NPCState(role: .pirate, origin: crimeTestSystem, destination: crimeTestSystem)
+    npc.resources = stock
+    npc.resources?.frontShield = 0
+    npc.resources?.fuel = 0
+    npc.ordinaryCargo = [.init(commodity: .food, quantity: capacity - 1),
+      .init(commodity: .alloys, quantity: 1), .init(commodity: .gold, quantity: 63)]
+    var body = SpaceBody(id: 2, hull: hull, position: .init(10, 20, 30))
+    body.energy = 1
+    body.missiles = 0
+    body.physical = .init(
+      identity: crimeTestID(2), population: .pirate, npc: npc, catalogueShipID: source.ship.id)
+    let original = try persistenceRequire(NPCPersistenceSnapshot.capture(
+      body: body, pose: .init(), physicalTime: 10, protection: .init()))
+    var ledger = NPCPersistenceLedger()
+    #expect(ledger.capture(original, protection: .init()) == .registered(original.actor))
+    ledger.cull(actor: original.actor)
+    let before = ledger
+    let invalidManifests: [[CommodityAmount]] = [
+      [.init(commodity: .food, quantity: capacity + 1)],
+      [.init(commodity: .food, quantity: capacity), .init(commodity: .food, quantity: 1)],
+      [.init(commodity: .food, quantity: Int.max / 17)],
+    ]
+    for manifest in invalidManifests {
+      let validManifest = manifest.allSatisfy(\.valid)
+      try #require(validManifest)
+      var invalid = original
+      invalid.npc.ordinaryCargo = manifest
+      #expect(!invalid.valid)
+      #expect(ledger.capture(invalid, protection: .init()) == .refused(.invalidSnapshot))
+      let updatedInvalid = ledger.updateUnbound(logicalIdentity: original.actor, snapshot: invalid)
+      #expect(!updatedInvalid)
+      #expect(ledger == before)
+      var invalidBody = body
+      invalidBody.physical?.npc?.ordinaryCargo = manifest
+      let originalBody = invalidBody
+      #expect(NPCPersistenceSnapshot.capture(
+        body: invalidBody, pose: .init(), physicalTime: 10, protection: .init()) == nil)
+      #expect(invalidBody == originalBody)
+    }
+    ledger = try persistenceRoundtrip(ledger)
+    #expect(ledger.snapshot(for: original.actor) == original)
+    let request = try persistenceRequire(
+      ledger.pendingSpawnRequests(context: crimeTestContext(20)).first)
+    #expect(request.npc?.ordinaryCargo == npc.ordinaryCargo)
+    let receipt = SpawnReceipt(request: request.identity, actor: crimeTestID(30), refusal: nil)
+    let rebind = try persistenceRequire(ledger.acknowledge(receipts: [receipt]).first)
+    var restored = SpaceBody(id: 30, hull: body.hull, position: .init(0, 0, 0))
+    restored.physical = .init(
+      identity: crimeTestID(30), population: .pirate, npc: npc, catalogueShipID: source.ship.id)
+    #expect(rebind.restore(body: &restored, pose: .init()))
+    #expect(restored.physical?.npc?.ordinaryCargo == npc.ordinaryCargo)
+    #expect(restored.physical?.npc?.resources == npc.resources && restored.energy == 1)
+    #expect(restored.missiles == 0 && restored.physical?.catalogueShipID == source.ship.id)
+  }
+
+  @Test func currentCatalogueMissileCapacityRejectsOverflowAndPreservesSpentPoolsAcrossColdRebind() throws {
+    let source = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH031"))
+    let stock = try persistenceRequire(NPCResources.stock(source.performance))
+    let hull = try persistenceRequire(source.ship.nativeHull)
+    try #require(source.performance.missiles > 0 && source.performance.missiles < Int.max)
+    var npc = NPCState(role: .pirate, origin: crimeTestSystem, destination: crimeTestSystem)
+    npc.resources = stock
+    var body = SpaceBody(id: 2, hull: hull, position: .init(10, 20, 30))
+    body.energy = stock.energyCapacity
+    body.missiles = source.performance.missiles
+    body.physical = .init(
+      identity: crimeTestID(2), population: .pirate, npc: npc, catalogueShipID: source.ship.id)
+    let maximum = try persistenceRequire(NPCPersistenceSnapshot.capture(
+      body: body, pose: .init(), physicalTime: 10, protection: .init()))
+    #expect(maximum.valid && maximum.missiles == source.performance.missiles)
+    #expect(NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+      catalogueShipID: source.ship.id, hull: hull, npc: npc, missiles: body.missiles))
+    var ledger = NPCPersistenceLedger()
+    #expect(ledger.capture(maximum, protection: .init()) == .registered(maximum.actor))
+    ledger.cull(actor: maximum.actor)
+    let before = ledger
+    for count in [Int.min, -1, source.performance.missiles + 1, Int.max] {
+      var invalid = maximum
+      invalid.missiles = count
+      // Exercise the source boundary itself, before snapshot.valid's separate invariants.
+      #expect(!NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+        catalogueShipID: source.ship.id, hull: hull, npc: invalid.npc, missiles: count))
+      #expect(!invalid.valid)
+      #expect(ledger.capture(invalid, protection: .init()) == .refused(.invalidSnapshot))
+      let updatedInvalid = ledger.updateUnbound(logicalIdentity: maximum.actor, snapshot: invalid)
+      #expect(!updatedInvalid)
+      #expect(ledger == before)
+      var invalidBody = body
+      invalidBody.missiles = count
+      let originalBody = invalidBody
+      #expect(NPCPersistenceSnapshot.capture(
+        body: invalidBody, pose: .init(), physicalTime: 10, protection: .init()) == nil)
+      #expect(invalidBody == originalBody)
+    }
+    var spent = maximum
+    spent.missiles = 0
+    spent.energy = 1
+    spent.npc.resources?.frontShield = 0
+    spent.npc.resources?.fuel = 0
+    #expect(NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+      catalogueShipID: source.ship.id, hull: hull, npc: spent.npc, missiles: 0))
+    let updatedSpent = ledger.updateUnbound(logicalIdentity: maximum.actor, snapshot: spent)
+    #expect(updatedSpent)
+    ledger = try persistenceRoundtrip(ledger)
+    #expect(ledger.snapshot(for: maximum.actor) == spent)
+    let request = try persistenceRequire(
+      ledger.pendingSpawnRequests(context: crimeTestContext(20)).first)
+    #expect(request.catalogueShipID == source.ship.id && request.energy == 1)
+    let receipt = SpawnReceipt(request: request.identity, actor: crimeTestID(30), refusal: nil)
+    let rebind = try persistenceRequire(ledger.acknowledge(receipts: [receipt]).first)
+    var restored = SpaceBody(id: 30, hull: body.hull, position: .init(0, 0, 0))
+    restored.energy = stock.energyCapacity
+    restored.missiles = source.performance.missiles
+    restored.physical = .init(
+      identity: crimeTestID(30), population: .pirate, npc: npc, catalogueShipID: source.ship.id)
+    #expect(rebind.restore(body: &restored, pose: .init()))
+    #expect(restored.missiles == 0 && restored.energy == 1 && restored.physical?.npc == spent.npc)
+    #expect(restored.physical?.catalogueShipID == source.ship.id)
+  }
+
+  @Test func acknowledgedRebindCannotReplaceAnAdmittedHullSourceOrEraseItsIdentity() throws {
+    let original = try persistenceSnapshot()
+    var ledger = NPCPersistenceLedger()
+    #expect(ledger.capture(original, protection: .init()) == .registered(original.actor))
+    ledger.cull(actor: original.actor)
+    ledger = try persistenceRoundtrip(ledger)
+    let request = try persistenceRequire(
+      ledger.pendingSpawnRequests(context: crimeTestContext(20)).first)
+    try #require(request.catalogueShipID == original.catalogueShipID)
+    let receipt = SpawnReceipt(request: request.identity, actor: crimeTestID(30), refusal: nil)
+    let rebind = try persistenceRequire(ledger.acknowledge(receipts: [receipt]).first)
+    let acknowledged = ledger
+    let other = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH031"))
+    let otherStock = try persistenceRequire(NPCResources.stock(other.performance))
+    let mismatchedIDs: [String?] = [other.ship.id, nil, "SH067"]
+    for id in mismatchedIDs {
+      var body = try persistenceBody(30)
+      body.physical?.catalogueShipID = id
+      if id == other.ship.id { body.physical?.npc?.resources = otherStock }
+      try #require(body.hull == original.hull && body.physical?.identity == receipt.actor)
+      let before = body
+      #expect(!rebind.restore(body: &body, pose: .init()))
+      #expect(body == before && body.physical == before.physical && ledger == acknowledged)
+    }
+    var matching = try persistenceBody(30)
+    matching.energy = 1
+    matching.physical?.npc?.resources?.frontShield = 0
+    #expect(rebind.restore(body: &matching, pose: .init()))
+    #expect(matching.physical?.catalogueShipID == original.catalogueShipID)
+    #expect(matching.energy == original.energy && matching.physical?.npc == original.npc)
+    #expect(ledger == acknowledged)
+  }
+
+  @Test func currentHullSnapshotsPreserveConsumedPoolsButRejectUnknownPendingAndBorrowedCapacities() throws {
+    let original = try persistenceSnapshot()
+    let current = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH025"))
+    let expected = try persistenceRequire(NPCResources.stock(current.performance))
+    let actual = try persistenceRequire(original.npc.resources)
+    #expect(original.valid && actual.energyCapacity == expected.energyCapacity)
+    #expect(actual.frontCapacity == expected.frontCapacity && actual.fuelCapacity == expected.fuelCapacity)
+    #expect(actual.frontShield == 17 && actual.rearShield == 23 && actual.laserHeat == 51)
+    #expect(actual.fuel == 13 && actual.scoopRemainder == 0.3 && original.energy == 34)
+    var invalid: [NPCPersistenceSnapshot] = []
+    var changed = original
+    changed.catalogueShipID = "SH999"
+    invalid.append(changed)
+    changed = original
+    changed.catalogueShipID = "SH067"
+    invalid.append(changed)
+    changed = original
+    changed.npc.resources = nil
+    invalid.append(changed)
+    let other = try persistenceRequire(OriginalFleetRuntimeHullSource.source(for: "SH031"))
+    let borrowed = try persistenceRequire(NPCResources.stock(other.performance))
+    try #require(borrowed.energyCapacity != expected.energyCapacity)
+    changed = original
+    changed.npc.resources = borrowed
+    invalid.append(changed)
+    changed = original
+    changed.npc.resources = NPCResources.legacyEnergyOnly(maximumEnergy: expected.energyCapacity)
+    invalid.append(changed)
+    var ledger = NPCPersistenceLedger()
+    let before = ledger
+    for snapshot in invalid {
+      #expect(!snapshot.valid)
+      #expect(ledger.capture(snapshot, protection: .init()) == .refused(.invalidSnapshot))
+      #expect(ledger == before)
+    }
+    #expect(ledger.capture(original, protection: .init()) == .registered(original.actor))
+    let cold = try persistenceRoundtrip(ledger)
+    #expect(cold.valid && cold == ledger && cold.snapshot(for: original.actor) == original)
   }
 }

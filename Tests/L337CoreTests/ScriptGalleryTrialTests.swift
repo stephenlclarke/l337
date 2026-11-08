@@ -38,6 +38,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
   let courier = try galleryPack("scripted-courier")
   let passengers = try galleryPack("scripted-passengers")
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.commander.name = "LIVE"
   game.commander.credits = 32100
@@ -86,6 +87,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
 @Test func galleryKeyboardLaunchAndReturnAndHintsUseTheSelectedDigest() async throws {
   let pack = try galleryPack("scripted-passengers")
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   let runtime = GameRuntime(game: game)
@@ -120,7 +122,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
   let original = try String(contentsOf: file, encoding: .utf8)
   for (old, new) in [
     ("cabins = 1", "cabins = 129"), ("credits = 100000", "credits = 0"),
-    ("ship = \"SH023\"", "ship = \"SH141\""), ("system = 7", "system = 256"),
+    ("ship = \"SH025\"", "ship = \"SH141\""), ("system = 7", "system = 256"),
     ("flight = false", "flight = false\nmission_complete = true"),
     (", \"gallery-basic-v2\"", ""),
   ] {
@@ -129,20 +131,72 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
     #expect(throws: (any Error).self) { try ScriptPackLibrary.read(pack) }
   }
 }
-@Test func staleParentControlsCannotFireAWeaponInTheTrial() async throws {
+@Test(arguments: ["scripted-passengers", "branch-choice"])
+func galleryRefusesAnUnavailablePlayerHullBeforeReplacingTheCommander(example: String) async throws {
   let folder = try galleryFolder()
   defer { try? FileManager.default.removeItem(at: folder) }
   let path = folder.appendingPathComponent("pack")
-  try FileManager.default.copyItem(
-    at: galleryExamples.appendingPathComponent("scripted-patrol"), to: path)
+  try FileManager.default.copyItem(at: galleryExamples.appendingPathComponent(example), to: path)
   let manifest = path.appendingPathComponent("manifest.toml")
-  var text = try String(contentsOf: manifest, encoding: .utf8)
-  text = text.replacingOccurrences(
-    of: "\"classic-encounters-v2\"]", with: "\"classic-encounters-v2\", \"gallery-basic-v2\"]")
-  text += "\n[trial]\nship='SH023'\ngalaxy=0\nsystem=7\ncredits=1000\ncabins=0\nflight=true\n"
-  try text.write(to: manifest, atomically: true, encoding: .utf8)
+  let current = try String(contentsOf: manifest, encoding: .utf8)
+  let old: String
+  if example == "branch-choice" {
+    // Same state and version, different authenticated content.
+    old = current.replacingOccurrences(of: "priority = 400", with: "priority = 401")
+  } else {
+    old = current.replacingOccurrences(of: "ship = \"SH025\"", with: "ship = \"SH023\"")
+  }
+  try #require(old != current)
+  try old.write(to: manifest, atomically: true, encoding: .utf8)
   let pack = try ScriptPackLibrary.read(path)
+  #expect(pack.manifest.trial?.ship == "SH023")
+
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
+  game.screen = .status
+  game.scriptPacks = [pack]
+  let file = folder.appendingPathComponent("live.json")
+  let runtime = GameRuntime(game: game, saveURL: file)
+  try await runtime.save(to: file)
+  let saved = try Data(contentsOf: file)
+  await runtime.key("gallery-open")
+  for _ in 0..<3 { await runtime.key("down") }
+  let before = await runtime.snapshot()
+  #expect(before.selectedGalleryMission?.trialDigest == pack.digest)
+  #expect(!before.canTrialSelectedMission)
+  await #expect(throws: OriginalDetailedHullStage.Failure.self) {
+    try await runtime.startScriptGalleryTrial(packDigest: pack.digest)
+  }
+  let after = await runtime.snapshot()
+  #expect(after.screen == .gallery && after.commander == before.commander && !after.isMissionTrial)
+  #expect(await runtime.gallerySaveDirectory() == nil)
+  #expect(try Data(contentsOf: file) == saved)
+}
+
+@Test func exactBranchChoicePackOffersAndStartsTheReplacementTrialHull() async throws {
+  let pack = try galleryPack("branch-choice")
+  var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
+  game.screen = .status
+  game.scriptPacks = [pack]
+  let runtime = GameRuntime(game: game)
+  await runtime.key("gallery-open")
+  for _ in 0..<3 { await runtime.key("down") }
+  let before = await runtime.snapshot()
+  #expect(before.selectedGalleryMission?.trialDigest == pack.digest && before.canTrialSelectedMission)
+  try await runtime.startScriptGalleryTrial(packDigest: pack.digest)
+  let namespace = try #require(await runtime.gallerySaveDirectory())
+  defer { try? FileManager.default.removeItem(at: namespace) }
+  let trial = await runtime.snapshot()
+  #expect(trial.isMissionTrial && trial.commander.shipID == "SH025" && trial.commander.valid)
+  try await runtime.returnFromScriptGalleryTrial()
+  #expect(await runtime.snapshot().commander == before.commander)
+}
+
+@Test func staleParentControlsCannotFireAWeaponInTheTrial() async throws {
+  let pack = try galleryPack("profiled-skirmish")
+  var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   game.openGallery()
@@ -152,6 +206,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
   let namespace = try #require(await runtime.gallerySaveDirectory())
   defer { try? FileManager.default.removeItem(at: namespace) }
   let trial = await runtime.snapshot()
+  #expect(trial.commander.shipID == "SH025" && trial.commander.valid)
   #expect(!trial.docked && trial.bodies.filter { $0.missionActorID != nil }.count == 2)
   var firing = Controls()
   firing.fire = true
@@ -220,6 +275,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
   defer { try? FileManager.default.removeItem(at: folder) }
   let courier = try galleryPack("scripted-courier")
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [courier]
   _ = try game.acceptScriptMission(courier)
@@ -276,6 +332,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
   try source.write(to: module, atomically: true, encoding: .utf8)
   let pack = try ScriptPackLibrary.read(directory)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   let id = try game.acceptScriptMission(pack)
@@ -403,6 +460,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
     .write(to: manifest, atomically: true, encoding: .utf8)
   let unsupported = try ScriptPackLibrary.read(directory)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [unsupported]
   game.openGallery()
@@ -427,6 +485,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
 @Test func restartingTrialRestoresItsInitialSeedLoadoutAndKeepsTheParent() async throws {
   let pack = try galleryPack("scripted-passengers")
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.commander.name = "PARENT"
   game.scriptPacks = [pack]
@@ -455,6 +514,7 @@ private func passengerTrialCredits(_ pack: ScriptPack) throws -> Int {
   defer { try? FileManager.default.removeItem(at: folder) }
   let pack = try galleryPack("scripted-courier")
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   game.openGallery()

@@ -1,0 +1,349 @@
+{
+  "schema": "l337.two-original-reference-component-partitions/1",
+  "status": "SOURCE_OWNERSHIP_METADATA_ONLY_NOT_FIDELITY_PHYSICAL_OR_ADOPTION",
+  "ids": [
+    "SH124",
+    "SH125"
+  ],
+  "physicalRegistrationSource": {
+    "path": "Sources/L337Core/OriginalFleetRelativePhysicalRegistrations.swift",
+    "bytes": 54532,
+    "sha256": "9d71664d7ca68e6d5193a837d0dd0cc83c3ac9d94ec046dd6716bf8d8b1d8b0b"
+  },
+  "rows": [
+    {
+      "id": "SH124",
+      "ownershipRecord": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH124.json",
+        "bytes": 9203,
+        "sha256": "653b81868573a72167bbf6fa83182d81649e0b49c2358a11beca34fc5fc14a8a"
+      },
+      "ownershipStatus": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH124-design.toml",
+        "bytes": 583091,
+        "sha256": "1715f8fc7da8e0a7e3c0c17534087477b443508c174a0a4da4eb158829438732"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH124.toml",
+        "bytes": 608020,
+        "sha256": "3a655b112425ad29131513cc6c3734c2cf54415b5c2e187eb865f6aa19990e5d"
+      },
+      "referenceDocument": {
+        "path": "/tmp/l337-fleet-a170b803-44620-cached55-build-fail-terminal/actual-run/prepared/references/SH124.json",
+        "bytes": 157324,
+        "sha256": "3d49ebbb5310f7d19fd793f20d16ac6711f6e1266ee94d0cc40fa13fa9236452"
+      },
+      "candidateDocument": {
+        "path": "/tmp/l337-fleet-a170b803-44620-cached55-build-fail-terminal/actual-run/prepared/candidates/SH124.json",
+        "bytes": 49065,
+        "sha256": "34b704529adf8d5aa9117741cda3ae15cc8a01d8eda45661dfc43d4a5a964c35"
+      },
+      "criteriaPreimage": {
+        "path": "/tmp/l337-fleet-a170b803-44620-cached55-build-fail-terminal/actual-run/prepared/criteria/SH124.json",
+        "bytes": 7085,
+        "sha256": "e6e9def000104eb3b7276c6408b4f74f21bad204d6c04400876248240233f4bd"
+      },
+      "blueprint": {
+        "path": "docs/fleet-physical/SH124-native-candidate-blueprint.json",
+        "bytes": 4524,
+        "sha256": "c566663e253df6f8f9b9ca13dc936dbcea09dc2d9bf9ddee0c72b41a8ce9065e"
+      },
+      "creatorPins": [
+        {
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+          "bytes": 48273,
+          "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+        },
+        {
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+          "bytes": 32122,
+          "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+        }
+      ],
+      "contractSHA256": "851502c15a6922797e9c650e8a126fd73ce7ccc76f5e1419a870625c72abe21e",
+      "nativeTable": "nativeDesign",
+      "originalTopology": {
+        "vertices": 744,
+        "faces": 1464,
+        "basis": "Copied scalar source metadata only, not evaluated geometry or candidate cap"
+      },
+      "parts": [
+        {
+          "index": 0,
+          "name": "closed alien lobe",
+          "vertexStart": 0,
+          "vertexCount": 192,
+          "faceStart": 0,
+          "faceCount": 384,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 384
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "alien-lobes"
+        },
+        {
+          "index": 1,
+          "name": "existing alien end growth",
+          "vertexStart": 192,
+          "vertexCount": 60,
+          "faceStart": 384,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes"
+        },
+        {
+          "index": 2,
+          "name": "exact reflected copy of alien end growth",
+          "vertexStart": 252,
+          "vertexCount": 60,
+          "faceStart": 500,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes"
+        },
+        {
+          "index": 3,
+          "name": "closed alien lobe",
+          "vertexStart": 312,
+          "vertexCount": 192,
+          "faceStart": 616,
+          "faceCount": 384,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 384
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "alien-lobes"
+        },
+        {
+          "index": 4,
+          "name": "existing alien end growth",
+          "vertexStart": 504,
+          "vertexCount": 60,
+          "faceStart": 1000,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes"
+        },
+        {
+          "index": 5,
+          "name": "exact reflected copy of alien end growth",
+          "vertexStart": 564,
+          "vertexCount": 60,
+          "faceStart": 1116,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes"
+        },
+        {
+          "index": 6,
+          "name": "central alien structural growth",
+          "vertexStart": 624,
+          "vertexCount": 60,
+          "faceStart": 1232,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes"
+        },
+        {
+          "index": 7,
+          "name": "alien luminous aft organ",
+          "vertexStart": 684,
+          "vertexCount": 60,
+          "faceStart": 1348,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes"
+        }
+      ],
+      "constructionEvidence": [
+        "fleet_redesign.py610..624 original alien-lobes operations: lobe/endgrowth/reflectedgrowth twice, centralgrowth, aftorgan",
+        "Mesh.raw77..84 append-only indexing; native torus159..178 and pod95..104 retain operation ownership"
+      ]
+    },
+    {
+      "id": "SH125",
+      "ownershipRecord": {
+        "path": "docs/fleet-physical/distinct-creator-ownership-records/SH125.json",
+        "bytes": 6726,
+        "sha256": "e7ca2843dec75a90851abd9b2ca427f03096bc4459be6d80dbe74e6f7771baea"
+      },
+      "ownershipStatus": "EXACT_SOURCE_OWNERSHIP_NEW_STOCK_DECLARATIONS_NOT_PHYSICAL_QUALIFICATION",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH125-design.toml",
+        "bytes": 809842,
+        "sha256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH125.toml",
+        "bytes": 834582,
+        "sha256": "59f90d0c480f818ce6ae325c48347fa26989dbc7e2f90b82dc4acd4d5562c0ff"
+      },
+      "referenceDocument": {
+        "path": "/tmp/l337-fleet-a170b803-44620-cached55-build-fail-terminal/actual-run/prepared/references/SH125.json",
+        "bytes": 166159,
+        "sha256": "8588f0f5d92376d7253a5978413cd7ba3c2444dd51c54d4ba83d0bdb2e4f622b"
+      },
+      "candidateDocument": {
+        "path": "/tmp/l337-fleet-a170b803-44620-cached55-build-fail-terminal/actual-run/prepared/candidates/SH125.json",
+        "bytes": 8499,
+        "sha256": "608459e60c50da4dae952af26295b8b5c0e93638d08ff0de510740934306da7e"
+      },
+      "criteriaPreimage": {
+        "path": "/tmp/l337-fleet-a170b803-44620-cached55-build-fail-terminal/actual-run/prepared/criteria/SH125.json",
+        "bytes": 6390,
+        "sha256": "489d8b04a88681f71e37d32bff59bd00f52e7c50604cf44222a08c167a47be93"
+      },
+      "blueprint": {
+        "path": "docs/fleet-physical/SH125-native-candidate-blueprint.json",
+        "bytes": 3948,
+        "sha256": "ec22eb89e9b0a51178087a35e07f66e0ed3eaf57d76c7ef9b44dadf7f4e8941a"
+      },
+      "creatorPins": [
+        {
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+          "bytes": 32122,
+          "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+        }
+      ],
+      "contractSHA256": "66671c43983362d99fa0ecbc361fe224db0a7ac50799fd7d35cedb4d3fa4506e",
+      "nativeTable": "nativeDesign",
+      "originalTopology": {
+        "vertices": 2562,
+        "faces": 5112,
+        "basis": "Copied scalar source metadata only, not evaluated geometry or candidate cap"
+      },
+      "parts": [
+        {
+          "index": 0,
+          "name": "closed jade shell source interval 0",
+          "vertexStart": 0,
+          "vertexCount": 578,
+          "faceStart": 0,
+          "faceCount": 1152,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core"
+        },
+        {
+          "index": 1,
+          "name": "closed jade shell source interval 1",
+          "vertexStart": 578,
+          "vertexCount": 288,
+          "faceStart": 1152,
+          "faceCount": 576,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core"
+        },
+        {
+          "index": 2,
+          "name": "closed jade shell source interval 2",
+          "vertexStart": 866,
+          "vertexCount": 288,
+          "faceStart": 1728,
+          "faceCount": 576,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core"
+        },
+        {
+          "index": 3,
+          "name": "closed jade shell source interval 3",
+          "vertexStart": 1154,
+          "vertexCount": 578,
+          "faceStart": 2304,
+          "faceCount": 1152,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core"
+        },
+        {
+          "index": 4,
+          "name": "single complete gold core sphere",
+          "vertexStart": 1732,
+          "vertexCount": 830,
+          "faceStart": 3456,
+          "faceCount": 1656,
+          "allowedSourceMaterials": [
+            2
+          ],
+          "creatorMethod": "larvaal.patch complete core",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core"
+        }
+      ],
+      "constructionEvidence": [
+        "generate.py197..265 original larvaal(native=True): four interval outer/inner/rim closures followed by one whole core",
+        "Existing distinct ownership record explicitly stores these exact native source ranges"
+      ]
+    }
+  ],
+  "geometryChanges": 0,
+  "candidateTriangleLimit": 512,
+  "continuousFidelity": "UNISSUED",
+  "installedOccupiedLoadedPhysical": "UNISSUED",
+  "acceptedHulls": 0,
+  "runtimeActivation": false
+}

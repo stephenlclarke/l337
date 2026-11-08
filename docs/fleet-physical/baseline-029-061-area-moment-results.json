@@ -1,0 +1,68 @@
+{
+  "status": "ONE_BOUNDED_SOURCE_AUTHORING_PASS_NO_NATIVE_OR_ACTIVATION",
+  "roleMapSHA256": "cd6f1104333dd94aa78b758e6ef0dac1504ab79fe6a3e6d5ef3ef3287536b3c3",
+  "authoringSourceSHA256": "0716197a6e1ea3cc31ae55709763f8d0c3f1a9c051533f505de7288c48df29ce",
+  "results": [
+    {
+      "id": "SH029",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-baseline-029-061-records/SH029.json",
+      "sha256": "f64a24c2863cf047f852d99313ca7ee131ebcda40c3e140f43572d6fbf3aa827",
+      "bytes": 33093,
+      "dryMassKg": 45520,
+      "operations": {
+        "sourceParses": 1,
+        "coordinateConversions": 3744,
+        "scaledCoordinateEvaluations": 3744,
+        "faceIndexChecks": 7128,
+        "triangleAreaEvaluations": 2376,
+        "analyticMomentEvaluations": 2376,
+        "quadratureMomentEvaluations": 7128,
+        "hardwareAllocations": 8,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH061",
+      "status": "STOPPED_NO_MASS_RECORD",
+      "error": "AssertionError: ('SH061', 'radial structural collar')",
+      "operations": {
+        "sourceParses": 1,
+        "coordinateConversions": 9648,
+        "scaledCoordinateEvaluations": 9648,
+        "faceIndexChecks": 11952,
+        "triangleAreaEvaluations": 3984,
+        "analyticMomentEvaluations": 3984,
+        "quadratureMomentEvaluations": 11952,
+        "hardwareAllocations": 0,
+        "resultRecords": 0
+      }
+    }
+  ],
+  "used": {
+    "sourceParses": 2,
+    "coordinateConversions": 13392,
+    "scaledCoordinateEvaluations": 13392,
+    "faceIndexChecks": 19080,
+    "triangleAreaEvaluations": 6360,
+    "analyticMomentEvaluations": 6360,
+    "quadratureMomentEvaluations": 19080,
+    "hardwareAllocations": 8,
+    "resultRecords": 1
+  },
+  "caps": {
+    "sourceParses": 2,
+    "coordinateConversions": 13392,
+    "scaledCoordinateEvaluations": 13392,
+    "faceIndexChecks": 24456,
+    "triangleAreaEvaluations": 8152,
+    "analyticMomentEvaluations": 8152,
+    "quadratureMomentEvaluations": 24456,
+    "hardwareAllocations": 16,
+    "resultRecords": 2
+  },
+  "unresolvedSourceMaps": [],
+  "nativeRendererCompilerTestsHelpers": 0,
+  "retries": 0,
+  "sourceGeometryWrites": 0
+}

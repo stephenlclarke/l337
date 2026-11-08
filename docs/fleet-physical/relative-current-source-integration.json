@@ -1,0 +1,1488 @@
+{
+  "status": "SOURCE_DEVELOPMENT_UNCOMPILED_UNRUN_NOT_INTEGRATION_READY",
+  "firstPassUnchanged": true,
+  "firstResultSHA256": "b794e0eca495a783edb04bc8cbe37a8a18b30639fa1da9faacecfddcf611fdf2",
+  "unchangedDeclaredMetreRecords": 49,
+  "currentRelativeRecords": 81,
+  "shippingPhysicalRecords": 130,
+  "geometryQueriesOrRecalculationsForThisBinding": 0,
+  "nativeTriangleLimit": 512,
+  "records": [
+    {
+      "id": "SH001",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH001.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH001.json",
+      "bytes": 278066,
+      "sha256": "f7beb62451cb86ab289e25f88f642924df183532c2a944030ac4f7fd2825491d",
+      "sourcePath": "replacement-hulls/SH001-design.toml",
+      "sourceSHA256": "5a5c99c1ab2c481e0891a90a18f9376b054709f14604c2fa5a45771d4d2817fe",
+      "metresPerSourceUnitExact": "40000/3411",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH010",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH010.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH010.json",
+      "bytes": 128354,
+      "sha256": "30aba17c31f65a5d1bcb9a29455f45bb876628ce5906d4af5cf16f249d2a79a6",
+      "sourcePath": "replacement-hulls/SH010-design.toml",
+      "sourceSHA256": "3e131707177a4b934ad969dc62da49963adf9aa6a71985e6dcf21c8ba9dd179c",
+      "metresPerSourceUnitExact": "15000000/1644589",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH011",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH011.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH011.json",
+      "bytes": 128447,
+      "sha256": "8b7526bcbbc93a6665cf3a288b7ebb5ce60ecc411e387626b2f602b39b88df51",
+      "sourcePath": "replacement-hulls/SH011-design.toml",
+      "sourceSHA256": "f0e1bf789ccad1f445f9d576c03affc853b7beb41b6820c03739b7e45a5e6884",
+      "metresPerSourceUnitExact": "30000000/3391379",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH015",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH015.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH015.json",
+      "bytes": 126460,
+      "sha256": "1de6745b7b55bdd273ed863e5e714691fc78eb6a449af1a4af2007094d919952",
+      "sourcePath": "replacement-hulls/SH015-design.toml",
+      "sourceSHA256": "e91491dc97b465dea7c09c06f0d0da96a50b8ab0155d3e2af22ed1f99a14e1ca",
+      "metresPerSourceUnitExact": "30000/2521",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH016",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH016.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH016.json",
+      "bytes": 134957,
+      "sha256": "9e8d0af0f1eca9b6de1307c33324ac96b0fb4f4652a2477b66fbf1d95a43421d",
+      "sourcePath": "replacement-hulls/SH016-design.toml",
+      "sourceSHA256": "dd0e951f8c8d46e91b58fa65f45446fe8604f29f213439ddb060fe5c9ee248f6",
+      "metresPerSourceUnitExact": "11500/687",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH017",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH017.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH017.json",
+      "bytes": 134917,
+      "sha256": "1e63f301befca35e4b3a118075a247f6c9a228a623fb8b8a04b2043351a70e64",
+      "sourcePath": "replacement-hulls/SH017-design.toml",
+      "sourceSHA256": "2a5efee25247b09a861d5112c7d070685b1f9aa2892143505fca28332fb2d4f3",
+      "metresPerSourceUnitExact": "920000/56367",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH020",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH020.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH020.json",
+      "bytes": 124750,
+      "sha256": "f2c3b08d17db3f1fba450c93f699e6c81bdc32acd12e78d870b5fcd01c6f2711",
+      "sourcePath": "replacement-hulls/SH020-design.toml",
+      "sourceSHA256": "626bcedd13d6affb1aaab5bc77ec7558a649fcc04e207ef34d3f848169be5b3d",
+      "metresPerSourceUnitExact": "20000/2533",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH021",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH021.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH021.json",
+      "bytes": 85496,
+      "sha256": "8b912a525dc3c5545fed1d7d47caf40a98183e56388b237174fcbfa62db9b63a",
+      "sourcePath": "replacement-hulls/SH021-design.toml",
+      "sourceSHA256": "90942461424c81049c241869ac934058a53ae9f75cd494e9c50bebf10f6313e9",
+      "metresPerSourceUnitExact": "40/3",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH022",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH022.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH022.json",
+      "bytes": 124578,
+      "sha256": "85b41b972c2c274bdcd2c822d5da04ff611c159b2576986196a6d1ff9e01f51e",
+      "sourcePath": "replacement-hulls/SH022-design.toml",
+      "sourceSHA256": "60cd55b2c752e53200a950ad9481c6f49bd6e9eed228071abb2d8794ed0a6979",
+      "metresPerSourceUnitExact": "800/59",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH023",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH023.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH023.json",
+      "bytes": 124724,
+      "sha256": "57401cbae3cec68e7bc32f446fe3bbe62f171ca45e9d4795083c9c67ec421f7e",
+      "sourcePath": "replacement-hulls/SH023-design.toml",
+      "sourceSHA256": "b6fa2593479b011b08fe7818874da9263cc671d01270619081183f578c7ebbb3",
+      "metresPerSourceUnitExact": "250000/19057",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH024",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH024.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH024.json",
+      "bytes": 124745,
+      "sha256": "d94b50b1bff0797cf7dbabfb8c3315f039ef4b2ca245d364c2099261e1415d77",
+      "sourcePath": "replacement-hulls/SH024-design.toml",
+      "sourceSHA256": "3148e8e17afe9a7be6e903cb563afd5e9547a4bb5c4f6267def86fbc78f37dbf",
+      "metresPerSourceUnitExact": "500000/39353",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH037",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH037.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH037.json",
+      "bytes": 369629,
+      "sha256": "0043c48d88c2c86063ad8aaaf99870dba03fbef733d5ed553f0db3066db50345",
+      "sourcePath": "replacement-hulls/SH037-design.toml",
+      "sourceSHA256": "c00f8163a07a5c90c2867334d03e275311afb3060ea5434841b6ab6005553f23",
+      "metresPerSourceUnitExact": "6000/611",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH038",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH038.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH038.json",
+      "bytes": 369513,
+      "sha256": "05e296d97b156545bb571b8271cf0fe5207da911cba66b8cea809cc7b1d44446",
+      "sourcePath": "replacement-hulls/SH038-design.toml",
+      "sourceSHA256": "41e9704f9c177717f42dabc4290bbe67b6792b9916a837dfaf9ef63d820191d4",
+      "metresPerSourceUnitExact": "6000/611",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH039",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH039.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH039.json",
+      "bytes": 369476,
+      "sha256": "0e1f5f491676ac779cb7999d111bcf8e049d23358497a29baa588e7c36c26483",
+      "sourcePath": "replacement-hulls/SH039-design.toml",
+      "sourceSHA256": "2b69475d2bc724889e10506f88e72df522dd054328c486d5cc67a36d209438c2",
+      "metresPerSourceUnitExact": "6000/611",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH040",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH040.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH040.json",
+      "bytes": 9788,
+      "sha256": "302ab01436523f9a9026d150f9eeb2134113cd19d386cf050e01ef29371bcffc",
+      "sourcePath": "replacement-hulls/SH040-design.toml",
+      "sourceSHA256": "94125f9da5db004437ac784ba47be3267271fe2401cf506f9a3715f2b2e3ae3a",
+      "metresPerSourceUnitExact": "60/19",
+      "objectKind": "capsule",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH048",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH048.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH048.json",
+      "bytes": 51438,
+      "sha256": "cc12450d3978c0168bbdf7f0973457d2d2f1c59f3868309d642a991b37f0e64d",
+      "sourcePath": "replacement-hulls/SH048-design.toml",
+      "sourceSHA256": "e55137ce5a91f7b2fc6521f3ebe11be865ee7b2c1467452844f33bb10edc90f6",
+      "metresPerSourceUnitExact": "5000000/597893",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH049",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH049.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH049.json",
+      "bytes": 124616,
+      "sha256": "3c11ae2ed743252d9a3d50146327ee2ddae50e3044b164bdff6db9dcb135a799",
+      "sourcePath": "replacement-hulls/SH049-design.toml",
+      "sourceSHA256": "2a7b44a76ef0f5c34c5e0596d5636f746145dfdc08cc75f151834bf11e477b10",
+      "metresPerSourceUnitExact": "20000/1737",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH050",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH050.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH050.json",
+      "bytes": 122265,
+      "sha256": "349091c7e330603cf3b1acefdd242406f93c49956ad709d1e50638b0e66f074a",
+      "sourcePath": "replacement-hulls/SH050-design.toml",
+      "sourceSHA256": "7f555c4821c9de8bea3026e88273c58acf7a778299ec67883f1e5990a31768b0",
+      "metresPerSourceUnitExact": "400/41",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH051",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH051.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH051.json",
+      "bytes": 124106,
+      "sha256": "61d620a7ee6ef7f1c53371088b402a0215ce331b0e0980aea8df6bb72521dbf4",
+      "sourcePath": "replacement-hulls/SH051-design.toml",
+      "sourceSHA256": "20199532d8d84d93152c05161e5f0af52ca6400ccdac0b326115a0d65c9fe5de",
+      "metresPerSourceUnitExact": "10000/959",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH052",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH052.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH052.json",
+      "bytes": 198699,
+      "sha256": "8afa4ff048b125121baecbac01edde17bff3cab5d2cdc4c6fb898a8d8ee605d5",
+      "sourcePath": "replacement-hulls/SH052-design.toml",
+      "sourceSHA256": "861010b50f1117030293cec1a8bed050112252ffe9373dde98b9b00cdc467ed2",
+      "metresPerSourceUnitExact": "20000/1661",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH053",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH053.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH053.json",
+      "bytes": 201361,
+      "sha256": "65c91cb82e45783f557ddaf344df8f76f9af94102edbb7e94c4d30cc240b716c",
+      "sourcePath": "replacement-hulls/SH053-design.toml",
+      "sourceSHA256": "0894d36fe7de3b645594fa7665a7b7231722e1b2f23c4a904278e91d4099ada0",
+      "metresPerSourceUnitExact": "1500000/171707",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH060",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH060.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH060.json",
+      "bytes": 128589,
+      "sha256": "d6742c676ab342235449d9d8ab423d9a2618767eaafcd1c4f802575aab33ad6e",
+      "sourcePath": "replacement-hulls/SH060-design.toml",
+      "sourceSHA256": "d7e3fcf666702d6cdd5b8b78f73fdb0117a58a8b5a219b9107da04e1fb1c4b70",
+      "metresPerSourceUnitExact": "23000/1211",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH063",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH063.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH063.json",
+      "bytes": 52364,
+      "sha256": "eba997ff8fcb3cca2040d7237778fe29e19553383aee330c0155e2f5e44806dd",
+      "sourcePath": "replacement-hulls/SH063-design.toml",
+      "sourceSHA256": "557e9ad9e2a496ee0f29ae34b5db40a05ceddd7e8f8ed5ddf9a7ee0b78edc722",
+      "metresPerSourceUnitExact": "75/11",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH066",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH066.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH066.json",
+      "bytes": 48557,
+      "sha256": "66ebbb21a1f65f3e56dd9a6886e4676e789dee18ab110f875b35128eb88fc840",
+      "sourcePath": "replacement-hulls/SH066-design.toml",
+      "sourceSHA256": "9ade27660044661f97105983b4995184ab7347aadf2efb5e62ae5d030b0f12e5",
+      "metresPerSourceUnitExact": "30000000/2547773",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH067",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH067.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH067.json",
+      "bytes": 12761,
+      "sha256": "2b383f5ee2356174eae999eadf563b8fa0b7c2e3c944fa3e8707cb511414aa51",
+      "sourcePath": "replacement-hulls/SH067-design.toml",
+      "sourceSHA256": "7cd4727a35a98a558d717bb3f16cf2d92a7bbd20d40f391f31b1854c1fa7736f",
+      "metresPerSourceUnitExact": "40000/3263",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH071",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH071.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH071.json",
+      "bytes": 51991,
+      "sha256": "4cf43c8db53f2e00177709bbd2761ef7360be2520a3576cb78a158bead2f31f7",
+      "sourcePath": "replacement-hulls/SH071-design.toml",
+      "sourceSHA256": "3f1d908400f032a2a90b8a4ee486c58e93368e4c49a1fa8a742ba52b7c9a80cc",
+      "metresPerSourceUnitExact": "60000/6221",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH072",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH072.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH072.json",
+      "bytes": 51990,
+      "sha256": "276171fa798535cc68af1bbce174f3defda19659c4a386113159557f73b91273",
+      "sourcePath": "replacement-hulls/SH072-design.toml",
+      "sourceSHA256": "8ea9b1346142ef4c31e71b802258b859d54be0cdc12ac05bf3f6a02d55733d70",
+      "metresPerSourceUnitExact": "30000000/3215237",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH073",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH073.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH073.json",
+      "bytes": 52037,
+      "sha256": "023d8539a45e25169613eb7899d98d8d34264c81c3b75d9ae6c6fce5037acdbb",
+      "sourcePath": "replacement-hulls/SH073-design.toml",
+      "sourceSHA256": "f132d3229d67b58a29dfda4707dcbc17537163ab31da7d20a77645c8fcc3268e",
+      "metresPerSourceUnitExact": "1200000/132799",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH076",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH076.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH076.json",
+      "bytes": 19266,
+      "sha256": "b38b9c87b12b236cb44d5ddcf8e5b5cadecd9029c33839691e23e24c8f59f871",
+      "sourcePath": "replacement-hulls/SH076-design.toml",
+      "sourceSHA256": "5e8fa307307bf36b5d5c52c556d92157091ed05f74765d06c241e386f14a72d5",
+      "metresPerSourceUnitExact": "55000/1347",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH082",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH082.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH082.json",
+      "bytes": 127302,
+      "sha256": "eb1f2df2bbd26d83b853e5278c26c2b56dfca4cca923bace68439df4f85b2971",
+      "sourcePath": "replacement-hulls/SH082-design.toml",
+      "sourceSHA256": "1588cff096e99efafd72688aeb3f764080c36517658a682c296f0b872ca33f49",
+      "metresPerSourceUnitExact": "7500/1081",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH086",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH086.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH086.json",
+      "bytes": 48010,
+      "sha256": "947ee8ebe8dabe624800f1909303e85ff34e7fb469f065db8f819fe8f2985768",
+      "sourcePath": "replacement-hulls/SH086-design.toml",
+      "sourceSHA256": "f1d7fc3e040aaf7f480ed0dadb32b35a3501c20b2c99452edf194c4bec80d0c0",
+      "metresPerSourceUnitExact": "2000/147",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH087",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH087.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH087.json",
+      "bytes": 48460,
+      "sha256": "d190fce52d04d4dd2737a2465e7232af40bb650cf2748e7081b7c0914df56fa2",
+      "sourcePath": "replacement-hulls/SH087-design.toml",
+      "sourceSHA256": "63298c43a80e0134b18cb10c9bc93cde9abcda8158db1094b036235a14270e94",
+      "metresPerSourceUnitExact": "20000/1731",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH088",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH088.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH088.json",
+      "bytes": 49701,
+      "sha256": "d860ec2ae784e6d8604882ea822ee48b5075db759f95322a82f69c48f9a96037",
+      "sourcePath": "replacement-hulls/SH088-design.toml",
+      "sourceSHA256": "8382b438252441ae6bb373bf307f7d341ec4d5d16fc525ab8d3edfa8cefbb8de",
+      "metresPerSourceUnitExact": "64000000/4107151",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH089",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH089.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH089.json",
+      "bytes": 49734,
+      "sha256": "329f364a3f3931a0ce8baf07551d1442b45ed29bd4c3453b27e6ea03986852b6",
+      "sourcePath": "replacement-hulls/SH089-design.toml",
+      "sourceSHA256": "75eaa16f5496ef1164f9665d1ee98da814d309562421addb3f86e78b778ed4d5",
+      "metresPerSourceUnitExact": "20000000/1533783",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH090",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH090.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH090.json",
+      "bytes": 159993,
+      "sha256": "e3c25343f6e1527a63350c792333abf34ef0659094d492d7f46dd398ee436ea6",
+      "sourcePath": "replacement-hulls/SH090-design.toml",
+      "sourceSHA256": "697cff048bc9b9af4f8cd02948cfc2877d2684109797c6477a2a34854a2952f9",
+      "metresPerSourceUnitExact": "10000/887",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH092",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH092.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH092.json",
+      "bytes": 84797,
+      "sha256": "e97aad550dd0f92d71135bfe802e6ffef0507c8a52e50e8a57ab26bbddb59710",
+      "sourcePath": "replacement-hulls/SH092-design.toml",
+      "sourceSHA256": "5636b640e4ece28c7985d56f9643e6f6a24e011fd826ea085f1e811ccf5d30d7",
+      "metresPerSourceUnitExact": "40000/4221",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH094",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH094.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH094.json",
+      "bytes": 204452,
+      "sha256": "dd95d34fa2acecc21e8c75a1f098014131ebd1a759d2b0e4cf0de4b61c14125e",
+      "sourcePath": "replacement-hulls/SH094-design.toml",
+      "sourceSHA256": "1aa22f477556aba2ff1265a82c193cc6dcd921813c3690c3f8c89018951a05b2",
+      "metresPerSourceUnitExact": "1250/131",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH095",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH095.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH095.json",
+      "bytes": 204452,
+      "sha256": "3713e0045469f74e792bc26fe2b0b4e171c7c4e42815efb345781ee7aff4ea5c",
+      "sourcePath": "replacement-hulls/SH095-design.toml",
+      "sourceSHA256": "441934d5018c83268f327097a52cd3add8482aab0d433dc91aa3d7466a0ca3b2",
+      "metresPerSourceUnitExact": "3000000/324991",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH096",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH096.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH096.json",
+      "bytes": 88916,
+      "sha256": "0d601ef336eb83046e5823ae43c70c78fa9197b19513a608549f8d046302390e",
+      "sourcePath": "replacement-hulls/SH096-design.toml",
+      "sourceSHA256": "3ed7051c06c65f78d7f58e7fdfc875b61aa54c616d8907aa9e37cf470ec69072",
+      "metresPerSourceUnitExact": "152/9",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH097",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH097.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH097.json",
+      "bytes": 88925,
+      "sha256": "7e9c862d8cd1da17b3c3244ee93350a5aeea701bf7a0374223a3d63e1520d024",
+      "sourcePath": "replacement-hulls/SH097-design.toml",
+      "sourceSHA256": "c5bff7a81f87ad4b6ad0a05ba8e689fc1114f1812e6e85461b09a4c15aac2b0a",
+      "metresPerSourceUnitExact": "30400/1863",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH098",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH098.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH098.json",
+      "bytes": 162039,
+      "sha256": "9b19e82a35a99ec7e89e4247cde8aa767f26f5c26057e1ee25c5420d4aa51ce0",
+      "sourcePath": "replacement-hulls/SH098-design.toml",
+      "sourceSHA256": "ed66a28884ae514dbbd74b07e9792b96936328b549edc9d1cac9bcc2966d7e98",
+      "metresPerSourceUnitExact": "190/9",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH099",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH099.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH099.json",
+      "bytes": 12297,
+      "sha256": "279e5e2869b3a6add8f368e82e6f21d90ee2cde69fd18e0b8995b14f1e68269f",
+      "sourcePath": "replacement-hulls/SH099-design.toml",
+      "sourceSHA256": "b80ded1ddf179eab04e383c13a2017d0f07c990f5c69daa5de084ed9372391d9",
+      "metresPerSourceUnitExact": "27500/997",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH100",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH100.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH100.json",
+      "bytes": 12346,
+      "sha256": "60a443b54ccbd7fc643c1775e62b601087dc8a0ab399c30aa5b2d4fe8e3bf797",
+      "sourcePath": "replacement-hulls/SH100-design.toml",
+      "sourceSHA256": "22cb04f635bcc998ad623853f1a147e087eade2fc3a0da0414d3c0a6b884f5e7",
+      "metresPerSourceUnitExact": "2200000/82469",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH104",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH104.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH104.json",
+      "bytes": 14185,
+      "sha256": "00c2b843f18bdb74fbfd455479787ad9d62eb6e7f41c6effb59a43c22e83fff4",
+      "sourcePath": "replacement-hulls/SH104-design.toml",
+      "sourceSHA256": "794a626f1d98fc2437c26fba3a57eb6c2aa923ac8424174fe9ea613bf7553ee8",
+      "metresPerSourceUnitExact": "10000/667",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH105",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH105.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH105.json",
+      "bytes": 48746,
+      "sha256": "20b68c19548176087a320bf33fec474ebd30a7494d29da2264ad07845fc4d7d1",
+      "sourcePath": "replacement-hulls/SH105-design.toml",
+      "sourceSHA256": "daf3fa9551a9f488edbcfd5ee164507616cf120b43f912c07171a3ddead2d96e",
+      "metresPerSourceUnitExact": "1900/61",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH106",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH106.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH106.json",
+      "bytes": 48751,
+      "sha256": "cd900affcb46a249216805cd69d6365acfde2c6aeed973c8885f6f04c06ffc4f",
+      "sourcePath": "replacement-hulls/SH106-design.toml",
+      "sourceSHA256": "20131f3bbc888dc52c51e0e950a50a7b2ee72ce62c47cf42dae0151d5db8fc65",
+      "metresPerSourceUnitExact": "7600000/252127",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH107",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH107.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH107.json",
+      "bytes": 125575,
+      "sha256": "1fd44d49f828657f63e32c777bd0d11c10e90f5f189b2b1624eb62bd84f767e4",
+      "sourcePath": "replacement-hulls/SH107-design.toml",
+      "sourceSHA256": "9f8ba7417e607a8ce5c16433e673249754853ef57312ff2b5a1ce6bbeecd73e6",
+      "metresPerSourceUnitExact": "1875/152",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH123",
+      "currentSourceBinding": false,
+      "status": "HISTORICAL_SOURCE_ESTIMATE_EXCLUDED_FROM_SHIPPING",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH123.json",
+      "runtimeRecord": null,
+      "bytes": 14444,
+      "sha256": "d793973ba865307536c5de2d864ae71dad3d53c61d796cc145af76d48ee26ca8",
+      "sourcePath": "replacement-hulls/SH123-design.toml",
+      "sourceSHA256": "a430c5e8946db1d2f27d5030ae3f245f0838e52f2dadf1409323a16fc1c67499",
+      "metresPerSourceUnitExact": "2000/49",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH124",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH124.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH124.json",
+      "bytes": 9921,
+      "sha256": "1e842cb7392dc8e9f6cbba555545de12eb8fc0eb9cf06df1bf32af1690b7067d",
+      "sourcePath": "replacement-hulls/SH124-design.toml",
+      "sourceSHA256": "1715f8fc7da8e0a7e3c0c17534087477b443508c174a0a4da4eb158829438732",
+      "metresPerSourceUnitExact": "760/69",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH125",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH125.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH125.json",
+      "bytes": 6186,
+      "sha256": "52f994685dd828bc8b77ec73ad1ee92189a129c1e3eb3db9523c6c129120e182",
+      "sourcePath": "replacement-hulls/SH125-design.toml",
+      "sourceSHA256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1",
+      "metresPerSourceUnitExact": "19000000/996381",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH127",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH127.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH127.json",
+      "bytes": 354908,
+      "sha256": "ef4cead275a21023148aa1c8ef181d5701476f370fc30740685cd45e57cee404",
+      "sourcePath": "replacement-hulls/SH127-design.toml",
+      "sourceSHA256": "33a5a9a095e417a76cdc2e55b73fc9819aa1b7390cfdee36d28661ff89bf6c70",
+      "metresPerSourceUnitExact": "625/69",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH128",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH128.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH128.json",
+      "bytes": 56821,
+      "sha256": "24b256fd113c5e4fe569d647d898f16bc438c22136d4b6adac3d835772d58d89",
+      "sourcePath": "replacement-hulls/SH128-design.toml",
+      "sourceSHA256": "f5b934ab51d55b29d5cdcfc112b9e5300030dbc2d9f0f33d5290562c1b2cd4aa",
+      "metresPerSourceUnitExact": "19000/697",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH136",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH136.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH136.json",
+      "bytes": 57764,
+      "sha256": "64a175239549bbd0f611fd5bd166554ff84a0cc48987cfdcbd868f7c5ae83898",
+      "sourcePath": "replacement-hulls/SH136-design.toml",
+      "sourceSHA256": "fdbf3fb120a965482dcf3f00cca9b27598f881aab297911f4ba802c17a90a6fc",
+      "metresPerSourceUnitExact": "20000/1881",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH137",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH137.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH137.json",
+      "bytes": 57842,
+      "sha256": "d8012c7bded79ab5a70a3b6ffd226962b8b389e79b8cb13764c3ed508c62d7f1",
+      "sourcePath": "replacement-hulls/SH137-design.toml",
+      "sourceSHA256": "1ae68958ef5c8372692b3540b03a3ce699c8de8f247958b06e5f18d344d78137",
+      "metresPerSourceUnitExact": "15000000/1458761",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH138",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH138.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH138.json",
+      "bytes": 57804,
+      "sha256": "e6d5dec289ccbec4ae502910af4ff2e5d17c5eeb378411cb9fe092138bdc27d2",
+      "sourcePath": "replacement-hulls/SH138-design.toml",
+      "sourceSHA256": "459a954252a56474df93d17d5e7e103d5cf2918af442c1630a26e65cb5e309ef",
+      "metresPerSourceUnitExact": "2000000/200903",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH139",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH139.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH139.json",
+      "bytes": 57838,
+      "sha256": "6b0dde0431ccdd94c5e27ac53dc0e3bf7b23abb5a1cd65ec50bb3cbf1a39410b",
+      "sourcePath": "replacement-hulls/SH139-design.toml",
+      "sourceSHA256": "2c55c3a5c5d954684cc71cf7ee9c6420771cd2f1243d1cb888f89f9f3e0cee39",
+      "metresPerSourceUnitExact": "30000000/3109567",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH142",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH142.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH142.json",
+      "bytes": 51643,
+      "sha256": "90b71733e6f2a65280c9c31d099c96357e250cb4606058ca3e9bd2703f427518",
+      "sourcePath": "replacement-hulls/SH142-design.toml",
+      "sourceSHA256": "8c2947c09d24d7990ff0cbe901220def8e5b52b1bd5b1f1990076167be9bd053",
+      "metresPerSourceUnitExact": "6000/611",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH143",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH143.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH143.json",
+      "bytes": 135471,
+      "sha256": "fb200eeb93a1c64b855e132b3b896b311271e65e38859fb6b09cf6aad0a5eb2f",
+      "sourcePath": "replacement-hulls/SH143-design.toml",
+      "sourceSHA256": "68f8b505e2c51ad34b2ff4a1fc7bb49c55903b58694e2ad353ddbc4728359341",
+      "metresPerSourceUnitExact": "4600/481",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH148",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH148.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH148.json",
+      "bytes": 90200,
+      "sha256": "cd961a18bc61263a5dece382c626124777d7b886f7af75a8c31efaa42876a54b",
+      "sourcePath": "replacement-hulls/SH148-design.toml",
+      "sourceSHA256": "c662ad791478a0709e2e136bcb70e3292665d48ac52d06c67e13a20d07879ecc",
+      "metresPerSourceUnitExact": "30000/2521",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH149",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH149.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH149.json",
+      "bytes": 127047,
+      "sha256": "f9b8118c1fefaf7be71e4e7c1ac505a8c930708be15c7324532692364aa2870e",
+      "sourcePath": "replacement-hulls/SH149-design.toml",
+      "sourceSHA256": "4759ef063f9c3ad2b1f733a2eb975744b3e6c34b8531a6a03bad8b1aed5fb595",
+      "metresPerSourceUnitExact": "12000/1357",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH150",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH150.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH150.json",
+      "bytes": 99105,
+      "sha256": "7cf5a96f40b198119cef90537ea3dbe0b8f9bb9e2abd00bc11f0b52b8c070c40",
+      "sourcePath": "replacement-hulls/SH150-design.toml",
+      "sourceSHA256": "06cbe5e88f8d62e9f65b09c5cb74ba85b7d84ee183ceed0f40f6a8f3a1542f34",
+      "metresPerSourceUnitExact": "1375/46",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH151",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH151.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH151.json",
+      "bytes": 127367,
+      "sha256": "200f1da8c2963e102b382fdf67a44c7bcde75eba034778526a0aeb4f22df53d1",
+      "sourcePath": "replacement-hulls/SH151-design.toml",
+      "sourceSHA256": "a568ebe3e5acd9833c743c5c325581ddfaa436a6e4be491887779b22b814681e",
+      "metresPerSourceUnitExact": "30000/2521",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH152",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH152.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH152.json",
+      "bytes": 128003,
+      "sha256": "243d1c019065bc0a0534faf44470de8dcd55ecea429b0d78327190cd9f52f21f",
+      "sourcePath": "replacement-hulls/SH152-design.toml",
+      "sourceSHA256": "72139a9ccf2ee7df38ffafce1f17bb823f639e7fdefbc4e027e815edb263e02c",
+      "metresPerSourceUnitExact": "1875/232",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH153",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH153.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH153.json",
+      "bytes": 128027,
+      "sha256": "edb0c8f2ec2341e2e53d89a1a604d3d0304bac66d2ec257020009190317d0308",
+      "sourcePath": "replacement-hulls/SH153-design.toml",
+      "sourceSHA256": "9ccb8ce4115e6f93a7fa06618e6ca2c001761b6d3135fbca477e7d1acb6be085",
+      "metresPerSourceUnitExact": "750000/95803",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH154",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH154.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH154.json",
+      "bytes": 128019,
+      "sha256": "60705f59d8fe3aecbc1caec9efd56b0226efc298d640ba122f28e40b5ae9cea0",
+      "sourcePath": "replacement-hulls/SH154-design.toml",
+      "sourceSHA256": "e629276d66b367e05424ec84ab029be99558b41b76f6670e775c031030f6d790",
+      "metresPerSourceUnitExact": "375000/49403",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH155",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH155.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH155.json",
+      "bytes": 128217,
+      "sha256": "39cd7e772c8e81451823d9f89eecc81458fd4a8c037d99686bd733535387c0cb",
+      "sourcePath": "replacement-hulls/SH155-design.toml",
+      "sourceSHA256": "63ddbc6a3f6e21dbd1641b8fd703297bfac0403e724b4926be46f2e57346fddb",
+      "metresPerSourceUnitExact": "750000/101809",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH156",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH156.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH156.json",
+      "bytes": 170314,
+      "sha256": "b07c553bb8b41ca866bfc4da2ea41928faedde61e1c589cd8e6432e2b6120273",
+      "sourcePath": "replacement-hulls/SH156-design.toml",
+      "sourceSHA256": "9a1147d23fa4a9e514afad7f5d9264746ff135f12729de23878750f4d7f1870d",
+      "metresPerSourceUnitExact": "90000/1699",
+      "objectKind": "platform",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH157",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH157.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH157.json",
+      "bytes": 71393,
+      "sha256": "3941ebacb2881199604f539c9ce509bb705e1af1df44f3509e81f901d0e9e5c8",
+      "sourcePath": "replacement-hulls/SH157-design.toml",
+      "sourceSHA256": "065e52fa27d9d46ea52229e7a7135e5d6b49bb2d39edcb50a16fd1154cf30e0c",
+      "metresPerSourceUnitExact": "1875/214",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH158",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH158.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH158.json",
+      "bytes": 71466,
+      "sha256": "e4fdd1b2890dfa967492a8b9e4b96f1897965da07f9978ba4e3aef880f6f9705",
+      "sourcePath": "replacement-hulls/SH158-design.toml",
+      "sourceSHA256": "2a4f09b965f5fcbb38105bb3a11a4fe9245a6cf6be93895bcf888b06a9219a3b",
+      "metresPerSourceUnitExact": "3000000/353971",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH159",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH159.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH159.json",
+      "bytes": 71275,
+      "sha256": "65f1f6946c0e1ceb17a638fee9c57d4ebecd5e54634bc223c19cb1265d43a444",
+      "sourcePath": "replacement-hulls/SH159-design.toml",
+      "sourceSHA256": "6a683a22e7fb9238426da2f284d1eacb29bb008b4b3514208d18e666af0569eb",
+      "metresPerSourceUnitExact": "1500000/182771",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH160",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH160.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH160.json",
+      "bytes": 71383,
+      "sha256": "d923cf08c4bcb019704e1fbb923c260655fc37141da1eb9fb24799b8d3569666",
+      "sourcePath": "replacement-hulls/SH160-design.toml",
+      "sourceSHA256": "febeb15ca6ed5dc6b53b3c59f8405edec733ff85af13f923fab3122d14f73083",
+      "metresPerSourceUnitExact": "3000000/377113",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH161",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH161.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH161.json",
+      "bytes": 71772,
+      "sha256": "0fb430800bed13bcbefe00e37ea0d1b4d94b5178bb8a6749d0f226ffca61a870",
+      "sourcePath": "replacement-hulls/SH161-design.toml",
+      "sourceSHA256": "0335361ca8aac1cc868e380b3312e2ffb222318803329f5a10c70a21cdf89621",
+      "metresPerSourceUnitExact": "1000000/22443",
+      "objectKind": "station",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH162",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH162.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH162.json",
+      "bytes": 5277,
+      "sha256": "74c75edfec6fb3243bd2a6d4497ffebfe6f8d5353d1dd7e388d8eee7b7df8d67",
+      "sourcePath": "replacement-hulls/SH162-design.toml",
+      "sourceSHA256": "14d4e261029ca1fcf61a2688c43c192e17c7e523a268ffb9c9b726b087b14151",
+      "metresPerSourceUnitExact": "12000000/2058667",
+      "objectKind": "other",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH163",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH163.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH163.json",
+      "bytes": 53438,
+      "sha256": "1d1cfaaefa0d84022fcee69362407a37273df59101fb57c506c4807602b87af0",
+      "sourcePath": "replacement-hulls/SH163-design.toml",
+      "sourceSHA256": "35c56db12a269759f3c87d95be388022146d95bfa4f8b8e4e09a4214cc84c9cc",
+      "metresPerSourceUnitExact": "300/43",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH164",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH164.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH164.json",
+      "bytes": 173417,
+      "sha256": "1af229dd864b6d385ca2098448a0d9dd8139bbd2c1e29424fe93ec9e6faac8dc",
+      "sourcePath": "replacement-hulls/SH164-design.toml",
+      "sourceSHA256": "b1563bbc135d0c6ec1ea44ccceabf8f3677363030bbf5af816a7a78d0c51c4e4",
+      "metresPerSourceUnitExact": "60000000/887723",
+      "objectKind": "station",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH165",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH165.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH165.json",
+      "bytes": 53530,
+      "sha256": "0df44a224fd267b6e5f39c456439ffaa82899181f8219b0b26f1045d0d773f00",
+      "sourcePath": "replacement-hulls/SH165-design.toml",
+      "sourceSHA256": "21eb911f38e847414ac0dfc1a66e52d506673859d030acfc6f67526c6ab3d332",
+      "metresPerSourceUnitExact": "375/46",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH166",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH166.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH166.json",
+      "bytes": 125977,
+      "sha256": "4e41cb435238b4250021eef1799dce74fb3fb92096c2c851350ff577058fc729",
+      "sourcePath": "replacement-hulls/SH166-design.toml",
+      "sourceSHA256": "5d782369e19a839d28bce557aa327701b0d9904e6381880fbabe9cf161f56db4",
+      "metresPerSourceUnitExact": "9500/341",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH167",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH167.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH167.json",
+      "bytes": 53428,
+      "sha256": "249bc66ab88bd99f634c5e0489f03ccd0fab4b65e7b88d60f45af9a0f51e5918",
+      "sourcePath": "replacement-hulls/SH167-design.toml",
+      "sourceSHA256": "e3f38e953673b840106430b34385a1492e18c1bb2db3250619f380da6d4fdf4b",
+      "metresPerSourceUnitExact": "12500/1587",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH168",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH168.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH168.json",
+      "bytes": 59151,
+      "sha256": "893a7914bdbdb104cf7cbde69f927a0b543cd0679ffb26efb049163d2620d7bc",
+      "sourcePath": "replacement-hulls/SH168-design.toml",
+      "sourceSHA256": "6b938c4b4879fa1e41b29fc1f1c81c5a950733937e8ad8337b5439854dca237f",
+      "metresPerSourceUnitExact": "46000/3083",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH169",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH169.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH169.json",
+      "bytes": 53278,
+      "sha256": "206b709130bbe749f089e84127abaf79218ecadcef3cb5ca5821b0d60d55821c",
+      "sourcePath": "replacement-hulls/SH169-design.toml",
+      "sourceSHA256": "6257767fbb2cd35db071004b197f8f5655251f87ca3398e176343d12c0fb7b1c",
+      "metresPerSourceUnitExact": "7500/697",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH170",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH170.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH170.json",
+      "bytes": 53240,
+      "sha256": "28d71e5541b55d9749d9a441d1b78a4feaefa6dcc864ded9421710d616f0e19c",
+      "sourcePath": "replacement-hulls/SH170-design.toml",
+      "sourceSHA256": "db011887f67e1ae1c5f235fe2b7c4db4a65b29b37906a830433d69d9c8a5527b",
+      "metresPerSourceUnitExact": "600000/57629",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    },
+    {
+      "id": "SH171",
+      "currentSourceBinding": true,
+      "status": "AUTHENTICATED_CURRENT_SOURCE_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "sourceRecord": "docs/fleet-physical/calculated-relative-records/SH171.json",
+      "runtimeRecord": "Sources/L337Core/Resources/OriginalFleetPhysical/SH171.json",
+      "bytes": 431492,
+      "sha256": "3a251b2433d907425bf0ad1d2cff150095195b185669a8addfb6fa7443f7ac38",
+      "sourcePath": "replacement-hulls/SH171-design.toml",
+      "sourceSHA256": "d093d9fb10c2319b93f807cf2b02977fa6df91c37e6735df5da33df886216e5b",
+      "metresPerSourceUnitExact": "5/41",
+      "objectKind": "ship",
+      "remaining": [
+        "native geometry/material/void/containment/collision qualification",
+        "actual fitting/crew/acquisition and population/provider where applicable",
+        "independent source review and G1 execution"
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import Foundation
 
 enum NativeGlassMeridianAction: String, Sendable {
   case accept, progress, ledgerEntries, recorderCalibration, auditReservations
+  case publishFullSafetyReport, submitCrewArbitration, archiveRecorder
   var key: String { NativeGlassMeridian.stateID + "/" + rawValue }
   var title: String {
     switch self {
@@ -10,6 +11,9 @@ enum NativeGlassMeridianAction: String, Sendable {
     case .ledgerEntries: "Sorel / Ledger entries"
     case .recorderCalibration: "Sorel / Recorder calibration"
     case .auditReservations: "Sorel / Record findings"
+    case .publishFullSafetyReport: "Publish the full safety report"
+    case .submitCrewArbitration: "Submit the ledger to crew arbitration"
+    case .archiveRecorder: "Venn / archive the same original recorder"
     }
   }
 }
@@ -22,8 +26,10 @@ struct NativeGlassMeridianReview: Sendable {
   let issues: [String]
   let reviewToken = UUID()
   var auditPin: NativeC01ReservationReadPin? = nil
+  var completionPin: NativeC01CompletionReviewPin? = nil
   var allowed: Bool {
-    issues.isEmpty && (action == .accept || (action == .auditReservations && auditPin != nil))
+    issues.isEmpty && (action == .accept || (action == .auditReservations && auditPin != nil)
+      || (action.isC01Completion && completionPin != nil))
   }
 }
 
@@ -49,9 +55,21 @@ extension Game {
             reason: glassMeridianAuditReview(action).issues.first, glassMeridian: action))
       }
     }
+    if contractStation == NativeGlassMeridian.source,
+      let opening = glassMeridianMission?.savedGlassMeridian,
+      opening.clinicEscort?.arrival != nil, opening.completion?.terminal == nil
+    {
+      let actions: [NativeGlassMeridianAction] = opening.completion == nil
+        ? [.publishFullSafetyReport, .submitCrewArbitration] : [.archiveRecorder]
+      for action in actions {
+        rows.append(.init(board: action.key, offer: nil, title: action.title,
+          reason: c01CompletionReview(action).issues.first, glassMeridian: action))
+      }
+    }
     return rows
   }
   func glassMeridianReview(_ action: NativeGlassMeridianAction) -> NativeGlassMeridianReview {
+    if action.isC01Completion { return c01CompletionReview(action) }
     if action != .accept && action != .progress { return glassMeridianAuditReview(action) }
     if action == .progress {
       return .init(
@@ -107,6 +125,10 @@ extension Game {
   }
 
   mutating func confirmGlassMeridian(_ quote: NativeGlassMeridianReview) throws {
+    if quote.action.isC01Completion {
+      try confirmC01Completion(quote)
+      return
+    }
     if quote.action == .auditReservations {
       try confirmGlassMeridianReservationAudit(quote)
       return
@@ -161,6 +183,12 @@ extension Game {
   }
 
   func glassMeridianDetail() -> [String] {
+    if let action = contractBoard.glassMeridianQuote?.action, action.isC01Completion {
+      return c01CompletionDetail(action)
+    }
+    if let opening = glassMeridianMission?.savedGlassMeridian, opening.completion != nil {
+      return c01CompletionHistory(opening)
+    }
     if let action = contractBoard.glassMeridianQuote?.action, action != .accept, action != .progress
     {
       return glassMeridianAuditDetail(action)
@@ -172,7 +200,7 @@ extension Game {
       "Use a fitted targeting computer in front view, within 2 degrees and 250-1500 surface units.",
       "Keep clear nearest-hit sight for 12 continuous native seconds. Pause freezes the reading.",
       "Completed target readings survive saves. Interrupted or loaded unfinished dwell restarts.",
-      "After both clocks, travel to Navidor to recover the original flight recorder. No payment or final clue is available.",
+      "After both clocks, travel to Navidor to recover the original flight recorder. Clock readings alone grant no payment or final clue.",
     ]
     if let state = glassMeridianMission?.savedGlassMeridian {
       for ordinal in 0..<2 {
@@ -196,7 +224,7 @@ extension Game {
           lines.append(
             "Sorel verified the original reservation audit. The recorded findings survive later genuine recorder loss."
           )
-          lines.append("Next: recover-standard at Enlirin. That later stage remains unavailable.")
+          lines.append(contentsOf: c01TimingStandardBriefing(state))
         } else if state.surveyor?.loss != nil {
           lines.append("Original recorder lost: this attempt has failed.")
         } else if state.surveyor?.held == true {
@@ -213,7 +241,7 @@ extension Game {
           lines.append(
             state.reservationCase == nil
               ? NativeGlassMeridian.laterStages
-              : "Recover the original recorder at Navidor, then visit Captain Orin Sorel at Enmadan. Stages 5-9 remain unavailable."
+              : "Recover the original recorder at Navidor, then visit Captain Orin Sorel at Enmadan for the booking audit."
           )
         }
       }

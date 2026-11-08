@@ -65,7 +65,7 @@ struct WayfarerFieldReliefJourneyTests {
   @Test func twoOriginalBatchesPayTheirFrozenQuotesAndKeepOnePermanentClue() async throws {
     let f = try WayfarerFieldReliefFixture()
     defer { f.native.files.clean() }
-    var runtime = try await f.native.source()
+    var runtime = try await f.native.source(combatReady: true)
     let initial = await runtime.snapshot().commander
     var expectedCredits = initial.credits
     var originalSets: [Set<UUID>] = []
@@ -112,7 +112,8 @@ struct WayfarerFieldReliefJourneyTests {
     #expect(originalSets.count == 2 && originalSets[0].isDisjoint(with: originalSets[1]))
     #expect(await runtime.snapshot().commander.nativeUtility?.availableMaterials.isEmpty == true)
     await runtime.key("0")
-    try await runtime.utilityActualHeadquartersDeath()
+    try await runtime.utilityPrepareTargetAttack()
+    try await runtime.utilityActualTargetDeath()
     let retained = await runtime.snapshot().commander
     #expect(retained.scriptState.savedClueJournal?.awards[WayfarerFieldRelief.stateID] == firstAward)
     #expect(retained.scriptState.instances.values.filter {
@@ -215,7 +216,8 @@ struct WayfarerFieldReliefJourneyTests {
   func actualFailureRetainsOriginalLossAndNeverPaysOrRestocks(cause: String) async throws {
     let f = try WayfarerFieldReliefFixture()
     defer { f.native.files.clean() }
-    var runtime = try await f.native.source(escapeReady: true)
+    let targetLoss = cause.hasPrefix("target")
+    var runtime = try await f.native.source(escapeReady: !targetLoss, combatReady: targetLoss)
     let collect = try await runtime.nativeUtilityQuote(.collect)
     try await runtime.confirmNativeUtility(collect)
     let before = await runtime.snapshot().commander
@@ -229,14 +231,82 @@ struct WayfarerFieldReliefJourneyTests {
         try await runtime.confirmNativeUtility(quote)
       }
       await runtime.key("0")
+      try await runtime.utilityPrepareTargetAttack()
       let live = await runtime.snapshot()
+      let utility = try #require(live.commander.nativeUtility)
+      let people = try #require(live.commander.nativePeople?.utilityEngineer)
+      let source = try #require(live.commander.nativeStations?.ledger.records.first {
+        $0.identity == utility.target
+      })
+      let mission = try f.mission(live.commander)
       let disk = try ScriptFinanceTestFixture.files(f.native.save.deletingLastPathComponent())
       let blocked = try f.native.files.blockWrites("field-relief-target")
-      await #expect(throws: (any Error).self) { try await runtime.utilityActualHeadquartersDeath() }
+      await #expect(throws: (any Error).self) { try await runtime.utilityActualTargetDeath() }
       let refused = await runtime.snapshot()
-      #expect(refused.commander == live.commander && refused.bodies == live.bodies)
+      // Autonomous physical death stays attained when its durable proposal fails.
+      // Original unpaid custody, mission history, money and files stay at their boundary.
+      let retainedTransition = refused.nativeOriginalUtilityFatalTransition
+      let transition = try #require(retainedTransition)
+      let transitionIsCurrent = refused.acceptsNativeOriginalUtilityFatalTransition(transition)
+      try #require(transitionIsCurrent)
+      let casualty = try #require(refused.commander.nativePeople?.utilityEngineer?.casualty)
+      let deadSource = try #require(refused.commander.nativeStations?.ledger.records.first {
+        $0.identity == utility.target
+      })
+      let deadBodyIsAbsent = !refused.bodies.contains { $0.id == transition.binding.bodyID }
+      #expect(deadBodyIsAbsent)
+      let alternateBodyID = refused.nextBodyID
+      try #require(alternateBodyID != transition.binding.bodyID)
+      for corruption in ["missing-proof", "missing-casualty", "living-body", "alias-body"] {
+        var forged = refused
+        switch corruption {
+        case "missing-proof":
+          forged.nativeOriginalUtilityFatalTransition = nil
+        case "missing-casualty":
+          forged.commander.savedNativePeopleCustody?.utilityEngineer = people
+        case "living-body":
+          var actor = transition.actor
+          actor.energy = 1
+          forged.bodies.append(actor)
+        default:
+          var actor = transition.actor
+          actor.id = alternateBodyID
+          forged.bodies.append(actor)
+        }
+        let accepted = forged.acceptsNativeOriginalUtilityFatalTransition(transition)
+        #expect(!accepted, "\(corruption) must not authorize the retained loss")
+      }
+      let originalStillAccepted = refused.acceptsNativeOriginalUtilityFatalTransition(transition)
+      #expect(originalStillAccepted)
+      #expect(deadSource.tombstone == casualty.tombstone && deadSource.binding == nil)
+      #expect(deadSource.utilitySourceBirth == source.utilitySourceBirth)
+      #expect(transition.actor.energy <= 0 && transition.tombstone == casualty.tombstone)
+      #expect(transition.actor.physical?.deathIncidentID == casualty.incident)
+      #expect(transition.actor.physical?.deathOrigin == casualty.origin)
+      #expect(casualty.binding == transition.binding && casualty.usedDuration == 0.1)
+      #expect(casualty.startTime == transition.startTime && casualty.physicalTime == transition.physicalTime)
+      #expect(casualty.physicalTime == casualty.startTime + casualty.usedDuration)
+      #expect(refused.commander.flightSimulation.physicalTime > live.commander.flightSimulation.physicalTime)
+      #expect(refused.commander.nativeUtility == utility)
+      #expect(refused.commander.credits == live.commander.credits)
+      #expect(refused.commander.scriptState.savedClueJournal == live.commander.scriptState.savedClueJournal)
+      #expect(refused.commander.nativePeople?.utilityEngineer?.registration == people.registration)
+      #expect(refused.commander.nativePeople?.utilityEngineer?.inspections == people.inspections)
+      #expect(try f.mission(refused.commander) == mission)
+      #expect(try ScriptFinanceTestFixture.files(blocked) == disk)
       try f.native.files.restoreWrites(blocked, files: disk)
-      try await runtime.utilityActualHeadquartersDeath()
+      try await runtime.utilityActualTargetDeath()
+      let retried = await runtime.snapshot()
+      #expect(retried.commander.nativePeople?.utilityEngineer?.casualty == casualty)
+      #expect(retried.commander.flightSimulation.physicalTime == refused.commander.flightSimulation.physicalTime)
+      #expect(retried.commander.flightSimulation.nextIncident == refused.commander.flightSimulation.nextIncident)
+      #expect(retried.commander.nativePeople?.utilityEngineer?.registration == people.registration)
+      #expect(retried.commander.nativePeople?.utilityEngineer?.inspections == people.inspections)
+      #expect(retried.commander.nativeStations?.ledger.records.first {
+        $0.identity == utility.target
+      }?.tombstone == deadSource.tombstone)
+      #expect(retried.commander.credits == live.commander.credits)
+      #expect(retried.commander.scriptState.savedClueJournal == live.commander.scriptState.savedClueJournal)
     } else {
       await runtime.key("0")
       if cause == "escape" { await runtime.key("escape-pod") }

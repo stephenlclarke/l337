@@ -3,20 +3,29 @@ import Testing
 
 @testable import L337Core
 
-private func equipmentShopGame() throws -> Game {
+private func equipmentShopGame(useOwnedStarter: Bool = false) throws -> Game {
   var game = Game(executive: false)
   try #require(game.commander.equipmentInventory == nil && game.commander.nativeStations == nil)
-  // This paid fitting scenario requires the stock hull's four mounts and two declared work tools.
-  game.commander.shipID = "SH023"
+  if useOwnedStarter {
+    try #require(game.commander.shipID == NewCommanderDefaults.shipID)
+    try #require(game.commander.shipID == "SH025")
+  } else {
+    // The original full-capability cases still need a supported current producer.
+    game.commander.shipID = "SH023"
+  }
   game.commander.fuel = game.commander.fuelCapacity
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
   game.rearShield = game.commander.rearShieldCapacity
-  try #require(
-    game.commander.nativePerformance.workTools?.contains(.miningLaser) == true
-      && game.commander.nativePerformance.workTools?.contains(.salvageCutter) == true
-      && LaserMount.allCases.allSatisfy { game.commander.nativePerformance.supports($0) }
-      && game.commander.fuelCapacity == 70 && game.commander.valid)
+  if useOwnedStarter {
+    try #require(game.commander.valid)
+  } else {
+    try #require(
+      game.commander.nativePerformance.workTools?.contains(.miningLaser) == true
+        && game.commander.nativePerformance.workTools?.contains(.salvageCutter) == true
+        && LaserMount.allCases.allSatisfy { game.commander.nativePerformance.supports($0) }
+        && game.commander.fuelCapacity == 70 && game.commander.valid)
+  }
   game.screen = .equipment
   game.commander.credits = 1_000_000
   let requiredTechnology = try #require(
@@ -70,7 +79,7 @@ struct EquipmentRuntimeTransactionTests {
   }
 
   @Test func aFabricatedShopPriceOrTechnologyCannotBecomeAnAuthoritativeReceipt() throws {
-    let game = try equipmentShopGame()
+    let game = try equipmentShopGame(useOwnedStarter: true)
     let before = game.commander
     for item in [
       Equipment(name: TargetingTier.basic.equipmentName, price: 1, technology: 3),
@@ -82,7 +91,7 @@ struct EquipmentRuntimeTransactionTests {
   }
 
   @Test func actualShopRequiresEveryPaidCoreAndRetainsReplacedPhysicalDevices() throws {
-    var game = try equipmentShopGame()
+    var game = try equipmentShopGame(useOwnedStarter: true)
     let before = game.commander
     try equipmentShopBuy(TargetingTier.military.equipmentName, game: &game)
     #expect(game.commander == before && game.message.contains("BUY TARGETING: BASIC FIRST"))
@@ -101,7 +110,7 @@ struct EquipmentRuntimeTransactionTests {
   }
 
   @Test func aGrantedHighCoreCannotInventPaidPredecessorsOrSpecialistOwnership() throws {
-    var game = try equipmentShopGame()
+    var game = try equipmentShopGame(useOwnedStarter: true)
     try game.commander.grantEquipment(
       TargetingTier.military.equipmentName, at: .targetingCore, provenance: .grant("fixture"))
     let military = try #require(game.commander.fittedEquipment(at: .targetingCore))
@@ -123,7 +132,7 @@ struct EquipmentRuntimeTransactionTests {
   }
 
   @Test func stockShieldPurchasesAreMonotonicAndPreserveBothCurrentFractions() throws {
-    var game = try equipmentShopGame()
+    var game = try equipmentShopGame(useOwnedStarter: true)
     game.energy = game.commander.performance.energy / 4
     game.frontShield = game.commander.shieldCapacity / 2
     game.rearShield = game.commander.rearShieldCapacity * 0.75
@@ -139,16 +148,11 @@ struct EquipmentRuntimeTransactionTests {
     }
     #expect(
       game.commander.equipmentInventory?.items.first { $0.id == oldShield.id }?.location == nil)
-    var legacy = Commander()
-    legacy.equipment.insert(ShieldBooster.mining.equipmentName)
-    let original = legacy.shieldCapacity
-    try legacy.prepareEquipment()
-    #expect(legacy.shieldCapacity == original && original == legacy.nativePerformance.shield * 5)
   }
 
   @Test(arguments: ["cash", "inventory", "shop", "mount", "work-tool", "flight"])
   func actualPurchaseRejectsAStaleCommanderOrOfferWithoutFurtherMutation(change: String) throws {
-    var game = try equipmentShopGame()
+    var game = try equipmentShopGame(useOwnedStarter: true)
     let item = try #require(Equipment.all.first { $0.name == TargetingTier.basic.equipmentName })
     let quote = try game.quoteEquipmentPurchase(item)
     switch change {
@@ -194,7 +198,7 @@ struct EquipmentRuntimeTransactionTests {
   }
 
   @Test func specialistAvailabilityAndIndependentPricesUseActualShopTechnology() throws {
-    var game = try equipmentShopGame()
+    var game = try equipmentShopGame(useOwnedStarter: true)
     for (name, price, technology) in [
       ("Targeting: Mining Module", 20000, 5), ("Targeting: Salvage Module", 40000, 7),
       ("Salvage Cutter", 25000, 6),
@@ -213,7 +217,7 @@ struct EquipmentRuntimeTransactionTests {
   }
 
   @Test func storedSpareCannotActAndConsumptionRemovesOnlyTheFittedPhysicalDevice() throws {
-    var game = try equipmentShopGame()
+    var game = try equipmentShopGame(useOwnedStarter: true)
     try game.commander.grantEquipment(
       "Energy Bomb", at: .utility(.energyBomb), provenance: .grant("fixture"))
     let bomb = try #require(game.commander.fittedEquipment(at: .utility(.energyBomb)))
@@ -243,12 +247,12 @@ struct EquipmentRuntimeTransactionTests {
     game.energy = game.commander.performance.energy * 0.4
     game.frontShield = game.commander.shieldCapacity * 0.3
     game.rearShield = game.commander.rearShieldCapacity * 0.6
-    game.showroom.selection = "SH013"
+    game.showroom.selection = "SH029"
     game.showroom.trading = true
     #expect(game.shipTradeQuote?.allowed == true)
     game.confirmShipTrade()
     #expect(
-      game.commander.shipID == "SH013" && game.commander.hullInstanceID != inventory.activeHull)
+      game.commander.shipID == "SH029" && game.commander.hullInstanceID != inventory.activeHull)
     #expect(game.commander.equipmentPurchaseHistory == history)
     let transferred = try #require(game.commander.equipmentInventory)
     for item in portable {
@@ -288,7 +292,7 @@ struct EquipmentRuntimeTransactionTests {
   @Test func realSaveRoundTripRetainsPhysicalItemsAndPaidHistoryWithoutDuplicatingAMutation()
     async throws
   {
-    var game = try equipmentShopGame()
+    var game = try equipmentShopGame(useOwnedStarter: true)
     try equipmentShopBuy(TargetingTier.basic.equipmentName, game: &game)
     try equipmentShopBuy("Targeting: Salvage Module", game: &game)
     #expect(game.commander.fittedEquipment(at: .targetingMining) == nil)
@@ -307,23 +311,31 @@ struct EquipmentRuntimeTransactionTests {
     #expect(loaded.commander.fittedEquipment(at: .targetingSalvage) != nil)
   }
 
-  @Test func failedMigrationWritePreservesTheRunningCommanderAndOriginalSaveBytes() async throws {
+  @Test func nonEnvelopeFileRefusalPreservesTheRunningCommanderAndOriginalSaveBytes() async throws {
     let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
     let url = directory.appendingPathComponent("commander.json")
-    let legacy = try JSONEncoder().encode(Commander())
-    try legacy.write(to: url)
-    let runtime = GameRuntime(game: try equipmentShopGame())
+    let input = directory.appendingPathComponent("unwrapped-current.json")
+    let initial = try equipmentShopGame(useOwnedStarter: true)
+    var unwrapped = initial.commander
+    unwrapped.name = "UNWRAPPED CURRENT INPUT"
+    let bytes = try JSONEncoder().encode(unwrapped)
+    try #require(try JSONDecoder().decode(Commander.self, from: bytes) == unwrapped)
+    try bytes.write(to: input)
+    let runtime = GameRuntime(game: initial, saveURL: url)
+    try await runtime.save(to: url)
     let before = await runtime.snapshot()
-    try FileManager.default.setAttributes([.posixPermissions: 0o500], ofItemAtPath: directory.path)
-    defer {
-      try? FileManager.default.setAttributes(
-        [.posixPermissions: 0o700], ofItemAtPath: directory.path)
-      try? FileManager.default.removeItem(at: directory)
-    }
-    await #expect(throws: (any Error).self) { try await runtime.load(from: url) }
+    let pointer = try Data(contentsOf: url)
+    let files = try ScriptFinanceTestFixture.files(directory)
+    await #expect(throws: SaveError.invalidCommander) { try await runtime.load(from: input) }
     let after = await runtime.snapshot()
     #expect(after.commander == before.commander && after.screen == before.screen)
-    #expect(try Data(contentsOf: url) == legacy)
+    #expect(after.bodies == before.bodies && after.time == before.time)
+    #expect(after.gameplayRevision == before.gameplayRevision)
+    #expect(await runtime.scriptSaveURL == url)
+    #expect(try Data(contentsOf: input) == bytes)
+    #expect(try Data(contentsOf: url) == pointer)
+    #expect(try ScriptFinanceTestFixture.files(directory) == files)
   }
 }

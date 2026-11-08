@@ -27,6 +27,7 @@ public struct WorkTargetCandidate: Sendable, Equatable {
   public let recordRecovery: WayfarerRecordRecoverySelectionFacts?
   public let inductionCrewLog: NativeInductionCrewLogSelectionFacts?
   public let identifiedSalvage: NativeIdentifiedSalvageSelectionFacts?
+  public let timingStandard: NativeC01TimingStandardSelectionFacts?
 
   public init(
     identity: ActorIdentity, kind: WorkTargetKind, isLive: Bool,
@@ -36,7 +37,8 @@ public struct WorkTargetCandidate: Sendable, Equatable {
     measuredExtraction: NativeMeasuredExtractionSelectionFacts? = nil,
     recordRecovery: WayfarerRecordRecoverySelectionFacts? = nil,
     inductionCrewLog: NativeInductionCrewLogSelectionFacts? = nil,
-    identifiedSalvage: NativeIdentifiedSalvageSelectionFacts? = nil
+    identifiedSalvage: NativeIdentifiedSalvageSelectionFacts? = nil,
+    timingStandard: NativeC01TimingStandardSelectionFacts? = nil
   ) {
     self.identity = identity
     self.kind = kind
@@ -51,6 +53,7 @@ public struct WorkTargetCandidate: Sendable, Equatable {
     self.recordRecovery = recordRecovery
     self.inductionCrewLog = inductionCrewLog
     self.identifiedSalvage = identifiedSalvage
+    self.timingStandard = timingStandard
   }
 }
 
@@ -118,6 +121,13 @@ public enum WorkTargetSelection {
       return .refused(.invalidDistance)
     }
     guard let core = capabilities.core else { return .refused(.missingCore) }
+    if let original = candidate.timingStandard {
+      guard capabilities.salvageModule else { return .refused(.missingModule(.salvage)) }
+      guard capabilities.fuelScoops else { return .refused(.missingFuelScoops) }
+      guard candidate.singleScoopCompatible else { return .refused(.notScoopCompatible) }
+      guard original.fits else { return .refused(.protectedTarget) }
+      return .eligible(.autoScoop(.salvage))
+    }
     if let original = candidate.measuredExtraction {
       guard capabilities.miningModule else { return .refused(.missingModule(.mining)) }
       guard capabilities.fuelScoops else { return .refused(.missingFuelScoops) }

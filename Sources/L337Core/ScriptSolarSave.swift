@@ -1,6 +1,6 @@
 import Foundation
 
-struct ScriptCelestialSave: Codable, Sendable {
+struct ScriptCelestialSave: Codable, Sendable, Equatable {
   let kind: String
   let position: Vector3
   let radius: Double
@@ -9,7 +9,7 @@ struct ScriptCelestialSave: Codable, Sendable {
       && [position.x, position.y, position.z].allSatisfy { $0.isFinite && abs($0) <= 1e12 }
   }
 }
-struct ScriptSolarSave: Codable, Sendable {
+struct ScriptSolarSave: Codable, Sendable, Equatable {
   let bodies: [ScriptCelestialSave]
   let fuelRemainder: Double
   let scoopState: String

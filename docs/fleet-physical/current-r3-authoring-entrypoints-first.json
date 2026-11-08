@@ -1,0 +1,49 @@
+{
+  "status": "FIRST_FROZEN_BEFORE_CURRENT_R3_AUTHORING_ENTRYPOINT_EDITS",
+  "beforeCommit": "4c20a5fb2b3724970c2e3e21ccdf5ef89e779f32",
+  "beforePins": [
+    {
+      "path": "Tools/showroom/ship-files.py",
+      "bytes": 2560,
+      "sha256": "c45a94600130f34f985234eae053d25458471fbb91b230279527964eec4ad208"
+    },
+    {
+      "path": "Tools/showroom/ship-reference.py",
+      "bytes": 26153,
+      "sha256": "33d22647b3262aaeacd3c6827c8f64604ab8d1c47aa582f48e1f190cc4638ad8"
+    },
+    {
+      "path": "Makefile",
+      "bytes": 5168,
+      "sha256": "57e8d9fea7c78d723613f98e1c76dd038cdd8e0b9edec6c3e7507dae49eed94b"
+    }
+  ],
+  "backlog": {
+    "path": "docs/FLEET-BACKLOG.json",
+    "bytes": 1195520,
+    "sha256": "c12deb920b4a04250238cffbdea5920f089f47fcdf454ca4844c74612e66fc2d"
+  },
+  "newFiles": [
+    "Tools/showroom/fleet-source-contract.py",
+    "Tools/showroom/test_fleet_source_contract.py"
+  ],
+  "scope": [
+    "references() rejects noncurrent R3 name/family/origin/objectKind/game instead of old catalogue-balance overlay",
+    "write_ship validates current source identity/performance BEFORE serializing, never applies legacybalance",
+    "Remove hull-designs/liberator-design Make targets/help/phony entry points",
+    "Correct generated explanatory purchase text to actual paidEMP/emptycut/scoop, not kill-credit"
+  ],
+  "validationCaps": {
+    "backlogMaximumBytes": 1500000,
+    "rows": 171,
+    "r3MaximumBytes": 65536,
+    "r3Parses": 171,
+    "geometryParsesOrQueries": 0
+  },
+  "noExceptionsForRemainingObjects": true,
+  "resourceWritesInThisSourceEdit": 0,
+  "stationProviderEdits": 0,
+  "sourceAuthGrantsNoNativeReadiness": true,
+  "nativeRendererCompilerTests": "UNRUN; sole G1 executor",
+  "legacyResearch": "Separate importer research remains archived source, not a current resource overlay. No original creator imports or execution by G4."
+}

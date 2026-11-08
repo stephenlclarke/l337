@@ -1,0 +1,45 @@
+{
+  "status": "FIRST_ORDINARY_CURRENT_NPC_EMITTER_RESOURCE_SOURCE_GUARD_NO_EDITS",
+  "beforeCommit": "3eebbd6c7c29a4d5127a2672ce86ad76485b116a",
+  "pins": [
+    {
+      "path": "Sources/L337Core/GameplayEncounters.swift",
+      "bytes": 20179,
+      "sha256": "faaff157925a7c13109bb56c3e0b4e934fc02516b0c88d30d7fa21daf3e0df4c"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Tests/L337CoreTests/GameplayCombatTests.swift",
+      "bytes": 23349,
+      "sha256": "d2ba848da6bbf00bf7bbe46696bfb7a01dff28636db519bd2be193de99a5764a"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCMiningSourceRefusalTests.swift",
+      "bytes": 2829,
+      "sha256": "15937c5ee63bbdab0673e522c61e3521b67f69e312e9882a225949821be0737d"
+    },
+    {
+      "path": "Sources/L337Core/MissionNativeBridge.swift",
+      "bytes": 58674,
+      "sha256": "e25858b41c429ee796d5b993710ce877c99af5fc190745533fbd48aaa2c12321"
+    }
+  ],
+  "sourcePath": "Sources/L337Core/GameplayEncounters.swift",
+  "before": "      let target = gameplayActor(identity, context: context)\n    else { return nil }\n    if mining, let id = actor.catalogueShipID {",
+  "proposedAfter": "      let target = gameplayActor(identity, context: context)\n    else { return nil }\n    if let npc = actor.npc, npc.role != .mission, let id = actor.catalogueShipID {\n      guard NPCPersistenceSnapshot.currentCatalogueSourceIsValid(\n        catalogueShipID: id, hull: bodies[index].hull, npc: npc, missiles: bodies[index].missiles)\n      else { return nil }\n    }\n    if mining, let id = actor.catalogueShipID {",
+  "finding": "Ordinary NPC emitter currently checks resources.canFire but does not compare explicit current-source identity/profile/capacities/known fuel/missile capacity. Valid generic or foreign resource profiles can pass canFire for a per-ID current actor, and unknown ID can reach geometry fallback. Reuse existing shared currentCatalogueSourceIsValid rather than duplicate fields or use persistence owner exclusions. This is necessary source-resource identity, not complete physics/hardware/power validation or observed runtime exploit.",
+  "scope": "One readonly guard before current mining-only guard/geometry/origin for existing NPC with role !=mission and explicitID. Mission-owned role and nil-ID/nonNPC existing paths stay unchanged; no new owner policy/alias/kit/Source adoption. Existing source predicate fields, mining guard, law/damage/timing/range/heat/normal valid emission algorithms unchanged. No current snapshot capture/owner clearing.",
+  "testPath": "Tests/L337CoreTests/NPCBeamCurrentSourceTests.swift",
+  "testScope": "One NEW4variant method: wrong-profile/unknown-fuel/missile-overflow/unknown-source. Actual Game launch/current025 source/stock, controlled ordinary pirate-role emitter and ordinary cargo native target offset from player. Require actual fixed-front contact and baseline real normal-pulse emission on a separate Game copy with actual source energy/cooldown/heat/emission advance (no fake incident). Corrupt only original candidate source/profile/fuel/ammo field and invoke actual emitter; wholeCommander/bodies/time/revision/cooldown/trace remains exact. Missing/unknown025/native geometry is mandatory require failure, no skip/hull substitution. Existing combat/mining/station tests unchanged. Controlled unearned unit; not a real installed NPC weapon issuer.",
+  "coordination": "Current prepareGameplayNPCBeam overlaps maintained actual combat helper; Root exact overlap/reservation before edit. Rolemission/C01 machinery remains owned separately, no Bridge/Weapons/Game/Runtime/renderer/occlusion edits. No new framework or hardware/power/mass data invented.",
+  "limits": "Source proposal only, no aftercode or mutations. No compiled/native/numeric/model/geometry execution. Source25native/actualNPCequipment/crew/loadedphysics/journey qualification OPEN."
+}

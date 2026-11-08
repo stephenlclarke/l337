@@ -55,6 +55,8 @@ struct NativeSalvageHotWork: Sendable {
   let catalogueShipID: String
   let originalCycle: NativeSalvageWorkCycle
   var cycle: NativeSalvageWorkCycle
+  /// First transient publication failure for this current work, never encoded or authoritative.
+  var firstReleaseRefusal: String? = nil
 }
 
 extension Game {
@@ -129,7 +131,12 @@ extension Game {
         velocity: body.physical!.velocity, angularVelocity: body.physical!.angularVelocity,
         tool: .cutter, elapsed: 0, availableEmissionSlots: nil)
     else { return false }
+    var stage = "CYCLE"
     do {
+      stage = "GEOMETRY"
+      let releasedLots = try NativeSalvageReleasePlacement.outsideParent(
+        lots, mesh: gameplayMesh(for: body), pose: modelPose(of: body), normal: hot.section.normal)
+      stage = "CYCLE"
       let cycle = try hot.cycle.releasing(
         at: time, progress: progress, operation: operation,
         requiredWorkSeconds: hot.section.workSeconds, depleted: depleted)
@@ -139,11 +146,14 @@ extension Game {
       } else {
         world.append(.nativeWork(cycle))
       }
+      stage = "WORLD"
       world = try NativeSalvageWorkWorld.reconcile(cycle, plan: hot.plan, in: world)
+      stage = "EMISSIONS"
       let emissions = try SalvageSectionEmissionView(
         seed: hot.seed, plan: hot.plan, progress: progress
       ).emissions()
-      for lot in lots {
+      stage = "LOTS"
+      for lot in releasedLots {
         guard let origin = emissions.first(where: { $0.value.identity == lot.identity })?.key else {
           throw AlienStorageError.invalidJoin
         }
@@ -186,14 +196,21 @@ extension Game {
       }
       var candidate = self
       candidate.nativeSalvageWork = nil
+      stage = "STORAGE"
       try candidate.commander.replaceAlienStorage(with: previous.replacingNativeWorld(world))
       candidate.admitPendingNativeSalvage()
+      stage = "WRITER"
       try publish(&candidate)
       self = candidate
       notify(depleted ? "SECTION EXHAUSTED" : "SECTION RELEASED")
       return true
     } catch {
-      notify("SALVAGE SAVE FAILED - COMPLETED WORK RETAINED")
+      // Fixed native tokens retain the actual failing boundary without exposing writer paths.
+      let reason = (error as? AlienStorageError).map { String(describing: $0) } ?? "saveFailed"
+      if nativeSalvageWork?.firstReleaseRefusal == nil {
+        nativeSalvageWork?.firstReleaseRefusal = stage + " " + reason
+      }
+      notify("SALVAGE SAVE FAILED - COMPLETED WORK RETAINED", voiced: false)
       return false
     }
   }

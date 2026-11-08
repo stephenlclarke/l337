@@ -548,9 +548,7 @@ enum NativeWayfarerInduction {
 
 extension Game {
   var wayfarerInductionMission: ScriptInstance? {
-    commander.scriptState.instances.values.first {
-      $0.definition == NativeWayfarerInduction.stateID
-    }
+    nativeGuidanceStoredMission(definition: NativeWayfarerInduction.stateID)
   }
   var wayfarerInductionPack: ScriptPack? {
     scriptPacks.first {

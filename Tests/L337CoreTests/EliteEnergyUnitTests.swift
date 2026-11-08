@@ -82,6 +82,7 @@ struct EliteEnergyUnitTests {
 
   @Test func xyzzyFitsEliteAndLaterNavalRewardRemainsOwnedWithoutDowngradingIt() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .status
     for key in "xyzzy" { game.key(String(key)) }
     let elite = try #require(game.commander.fittedEquipment(at: .energy))

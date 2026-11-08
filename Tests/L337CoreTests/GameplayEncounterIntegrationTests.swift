@@ -6,6 +6,7 @@ import Testing
 struct GameplayEncounterIntegrationTests {
   @Test func approachingARealFieldAdmitsBoundedUndepletedPhysicalRocks() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.bodies.removeAll { $0.id != 0 }
     let field = try #require(game.miningFields.first)
@@ -27,6 +28,7 @@ struct GameplayEncounterIntegrationTests {
 
   @Test func extractedOreIsAdmittedThenPhysicallyScoopedWithItsNativeQuantity() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.bodies.removeAll()
     let rock = try #require(game.miningFields.first?.rocks.first)
@@ -61,16 +63,29 @@ struct GameplayEncounterIntegrationTests {
 
   @Test func newPopulationMovementUsesWorldVelocityAndDoesNotRunLegacyHostileDamage() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.speed = 0
-    game.bodies.removeAll { $0.id != 0 }
+    game.bodies.removeAll()
+    let anchors = try #require(game.commander.flightSimulation.anchors)
+    // Controlled physics scene; the canonical station stays fixed while the actor is admitted.
+    game.commander.flightSimulation.pose.position =
+      anchors.arrival * 0.6 + anchors.station.position * 0.4
     let context = try #require(game.gameplayContext())
-    let npc = NPCState(role: .pirate, origin: context.system, destination: context.system)
+    let position = context.player.position + Vector3(1000, 0, -1000)
+    let source = try #require(OriginalFleetRuntimeHullSource.naturalSource(
+      role: .pirate, context: context, positions: [position], draw: 0))
+    let stock = try #require(NPCResources.stock(source.performance))
+    var npc = NPCState(
+      role: .pirate, origin: context.system, destination: context.system, resources: stock)
+    npc.legalProvenance = .generated
+    npc.cargoProvenance = .generated
+    npc.routeProvenance = .generated
     let request = SpawnRequest(
       identity: .init(system: context.system, visit: context.visit, sequence: 999, member: 0),
-      population: .pirate, hull: .sidewinder, position: .init(1000, 0, -1000),
+      population: .pirate, hull: .sidewinder, position: position,
       orientation: Basis3(), velocity: .init(100, 0, 0), npc: npc,
-      rock: nil, payload: nil, priority: .ordinary)
+      rock: nil, payload: nil, priority: .ordinary, catalogueShipID: source.ship.id)
     let receipts = game.admitEncounterPlan(
       .init(
         system: context.system, visit: context.visit, revision: context.revision,

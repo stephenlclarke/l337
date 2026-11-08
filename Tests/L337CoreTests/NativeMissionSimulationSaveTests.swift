@@ -12,6 +12,7 @@ struct NativeMissionSimulationSaveTests {
     var game = Game(executive: false)
     game.screen = .status
     game.commander.scriptState.calendarLedger = .init(origin: .newCommander)
+    try game.commander.prepareEquipment(legacy: false)
     let runtime = GameRuntime(game: game)
     try await runtime.save(to: url)
     let before = await runtime.snapshot()
@@ -49,39 +50,6 @@ struct NativeMissionSimulationSaveTests {
     }
   }
 
-  @Test func loadingAnUnrelatedRawCommanderClearsRetainedLegacySpawnMetadata() async throws {
-    let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-    defer { try? FileManager.default.removeItem(at: folder) }
-    let oldURL = folder.appendingPathComponent("old.json")
-    let rawURL = folder.appendingPathComponent("raw.json")
-    let nextURL = folder.appendingPathComponent("next.json")
-    var old = Game(executive: false)
-    old.screen = .status
-    let legacy = try decoded(old.scriptSimulationSave) { object in object["spawnClock"] = 12.5 }
-    old.restoreScriptSimulation(legacy)
-    old.commander.scriptState.calendarLedger = .init(origin: .newCommander)
-    let runtime = GameRuntime(game: old)
-    try await runtime.save(to: oldURL)
-    try await runtime.load(from: oldURL, persistMigrations: false)
-    #expect(await runtime.snapshot().scriptSimulationSave.spawnClock == 12.5)
-    var raw = Commander()
-    raw.name = "MODERN"
-    let bytes = try JSONEncoder().encode(raw)
-    try bytes.write(to: rawURL)
-    try await runtime.load(from: rawURL, persistMigrations: false)
-    var next = await runtime.snapshot()
-    #expect(next.scriptSimulationSave.spawnClock == nil)
-    #expect(next.commander.encounterDirector == raw.encounterDirector)
-    #expect(try Data(contentsOf: rawURL) == bytes)
-    next.commander.scriptState.calendarLedger = .init(origin: .newCommander)
-    let writer = GameRuntime(game: next)
-    try await writer.save(to: nextURL)
-    let saved = try ScriptSaveStore.read(Data(contentsOf: nextURL), from: nextURL)
-    #expect(saved.1.simulation?.spawnClock == nil)
-    #expect(saved.0.encounterDirector == raw.encounterDirector)
-  }
-
   private func decoded(
     _ state: ScriptSimulationSave, changing edit: (inout [String: Any]) -> Void
   ) throws -> ScriptSimulationSave {
@@ -90,28 +58,6 @@ struct NativeMissionSimulationSaveTests {
     edit(&object)
     return try JSONDecoder().decode(
       ScriptSimulationSave.self, from: JSONSerialization.data(withJSONObject: object))
-  }
-
-  @Test func legacyFramesAndSpawnMetadataRestoreWithoutChangingTheNativeDirector() throws {
-    var game = Game(executive: false)
-    game.launch()
-    let director = game.commander.encounterDirector
-    let old = try decoded(game.scriptSimulationSave) { object in
-      object.removeValue(forKey: "ecmRemainingDuration")
-      object["ecmFrames"] = 1024
-      object["spawnClock"] = 12.5
-    }
-    try #require(old.valid)
-    game.restoreScriptSimulation(old)
-    #expect(game.ecmControl.remainingDuration == 1024.0 / ECMControl.referenceFramesPerSecond)
-    #expect(game.ecmFrames == 1024 && !game.ecmControl.ownFieldActive)
-    #expect(game.ecmControl.activation == 0 && game.ecmControl.events.isEmpty)
-    #expect(game.activeECMActivation == nil && game.commander.encounterDirector == director)
-    let saved = game.scriptSimulationSave
-    #expect(saved.spawnClock == 12.5 && saved.valid)
-    let bytes = try JSONEncoder().encode(saved)
-    let restored = try JSONDecoder().decode(ScriptSimulationSave.self, from: bytes)
-    #expect(restored.spawnClock == 12.5)
   }
 
   @Test func modernFractionalECMTimeRoundTripsExactlyAndClearsPreviousLiveOwnership() throws {

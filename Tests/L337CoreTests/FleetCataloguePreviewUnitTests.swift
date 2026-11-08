@@ -55,7 +55,7 @@ struct FleetCataloguePreviewUnitTests {
     #expect(
       FleetCataloguePreview.mode(ship: ship, owner: owner, ownedShip: ship.id, discovery: nil)
         == .shaded)
-    #expect(discovery == before && discovery.entries[ship.id]?.blueprintEarned == false)
+    #expect(discovery == before && discovery.entries[ship.id]?.milestone == nil)
     // Reading the source profile keeps all authored values available without recording a sighting.
     #expect(!ship.sourceProfilesIncludingOriginal.isEmpty)
     for value in ShipCatalogue.all

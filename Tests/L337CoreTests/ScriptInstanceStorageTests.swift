@@ -323,6 +323,7 @@ struct ScriptInstanceStorageTests {
       .appendingPathComponent("docs/mission-packs/scripted-courier")
     let pack = try ScriptPackLibrary.read(directory)
     var supplied = Game(executive: false)
+    try supplied.commander.prepareEquipment(legacy: false)
     supplied.screen = .status
     supplied.scriptPacks = [pack]
     let id = try supplied.acceptScriptMission(pack, drainAccepted: false)

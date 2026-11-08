@@ -55,7 +55,7 @@ extension Game {
   }
 
   /// All actors observe the same post-camera snapshot; array order cannot change steering.
-  mutating func advanceScriptNPCFlight(delta: Double) {
+  mutating func advanceScriptNPCFlight(delta: Double, excluding: Set<ActorIdentity> = []) {
     let snapshot = bodies
     let owned = Dictionary(
       snapshot.compactMap { body in
@@ -63,106 +63,41 @@ extension Game {
       }, uniquingKeysWith: { first, _ in first })
     let station = snapshot.first { $0.id == 0 && $0.hull == .station }
     for index in bodies.indices {
+      if let actor = bodies[index].physical?.identity, excluding.contains(actor) { continue }
       observeNativeTransitSpool(bodies[index])
       guard bodies[index].energy > 0, var npc = bodies[index].scriptNPC else { continue }
       let definition = npc.fit.definition
       // C01's native inertia already moved inside the physical sweep; no powered second pass.
-      if c01SurveyorActor(bodies[index]) != nil { continue }
+      if c01SurveyorActor(bodies[index]) != nil || c01TimingStandardPart(bodies[index]) != nil
+          || c01LaneRepairTarget(bodies[index]) != nil
+          || c01ClinicCradleDeclared(bodies[index]) {
+        continue
+      }
       if bodies[index].physical?.npc?.resources?.profile != .nativeHull {
         bodies[index].energy = min(
           definition.energy, bodies[index].energy + definition.recharge * delta)
       }
-      var desired = Vector3(0, 0, 0)
-      if let guidance = inductionArkDockGuidance(bodies[index], profile: definition, delta: delta)
+      let guidance =
+        c01ClinicGuidance(bodies[index], profile: definition, delta: delta)
+        .map({ NativeArkDockGuidance(desired: $0.desired, orientation: $0.orientation) })
+        ?? inductionArkDockGuidance(bodies[index], profile: definition, delta: delta)
         ?? inductionRescueDockGuidance(bodies[index], profile: definition, delta: delta)
-      {
-        bodies[index].orientation = guidance.orientation
-        desired = guidance.desired
-      } else {
-        if npc.intent == nil, let goal = nativeTransitExitClearanceGoal(bodies[index]) {
-          let offset = goal - bodies[index].position
-          if offset.length > 1e-6 {
-            bodies[index].orientation = Self.steerScriptNPC(
-              bodies[index].orientation, toward: offset, profile: definition, delta: delta)
-            desired =
-              bodies[index].orientation.z
-              * min(
-                definition.speed,
-                sqrt(2 * definition.acceleration * offset.length))
-          }
-        }
-        if var intent = npc.intent {
-          intent = nativeTransitSteeringIntent(bodies[index], intent: intent)
-          let transitGoal = nativeTransitSteeringGoal(bodies[index], intent: intent)
-          var goal: Vector3?
-          var targetVelocity = Vector3(0, 0, 0)
-          if intent.mode == .hold {
-            goal = bodies[index].position
-          } else if intent.mode == .approach, let station {
-            goal =
-              transitGoal
-              ?? (station.position + station.orientation.apply(intent.offset))
-          } else if intent.player {
-            goal = intent.offset
-          } else if let identity = intent.target, let target = owned[identity], target.energy > 0 {
-            goal = target.position + target.modelVector(intent.offset)
-            targetVelocity = target.scriptNPC?.velocity ?? .init(0, 0, 0)
-          }
-          if let goal {
-            let offset = goal - bodies[index].position
-            let aim = intent.mode == .flee ? offset * -1 : offset
-            if intent.mode != .hold && aim.length > 1e-6 {
-              bodies[index].orientation = Self.steerScriptNPC(
-                bodies[index].orientation, toward: aim, profile: definition, delta: delta)
-            }
-            var speed = definition.speed * intent.speed
-            if transitGoal != nil && aim.length > 1e-6
-              && bodies[index].orientation.z.dot(aim.unit) < 0.98
-            {
-              speed = 0
-            }
-            if [.hold, .approach, .follow].contains(intent.mode) {
-              speed = min(
-                speed, sqrt(2 * definition.acceleration * max(0, offset.length - intent.tolerance)))
-            }
-            desired = bodies[index].orientation.z * speed
-            if intent.mode == .follow { desired = desired + targetVelocity }
-            desired = desired.limited(to: definition.speed)
-            if intent.status == .requested && [.hold, .approach, .follow].contains(intent.mode)
-              && transitGoal == nil
-              && offset.length <= intent.tolerance && (npc.velocity - targetVelocity).length < 1
-            {
-              intent.status = .reached
-              emitScriptNPCFlightResult(bodies[index], intent: intent, kind: "actor.arrived")
-            }
-          } else if intent.status != .lost {
-            intent.status = .lost
-            emitScriptNPCFlightResult(bodies[index], intent: intent, kind: "actor.target.lost")
-          }
-          npc.intent = intent
-        }
+      let decision = scriptNPCFlightDecision(
+        bodies[index], npc: npc, owned: owned,
+        station: station, guidance: guidance, delta: delta)
+      bodies[index].orientation = decision.orientation
+      if let pending = decision.pending {
+        emitScriptNPCFlightResult(
+          bodies[index], intent: pending.intent, kind: pending.kind.rawValue)
       }
-      npc.velocity =
-        npc.velocity + (desired - npc.velocity).limited(to: definition.acceleration * delta)
-      bodies[index].position = bodies[index].position + npc.velocity * delta
+      npc.intent = decision.intent
+      npc.velocity = decision.translation.velocity
+      bodies[index].position = decision.translation.end
       bodies[index].scriptNPC = npc
     }
+    resolveC01ClinicMotion(before: snapshot, delta: delta)
     resolveInductionArkDockMotion(before: snapshot, delta: delta)
     resolveNativeTransitMotion(before: snapshot, delta: delta)
-  }
-  private static func steerScriptNPC(
-    _ basis: Basis3, toward vector: Vector3, profile: ScriptNPCDefinition, delta: Double
-  ) -> Basis3 {
-    let local = basis.inverse(vector)
-    let pitch = max(
-      -profile.pitch * delta,
-      min(
-        profile.pitch * delta,
-        -atan2(local.y, hypot(local.x, local.z))))
-    let yaw = max(-profile.yaw * delta, min(profile.yaw * delta, -atan2(local.x, local.z)))
-    var step = Basis3()
-    step.rotate(pitch: pitch, roll: 0, yaw: yaw)
-    return step.transformed(by: basis)
   }
   private mutating func emitScriptNPCFlightResult(
     _ body: SpaceBody, intent: ScriptNPCIntent, kind: String
@@ -175,5 +110,80 @@ extension Game {
         "request": .string(intent.request), "mode": .string(intent.mode.rawValue),
       ],
       only: instance, drain: false)
+  }
+
+  /// Consume only the real opening cohort after its physical paths have been
+  /// retained. Motion is not integrated here, and T1 births are not in this set.
+  mutating func commitCurrentNewtNPCDecisions(
+    _ frame: CurrentNewtNPCFrame,
+    evidence: CurrentNewtNativeClockEvidence? = nil, admittedAtEnd: CurrentNewtEndBirths? = nil
+  ) -> Bool {
+    guard nativeStationRuntimeEpoch == frame.epoch,
+      commander.flightSimulation.system == frame.opening.system,
+      commander.flightSimulation.visit == frame.opening.visit,
+      commander.flightSimulation.physicalTime == frame.path.endTime
+    else { return false }
+    for body in bodies {
+      guard let actor = body.physical?.identity, let entry = frame.entries[actor], body.energy > 0
+      else { continue }
+      if let legacy = entry.legacy {
+        guard body.id == entry.bodyID, body.physical?.npc?.intention == legacy.intention,
+          body.blackjackIdentity == legacy.blackjackIdentity, body.scriptNPC == nil
+        else { return false }
+        continue
+      }
+      guard body.id == entry.bodyID, body.missionActorID == entry.missionActor,
+        body.missionInstanceID == entry.missionInstance,
+        let original = entry.originalNPC, let npc = body.scriptNPC, npc.fit == original.fit,
+        npc.intent == original.intent
+      else { return false }
+    }
+    var birthView = admittedAtEnd
+    for index in bodies.indices {
+      guard let actor = bodies[index].physical?.identity, let entry = frame.entries[actor],
+        let legacy = entry.legacy, bodies[index].energy > 0
+      else { continue }
+      // The actual full interval has been retained. No effect phase runs for a
+      // T1 birth, and no old controller is called again for a mechanical cut.
+      guard let evidence,
+        let native = evidence.legacyEffectContext(
+          for: actor, path: frame.path,
+          admittedAtEnd: birthView)
+      else { return false }
+      _ = applyLegacyNPCFlightEffects(
+        index: index, delta: frame.path.motion.duration,
+        blackjackStartingDistance: legacy.start.length, native: native)
+      if let births = birthView {
+        if let accepted = native.acceptedCombat {
+          guard let updated = births.accepting(accepted, in: self) else { return false }
+          birthView = updated
+        } else if let accepted = native.acceptedMission {
+          guard let updated = births.accepting(accepted, in: self) else { return false }
+          birthView = updated
+        }
+      }
+    }
+    for index in bodies.indices {
+      guard let actor = bodies[index].physical?.identity, let entry = frame.entries[actor],
+        bodies[index].energy > 0, var npc = bodies[index].scriptNPC,
+        let decision = entry.decision
+      else { continue }
+      observeNativeTransitSpool(bodies[index])
+      if bodies[index].physical?.npc?.resources?.profile != .nativeHull {
+        let definition = npc.fit.definition
+        bodies[index].energy = min(
+          definition.energy,
+          bodies[index].energy + definition.recharge * frame.path.motion.duration)
+      }
+      npc.intent = decision.intent
+      if let velocity = bodies[index].physical?.velocity {
+        npc.velocity = commander.flightSimulation.pose.shipVector(velocity)
+      }
+      bodies[index].scriptNPC = npc
+      if let notice = decision.pending {
+        emitScriptNPCFlightResult(bodies[index], intent: notice.intent, kind: notice.kind.rawValue)
+      }
+    }
+    return true
   }
 }

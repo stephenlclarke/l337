@@ -3,8 +3,9 @@ import Testing
 
 @testable import L337Core
 
-private func assistedGame() -> Game {
+private func assistedGame() throws -> Game {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   for key in "xyzzy" { game.key(String(key)) }
   game.key("return")
@@ -18,8 +19,10 @@ private func assistedGame() -> Game {
   game.commander.shipID = "SH023"
   game.commander.fuel = game.commander.fuelCapacity
   game.commander.credits = 1000
-  game.commander.installTargetingComputer(.docking)
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.docking.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
   game.commander.mirrorFittedEquipment()
   try #require(game.commander.valid && game.commander.targetingTier == .docking)
   game.energy = game.commander.performance.energy
@@ -53,8 +56,8 @@ private func assistedGame() -> Game {
   game.key("tab")
   #expect(game.autoPilot.status == "NO TARGETS")
 }
-@Test func autoFacesTargetsWithoutChangingSpeedOrFiringAndManualSteeringWins() {
-  var game = assistedGame()
+@Test func autoFacesTargetsWithoutChangingSpeedOrFiringAndManualSteeringWins() throws {
+  var game = try assistedGame()
   game.bodies = [.init(id: 1, hull: .cobra, position: .init(900, 500, -800))]
   game.bodies[0].rotationRate = 0
   game.speed = 7
@@ -77,7 +80,7 @@ private func assistedGame() -> Game {
 @Test func stationAutoCompletesRealDockingFromEitherSideWithEitherSpin() throws {
   for z in [1800.0, -1800.0] {
     for rate in [-0.3, 0.3] {
-      var game = assistedGame()
+      var game = try assistedGame()
       let anchor = try #require(
         game.currentNativeMainStationAnchor(at: game.commander.flightSimulation.physicalTime))
       let index = try #require(game.bodies.firstIndex { $0.id == 0 && $0.hull == .station })
@@ -105,8 +108,8 @@ private func assistedGame() -> Game {
     }
   }
 }
-@Test func automaticECMAnnouncesActualOutcomesInOrderAndRespectsCooldownAndSwitch() {
-  var game = assistedGame()
+@Test func automaticECMAnnouncesActualOutcomesInOrderAndRespectsCooldownAndSwitch() throws {
+  var game = try assistedGame()
   game.bodies = []
   for id in 1...3 {
     var missile = SpaceBody(id: id, hull: .missile, position: .init(0, 0, 1000))
@@ -137,8 +140,8 @@ private func assistedGame() -> Game {
   for _ in 0..<32 { game.tick(delta: 0.02) }
   #expect(game.ecmControl.events.last?.announcement == .missilesDestroyed(1))
 }
-@Test func ecmIgnoresUnrelatedThreatsAndCountsOnlyItsOwnDestruction() {
-  var game = assistedGame()
+@Test func ecmIgnoresUnrelatedThreatsAndCountsOnlyItsOwnDestruction() throws {
+  var game = try assistedGame()
   game.bodies = [.init(id: 1, hull: .missile, position: .init(0, 0, 1000))]
   game.tick(delta: 0.02)
   #expect(game.ecmControl.events.isEmpty)
@@ -164,7 +167,7 @@ private func assistedGame() -> Game {
 }
 
 @Test func stationAutoUsesTiltedEntrancePoseAndSwitchesAwayWithoutResidualTranslation() throws {
-  var game = assistedGame()
+  var game = try assistedGame()
   let anchor = try #require(
     game.currentNativeMainStationAnchor(at: game.commander.flightSimulation.physicalTime))
   let position = Vector3(1200, 700, 1600)
@@ -207,8 +210,8 @@ private func assistedGame() -> Game {
   #expect(game.autoPilot.targetID == nil)
 }
 
-@Test func ecmCountsNewWavesOnceDuringAnOwnActivationAndRequiresRealEquipment() {
-  var game = assistedGame()
+@Test func ecmCountsNewWavesOnceDuringAnOwnActivationAndRequiresRealEquipment() throws {
+  var game = try assistedGame()
   game.bodies = []
   game.commander.equipment.remove("E.C.M. System")
   var missile = SpaceBody(id: 1, hull: .missile, position: .init(0, 0, 1000))
@@ -235,10 +238,10 @@ private func assistedGame() -> Game {
   #expect(game.bodies.contains { $0.id == 3 })
 }
 
-@Test func rCentersTheSelectedShipFromEveryViewAtNativeResolutionWithoutChangingCruise() {
+@Test func rCentersTheSelectedShipFromEveryViewAtNativeResolutionWithoutChangingCruise() throws {
   for view in [Screen.front, .rear, .left, .right] {
     for position in [Vector3(900, 500, 1800), .init(-900, -500, -1800)] {
-      var game = assistedGame()
+      var game = try assistedGame()
       game.commander.autoTarget = false
       game.viewportWidth = 1800
       game.viewportHeight = 1160

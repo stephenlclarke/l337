@@ -1,0 +1,17 @@
+{
+  "status": "FROZEN_PUBLICATION_ONLY_CORRECTION_BEFORE_SOURCE_MUTATION_NO_EXECUTION_AUTHORITY",
+  "beforeCommit": "371ed228dd1b6c9d9da306972307780c4c19ce18",
+  "source": {
+    "path": "docs/fleet-physical/decimal80-061-122-authoring.py",
+    "bytes": 20175,
+    "sha256": "326458a4757a5e2d6d526e4025f61df6951f0dd17f8c5a12b16fa5e63dd9c943"
+  },
+  "findingReview": {
+    "path": "/tmp/elite-g2-decimal80-source-method-review/review.json",
+    "sha256": "523fc6e1df8080d7823f0bea9fa538835de7583916b04760d066a8669ae12875"
+  },
+  "scope": "Only imports, new publication/status helpers, and main output/error paths. Freeze original execution_gate and entire numerical region close_decimal through calculate byte-exact. No inputs, roles, geometry, tolerances, caps, numeric expressions or original FIRST edits.",
+  "publication": "Exclusive mkstemp in final directory; write complete bounded bytes, flush/fsync, seek/read exact comparison; atomic os.link(temp, final) refuses existing final; never unlink final. Remove only own temporary inode after identity check; directory fsync. Any failure reports actual final lstat presence or inspection uncertainty; NO_MASS_RECORD only when absence established. Apply same complete nonoverwrite publication to result receipt. No execution, import, compiler, parser or test of candidate.",
+  "validation": "Metadata/hash/text and strict reconstruction only; actual failure injection and execution deferred to authorized executor.",
+  "numericExecutionAuthorized": false
+}

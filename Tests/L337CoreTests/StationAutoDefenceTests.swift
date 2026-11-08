@@ -2,6 +2,42 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
+
+private func stationAutoBindCurrentAttacker(_ game: inout Game, index: Int) throws {
+  // A controlled fresh Peregrine counterpart, not an earned traffic admission.
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH025"))
+  let stock = try #require(NPCResources.stock(source.performance))
+  try #require(game.bodies[index].hull == .cobra)
+  try #require(game.bodies[index].physical?.catalogueShipID == nil)
+  try #require(game.bodies[index].physical?.npc != nil)
+  try #require(game.bodies[index].missiles <= source.performance.missiles)
+  game.bodies[index].physical?.catalogueShipID = source.ship.id
+  game.bodies[index].physical?.npc?.resources = stock
+  game.bodies[index].energy = stock.energyCapacity
+  let context = try #require(game.gameplayContext())
+  try #require(NPCPersistenceSnapshot.capture(
+    body: game.bodies[index], pose: game.commander.flightSimulation.pose,
+    physicalTime: context.physicalTime, protection: context.protection) != nil)
+  try #require(game.bodies[index].physical?.npc?.resources == stock)
+}
+
+private func stationAutoCurrentDamage(before: SpaceBody, after: SpaceBody) throws -> Double {
+  let original = try #require(before.physical?.npc)
+  let current = try #require(after.physical?.npc)
+  let old = try #require(original.resources)
+  let new = try #require(current.resources)
+  try #require(old.valid && new.valid)
+  #expect(before.physical?.catalogueShipID == after.physical?.catalogueShipID)
+  #expect(old.profile == new.profile && old.energyCapacity == new.energyCapacity)
+  #expect(old.energyRecharge == new.energyRecharge && old.shieldRecharge == new.shieldRecharge)
+  #expect(old.frontCapacity == new.frontCapacity && old.rearCapacity == new.rearCapacity)
+  #expect(old.fuel == new.fuel && old.fuelCapacity == new.fuelCapacity)
+  #expect(original.ordinaryCargo == current.ordinaryCargo && before.missiles == after.missiles)
+  let beforeTotal = (before.energy + old.frontShield) + old.rearShield
+  let afterTotal = (after.energy + new.frontShield) + new.rearShield
+  return beforeTotal - afterTotal
+}
 
 private func stationAutoGame() throws -> Game {
   // Controlled native unit boundary. Original mission routes and traffic are not edited.
@@ -9,6 +45,7 @@ private func stationAutoGame() throws -> Game {
   try game.prepareG03FlightEquipment()
   try ScriptProcurementFixture.requirePaidG03Preparation(game)
   game.ensureMissionCalendar()
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let station = try #require(game.commander.flightSimulation.anchors?.station)
   NativePagedSalvageFixture.moveObserver(
@@ -29,7 +66,7 @@ private func stationAutoGame() throws -> Game {
     sequence: 900, member: 0, producer: .ambient)
   game.bodies[index].missiles = 0
   game.bodies[index].physical?.spawnIdentity = spawn
-  game.bodies[index].physical?.catalogueShipID = ShipCatalogue.nativeShip(.cobra)?.id
+  try stationAutoBindCurrentAttacker(&game, index: index)
   game.bodies[index].physical?.npc?.legal = .init(value: 16)
   game.bodies[index].physical?.npc?.routeProvenance = .generated
   for _ in 0..<32 {
@@ -38,6 +75,113 @@ private func stationAutoGame() throws -> Game {
   }
   try #require(game.stationAutoDockingActive && game.autoPilot.targetActor == station.identity)
   return game
+}
+
+@Test(arguments: ["current", "missing-source", "unknown-source", "wrong-profile", "unknown-fuel"])
+func stationAutoCurrentObservedBeamKeepsSourceFailuresConservative(condition: String) throws {
+  var game = try stationAutoGame()
+  let attacker = try stationAutoAddNativeAttacker(
+    &game, position: .init(300, 0, 800), sequence: 940, facingPlayer: true)
+  let player = try #require(game.commander.flightSimulation.player)
+  let attackContext = try #require(game.gameplayContext())
+  try stationAutoRequireNativePressureLane(game, attacker: attacker)
+  game.emitGameplayNPCBeam(bodyID: attacker, target: player, context: attackContext)
+  let context = try #require(game.gameplayContext())
+  let index = try #require(game.bodies.firstIndex { $0.id == attacker })
+  let actor = try #require(game.bodies[index].physical?.identity)
+  try #require(game.commander.crimeLedger.hasCurrentUnlawfulAttack(
+    from: actor, against: player, context: context))
+  let station = try #require(game.autoTargetBody)
+  let authentic = game.stationAutoGuidance(target: station)
+  try #require(authentic?.hazard == .active)
+  switch condition {
+  case "missing-source": game.bodies[index].physical?.catalogueShipID = nil
+  case "unknown-source": game.bodies[index].physical?.catalogueShipID = "UNKNOWN-CURRENT-SOURCE"
+  case "wrong-profile":
+    let maximumEnergy = game.bodies[index].energy
+    game.bodies[index].physical?.npc?.resources = try #require(
+      NPCResources.legacyEnergyOnly(maximumEnergy: maximumEnergy))
+  case "unknown-fuel": game.bodies[index].physical?.npc?.resources?.fuel = nil
+  default: break
+  }
+  let before = game
+  let guidance = game.stationAutoGuidance(target: station)
+  let expected: StationAutoHazard = condition == "current" ? .active : .unknown
+  #expect(guidance?.hazard == expected)
+  #expect(game.commander == before.commander && game.bodies == before.bodies)
+  #expect(game.laserHeat == before.laserHeat && game.fireCooldown == before.fireCooldown)
+  #expect(game.missileCooldown == before.missileCooldown && game.gameplayRevision == before.gameplayRevision)
+  #expect(game.autoPilot.targetActor == before.autoPilot.targetActor)
+  #expect(game.weaponsTargetID == before.weaponsTargetID && game.missileArmed == before.missileArmed)
+  #expect(game.screen == before.screen && game.selectedFlightTool == before.selectedFlightTool)
+}
+
+@Test(arguments: [false, true])
+func stationAutoCurrentFullAndSpentStockUseRealPoolsWithoutRefilling(spent: Bool) throws {
+  var game = try stationAutoGame()
+  let index = try #require(game.bodies.firstIndex { $0.hostile })
+  let id = try #require(game.bodies[index].physical?.catalogueShipID)
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: id))
+  let stock = try #require(NPCResources.stock(source.performance))
+  try #require(game.bodies[index].physical?.npc?.resources == stock)
+  try #require(game.bodies[index].energy == stock.energyCapacity)
+  if spent {
+    var resources = stock
+    resources.frontShield *= 0.75
+    resources.rearShield *= 0.75
+    resources.fuel = max(0, try #require(stock.fuel) - 1)
+    resources.laserHeat = 1
+    game.bodies[index].physical?.npc?.resources = resources
+    game.bodies[index].energy *= 0.75
+  }
+  let context = try #require(game.gameplayContext())
+  try #require(NPCPersistenceSnapshot.capture(
+    body: game.bodies[index], pose: game.commander.flightSimulation.pose,
+    physicalTime: context.physicalTime, protection: context.protection) != nil)
+  let before = game
+  game.fireStationAutoLaser()
+  let damage = try stationAutoCurrentDamage(
+    before: before.bodies[index], after: game.bodies[index])
+  #expect(damage > 0 && game.laserHeat > before.laserHeat && game.fireCooldown > 0)
+  #expect(game.commander.crimeLedger != before.commander.crimeLedger && game.commander.legal == 0)
+  #expect(game.commander.missiles == before.commander.missiles)
+  #expect(game.autoPilot.targetActor == before.autoPilot.targetActor)
+  #expect(game.bodies[index].physical?.npc?.resources?.laserHeat
+    == before.bodies[index].physical?.npc?.resources?.laserHeat)
+}
+
+@Test(arguments: [
+  "missing-source", "unknown-source", "wrong-profile", "unknown-fuel", "missile-overflow",
+  "EMP-owner", "protected-owner",
+])
+func stationAutoCurrentSourceRefusalsPreserveWholeNativeState(condition: String) throws {
+  var game = try stationAutoGame()
+  let index = try #require(game.bodies.firstIndex { $0.hostile })
+  let id = try #require(game.bodies[index].physical?.catalogueShipID)
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: id))
+  switch condition {
+  case "missing-source": game.bodies[index].physical?.catalogueShipID = nil
+  case "unknown-source": game.bodies[index].physical?.catalogueShipID = "UNKNOWN-CURRENT-SOURCE"
+  case "wrong-profile":
+    let maximumEnergy = game.bodies[index].energy
+    game.bodies[index].physical?.npc?.resources = try #require(
+      NPCResources.legacyEnergyOnly(maximumEnergy: maximumEnergy))
+  case "unknown-fuel": game.bodies[index].physical?.npc?.resources?.fuel = nil
+  case "missile-overflow": game.bodies[index].missiles = source.performance.missiles + 1
+  case "EMP-owner":
+    let player = try #require(game.commander.flightSimulation.player)
+    game.bodies[index].physical?.empSource = player
+  case "protected-owner": game.bodies[index].navalTarget = true
+  default: Issue.record("Unknown controlled source refusal condition")
+  }
+  let before = game
+  game.fireStationAutoLaser()
+  #expect(game.commander == before.commander && game.bodies == before.bodies)
+  #expect(game.laserHeat == before.laserHeat && game.fireCooldown == before.fireCooldown)
+  #expect(game.missileCooldown == before.missileCooldown && game.gameplayRevision == before.gameplayRevision)
+  #expect(game.autoPilot.targetActor == before.autoPilot.targetActor)
+  #expect(game.weaponsTargetID == before.weaponsTargetID && game.missileArmed == before.missileArmed)
+  #expect(game.screen == before.screen && game.selectedFlightTool == before.selectedFlightTool)
 }
 
 @Test func stationAutoNativeMountedHitPreservesViewToolStationAndWeaponLocks() throws {
@@ -51,7 +195,8 @@ private func stationAutoGame() throws -> Game {
   game.fireStationAutoLaser()
   StationDefenceRefusalObservation.emit(game, phase: "station-after")
   let hit = try #require(game.bodies.first { $0.id == attacker.id })
-  #expect(hit.energy < attacker.energy && game.laserHeat > before.laserHeat)
+  let damage = try stationAutoCurrentDamage(before: attacker, after: hit)
+  #expect(damage > 0 && game.laserHeat > before.laserHeat)
   #expect(game.commander.crimeLedger != before.commander.crimeLedger && game.commander.legal == 0)
   #expect(game.screen == before.screen && game.selectedFlightTool == before.selectedFlightTool)
   #expect(game.autoPilot.targetActor == before.autoPilot.targetActor)
@@ -425,9 +570,10 @@ func stationAutoOpportunisticMountedFireKeepsFarAttackersOutOfSteeringPolicy(ran
     #expect(game.pitch == baseline.pitch && game.yaw == baseline.yaw)
     #expect(game.autoPilot.velocity == baseline.autoPilot.velocity)
   }
-  let before = game.bodies[index].energy
+  let before = game.bodies[index]
   game.fireStationAutoLaser()
-  #expect(game.bodies[index].energy < before && game.commander.legal == 0)
+  let damage = try stationAutoCurrentDamage(before: before, after: game.bodies[index])
+  #expect(damage > 0 && game.commander.legal == 0)
   #expect(game.autoPilot.targetActor == station.physical?.identity)
 }
 
@@ -448,7 +594,9 @@ func stationAutoMountedFireUsesActualMeshContactAtNativeBeamRangeBoundary(offset
   game.bodies[index].position = .init(0, 0, 6000 + surfaceOffset + offset)
   let before = game
   game.fireStationAutoLaser()
-  #expect((game.bodies[index].energy < before.bodies[index].energy) == (offset < 0))
+  let damage = try stationAutoCurrentDamage(
+    before: before.bodies[index], after: game.bodies[index])
+  #expect((damage > 0) == (offset < 0))
   #expect(game.commander.legal == 0 && game.autoPilot.targetActor == before.autoPilot.targetActor)
 }
 
@@ -468,7 +616,7 @@ func stationAutoMountedFireUsesActualMeshContactAtNativeBeamRangeBoundary(offset
     system: game.systemIdentity, visit: game.commander.flightSimulation.visit,
     sequence: 902, member: 0, producer: .ambient)
   game.bodies[index].physical?.spawnIdentity = spawn
-  game.bodies[index].physical?.catalogueShipID = ShipCatalogue.nativeShip(.cobra)?.id
+  try stationAutoBindCurrentAttacker(&game, index: index)
   game.bodies[index].physical?.npc?.legal = .init(value: 16)
   game.bodies[index].physical?.npc?.routeProvenance = .generated
   game.bodies[index].missiles = 1
@@ -551,7 +699,7 @@ private func stationAutoAddNativeAttacker(
     system: game.systemIdentity, visit: game.commander.flightSimulation.visit,
     sequence: sequence, member: 0, producer: .ambient)
   game.bodies[index].physical?.spawnIdentity = spawn
-  game.bodies[index].physical?.catalogueShipID = ShipCatalogue.nativeShip(.cobra)?.id
+  try stationAutoBindCurrentAttacker(&game, index: index)
   game.bodies[index].physical?.npc?.legal = .init(value: 16)
   game.bodies[index].physical?.npc?.routeProvenance = .generated
   return id
@@ -698,8 +846,14 @@ func stationAutoColdMissileRequiresActualAttackAndClearExplicitSourcePath(condit
 }
 
 @Test func stationAutoDefenceSuspendsEntryUntilCurrentHazardsClearAndReacquiresSpin() {
-  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 1090))
+  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 0))
   station.rotationRate = 0
+  // Face the actual native port inward and place its external approach goal.
+  station.orientation.x = .init(-1, 0, 0)
+  station.orientation.z = .init(0, 0, -1)
+  station.position =
+    Vector3(0, 0, 0)
+    - (station.entrancePosition + station.entranceNormal * station.stationApproachDistance)
   var control = AutoTargetControl()
   _ = control.steer(target: station, delta: 0.1)
   #expect(control.finalApproach && control.ready)
@@ -732,8 +886,14 @@ func stationAutoColdMissileRequiresActualAttackAndClearExplicitSourcePath(condit
 
 @Test(arguments: ["structure", "stopping", "pending-entry"])
 func stationAutoInterruptionRetainsNativeEntrySafetyWithoutStoppingClearance(condition: String) {
-  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 1090))
+  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 0))
   station.rotationRate = 0
+  // Face the actual native port inward and place its external approach goal.
+  station.orientation.x = .init(-1, 0, 0)
+  station.orientation.z = .init(0, 0, -1)
+  station.position =
+    Vector3(0, 0, 0)
+    - (station.entrancePosition + station.entranceNormal * station.stationApproachDistance)
   var normal = AutoTargetControl()
   _ = normal.steer(target: station, delta: 0.1)
   #expect(normal.finalApproach)
@@ -896,7 +1056,8 @@ private func stationAutoRequireNativePressureLane(_ game: borrowing Game, attack
   #expect(
     (game.flightWorldVelocity - before.flightWorldVelocity).length
       <= before.workLimits.acceleration * 0.1 + 1e-8)
-  #expect(hit.energy < victim.energy && game.laserHeat > before.laserHeat && game.fireCooldown > 0)
+  let damage = try stationAutoCurrentDamage(before: victim, after: hit)
+  #expect(damage > 0 && game.laserHeat > before.laserHeat && game.fireCooldown > 0)
   #expect(game.commander.missiles == before.commander.missiles && game.commander.legal == 0)
   let station = try #require(game.autoTargetBody)
   #expect(station.position.length > station.stationClearanceRadius)
@@ -927,7 +1088,13 @@ func stationAutoCancellationPreservesFullEvasiveMomentumAndNativeCoasting(condit
 }
 
 @Test func stationAutoClearedHazardReturnsToExternalGoalWithoutFollowingCombatBearing() {
-  let station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 2000))
+  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 0))
+  // Face the actual native port inward and place its external approach goal.
+  station.orientation.x = .init(-1, 0, 0)
+  station.orientation.z = .init(0, 0, -1)
+  station.position =
+    Vector3(0, 0, 910)
+    - (station.entrancePosition + station.entranceNormal * station.stationApproachDistance)
   var control = AutoTargetControl()
   var guidance = StationAutoGuidance(
     aim: .init(600, 0, 0), lateralVelocity: .init(80, 0, 0),
@@ -1034,7 +1201,9 @@ func stationAutoAuthenticatedLauncherRemainsActiveWhenItsProjectileJoinIsLost(jo
         && $0.outcome == .hit && $0.mount == .front
     })
   #expect(withoutTrace.gameplayCombatTrace == nil)
-  #expect(ordinaryVictim.energy < target.energy && observedVictim.energy == ordinaryVictim.energy)
+  let damage = try stationAutoCurrentDamage(before: target, after: ordinaryVictim)
+  #expect(damage > 0 && observedVictim.energy == ordinaryVictim.energy)
+  #expect(observedVictim.physical?.npc?.resources == ordinaryVictim.physical?.npc?.resources)
   #expect(
     observed.laserHeat == withoutTrace.laserHeat
       && observed.fireCooldown == withoutTrace.fireCooldown)
@@ -1096,12 +1265,14 @@ func stationAutoAuthenticatedLauncherRemainsActiveWhenItsProjectileJoinIsLost(jo
   // The fixed lateral lane reaches SH025's side surface clear of the retained nearby Viper.
   let id = try stationAutoAddNativeAttacker(&game, position: .init(1000, 0, -300), sequence: 909)
   let index = try #require(game.bodies.firstIndex { $0.id == id })
-  // This sustained-pressure scene starts with the actual native hull's full stock
-  // resources, rather than the helper's legacy 100-energy adoption profile.
-  let native = ShipCatalogue.nativeShip(game.bodies[index].hull)?.game
-  let performance = try #require(native)
+  // The controlled fresh attacker already owns its actual current full stock.
+  let catalogueID = try #require(game.bodies[index].physical?.catalogueShipID)
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: catalogueID))
+  let performance = source.performance
   let stock = NPCResources.stock(performance)
   let resources = try #require(stock)
+  try #require(game.bodies[index].energy == performance.energy)
+  try #require(game.bodies[index].physical?.npc?.resources == resources)
   game.bodies[index].energy = performance.energy
   game.bodies[index].physical?.npc?.resources = resources
   // Author an actually aligned fixed mount, rather than seed pressure through the
@@ -1118,8 +1289,8 @@ func stationAutoAuthenticatedLauncherRemainsActiveWhenItsProjectileJoinIsLost(jo
   let destination = game.autoPilot.targetActor
   let shields = game.frontShield + game.rearShield
   let attackContext = try #require(game.gameplayContext())
-  let source = try #require(attackContext.actors.first { $0.identity == actor })
-  try #require(source.energy == source.maximumEnergy && source.maximumEnergy == performance.energy)
+  let attacker = try #require(attackContext.actors.first { $0.identity == actor })
+  try #require(attacker.energy == attacker.maximumEnergy && attacker.maximumEnergy == performance.energy)
   try stationAutoRequireNativePressureLane(game, attacker: id)
   game.gameplayCombatTrace = .init()
   game.emitGameplayNPCBeam(bodyID: id, target: player, context: attackContext)
@@ -1194,6 +1365,7 @@ func stationAutoRetainedViperCourseUsesActualHull(condition: String) throws {
   game.frontShield = game.commander.shieldCapacity
   game.rearShield = game.commander.rearShieldCapacity
   game.screen = .status
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   let lane = Vector3(-42.03981364135889, 79.57797477317199, -928)
@@ -1287,9 +1459,58 @@ func stationAutoCourseRefusesUnknownBroadPhaseFacts(condition: String) async thr
   #expect(observation?["blocker"] == String(id))
 }
 
+@Test func stationAutoCurrentSourceBrakingBoundContainsActualDiscreteNavigation() throws {
+  var game = Game(executive: false)
+  game.screen = .status
+  try game.commander.prepareEquipment(legacy: false)
+  game.launch()
+  try #require(!game.docked && game.screen.isFlight)
+  game.speed = 0
+  let id = try stationAutoAddNativeAttacker(
+    &game, position: .init(0, 0, 3000), sequence: 941)
+  let index = try #require(game.bodies.firstIndex { $0.id == id })
+  let catalogueID = try #require(game.bodies[index].physical?.catalogueShipID)
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: catalogueID))
+  let stock = try #require(NPCResources.stock(source.performance))
+  try #require(catalogueID == "SH025")
+  try #require(game.bodies[index].physical?.npc?.resources == stock)
+  try #require(game.bodies[index].energy == stock.energyCapacity)
+  game.bodies[index].hostile = false
+  game.bodies[index].physical?.velocity = .init(0, 0, 0)
+  let destination = game.commander.flightSimulation.pose.systemPoint(.init(0, 0, 10000))
+  game.bodies[index].physical?.npc?.intention = .navigate(
+    position: destination, speedUnitsPerSecond: source.performance.speed * 18)
+  let initial = game.bodies[index]
+  let start = game.commander.flightSimulation.pose.systemPoint(initial.position)
+  let bound = try #require(Game.stationAutoNPCMotionAllowance(
+    catalogueShipID: catalogueID, horizon: 0.2))
+  #expect(Game.stationAutoNPCMotionAllowance(catalogueShipID: nil, horizon: 0.2) == nil)
+  #expect(Game.stationAutoNPCMotionAllowance(
+    catalogueShipID: "UNKNOWN-CURRENT-SOURCE", horizon: 0.2) == nil)
+  for _ in 0..<2 { game.tick(delta: 0.1, controls: Controls()) }
+  let final = try #require(game.bodies.first { $0.id == id })
+  let displacement = (game.commander.flightSimulation.pose.systemPoint(final.position) - start).length
+  let oldFallbackBound = Game.stationAutoNPCMotionAllowance(
+    acceleration: max(1, 2 * 18), horizon: 0.2)
+  #expect(displacement > oldFallbackBound + 1e-8)
+  #expect(displacement <= bound + 1e-8)
+  #expect(final.physical?.identity == initial.physical?.identity)
+  #expect(final.physical?.spawnIdentity == initial.physical?.spawnIdentity)
+  #expect(final.physical?.catalogueShipID == initial.physical?.catalogueShipID)
+  let original = try #require(initial.physical?.npc)
+  let current = try #require(final.physical?.npc)
+  let actual = try #require(current.resources)
+  #expect(actual.profile == stock.profile && actual.energyCapacity == stock.energyCapacity)
+  #expect(actual.frontCapacity == stock.frontCapacity && actual.rearCapacity == stock.rearCapacity)
+  #expect(actual.energyRecharge == stock.energyRecharge && actual.shieldRecharge == stock.shieldRecharge)
+  #expect(actual.fuel == stock.fuel && actual.fuelCapacity == stock.fuelCapacity)
+  #expect(current.ordinaryCargo == original.ordinaryCargo && final.missiles == initial.missiles)
+}
+
 @Test func stationAutoBrakingAllowanceContainsActualDiscreteNPCUpdates() throws {
   var game = Game(executive: false)
   game.screen = .status
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   let currentContext = game.gameplayContext()
@@ -1332,8 +1553,14 @@ func stationAutoCourseRefusesUnknownBroadPhaseFacts(condition: String) async thr
 func stationAutoFiniteBrakingPreservesOnlyAValidatedCourse(condition: String) {
   let limits = RelativeWorkLimits(
     acceleration: 216, speed: 576, pitchRate: 0.8, yawRate: 0.8, rollRate: 1)
-  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 1110.3638355679848))
+  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 0))
   station.rotationRate = 0
+  // Face the actual native port inward and place its external approach goal.
+  station.orientation.x = .init(-1, 0, 0)
+  station.orientation.z = .init(0, 0, -1)
+  station.position =
+    Vector3(0, 0, 20.3638355679848)
+    - (station.entrancePosition + station.entranceNormal * station.stationApproachDistance)
   var control = AutoTargetControl()
   control.setApproachVelocity(.init(0, 0, 21.451299950917527))
   var pressure = StationAutoGuidance(
@@ -1425,11 +1652,16 @@ func stationAutoRealPoliceDepartureRetainsClearEntryAndRefusesUnsafeStop(conditi
       sequence: UInt64(924 + member), facingPlayer: true)
     attackers.append(id)
   }
-  let native = try #require(ShipCatalogue.nativeShip(.cobra)?.game)
+  let catalogueID = try #require(
+    game.bodies.first { $0.id == attacker }?.physical?.catalogueShipID)
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: catalogueID))
+  let native = source.performance
   let stockResources = try #require(NPCResources.stock(native))
   for id in attackers {
     let index = try #require(game.bodies.firstIndex { $0.id == id })
     try #require(game.bodies[index].physical?.npc?.role == .pirate)
+    try #require(game.bodies[index].energy == native.energy)
+    try #require(game.bodies[index].physical?.npc?.resources == stockResources)
     game.bodies[index].energy = native.energy
     game.bodies[index].physical?.npc?.resources = stockResources
   }
@@ -1518,39 +1750,67 @@ func stationAutoRealPoliceDepartureRetainsClearEntryAndRefusesUnsafeStop(conditi
         (game.flightWorldVelocity - before).length <= game.workLimits.acceleration * 0.1 + 1e-8)
       #expect(game.autoPilot.targetActor == target)
     }
-    try #require(game.screen != .gameOver)
+    let survived = game.screen != .gameOver
+    var terminalPredicates = ""
+    if !survived {
+      let energy = game.energy
+      let energyPredicate = !energy.isFinite ? "energyNonfinite"
+        : (energy <= 0 ? "energyNonpositive" : "energyPositive")
+      let storedMessage = game.message
+      let messagePredicate: String
+      switch storedMessage {
+      case "GAME OVER": messagePredicate = "messageGameOver"
+      case "DESTROYED IN THE SUN": messagePredicate = "messageSun"
+      case "PLANET IMPACT": messagePredicate = "messagePlanet"
+      case "CABIN OVERHEATED - SHIP DESTROYED": messagePredicate = "messageOverheated"
+      default: messagePredicate = "messageOther"
+      }
+      terminalPredicates = energyPredicate + "/" + messagePredicate
+    }
+    try #require(survived, Comment(rawValue: terminalPredicates))
     #expect(game.commander.missiles <= stock && !game.commander.unlimitedMissiles)
   }
   #expect(game.docked && game.dockedAtMainStation && game.nativeMainStationDockEvidenceIsCurrent)
   #expect(game.commander.legal == 0)
 }
 
-@Test(arguments: ["clear-port", "rim", "back-wall", "oversize-hull"])
+@Test(arguments: ["clear-port", "rim", "habitat-wall", "oversize-hull"])
 func stationAutoMainPortRetainsRealWallsAndRefusesNonfittingHulls(condition: String) throws {
   var game = Game(executive: false)
+  game.commander.shipID = "SH025"
+  game.commander.fuel = 20
+  game.commander.missiles = 1
+  try game.commander.prepareEquipment(legacy: false)
+  game.commander.mirrorFittedEquipment()
   game.screen = .status
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let initial = try #require(game.bodies.first { $0.id == 0 && $0.hull == .station })
   if condition == "oversize-hull" {
     let oversized = ShipCatalogue.all.first { ship in
-      guard ship.game != nil, let mesh = ship.previewMesh else { return false }
-      let effective = Mesh(vertices: mesh.vertices.map { $0 * 0.69 }, faces: mesh.faces)
-      return !MainStationGeometry.docking.fits(effective)
+      guard ship.game != nil, ship.catalogue.playerFlyable else { return false }
+      var candidate = Commander()
+      candidate.shipID = ship.id
+      return !MainStationGeometry.docking.fits(candidate.playerMesh)
     }
-    let ship = try #require(oversized)
-    game.commander.shipID = ship.id
+    game.commander.shipID = try #require(oversized).id
   }
   let original = game.commander.flightSimulation.pose
   var pose = ShipPose()
+  let offset: Vector3
+  switch condition {
+  case "rim": offset = .init(69, 0, 0)
+  case "habitat-wall": offset = .init(115.2, 1, 0)
+  default: offset = .init(0, 0, 0)
+  }
   pose.position = original.systemPoint(
-    initial.entrancePosition + initial.entranceNormal * 500
-      + initial.modelVector(.init(condition == "rim" ? 85 : 0, 0, 0)))
+    initial.entrancePosition + initial.entranceNormal * 500 + initial.modelVector(offset))
   pose.orientation.z = original.orientation.apply(initial.entranceNormal) * -1
   pose.orientation.y = original.orientation.apply(initial.entranceUp)
   pose.orientation.x = pose.orientation.y.cross(pose.orientation.z)
   NativeStationTestFixture.reframe(&game, to: pose)
   let station = try #require(game.bodies.first { $0.id == 0 })
-  let advance = Vector3(0, 0, condition == "back-wall" ? 1000 : 499.5)
+  let advance = Vector3(0, 0, condition == "habitat-wall" ? 550 : 499.5)
   var endpoint = pose
   endpoint.position = pose.systemPoint(advance)
   let apertureFits = MainStationGeometry.docking.fits(game.commander.playerMesh)
@@ -1558,23 +1818,27 @@ func stationAutoMainPortRetainsRealWallsAndRefusesNonfittingHulls(condition: Str
     station, from: pose, to: endpoint, requireAperture: false)
   let allowed = game.nativeMainStationHullCourseIsClear(station, from: pose, to: endpoint)
   #expect(allowed == (condition == "clear-port"))
-  if condition == "rim" || condition == "back-wall" { #expect(!structuralClear) }
+  if condition == "rim" || condition == "habitat-wall" { #expect(!structuralClear) }
   #expect(apertureFits == (condition != "oversize-hull"))
   let gameplay = game.gameplayMesh(for: station)
   #expect(gameplay.vertices == MainStationGeometry.mesh.vertices)
   #expect(gameplay.faces == MainStationGeometry.mesh.faces)
-  if condition == "clear-port" || condition == "rim" {
-    let ray = GameplayRaycast.nearest(
-      origin: .init(0, 0, 0), direction: .init(0, 0, 1), maxDistance: 1000,
-      bodies: [station], meshOverrides: [station.id: gameplay])
+  let ray = GameplayRaycast.nearest(
+    origin: .init(0, 0, 0), direction: .init(0, 0, 1), maxDistance: 1000,
+    bodies: [station], meshOverrides: [station.id: gameplay])
+  if condition == "clear-port" {
+    // The original station has a hollow centre, not the removed cube's back wall.
+    #expect(ray == nil)
+  } else if condition == "rim" || condition == "habitat-wall" {
     let hit = try #require(ray)
-    // The centre ray passes the actual opening and meets the retained back wall;
-    // the rim ray meets the front wall. Rendering and defence use these same panels.
-    #expect(abs(hit.distance - (condition == "clear-port" ? 680 : 500)) < 1e-7)
+    // Actual front lightbox z136.32 and habitat end cap z112 from the original source.
+    let expected = condition == "rim" ? 500.0 : 500 + 136.32 - 112
+    #expect(abs(hit.distance - expected) < 1e-6)
   }
-  // The read-only geometry proposal never installs its endpoint or creates arrival authority.
-  #expect(game.commander.flightSimulation.pose == pose)
-  #expect(!game.docked && game.pendingNativeStationDock == nil)
+  // Read-only geometry never installs an endpoint or creates arrival authority.
+  #expect(game.commander.flightSimulation.pose == pose && !game.docked)
+  #expect(game.commander.nativeStations?.currentMainDock == nil)
+  #expect(!game.nativeMainStationDockEvidenceIsCurrent)
 }
 
 @Test func stationAutoMainPortFitsActualNormalizedCobraAcrossMatchedSpinStep() throws {
@@ -1586,8 +1850,19 @@ func stationAutoMainPortRetainsRealWallsAndRefusesNonfittingHulls(condition: Str
   game.rearShield = game.commander.rearShieldCapacity
   try #require(game.commander.valid)
   game.screen = .status
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.docking.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
   game.launch()
   let initial = try #require(game.bodies.first { $0.id == 0 && $0.hull == .station })
+  let stationActor = try #require(initial.physical?.identity)
+  for _ in 0..<(game.bodies.count * 2) {
+    game.key("tab")
+    if game.autoPilot.targetActor == stationActor { break }
+  }
+  try #require(game.stationAutoDockingActive && game.dockingComputer)
+  try #require(game.autoPilot.targetActor == stationActor)
   let old = game.commander.flightSimulation.pose
   var before = ShipPose()
   before.position = old.systemPoint(initial.entrancePosition + initial.entranceNormal * 2)
@@ -1595,16 +1870,19 @@ func stationAutoMainPortRetainsRealWallsAndRefusesNonfittingHulls(condition: Str
   before.orientation.y = old.orientation.apply(initial.entranceUp)
   before.orientation.x = before.orientation.y.cross(before.orientation.z)
   NativeStationTestFixture.reframe(&game, to: before)
-  game.roll = -initial.rotationRate
+  game.speed = 0
+  game.pitch = 0
+  game.yaw = 0
+  game.roll = initial.rotationRate
+  game.autoPilot.setApproachVelocity(.init(0, 0, 40))
   let delta = 0.1
   game.commander.flightSimulation.advancePhysicalTime(delta)
   let index = try #require(game.bodies.firstIndex { $0.id == 0 })
   game.advanceBodyModelRotation(at: index, delta: delta)
-  var matchedSpin = Basis3()
-  matchedSpin.rotate(pitch: 0, roll: initial.rotationRate * delta, yaw: 0)
+  // Use the same inverse-view Euler step and velocity checked by the native proof.
   var endpoint = before
-  endpoint.orientation = before.orientation.composed(with: matchedSpin)
-  endpoint.position = before.systemPoint(.init(0, 0, 4))
+  endpoint.advanceView(
+    pitch: 0, roll: game.roll * delta, yaw: 0, translation: .init(0, 0, 40 * delta))
   NativeStationTestFixture.reframe(&game, to: endpoint)
   let station = game.bodies[index]
   let player = game.commander.playerMesh
@@ -1622,6 +1900,7 @@ func stationAutoMainPortRetainsRealWallsAndRefusesNonfittingHulls(condition: Str
 @Test func stationAutoMainRimStopsTheEffectiveHullBeforeItsCentreEnters() throws {
   var game = Game(executive: false)
   game.screen = .status
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let station = try #require(game.bodies.first { $0.id == 0 && $0.hull == .station })
   let old = game.commander.flightSimulation.pose
@@ -1650,25 +1929,29 @@ func stationAutoMainPortRetainsRealWallsAndRefusesNonfittingHulls(condition: Str
 
 // Keep actual station actors, source geometry and ledger poses; only move the observer.
 @Test(arguments: ["clear-port", "aperture-edge", "through-structure"])
-func stationAutoNativeRRSCourseChecksActualTargetHull(condition: String) throws {
+func stationAutoOriginalUtilityCourseChecksActualTargetHull(condition: String) throws {
   var game = Game(executive: false)
   game.commander.system = 237
   game.screen = .status
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
+  let owner = try #require(game.commander.nativeStations?.ledger.world)
   let initial = try #require(
     game.bodies.first {
-      $0.nativeStationIdentity?.definition
-        == NativeStationGeometry.Kind.headquarters.sourceDefinition
+      $0.nativeStationIdentity == OriginalStationSite.remoteUtility.identity(world: owner)
     })
   let identity = try #require(initial.nativeStationIdentity)
   let source = try #require(NativeStationSource.binding(for: identity))
   let world = try #require(game.commander.nativeStations)
   let time = game.commander.flightSimulation.physicalTime
-  let position = try #require(world.currentPosition(for: .rrs(identity), at: time))
+  let position = try #require(world.currentPosition(for: .originalStation(identity), at: time))
   let orientation = try #require(world.currentOrientation(for: identity, at: time))
   let port = source.geometry.docking
   var pose = ShipPose()
-  let offset = condition == "aperture-edge" ? Vector3(124, 0, 0) : .init(0, 0, 0)
+  let boundary = try #require(port.aperture.max { $0.x < $1.x })
+  let right = port.up.cross(port.outward)
+  let offset = condition == "aperture-edge"
+    ? right * boundary.x + port.up * boundary.y : Vector3(0, 0, 0)
   pose.position = position + orientation.apply(port.center + port.outward * 500 + offset)
   pose.orientation.y = orientation.apply(port.up)
   pose.orientation.z = orientation.apply(port.outward) * -1
@@ -1791,8 +2074,14 @@ func stationAutoMovingEntryRefusesUnsafeOrUnjoinedCurrentCourses(condition: Stri
 }
 
 @Test func stationAutoClosingHandoverUsesActualBrakingBoundaryAndKeepsOneThrustBudget() {
-  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 2000))
+  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 0))
   station.rotationRate = 0
+  // Face the actual native port inward and place its external approach goal.
+  station.orientation.x = .init(-1, 0, 0)
+  station.orientation.z = .init(0, 0, -1)
+  station.position =
+    Vector3(0, 0, 910)
+    - (station.entrancePosition + station.entranceNormal * station.stationApproachDistance)
   var control = AutoTargetControl()
   control.setApproachVelocity(.init(0, 0, 600))
   var pressure = StationAutoGuidance(
@@ -1804,7 +2093,7 @@ func stationAutoMovingEntryRefusesUnsafeOrUnjoinedCurrentCourses(condition: Stri
   _ = control.steer(target: station, delta: 0.1, defence: pressure)
   #expect(control.stationDefencePhase == .defending)
   #expect((control.velocity - outside).length <= 24 + 1e-8)
-  station.position.z = 1800
+  station.position.z -= 200
   let before = control.velocity
   let steering = control.steer(target: station, delta: 0.1, defence: pressure)
   #expect(control.stationDefencePhase == .returning && !control.ready && !control.finalApproach)
@@ -1814,8 +2103,14 @@ func stationAutoMovingEntryRefusesUnsafeOrUnjoinedCurrentCourses(condition: Stri
 }
 
 @Test func stationAutoClosingHandoverKeepsReturningThroughFreshReadinessAndSpin() {
-  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 1090))
+  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 0))
   station.rotationRate = 0
+  // Face the actual native port inward and place its external approach goal.
+  station.orientation.x = .init(-1, 0, 0)
+  station.orientation.z = .init(0, 0, -1)
+  station.position =
+    Vector3(0, 0, 0)
+    - (station.entrancePosition + station.entranceNormal * station.stationApproachDistance)
   var control = AutoTargetControl()
   _ = control.steer(target: station, delta: 0.1)
   #expect(control.finalApproach)
@@ -1873,7 +2168,13 @@ func stationAutoMixedAuthenticBeamAndUnknownFactsCannotGrantHandover(condition: 
   NativeStationTestFixture.reframe(&game, to: unsafePose)
   game.autoPilot.setApproachVelocity(.init(0, 0, 0))
   let id = try stationAutoAddNativeAttacker(&game, position: .init(300, 0, -600), sequence: 910)
+  let pressureDistance = try #require(game.bodies.first { $0.id == id }?.position.length)
+  try stationAutoSetAuthoredHullPressureLane(
+    &game, attacker: id, side: 1, distance: pressureDistance)
+  try stationAutoRequireNativePressureLane(game, attacker: id)
+  let shieldBeforeBeam = game.frontShield + game.rearShield
   game.emitLegacyNPCBeam(bodyID: id, damage: LaserKind.pulse.damage)
+  try #require(game.frontShield + game.rearShield < shieldBeforeBeam)
   let source = try #require(game.bodies.first { $0.id == id }?.physical?.identity)
   let context = try #require(game.gameplayContext())
   try #require(
@@ -1920,7 +2221,20 @@ func stationAutoMixedAuthenticBeamAndUnknownFactsCannotGrantHandover(condition: 
   NativeStationTestFixture.reframe(&game, to: unsafePose)
   game.autoPilot.setApproachVelocity(.init(0, 0, 0))
   let id = try stationAutoAddNativeAttacker(&game, position: .init(300, 0, -600), sequence: 912)
+  let pressureDistance = try #require(game.bodies.first { $0.id == id }?.position.length)
+  try stationAutoSetAuthoredHullPressureLane(
+    &game, attacker: id, side: 1, distance: pressureDistance)
+  try stationAutoRequireNativePressureLane(game, attacker: id)
+  let shieldBeforeBeam = game.frontShield + game.rearShield
   game.emitLegacyNPCBeam(bodyID: id, damage: LaserKind.pulse.damage)
+  try #require(game.frontShield + game.rearShield < shieldBeforeBeam)
+  do {
+    let source = try #require(game.bodies.first { $0.id == id }?.physical?.identity)
+    let context = try #require(game.gameplayContext())
+    try #require(
+      game.commander.crimeLedger.hasCurrentUnlawfulAttack(
+        from: source, against: context.player.identity, context: context))
+  }
   let destination = game.autoPilot.targetActor
   game.applyAutoTarget(delta: 0.1, controls: Controls())
   #expect(game.autoPilot.stationDefencePhase == .defending)
@@ -1954,8 +2268,12 @@ func stationAutoMixedAuthenticBeamAndUnknownFactsCannotGrantHandover(condition: 
 }
 
 @Test func stationAutoHandoverRevokesExteriorReadinessWhenMixedUnknownsAppear() {
-  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 1090))
+  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 0))
   station.rotationRate = 0
+  station.orientation.x = .init(-1, 0, 0)
+  station.orientation.z = .init(0, 0, -1)
+  station.position =
+    (station.entrancePosition + station.entranceNormal * station.stationApproachDistance) * -1
   var control = AutoTargetControl()
   _ = control.steer(target: station, delta: 0.1)
   var observations = StationAutoGuidance(
@@ -2293,8 +2611,15 @@ func stationAutoDefensiveTrackerAcquiresMovingBearingWithinTurnAndThrustLimits(a
 }
 
 @Test func stationAutoActiveCoverTransitLeavesTheStagingPointThroughTheClearanceDetour() {
-  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 1090))
+  var station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 0))
   station.rotationRate = 0
+  // Face the actual native port inward and place its external approach goal.
+  station.orientation.x = .init(1, 0, 0)
+  station.orientation.y = .init(0, -1, 0)
+  station.orientation.z = .init(0, 0, -1)
+  station.position =
+    Vector3(0, 0, 0)
+    - (station.entrancePosition + station.entranceNormal * station.stationApproachDistance)
   var control = AutoTargetControl()
   var travelled = Vector3(0, 0, 0)
   let limits = AutoTargetControl.policyLimits
@@ -2644,6 +2969,7 @@ func stationAutoCoverSourceCannotBorrowAnotherAttackersActiveHazard(condition: S
     try #require(game.offeredPack?.digest == parcel.digest)
     game.key("return")
     try #require(game.commander.missionProgress[parcel.pack.stateID]?.payloads["parcel"] == 1)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     try #require(!game.docked && game.commander.valid)
     let previousPose = game.commander.flightSimulation.pose
@@ -2666,9 +2992,14 @@ func stationAutoCoverSourceCannotBorrowAnotherAttackersActiveHazard(condition: S
       let id = try stationAutoAddNativeAttacker(
         &game, position: .init(x, 0, 0), sequence: sequence, facingPlayer: true)
       let index = try #require(game.bodies.firstIndex { $0.id == id })
-      let performance = try #require(ShipCatalogue.nativeShip(.cobra)?.game)
+      let catalogueID = try #require(game.bodies[index].physical?.catalogueShipID)
+      let source = try #require(OriginalFleetRuntimeHullSource.source(for: catalogueID))
+      let performance = source.performance
       let stock = try #require(NPCResources.stock(performance))
       // A declared pulse-only native loadout: full authored hull/shields, empty missile racks.
+      try #require(game.bodies[index].energy == performance.energy)
+      try #require(game.bodies[index].physical?.npc?.resources == stock)
+      try #require(game.bodies[index].missiles == 0)
       game.bodies[index].energy = performance.energy
       game.bodies[index].missiles = 0
       game.bodies[index].physical?.npc?.resources = stock

@@ -48,6 +48,7 @@ private struct CommanderQueryFixture {
   game.screen = .status
   game.scriptPacks = [fixture.pack]
   game.commander.kills = 255
+  try game.commander.prepareEquipment(legacy: false)
   let before = game.commander
   #expect(throws: MissionPackError.self) { try game.acceptScriptMission(fixture.pack) }
   #expect(game.commander == before)
@@ -76,6 +77,7 @@ private struct CommanderQueryFixture {
   var game = Game(executive: false)
   game.screen = .status
   game.commander.installLaser(.military, on: .front)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.celestials = []
   let before = game.commander.missiles
@@ -124,19 +126,20 @@ private struct CommanderQueryFixture {
   var game = Game(executive: false)
   game.screen = .status
   game.commander.credits = 10_000_000
-  game.commander.fuel = try #require(ShipCatalogue.ship("SH013")?.game?.fuel)
+  game.commander.fuel = min(
+    game.commander.fuel, try #require(ShipCatalogue.ship("SH029")?.game?.fuel))
   game.commander.cargo[0] = 2
   game.commander.cargo[10] = 1
   game.commander.installLaser(.beam, on: .rear)
   game.key("6")
-  game.showroom.selection = "SH013"
+  game.showroom.selection = "SH029"
   let quote = try #require(game.shipTradeQuote)
   #expect(quote.allowed)
   game.key("showroom-trade")
   game.key("right")
   game.key("return")
   let query = game.scriptCommanderQuery
-  #expect(query["ship_id"] == .string("SH013"))
+  #expect(query["ship_id"] == .string("SH029"))
   #expect(query["credits_decicredits"] == .integer(Int64(quote.balance)))
   #expect(query["lasers"]?["rear"]?["kind"] == .string("beam"))
   let commodities = try #require(query["hold"]?["commodities"]?.array)

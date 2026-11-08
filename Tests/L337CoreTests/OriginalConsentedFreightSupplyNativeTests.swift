@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct OriginalConsentedFreightSupplyFixture {
   let flight: OriginalSealedDispatchFixture
@@ -217,6 +218,11 @@ struct OriginalConsentedFreightSupplyNativeTests {
     let runtime = try await f.runtime()
     let id = try await f.accept(runtime)
     let accepted = await runtime.snapshot()
+    let issued = try #require(accepted.commander.scriptState.instances[id]?.savedOwnedCargo)
+    #expect(accepted.commander.system == 7)
+    #expect(accepted.commander.scriptState.instances[id]?.contract?.offer.freightPlan?.path
+      == [7, 185])
+    #expect(issued.issued.count == 8 && Set(issued.issued).count == 8)
     try await f.partialSeven(runtime, id: id)
     let partial = await runtime.snapshot()
     let state = try #require(partial.commander.scriptState.instances[id])
@@ -230,9 +236,55 @@ struct OriginalConsentedFreightSupplyNativeTests {
       done.commander.scriptState.instances[id]?.outcome == .complete
         && done.commander.credits == partial.commander.credits + 7300)
     #expect(done.commander.scriptState.savedClueJournal?.awards.count == 1)
+    let completed = try #require(done.commander.scriptState.instances[id])
+    let delivered = try #require(completed.savedOwnedCargo)
+    let transferred = delivered.transfers.sorted { $0.key < $1.key }.flatMap { $0.value.units }
+    #expect(delivered.held.isEmpty && delivered.terminal?.cause == .delivered)
+    #expect(delivered.transfers.count == 8 && completed.conversationReceipts.count == 8)
+    #expect(transferred == issued.issued)
+    let receipt = try #require(completed.completionReceipt)
+    let clue = try #require(
+      done.commander.scriptState.savedClueJournal?.awards[OriginalConsentedFreightSupply.stateID])
+    #expect(clue.completion == receipt && clue.clueID == "consented-freight-family-trace")
+    #expect(ScriptClueTrustCatalog.production.pin(for: receipt)?.sourceID
+      == OriginalConsentedFreightSupply.stateID)
     var replay = done
     replay.emitScriptEvent("dialogue.confirmed", only: id)
     #expect(replay.commander == done.commander)
+
+    try await runtime.save(to: f.save)
+    try await expectCompletedSupplyContinue(f, id: id, expected: done.commander)
+  }
+
+  private func expectCompletedSupplyContinue(
+    _ fixture: OriginalConsentedFreightSupplyFixture, id: UUID, expected: Commander
+  ) async throws {
+    let written = try ScriptFinanceTestFixture.files(fixture.files.root)
+    var startup = Game(executive: false)
+    startup.scriptPacks = [try ScriptPackLibrary.read(ScriptPackLibrary.bundledConsentedFreightDirectory)]
+    let reopened = GameRuntime(game: startup)
+    try await reopened.restoreStartup(from: fixture.save)
+    let title = await reopened.snapshot()
+    #expect(title.screen == .title)
+    #expect(title.commander.system == 185 && title.nativeMainStationDockEvidenceIsCurrent)
+    #expect(title.commander.credits == expected.credits)
+    #expect(title.commander.scriptState.instances[id] == expected.scriptState.instances[id])
+    #expect(title.commander.scriptState.savedClueJournal == expected.scriptState.savedClueJournal)
+    #expect(title.commander.scriptState.savedOriginalConsentedFreightSupply
+      == expected.scriptState.savedOriginalConsentedFreightSupply)
+
+    await reopened.key(" ")
+    let continued = await reopened.snapshot()
+    #expect(continued.screen == .status && continued.nativeMainStationDockEvidenceIsCurrent)
+    #expect(continued.commander == title.commander)
+    #expect(try ScriptFinanceTestFixture.files(fixture.files.root) == written)
+
+    await reopened.key("contacts-open")
+    let revisited = await reopened.snapshot()
+    #expect(revisited.scriptPresentedDialogue?.id != "freight-delivery")
+    #expect(revisited.commander.credits == expected.credits)
+    #expect(revisited.commander.scriptState.instances[id] == expected.scriptState.instances[id])
+    #expect(revisited.commander.scriptState.savedClueJournal == expected.scriptState.savedClueJournal)
   }
 
   @Test func supplySourceWriterRefusalRollsBackStockAndHoldThenRetries() async throws {

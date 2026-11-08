@@ -1,0 +1,9 @@
+# Add finite paid crew service for four original hulls
+
+Bison and Buffalo hulls previously had staffing requirements without a producer of actual assigned crew. Add thirteen original consenting Avenor volunteers through the existing native people state, Crew action on the equipment screen, exact200CR first contracts, explicit actual-station disembarkation and same-contract0CR reassignment. Commander counts once; intrinsic crew places never count as people or passenger cabins.
+
+Understaffed owned hulls remain valid for current docked save/load. Normal player launch for SH005/SH006/SH013/SH014 refuses with the missing count until enough distinct people are assigned. Existing NPC/mission/structural actor policies are unchanged. Hull exchange preserves exact identities/contracts or refuses for insufficient places. Real player loss/escape records aboard crew without automatic rescue or replenishment.
+
+Quote confirmation rechecks person/native reply, current owned hull/place/profile/inventory snapshot, station arrival/visit/epoch, exact cash and operation. Existing command publication rolls back all effects on writer failure. Current native people COW/equality/Codable/preflight includes the crew leaf; no migration, compatibility version pair or independent writer is added.
+
+Validation: two new focused test suites plus the owned Bison native-route launch test now cover21 literal source cases, ALL UNRUN pending G1. They cover real station paid confirmation, failed writer rollback, stale quotes, reserved/duplicate people, current cold load, exact four-hull complements/costs, later-station disembarkation, projection/owned transfer, smaller actual exchange, starter launch and real fatal loss/escape. Controlled initial hull ownership is explicitly not acquisition evidence. Pending fabrication guard, unsupported device/acquisition and placement blockers remain. Independent review and required GitHub checks must pass before protected merge.

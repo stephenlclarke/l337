@@ -10,6 +10,7 @@ private var patrolDirectory: URL {
 private func patrolGame() throws -> (Game, UUID) {
   let pack = try ScriptPackLibrary.read(patrolDirectory)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   let id = try game.acceptScriptMission(pack)
@@ -48,6 +49,7 @@ private func fitScriptedPatrolTargeting(_ game: inout Game) throws {
 
 @Test func scriptedPatrolFightsActualTargetsAndReportsThroughNativeStationControls() async throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   try fitScriptedPatrolTargeting(&game)
   game.scriptPacks = [try ScriptPackLibrary.read(patrolDirectory)]
@@ -185,6 +187,7 @@ private func verifyPatrolForeignEventsCullingAndDuplicateDeaths(_ game: inout Ga
 @Test func encounterPreparationRetainsIdentitiesAndAdmitsTheWholeCohortAfterDenial() throws {
   let pack = try ScriptPackLibrary.read(patrolDirectory)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   let id = try game.acceptScriptMission(pack)
   game.launch()
@@ -423,6 +426,7 @@ private func verifyPatrolPhysicalSaveConsistency(_ game: inout Game, id: UUID) t
 @Test func galleryTrialSavesReloadOnlyWithinItsOwnNamespace() async throws {
   let pack = try ScriptPackLibrary.read(patrolDirectory)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   let live = GameRuntime(game: game)
   let trial = try await live.scriptGalleryTrial(packDigest: pack.digest)
@@ -479,6 +483,7 @@ private func modifiedPatrol(
   })
   defer { try? FileManager.default.removeItem(at: folder) }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   let id = try game.acceptScriptMission(pack)
   game.launch()
@@ -504,6 +509,7 @@ private func modifiedPatrol(
   })
   defer { try? FileManager.default.removeItem(at: folder) }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   let id = try game.acceptScriptMission(pack)
   game.launch()
@@ -590,6 +596,7 @@ private func requireUnchangedColdCombatReference(_ hot: borrowing Game, _ cold: 
   })
   defer { try? FileManager.default.removeItem(at: folder) }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   _ = try game.acceptScriptMission(pack)
   game.launch()
@@ -643,6 +650,7 @@ private func requireUnchangedColdCombatReference(_ hot: borrowing Game, _ cold: 
 @Test func galleryNamespaceCannotBeRedirectedToAProductionSaveFolder() async throws {
   let pack = try ScriptPackLibrary.read(patrolDirectory)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   let trial = try await GameRuntime(game: game).scriptGalleryTrial(packDigest: pack.digest)
   let namespace = try #require(await trial.gallerySaveDirectory())

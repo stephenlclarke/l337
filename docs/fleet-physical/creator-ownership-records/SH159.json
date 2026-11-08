@@ -1,0 +1,2452 @@
+{
+  "id": "SH159",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "6a683a22e7fb9238426da2f284d1eacb29bb008b4b3514208d18e666af0569eb",
+  "contractSHA256": "3e9dace75fa8fea326ff95d4137a49dd3b6918a86bcb1daeaaa7a9605e06d55a",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "twin spine pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "twin spine shoulder envelope",
+          "vertexStart": 8,
+          "vertexCount": 8,
+          "faceStart": 12,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 16,
+          "vertexCount": 12,
+          "faceStart": 24,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "twin spine shoulder service well/recess-service-strut-0",
+          "vertexStart": 28,
+          "vertexCount": 8,
+          "faceStart": 44,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "twin spine shoulder service well/recess-service-strut-1",
+          "vertexStart": 36,
+          "vertexCount": 8,
+          "faceStart": 56,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "twin spine shoulder service well/recess-service-strut-2",
+          "vertexStart": 44,
+          "vertexCount": 8,
+          "faceStart": 68,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 52,
+          "vertexCount": 12,
+          "faceStart": 80,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "twin spine shoulder service well/recess-service-strut-0",
+          "vertexStart": 64,
+          "vertexCount": 8,
+          "faceStart": 100,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "twin spine shoulder service well/recess-service-strut-1",
+          "vertexStart": 72,
+          "vertexCount": 8,
+          "faceStart": 112,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "twin spine shoulder service well/recess-service-strut-2",
+          "vertexStart": 80,
+          "vertexCount": 8,
+          "faceStart": 124,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 88,
+          "vertexCount": 12,
+          "faceStart": 136,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "twin spine shoulder service well/recess-service-strut-0",
+          "vertexStart": 100,
+          "vertexCount": 8,
+          "faceStart": 156,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "twin spine shoulder service well/recess-service-strut-1",
+          "vertexStart": 108,
+          "vertexCount": 8,
+          "faceStart": 168,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "twin spine shoulder service well/recess-service-strut-2",
+          "vertexStart": 116,
+          "vertexCount": 8,
+          "faceStart": 180,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "twin spine pressure envelope",
+          "vertexStart": 124,
+          "vertexCount": 8,
+          "faceStart": 192,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "twin spine shoulder envelope",
+          "vertexStart": 132,
+          "vertexCount": 8,
+          "faceStart": 204,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 140,
+          "vertexCount": 12,
+          "faceStart": 216,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "twin spine shoulder service well/recess-service-strut-0",
+          "vertexStart": 152,
+          "vertexCount": 8,
+          "faceStart": 236,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "twin spine shoulder service well/recess-service-strut-1",
+          "vertexStart": 160,
+          "vertexCount": 8,
+          "faceStart": 248,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "twin spine shoulder service well/recess-service-strut-2",
+          "vertexStart": 168,
+          "vertexCount": 8,
+          "faceStart": 260,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 176,
+          "vertexCount": 12,
+          "faceStart": 272,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "twin spine shoulder service well/recess-service-strut-0",
+          "vertexStart": 188,
+          "vertexCount": 8,
+          "faceStart": 292,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "twin spine shoulder service well/recess-service-strut-1",
+          "vertexStart": 196,
+          "vertexCount": 8,
+          "faceStart": 304,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "twin spine shoulder service well/recess-service-strut-2",
+          "vertexStart": 204,
+          "vertexCount": 8,
+          "faceStart": 316,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 212,
+          "vertexCount": 12,
+          "faceStart": 328,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "twin spine shoulder service well/recess-service-strut-0",
+          "vertexStart": 224,
+          "vertexCount": 8,
+          "faceStart": 348,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "twin spine shoulder service well/recess-service-strut-1",
+          "vertexStart": 232,
+          "vertexCount": 8,
+          "faceStart": 360,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "twin spine shoulder service well/recess-service-strut-2",
+          "vertexStart": 240,
+          "vertexCount": 8,
+          "faceStart": 372,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "twin spine transverse bridge",
+          "vertexStart": 248,
+          "vertexCount": 8,
+          "faceStart": 384,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "twin spine transverse bridge",
+          "vertexStart": 256,
+          "vertexCount": 8,
+          "faceStart": 396,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "twin spine central forward envelope",
+          "vertexStart": 264,
+          "vertexCount": 120,
+          "faceStart": 408,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "twin spine central forward envelope/service-well-0-0",
+          "vertexStart": 384,
+          "vertexCount": 12,
+          "faceStart": 644,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "twin spine central forward envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 396,
+          "vertexCount": 8,
+          "faceStart": 664,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 33,
+          "name": "twin spine central forward envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 404,
+          "vertexCount": 8,
+          "faceStart": 676,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 34,
+          "name": "twin spine central forward envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 412,
+          "vertexCount": 8,
+          "faceStart": 688,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 35,
+          "name": "twin spine central forward envelope/service-well-0-1",
+          "vertexStart": 420,
+          "vertexCount": 12,
+          "faceStart": 700,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 36,
+          "name": "twin spine central forward envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 432,
+          "vertexCount": 8,
+          "faceStart": 720,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 37,
+          "name": "twin spine central forward envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 440,
+          "vertexCount": 8,
+          "faceStart": 732,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 38,
+          "name": "twin spine central forward envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 448,
+          "vertexCount": 8,
+          "faceStart": 744,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 39,
+          "name": "twin spine central forward envelope/service-well-0-2",
+          "vertexStart": 456,
+          "vertexCount": 12,
+          "faceStart": 756,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 40,
+          "name": "twin spine central forward envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 468,
+          "vertexCount": 8,
+          "faceStart": 776,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 41,
+          "name": "twin spine central forward envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 476,
+          "vertexCount": 8,
+          "faceStart": 788,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 42,
+          "name": "twin spine central forward envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 484,
+          "vertexCount": 8,
+          "faceStart": 800,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 43,
+          "name": "twin spine central forward envelope/service-well-1-0",
+          "vertexStart": 492,
+          "vertexCount": 12,
+          "faceStart": 812,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 44,
+          "name": "twin spine central forward envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 504,
+          "vertexCount": 8,
+          "faceStart": 832,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 45,
+          "name": "twin spine central forward envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 512,
+          "vertexCount": 8,
+          "faceStart": 844,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 46,
+          "name": "twin spine central forward envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 520,
+          "vertexCount": 8,
+          "faceStart": 856,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 47,
+          "name": "twin spine central forward envelope/service-well-1-1",
+          "vertexStart": 528,
+          "vertexCount": 12,
+          "faceStart": 868,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 48,
+          "name": "twin spine central forward envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 540,
+          "vertexCount": 8,
+          "faceStart": 888,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 49,
+          "name": "twin spine central forward envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 548,
+          "vertexCount": 8,
+          "faceStart": 900,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 50,
+          "name": "twin spine central forward envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 556,
+          "vertexCount": 8,
+          "faceStart": 912,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 51,
+          "name": "twin spine central forward envelope/service-well-1-2",
+          "vertexStart": 564,
+          "vertexCount": 12,
+          "faceStart": 924,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 52,
+          "name": "twin spine central forward envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 576,
+          "vertexCount": 8,
+          "faceStart": 944,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 53,
+          "name": "twin spine central forward envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 584,
+          "vertexCount": 8,
+          "faceStart": 956,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 54,
+          "name": "twin spine central forward envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 592,
+          "vertexCount": 8,
+          "faceStart": 968,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 55,
+          "name": "twin spine central forward envelope/service-well-2-0",
+          "vertexStart": 600,
+          "vertexCount": 12,
+          "faceStart": 980,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 56,
+          "name": "twin spine central forward envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 612,
+          "vertexCount": 8,
+          "faceStart": 1000,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 57,
+          "name": "twin spine central forward envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 620,
+          "vertexCount": 8,
+          "faceStart": 1012,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 58,
+          "name": "twin spine central forward envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 628,
+          "vertexCount": 8,
+          "faceStart": 1024,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 59,
+          "name": "twin spine central forward envelope/service-well-2-1",
+          "vertexStart": 636,
+          "vertexCount": 12,
+          "faceStart": 1036,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 60,
+          "name": "twin spine central forward envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 648,
+          "vertexCount": 8,
+          "faceStart": 1056,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 61,
+          "name": "twin spine central forward envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 656,
+          "vertexCount": 8,
+          "faceStart": 1068,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 62,
+          "name": "twin spine central forward envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 664,
+          "vertexCount": 8,
+          "faceStart": 1080,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 63,
+          "name": "twin spine central forward envelope/service-well-2-2",
+          "vertexStart": 672,
+          "vertexCount": 12,
+          "faceStart": 1092,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 64,
+          "name": "twin spine central forward envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 684,
+          "vertexCount": 8,
+          "faceStart": 1112,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 65,
+          "name": "twin spine central forward envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 692,
+          "vertexCount": 8,
+          "faceStart": 1124,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 66,
+          "name": "twin spine central forward envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 700,
+          "vertexCount": 8,
+          "faceStart": 1136,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 67,
+          "name": "twin spine central forward envelope/service-well-3-0",
+          "vertexStart": 708,
+          "vertexCount": 12,
+          "faceStart": 1148,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 68,
+          "name": "twin spine central forward envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 720,
+          "vertexCount": 8,
+          "faceStart": 1168,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 69,
+          "name": "twin spine central forward envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 728,
+          "vertexCount": 8,
+          "faceStart": 1180,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 70,
+          "name": "twin spine central forward envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 736,
+          "vertexCount": 8,
+          "faceStart": 1192,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 71,
+          "name": "twin spine central forward envelope/service-well-3-1",
+          "vertexStart": 744,
+          "vertexCount": 12,
+          "faceStart": 1204,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 72,
+          "name": "twin spine central forward envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 756,
+          "vertexCount": 8,
+          "faceStart": 1224,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 73,
+          "name": "twin spine central forward envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 764,
+          "vertexCount": 8,
+          "faceStart": 1236,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 74,
+          "name": "twin spine central forward envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 772,
+          "vertexCount": 8,
+          "faceStart": 1248,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 75,
+          "name": "twin spine central forward envelope/service-well-3-2",
+          "vertexStart": 780,
+          "vertexCount": 12,
+          "faceStart": 1260,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 76,
+          "name": "twin spine central forward envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 792,
+          "vertexCount": 8,
+          "faceStart": 1280,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 77,
+          "name": "twin spine central forward envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 800,
+          "vertexCount": 8,
+          "faceStart": 1292,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 78,
+          "name": "twin spine central forward envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 808,
+          "vertexCount": 8,
+          "faceStart": 1304,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 79,
+          "name": "twin spine central forward envelope/longitudinal-service-strut-0",
+          "vertexStart": 816,
+          "vertexCount": 8,
+          "faceStart": 1316,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 80,
+          "name": "twin spine central forward envelope/longitudinal-service-strut-1",
+          "vertexStart": 824,
+          "vertexCount": 8,
+          "faceStart": 1328,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 81,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 832,
+          "vertexCount": 120,
+          "faceStart": 1340,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 82,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 952,
+          "vertexCount": 8,
+          "faceStart": 1576,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 83,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 960,
+          "vertexCount": 8,
+          "faceStart": 1588,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 84,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 968,
+          "vertexCount": 48,
+          "faceStart": 1600,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 85,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 1016,
+          "vertexCount": 48,
+          "faceStart": 1692,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 86,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 1064,
+          "vertexCount": 8,
+          "faceStart": 1784,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 87,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 1072,
+          "vertexCount": 48,
+          "faceStart": 1796,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 88,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 1120,
+          "vertexCount": 48,
+          "faceStart": 1888,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 89,
+          "name": "explicit military mount upright",
+          "vertexStart": 1168,
+          "vertexCount": 8,
+          "faceStart": 1980,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 90,
+          "name": "explicit military mount longitudinal member",
+          "vertexStart": 1176,
+          "vertexCount": 8,
+          "faceStart": 1992,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 91,
+          "name": "explicit military mount upright",
+          "vertexStart": 1184,
+          "vertexCount": 8,
+          "faceStart": 2004,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 92,
+          "name": "explicit military mount longitudinal member",
+          "vertexStart": 1192,
+          "vertexCount": 8,
+          "faceStart": 2016,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        84,
+        87
+      ],
+      "vertices": 1200,
+      "faces": 2028
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "twin spine pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "twin spine shoulder envelope",
+          "vertexStart": 8,
+          "vertexCount": 8,
+          "faceStart": 12,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 16,
+          "vertexCount": 12,
+          "faceStart": 24,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 28,
+          "vertexCount": 12,
+          "faceStart": 44,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 40,
+          "vertexCount": 12,
+          "faceStart": 64,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "twin spine pressure envelope",
+          "vertexStart": 52,
+          "vertexCount": 8,
+          "faceStart": 84,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "twin spine shoulder envelope",
+          "vertexStart": 60,
+          "vertexCount": 8,
+          "faceStart": 96,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 68,
+          "vertexCount": 12,
+          "faceStart": 108,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 80,
+          "vertexCount": 12,
+          "faceStart": 128,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "twin spine shoulder service well",
+          "vertexStart": 92,
+          "vertexCount": 12,
+          "faceStart": 148,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "twin spine transverse bridge",
+          "vertexStart": 104,
+          "vertexCount": 8,
+          "faceStart": 168,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "twin spine transverse bridge",
+          "vertexStart": 112,
+          "vertexCount": 8,
+          "faceStart": 180,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "twin spine central forward envelope",
+          "vertexStart": 120,
+          "vertexCount": 60,
+          "faceStart": 192,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "twin spine central forward envelope/service-well-0-0",
+          "vertexStart": 180,
+          "vertexCount": 12,
+          "faceStart": 308,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "twin spine central forward envelope/service-well-1-0",
+          "vertexStart": 192,
+          "vertexCount": 12,
+          "faceStart": 328,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "twin spine central forward envelope/service-well-2-0",
+          "vertexStart": 204,
+          "vertexCount": 12,
+          "faceStart": 348,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "twin spine central forward envelope/service-well-3-0",
+          "vertexStart": 216,
+          "vertexCount": 12,
+          "faceStart": 368,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 228,
+          "vertexCount": 60,
+          "faceStart": 388,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 18,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 288,
+          "vertexCount": 8,
+          "faceStart": 504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 296,
+          "vertexCount": 8,
+          "faceStart": 516,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 304,
+          "vertexCount": 24,
+          "faceStart": 528,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 328,
+          "vertexCount": 24,
+          "faceStart": 572,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 352,
+          "vertexCount": 8,
+          "faceStart": 616,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 360,
+          "vertexCount": 24,
+          "faceStart": 628,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 384,
+          "vertexCount": 24,
+          "faceStart": 672,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-spine",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "explicit military mount upright",
+          "vertexStart": 408,
+          "vertexCount": 8,
+          "faceStart": 716,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "explicit military mount longitudinal member",
+          "vertexStart": 416,
+          "vertexCount": 8,
+          "faceStart": 728,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "explicit military mount upright",
+          "vertexStart": 424,
+          "vertexCount": 8,
+          "faceStart": 740,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "explicit military mount longitudinal member",
+          "vertexStart": 432,
+          "vertexCount": 8,
+          "faceStart": 752,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-spine",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        20,
+        23
+      ],
+      "vertices": 440,
+      "faces": 764
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

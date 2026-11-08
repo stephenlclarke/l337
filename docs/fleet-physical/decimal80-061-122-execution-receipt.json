@@ -1,0 +1,169 @@
+{
+  "status": "ONE_ROOT_AUTHORIZED_FIXED_DECIMAL80_PASS_TWO_EMPTY_SOURCE_ESTIMATES_NOT_NATIVE_OR_LOADED_QUALIFICATION",
+  "authority": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a134a1-be40-77d0-9e11-64a775729232/fleet-completion-batch/decimal80-061-122-authority/authority-FIRST.json",
+    "bytes": 1159,
+    "sha256": "be3adf5488968a980f87b74eefa3d2c2071067eb40290a8fab0836573f96cbb3"
+  },
+  "rootDecision": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a134a1-be40-77d0-9e11-64a775729232/fleet-completion-batch/decimal80-061-122-authority/root-decision.json",
+    "bytes": 1493,
+    "sha256": "8b306b3047bbcd4baca445d4e7ed6d2e9fe89a63a0b8a918f5c5ae6cd8d62bb6"
+  },
+  "sourceMethodReview": {
+    "path": "/tmp/elite-g2-2d265-decimal-publication-correction-review/review.json",
+    "bytes": 5050,
+    "sha256": "1aa011dc72e14f6366f4ea2c4ea857aa7ebf6a4c087fb606113588444a99f1ac"
+  },
+  "methodFirst": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a134a1-be40-77d0-9e11-64a775729232/fleet-completion-batch/decimal80-061-122-authority/method-first.json",
+    "bytes": 4380,
+    "sha256": "69aefd90fe4dcbd497ac03c816b09add06d01ab5fbd2a0423acda2848f96206a"
+  },
+  "authoringSource": {
+    "path": "docs/fleet-physical/decimal80-061-122-authoring.py",
+    "bytes": 22729,
+    "sha256": "d0d3efd97dbf7b8446b0eec977d0fb43acd14c9882f0437867598d1c2fbac21e"
+  },
+  "input": {
+    "path": "docs/fleet-physical/decimal80-061-122-method-input-first.json",
+    "bytes": 114824,
+    "sha256": "3116ad99f94910fbc0c111fbfb539af0cec9998388f0527e0bff4f45bc8d1583"
+  },
+  "exactCommand": "python3 -E -B docs/fleet-physical/decimal80-061-122-authoring.py --authority-first /Users/sclarke/.codex/visualizations/2026/10/13/01a134a1-be40-77d0-9e11-64a775729232/fleet-completion-batch/decimal80-061-122-authority/authority-FIRST.json",
+  "execution": {
+    "count": 1,
+    "exitCode": 0,
+    "reportedWallTimeSeconds": 0.845230375,
+    "stdout": "{\"records\": 2, \"stops\": []}",
+    "retries": 0,
+    "precisionEscalations": 0,
+    "capRaises": 0,
+    "toleranceChanges": 0,
+    "sourceGeometryWrites": 0,
+    "originalCreatorImportsOrExecutions": 0,
+    "nativeCompilerRendererTests": 0
+  },
+  "results": [
+    {
+      "bytes": 212678,
+      "file": "calculated-decimal80-061-122-records/SH061.json",
+      "id": "SH061",
+      "operations": {
+        "analyticMomentEvaluations": 5776,
+        "coordinateConversions": 9648,
+        "decimalTensorChecks": 1,
+        "faceIndexChecks": 17328,
+        "faceMaterialChecks": 5776,
+        "floatBridgeChecks": 1,
+        "hardwareAllocations": 8,
+        "momentConsistencyChecks": 2158,
+        "outputFloatConversions": 5044,
+        "quadratureMomentEvaluations": 17328,
+        "resultRecords": 1,
+        "scaledCoordinateEvaluations": 9648,
+        "sourceParses": 1,
+        "squareRoots": 5776,
+        "triangleAreaEvaluations": 5776
+      },
+      "sha256": "7e94b9a638bcc373da033d68c322706ed0261abf2f10b7544e3bf601c8683ff0",
+      "status": "AUTHORED_SOURCE_BUDGET"
+    },
+    {
+      "bytes": 17791,
+      "file": "calculated-decimal80-061-122-records/SH122.json",
+      "id": "SH122",
+      "operations": {
+        "analyticMomentEvaluations": 12096,
+        "coordinateConversions": 18192,
+        "decimalTensorChecks": 1,
+        "faceIndexChecks": 36288,
+        "faceMaterialChecks": 12096,
+        "floatBridgeChecks": 1,
+        "hardwareAllocations": 7,
+        "momentConsistencyChecks": 117,
+        "outputFloatConversions": 330,
+        "quadratureMomentEvaluations": 36288,
+        "resultRecords": 1,
+        "scaledCoordinateEvaluations": 18192,
+        "sourceParses": 1,
+        "squareRoots": 12096,
+        "triangleAreaEvaluations": 12096
+      },
+      "sha256": "9db38e92c858583d49ddc561be4bb2ab769ee3af3afacbba54f7c580ab9b5200",
+      "status": "AUTHORED_SOURCE_BUDGET"
+    }
+  ],
+  "used": {
+    "analyticMomentEvaluations": 17872,
+    "coordinateConversions": 27840,
+    "decimalTensorChecks": 2,
+    "faceIndexChecks": 53616,
+    "faceMaterialChecks": 17872,
+    "floatBridgeChecks": 2,
+    "hardwareAllocations": 15,
+    "momentConsistencyChecks": 2275,
+    "outputFloatConversions": 5374,
+    "quadratureMomentEvaluations": 53616,
+    "resultRecords": 2,
+    "scaledCoordinateEvaluations": 27840,
+    "sourceParses": 2,
+    "squareRoots": 17872,
+    "triangleAreaEvaluations": 17872
+  },
+  "caps": {
+    "analyticMomentEvaluations": 17872,
+    "coordinateConversions": 27840,
+    "decimalTensorChecks": 2,
+    "faceIndexChecks": 53616,
+    "faceMaterialChecks": 17872,
+    "floatBridgeChecks": 2,
+    "hardwareAllocations": 15,
+    "momentConsistencyChecks": 2275,
+    "outputFloatConversions": 5374,
+    "quadratureMomentEvaluations": 53616,
+    "resultRecords": 2,
+    "scaledCoordinateEvaluations": 27840,
+    "sourceParses": 2,
+    "squareRoots": 17872,
+    "triangleAreaEvaluations": 17872
+  },
+  "resultFile": {
+    "path": "docs/fleet-physical/decimal80-061-122-results.json",
+    "bytes": 3207,
+    "sha256": "6f006a78be7494234519f62fe66094b5337c9a421fff0958fabcf51a0b681dc6"
+  },
+  "publication": "Both complete verified record files and summary receipt published without reported error; no owned temporary files remain.",
+  "oldStopPinsUnchanged": [
+    {
+      "path": "docs/fleet-physical/baseline-029-061-area-moment-results.json",
+      "bytes": 2184,
+      "sha256": "a256323ac497aedd83fae2ba100bd129f911dbd341d24a321f6660ff05e4caf5"
+    },
+    {
+      "path": "docs/fleet-physical/larvaal-area-moment-results.json",
+      "bytes": 7290,
+      "sha256": "a99afe756019097c6a1777c4d0ad13482bd9d8dad0b4bd7525ed6cfc49488098"
+    }
+  ],
+  "allPrior141ShippingBytesUnchanged": true,
+  "estimates": [
+    {
+      "id": "SH061",
+      "dryMassKilograms": 284291,
+      "scale": 20,
+      "sourceFrame": "existing original axes/origin; no R3 target fit",
+      "nativeBlocker": "1720 selected source faces exceed512; no runtime source admission",
+      "loadedMass": "UNISSUED"
+    },
+    {
+      "id": "SH122",
+      "dryMassKilograms": 49810,
+      "scale": 1,
+      "sourceFrame": "original declared metre axes/origin",
+      "nativeBlocker": "312-face selected source still native evidence pending; no actor grant",
+      "loadedMass": "UNISSUED"
+    }
+  ],
+  "consumerBoundary": "Swift strict reader/calibration/fulltensor consumer and registry source edits authored UNCOMPILED UNRUN; no geometry or gameplay acceptance."
+}

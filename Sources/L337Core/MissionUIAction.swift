@@ -11,6 +11,9 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
   case returnToCommander = "trial-return"
   case restartTrial = "trial-restart"
   case library = "library-open"
+  case assemblyCalibrationStart = "assembly-calibration-start"
+  case assemblyCalibrationCancel = "assembly-calibration-cancel"
+  case journal = "journal-open"
 
   public var title: String {
     switch self {
@@ -24,6 +27,9 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
     case .returnToCommander: "Return to Commander"
     case .restartTrial: "Restart Mission Trial"
     case .library: "Mission Library"
+    case .assemblyCalibrationStart: "Start Surface Calibration"
+    case .assemblyCalibrationCancel: "Stop Surface Calibration"
+    case .journal: "Journal"
     }
   }
 
@@ -33,6 +39,8 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
 
   public func isEnabled(in game: Game) -> Bool {
     switch self {
+    case .assemblyCalibrationStart: return game.canStartAssemblyCalibration
+    case .assemblyCalibrationCancel: return game.canCancelAssemblyCalibration
     case .contracts:
       return game.docked && (game.dockedAtMainStation || game.nativeStationBoardContext != nil)
         && !game.paused && !game.showroom.trading
@@ -47,6 +55,9 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
       return game.isMissionTrial
     case .library:
       return true
+    case .journal:
+      return !game.acceptsTextInput && !game.showroom.trading
+        && ![Screen.demo, .title, .gameOver, .help, .secret, .mission, .handoff].contains(game.screen)
     case .gallery, .contacts, .rumours:
       return !game.paused && !game.acceptsTextInput
         && ![
@@ -67,11 +78,14 @@ public struct MissionUIIntent: Sendable, Equatable {
   public let presentation: ScriptPagePresentation
   public let screen: Screen
   public let inventoryContext: InventoryContextEpoch
+  private let assemblyCalibrationSelection: NativeAssemblyCalibrationSelection?
   /// Check again inside GameRuntime immediately before dispatch, without an intervening await.
   public func isCurrent(in game: Game) -> Bool {
     screen == game.screen && inventoryContext == game.inventoryContextEpoch
       && presentation.epoch == game.scriptPagePresentation.epoch && action.isEnabled(in: game)
       && (!action.requiresPageProof || presentation == game.scriptPagePresentation)
+      && (action != .assemblyCalibrationStart
+        || assemblyCalibrationSelection?.isCurrent(in: game) == true)
   }
 
   public init(action: MissionUIAction, game: Game, presentation: ScriptPagePresentation) {
@@ -79,6 +93,8 @@ public struct MissionUIIntent: Sendable, Equatable {
     self.presentation = presentation
     screen = game.screen
     inventoryContext = game.inventoryContextEpoch
+    assemblyCalibrationSelection = action == .assemblyCalibrationStart
+      ? NativeAssemblyCalibrationSelection.capture(in: game) : nil
   }
 }
 
@@ -86,6 +102,7 @@ extension GameRuntime {
   /// Validate and dispatch in one actor turn so a restore cannot race the captured proof.
   public func missionUICommand(_ intent: MissionUIIntent) {
     guard intent.isCurrent(in: game) else { return }
+    if handleAssemblyCalibrationUI(intent) { return }
     if intent.action.requiresPageProof {
       scriptPageKey(intent.action.rawValue, expected: intent.presentation)
     } else {

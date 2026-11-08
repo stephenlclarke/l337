@@ -3,37 +3,36 @@ import Testing
 
 @testable import L337Core
 
-@Test func contractAndRRSReviewResourcesRemainFrozenAcrossNestedMutations() {
-  var source = Commander()
+@Test func contractAndRefusedReviewResourcesRemainFrozenAcrossNestedMutations() {
+  var game = Game(executive: false)
+  var source = game.commander
   source.cargo[0] = 2
   let station = ScriptStationResource(identity: UUID(), galaxy: 0, system: 7)
   source.scriptState.stationResources[station.key] = station
-  let original = source
-  let token = UUID()
-  let contract = ContractAcceptanceQuote(
-    board: "snapshot", offer: UUID(), issues: [], resources: source, epoch: UUID(),
-    reviewToken: token)
-  let rrs = RRSCourierQuote(
-    row: .abandon(UUID()), resources: source, epoch: UUID(), board: nil,
-    destination: nil, arrival: nil, issues: ["No actual station authority"])
+  game.commander = source
+  let original = source.contractQuoteResources
+  let contract = game.contractAcceptanceQuote(board: "missing-snapshot-board", offer: UUID())
+  let refused = game.contractAcceptanceQuote(board: "other-missing-board", offer: UUID())
+  let token = contract.reviewToken
+  #expect(!contract.allowed && !refused.allowed)
 
   source.credits += 10
   source.cargo[0] = 9
   source.equipment.insert("Fuel Scoops")
   source.scriptState.stationResources[station.key]?.energy = 50
   #expect(source != original)
-  #expect(contract.resources == original && rrs.resources == original)
+  #expect(contract.resources == original && refused.resources == original)
 
-  for var readback in [contract.resources, rrs.resources] {
+  for var readback in [contract.resources, refused.resources] {
     readback.credits = 0
     readback.cargo[0] = 0
     readback.equipment.removeAll()
     readback.scriptState.stationResources[station.key]?.destroyed = true
     #expect(readback != original)
-    #expect(contract.resources == original && rrs.resources == original)
+    #expect(contract.resources == original && refused.resources == original)
   }
   var copied = contract
   copied.reviewToken = UUID()
   #expect(contract.reviewToken == token)
-  #expect(copied.resources == original && !rrs.allowed)
+  #expect(copied.resources == original && !refused.allowed)
 }

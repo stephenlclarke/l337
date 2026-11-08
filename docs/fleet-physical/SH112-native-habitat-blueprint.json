@@ -1,0 +1,111 @@
+{
+  "schema": "l337.per-id-habitat-geometry-blueprint-proposal/1",
+  "id": "SH112-native-two-cell-shell-v1",
+  "ship": "SH112",
+  "status": "NEW_AUTHORED_GEOMETRY_RECIPE_UNEXECUTED_PHYSICAL_ENVIRONMENT_INPUTS_UNISSUED",
+  "sourceGeometry": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-design.toml",
+    "bytes": 880289,
+    "sha256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1"
+  },
+  "primitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH112-native-habitat-recipe.py",
+    "bytes": 7803,
+    "sha256": "f760f455988c1b41061fb5e54685101402990d8c8b8a47fcf85fc56da8a6961d",
+    "entryPoint": "append_candidate_habitat",
+    "executionOwner": "G1 only, after source review; G4 does not import/parse/execute this recipe or the creator"
+  },
+  "newGeometricDesignChoices": {
+    "units": "metres",
+    "cellClearWidth": 3.0,
+    "cellClearLength": 4.0,
+    "cellClearHeight": 2.4,
+    "wallThickness": 0.02,
+    "corridorClearWidth": 1.2,
+    "doorClearWidth": 1.0,
+    "doorClearHeight": 2.1,
+    "basis": "Explicit new candidate dimensions ONLY, not measured native occupied envelopes, pressure requirements, physical performance or fit"
+  },
+  "construction": {
+    "primitive": "Pinned existing Hull.box(centre,FULLextent,materialIndex); no new generic builder or actor factory",
+    "freshBufferOnly": true,
+    "panels": "Separate closed wall/floor/roof/pier/lintel solids around authored apertures; cell leaves are CLOSED geometry with no operating hardware assertion",
+    "interfaces": "Forward control/egress and aft-service apertures remain OPEN/UNISSUED. No corridor pressure enclosure, exterior mantle opening or actual traversable route is asserted.",
+    "appearance": "Use exact original SH112 materials array; new panels choose index0 jade-skin as appearance only. Never infer mechanical material from colour/name. Original source geometry/material/texture data is unchanged.",
+    "originalSourceEdited": false
+  },
+  "materialConstraints": {
+    "existingEmptySurfacePolicy": [
+      {
+        "materialIndex": 0,
+        "exactSourceMaterialName": "jade-skin",
+        "kgPerSquareMetre": 14,
+        "meaning": "Existing EMPTY source engineering equivalent, not actual new habitat wall density/strength/pressure rating"
+      },
+      {
+        "materialIndex": 1,
+        "exactSourceMaterialName": "deep-jade",
+        "kgPerSquareMetre": 14,
+        "meaning": "Existing EMPTY source engineering equivalent, not actual new habitat wall density/strength/pressure rating"
+      },
+      {
+        "materialIndex": 2,
+        "exactSourceMaterialName": "gold-core",
+        "kgPerSquareMetre": 14,
+        "meaning": "Existing EMPTY source engineering equivalent, not actual new habitat wall density/strength/pressure rating"
+      },
+      {
+        "materialIndex": 3,
+        "exactSourceMaterialName": "recess-shadow",
+        "kgPerSquareMetre": 14,
+        "meaning": "Existing EMPTY source engineering equivalent, not actual new habitat wall density/strength/pressure rating"
+      },
+      {
+        "materialIndex": 4,
+        "exactSourceMaterialName": "soft-jade",
+        "kgPerSquareMetre": 14,
+        "meaning": "Existing EMPTY source engineering equivalent, not actual new habitat wall density/strength/pressure rating"
+      },
+      {
+        "materialIndex": 5,
+        "exactSourceMaterialName": "gold-green-organ",
+        "kgPerSquareMetre": 14,
+        "meaning": "Existing EMPTY source engineering equivalent, not actual new habitat wall density/strength/pressure rating"
+      },
+      {
+        "materialIndex": 6,
+        "exactSourceMaterialName": "luminous-organ",
+        "kgPerSquareMetre": 14,
+        "meaning": "Existing EMPTY source engineering equivalent, not actual new habitat wall density/strength/pressure rating"
+      },
+      {
+        "materialIndex": 7,
+        "exactSourceMaterialName": "jade-inlay",
+        "kgPerSquareMetre": 14,
+        "meaning": "Existing EMPTY source engineering equivalent, not actual new habitat wall density/strength/pressure rating"
+      }
+    ],
+    "actualSolidMaterialRecipe": "UNISSUED; no density, strength, pressure rating, thermal model or mass assigned by blueprint"
+  },
+  "environmentAndPower": {
+    "meaning": "No native phenotype or atmosphere/pressure/temperature/occupied size is inferred. Compatibility is unknown, not false or a negative actual observation.",
+    "actualDoorMechanism": "UNISSUED",
+    "actualLifeSupportAndConnectedPower": "UNISSUED; no zero/default power or invented watt figure",
+    "actualNativePeople": "UNISSUED; no identities, occupants, cabins or purchase/grant receipt created",
+    "nativeCompatibility": "UNISSUED"
+  },
+  "laterG1Work": [
+    "Generate actual proposed geometry using pinned source and existing primitive only when execution is assigned; retain failures and exact output identity",
+    "Derive actual body/material ownership and prohibit corner/face/volume double-counting; do not reuse empty coefficients as loaded proof",
+    "Require real native environment/occupied-source and actual material/door/life-support/power inputs before any habitat qualification",
+    "Verify material/void/closedness/clearance and host fit at the actual primary-component candidate pose, without recentering/rescaling/deleting original material",
+    "Check unchanged512 cap on the COMPLETE actual required collision assembly, including later real control/service/door/hardware; preliminary generated count is insufficient",
+    "Derive real mass/COM/full tensor and connect actual source-owned crew/hardware/current save behavior only after genuine qualification"
+  ],
+  "currentResult": "No geometry was generated. No parser/compiler/test/native/model/numerical/creator execution. Blueprint and recipe source only, not installed hardware/evidence or accepted hull."
+}

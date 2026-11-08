@@ -118,12 +118,15 @@ struct FlightControlInputTests {
     #expect(game.deriveFlightWeaponDisplay().status == "CHARGING 0.1/10S")
   }
 
-  @Test func everyActualHelpPageIncludesScopedGeneratedControls() {
+  @Test func everyActualHelpPageIncludesScopedGeneratedControls() throws {
     for screen in Screen.allCases {
       for docked in [false, true] {
         for paused in [false, true] {
           var game = Game(executive: false)
-          if !docked { game.launch() }
+          if !docked {
+            try game.commander.prepareEquipment(legacy: false)
+            game.launch()
+          }
           game.screen = screen
           game.paused = paused
           for page in PlayerHelp.pages(for: game) {
@@ -144,6 +147,7 @@ struct FlightControlInputTests {
 
   @Test func weaponRowIsReservedAboveScannerAcrossViewsStylesAndSizes() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.bodies = []
     for style in ShipDisplayStyle.allCases {
@@ -172,6 +176,7 @@ struct FlightControlInputTests {
     _ = NSApplication.shared
     let view = GameView(frame: .init(x: 0, y: 0, width: 768, height: 768))
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let runtime = GameRuntime(game: game)
     let delegate = AppDelegate(
@@ -252,7 +257,7 @@ struct FlightControlInputTests {
 extension FlightControlInputTests {
   @Test(arguments: ["q", "w", "tab", "f"])
   func actorSafetyStopSurvivesAnActualRefusedHotWorkFlush(key: String) async throws {
-    var (game, _) = try NativePagedSalvageFixture.game()
+    var (game, _) = try NativePagedSalvageFixture.empGame()
     let body = try #require(game.bodies.first { $0.physical?.salvage?.wreck != nil })
     game.beginWorkGuidance(body: body, mode: .hold(.salvage), velocity: .init(20, -10, 50))
     try #require(game.workGuidance != nil)
@@ -265,7 +270,8 @@ extension FlightControlInputTests {
     await runtime.setControls(held)
     let before = await runtime.snapshot()
     let hot = try #require(before.nativeSalvageWork)
-    try #require(!before.nativeSalvageHotWorkIsCurrent(hot))
+    let ownedPreparationRequired1 = !before.nativeSalvageHotWorkIsCurrent(hot)
+    try #require(ownedPreparationRequired1)
     let momentum = before.flightWorldVelocity
     await runtime.key(key)
     let stopped = await runtime.snapshot()
@@ -304,31 +310,38 @@ extension FlightControlInputTests {
   }
 
   @Test func refusedWriterRollsBackTargetAcquisitionButCannotRestoreHeldEMPFire() async throws {
-    var (game, _) = try NativePagedSalvageFixture.game()
-    let body = try #require(game.bodies.first { $0.physical?.salvage?.wreck != nil })
-    // Retain an actual native parent, but exercise the same visible legacy-spin canonicalization
-    // that a real Tab acquisition changes. This guarantees a persistent candidate write.
-    let index = try #require(game.bodies.firstIndex { $0.id == body.id })
-    game.bodies[index].physical?.canonicalSpin = false
-    game.bodies[index].rotationRate = 0.1
-    game.bodies[index].position.x += 10000
+    var (game, site) = try NativePagedSalvageFixture.game(humanCargo: true)
+    let body = try #require(game.bodies.first { $0.physical?.salvage?.wreck == site.identity })
+    let parent = try #require(body.physical)
+    try #require(parent.spawnIdentity?.producer == .derelicts && parent.empSource == nil)
+    try #require(parent.catalogueShipID == site.catalogueShipID && parent.salvage == site.metadata)
+    try #require(game.salvageSites.contains(site))
+    try #require(game.commander.savedEMPState == nil && game.commander.alienStorageState == nil)
+    let observer = game.commander.flightSimulation.pose
     try game.commander.grantEquipment(
       Equipment.empPirateBlaster,
       at: .utility(.empPirateBlaster), provenance: .grant("refused input charge"))
-    let catalogue = try #require(ShipCatalogue.ship("SH023"))
-    let craft = try #require(catalogue.game)
-    var target = SpaceBody(id: game.nextBodyID, hull: .cobra, position: .init(0, 0, 1000))
-    target.rotationRate = 0
-    target.energy = min(77, craft.energy * 0.6)
-    game.nextBodyID += 1
-    game.bodies.append(target)
-    game.ensurePhysicalActors()
-    let targetIndex = try #require(game.bodies.firstIndex { $0.id == target.id })
-    game.bodies[targetIndex].physical?.catalogueShipID = catalogue.id
-    game.bodies[targetIndex].physical?.npc?.resources = .stock(craft)
+    // Charge against an actor already admitted by the ordinary native launch producer.
+    let target = try #require(game.bodies.first { game.empPulseEligible($0) })
+    let physical = try #require(target.physical)
+    try #require(physical.npc?.routeProvenance == .generated)
+    try #require(physical.empSource == nil && physical.salvage == nil)
+    let targetPose = game.modelPose(of: target)
+    let aim = Game.nativePlayerSurfaceAim(
+      from: .init(0, 0, -1000), mesh: game.gameplayMesh(for: target))
+    var chargingObserver = targetPose
+    chargingObserver.position = targetPose.systemPoint(aim) - targetPose.orientation.z * 1000
+    NativePagedSalvageFixture.moveObserver(&game, to: chargingObserver)
     game.selectFlightTool(.empPirateBlaster)
     let charged = game.fireEMPPirateBlaster()
     try #require(charged && game.commander.savedEMPCharge?.phase == .charging)
+    try #require(game.commander.savedEMPCharge?.target == physical.identity)
+    try #require(game.commander.savedEMPState == nil)
+    NativePagedSalvageFixture.moveObserver(&game, to: observer)
+    // Keep the actual parent in view; Tab must canonicalize this visible spin transform.
+    let index = try #require(game.bodies.firstIndex { $0.physical?.identity == parent.identity })
+    game.bodies[index].physical?.canonicalSpin = false
+    game.bodies[index].rotationRate = 0.1
     game.workTargetFilter = .salvage
     let folder = try NativePagedSalvageFixture.folder()
     defer { try? FileManager.default.removeItem(at: folder) }
@@ -340,6 +353,14 @@ extension FlightControlInputTests {
     await runtime.setControls(held)
     let before = await runtime.snapshot()
     try #require(before.requiresScriptDurability)
+    try #require(before.commander.savedEMPState == nil && before.commander.savedEMPCharge?.phase == .charging)
+    // The same real Tab transition must have a persistent effect before writer refusal.
+    var acquired = before
+    acquired.key("tab")
+    try #require(acquired.autoPilot.targetActor == parent.identity)
+    try #require(acquired.bodies.first { $0.physical?.identity == parent.identity }?.physical?.canonicalSpin == true)
+    try #require(acquired.bodies != before.bodies)
+    #expect(acquired.commander.savedEMPState == nil)
     await runtime.key("tab")
     let refused = await runtime.snapshot()
     #expect(refused.message == "MISSION SAVE FAILED - ACTION NOT COMMITTED")

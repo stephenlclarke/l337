@@ -142,12 +142,16 @@ extension NativeViewTests {
     let previousMenu = NSApp.mainMenu
     let identifier = "elite-native-emp-" + UUID().uuidString
     let preferences = try #require(UserDefaults(suiteName: identifier))
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(identifier)
-    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-    let file = directory.appendingPathComponent("commander.json")
-    var baseline = try empFixture(hostile: true)
+    let storage = try NativeStationTestStorage()
+    defer {
+      preferences.removePersistentDomain(forName: identifier)
+      storage.clean()
+    }
+    let file = storage.url
+    var baseline = try await NativeEMPPaidUIFixture.game(file: file)
     baseline.selectFlightTool(.combatLaser)
-    let profile = try #require(SalvageCatalogue.empProfile(catalogueShipID: "SH023"))
+    let profile = try #require(
+      SalvageCatalogue.empProfile(catalogueShipID: NativeEMPPaidUIFixture.catalogueID))
     let cargoSection = try #require(profile.sections.first { $0.kind == .cargo })
     let forward = cargoSection.normal.unit * -1
     let cardinal = abs(forward.y) < 0.8 ? Vector3(0, 1, 0) : .init(1, 0, 0)
@@ -174,7 +178,7 @@ extension NativeViewTests {
     resources.electrical = reserve
     baseline.bodies[0].physical?.npc?.resources = resources
     let pulse = try EMPPulseProfile.resolve(for: baseline.commander)
-    try #require(pulse.power == 32 && pulse.warmup == 10)
+    try #require(pulse.power == 64 && pulse.warmup == 10 && pulse.energyCost == 8)
     try #require(
       1 + (resources.electricalRecharge + resources.shieldRecharge) * (pulse.warmup + 0.1)
         < pulse.power)
@@ -183,9 +187,17 @@ extension NativeViewTests {
     try #require(
       baseline.commander.savedEMPState == nil && baseline.commander.savedEMPCharge == nil)
     try #require(baseline.bodies[0].physical?.empSource == nil && baseline.bodies[0].energy == 77)
-    // The saved simulation input supplies the first genuine sampled ejection, never a late reseed.
-    baseline.seedScriptTrial(0)
-    try #require(baseline.scriptSimulationSave.randomState == 0 && baseline.missionLoopCounter == 0)
+    // Paid arrival, launch and bank earning have already advanced this scene.
+    // Preserve the entire attained simulation input; never reseed it for the UI.
+    let attainedSimulation = baseline.scriptSimulationSave
+    let attainedPhysicalTime = baseline.commander.flightSimulation.physicalTime
+    try #require(attainedSimulation.valid && attainedPhysicalTime > 0)
+    // The shared fixture fixes its initial input before the paid journey. No
+    // scalar draw is expected until this scene's one original crew sample.
+    // Preserve the attained clock/counter and expose any unexpected earlier draw.
+    try #require(attainedSimulation.randomState == 0,
+      Comment(rawValue: "Initial paid UI stream consumed before EMP: RNG=\(attainedSimulation.randomState) "
+        + "missionCounter=\(attainedSimulation.missionLoopCounter) physicalTime=\(attainedPhysicalTime)"))
     try #require(baseline.commander.missionStage == .notStarted)
     try #require(!baseline.bodies[0].ecmEnabled && baseline.bodies[0].missiles == 0)
     try #require(baseline.bodies[0].hull.navalEnergy == nil)
@@ -203,8 +215,6 @@ extension NativeViewTests {
       window.orderOut(nil)
       window.delegate = nil
       NSApp.mainMenu = previousMenu
-      preferences.removePersistentDomain(forName: identifier)
-      try? FileManager.default.removeItem(at: directory)
     }
     let view = try #require(window.contentView as? GameView)
     let loop = try #require(delegate.loop)
@@ -213,7 +223,8 @@ extension NativeViewTests {
     try await delegate.runtime.load(from: file, persistMigrations: false)
     view.game = await delegate.runtime.snapshot()
     try #require(
-      view.game.scriptSimulationSave.randomState == 0 && view.game.missionLoopCounter == 0)
+      view.game.scriptSimulationSave == attainedSimulation
+        && view.game.commander.flightSimulation.physicalTime == attainedPhysicalTime)
     try #require(
       view.game.commander.savedEMPState == nil && view.game.commander.savedEMPCharge == nil)
     let loadedTarget = try #require(view.game.bodies.first { $0.id == original.id })
@@ -242,6 +253,7 @@ extension NativeViewTests {
     try verifyNativeEMPPixels(view, bodyID: original.id, ink: .red, stage: "armed")
     let audioBefore = view.game.dischargeAudio.events.filter { $0.tool == .empPirateBlaster }.count
     var expectedEnergy = original.energy
+    let chargeStartSimulation = view.game.scriptSimulationSave
     view.keyDown(with: try event(36, "\r", down: true))
     await delegate.processFrame(in: view, delta: { 0.1 })
     if resources.profile == .nativeHull {
@@ -255,7 +267,7 @@ extension NativeViewTests {
       view.game.dischargeAudio.events.filter { $0.tool == .empPirateBlaster }.count == audioBefore)
     var heldFrames = 0
     for _ in 0..<120 where view.game.commander.savedEMPCharge?.phase == .charging {
-      try #require(view.game.scriptSimulationSave.randomState == 0)
+      try #require(view.game.scriptSimulationSave.randomState == attainedSimulation.randomState)
       try #require(view.game.ecmFrames == 0 && view.game.screen != .gameOver && !view.game.docked)
       try #require(
         view.game.bodies.allSatisfy { body in
@@ -300,8 +312,19 @@ extension NativeViewTests {
     let occupied = try #require(view.game.commander.savedEMPState?.records[source])
     let episode = try #require(occupied.disableEpisodes.last)
     try #require(occupied.crewTotal == 1 && occupied.crewAboard == 1)
-    try #require(episode.ejections == [.init(ordinal: 0, delay: 0.5)])
-    #expect(view.game.scriptSimulationSave.randomState == 1)
+    // One original crew member consumes exactly one source RNG draw. Its delay
+    // follows the attained stream, rather than the obsolete reseeded 0.5 seconds.
+    let sampledState = attainedSimulation.randomState &* 6_364_136_223_846_793_005 &+ 1
+    let sampledByte = Int((sampledState >> 32) & 255)
+    let sampledDelay = 0.5 + Double(sampledByte) / 255 * 44.5
+    try #require(episode.ejections == [.init(ordinal: 0, delay: sampledDelay)])
+    #expect(view.game.scriptSimulationSave.randomState == sampledState)
+    #expect(view.game.missionLoopCounter
+      == chargeStartSimulation.missionLoopCounter &- UInt8(heldFrames + 1))
+    try #require(episode.incident.physicalTime + sampledDelay < episode.deadline,
+      Comment(rawValue: "Current UI ejection premise: attainedRNG=\(attainedSimulation.randomState) "
+        + "attainedCounter=\(attainedSimulation.missionLoopCounter) sampledDelay=\(sampledDelay) "
+        + "deadline=\(episode.deadline) disableTime=\(episode.incident.physicalTime)"))
     for _ in 0..<300 where view.game.commander.savedEMPState?.records[source]?.crewAboard != 0 {
       try #require(
         view.game.commander.flightSimulation.physicalTime < episode.deadline
@@ -333,20 +356,67 @@ extension NativeViewTests {
     let section = WreckSectionIdentity(wreck: record.wreck, section: cargoSection.index)
     try #require(view.game.workGuidance?.surface.section == section)
     view.keyDown(with: try event(36, "\r", down: true))
-    for _ in 0..<1200 where !view.game.commander.salvageLedger.isDepleted(section) {
+    var cutting = true
+    for _ in 0..<1200 {
+      if view.game.salvageSectionIsDepleted(section) {
+        if cutting {
+          view.keyUp(with: try event(36, "\r", down: false))
+          cutting = false
+        }
+        let received = view.game.commander.cargo[CommodityIdentity.food.rawValue]
+          - baseline.commander.cargo[CommodityIdentity.food.rawValue]
+        if received == 2 { break }
+        let food = view.game.commander.alienStorageState?.current.salvage.pending.values.first {
+          guard $0.lot.identity.section == section, $0.binding != nil,
+            case .commodity(let amount) = $0.lot.content
+          else { return false }
+          return amount.commodity == .food
+        }
+        if let target = food?.binding, view.game.autoPilot.targetActor != target {
+          // Tab selects the actual released body; the ordinary scoop controller
+          // must move the owned craft through its real aperture and custody guard.
+          for _ in 0..<view.game.bodies.count {
+            view.keyDown(with: try event(48, "\t", down: true))
+            view.keyUp(with: try event(48, "\t", down: false))
+            await delegate.processPendingCommands(in: view)
+            if view.game.autoPilot.targetActor == target { break }
+          }
+          try #require(view.game.autoPilot.targetActor == target)
+        }
+      }
       await delegate.processFrame(in: view, delta: { 0.1 })
     }
-    view.keyUp(with: try event(36, "\r", down: false))
-    try #require(view.game.commander.salvageLedger.isDepleted(section))
-    let food = view.game.commander.salvageLedger.pendingLots.reduce(0) { total, lot in
-      guard lot.identity.section.wreck == record.wreck,
-        case .commodity(let amount)? = lot.loot?.content, amount.commodity == .food
+    if cutting { view.keyUp(with: try event(36, "\r", down: false)) }
+    try #require(view.game.salvageSectionIsDepleted(section))
+    let native = try #require(view.game.commander.alienStorageState?.current.salvage.native)
+    let inspection = try #require(native.inspections[section])
+    let cycle = try #require(native.works[inspection.id])
+    #expect(cycle.inspection == .fresh(inspection.id) && cycle.releases > 0)
+    #expect(cycle.currentWorkSeconds == 0 && cycle.depleted)
+    #expect(inspection.preinspection == nil && inspection.plan.source.manifest == record.salvageCargo)
+    let parent = try #require(native.wrecks[record.wreck])
+    #expect(parent.source == .emp(actor: source, sequence: record.sequence))
+    let food = view.game.commander.alienStorageState?.current.salvage.pending.values.reduce(0) {
+      total, pending in
+      guard pending.lot.identity.section.wreck == record.wreck,
+        case .commodity(let amount) = pending.lot.content, amount.commodity == .food
       else { return total }
       return total + amount.quantity
-    }
-    #expect(
-      food + view.game.commander.cargo[CommodityIdentity.food.rawValue]
-        - baseline.commander.cargo[CommodityIdentity.food.rawValue] == 2)
+    } ?? 0
+    #expect(food + view.game.commander.cargo[CommodityIdentity.food.rawValue]
+      - baseline.commander.cargo[CommodityIdentity.food.rawValue] == 2)
+    #expect(view.game.commander.cargo[CommodityIdentity.food.rawValue]
+      - baseline.commander.cargo[CommodityIdentity.food.rawValue] == 2)
+    let receivedFood = view.game.commander.alienStorageState?.current.snapshot.world.reduce(0) {
+      total, value in
+      guard case .companion(let item) = value, item.plan == inspection.id,
+        case .collected(let receipt) = item.state,
+        case .cargo(let amount, let before, let after) = receipt.effect,
+        amount.commodity == .food, after - before == amount.quantity
+      else { return total }
+      return total + amount.quantity
+    } ?? 0
+    #expect(receivedFood == 2)
     #expect(view.game.commander.savedEMPState?.records[source]?.pods.count == people.count)
     delegate.queueCommanderFile(.saveActive)
     await delegate.processPendingCommands(in: view)
@@ -355,11 +425,22 @@ extension NativeViewTests {
     let (saved, _) = try ScriptSaveStore.read(bytes, from: file)
     let discovery = try #require(saved.scriptState.savedFleetDiscovery)
     #expect(discovery.valid && discovery.owner == saved.equipmentOwnerID)
-    #expect(discovery.entries["SH023"] != nil)
-    #expect(NativeFleetDiscoverySave.version == 61)
-    #expect(pointer.schemaVersion == NativeFleetDiscoverySave.version)
-    #expect(!saved.usesAlienStorageSaveVersion)
+    #expect(discovery.entries[NativeEMPPaidUIFixture.catalogueID] != nil)
+    #expect(pointer.schemaVersion == NativeFleetDiscoverySave.alienVersion)
+    #expect(saved.usesAlienStorageSaveVersion && saved.alienStorageStateValid)
+    #expect(saved.alienStorageState?.current.salvage.native.works[inspection.id] == cycle)
+    #expect(saved.alienStorageState?.current.salvage.native.inspections[section] == inspection)
     #expect(saved.savedEMPState?.records[source]?.pods.count == people.count)
     #expect(saved.savedEMPState?.records[source]?.hull.body.id == original.id)
+    try await delegate.runtime.load(from: file, persistMigrations: false)
+    view.game = await delegate.runtime.snapshot()
+    #expect(view.game.commander.cargo == saved.cargo)
+    #expect(view.game.commander.alienStorageState?.current.snapshot
+      == saved.alienStorageState?.current.snapshot)
+    #expect(view.game.commander.savedEMPState?.records[source]?.disableEpisodes
+      == saved.savedEMPState?.records[source]?.disableEpisodes)
+    #expect(Set(view.game.bodies.compactMap { $0.physical?.empCrewPod }) == people)
+    #expect(nativeEMPHulls(view.game, source: source).count == 1)
+    #expect(try Data(contentsOf: file) == bytes)
   }
 }

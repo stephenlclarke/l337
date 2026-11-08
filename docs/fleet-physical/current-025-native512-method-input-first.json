@@ -1,0 +1,233 @@
+{
+  "status": "FROZEN_CURRENT025_FIXED_NATIVE512_SOURCE_METHOD_PROPOSAL_NO_GEOMETRY_EXECUTION_AUTHORITY",
+  "beforeCommit": "deac613e0ee839ead60f4ff3455c485f7c3b957d",
+  "scopeID": "SH025",
+  "inputCurrentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH025.toml",
+    "bytes": 690857,
+    "sha256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883"
+  },
+  "inputOriginalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH025-design.toml",
+    "bytes": 534238,
+    "sha256": "5c76051fbb6f681065858b312dadfb1acad3e10ea22559d6da6f62d6684d25cc"
+  },
+  "r3": {
+    "path": "docs/fleet-design-v2/ships/SH025.toml",
+    "bytes": 3492,
+    "sha256": "a305641b7be704a2af0129e146d4ef1d72d165a1cbc7b935458c4c35aea14cc0"
+  },
+  "callerAndMethodPins": [
+    {
+      "path": "docs/fleet-physical/author-baseline-005-006-025-source-ownership.py",
+      "bytes": 29286,
+      "sha256": "f1fcea4f628856b9f22987f1fcf9c63cbb4f3da880ea86d7ef2413aaafb3ff9b"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/ShipRawMeshCache.swift",
+      "bytes": 1626,
+      "sha256": "13879bfe6a2dd5871c5a26532e82231f25087401966931e6cce99ea8ac8ce23b"
+    },
+    {
+      "path": "Sources/L337Core/ShipCatalogue.swift",
+      "bytes": 12862,
+      "sha256": "d6a777a426b9958bc6539bb27c2d53b3ee76e390b20039eab2a144966f5d8d03"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Fitting.swift",
+      "bytes": 4525,
+      "sha256": "cf6692c4fa3f37518c524af5f9615cc54c761d082c751925fa7c30a54a4880e8"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalFleetRuntimeHullSourceUnitTests.swift",
+      "bytes": 4874,
+      "sha256": "eaf3120134f05fd30ee02fe082845733b077c8a4c59f2bfcb34c5de29eb1a848"
+    },
+    {
+      "path": "docs/fleet-physical/baseline-025-stop-text-attribution.json",
+      "bytes": 676,
+      "sha256": "bbec0d649b755968cbf712ace88c43fe931855e64be4c216f7a3e6c292036136"
+    }
+  ],
+  "sourceCreatorPins": {
+    "creatorPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+    "primitiveCreatorPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "primitiveCreatorSHA256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476",
+    "emissionManifestPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet-redesign-manifest.json",
+    "emissionManifestSHA256": "acbc9e01bd7c3dbc7ac301e46c793142805ecaa6a5e0041b000f02f4c30f182c",
+    "originalInputPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "originalInputSHA256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "maintainedBoundary": "Authoring current resourceaa8fd7b2 only. Maintained9ed65 source794c19f7 differs and is read-only/not part of scope; no crash/baseline claim or overlay.",
+  "inputNativeExpected": {
+    "vertices": 536,
+    "triangles": 964,
+    "closedNamedComponents": 27,
+    "sourceArchetype": "split-prow",
+    "sourceModuleCount": 2,
+    "sourceRole": "trader"
+  },
+  "fixedPartRecipe": [
+    {
+      "indices": [
+        0,
+        5,
+        13
+      ],
+      "role": "two forward pressure pods and primary body envelope",
+      "oldRings": 5,
+      "oldSides": 12,
+      "keepRings": [
+        0,
+        1,
+        4
+      ],
+      "keepAngularIndices": [
+        0,
+        2,
+        3,
+        6,
+        8,
+        9
+      ],
+      "newVerticesEach": 18,
+      "newTrianglesEach": 32
+    },
+    {
+      "indices": [
+        19
+      ],
+      "role": "original cockpit glazing envelope",
+      "oldRings": 5,
+      "oldSides": 12,
+      "keepRings": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "keepAngularIndices": [
+        0,
+        2,
+        3,
+        6,
+        8,
+        9
+      ],
+      "newVerticesEach": 24,
+      "newTrianglesEach": 44
+    },
+    {
+      "indices": [
+        22,
+        23,
+        25,
+        26
+      ],
+      "role": "both original drive casings and both luminous drive recesses",
+      "oldRings": 2,
+      "oldSides": 12,
+      "keepRings": [
+        0,
+        1
+      ],
+      "keepAngularIndices": [
+        0,
+        3,
+        6,
+        9
+      ],
+      "newVerticesEach": 8,
+      "newTrianglesEach": 12
+    },
+    {
+      "indices": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        14,
+        15,
+        16,
+        17
+      ],
+      "role": "all twelve original closed recessed service wells; exact original vertices/faces/material runs/UV tokens",
+      "copyExact": true,
+      "newVerticesEach": 12,
+      "newTrianglesEach": 20
+    },
+    {
+      "indices": [
+        10,
+        11,
+        12,
+        18,
+        20,
+        21,
+        24
+      ],
+      "role": "both fork longitudinal stock envelopes, aft bridge, lower pressure envelope, cockpit crossmember, both drive supports; exact original vertices/faces/materials/UV tokens",
+      "copyExact": true,
+      "newVerticesEach": 8,
+      "newTrianglesEach": 12
+    }
+  ],
+  "outputNativeExact": {
+    "vertices": 310,
+    "triangles": 512,
+    "closedNamedComponents": 27,
+    "triangleBudgetExpression": "3*32 + 44 + 4*12 + 12*20 + 7*12 = 512; no omitted part or final cap increase."
+  },
+  "frame": "Copy ONLY selected existing current-native coordinate tuples, preserve original vertex values/axes/origin/F01 uniform36.95309420575483 calibration. No new point scaling, span fit, AABB replacement, convex wrap, union, CSG/search or transform. Cardinal angle indices and each peak/end station retained. AABB preservation is a fixed per-component refusal check, not assumed geometry qualification.",
+  "topology": "Reconstruct only eight selected original lofts from fixed ring/angular subsets with original cap fan/side-quad triangulation and outward order. Preserve all other19 parts byte-value exact after index remapping, including all12closed recessed wells and7supports. No face joins separate component vertex sets, no channels filled, no model component omitted. Closed oriented two-incidence edges and positive signed component volume required. Reduced loft faceting is a candidate; all-view/full-detailed comparison remains G1 acceptance.",
+  "appearance": "Keep actual current native materials/textures/palette/licence/appearance metadata unchanged. Copy old well/support face UV token values exact. For188 new loft faces apply the original pinned mesh_dict style only: original relative source points, dominant absolute triangle-normal component with first-axis tie, planes{0:(2,1),1:(0,2),2:(0,1)}, uv_scale0.85 and round6, texture0 for material0 else2. This is explicit newly authored UV projection for changed faces, not a false byte-identical UV claim. Source original-current selected point uniform-frame correspondence must pass unchanged1e-9 relative per-coordinate check; no coordinate correction on failure.",
+  "validation": "Verify current native integer topology/materials correspond to original selected native before reusing its27-component ownership. Reuse own Counter+operation_groups text, never import/execute creators. Verify exact current full detailed/rawmetadata bytes unchanged outside new native block and explicit provenance context suffix. Verify original/current source inputs/licences/materials/textures/R3/frame pins. New faces finite/nondegenerate, oriented edges2 per closed part, finite positive signed volumes and each part old/new bounds exact. No adaptive retry, angle/ring search, cap/tolerance raise or source editing to force pass.",
+  "plannedOutputs": [
+    "current-025-native512-candidate/SH025.toml",
+    "current-025-native512-candidate/component-provenance.json",
+    "current-025-native512-candidate/result.json"
+  ],
+  "maximumOutputBytesEach": 1048576,
+  "plannedSourceHunks": [
+    "Sources/L337Core/Resources/Ships/SH025.toml: replace only nativeDesign vertices/faces/faceMaterials/faceTextures values; append explicit native authoring provenance to existing geometryContext/source metadata while retaining complete F01 text. All design/R3/game/profile/material/texture/license/outside bytes exact.",
+    "Tests/L337CoreTests/OriginalFleetRuntimeHullSourceUnitTests.swift: strengthen existing actual025mesh/physicalframe/material/UV/currentstock source assertions for512native, no new capability/acquisition grants.",
+    "Immutable native authoring method/input/codeFIRST/provenance/receipt and completion ledger only; no source-cap/runtime admission/fit/clearance policy weakening."
+  ],
+  "consumerMap": "Existing current native raw/player/salvage/mission loader consumers already share ship.nativeDesign; strict RuntimeHullSource <=512 gate remains. No old original display-native substitution and no physical mass registration/adoption in this repair.",
+  "operationCaps": {
+    "sourceTOMLParses": 2,
+    "ownIntegerPartRecords": 27,
+    "inputNativeFaceIndexChecks": 5784,
+    "inputNativeFaceMaterialChecks": 1928,
+    "inputNativeCorrespondenceFaceComparisons": 964,
+    "existingScaleTokenConversions": 1,
+    "coordinateFloatConversions": 2538,
+    "sourceFrameCoordinateComparisons": 930,
+    "newVertexCopies": 310,
+    "newTriangleRecords": 512,
+    "newTriangleIndexChecks": 1536,
+    "faceGeometryChecks": 512,
+    "normalCrossProducts": 700,
+    "signedVolumeFaceTerms": 512,
+    "edgeIncidenceRecords": 1536,
+    "componentBoundsVertexVisits": 846,
+    "componentBoundsComparisons": 162,
+    "UVProjectionFaces": 188,
+    "UVNumericRoundings": 1128,
+    "copiedFaceTextures": 324,
+    "outputDocuments": 3
+  },
+  "executionBoundary": "Source proposal only: own new geometry authoring program must be frozen/pinned and source reviewed; Root must separately authorize exact one bounded new source-engineering authoring execution or dispatch G1. No original creator/repo helper/geometry/native/compiler/renderer/test execution here; no unchanged validation retry.",
+  "engineeringOrNativeQualification": false,
+  "sourceMassRecordsAndOldSTOPs": "All143 byte-exact records, original025 validationFAIL/no-record and both old numericSTOPs remain; other170resources/013014corrections/026budget/stations untouched."
+}

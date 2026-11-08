@@ -1,0 +1,21 @@
+{
+  "status": "FROZEN_CURRENT025_NATIVE512_SOURCE_METHOD_REVIEW_CANDIDATE_NOT_EXECUTED",
+  "beforeCommit": "deac613e0ee839ead60f4ff3455c485f7c3b957d",
+  "method": "current025-fixed-component-native512-v1",
+  "source": {
+    "path": "docs/fleet-physical/author-current-025-native512.py",
+    "bytes": 38055,
+    "sha256": "d76060259ea0ed98e7f5412c22ae9f123e86780b573a470a8744f2e4b749354e"
+  },
+  "input": {
+    "path": "docs/fleet-physical/current-025-native512-method-input-first.json",
+    "bytes": 10653,
+    "sha256": "0fb59f2f331fd08ae9535633de930ee5005fc5ed6bdf64198687652b13f232e7"
+  },
+  "ownCounterAndOperationGroupsAndCheckSourceExact": true,
+  "publicationHelpersExactReviewedCopy": true,
+  "authorityRequiredBeforeGeometry": "Future Root decision/sourceMethodReview/methodFirst exactpins, executionAuthorizedtrue/scopeSH025/method, plus own source/input/currentresource/originalsource/caller/creator pins. Process integrity only; not a cryptographic capability. No authority exists yet.",
+  "numericalBoundary": "Own fixed native authoring code; no import/syntax test/numerical or geometry evaluation performed. No original creator/repohelper/native/compiler/renderer/tests. Fixed all27components/310copiedvertices/512newtriangles; no search or adaptive rings/caps/tolerance.",
+  "sourceOrNativeQualification": false,
+  "limitations": "Source review needed for fixed ring topology/UV/provenance/output bounds and all retained parts; actual allview/nativeclearance/physical/gameplay qualified acceptance remains separate G1 work. Output TOML serialization is unparsed/unrun; decoder tests required later."
+}

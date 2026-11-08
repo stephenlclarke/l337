@@ -50,7 +50,8 @@ struct NativeSalvageInspection: Codable, Sendable, Equatable {
     guard source.valid, wreck == source.id, owner == source.owner, seed == source.seed,
       plan.section.wreck == source.identity, plan.section.section == sectionProfile.index,
       inspectedAt.isFinite, inspectedAt >= source.bornAt,
-      let profile = SalvageCatalogue.profile(catalogueShipID: source.catalogueShipID),
+      let profile = SalvageCatalogue.profile(catalogueShipID: source.catalogueShipID)
+        ?? SalvageCatalogue.empProfile(catalogueShipID: source.catalogueShipID),
       profile.sections.first(where: { $0.index == sectionProfile.index }) == sectionProfile,
       plan.source.roles == profile.sourceRoles,
       sectionProfile.workSeconds.isFinite, sectionProfile.workSeconds > 0,

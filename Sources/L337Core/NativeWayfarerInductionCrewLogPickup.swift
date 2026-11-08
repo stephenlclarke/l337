@@ -43,8 +43,8 @@ extension Game {
       parent.seedReception != nil
     else { return nil }
     let manifest = NativeInductionCrewLogManifest(permission: parent.permission)
-    return commander.scriptState.instances[
-      NativeInductionCrewLogPack.instance(recorder: manifest.recorder)]
+    return nativeGuidanceStoredMission(
+      id: NativeInductionCrewLogPack.instance(recorder: manifest.recorder))
   }
 
   /// Exact current native address and owning retained alias, never a selected name or serial alone.

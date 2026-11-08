@@ -1,5 +1,5 @@
 enum EMPPulseProfileError: Error, Equatable, Sendable {
-  case missingEnergySystem, invalidEnergyGrade, invalidReserve, invalidDistance
+  case missingEnergySystem, invalidEnergyGrade, invalidReserve, invalidDistance, invalidEMPModule
 }
 
 /// Project balance for a future pulse. Resolving this value never authorizes or emits a shot.
@@ -13,10 +13,10 @@ struct EMPPulseProfile: Equatable, Sendable {
   let warmup: Double
   let splashRadius: Double
 
-  private init(energyStage: Int) {
+  private init(energyStage: Int, empPowerMultiplier: Double) {
     let factor = 1 + 0.5 * Double(energyStage)
     self.energyStage = energyStage
-    power = 32 * factor
+    power = 32 * factor * empPowerMultiplier
     range = 3000 * factor
     energyCost = 8
     heatCost = 18
@@ -42,7 +42,13 @@ struct EMPPulseProfile: Equatable, Sendable {
     }
     let stage = grade.order.addingReportingOverflow(modules)
     guard !stage.overflow else { throw EMPPulseProfileError.invalidEnergyGrade }
-    return Self(energyStage: stage.partialValue)
+    guard let module = commander.fittedEquipment(at: .utility(.empPirateBlaster)),
+      module.node == EMPModuleGradePolicy.node, module.empBankValid,
+      let grades = module.empGrades
+    else { throw EMPPulseProfileError.invalidEMPModule }
+    return Self(
+      energyStage: stage.partialValue,
+      empPowerMultiplier: EMPModuleGradePolicy.powerMultipliers[grades.power])
   }
 
   func primaryDrain(remainingReserve: Double) throws -> Double {

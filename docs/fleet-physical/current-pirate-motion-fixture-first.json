@@ -1,0 +1,10 @@
+{
+  "status": "FROZEN_SINGLE_PHYSICS_FIXTURE_CURRENT_SOURCE_BEFORE_MUTATION",
+  "beforeCommit": "fe4241ddf123e409fdfb8b9c4c38dce0cf9d3313",
+  "file": "Tests/L337CoreTests/GameplayEncounterIntegrationTests.swift",
+  "bytes": 4206,
+  "sha256": "f1d12fd10d0a7a08bb0216fd71c80ec206baa5aced80255aa06c4564a3c6b62b",
+  "method": "newPopulationMovementUsesWorldVelocityAndDoesNotRunLegacyHostileDamage",
+  "scope": "Only original method fixture before request: retain Game.launch/speed0; remove unrelated bodies, use canonical flight anchors and controlled initial player pose on declared trade lane, resolve current published pirate source with deterministicdraw0 for actual player and birth position, actual current stock and generated provenance, exact source ID in existing request. Velocity100 and every existing receipt/motion/no damage/legal oracle unchanged. No actual journey claim, source gate bypass, natural policy/cap/seed alteration, new test or helper.",
+  "validation": "Source text/hash and exact inverse outside proof only, no compiler/native/model/tests."
+}

@@ -19,7 +19,7 @@ private struct TrialEquipmentQuoteFixture {
   init(_ scenario: TrialEquipmentQuoteScenario) throws {
     let scene = """
       [trial]
-      ship = "SH023"
+      ship = "\(scenario.pledge ? "SH025" : "SH023")"
       galaxy = 0
       system = 7
       credits = 100000
@@ -113,6 +113,7 @@ func publishedTrialQuotesBindCanonicalEquipmentAcrossSaveLoadRestartAndReturn(
   game.commander.name = "KEEP PROPERTY"
   game.commander.credits = 543210
   game.commander.cargo[0] = 2
+  try game.commander.prepareEquipment(legacy: false)
   game.openGallery()
   try #require(game.commander.valid)
   let runtime = GameRuntime(game: game, saveURL: fixture.save)
@@ -138,12 +139,11 @@ func publishedTrialQuotesBindCanonicalEquipmentAcrossSaveLoadRestartAndReturn(
         (0..<3).map {
           ComponentFittingSlot.missilePylon($0)
         }))
-  let expectedShip = scenario.scene ? "SH023" : "SH025"
-  let expectedFuel = scenario.scene ? 70 : 130
+  let expectedShip = "SH025"
   let expectedCash = scenario.scene ? 100000 : 7200
   let expectedAllowed = scenario.scene || scenario.pledge
   #expect(published.commander.shipID == expectedShip && published.commander.credits == expectedCash)
-  #expect(published.commander.fuel == expectedFuel && !published.commander.unlimitedMissiles)
+  #expect(published.commander.fuel == 130 && !published.commander.unlimitedMissiles)
   let expectedIssues: [String]
   if scenario.scene {
     expectedIssues = []

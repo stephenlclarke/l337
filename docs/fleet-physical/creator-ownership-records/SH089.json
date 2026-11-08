@@ -1,0 +1,1564 @@
+{
+  "id": "SH089",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "75eaa16f5496ef1164f9665d1ee98da814d309562421addb3f86e78b778ed4d5",
+  "contractSHA256": "92cdce3357540ac17a213a8f5f034d0fc58f7af6e3b541539c951d45e0439d65",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "open curved loop",
+          "vertexStart": 0,
+          "vertexCount": 540,
+          "faceStart": 0,
+          "faceCount": 1076,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 1076
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "body primary pressure envelope",
+          "vertexStart": 540,
+          "vertexCount": 120,
+          "faceStart": 1076,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "body primary pressure envelope/service-well-0-0",
+          "vertexStart": 660,
+          "vertexCount": 12,
+          "faceStart": 1312,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 672,
+          "vertexCount": 8,
+          "faceStart": 1332,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 680,
+          "vertexCount": 8,
+          "faceStart": 1344,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 688,
+          "vertexCount": 8,
+          "faceStart": 1356,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "body primary pressure envelope/service-well-0-1",
+          "vertexStart": 696,
+          "vertexCount": 12,
+          "faceStart": 1368,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 708,
+          "vertexCount": 8,
+          "faceStart": 1388,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 716,
+          "vertexCount": 8,
+          "faceStart": 1400,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 724,
+          "vertexCount": 8,
+          "faceStart": 1412,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "body primary pressure envelope/service-well-0-2",
+          "vertexStart": 732,
+          "vertexCount": 12,
+          "faceStart": 1424,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 744,
+          "vertexCount": 8,
+          "faceStart": 1444,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 752,
+          "vertexCount": 8,
+          "faceStart": 1456,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 760,
+          "vertexCount": 8,
+          "faceStart": 1468,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "body primary pressure envelope/service-well-1-0",
+          "vertexStart": 768,
+          "vertexCount": 12,
+          "faceStart": 1480,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 780,
+          "vertexCount": 8,
+          "faceStart": 1500,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 788,
+          "vertexCount": 8,
+          "faceStart": 1512,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 796,
+          "vertexCount": 8,
+          "faceStart": 1524,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "body primary pressure envelope/service-well-1-1",
+          "vertexStart": 804,
+          "vertexCount": 12,
+          "faceStart": 1536,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 816,
+          "vertexCount": 8,
+          "faceStart": 1556,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 824,
+          "vertexCount": 8,
+          "faceStart": 1568,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 832,
+          "vertexCount": 8,
+          "faceStart": 1580,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "body primary pressure envelope/service-well-1-2",
+          "vertexStart": 840,
+          "vertexCount": 12,
+          "faceStart": 1592,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 852,
+          "vertexCount": 8,
+          "faceStart": 1612,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 860,
+          "vertexCount": 8,
+          "faceStart": 1624,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 868,
+          "vertexCount": 8,
+          "faceStart": 1636,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "body primary pressure envelope/service-well-2-0",
+          "vertexStart": 876,
+          "vertexCount": 12,
+          "faceStart": 1648,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 888,
+          "vertexCount": 8,
+          "faceStart": 1668,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 896,
+          "vertexCount": 8,
+          "faceStart": 1680,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 904,
+          "vertexCount": 8,
+          "faceStart": 1692,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "body primary pressure envelope/service-well-2-1",
+          "vertexStart": 912,
+          "vertexCount": 12,
+          "faceStart": 1704,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 924,
+          "vertexCount": 8,
+          "faceStart": 1724,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 932,
+          "vertexCount": 8,
+          "faceStart": 1736,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 33,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 940,
+          "vertexCount": 8,
+          "faceStart": 1748,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 34,
+          "name": "body primary pressure envelope/service-well-2-2",
+          "vertexStart": 948,
+          "vertexCount": 12,
+          "faceStart": 1760,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 35,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 960,
+          "vertexCount": 8,
+          "faceStart": 1780,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 36,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 968,
+          "vertexCount": 8,
+          "faceStart": 1792,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 37,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 976,
+          "vertexCount": 8,
+          "faceStart": 1804,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 38,
+          "name": "body primary pressure envelope/service-well-3-0",
+          "vertexStart": 984,
+          "vertexCount": 12,
+          "faceStart": 1816,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 39,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 996,
+          "vertexCount": 8,
+          "faceStart": 1836,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 40,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 1004,
+          "vertexCount": 8,
+          "faceStart": 1848,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 41,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 1012,
+          "vertexCount": 8,
+          "faceStart": 1860,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 42,
+          "name": "body primary pressure envelope/service-well-3-1",
+          "vertexStart": 1020,
+          "vertexCount": 12,
+          "faceStart": 1872,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 43,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 1032,
+          "vertexCount": 8,
+          "faceStart": 1892,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 44,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 1040,
+          "vertexCount": 8,
+          "faceStart": 1904,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 45,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 1048,
+          "vertexCount": 8,
+          "faceStart": 1916,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 46,
+          "name": "body primary pressure envelope/service-well-3-2",
+          "vertexStart": 1056,
+          "vertexCount": 12,
+          "faceStart": 1928,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 47,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 1068,
+          "vertexCount": 8,
+          "faceStart": 1948,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 48,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 1076,
+          "vertexCount": 8,
+          "faceStart": 1960,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 49,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 1084,
+          "vertexCount": 8,
+          "faceStart": 1972,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 50,
+          "name": "body primary pressure envelope/longitudinal-service-strut-0",
+          "vertexStart": 1092,
+          "vertexCount": 8,
+          "faceStart": 1984,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 51,
+          "name": "body primary pressure envelope/longitudinal-service-strut-1",
+          "vertexStart": 1100,
+          "vertexCount": 8,
+          "faceStart": 1996,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 52,
+          "name": "arc transverse connected support",
+          "vertexStart": 1108,
+          "vertexCount": 8,
+          "faceStart": 2008,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 53,
+          "name": "arc transverse connected support",
+          "vertexStart": 1116,
+          "vertexCount": 8,
+          "faceStart": 2020,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 54,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 1124,
+          "vertexCount": 120,
+          "faceStart": 2032,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 55,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 1244,
+          "vertexCount": 8,
+          "faceStart": 2268,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 56,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 1252,
+          "vertexCount": 8,
+          "faceStart": 2280,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 57,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 1260,
+          "vertexCount": 48,
+          "faceStart": 2292,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 58,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 1308,
+          "vertexCount": 48,
+          "faceStart": 2384,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 59,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 1356,
+          "vertexCount": 8,
+          "faceStart": 2476,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 60,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 1364,
+          "vertexCount": 48,
+          "faceStart": 2488,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 61,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 1412,
+          "vertexCount": 48,
+          "faceStart": 2580,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        57,
+        60
+      ],
+      "vertices": 1460,
+      "faces": 2672
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "open curved loop",
+          "vertexStart": 0,
+          "vertexCount": 184,
+          "faceStart": 0,
+          "faceCount": 364,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 364
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "body primary pressure envelope",
+          "vertexStart": 184,
+          "vertexCount": 60,
+          "faceStart": 364,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "body primary pressure envelope/service-well-0-0",
+          "vertexStart": 244,
+          "vertexCount": 12,
+          "faceStart": 480,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "body primary pressure envelope/service-well-1-0",
+          "vertexStart": 256,
+          "vertexCount": 12,
+          "faceStart": 500,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "body primary pressure envelope/service-well-2-0",
+          "vertexStart": 268,
+          "vertexCount": 12,
+          "faceStart": 520,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "body primary pressure envelope/service-well-3-0",
+          "vertexStart": 280,
+          "vertexCount": 12,
+          "faceStart": 540,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "arc transverse connected support",
+          "vertexStart": 292,
+          "vertexCount": 8,
+          "faceStart": 560,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "arc transverse connected support",
+          "vertexStart": 300,
+          "vertexCount": 8,
+          "faceStart": 572,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 308,
+          "vertexCount": 60,
+          "faceStart": 584,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 9,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 368,
+          "vertexCount": 8,
+          "faceStart": 700,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 376,
+          "vertexCount": 8,
+          "faceStart": 712,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 384,
+          "vertexCount": 24,
+          "faceStart": 724,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 408,
+          "vertexCount": 24,
+          "faceStart": 768,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 432,
+          "vertexCount": 8,
+          "faceStart": 812,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "arc-runner",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 440,
+          "vertexCount": 24,
+          "faceStart": 824,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 464,
+          "vertexCount": 24,
+          "faceStart": 868,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "arc-runner",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        11,
+        14
+      ],
+      "vertices": 488,
+      "faces": 912
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

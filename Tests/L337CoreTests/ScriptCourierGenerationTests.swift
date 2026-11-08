@@ -127,6 +127,7 @@ struct CourierNativeFixture: Sendable {
         && reach.navigation == nil && reach.storage == 0 && reach.fuel == 70
         && reach.capacity == 70 && reach.jumpCap == 7 && reach.firstReach == 7
         && reach.laterReach == 7)
+    try game.commander.prepareEquipment(legacy: false)
     return game
   }
 

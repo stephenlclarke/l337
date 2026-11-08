@@ -29,8 +29,24 @@ extension Display {
   static func contractDetailRows(_ game: Game, width: Double) -> [String] {
     guard let row = game.contractBoard.selected else { return ["No contract selected."] }
     var rows: [String]
-    if row.utility != nil {
+    if row.borrowedVoice != nil {
+      rows = game.borrowedVoiceDetail()
+    } else if row.quietChoir != nil {
+      rows = game.quietChoirDetail()
+    } else if row.memoryAtlas != nil {
+      rows = game.memoryAtlasDetail()
+    } else if row.signedPassageOpening != nil {
+      rows = game.signedPassageOpeningDetail()
+    } else if row.assemblyOfOrbits != nil {
+      rows = game.assemblyOfOrbitsDetail()
+    } else if row.underTow != nil {
+      rows = game.underTowDetail()
+    } else if row.inquiry == .requestCase {
+      rows = game.c01InquiryRequestDetail()
+    } else if row.utility != nil {
       rows = game.nativeUtilityDetail
+    } else if row.isolationWorkParent != nil {
+      rows = game.isolationWorkParentDetail()
     } else if row.wayfarerInduction != nil {
       rows = game.wayfarerInductionDetail()
     } else if row.glassMeridian != nil {
@@ -59,8 +75,6 @@ extension Display {
       rows = game.nativePeopleDetail
     } else if row.finance != nil {
       rows = game.financeDetail
-    } else if row.rrs != nil {
-      rows = game.rrsCourierDetail
     } else if let offer = row.offer {
       let destination = Universe.systemsIncludingPlugh(number: offer.destinationGalaxy)[
         offer.destinationSystem
@@ -136,7 +150,14 @@ extension Display {
           : active.first ?? "No active contract assignments."), layout.left, 62, scale: scale,
       ink: active.isEmpty ? .white : .green)
     var detailReason: String? {
+      if let reason = game.contractBoard.signedPassageOpeningQuote?.issues.first { return reason }
+      if let reason = game.contractBoard.memoryAtlasQuote?.issues.first { return reason }
+      if let reason = game.contractBoard.quietChoirQuote?.issues.first { return reason }
+      if let reason = game.contractBoard.borrowedVoiceQuote?.issues.first { return reason }
+      if let reason = game.contractBoard.underTowQuote?.issues.first { return reason }
+      if let reason = game.contractBoard.assemblyOfOrbitsQuote?.issues.first { return reason }
       if let reason = game.contractBoard.utilityQuote?.issues.first { return reason }
+      if let reason = game.contractBoard.isolationWorkParentQuote?.issues.first { return reason }
       if let reason: String = game.contractBoard.measuredExtractionQuote?.issues.first {
         return reason
       }
@@ -148,7 +169,6 @@ extension Display {
       if let reason: String = game.contractBoard.repairLoopQuote?.issues.first { return reason }
       if let reason: String = game.contractBoard.coldChainQuote?.issues.first { return reason }
       if let reason: String = game.contractBoard.providerQuote?.issues.first { return reason }
-      if let reason: String = game.contractBoard.rrsQuote?.issues.first { return reason }
       if let reason: String = game.contractBoard.financeQuote?.issues.first { return reason }
       if let reason: String = game.contractBoard.peopleQuote?.issues.first { return reason }
       if let reason: String = game.contractBoard.quote?.issues.first { return reason }
@@ -172,15 +192,22 @@ extension Display {
         frame.label(hint, layout.left, height - 84, scale: scale, ink: .cyan)
       }
       for (action, bounds) in layout.actions {
-        let rrs = game.contractBoard.rrsQuote
         let finance = game.contractBoard.financeQuote
         let people = game.contractBoard.peopleQuote
         let utility = game.contractBoard.utilityQuote
+        let isolation = game.contractBoard.isolationWorkParentQuote
         let repairLoop = game.contractBoard.repairLoopQuote
         let coldChain = game.contractBoard.coldChainQuote
         let provider = game.contractBoard.providerQuote
         let survey = game.contractBoard.surveyQuote
         let wayfarerInduction = game.contractBoard.wayfarerInductionQuote
+        let inquiry = game.contractBoard.inquiryQuote
+        let underTow = game.contractBoard.underTowQuote
+        let borrowedVoice = game.contractBoard.borrowedVoiceQuote
+        let quietChoir = game.contractBoard.quietChoirQuote
+        let memoryAtlas = game.contractBoard.memoryAtlasQuote
+        let signedPassageOpening = game.contractBoard.signedPassageOpeningQuote
+        let assemblyOfOrbits = game.contractBoard.assemblyOfOrbitsQuote
         let glassMeridian = game.contractBoard.glassMeridianQuote
         let flightReception = game.contractBoard.flightReceptionQuote
         let safeGunnery = game.contractBoard.safeGunneryQuote
@@ -190,8 +217,16 @@ extension Display {
         let identifiedSalvage = game.contractBoard.identifiedSalvageQuote
         let available =
           action == .back
+          || (underTow != nil && action == .accept && underTow?.allowed == true)
+          || (borrowedVoice != nil && action == .accept && borrowedVoice?.allowed == true)
+          || (quietChoir != nil && action == .accept && quietChoir?.allowed == true)
+          || (memoryAtlas != nil && action == .accept && memoryAtlas?.allowed == true)
+          || (signedPassageOpening != nil && action == .accept && signedPassageOpening?.allowed == true)
+          || (assemblyOfOrbits != nil && action == .accept && assemblyOfOrbits?.allowed == true)
           || (utility != nil && action == .accept && utility?.allowed == true)
+          || (isolation != nil && action == .accept && isolation?.allowed == true)
           || (wayfarerInduction != nil && action == .accept && wayfarerInduction?.allowed == true)
+          || (inquiry != nil && action == .accept && inquiry?.allowed == true)
           || (glassMeridian != nil && action == .accept && glassMeridian?.allowed == true)
           || (flightReception != nil && action == .accept && flightReception?.allowed == true)
           || (safeGunnery != nil && action == .accept && safeGunnery?.allowed == true)
@@ -209,29 +244,25 @@ extension Display {
             && (action == .accept
               ? finance?.allowed == true
               : finance?.canDecline == true))
-          || (rrs != nil
-            && (action == .accept ? rrs?.allowed == true : rrs?.row.canDecline == true))
           || (game.contractBoard.quote != nil
             && (action != .accept || game.contractBoard.quote?.allowed == true))
         frame.label(
           (game.contractBoard.action == action ? "> " : "  ")
             + (action == .accept
-              && (wayfarerInduction != nil || glassMeridian != nil || flightReception != nil
+              && (borrowedVoice != nil || quietChoir != nil || memoryAtlas != nil || signedPassageOpening != nil || assemblyOfOrbits != nil || underTow != nil || inquiry != nil || wayfarerInduction != nil || glassMeridian != nil || flightReception != nil
                 || measuredExtraction != nil
                 || recordRecovery != nil
                 || identifiedSalvage != nil
                 || survey != nil
                 || provider != nil || coldChain != nil
-                || repairLoop != nil || utility != nil)
+                || repairLoop != nil || utility != nil || isolation != nil)
               ? "Confirm"
               : action == .accept && people != nil
                 ? (people?.row.action ?? "Closed")
                 : action == .accept && finance != nil
                   ? (finance?.actionLabel ?? "Closed")
-                  : action == .accept && rrs != nil
-                    ? "Confirm"
-                    : (action == .accept && game.contractBoard.quote?.pledge != nil
-                      ? "Donate" : action.rawValue)),
+                  : (action == .accept && game.contractBoard.quote?.pledge != nil
+                    ? "Donate" : action.rawValue)),
           bounds.x + 8,
           bounds.y + 10, scale: scale, ink: available ? .cyan : .orange)
       }
@@ -253,8 +284,6 @@ extension Display {
           layout.left, y, scale: scale, ink: .cyan)
         let pledge = row.offer.flatMap { try? game.pledgePreview(board: row.board, offer: $0.id) }
         let courier = row.offer?.courier.map { ScriptCourierPreview(terms: $0) }
-        let rrsSummary: String? =
-          row.rrs == nil ? nil : "Protected packet / 0 tonnes / Confirm required"
         let pledgeSummary: String? = pledge.map {
           if OriginalMutualContribution.matches($0.declaration) {
             return "Donate 500.0 CR / Cedamar relief reserve / no cash reward"
@@ -268,10 +297,45 @@ extension Display {
             $0.duration == 0 ? "no limit" : String(format: "%.0fs", $0.duration))
         }
         var preferredSummary: String? = row.reason
+        if preferredSummary == nil, let action = row.borrowedVoice {
+          preferredSummary = action == .progress
+            ? "The Borrowed Voice / retained investigation / beacons unavailable"
+            : "The Borrowed Voice / investigation / five actual visited systems"
+        }
+        if preferredSummary == nil, let action = row.quietChoir {
+          preferredSummary = action == .progress
+            ? "A Choir Beneath the Static / retained investigation / calibration unavailable"
+            : "A Choir Beneath the Static / investigation / four systems and real Larvaal ID"
+        }
+        if preferredSummary == nil, let action = row.memoryAtlas {
+          preferredSummary = action == .progress
+            ? "The Memory Atlas / original case and watcher custody"
+            : "The Memory Atlas / commission and separate original watcher"
+        }
+        if preferredSummary == nil, let action = row.signedPassageOpening {
+          preferredSummary = action == .progress
+            ? "Signed Passage / retained commission / reference unavailable"
+            : "Signed Passage / commission only / original reference pickup separate"
+        }
+        if preferredSummary == nil, let action = row.underTow {
+          preferredSummary = action == .progress
+            ? "Under Tow / retained original case / read progress"
+            : "Under Tow / separate 1t original instrument loan / Confirm required"
+        }
+        if preferredSummary == nil, let action = row.assemblyOfOrbits {
+          preferredSummary = action == .progress
+            ? "An Assembly of Orbits / retained original case / read progress"
+            : "An Assembly of Orbits / separate 1t original instrument loan / Confirm required"
+        }
         if preferredSummary == nil {
           preferredSummary =
             row.wayfarerInduction == nil
             ? nil : "Exchange induction / sealed 1t / review the 1800s flight allowance"
+        }
+        if preferredSummary == nil {
+          preferredSummary =
+            row.inquiry == .requestCase
+            ? "Continuity inquiry / no fee / separate case" : nil
         }
         if preferredSummary == nil {
           preferredSummary =
@@ -288,6 +352,9 @@ extension Display {
             row.utility == nil
             ? nil : "Field relief / original 4t / payment at verified reception"
         }
+        if preferredSummary == nil, row.isolationWorkParent != nil {
+          preferredSummary = "Two physical isolations / original 1t programmer / 970 CR on return"
+        }
         if preferredSummary == nil {
           preferredSummary =
             row.repairLoop == nil ? nil : "Repair loop / 2t / 610 CR on owner return"
@@ -301,7 +368,7 @@ extension Display {
         if preferredSummary == nil {
           preferredSummary = row.finance == nil ? nil : "Review loan terms"
         }
-        if preferredSummary == nil { preferredSummary = rrsSummary ?? courier?.summary }
+        if preferredSummary == nil { preferredSummary = courier?.summary }
         let summary: String = preferredSummary ?? pledgeSummary ?? offerSummary ?? "Unavailable"
         frame.label(
           short(summary), layout.left, y + 18, scale: scale,

@@ -1,0 +1,3592 @@
+{
+  "id": "SH150",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "06cbe5e88f8d62e9f65b09c5cb74ba85b7d84ee183ceed0f40f6a8f3a1542f34",
+  "contractSHA256": "fcaab7daecf342a8dd67725565ed8f7fcf6460eab8c0357de5041b314fe8cbe4",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "body primary pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 120,
+          "faceStart": 0,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "body primary pressure envelope/service-well-0-0",
+          "vertexStart": 120,
+          "vertexCount": 12,
+          "faceStart": 236,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 132,
+          "vertexCount": 8,
+          "faceStart": 256,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 140,
+          "vertexCount": 8,
+          "faceStart": 268,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 148,
+          "vertexCount": 8,
+          "faceStart": 280,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "body primary pressure envelope/service-well-0-1",
+          "vertexStart": 156,
+          "vertexCount": 12,
+          "faceStart": 292,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 168,
+          "vertexCount": 8,
+          "faceStart": 312,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 176,
+          "vertexCount": 8,
+          "faceStart": 324,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 184,
+          "vertexCount": 8,
+          "faceStart": 336,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "body primary pressure envelope/service-well-0-2",
+          "vertexStart": 192,
+          "vertexCount": 12,
+          "faceStart": 348,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 204,
+          "vertexCount": 8,
+          "faceStart": 368,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 212,
+          "vertexCount": 8,
+          "faceStart": 380,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 220,
+          "vertexCount": 8,
+          "faceStart": 392,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "body primary pressure envelope/service-well-1-0",
+          "vertexStart": 228,
+          "vertexCount": 12,
+          "faceStart": 404,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 240,
+          "vertexCount": 8,
+          "faceStart": 424,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 248,
+          "vertexCount": 8,
+          "faceStart": 436,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 256,
+          "vertexCount": 8,
+          "faceStart": 448,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "body primary pressure envelope/service-well-1-1",
+          "vertexStart": 264,
+          "vertexCount": 12,
+          "faceStart": 460,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 276,
+          "vertexCount": 8,
+          "faceStart": 480,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 284,
+          "vertexCount": 8,
+          "faceStart": 492,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 292,
+          "vertexCount": 8,
+          "faceStart": 504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "body primary pressure envelope/service-well-1-2",
+          "vertexStart": 300,
+          "vertexCount": 12,
+          "faceStart": 516,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 312,
+          "vertexCount": 8,
+          "faceStart": 536,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 320,
+          "vertexCount": 8,
+          "faceStart": 548,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 328,
+          "vertexCount": 8,
+          "faceStart": 560,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "body primary pressure envelope/service-well-2-0",
+          "vertexStart": 336,
+          "vertexCount": 12,
+          "faceStart": 572,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 348,
+          "vertexCount": 8,
+          "faceStart": 592,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 356,
+          "vertexCount": 8,
+          "faceStart": 604,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 364,
+          "vertexCount": 8,
+          "faceStart": 616,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "body primary pressure envelope/service-well-2-1",
+          "vertexStart": 372,
+          "vertexCount": 12,
+          "faceStart": 628,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 384,
+          "vertexCount": 8,
+          "faceStart": 648,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 392,
+          "vertexCount": 8,
+          "faceStart": 660,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 400,
+          "vertexCount": 8,
+          "faceStart": 672,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 33,
+          "name": "body primary pressure envelope/service-well-2-2",
+          "vertexStart": 408,
+          "vertexCount": 12,
+          "faceStart": 684,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 34,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 420,
+          "vertexCount": 8,
+          "faceStart": 704,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 35,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 428,
+          "vertexCount": 8,
+          "faceStart": 716,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 36,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 436,
+          "vertexCount": 8,
+          "faceStart": 728,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 37,
+          "name": "body primary pressure envelope/service-well-3-0",
+          "vertexStart": 444,
+          "vertexCount": 12,
+          "faceStart": 740,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 38,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 456,
+          "vertexCount": 8,
+          "faceStart": 760,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 39,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 464,
+          "vertexCount": 8,
+          "faceStart": 772,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 40,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 472,
+          "vertexCount": 8,
+          "faceStart": 784,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 41,
+          "name": "body primary pressure envelope/service-well-3-1",
+          "vertexStart": 480,
+          "vertexCount": 12,
+          "faceStart": 796,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 42,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 492,
+          "vertexCount": 8,
+          "faceStart": 816,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 43,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 500,
+          "vertexCount": 8,
+          "faceStart": 828,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 44,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 508,
+          "vertexCount": 8,
+          "faceStart": 840,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 45,
+          "name": "body primary pressure envelope/service-well-3-2",
+          "vertexStart": 516,
+          "vertexCount": 12,
+          "faceStart": 852,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 46,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 528,
+          "vertexCount": 8,
+          "faceStart": 872,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 47,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 536,
+          "vertexCount": 8,
+          "faceStart": 884,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 48,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 544,
+          "vertexCount": 8,
+          "faceStart": 896,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 49,
+          "name": "body primary pressure envelope/longitudinal-service-strut-0",
+          "vertexStart": 552,
+          "vertexCount": 8,
+          "faceStart": 908,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 50,
+          "name": "body primary pressure envelope/longitudinal-service-strut-1",
+          "vertexStart": 560,
+          "vertexCount": 8,
+          "faceStart": 920,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 51,
+          "name": "pannier connected structural support",
+          "vertexStart": 568,
+          "vertexCount": 8,
+          "faceStart": 932,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 52,
+          "name": "box_detail structural envelope",
+          "vertexStart": 576,
+          "vertexCount": 8,
+          "faceStart": 944,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 53,
+          "name": "box_detail recessed service well",
+          "vertexStart": 584,
+          "vertexCount": 12,
+          "faceStart": 956,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 54,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 596,
+          "vertexCount": 8,
+          "faceStart": 976,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 55,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 604,
+          "vertexCount": 8,
+          "faceStart": 988,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 56,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 612,
+          "vertexCount": 8,
+          "faceStart": 1000,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 57,
+          "name": "pannier connected structural support",
+          "vertexStart": 620,
+          "vertexCount": 8,
+          "faceStart": 1012,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 58,
+          "name": "box_detail structural envelope",
+          "vertexStart": 628,
+          "vertexCount": 8,
+          "faceStart": 1024,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 59,
+          "name": "box_detail recessed service well",
+          "vertexStart": 636,
+          "vertexCount": 12,
+          "faceStart": 1036,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 60,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 648,
+          "vertexCount": 8,
+          "faceStart": 1056,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 61,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 656,
+          "vertexCount": 8,
+          "faceStart": 1068,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 62,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 664,
+          "vertexCount": 8,
+          "faceStart": 1080,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 63,
+          "name": "pannier connected structural support",
+          "vertexStart": 672,
+          "vertexCount": 8,
+          "faceStart": 1092,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 64,
+          "name": "box_detail structural envelope",
+          "vertexStart": 680,
+          "vertexCount": 8,
+          "faceStart": 1104,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 65,
+          "name": "box_detail recessed service well",
+          "vertexStart": 688,
+          "vertexCount": 12,
+          "faceStart": 1116,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 66,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 700,
+          "vertexCount": 8,
+          "faceStart": 1136,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 67,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 708,
+          "vertexCount": 8,
+          "faceStart": 1148,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 68,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 716,
+          "vertexCount": 8,
+          "faceStart": 1160,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 69,
+          "name": "pannier connected structural support",
+          "vertexStart": 724,
+          "vertexCount": 8,
+          "faceStart": 1172,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 70,
+          "name": "box_detail structural envelope",
+          "vertexStart": 732,
+          "vertexCount": 8,
+          "faceStart": 1184,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 71,
+          "name": "box_detail recessed service well",
+          "vertexStart": 740,
+          "vertexCount": 12,
+          "faceStart": 1196,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 72,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 752,
+          "vertexCount": 8,
+          "faceStart": 1216,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 73,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 760,
+          "vertexCount": 8,
+          "faceStart": 1228,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 74,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 768,
+          "vertexCount": 8,
+          "faceStart": 1240,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 75,
+          "name": "pannier connected structural support",
+          "vertexStart": 776,
+          "vertexCount": 8,
+          "faceStart": 1252,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 76,
+          "name": "box_detail structural envelope",
+          "vertexStart": 784,
+          "vertexCount": 8,
+          "faceStart": 1264,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 77,
+          "name": "box_detail recessed service well",
+          "vertexStart": 792,
+          "vertexCount": 12,
+          "faceStart": 1276,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 78,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 804,
+          "vertexCount": 8,
+          "faceStart": 1296,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 79,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 812,
+          "vertexCount": 8,
+          "faceStart": 1308,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 80,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 820,
+          "vertexCount": 8,
+          "faceStart": 1320,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 81,
+          "name": "pannier connected structural support",
+          "vertexStart": 828,
+          "vertexCount": 8,
+          "faceStart": 1332,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 82,
+          "name": "box_detail structural envelope",
+          "vertexStart": 836,
+          "vertexCount": 8,
+          "faceStart": 1344,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 83,
+          "name": "box_detail recessed service well",
+          "vertexStart": 844,
+          "vertexCount": 12,
+          "faceStart": 1356,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 84,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 856,
+          "vertexCount": 8,
+          "faceStart": 1376,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 85,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 864,
+          "vertexCount": 8,
+          "faceStart": 1388,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 86,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 872,
+          "vertexCount": 8,
+          "faceStart": 1400,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 87,
+          "name": "pannier connected structural support",
+          "vertexStart": 880,
+          "vertexCount": 8,
+          "faceStart": 1412,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 88,
+          "name": "box_detail structural envelope",
+          "vertexStart": 888,
+          "vertexCount": 8,
+          "faceStart": 1424,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 89,
+          "name": "box_detail recessed service well",
+          "vertexStart": 896,
+          "vertexCount": 12,
+          "faceStart": 1436,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 90,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 908,
+          "vertexCount": 8,
+          "faceStart": 1456,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 91,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 916,
+          "vertexCount": 8,
+          "faceStart": 1468,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 92,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 924,
+          "vertexCount": 8,
+          "faceStart": 1480,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 93,
+          "name": "pannier connected structural support",
+          "vertexStart": 932,
+          "vertexCount": 8,
+          "faceStart": 1492,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 94,
+          "name": "box_detail structural envelope",
+          "vertexStart": 940,
+          "vertexCount": 8,
+          "faceStart": 1504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 95,
+          "name": "box_detail recessed service well",
+          "vertexStart": 948,
+          "vertexCount": 12,
+          "faceStart": 1516,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 96,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 960,
+          "vertexCount": 8,
+          "faceStart": 1536,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 97,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 968,
+          "vertexCount": 8,
+          "faceStart": 1548,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 98,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 976,
+          "vertexCount": 8,
+          "faceStart": 1560,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 99,
+          "name": "pannier connected structural support",
+          "vertexStart": 984,
+          "vertexCount": 8,
+          "faceStart": 1572,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 100,
+          "name": "box_detail structural envelope",
+          "vertexStart": 992,
+          "vertexCount": 8,
+          "faceStart": 1584,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 101,
+          "name": "box_detail recessed service well",
+          "vertexStart": 1000,
+          "vertexCount": 12,
+          "faceStart": 1596,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 102,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 1012,
+          "vertexCount": 8,
+          "faceStart": 1616,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 103,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 1020,
+          "vertexCount": 8,
+          "faceStart": 1628,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 104,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 1028,
+          "vertexCount": 8,
+          "faceStart": 1640,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 105,
+          "name": "pannier connected structural support",
+          "vertexStart": 1036,
+          "vertexCount": 8,
+          "faceStart": 1652,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 106,
+          "name": "box_detail structural envelope",
+          "vertexStart": 1044,
+          "vertexCount": 8,
+          "faceStart": 1664,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 107,
+          "name": "box_detail recessed service well",
+          "vertexStart": 1052,
+          "vertexCount": 12,
+          "faceStart": 1676,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 108,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 1064,
+          "vertexCount": 8,
+          "faceStart": 1696,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 109,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 1072,
+          "vertexCount": 8,
+          "faceStart": 1708,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 110,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 1080,
+          "vertexCount": 8,
+          "faceStart": 1720,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 111,
+          "name": "pannier connected structural support",
+          "vertexStart": 1088,
+          "vertexCount": 8,
+          "faceStart": 1732,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 112,
+          "name": "box_detail structural envelope",
+          "vertexStart": 1096,
+          "vertexCount": 8,
+          "faceStart": 1744,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 113,
+          "name": "box_detail recessed service well",
+          "vertexStart": 1104,
+          "vertexCount": 12,
+          "faceStart": 1756,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 114,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 1116,
+          "vertexCount": 8,
+          "faceStart": 1776,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 115,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 1124,
+          "vertexCount": 8,
+          "faceStart": 1788,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 116,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 1132,
+          "vertexCount": 8,
+          "faceStart": 1800,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 117,
+          "name": "pannier connected structural support",
+          "vertexStart": 1140,
+          "vertexCount": 8,
+          "faceStart": 1812,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 118,
+          "name": "box_detail structural envelope",
+          "vertexStart": 1148,
+          "vertexCount": 8,
+          "faceStart": 1824,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 119,
+          "name": "box_detail recessed service well",
+          "vertexStart": 1156,
+          "vertexCount": 12,
+          "faceStart": 1836,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 120,
+          "name": "box_detail recessed service well/recess-service-strut-0",
+          "vertexStart": 1168,
+          "vertexCount": 8,
+          "faceStart": 1856,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 121,
+          "name": "box_detail recessed service well/recess-service-strut-1",
+          "vertexStart": 1176,
+          "vertexCount": 8,
+          "faceStart": 1868,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 122,
+          "name": "box_detail recessed service well/recess-service-strut-2",
+          "vertexStart": 1184,
+          "vertexCount": 8,
+          "faceStart": 1880,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 123,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 1192,
+          "vertexCount": 120,
+          "faceStart": 1892,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 124,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 1312,
+          "vertexCount": 8,
+          "faceStart": 2128,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 125,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 1320,
+          "vertexCount": 8,
+          "faceStart": 2140,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 126,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 1328,
+          "vertexCount": 48,
+          "faceStart": 2152,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 127,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 1376,
+          "vertexCount": 48,
+          "faceStart": 2244,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 128,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 1424,
+          "vertexCount": 8,
+          "faceStart": 2336,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 129,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 1432,
+          "vertexCount": 48,
+          "faceStart": 2348,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 130,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 1480,
+          "vertexCount": 48,
+          "faceStart": 2440,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        126,
+        129
+      ],
+      "vertices": 1528,
+      "faces": 2532
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "body primary pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 60,
+          "faceStart": 0,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "body primary pressure envelope/service-well-0-0",
+          "vertexStart": 60,
+          "vertexCount": 12,
+          "faceStart": 116,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "body primary pressure envelope/service-well-1-0",
+          "vertexStart": 72,
+          "vertexCount": 12,
+          "faceStart": 136,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "body primary pressure envelope/service-well-2-0",
+          "vertexStart": 84,
+          "vertexCount": 12,
+          "faceStart": 156,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "body primary pressure envelope/service-well-3-0",
+          "vertexStart": 96,
+          "vertexCount": 12,
+          "faceStart": 176,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "pannier connected structural support",
+          "vertexStart": 108,
+          "vertexCount": 8,
+          "faceStart": 196,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "box_detail structural envelope",
+          "vertexStart": 116,
+          "vertexCount": 8,
+          "faceStart": 208,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "box_detail recessed service well",
+          "vertexStart": 124,
+          "vertexCount": 12,
+          "faceStart": 220,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "pannier connected structural support",
+          "vertexStart": 136,
+          "vertexCount": 8,
+          "faceStart": 240,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "box_detail structural envelope",
+          "vertexStart": 144,
+          "vertexCount": 8,
+          "faceStart": 252,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "box_detail recessed service well",
+          "vertexStart": 152,
+          "vertexCount": 12,
+          "faceStart": 264,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "pannier connected structural support",
+          "vertexStart": 164,
+          "vertexCount": 8,
+          "faceStart": 284,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "box_detail structural envelope",
+          "vertexStart": 172,
+          "vertexCount": 8,
+          "faceStart": 296,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "box_detail recessed service well",
+          "vertexStart": 180,
+          "vertexCount": 12,
+          "faceStart": 308,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "pannier connected structural support",
+          "vertexStart": 192,
+          "vertexCount": 8,
+          "faceStart": 328,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "box_detail structural envelope",
+          "vertexStart": 200,
+          "vertexCount": 8,
+          "faceStart": 340,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "box_detail recessed service well",
+          "vertexStart": 208,
+          "vertexCount": 12,
+          "faceStart": 352,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "pannier connected structural support",
+          "vertexStart": 220,
+          "vertexCount": 8,
+          "faceStart": 372,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "box_detail structural envelope",
+          "vertexStart": 228,
+          "vertexCount": 8,
+          "faceStart": 384,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "box_detail recessed service well",
+          "vertexStart": 236,
+          "vertexCount": 12,
+          "faceStart": 396,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "pannier connected structural support",
+          "vertexStart": 248,
+          "vertexCount": 8,
+          "faceStart": 416,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "box_detail structural envelope",
+          "vertexStart": 256,
+          "vertexCount": 8,
+          "faceStart": 428,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "box_detail recessed service well",
+          "vertexStart": 264,
+          "vertexCount": 12,
+          "faceStart": 440,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "pannier connected structural support",
+          "vertexStart": 276,
+          "vertexCount": 8,
+          "faceStart": 460,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "box_detail structural envelope",
+          "vertexStart": 284,
+          "vertexCount": 8,
+          "faceStart": 472,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "box_detail recessed service well",
+          "vertexStart": 292,
+          "vertexCount": 12,
+          "faceStart": 484,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "pannier connected structural support",
+          "vertexStart": 304,
+          "vertexCount": 8,
+          "faceStart": 504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "box_detail structural envelope",
+          "vertexStart": 312,
+          "vertexCount": 8,
+          "faceStart": 516,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "box_detail recessed service well",
+          "vertexStart": 320,
+          "vertexCount": 12,
+          "faceStart": 528,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "pannier connected structural support",
+          "vertexStart": 332,
+          "vertexCount": 8,
+          "faceStart": 548,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "box_detail structural envelope",
+          "vertexStart": 340,
+          "vertexCount": 8,
+          "faceStart": 560,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "box_detail recessed service well",
+          "vertexStart": 348,
+          "vertexCount": 12,
+          "faceStart": 572,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "pannier connected structural support",
+          "vertexStart": 360,
+          "vertexCount": 8,
+          "faceStart": 592,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 33,
+          "name": "box_detail structural envelope",
+          "vertexStart": 368,
+          "vertexCount": 8,
+          "faceStart": 604,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 34,
+          "name": "box_detail recessed service well",
+          "vertexStart": 376,
+          "vertexCount": 12,
+          "faceStart": 616,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 35,
+          "name": "pannier connected structural support",
+          "vertexStart": 388,
+          "vertexCount": 8,
+          "faceStart": 636,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 36,
+          "name": "box_detail structural envelope",
+          "vertexStart": 396,
+          "vertexCount": 8,
+          "faceStart": 648,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 37,
+          "name": "box_detail recessed service well",
+          "vertexStart": 404,
+          "vertexCount": 12,
+          "faceStart": 660,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 38,
+          "name": "pannier connected structural support",
+          "vertexStart": 416,
+          "vertexCount": 8,
+          "faceStart": 680,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 39,
+          "name": "box_detail structural envelope",
+          "vertexStart": 424,
+          "vertexCount": 8,
+          "faceStart": 692,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 40,
+          "name": "box_detail recessed service well",
+          "vertexStart": 432,
+          "vertexCount": 12,
+          "faceStart": 704,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 41,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 444,
+          "vertexCount": 60,
+          "faceStart": 724,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 42,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 504,
+          "vertexCount": 8,
+          "faceStart": 840,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 43,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 512,
+          "vertexCount": 8,
+          "faceStart": 852,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 44,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 520,
+          "vertexCount": 24,
+          "faceStart": 864,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 45,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 544,
+          "vertexCount": 24,
+          "faceStart": 908,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 46,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 568,
+          "vertexCount": 8,
+          "faceStart": 952,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "gift-barge",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 47,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 576,
+          "vertexCount": 24,
+          "faceStart": 964,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 48,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 600,
+          "vertexCount": 24,
+          "faceStart": 1008,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "gift-barge",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        44,
+        47
+      ],
+      "vertices": 624,
+      "faces": 1052
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

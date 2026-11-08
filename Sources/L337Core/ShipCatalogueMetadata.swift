@@ -28,7 +28,7 @@ public enum ShipCatalogueType: String, Codable, Sendable, CaseIterable {
   }
 }
 public enum ShipCatalogueCapitalSubtype: String, Codable, Sendable {
-  case vessel, station
+  case vessel, station, platform
 }
 public enum ShipCataloguePurchasePolicy: String, Codable, Sendable {
   case blueprintFabrication, pendingFabrication, xyzzyOnly, never
@@ -70,13 +70,14 @@ public enum ShipCataloguePlacementStatus: String, Codable, Sendable {
   case declared, pending
 }
 public enum ShipCatalogueRarity: String, Codable, Sendable, CaseIterable {
-  case common, uncommon, rare
+  case common, uncommon, rare, pending
   /// Version-one project population balance, before the authored role preference.
   public var encounterWeight: Int {
     switch self {
     case .common: 100
     case .uncommon: 25
     case .rare: 5
+    case .pending: 0
     }
   }
 }
@@ -93,7 +94,7 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
   public let objectKind: ShipCatalogueObjectKind
   public let origin: ShipCatalogueOrigin
   public let primaryType: ShipCatalogueType?
-  /// Functional AI eligibility, separate from the eight displayed types.
+  /// Descriptive for an unplaced pending authored hull; natural AI eligibility needs roleWeights.
   public let primaryRole: ShipCatalogueRole?
   public let roleWeights: [ShipCatalogueRoleWeight]
   public let access: ShipCatalogueAccess
@@ -126,7 +127,7 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
   /// Catalogue pool policy only; the runtime still authenticates and admits each actor.
   public var readyForNaturalEncounters: Bool {
     access == .normal && encounterMode == .natural && mechanicsStatus == .ready
-      && placementStatus == .declared
+      && placementStatus == .declared && rarity != .pending
   }
   public var normallyDiscoverable: Bool {
     access == .normal && discoveryEligible
@@ -145,7 +146,7 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
   func validEffectiveCargo(performance: ShipPerformance?, profiles: [ShipProfile]) -> Bool {
     guard let performance else { return true }
     let selected = profiles.filter {
-      $0.group == "project-refit-v1" || $0.group == "liberator-native-v1"
+      $0.group == "project-refit-v1"
     }
     guard selected.count == 1, let profile = selected.first else { return false }
     func tonnes(_ key: String) -> Double? {
@@ -154,11 +155,6 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
         let number = value.number, number.isFinite, number >= 0, number.rounded() == number
       else { return nil }
       return number
-    }
-    if profile.group == "liberator-native-v1" {
-      return tonnes("cargo") == Double(performance.cargo)
-        && tonnes("cargoExpansion") == Double(performance.cargoExpansion)
-        && performance.cargo >= minimumStandardCargoTonnes
     }
     guard let cabinHold = tonnes("hold_used_by_cabins"), cabinHold <= Double(performance.cargo),
       let usable = tonnes("usable_cargo_after_fit")
@@ -176,14 +172,15 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
       return normalPurchaseEligible && collectionMilestone == .blueprintAndFabrication && validLevel
     case .pendingFabrication:
       return !normalPurchaseEligible && objectKind == .ship && mechanicsStatus == .pending
-        && access == .normal && collectionMilestone == .blueprintAndFabrication && validLevel
+        && access == .normal && collectionMilestone == .blueprintAndFabrication
+        && (minimumBuildTechLevel == nil || validLevel)
     case .xyzzyOnly:
       return access == .xyzzyOnly && !normalPurchaseEligible && !discoveryEligible
         && collectionMilestone == .none && minimumBuildTechLevel == nil
     case .never: return !normalPurchaseEligible && minimumBuildTechLevel == nil
     }
   }
-  private var validCollectionPolicy: Bool {
+  private func validCollectionPolicy(shipID: String) -> Bool {
     switch collectionMilestone {
     case .none: return !discoveryEligible
     case .blueprintAndFabrication:
@@ -195,7 +192,13 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
     case .docking:
       return discoveryEligible && isCapital && capitalSubtype == .station
         && (objectKind == .station || objectKind == .platform)
-        && purchasePolicy == .never && damagePolicy == .activeStationIndestructible
+        && purchasePolicy == .never
+        && (damagePolicy == .activeStationIndestructible
+          || (["SH141", "SH034", "SH102"].contains(shipID) && damagePolicy == .destructible)
+          || (["SH161", "SH164"].contains(shipID) && objectKind == .station
+            && mechanicsStatus == .pending && placementStatus == .pending
+            && encounterMode == .authored && !playerFlyable && !normalPurchaseEligible
+            && damagePolicy == .destructible))
     }
   }
 
@@ -206,7 +209,29 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
     case .some(.vessel): return objectKind == .ship && collectionMilestone == .destruction
     case .some(.station):
       return (objectKind == .station || objectKind == .platform) && collectionMilestone == .docking
+    case .some(.platform):
+      return objectKind == .platform && collectionMilestone == .none
+        && purchasePolicy == .never && !normalPurchaseEligible
     }
+  }
+
+  /// A source-stage role describes the hull without declaring any population weight or location.
+  private var hasUnplacedAuthoredRole: Bool {
+    primaryRole != nil && roleWeights.isEmpty && objectKind == .ship
+      && encounterMode == .authored && mechanicsStatus == .pending && placementStatus == .pending
+      && (purchasePolicy == .pendingFabrication
+        || (purchasePolicy == .never && isCapital && capitalSubtype == .vessel))
+      && !normalPurchaseEligible && access == .normal
+      && galaxies.isEmpty && regions.isEmpty && (authoredSystems?.isEmpty ?? true) && habitat == nil
+  }
+
+  /// A pending Larvaal source must not acquire a human functional role or population default.
+  private var hasUnissuedLarvaalRole: Bool {
+    objectKind == .ship && origin == .alien && primaryType == .alien && primaryRole == nil
+      && roleWeights.isEmpty && encounterMode == .authored && mechanicsStatus == .pending
+      && placementStatus == .pending && !playerFlyable && !normalPurchaseEligible
+      && access == .normal && galaxies.isEmpty && regions.isEmpty
+      && (authoredSystems?.isEmpty ?? true) && habitat == nil
   }
 
   func valid(shipID: String, performance: ShipPerformance?, nativeCombat: NativeCombat?) -> Bool {
@@ -223,8 +248,9 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
       Set(regions.map(\.rawValue)).count == regions.count,
       Set(roleWeights.map { $0.role.rawValue }).count == roleWeights.count,
       roleWeights.allSatisfy({ (1...100).contains($0.weight) }),
-      primaryRole.map({ primary in roleWeights.contains { $0.role == primary } })
-        ?? roleWeights.isEmpty,
+      primaryRole.map({ primary in
+        roleWeights.contains { $0.role == primary } || hasUnplacedAuthoredRole
+      }) ?? roleWeights.isEmpty,
       !playerFlyable || performance != nil,
       !normalPurchaseEligible
         || (access == .normal && objectKind == .ship && playerFlyable && discoveryEligible
@@ -232,11 +258,12 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
       !discoveryEligible || (access == .normal && encounterMode != .none),
       objectKind != .ship || primaryType != nil,
       objectKind == .ship || primaryType == nil,
-      objectKind != .ship || encounterMode == .none || primaryRole != nil,
+      objectKind != .ship || encounterMode == .none || primaryRole != nil || hasUnissuedLarvaalRole,
       habitat?.valid ?? true,
+      rarity != .pending || (mechanicsStatus == .pending && placementStatus == .pending),
       validCapitalHierarchy
     else { return false }
-    guard validPurchasePolicy, validCollectionPolicy,
+    guard validPurchasePolicy, validCollectionPolicy(shipID: shipID),
       objectKind != .station || collectionMilestone == .docking,
       damagePolicy != .activeStationIndestructible || objectKind == .station
         || objectKind == .platform
@@ -247,9 +274,9 @@ public struct ShipCatalogueMetadata: Codable, Sendable, Equatable {
       return false
     }
     if shipID == "SH171" {
-      guard access == .xyzzyOnly, primaryType == .alien, purchasePolicy == .xyzzyOnly,
-        !normalPurchaseEligible, !discoveryEligible,
-        encounterMode == .none
+      guard access == .normal, origin == .alien, primaryType == .alien,
+        purchasePolicy == .never, !playerFlyable, !normalPurchaseEligible, !discoveryEligible,
+        collectionMilestone == .none, hasUnissuedLarvaalRole
       else {
         return false
       }

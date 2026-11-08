@@ -9,8 +9,8 @@ private func combatRequire<T>(_ value: T?) throws -> T {
 
 private func combatGame(position: Vector3 = .init(0, 0, -3000)) -> Game {
   var game = Game(executive: false)
-  // These law/resource cases use the original Cobra and an explicit cash baseline.
-  game.commander.shipID = "SH023"
+  // Use an admitted Okapi and an explicit cash baseline for the law and resource cases.
+  game.commander.shipID = "SH029"
   game.commander.fuel = game.commander.fuelCapacity
   game.commander.credits = 1000
   game.energy = game.commander.performance.energy
@@ -68,6 +68,52 @@ private func combatBodyHit(_ game: Game, id: Int = 10) throws -> GameplayHit {
 }
 
 struct GameplayCombatTests {
+  @Test(arguments: [1.0, 1000.0], [AttackKind.collision, .missile, .plasma])
+  func nativeCollisionClockProofRetainsActualDamageAndDestructionAllocations(
+    damage: Double, kind: AttackKind
+  )
+    throws
+  {
+    var game = combatGame()
+    game.bodies = []
+    game.celestials = []
+    try combatBody(&game, energy: 40)
+    game.ensurePhysicalActors()
+    game.gameplayCombatTrace = .init()
+    let origin = try combatPlayerOrigin(&game)
+    let hit = try combatBodyHit(game)
+    let opening = game.commander.flightSimulation
+    var ordinary = game
+    let expectedCandidate = ordinary.applyCombatHit(
+      hit, origin: origin, kind: kind, damage: damage)
+    let expected = try #require(expectedCandidate)
+    let ownedPreparationRequired1 = kind == .collision
+        ? game.applyNativeCollisionHit(hit, origin: origin, damage: damage)
+        : game.applyNativeCombatHit(hit, origin: origin, kind: kind, damage: damage)
+    let effect = try #require(ownedPreparationRequired1)
+    #expect(effect.incident == expected)
+    #expect(game.commander == ordinary.commander)
+    #expect(game.bodies == ordinary.bodies)
+    #expect(game.gameplayCombatTrace?.incidents == ordinary.gameplayCombatTrace?.incidents)
+    #expect(effect.applying(to: opening) == game.commander.flightSimulation)
+    #expect(
+      game.commander.flightSimulation.nextIncident - opening.nextIncident
+        == (damage == 1 ? 1 : 2))
+    #expect((game.bodies[0].energy <= 0) == (damage == 1000))
+    var other = opening
+    other.advancePhysicalTime(0.01)
+    #expect(effect.applying(to: other) == nil)
+    other = opening
+    other.pose.position.x += 1
+    #expect(effect.applying(to: other) == nil)
+    other = opening
+    _ = other.allocateActor()
+    #expect(effect.applying(to: other) == nil)
+    other = opening
+    _ = other.allocateEmission()
+    #expect(effect.applying(to: other) == nil)
+  }
+
   @Test func alignedNPCFrontBeamUsesNativeHitAttributionAndChargesResourcesOnce() throws {
     var game = try mountedNPCBeamGame()
     let context = try #require(game.gameplayContext())
@@ -313,12 +359,14 @@ struct GameplayCombatTests {
     game.commander.legal = 64
     let officer = try combatBody(&game, hull: .viper, role: .police)
     let origin = try combatRequire(game.makeAttackOrigin(owner: officer))
+    let shield = game.frontShield
+    let energy = game.energy
     game.applyCombatHit(
       .init(target: .player, distance: 1, point: .init(0, 0, 1)), origin: origin, kind: .laser,
       damage: 5)
     #expect(game.bodies[0].physical?.npc?.legal == LegalRecord())
     #expect(game.commander.stationSecurity.phase == .calm && game.commander.legal == 64)
-    #expect(game.frontShield == 250 && game.energy == 256)
+    #expect(game.frontShield == shield - 5 && game.energy == energy)
   }
 
   @Test(arguments: [LaserKind.mining, .pulse])

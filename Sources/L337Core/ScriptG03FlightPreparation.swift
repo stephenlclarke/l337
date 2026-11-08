@@ -22,7 +22,7 @@ extension Game {
       ("Extra Energy Unit", 72000, .energy),
     ]
     var candidate = self
-    try candidate.commander.prepareEquipment(legacy: false)
+    try candidate.commander.prepareEquipment()
     let before = candidate.commander
     for (name, price, slot) in purchases {
       guard let item = Equipment.all.first(where: { $0.name == name }),

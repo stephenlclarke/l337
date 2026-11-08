@@ -11,6 +11,7 @@ private func cutterRuntimeGame() throws -> (Game, WreckSectionIdentity) {
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
   game.rearShield = game.commander.rearShieldCapacity
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   game.bodies = []

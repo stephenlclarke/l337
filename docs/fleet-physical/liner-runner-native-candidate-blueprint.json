@@ -1,0 +1,144 @@
+{
+  "schema": "l337.closed-ids-native-tessellation-proposal/1",
+  "id": "actual-SH088-SH089-complete16part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH088",
+      "name": "Springbok Starliner",
+      "family": "springbok",
+      "r3ContractSHA256": "a68eca7fb52dba02989f82a1c23a1201ac4ce28b2125f9a6a357fd4eb785ee82",
+      "originalRecipe": {
+        "archetype": "arc-liner",
+        "palette": "violet-pearl",
+        "length": 4.4,
+        "beam": 2.4
+      },
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH088-design.toml",
+        "bytes": 412371,
+        "sha256": "8382b438252441ae6bb373bf307f7d341ec4d5d16fc525ab8d3edfa8cefbb8de"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH088.toml",
+        "bytes": 437218,
+        "sha256": "9472ffe6e4ad44a82238624f50f4ef10b67f9364e8befc23dfa41f7a137f9606"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH088.json",
+        "bytes": 44936,
+        "sha256": "7d670474398ce0a9d7b1401f4bb46c502cdd418e1c3208b7f97556ca8a539904"
+      },
+      "declaredOriginalNativeFaces": 912,
+      "originalComponents": 16,
+      "nativeCrew": 8,
+      "conversionCrew": 8,
+      "status": "Own original complete resource remains pending; no source/family/crew/identity substitution"
+    },
+    {
+      "id": "SH089",
+      "name": "Antelope",
+      "family": "antelope",
+      "r3ContractSHA256": "92cdce3357540ac17a213a8f5f034d0fc58f7af6e3b541539c951d45e0439d65",
+      "originalRecipe": {
+        "archetype": "arc-runner",
+        "palette": "sage-umber",
+        "length": 3.2,
+        "beam": 2.1
+      },
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH089-design.toml",
+        "bytes": 412879,
+        "sha256": "75eaa16f5496ef1164f9665d1ee98da814d309562421addb3f86e78b778ed4d5"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH089.toml",
+        "bytes": 436964,
+        "sha256": "64111eb6f1dca889d1d8db7de4f8bc711f184425a899848daad43f529b858eef"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH089.json",
+        "bytes": 45014,
+        "sha256": "2b826987358e1d15e45b30915c76ae6d826c1d20f2fbe1a5e3ce0f2ea256581b"
+      },
+      "declaredOriginalNativeFaces": 912,
+      "originalComponents": 16,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own original complete resource remains pending; no source/family/crew/identity substitution"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/liner-runner-native-candidate-recipe.py",
+    "bytes": 10333,
+    "sha256": "796013da682d984166746493a6efc9e3feb85432ca15894c9b6401dbdaef5e80"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/liner-runner-native-candidate-tests.py",
+    "bytes": 10093,
+    "sha256": "5aad84057d0f19a7431eab52f1f47cb357bee7deac6e4e64016efa1b84851c49"
+  },
+  "baseline": {
+    "limit": 512,
+    "basis": "Own pinned original creator ownership metadata; not recomputed",
+    "allInstalledResourcesUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 8,
+    "arcSegments": 12,
+    "arcMinorSamples": 4,
+    "changedOriginalPartIndices": [
+      0,
+      1,
+      8,
+      11,
+      12,
+      14,
+      15
+    ],
+    "unchangedFixedOriginalPartsPerEntry": 9,
+    "status": "NEW angular approximation only; all actual output counts and full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Each actual open-arc loop: original centre(0,-.04,0),rxbeam*.46,rylength*.44,tube.15,axisY",
+    "Both actual open-arc endpoint caps, PI/2+.25 to PI/2+TAU-.25, complete original gap",
+    "Complete own five-station body AND all four original analytical native recessed wells",
+    "BOTH actual transverse crossmembers at original z=-length*.27 and length*.25",
+    "Complete cockpit glazing AND structural crossmember",
+    "Both connected drive supports, complete casings AND luminous recesses",
+    "Each own original palette/emission/material/textures/license/source fields; genuine serializer regenerates complete UVs"
+  ],
+  "coordinates": "Each own original length/beam/source coordinates/frame/axes/origin/units retained. No source scale/recenter/calibration evaluation.",
+  "coupledRuntime": "Two separate real families and current R3 contracts remain distinct. Native/conversion crew8 for Springbok and1 for Antelope is declared only; no people/hardware/quarters/paid kit/source/actor/acquisition/current-save authority issued. All existing gates unchanged.",
+  "stopRules": [
+    "Only actual IDs088/089 accepted, no names/prefixes/unknown variants",
+    "Each actual source/resource digest and canonical identity/name must match OWN entry; no cross-entry borrowing",
+    "Each original family must be the pinned sole mark with its actual creator role",
+    "Changed original creator/primitive/family/own source/resource inputs refuse before geometry",
+    "All16 positive original parts/material sets and full UV/metadata required for each entry",
+    "Both arc crossmembers, original open gap and BOTH endcaps remain; no omissions or loop closure",
+    "Complete own output<=512 and genuine closure/winding required, no waiver/count claim",
+    "Independent tests require own9 fixed parts exact original vertices/localfaces/material sequence/UVs",
+    "Full curved-source/profile/void/material/UV fidelity/native/physical qualification remains G1 work"
+  ],
+  "blocker": {
+    "missing": "Per-entry actual source-fidelity/native evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner actual installed/occupied inputs",
+    "next": "G1 generate each once and run own16parts/exact9fixed/gap/endcaps/UV/wrong-entry/input checks then actual full source/native qualification. G4 continues other entries independently."
+  }
+}

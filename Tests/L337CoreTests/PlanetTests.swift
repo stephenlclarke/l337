@@ -24,7 +24,7 @@ import UniformTypeIdentifiers
   #expect(PlanetPalette(identity: identity).ocean.z > PlanetPalette(identity: identity).ocean.x)
 }
 
-@Test func dockedChartsContainPlanetFactsAndCluesWithNoSeparateDataScreen() {
+@Test func dockedChartsContainPlanetFactsAndCluesWithNoSeparateDataScreen() throws {
   var game = Game(executive: false)
   game.commander.missionStage = .huntingConstrictor
   game.commander.galaxy = 1
@@ -53,6 +53,7 @@ import UniformTypeIdentifiers
     game.key("escape")
     #expect(game.screen == screen)
   }
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.key("6")
   #expect(game.screen == .system)
@@ -112,10 +113,20 @@ import UniformTypeIdentifiers
   }
 }
 
-@Test func cobraGeometryMatchesTheFittedAndCataloguePreviewWithoutChangingCommander() throws {
-  let source = try #require(ShipCatalogue.ship("SH023")?.previewMesh)
-  let flight = Mesh.hull(.cobra)
-  #expect(flight.faces == source.faces && flight.vertices.count == source.vertices.count)
-  for (a, b) in zip(flight.vertices, source.vertices) { #expect((a - b * 0.69).length < 1e-9) }
+@Test func startingPlayerGeometryMatchesTheCurrentCanonicalSourceWithoutChangingCommander() throws {
+  let game = Game(executive: false)
+  let commander = game.commander
+  try #require(commander.shipID == "SH025")
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: commander.shipID))
+  let canonical = try #require(source.ship.nativeDesign).rawMesh
+  let packaged = try #require(ShipCatalogue.rawMesh(commander.shipID))
+  let flight = game.commander.playerMesh
+  for mesh in [flight, packaged, source.mesh] {
+    #expect(mesh.faces == canonical.faces && mesh.vertices.count == canonical.vertices.count)
+    for (a, b) in zip(mesh.vertices, canonical.vertices) { #expect((a - b).length < 1e-9) }
+    #expect(mesh.details == canonical.details && mesh.materials == canonical.materials)
+    #expect(mesh.faceMaterials == canonical.faceMaterials && mesh.faceTextures == canonical.faceTextures)
+  }
   #expect(flight.vertices.count > 100)
+  #expect(game.commander == commander)
 }

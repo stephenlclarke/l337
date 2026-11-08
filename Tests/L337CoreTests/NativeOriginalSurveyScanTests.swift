@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct NativeOriginalSurveyScanTests {
   @Test func surveyOnlyOrderedDistinctRealMarkersProduceMeasuredReadings() async throws {
@@ -306,7 +307,8 @@ extension GameRuntime {
       let item = try #require(
         Equipment.all.first { $0.name == TargetingTier.identification.equipmentName })
       let quote = try game.quoteEquipmentPurchase(item)
-      try #require(try game.applyEquipmentPurchase(quote))
+      let purchaseApplied = try game.applyEquipmentPurchase(quote)
+      try #require(purchaseApplied)
     }
   }
 }

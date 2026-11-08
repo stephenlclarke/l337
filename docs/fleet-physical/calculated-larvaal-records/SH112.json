@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "id": "SH112",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "cbcdc5e45436d78d490b00f76b8e3f430e963fb5204cd6162f51fc802ad8674b",
+  "detailedSourceSHA256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1",
+  "componentSourceSHA256": "8e92b8b5b65efa8bbd8544e7270d980c9d4b39d2033ca1e32a39a4b652d10bc3",
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "coordinateUnits": "metres",
+  "metresPerSourceUnit": 1,
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 3289.4781689134356,
+  "stockMassKg": 46052.69436478814,
+  "intrinsicHardwareMassKg": 3360.0,
+  "unroundedMassKg": 49412.69436478814,
+  "roundingReserveKg": 0.3056352118583163,
+  "dryMassKilograms": 49413,
+  "centreOfMassMetres": [
+    4.139927141239422e-16,
+    -0.6963073501117586,
+    -1.0179195663814846
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    3338505.103999444,
+    -7.262661409523081,
+    -2.091027409227117e-10,
+    -7.262661409522171,
+    6799855.322980885,
+    -20286.468183487428,
+    -2.1637869853689511e-10,
+    -20286.468183487428,
+    7272824.220301296
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    3413662.0181516465,
+    -7.262661409508837,
+    -1.8827967394226698e-10,
+    -7.262661409507928,
+    6851054.792411937,
+    -55309.43862642204,
+    -1.955556315564504e-10,
+    -55309.43862642204,
+    7296781.665022447
+  ],
+  "reserveLocationMetres": [
+    4.139927141239422e-16,
+    -0.6963073501117586,
+    -1.0179195663814846
+  ],
+  "positiveLeadingPrincipalMinors": [
+    3338505.103999444,
+    22701351702176.727,
+    1.6510156656213646e+20
+  ],
+  "zeroAreaSourceFaces": 0,
+  "stockComponents": [
+    {
+      "name": "broad closed protective mantle",
+      "areaSquareMetres": 1423.9046654436988,
+      "stockMassKg": 19934.66531621179,
+      "areaCentroidMetres": [
+        2.869307777250289e-16,
+        1.0705324940664802e-16,
+        -2.000000000000004
+      ],
+      "massFirst": [
+        3.069544618483633e-12,
+        -6.208367153703875e-12,
+        -39869.33063242359
+      ],
+      "massSecond": [
+        2727242.404603341,
+        9.771383702172898e-11,
+        -9.549694368615746e-12,
+        9.771383702172898e-11,
+        1636835.7763061747,
+        -2.906972440541722e-10,
+        -9.549694368615746e-12,
+        -2.906972440541722e-10,
+        139235.3761520539
+      ],
+      "verificationSecond": [
+        2727242.40460334,
+        2.0875745576631743e-11,
+        1.3926637620897964e-12,
+        -8.711253940418828e-12,
+        1636835.7763061766,
+        -9.847234139215288e-11,
+        1.9042545318370685e-12,
+        -9.665690470228583e-11,
+        139235.37615205394
+      ]
+    },
+    {
+      "name": "exposed gold nucleus",
+      "areaSquareMetres": 667.0677731062294,
+      "stockMassKg": 9338.94882348722,
+      "areaCentroidMetres": [
+        3.441008838912946e-17,
+        7.714444317287829e-18,
+        0.9999999999999991
+      ],
+      "massFirst": [
+        -2.204902926905561e-13,
+        6.874639746357047e-13,
+        9338.948823487204
+      ],
+      "massSecond": [
+        151940.16399499317,
+        -1.194030985196548e-12,
+        -1.6697754290362354e-13,
+        -1.194030985196548e-12,
+        119371.83762709684,
+        -3.67272878776248e-12,
+        -1.6697754290362354e-13,
+        -3.67272878776248e-12,
+        239709.32645299268
+      ],
+      "verificationSecond": [
+        151940.16399499297,
+        -1.792021392388321e-13,
+        -8.846257060213247e-13,
+        1.3254848607591185e-13,
+        119371.83762709695,
+        -9.659106847692556e-12,
+        1.1475265182525618e-12,
+        -6.447453682056903e-12,
+        239709.32645299303
+      ]
+    },
+    {
+      "name": "long curved mantle lobe",
+      "areaSquareMetres": 565.262216069239,
+      "stockMassKg": 7913.671024969361,
+      "areaCentroidMetres": [
+        -12.000000000000027,
+        -2.0000000000000036,
+        -2.442714126719889
+      ],
+      "massFirst": [
+        -94964.05229963228,
+        -15827.342049938723,
+        -19330.83600690642
+      ],
+      "massSecond": [
+        1176178.3885275577,
+        189931.73592996938,
+        231970.03208287715,
+        189931.73592996938,
+        85115.33625458495,
+        38661.67201381278,
+        231970.03208287715,
+        38661.67201381278,
+        460603.98050083016
+      ],
+      "verificationSecond": [
+        1176178.3885275568,
+        189931.73592996932,
+        231970.03208287692,
+        189931.73592996932,
+        85115.33625458475,
+        38661.67201381288,
+        231970.03208287698,
+        38661.67201381288,
+        460603.98050083034
+      ]
+    },
+    {
+      "name": "small inner organ",
+      "areaSquareMetres": 33.9906491125147,
+      "stockMassKg": 475.86908757520416,
+      "areaCentroidMetres": [
+        -6.999999999999992,
+        -0.9999999999999991,
+        7.999999999999979
+      ],
+      "massFirst": [
+        -3331.0836130264356,
+        -475.86908757520456,
+        3806.9527006016433
+      ],
+      "massSecond": [
+        23673.93699395954,
+        3331.0836130264374,
+        -26648.66890421148,
+        3331.0836130264374,
+        728.079469318226,
+        -3806.9527006016338,
+        -26648.66890421148,
+        -3806.9527006016338,
+        31187.454581931
+      ],
+      "verificationSecond": [
+        23673.93699395952,
+        3331.0836130264356,
+        -26648.668904211503,
+        3331.0836130264356,
+        728.0794693182321,
+        -3806.9527006016524,
+        -26648.668904211503,
+        -3806.9527006016524,
+        31187.45458193088
+      ]
+    },
+    {
+      "name": "long curved mantle lobe",
+      "areaSquareMetres": 565.262216069239,
+      "stockMassKg": 7913.671024969361,
+      "areaCentroidMetres": [
+        12.000000000000028,
+        -2.0000000000000036,
+        -2.442714126719889
+      ],
+      "massFirst": [
+        94964.0522996323,
+        -15827.342049938723,
+        -19330.83600690642
+      ],
+      "massSecond": [
+        1176178.3885275577,
+        -189924.47326855996,
+        -231970.032082877,
+        -189924.47326855996,
+        85115.33625458495,
+        38661.67201381278,
+        -231970.032082877,
+        38661.67201381278,
+        460603.98050083016
+      ],
+      "verificationSecond": [
+        1176178.3885275556,
+        -189924.47326855944,
+        -231970.0320828768,
+        -189924.4732685594,
+        85115.33625458475,
+        38661.67201381288,
+        -231970.0320828768,
+        38661.67201381288,
+        460603.98050083034
+      ]
+    },
+    {
+      "name": "small inner organ",
+      "areaSquareMetres": 33.990649112514696,
+      "stockMassKg": 475.8690875752041,
+      "areaCentroidMetres": [
+        6.9999999999999964,
+        -0.9999999999999998,
+        7.999999999999981
+      ],
+      "massFirst": [
+        3331.0836130264347,
+        -475.8690875752045,
+        3806.952700601644
+      ],
+      "massSecond": [
+        23673.93699395954,
+        -3331.0836130264365,
+        26648.66890421149,
+        -3331.0836130264365,
+        728.0794693182261,
+        -3806.952700601633,
+        26648.66890421149,
+        -3806.952700601633,
+        31187.454581931
+      ],
+      "verificationSecond": [
+        23673.936993959513,
+        -3331.083613026428,
+        26648.668904211467,
+        -3331.083613026428,
+        728.0794693182322,
+        -3806.9527006016506,
+        26648.668904211463,
+        -3806.95270060165,
+        31187.45458193088
+      ]
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 3,
+      "anchorName": "small inner organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -6.999999999999992,
+        -0.9999999999999991,
+        7.999999999999979
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 5,
+      "anchorName": "small inner organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        6.9999999999999964,
+        -0.9999999999999998,
+        7.999999999999981
+      ]
+    },
+    {
+      "name": "Empty intrinsic power system",
+      "count": 1,
+      "eachKg": 750,
+      "anchorComponent": 0,
+      "anchorName": "broad closed protective mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 750,
+      "anchorMetres": [
+        2.869307777250289e-16,
+        1.0705324940664802e-16,
+        -2.000000000000004
+      ]
+    },
+    {
+      "name": "Empty fuel-containment and transfer system",
+      "count": 1,
+      "eachKg": 180,
+      "anchorComponent": 0,
+      "anchorName": "broad closed protective mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 180,
+      "anchorMetres": [
+        2.869307777250289e-16,
+        1.0705324940664802e-16,
+        -2.000000000000004
+      ]
+    },
+    {
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+      "count": 2,
+      "eachKg": 120,
+      "anchorComponent": 0,
+      "anchorName": "broad closed protective mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 240,
+      "anchorMetres": [
+        2.869307777250289e-16,
+        1.0705324940664802e-16,
+        -2.000000000000004
+      ]
+    },
+    {
+      "name": "Control and sensing system",
+      "count": 1,
+      "eachKg": 90,
+      "anchorComponent": 0,
+      "anchorName": "broad closed protective mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 90,
+      "anchorMetres": [
+        2.869307777250289e-16,
+        1.0705324940664802e-16,
+        -2.000000000000004
+      ]
+    },
+    {
+      "name": "Empty carried-equipment interfaces",
+      "count": 1,
+      "eachKg": 140,
+      "anchorComponent": 0,
+      "anchorName": "broad closed protective mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 140,
+      "anchorMetres": [
+        2.869307777250289e-16,
+        1.0705324940664802e-16,
+        -2.000000000000004
+      ]
+    },
+    {
+      "name": "Empty launcher system, no ammunition",
+      "count": 1,
+      "eachKg": 160,
+      "anchorComponent": 0,
+      "anchorName": "broad closed protective mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 160,
+      "anchorMetres": [
+        2.869307777250289e-16,
+        1.0705324940664802e-16,
+        -2.000000000000004
+      ]
+    }
+  ],
+  "operations": {
+    "coordinateConversions": 10254,
+    "faceIndexChecks": 20448,
+    "triangleAreaEvaluations": 6816,
+    "analyticMomentEvaluations": 6816,
+    "quadratureMomentEvaluations": 20448,
+    "hardwareAllocations": 8,
+    "sourceParses": 1,
+    "resultRecords": 1
+  },
+  "sourceGeometryNotEdited": true,
+  "nativeQualification": "UNRUN; source budget never activates a hull"
+}

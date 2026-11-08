@@ -17,8 +17,10 @@ struct AutoTargetCruiseTests {
     game.market = MarketItem.at(game.currentSystem)
     let startingRounds = min(3, game.commander.nativePerformance.missiles)
     game.commander.missiles = startingRounds
-    game.commander.installTargetingComputer(.docking)
-    try game.commander.prepareEquipment()
+    try game.commander.prepareEquipment(legacy: false)
+    try game.commander.grantEquipment(
+      TargetingTier.docking.equipmentName, at: .targetingCore,
+      provenance: .grant("current targeting unit fixture"))
     let destination = try #require(
       game.knownSystems.first {
         $0.id != game.commander.system && $0.id != Plugh.systemID && $0.government == 7

@@ -3,9 +3,12 @@ import Testing
 
 @testable import L337Core
 
-private func computerGame(_ tier: TargetingTier) -> Game {
+private func computerGame(_ tier: TargetingTier) throws -> Game {
   var game = Game(executive: false)
-  game.commander.installTargetingComputer(tier)
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    tier.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
   game.launch()
   game.speed = 0
   #expect(game.commander.targetingTier == tier)
@@ -17,7 +20,7 @@ private func computerGame(_ tier: TargetingTier) -> Game {
 func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: TargetingTier)
   throws
 {
-  var game = computerGame(tier)
+  var game = try computerGame(tier)
   for (hull, hostile) in [
     (Hull.cobra, false), (.cobra, true), (.cargo, false), (.asteroid, false),
     (.missile, false), (.station, false),
@@ -41,7 +44,14 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
       let statusTop = panel.y + panel.row * Double(panel.headings.count)
       let statusBottom = statusTop + panel.row * Double(panel.statuses.count)
       let expectedInk: Ink = hostile ? .red : .cyan
-      let frame = Display.cockpit(game, width: 512, height: 518)
+      // Render only the collapsed information panel; the unadopted hull has no mesh authority.
+      game.targetPanelExpanded = false
+      var frame = Frame()
+      frame.responsive = true
+      frame.rasterizeGraphics = false
+      frame.canvas = .init(x: 0, y: 0, width: 512, height: 518)
+      frame.flightClip = cockpit.flightClip
+      Display.targetPanel(game, layout: cockpit, into: &frame)
       let statusRows = frame.labels.filter {
         $0.x == panel.x && $0.y >= statusTop && $0.y < statusBottom
       }.sorted { $0.y < $1.y }
@@ -60,7 +70,7 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
 }
 
 @Test func workStatusRequiresARealMatchingPhysicalIdentity() throws {
-  var game = computerGame(.military)
+  var game = try computerGame(.military)
   let allocated = game.commander.flightSimulation.allocateActor()
   let parent = try #require(allocated)
   let allocatedOther = game.commander.flightSimulation.allocateActor()
@@ -86,7 +96,7 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
 
 @Test func computerTiersGateAcquisitionAndShipGroupsStayAheadOfStations() throws {
   for tier in TargetingTier.allCases {
-    var game = computerGame(tier)
+    var game = try computerGame(tier)
     game.screen = .left
     game.bodies = [
       .init(id: 0, hull: .station, position: .init(0, 0, 400)),
@@ -121,8 +131,8 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
     #expect(game.autoPilot.targetID == 2)
   }
 }
-@Test func frontVisibilityUsesRenderedEdgesAndChangingMembershipNeverRepeatsVisitedShips() {
-  var game = computerGame(.advanced)
+@Test func frontVisibilityUsesRenderedEdgesAndChangingMembershipNeverRepeatsVisitedShips() throws {
+  var game = try computerGame(.advanced)
   let layout = CockpitLayout(game: game, width: game.viewportWidth, height: game.viewportHeight)
   let edgeX = game.viewportWidth / 2 * 1000 / layout.projection.focal
   let visibleEdge = SpaceBody(id: 1, hull: .cobra, position: .init(edgeX + 10, 0, 1000))
@@ -152,6 +162,7 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
   game.commander.system = try #require(
     game.systems.first { !$0.isPlugh && $0.technology >= requiredLevel }?.id)
   game.commander.credits = 1_000_000
+  try game.commander.prepareEquipment(legacy: false)
   for tier in TargetingTier.allCases {
     game.selection = try #require(Equipment.all.firstIndex { $0.name == tier.equipmentName })
     let before = game.commander.credits
@@ -163,7 +174,9 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
   }
   #expect(TargetingTier.basic.price == 8000)
   #expect(TargetingTier.military.price == 120000)
-  game.commander.equipment.insert(TargetingTier.basic.equipmentName)
+  #expect(game.commander.equipmentInventory?.items.contains {
+    $0.node.key == TargetingTier.basic.equipmentName && $0.location == nil
+  } == true)
   #expect(game.commander.targetingTier == .military)
   let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
   defer { try? FileManager.default.removeItem(at: url) }
@@ -176,30 +189,69 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
       && !commander.equipment.contains(TargetingTier.basic.equipmentName))
 }
 @Test func targetInformationDoesNotLeakHigherTierReadingsAndNeverUsesPlayerValues() throws {
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH031"))
+  let nativeHull = try #require(source.ship.nativeHull)
+  try #require(source.ship.id == "SH031" && nativeHull == .viper)
+  try #require(ShipCatalogue.nativeShip(nativeHull)?.id == source.ship.id)
+  let stock = try #require(NPCResources.stock(source.performance))
   for tier in TargetingTier.allCases {
-    var game = computerGame(tier)
-    var target = SpaceBody(id: 17, hull: .constrictor, position: .init(0, 0, 1000), hostile: true)
-    target.missiles = 2
-    target.ecmEnabled = true
+    var game = try computerGame(tier)
+    let allocated = game.commander.flightSimulation.allocateActor()
+    let actor = try #require(allocated)
+    var npc = NPCState(role: .police, origin: game.systemIdentity, destination: game.systemIdentity)
+    npc.resources = stock
+    var target = SpaceBody(id: 17, hull: nativeHull, position: .init(0, 0, 1000), hostile: true)
+    target.energy = stock.energyCapacity
+    target.missiles = source.performance.missiles
+    target.physical = .init(
+      identity: actor, population: .police, npc: npc, catalogueShipID: source.ship.id)
+    // This controlled observation uses the actual current hull; it issues no spawn receipt.
     game.bodies = [target]
-    game.ensurePhysicalActors()
-    // This disclosure fixture intentionally has no observed resource readings.
-    game.bodies[0].physical?.npc?.resources = nil
     game.key("tab")
+    try #require(game.autoTargetBody?.physical?.identity == actor)
+    try #require(game.autoTargetBody?.physical?.catalogueShipID == source.ship.id)
+    let commanderBefore = game.commander
+    let bodiesBefore = game.bodies
+    let timeBefore = game.time
     let info = game.targetInformation
     #expect(info?.id == 17)
     #expect((info?.model != nil) == (tier >= .identification))
+    if tier >= .identification { #expect(info?.model == source.ship.name) }
     #expect((info?.fields.contains { $0.label == "Origin" } ?? false) == (tier >= .pirate))
     #expect((info?.fields.contains { $0.label == "Missiles" } ?? false) == (tier == .military))
+    // The raw legacy identity is projected without physical selection, adoption or rendering.
+    var legacy = SpaceBody(id: 17, hull: .constrictor, position: .init(0, 0, 1000), hostile: true)
+    legacy.missiles = 2
+    legacy.ecmEnabled = true
+    var legacyProjection = game
+    legacyProjection.bodies = [legacy]
+    legacyProjection.weaponsTargetID = legacy.id
+    let legacyInfo = legacyProjection.targetInformation
+    #expect(legacyInfo?.id == 17)
+    #expect((legacyInfo?.model != nil) == (tier >= .identification))
+    #expect((legacyInfo?.fields.contains { $0.label == "Origin" } ?? false) == (tier >= .pirate))
+    #expect((legacyInfo?.fields.contains { $0.label == "Missiles" } ?? false) == (tier == .military))
     if tier == .military {
-      #expect(info?.fields.first { $0.label == "Missiles" }?.value == "2")
-      #expect(info?.fields.first { $0.label == "Front shield" }?.value == "Unknown")
-      #expect(info?.fields.first { $0.label == "Rear shield" }?.value == "Unknown")
-      #expect(info?.fields.first { $0.label == "Fuel" }?.value == "Unknown")
-      game.ecmFrames = 20
-      game.enemyECMSource = 17
-      #expect(game.targetInformation?.fields.first { $0.label == "ECM active" }?.value == "Yes")
+      #expect(info?.fields.first { $0.label == "Missiles" }?.value == String(target.missiles))
+      #expect(info?.fields.first { $0.label == "ECM equipped" }?.value == "No")
+      #expect(legacyInfo?.fields.first { $0.label == "Missiles" }?.value == "2")
+      #expect(legacyInfo?.fields.first { $0.label == "Front shield" }?.value == "Unknown")
+      #expect(legacyInfo?.fields.first { $0.label == "Rear shield" }?.value == "Unknown")
+      #expect(legacyInfo?.fields.first { $0.label == "Fuel" }?.value == "Unknown")
+      var unknown = target
+      unknown.physical?.npc?.resources = nil
+      let unknownInfo = game.information(for: unknown)
+      for label in ["Front shield", "Rear shield", "Fuel", "Missiles", "ECM equipped", "ECM active"] {
+        #expect(unknownInfo?.fields.first { $0.label == label }?.value == "Unknown")
+      }
+      var activeLegacy = legacyProjection
+      activeLegacy.ecmFrames = 20
+      activeLegacy.enemyECMSource = 17
+      #expect(activeLegacy.targetInformation?.fields.first { $0.label == "ECM active" }?.value == "Yes")
     }
+    #expect(legacy.physical == nil && legacyProjection.bodies[0].physical == nil)
+    #expect(legacyProjection.commander == commanderBefore)
+    #expect(game.commander == commanderBefore && game.bodies == bodiesBefore && game.time == timeBefore)
     let inventory = try #require(game.commander.equipmentInventory)
     let core = try #require(game.commander.fittedEquipment(at: .targetingCore))
     try game.commander.storeEquipment(core, expectedRevision: inventory.revision)
@@ -208,15 +260,23 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
       provenance: .grant("disclosure downgrade fixture"))
     #expect(game.commander.targetingTier == .basic)
     #expect(game.targetInformation?.fields.isEmpty == true && game.targetInformation?.model == nil)
+    legacyProjection.commander = game.commander
+    let downgradedLegacy = legacyProjection.targetInformation
+    #expect(downgradedLegacy?.fields.isEmpty == true && downgradedLegacy?.model == nil)
+    legacyProjection.bodies = []
+    #expect(legacyProjection.targetInformation == nil)
+    #expect(legacyProjection.commander == game.commander)
     game.bodies = []
     game.tick(delta: 0.01)
     #expect(game.targetInformation == nil && game.weaponsTargetID == nil)
   }
 }
-@Test func targetCameraIsLiveBoundedAndIndependentOfPlayerViewAndSimulation() {
-  var game = computerGame(.military)
+@Test func targetCameraIsLiveBoundedAndIndependentOfPlayerViewAndSimulation() throws {
+  var game = try computerGame(.military)
   game.commander.shipDisplayStyle = .whiteWireframe
-  game.bodies = [.init(id: 1, hull: .cobra, position: .init(0, 0, 1000))]
+  let kite = try #require(ShipCatalogue.nativeShip(.viper))
+  #expect(kite.id == "SH031")
+  game.bodies = [.init(id: 1, hull: .viper, position: .init(0, 0, 1000))]
   game.ensurePhysicalActors()
   // An explicitly unknown route must remain unknown in the independent camera.
   game.bodies[0].physical?.npc?.routeProvenance = nil
@@ -226,7 +286,7 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
   let original = game.bodies
   for width in [512.0, 768, 1512] {
     let frame = Display.cockpit(game, width: width, height: 768)
-    #expect(frame.labels.contains { $0.text == "Cobra Mk III #1" })
+    #expect(frame.labels.contains { $0.text == "\(kite.name) #1" })
     #expect(frame.labels.contains { $0.text == "Origin: Unknown" })
     for label in frame.labels { #expect(label.bounds.maxX <= width && label.bounds.maxY <= 768) }
     let preview = frame.shipLines
@@ -247,7 +307,7 @@ func legacyUnadoptedTargetsUseStatusFallbackWithoutInventingWorkAuthority(tier: 
   for (position, angle, speed) in [
     (Vector3(600, 400, 2400), 0.7, 32.0), (Vector3(0, 0, 2400), Double.pi, 24.0),
   ] {
-    var game = computerGame(.docking)
+    var game = try computerGame(.docking)
     let anchor = try #require(
       game.currentNativeMainStationAnchor(at: game.commander.flightSimulation.physicalTime))
     var orientation = Basis3()
@@ -330,7 +390,12 @@ func frontVisibilityPreservesGenuineNativeStationGeometryAndRevokedAuthority(
   game.commander.shipDisplayStyle = style
   game.screen = .left
   let stationIDs = game.bodies.filter { $0.nativeStationIdentity != nil }.map(\.id)
-  try #require(stationIDs.count == 2)
+  let stationWorld = try #require(game.commander.nativeStations)
+  let expectedStations = Set([OriginalStationSite.salamander, .frog, .dhole].map {
+    $0.identity(world: stationWorld.ledger.world)
+  })
+  try #require(stationIDs.count == expectedStations.count)
+  #expect(Set(game.bodies.compactMap(\.nativeStationIdentity)) == expectedStations)
   for id in stationIDs {
     let original = try #require(game.bodies.first { $0.id == id })
     var pose = ShipPose()
@@ -422,4 +487,15 @@ struct FrontVisibilityRenderUnitTests {
     }
   }
 
+}
+
+
+@Test func unownedRawTargetingNamesCannotSupplyAComputerOrDocking() {
+  var commander = Commander()
+  commander.equipment.formUnion(TargetingTier.allCases.map(\.equipmentName))
+  commander.equipment.insert(Equipment.legacyDockingComputer)
+  let before = commander
+  #expect(commander.equipmentInventory == nil)
+  #expect(commander.targetingTier == nil && !commander.hasAutomaticDocking)
+  #expect(commander == before)
 }

@@ -7,8 +7,7 @@ private func navalGame(galaxy: Int = 0, score: Int = 256, stage: NavalMissionSta
   -> Game
 {
   var game = Game(executive: true)
-  // Classic naval arithmetic uses a controlled stock Cobra and a 100 CR starting balance.
-  game.commander.shipID = "SH023"
+  // Use the admitted starter hull and a fixed 100 CR balance for the naval arithmetic.
   game.commander.fuel = game.commander.fuelCapacity
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
@@ -222,6 +221,63 @@ private func finishMessage(_ game: inout Game) {
   #expect(!Display.render(game).pixels.isEmpty)
 }
 
+@Test func aegisUsesMissionOnlyGeometryAndContinuesSavedNavalHunt() throws {
+  let source = try #require(AegisPrototype.source)
+  let entry = try #require(
+    MissionPackLibrary.bundled.entries.first { $0.pack.id == "xyzzy.constrictor" })
+  #expect(entry.digest == "5c66f75add31c61b08cbc0e57a4ef22df2043e26879ae6c2796dfba3d6a4e4f9")
+  #expect(ShipCatalogue.ship("SH026")?.name == "Harrier")
+  #expect(ShipCatalogue.nativeShip(.constrictor) == nil)
+  #expect(source.combat.laserDamage == 26 && source.combat.bombImmune && source.combat.ecm)
+
+  var game = navalGame(galaxy: 1, stage: .huntingConstrictor)
+  game.commander.missionProgress[entry.pack.stateID] = MissionProgress(
+    version: entry.pack.version, digest: entry.digest, stage: "hunt")
+  #expect(game.packMatchesSave(entry))
+  moveCommander(&game, galaxy: 1, system: 193)
+  for _ in 0..<128 { game.spawnNavalEncounter() }
+
+  let targets = game.bodies.filter { $0.hull == .constrictor }
+  try #require(targets.count == 1)
+  let target = try #require(targets.first)
+  #expect(target.isAegisPrototype && target.hull.modelName == "Unidentified craft")
+  #expect(target.navalTarget && target.energy == 252 && target.missiles == 4 && target.ecmEnabled)
+  let mesh = game.gameplayMesh(for: target)
+  #expect(mesh.vertices == source.nativeDesign.rawMesh.vertices)
+  #expect(mesh.faces == source.nativeDesign.rawMesh.faces)
+  let direction = Vector3(0, 0, 1)
+  let origin = target.position - direction * 100
+  let hit = try game.nearestMissionCollision(
+    from: origin, direction: direction, range: 200, radius: 0, includePlayer: false)
+  let contact = try #require(hit)
+  #expect(contact.hit.target == .body(target.id))
+
+  var lookalike = target
+  lookalike.navalTarget = false
+  #expect(lookalike.nativeNavalCombat == nil && game.gameplayMesh(for: lookalike).faces.isEmpty)
+  game.bodies = [lookalike]
+  #expect(throws: MissionNativeBridgeError.invalidGeometry) {
+    try game.nearestMissionCollision(
+      from: origin, direction: direction, range: 200, radius: 0, includePlayer: false)
+  }
+  #expect(GameplayRaycast.nearest(
+    origin: origin, direction: direction, maxDistance: 200, bodies: [lookalike]) == nil)
+  game.bodies = [SpaceBody(id: target.id, hull: .sidewinder, position: target.position)]
+  #expect(throws: MissionNativeBridgeError.invalidGeometry) {
+    try game.nearestMissionCollision(
+      from: origin, direction: direction, range: 200, radius: 1, includePlayer: false)
+  }
+  game.bodies = [target]
+  game.missionTargetRemoved(lookalike)
+  #expect(game.commander.missionStage == .huntingConstrictor)
+  game.missionTargetRemoved(target)
+  #expect(game.commander.missionStage == .constrictorDestroyed)
+  game.dock()
+  #expect(game.commander.missionStage == .constrictorComplete)
+  #expect(game.commander.credits == 51000 && game.commander.kills == 512)
+  #expect(game.missionNotice?.text.contains("AEGIS PROTOTYPE") == true)
+}
+
 @Test func missionEncounterPredicatesMatchOriginalByteBoundariesAndSingleTarget() {
   #expect((0..<256).filter { MissionRules.plansAmbush(randomByte: $0) }.count == 56)
   #expect(MissionRules.bountyHunterCheck(government: 0, roll: 255, hunterRoll: 99))
@@ -313,6 +369,9 @@ private func finishMessage(_ game: inout Game) {
   #expect(game.screen == .mission && game.missionPage == 0)
   for _ in 0..<21 { game.tick(delta: 0.1) }
   let first = Display.render(game, rasterizeGraphics: false)
+  #expect(game.missionNotice?.dialog?.ship == true)
+  #expect(game.missionNotice?.showsShip == true)
+  #expect(game.missionNotice?.text.contains("AEGIS PROTOTYPE") == true)
   #expect(!first.shipLines.isEmpty)
   let notice = game.missionNotice
   #expect(notice?.pages.flatMap { $0 }.allSatisfy { $0.count <= 40 } == true)
@@ -347,6 +406,7 @@ private func finishMessage(_ game: inout Game) {
 
 @Test func navalMissileECMImpactAndEnergyUpgradePaths() throws {
   var game = navalGame(stage: .huntingConstrictor)
+  try game.commander.prepareEquipment(legacy: false)
   game.docked = false
   game.bodies = [SpaceBody(id: 99, hull: .constrictor, position: .init(0, 0, 6000), hostile: true)]
   game.missileArmed = true
@@ -369,6 +429,7 @@ private func finishMessage(_ game: inout Game) {
   #expect(game.bodies[0].position.z < 500)
   game.bodies[0].position = .init(0, 0, 30)
   game.frontShield = 100
+  game.energy = 256
   game.advanceNavalMissiles(delta: 0.1)
   #expect(game.frontShield == 0 && game.energy == 106)
   game.bodies[0] = missile
@@ -382,6 +443,7 @@ private func finishMessage(_ game: inout Game) {
   for (equipment, recharge) in upgrades {
     game = navalGame(score: 0)
     game.commander.equipment = equipment
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.bodies = []
     game.energy = 100
@@ -401,7 +463,7 @@ private func finishMessage(_ game: inout Game) {
   game.commander.credits = cost + 1000
   let cash = game.commander.credits
   game.purchase()
-  // Paid predecessors can be held while the stronger migrated reward stays fitted.
+  // Paid predecessors can be held while the stronger current reward stays fitted.
   #expect(game.commander.credits == cash - cost && game.commander.energyRechargeMultiplier == 3)
   #expect(game.commander.fittedEquipment(at: .energy)?.id == naval.id)
   let node = try #require(EquipmentRuntimeCatalog.node(for: item.name))

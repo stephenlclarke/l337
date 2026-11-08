@@ -4,49 +4,64 @@ import Testing
 @testable import L337Core
 
 private struct StationStateFixture {
-  let world = UUID()
-  let owner = UUID()
-  let system = SystemIdentity(galaxy: 0, system: 237)
+  let world: UUID
+  var owner: UUID { world }
+  let system = OriginalStationSite.salamander.system
+
+  init(world: UUID = UUID()) { self.world = world }
 
   func record(
-    key: String = "waystation", system: SystemIdentity? = nil,
-    definition: String = "rescue_station",
-    capabilities: [NativeStationCapability] = [.rrsContractBoard]
-  )
-    -> NativeStationRecord
-  {
-    .init(
-      identity: .init(
-        world: world, system: system ?? self.system, definition: definition, version: "1.5.4",
-        key: key),
-      descriptor: .init(
-        definition: definition, version: "1.5.4",
-        boardOrigin: definition == "rescue_station" ? .source : .projectExtension,
-        capabilities: capabilities), revision: 1, binding: nil, tombstone: nil)
+    site: OriginalStationSite = .salamander,
+    capabilities: [NativeStationCapability]? = nil
+  ) throws -> NativeStationRecord {
+    let current = try NativeStationWorld(owner: world)
+    var record = try #require(current.ledger.records.first { $0.identity == site.identity(world: world) })
+    if let capabilities {
+      record = .init(
+        identity: record.identity,
+        descriptor: .init(
+          definition: record.descriptor.definition, version: record.descriptor.version,
+          boardOrigin: record.descriptor.boardOrigin, capabilities: capabilities),
+        revision: record.revision, binding: record.binding, tombstone: record.tombstone,
+        utility: record.utility, utilitySourceBirth: record.utilitySourceBirth)
+    }
+    return record
   }
 
   func budgetRecords(count: Int) throws -> [NativeStationRecord] {
     let limit = try stationRecordBudget()
-    try #require((0...limit + 1).contains(count))
-    // Two structural source-class slots per ordinary system keep limit+1 records valid and unique.
-    let records = (0..<count).map { index in
-      record(
-        key: "station-\(index)",
-        system: .init(galaxy: (index / 2) / 256, system: (index / 2) % 256),
-        definition: index.isMultiple(of: 2) ? "rescue_station" : "rrs_headquarters")
-    }
-    let allRecordsValid: Bool = records.allSatisfy { $0.valid }
-    try #require(allRecordsValid)
+    try #require((0...limit).contains(count))
+    let records = Array(try NativeStationWorld(owner: world).ledger.records.prefix(count))
+    try #require(records.count == count && records.allSatisfy { $0.valid })
     try #require(Set(records.map(\.identity.slot)).count == count)
     return records
   }
 
-  func binding(visit: UInt64 = 1, entity: UInt64 = 9, body: Int = 9) -> NativeStationBinding {
-    .init(actor: .init(system: system, visit: visit, entity: entity), bodyID: body)
+  func binding(
+    system: SystemIdentity? = nil, visit: UInt64 = 1, entity: UInt64 = 9, body: Int = 9
+  ) -> NativeStationBinding {
+    .init(actor: .init(system: system ?? self.system, visit: visit, entity: entity), bodyID: body)
   }
 
+  static func admittedRemoteWorld() throws -> NativeStationWorld {
+    var game = Game(executive: false)
+    game.commander.system = OriginalStationSite.remoteUtility.system.system
+    game.screen = .status
+    try game.commander.prepareEquipment(legacy: false)
+    game.launch()
+    try #require(!game.docked && game.commander.valid)
+    let world = try #require(game.commander.nativeStations)
+    let identity = OriginalStationSite.remoteUtility.identity(world: world.ledger.world)
+    let body = try #require(game.bodies.first { $0.nativeStationIdentity == identity })
+    try #require(game.nativeStationBodyIsCurrent(body))
+    let record = try #require(world.ledger.records.first { $0.identity == identity })
+    try #require(record.utilitySourceBirth != nil && record.binding != nil && record.valid)
+    return world
+  }
+
+  // Model-only ledger exercise. This does not issue a Game's sealed entry or live service proof.
   func docked() throws -> NativeStationLedger {
-    let record = record()
+    let record = try record()
     var ledger = try NativeStationLedger(world: world, records: [record])
     let binding = binding()
     try ledger.rebind(record.identity, to: binding)
@@ -58,7 +73,8 @@ private struct StationStateFixture {
 private func stationRecordBudget() throws -> Int {
   let limit = NativeStationLedger.recordLimit
   try #require(limit > 0 && limit <= NativeStationLedger.maximumSourceRecords)
-  // The real source ceiling leaves room for one excess record in the two-class structural domain.
+  try #require(limit == 4 && Set(OriginalStationSite.allCases).count == 4)
+  // The absolute decoder budget remains separate from the closed four-site source domain.
   try #require(NativeStationLedger.maximumSourceRecords == 8 * (256 + 1))
   return limit
 }
@@ -69,7 +85,7 @@ private func stationRecordBudget() throws -> Int {
   let epoch = UUID()
   let context = try #require(
     ledger.serviceContext(
-      capability: .rrsContractBoard, docked: true, system: fixture.system,
+      capability: .sealedDispatchBoard, docked: true, system: fixture.system,
       commanderOwner: fixture.owner, runtimeEpoch: epoch))
   let bytes = try JSONEncoder().encode(ledger)
   let loaded = try JSONDecoder().decode(NativeStationLedger.self, from: bytes)
@@ -86,25 +102,25 @@ private func stationRecordBudget() throws -> Int {
       runtimeEpoch: newEpoch))
   let fresh = try #require(
     loaded.serviceContext(
-      capability: .rrsContractBoard, docked: true, system: fixture.system,
+      capability: .sealedDispatchBoard, docked: true, system: fixture.system,
       commanderOwner: fixture.owner, runtimeEpoch: newEpoch))
   #expect(fresh.receipt == context.receipt && fresh.runtimeEpoch == newEpoch)
   #expect(loaded.currentDock == ledger.currentDock && loaded.nextDockSequence == 2)
   #expect(
     loaded.serviceContext(
-      capability: .rrsContractBoard, docked: false, system: fixture.system,
+      capability: .sealedDispatchBoard, docked: false, system: fixture.system,
       commanderOwner: fixture.owner, runtimeEpoch: newEpoch) == nil)
   #expect(
     loaded.serviceContext(
-      capability: .rrsContractBoard, docked: true, system: fixture.system,
+      capability: .sealedDispatchBoard, docked: true, system: fixture.system,
       commanderOwner: UUID(), runtimeEpoch: newEpoch) == nil)
   #expect(
     loaded.serviceContext(
-      capability: .rrsContractBoard, docked: true, system: fixture.system,
+      capability: .sealedDispatchBoard, docked: true, system: fixture.system,
       commanderOwner: nil, runtimeEpoch: newEpoch) == nil)
   #expect(
     loaded.serviceContext(
-      capability: .rrsContractBoard, docked: true, system: .init(galaxy: 0, system: 1),
+      capability: .sealedDispatchBoard, docked: true, system: .init(galaxy: 0, system: 1),
       commanderOwner: fixture.owner, runtimeEpoch: newEpoch) == nil)
 }
 
@@ -143,29 +159,34 @@ private func stationRecordBudget() throws -> Int {
 
 @Test func nativeStationRegistryRejectsDuplicateForeignAndUnboundedState() throws {
   let fixture = StationStateFixture()
-  let record = fixture.record()
+  let record = try fixture.record()
   #expect(throws: NativeStationStateError.self) {
     _ = try NativeStationLedger(world: fixture.world, records: [record, record])
   }
   #expect(throws: NativeStationStateError.self) {
     _ = try NativeStationLedger(world: UUID(), records: [record])
   }
+  let alias = NativeStationRecord(
+    identity: .init(
+      world: fixture.world, system: fixture.system, definition: record.identity.definition,
+      version: record.identity.version, key: "alias"),
+    descriptor: record.descriptor, revision: 1, binding: nil, tombstone: nil)
+  #expect(!alias.valid)
   #expect(throws: NativeStationStateError.self) {
-    _ = try NativeStationLedger(
-      world: fixture.world, records: [record, fixture.record(key: "alias")])
+    _ = try NativeStationLedger(world: fixture.world, records: [record, alias])
   }
   let changedVersion = NativeStationIdentity(
-    world: fixture.world, system: fixture.system, definition: "rescue_station",
-    version: "1.5.5", key: "replacement")
+    world: fixture.world, system: fixture.system, definition: record.identity.definition,
+    version: "foreign-current-revision", key: record.identity.key)
   #expect(!changedVersion.valid && changedVersion.slot == record.identity.slot)
   let limit = try stationRecordBudget()
-  let records = try fixture.budgetRecords(count: limit + 1)
+  let records = try fixture.budgetRecords(count: limit)
+  #expect(records.count == 4 && records.allSatisfy { $0.valid })
   #expect(throws: NativeStationStateError.self) {
-    _ = try NativeStationLedger(world: fixture.world, records: records)
+    _ = try NativeStationLedger(world: fixture.world, records: records + [record])
   }
   var ledger = try NativeStationLedger(
-    world: fixture.world,
-    records: [record, fixture.record(key: "hq", definition: "rrs_headquarters")])
+    world: fixture.world, records: [record, try fixture.record(site: .frog)])
   try ledger.rebind(record.identity, to: fixture.binding())
   let before = ledger
   let otherIdentity = ledger.records[1].identity
@@ -203,21 +224,30 @@ private func stationRecordBudget() throws -> Int {
 
 @Test func nativeStationEmptyCapabilitiesGrantNoService() throws {
   let fixture = StationStateFixture()
-  let record = fixture.record(capabilities: [])
-  var ledger = try NativeStationLedger(world: fixture.world, records: [record])
-  try ledger.rebind(record.identity, to: fixture.binding())
-  try ledger.recordDock(
-    at: record.identity, binding: fixture.binding(), commanderOwner: fixture.owner)
-  #expect(ledger.valid && ledger.currentDock != nil)
+  let invalidAvenor = try fixture.record(capabilities: [])
+  #expect(!invalidAvenor.valid)
+  #expect(throws: NativeStationStateError.self) {
+    _ = try NativeStationLedger(world: fixture.world, records: [invalidAvenor])
+  }
+  let world = try StationStateFixture.admittedRemoteWorld()
+  let identity = OriginalStationSite.remoteUtility.identity(world: world.ledger.world)
+  let record = try #require(world.ledger.records.first { $0.identity == identity })
+  let binding = try #require(record.binding)
+  #expect(record.valid && record.utilitySourceBirth != nil && record.descriptor.capabilities.isEmpty)
+  // Historical ledger data cannot grant a capability. Actual remote doorway entry is
+  // covered by the native service tests, which own the real GameRuntime and writer.
+  var ledger = world.ledger
+  try ledger.recordDock(at: identity, binding: binding, commanderOwner: world.ledger.world)
+  #expect(ledger.valid && ledger.currentDock?.station == identity)
   #expect(
     ledger.serviceContext(
-      capability: .rrsContractBoard, docked: true, system: fixture.system,
-      commanderOwner: fixture.owner, runtimeEpoch: UUID()) == nil)
+      capability: .sealedDispatchBoard, docked: true, system: identity.system,
+      commanderOwner: world.ledger.world, runtimeEpoch: UUID()) == nil)
 }
 
 @Test func nativeStationStructuralMetadataAndRevisionLimitsAreChecked() throws {
   let fixture = StationStateFixture()
-  let record = fixture.record()
+  let record = try fixture.record()
   let maximum = try fixture.budgetRecords(count: stationRecordBudget())
   let admitted = try NativeStationLedger(world: fixture.world, records: maximum)
   #expect(admitted.valid)
@@ -232,17 +262,13 @@ private func stationRecordBudget() throws -> Int {
   invalid = record
   invalid.tombstone = .init(revision: 2, destroyedBinding: fixture.binding())
   #expect(!invalid.valid)
-  let duplicateCapabilities = fixture.record(capabilities: [.rrsContractBoard, .rrsContractBoard])
+  let duplicateCapabilities = try fixture.record(capabilities: [.sealedDispatchBoard, .sealedDispatchBoard])
   #expect(!duplicateCapabilities.valid)
-  let hq = NativeStationIdentity(
-    world: fixture.world, system: fixture.system, definition: "rrs_headquarters",
-    version: "1.5.4", key: "hq")
-  let hqDescriptor = NativeStationDescriptor(
-    definition: "rrs_headquarters", version: "1.5.4", boardOrigin: .projectExtension,
-    capabilities: [.rrsContractBoard])
-  #expect(hqDescriptor.matches(hq))
-  #expect(hqDescriptor.sourceRoles == ["rrs_galactic_hq", "rrs_group_spacestation"])
-  #expect(!record.descriptor.matches(hq))
+  let other = try fixture.record(site: .frog)
+  #expect(other.descriptor.matches(other.identity))
+  #expect(other.descriptor.boardOrigin == .authored)
+  #expect(other.descriptor.sourceRoles == [other.identity.definition])
+  #expect(!record.descriptor.matches(other.identity))
   var ledger = try NativeStationLedger(world: fixture.world, records: [record])
   try ledger.rebind(record.identity, to: fixture.binding())
   let before = ledger
@@ -254,8 +280,8 @@ private func stationRecordBudget() throws -> Int {
 
 @Test func nativeStationReservedActorsAndHistoricalDockAliasesRefuse() throws {
   let fixture = StationStateFixture()
-  let way = fixture.record()
-  let hq = fixture.record(key: "hq", definition: "rrs_headquarters")
+  let way = try fixture.record()
+  let hq = try fixture.record(site: .frog)
   var ledger = try NativeStationLedger(world: fixture.world, records: [way, hq])
   for entity in [UInt64(0), UInt64(1)] {
     let before = ledger
@@ -326,23 +352,25 @@ private func stationRecordBudget() throws -> Int {
 }
 
 @Test func nativeStationBodyBindingUniquenessIncludesSystemAndVisit() throws {
-  let fixture = StationStateFixture()
-  let way = fixture.record()
-  let hq = fixture.record(key: "hq", definition: "rrs_headquarters")
-  let foreignSystem = SystemIdentity(galaxy: 1, system: fixture.system.system)
-  let foreign = fixture.record(key: "foreign", system: foreignSystem)
-  var ledger = try NativeStationLedger(world: fixture.world, records: [way, hq, foreign])
+  // The different-system record comes from actual remote source admission and its birth event.
+  let world = try StationStateFixture.admittedRemoteWorld()
+  let fixture = StationStateFixture(world: world.ledger.world)
+  let way = try fixture.record()
+  let other = try fixture.record(site: .frog)
+  let remoteID = OriginalStationSite.remoteUtility.identity(world: fixture.world)
+  let remote = try #require(world.ledger.records.first { $0.identity == remoteID })
+  try #require(remote.utilitySourceBirth != nil && remote.binding != nil && remote.valid)
+  var ledger = try NativeStationLedger(world: fixture.world, records: [way, other, remote])
   try ledger.rebind(way.identity, to: fixture.binding(entity: 9, body: 9))
   let before = ledger
   #expect(throws: NativeStationStateError.self) {
-    try ledger.rebind(hq.identity, to: fixture.binding(entity: 10, body: 9))
+    try ledger.rebind(other.identity, to: fixture.binding(entity: 10, body: 9))
   }
   #expect(ledger == before)
-  try ledger.rebind(hq.identity, to: fixture.binding(visit: 2, entity: 10, body: 9))
+  try ledger.rebind(other.identity, to: fixture.binding(visit: 2, entity: 10, body: 9))
   #expect(ledger.valid && ledger.records[0].binding?.bodyID == ledger.records[1].binding?.bodyID)
-  let other = NativeStationBinding(
-    actor: .init(system: foreignSystem, visit: 1, entity: 9), bodyID: 9)
-  try ledger.rebind(foreign.identity, to: other)
-  #expect(ledger.valid && ledger.records[2].binding == other)
+  let differentSystem = fixture.binding(system: remoteID.system, entity: 9, body: 9)
+  try ledger.rebind(remote.identity, to: differentSystem)
+  #expect(ledger.valid && ledger.records[2].binding == differentSystem)
   #expect(ledger.records.allSatisfy { $0.binding?.bodyID == 9 })
 }

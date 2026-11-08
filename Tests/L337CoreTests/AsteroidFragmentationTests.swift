@@ -778,10 +778,11 @@ extension AsteroidFragmentationTests {
 }
 
 private func stationFractureGame(main: Bool) throws -> (Game, MiningRock, Int, Int) {
-  // Select from genuine authored station/belt presence before constructing a game.
+  // Controlled kernel-component fixture. This is not evidence of earned gameplay breakup or coast.
+  // Select the current canonical station/belt; the separate native producer uses real fire and full scene.
   let binding = try #require(
     NativeStationSource.bindings.first { binding in
-      guard binding.kind == .waystation,
+      guard binding.site == .salamander,
         let system = Universe.galaxy(number: binding.system.galaxy)
           .first(where: { $0.id == binding.system.system }),
         AsteroidBeltDefinition.isPresent(system: system, galaxy: binding.system.galaxy)
@@ -806,9 +807,11 @@ private func stationFractureGame(main: Bool) throws -> (Game, MiningRock, Int, I
   try game.commander.prepareEquipment(legacy: false)
   game.launch()
   try #require(!game.docked && game.commander.nativeStationStateValid)
+  let owner = try #require(game.commander.equipmentOwnerID)
+  let originalStation = binding.identity(world: owner)
   let station = try #require(
     game.bodies.first {
-      main ? $0.id == 0 : $0.nativeStationIdentity?.definition == binding.kind.sourceDefinition
+      main ? $0.id == 0 : $0.nativeStationIdentity == originalStation
     })
   let rock = try #require(
     game.miningFields.flatMap(\.rocks).first {
@@ -896,7 +899,8 @@ extension AsteroidFragmentationTests {
     let velocity = try #require(debris.physical?.velocity)
     let stationVelocity = try #require(station.physical?.velocity)
     #expect(stationVelocity.length > 0 && station.energy < before.energy && station.energy > 0)
-    let momentum = velocity * mass + stationVelocity * AsteroidImpactPolicy.massKg(hull: .station)
+    let stationMass = try #require(identity.sourceMassKilograms)
+    let momentum = velocity * mass + stationVelocity * stationMass
     #expect((momentum - Vector3(-200, 0, 0) * mass).length < 1e-6)
     #expect(game.commander.credits == credits && game.commander.kills == kills)
     #expect(game.commander.flightSimulation.anchors?.station == sourceAnchor)
@@ -909,7 +913,7 @@ extension AsteroidFragmentationTests {
     case .main(let id):
       #expect(game.commander.scriptState.stationResources[id.key]?.energy == station.energy)
       #expect(sourceAnchor?.position == Vector3(0, 0, 0))
-    case .rrs(let id):
+    case .originalStation(let id):
       let saved = try #require(world.pose(for: id))
       #expect(
         saved.position == authoredPose?.position && saved.orientation == authoredPose?.orientation)
@@ -961,7 +965,7 @@ extension AsteroidFragmentationTests {
     #expect((position - initial - stationVelocity * 1000).length < 1e-5)
     #expect(game.commander.flightSimulation.anchors?.station == sourceAnchor)
     #expect(game.commander.miningLedger.breakups[rock.identity]?.birthMassKg == mass)
-    if case .rrs(let id) = identity {
+    if case .originalStation(let id) = identity {
       game.bodies.removeAll { $0.id == stationID || $0.id == sourceID }
       try game.populateNativeStations()
       let admitted = try #require(game.bodies.first { $0.nativeStationIdentity == id })
@@ -1122,7 +1126,7 @@ extension AsteroidFragmentationTests {
     try #require(!stations.isEmpty)
     for station in stations {
       let identity = try #require(station.nativeStationIdentity)
-      let motion = try #require(world.inertia(for: .rrs(identity)))
+      let motion = try #require(world.inertia(for: .originalStation(identity)))
       #expect(motion.valid && motion.contacts == 0 && motion.impactTime == 0)
       #expect(motion.momentum == Vector3(0, 0, 0) && motion.displacement == Vector3(0, 0, 0))
       #expect(motion.refusedSteps == 1 && motion.refusedMotionTime == 0.1)

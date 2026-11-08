@@ -110,13 +110,13 @@ struct NativeWormholeMotionSample {
   let bodies: [SpaceBody]
   init(_ game: borrowing Game) {
     system = game.systemIdentity
-    visit = game.commander.flightSimulation.visit
-    physicalTime = game.commander.flightSimulation.physicalTime
-    pose = game.commander.flightSimulation.pose
+    visit = game.storedFlightSimulation().visit
+    physicalTime = game.storedFlightSimulation().physicalTime
+    pose = game.storedFlightSimulation().pose
     bodies = game.bodies
   }
   static func profiledMotion(in game: borrowing Game, before: [SpaceBody], delta: Double) -> Self {
-    let flight = game.commander.flightSimulation
+    let flight = game.storedFlightSimulation()
     return Self(
       system: game.systemIdentity, visit: flight.visit,
       physicalTime: flight.physicalTime - delta, pose: flight.pose, bodies: before)

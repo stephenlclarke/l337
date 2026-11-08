@@ -35,6 +35,7 @@ public struct CatalogueShip: Codable, Sendable, Equatable, Identifiable {
   public let nativeHull: Hull?
   public let nativeDesign: ShipDesign?
   public let nativeCombat: NativeCombat?
+  var nativeDocking: NativeStationGeometry.Port? = nil
   public var originalDefinition: OriginalFleetDefinition? {
     ShipCatalogue.originalDefinition(for: id)
   }
@@ -51,7 +52,10 @@ public struct CatalogueShip: Codable, Sendable, Equatable, Identifiable {
   }
   public var previewMesh: Mesh? { ShipCatalogue.meshes[id] }
   public var availability: String {
-    game == nil ? "Display object; not a flyable ship" : "Available for exchange at a main station"
+    if OriginalDetailedHullStage.blocksRuntime(id) {
+      return "Original hull pending; unavailable for flight or purchase"
+    }
+    return game == nil ? "Display object; not a flyable ship" : "Available for exchange at a main station"
   }
 }
 public struct ShipDesign: Codable, Sendable, Equatable {
@@ -115,13 +119,24 @@ public struct ShipDesign: Codable, Sendable, Equatable {
       ? assignments.isEmpty
       : assignments.count == faces.count
         && assignments.allSatisfy { palette.indices.contains($0) }
-        && palette.allSatisfy { !$0.name.isEmpty && $0.colour & 255 == 255 }
+        && palette.allSatisfy { material in
+          guard !material.name.isEmpty && material.colour & 255 == 255 else { return false }
+          guard let opacity = material.opticalOpacity else { return true }
+          return opacity > 0 && opacity < 1
+        }
     guard indicesValid, materialsValid, sourceAppearanceValid, originalAppearanceValid,
       (details ?? []).allSatisfy({
         vertices.indices.contains($0.start) && vertices.indices.contains($0.end)
           && faces.indices.contains($0.face)
       })
     else { return false }
+    if palette.contains(where: { $0.opticalOpacity != nil }) {
+      for mappings in [faceTextures, sourceFaceTextures].compactMap({ $0 }) where !mappings.isEmpty {
+        for (index, mapping) in mappings.enumerated() where mapping.texture != -1 {
+          guard palette[assignments[index]].opticalOpacity == nil else { return false }
+        }
+      }
+    }
     return faces.filter { face in
       let p = face.prefix(3).map { Vector3(vertices[$0][0], vertices[$0][1], vertices[$0][2]) }
       return (p[1] - p[0]).cross(p[2] - p[0]).length > 0.000001
@@ -169,10 +184,9 @@ public enum ShipCatalogue {
   public static func originalDefinition(for id: String) -> OriginalFleetDefinition? {
     OriginalFleetDefinitionData.definition(for: id)
   }
-  private static let originalSourceProfiles = Dictionary(
-    uniqueKeysWithValues:
-      OriginalFleetDefinitionData.staged.map { ($0.id, $0.sourceProfile) })
-  static func originalSourceProfile(for id: String) -> ShipProfile? { originalSourceProfiles[id] }
+  static func originalSourceProfile(for id: String) -> ShipProfile? {
+    OriginalFleetDefinitionData.definition(for: id)?.sourceProfile
+  }
   public static var modelCount: Int { all.count }
   private static let resources: Bundle =
     Bundle.main.resourceURL.flatMap {
@@ -188,17 +202,75 @@ public enum ShipCatalogue {
     var ids = Set<String>()
     var nativeKinds = Set<Hull>()
     return try files.map { url in
-      let ship = try TOMLDecoder().decode(CatalogueShip.self, from: Data(contentsOf: url))
+      let bytes = try Data(contentsOf: url)
+      let ship = try TOMLDecoder().decode(CatalogueShip.self, from: bytes)
+      // The save discriminator is still used by role-bound actors. It owns no native mesh.
+      guard ship.nativeHull != .cobra else {
+        throw ShipFileError.invalid("Retired native hull: cobra")
+      }
+      try OriginalDetailedHullStage.authenticate(ship, bytes: bytes)
+      try OriginalPlayerHullActivation.authenticateBaseline(ship, bytes: bytes)
+      if ["SH005", "SH006"].contains(ship.id) {
+        let expectedName = ship.id == "SH005" ? "Bison" : "Bison Mk II"
+        guard ship.name == expectedName, ship.catalogue.family == "bison",
+          let native = ship.nativeDesign, native.valid
+        else { throw ShipFileError.invalid(url.lastPathComponent) }
+      }
+      if ["SH013", "SH014"].contains(ship.id) {
+        let expectedName = ship.id == "SH013" ? "Buffalo" : "Buffalo Mk II"
+        guard ship.name == expectedName, ship.catalogue.family == "buffalo",
+          let native = ship.nativeDesign, native.valid
+        else { throw ShipFileError.invalid(url.lastPathComponent) }
+      }
+      if ship.id == "SH025" {
+        guard let contract = OriginalFleetR3Data.contract(for: ship.id),
+          ship.name == contract.name, ship.catalogue.family == contract.family,
+          ship.game == contract.performance,
+          let accommodation = try? ShipAccommodationProfile(ship: ship),
+          accommodation.equipmentUnits == contract.fitting?.equipmentUnits,
+          accommodation.operatingCrew == contract.accommodation?.operatingCrew
+        else { throw ShipFileError.invalid(url.lastPathComponent) }
+      }
+      if ship.id == "SH026" {
+        guard ship.name == "Harrier", ship.catalogue.family == "harrier",
+          let native = ship.nativeDesign, native.valid
+        else { throw ShipFileError.invalid(url.lastPathComponent) }
+      }
+      if let site = OriginalStationSite.allCases.first(where: { $0.catalogueID == ship.id }) {
+        guard site.nativeGeometry(from: ship) != nil,
+          let physical = OriginalStationPhysical.read(from: ship), physical.blueprintID == ship.id,
+          ship.catalogue.damagePolicy == .destructible
+        else { throw ShipFileError.invalid(url.lastPathComponent) }
+      }
+      if ship.id == "SH028" {
+        guard ship.name == "Lion Citadel", ship.catalogue.family == "lion-citadel",
+          ship.nativeHull == .station, let native = ship.nativeDesign, native.valid,
+          let port = ship.nativeDocking, port.valid
+        else { throw ShipFileError.invalid(url.lastPathComponent) }
+      }
       guard ship.id == url.deletingPathExtension().lastPathComponent,
         ship.id.range(of: "^SH[0-9]{3}$", options: .regularExpression) != nil,
         !ship.name.isEmpty, ship.design.valid,
-        ship.game?.valid(purchasePolicy: ship.catalogue.purchasePolicy) ?? true,
+        (ship.game?.valid(purchasePolicy: ship.catalogue.purchasePolicy) ?? true)
+          || OriginalDetailedHullStage.hasPendingCapsuleStatistics(ship),
         ship.nativeDesign?.valid ?? true, ship.nativeCombat?.valid ?? true,
         ship.catalogue.valid(
           shipID: ship.id, performance: ship.game, nativeCombat: ship.nativeCombat),
-        ship.catalogue.validEffectiveCargo(performance: ship.game, profiles: ship.profiles)
+        (ship.id == OriginalImpalaVoyagerActivation.id
+          ? OriginalImpalaVoyagerActivation.validEffectiveCargo(ship)
+          : ship.catalogue.validEffectiveCargo(performance: ship.game, profiles: ship.profiles))
       else { throw ShipFileError.invalid(url.lastPathComponent) }
-      let resolved = try OriginalPlayerHullActivation.resolve(ship)
+      let resolved: CatalogueShip
+      if OriginalBisonActivation.contains(ship.id) {
+        do {
+          resolved = try OriginalBisonActivation.resolve(
+            ship, resourceSHA256: ScriptPackLibrary.hash(bytes))
+        } catch {
+          throw ShipFileError.invalid(url.lastPathComponent)
+        }
+      } else {
+        resolved = try OriginalPlayerHullActivation.resolve(ship)
+      }
       if let hull = ship.nativeHull, !nativeKinds.insert(hull).inserted {
         throw ShipFileError.invalid("Duplicate native hull: " + hull.rawValue)
       }

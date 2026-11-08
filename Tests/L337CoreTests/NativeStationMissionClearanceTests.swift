@@ -9,16 +9,17 @@ private func nativeStationClearanceScene() throws -> (Game, SpaceBody) {
   try game.commander.prepareEquipment(legacy: false)
   game.launch()
   try #require(!game.docked && game.commander.valid)
+  let owner = try #require(game.commander.nativeStations?.ledger.world)
   let station = try #require(
     game.bodies.first {
-      $0.nativeStationIdentity?.definition == NativeStationGeometry.Kind.waystation.sourceDefinition
+      $0.nativeStationIdentity == OriginalStationSite.salamander.identity(world: owner)
     })
   try #require(game.nativeStationBodyIsCurrent(station))
   return (game, station)
 }
 
 @Test(arguments: ["profiled-skirmish", "scripted-patrol"])
-func originalMissionCoordinatesAdmitBesideActualNativeWaystation(example: String) throws {
+func originalMissionCoordinatesAdmitBesideActualOriginalStation(example: String) throws {
   let directory = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
     .deletingLastPathComponent().deletingLastPathComponent()
     .appendingPathComponent("docs/mission-packs/" + example)
@@ -30,9 +31,10 @@ func originalMissionCoordinatesAdmitBesideActualNativeWaystation(example: String
   let id = try game.acceptScriptMission(pack)
   game.launch()
   try #require(!game.docked)
+  let owner = try #require(game.commander.nativeStations?.ledger.world)
   let station = try #require(
     game.bodies.first {
-      $0.nativeStationIdentity?.definition == NativeStationGeometry.Kind.waystation.sourceDefinition
+      $0.nativeStationIdentity == OriginalStationSite.salamander.identity(world: owner)
     })
   let anchor = try #require(game.scriptAnchor)
   let definition = try #require(pack.manifest.encounters?.first)
@@ -52,8 +54,20 @@ func originalMissionCoordinatesAdmitBesideActualNativeWaystation(example: String
   let identity = try #require(station.nativeStationIdentity)
   let geometry = try #require(NativeStationSource.binding(for: identity)?.geometry)
   let radius = try #require(geometry.mesh.vertices.map(\.length).max())
-  // Prove the real example exercises the conservative sphere-overlap fallback.
-  #expect((center - game.modelPose(of: station).position).length < radius + template.radius + 64)
+  // Preserve the actual mission coordinates. Independently probe a source-derived
+  // clear point inside the conservative bounding sphere to exercise narrowphase.
+  let normals: [Vector3] = [
+    .init(1, 0, 0), .init(-1, 0, 0), .init(0, 1, 0),
+    .init(0, -1, 0), .init(0, 0, 1), .init(0, 0, -1),
+  ]
+  let normal = try #require(normals.min {
+    geometry.bounds.support($0) < geometry.bounds.support($1)
+  })
+  let pose = game.modelPose(of: station)
+  let localProbe = normal * (geometry.bounds.support(normal) + template.radius + 65)
+  let probe = pose.systemPoint(localProbe)
+  #expect((probe - pose.position).length < radius + template.radius + 64)
+  #expect(game.missionActorClearsNativeStation(center: probe, radius: template.radius, body: station))
   #expect(
     game.missionActorClearsNativeStation(center: center, radius: template.radius, body: station))
   #expect(game.bodies.filter { $0.missionInstanceID == id }.count == 2)
@@ -85,7 +99,7 @@ private func verifyToleratedStationBasisClearance(
   #expect(!game.missionActorClearsNativeStation(center: center, radius: radius, body: scaled))
 }
 
-@Test func actualRigidStationBoundsRetainClearanceAndRejectInteriorAtCurrentSpin() throws {
+@Test func actualRigidStationBoundsRetainClearanceAtZeroOriginalSpin() throws {
   var (game, station) = try nativeStationClearanceScene()
   let radius = try #require(Mesh.hull(.sidewinder).vertices.map(\.length).max())
   try verifyToleratedStationBasisClearance(game, station: station, radius: radius)
@@ -98,24 +112,28 @@ private func verifyToleratedStationBasisClearance(
     let geometry = try #require(NativeStationSource.binding(for: identity)?.geometry)
     let pose = game.modelPose(of: station)
     let minimum = geometry.bounds.minimum
-    let middle = (minimum + geometry.bounds.maximum) * 0.5
+    let face = try #require(geometry.mesh.faces.first { $0.count >= 3 })
+    let solidPoint = face.reduce(Vector3(0, 0, 0)) {
+      $0 + geometry.mesh.vertices[$1]
+    } * (1 / Double(face.count))
+    let boundary = try #require(geometry.mesh.vertices.first { $0.z == minimum.z })
     let vertex = try #require(geometry.mesh.vertices.first)
     #expect(
       !game.missionActorClearsNativeStation(
         center: pose.systemPoint(vertex), radius: radius, body: station))
     #expect(
       !game.missionActorClearsNativeStation(
-        center: pose.systemPoint(middle), radius: radius, body: station))
+        center: pose.systemPoint(solidPoint), radius: radius, body: station))
     for clearance in [0.0, 63, 64] {
-      let point = pose.systemPoint(.init(0, 0, minimum.z - radius - clearance))
+      let point = pose.systemPoint(boundary - .init(0, 0, radius + clearance))
       #expect(!game.missionActorClearsNativeStation(center: point, radius: radius, body: station))
     }
-    let clear = pose.systemPoint(.init(0, 0, minimum.z - radius - 65))
+    let clear = pose.systemPoint(boundary - .init(0, 0, radius + 65))
     #expect(game.missionActorClearsNativeStation(center: clear, radius: radius, body: station))
-    let far = pose.systemPoint(.init(0, 0, minimum.z - radius - 2000))
+    let far = pose.systemPoint(boundary - .init(0, 0, radius + 2000))
     #expect(game.missionActorClearsNativeStation(center: far, radius: radius, body: station))
   }
-  #expect(station.rotation != 0)
+  #expect(station.rotation == 0 && station.rotationRate == 0)
 }
 
 @Test(arguments: [

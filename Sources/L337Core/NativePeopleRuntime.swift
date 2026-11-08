@@ -55,6 +55,7 @@ extension Game {
   {
     guard let physical = body.physical, let person = physical.empCrewPod,
       let record = commander.savedEMPState?.records[person.source], record.valid,
+      currentOccupiedNewtPodHasCurrentCustody(body),
       let podIndex = record.podIndex(for: person.ordinal), commander.worldOwnedPod(person),
       record.pods[podIndex].binding == physical.identity,
       physical.identity.system == context.system, physical.identity.visit == context.visit,
@@ -219,10 +220,38 @@ extension Game {
     if seal.gate.kind == .pod {
       guard let ordinal = seal.ordinals.first, let podIndex = record.podIndex(for: ordinal)
       else { throw SaveError.invalidCommander }
-      record.pods[podIndex].binding = nil
+      let claimsNewt = bodies[index].physical?.currentNewtKitReceipt != nil
+        || record.custody.original.body.physical?.currentNewtKitStock != nil
+        || record.hull.body.physical?.currentNewtKitStock != nil
+      if claimsNewt {
+        guard let receipt = bodies[index].physical?.currentNewtKitReceipt,
+          interruptCurrentNewtDriveForCapture(receipt, at: seal.physicalTime),
+          let updated = commander.savedEMPState?.records[seal.source]
+        else { throw SaveError.invalidCommander }
+        // Keep the actual parent/rod brake; the local pre-capture record must
+        // not replace the updated mechanical state when custody is committed.
+        record = updated
+      }
+      // Freeze portable service at the actual capture, before removing its live
+      // body. The immutable unlock receipt remains the same historical evidence.
+      var captured = EMPStoredObject(body: bodies[index], pose: commander.flightSimulation.pose,
+        time: seal.physicalTime)
+      guard captured.body.physical?.currentNewtKitReceipt
+        == record.pods[podIndex].body.physical?.currentNewtKitReceipt
+      else { throw SaveError.invalidCommander }
+      captured.binding = nil
+      record.pods[podIndex] = captured
       workTargetCollected(bodies[index])
       bodies.remove(at: index)
     } else {
+      // Brake using the actual pre-transfer people/load. A later changed-load
+      // observation cannot recover momentum already removed with a person.
+      if record.hull.body.physical?.currentNewtKitStock != nil {
+        guard prepareCurrentNewtForActorRemoval(Set([seal.gate.subject])),
+          let updated = commander.savedEMPState?.records[seal.source]
+        else { throw SaveError.invalidCommander }
+        record = updated
+      }
       let energyCost = elapsed * 2
       let heatCost = elapsed * 6
       guard energy > energyCost, laserHeat.isFinite, laserHeat + heatCost < 240,
@@ -257,6 +286,22 @@ extension Game {
     }
     commander.savedEMPState?.records[seal.source] = record
     commander.savedNativePeopleCustody = state
+    if seal.gate.kind == .pod {
+      guard let ordinal = seal.ordinals.first, let podIndex = record.podIndex(for: ordinal)
+      else { throw SaveError.invalidCommander }
+      let claimsNewt = record.pods[podIndex].body.physical?.currentNewtKitReceipt != nil
+        || record.custody.original.body.physical?.currentNewtKitStock != nil
+        || record.hull.body.physical?.currentNewtKitStock != nil
+      if claimsNewt {
+        guard let receipt = record.pods[podIndex].body.physical?.currentNewtKitReceipt,
+          sealCurrentNewtCapturedService(receipt, at: seal.physicalTime),
+          let updated = commander.savedEMPState?.records[seal.source],
+          let updatedPeople = commander.nativePeople
+        else { throw SaveError.invalidCommander }
+        record = updated
+        state = updatedPeople
+      }
+    }
     guard commander.valid,
       commander.savedEMPState?.sceneIsConsistent(
         bodies, flight: commander.flightSimulation, people: state) == true

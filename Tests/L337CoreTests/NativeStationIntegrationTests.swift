@@ -1,49 +1,71 @@
+import Darwin
 import Foundation
 import Testing
 
 @testable import L337Core
 
 struct NativeStationIntegrationTests {
-  @Test func compiledStationBindingsMatchTheRetainedSourcePopulationAndSeparateHeadquarters() throws
-  {
-    // Independently expanded from authenticated original-world government IDs and RRS LCG.
-    let expected = [45, 49, 51, 44, 46, 52, 42, 45]
-    let headquartersAlsoHaveWaystation = [false, false, false, true, false, false, false, false]
-    #expect(NativeStationSource.bindings.count == 382)
-    for galaxy in 0..<8 {
-      let bindings = NativeStationSource.bindings.filter { $0.system.galaxy == galaxy }
-      #expect(bindings.filter { $0.kind == .waystation }.count == expected[galaxy])
-      let hq = try #require(bindings.first { $0.kind == .headquarters })
-      #expect(hq.system.system == [237, 98, 5, 149, 35, 213, 66, 7][galaxy])
-      let waystation = bindings.first { $0.system == hq.system && $0.kind == .waystation }
-      #expect((waystation != nil) == headquartersAlsoHaveWaystation[galaxy])
-      if let waystation { #expect(waystation.key != hq.key) }
-      #expect(hq.descriptor.boardOrigin == .projectExtension)
-      #expect(hq.rotationRate == 0 && hq.technology == 0)
-      #expect(
-        bindings.filter { $0.kind == .waystation }.allSatisfy {
-          $0.descriptor.boardOrigin == .source && $0.rotationRate == 0.02 && $0.technology == 7
-        })
-      #expect(!bindings.contains { $0.system.system == Plugh.systemID })
+  @Test func physicalTestStorageSupportsNativePagesAndWriterRecovery() throws {
+    let storage = try NativeStationTestStorage()
+    defer { storage.clean() }
+    let snapshot = AlienStorageTestFixture().snapshot
+    let reference = try AlienStoragePageStore.write(
+      snapshot: snapshot, previous: nil, to: storage.directory)
+    let root = try Data(contentsOf: storage.directory.appendingPathComponent("alien-root.json"))
+    try storage.blockWriter()
+    #expect(throws: (any Error).self) {
+      try AlienStoragePageStore.read(
+        reference: reference, expectedOwner: snapshot.owner, from: storage.directory)
     }
+    #expect(try Data(contentsOf: storage.backup.appendingPathComponent("alien-root.json")) == root)
+    try storage.restoreWriter()
+    let restored = try AlienStoragePageStore.read(
+      reference: reference, expectedOwner: snapshot.owner, from: storage.directory)
+    #expect(restored == snapshot)
+    let retry = try AlienStoragePageStore.write(
+      snapshot: snapshot, previous: snapshot, to: storage.directory)
+    #expect(retry == reference)
+  }
+
+  @Test func compiledOriginalStationBindingsMatchFourClosedSites() throws {
+    let bindings = try NativeStationSource.requireBindings()
+    let sites: [OriginalStationSite] = [.salamander, .frog, .dhole, .remoteUtility]
+    #expect(bindings.count == 4 && Set(bindings.map(\.site)) == Set(sites))
+    #expect(bindings.filter { $0.system == .init(galaxy: 0, system: 7) }.map(\.site) == [.salamander, .frog, .dhole])
+    #expect(bindings.filter { $0.system == .init(galaxy: 0, system: 237) }.map(\.site) == [.remoteUtility])
+    for source in bindings {
+      #expect(source.descriptor.boardOrigin == .authored)
+      #expect(source.rotationRate == 0 && source.recharge == 0)
+      #expect(source.physical.dryMassKilograms == (source.site == .salamander ? 2_000_000 : 12_000_000))
+      #expect(source.maximumEnergy == (source.site == .salamander ? 2000 : 5000))
+      #expect(source.descriptor.capabilities == (source.site == .remoteUtility ? [] : [.sealedDispatchBoard]))
+      #expect(source.catalogueShipID == source.site.catalogueID)
+      #expect(source.key == source.site.key)
+    }
+    let dhole = try #require(bindings.first { $0.site == .dhole })
+    let remote = try #require(bindings.first { $0.site == .remoteUtility })
+    #expect(dhole.physical == remote.physical && dhole.geometry.mesh.vertices == remote.geometry.mesh.vertices)
+    #expect(dhole.key != remote.key && dhole.system != remote.system)
+    #expect(!bindings.contains { $0.system.system == Plugh.systemID })
   }
 
   @Test func nativeStationWorldRetainsChosenPosesWithoutMintingDockingAuthority() throws {
     let owner = UUID()
     let world = try NativeStationWorld(owner: owner)
-    #expect(world.valid && world.ledger.world == owner && world.ledger.records.count == 382)
+    let expected = Set(OriginalStationSite.allCases.map { $0.identity(world: owner) })
+    #expect(world.valid && world.ledger.world == owner && world.ledger.records.count == 4)
+    #expect(Set(world.ledger.records.map(\.identity)) == expected && Set(world.poses.map(\.station)) == expected)
     #expect(world.ledger.currentDock == nil && world.ledger.nextDockSequence == 1)
-    #expect(world.ledger.records.allSatisfy { $0.binding == nil && $0.tombstone == nil })
+    #expect(world.ledger.records.allSatisfy { $0.binding == nil && $0.tombstone == nil && $0.utilitySourceBirth == nil })
     let bytes = try JSONEncoder().encode(world)
     let loaded = try JSONDecoder().decode(NativeStationWorld.self, from: bytes)
     #expect(loaded == world)
-    let hq = try #require(world.poses.first { $0.station.definition == "rrs_headquarters" })
-    #expect(hq.orientation == loaded.pose(for: hq.station)?.orientation)
-    #expect(hq.orientation(at: 0) == hq.orientation(at: 12_345))
-    let waystation = try #require(world.poses.first { $0.station.definition == "rescue_station" })
-    #expect(waystation.orientation == Basis3())
-    #expect(waystation.orientation(at: 0) != waystation.orientation(at: 1))
-    #expect(waystation.orientation(at: .nan) == nil)
+    for site in OriginalStationSite.allCases {
+      let pose = try #require(world.pose(for: site.identity(world: owner)))
+      #expect(pose.orientation == loaded.pose(for: pose.station)?.orientation)
+      #expect(pose.orientation == Basis3() && pose.orientation(at: 0) == pose.orientation(at: 12_345))
+      #expect(pose.orientation(at: .nan) == nil)
+    }
   }
 
   @Test func savedDescriptorsAndAlteredPosesCannotReplaceTheCompiledSourceBinding() throws {
@@ -56,14 +78,14 @@ struct NativeStationIntegrationTests {
       JSONSerialization.jsonObject(with: JSONEncoder().encode(world)) as? [String: Any])
     var poses = try #require(object["poses"] as? [[String: Any]])
     var position = try #require(poses[0]["position"] as? [String: Any])
-    position["x"] = 0
+    position["x"] = (try #require(position["x"] as? Double)) + 1
     poses[0]["position"] = position
     object["poses"] = poses
     let forged = try JSONSerialization.data(withJSONObject: object)
     #expect(throws: NativeStationRuntimeError.self) {
       _ = try JSONDecoder().decode(NativeStationWorld.self, from: forged)
     }
-    object["poses"] = Array(repeating: poses[0], count: 373)
+    object["poses"] = Array(repeating: poses[0], count: 5)
     let oversized = try JSONSerialization.data(withJSONObject: object)
     #expect(throws: NativeStationRuntimeError.self) {
       _ = try JSONDecoder().decode(NativeStationWorld.self, from: oversized)
@@ -81,7 +103,7 @@ struct NativeStationIntegrationTests {
     #expect(NativeStationSource.boardHour(calendarSeconds: .greatestFiniteMagnitude) == nil)
   }
 
-  @Test func actualPopulationKeepsOriginalMainAndSeparateWaystationAndHeadquarters() throws {
+  @Test func actualPopulationKeepsOriginalMainAndCompleteCurrentSiteCohort() throws {
     var game = try NativeStationTestFixture.launched()
     try verifyNativePopulation(&game)
   }
@@ -101,38 +123,39 @@ struct NativeStationIntegrationTests {
     try verifyOriginalMainImmunity(&game)
   }
 
-  @Test func actualXYZZYMissileVolleyDestroysHeadquartersAndRetainsItsTombstoneAcrossLoad()
+  @Test(arguments: OriginalStationSite.allCases)
+  func actualXYZZYMissileVolleyDestroysOriginalSiteAndRetainsItsTombstoneAcrossLoad(site: OriginalStationSite)
     async throws
   {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try NativeStationTestFixture.headquartersAttack()
-    try await verifyNativeHeadquartersDestruction(&game, storage: storage)
+    var game = try NativeStationTestFixture.originalSiteAttack(site: site)
+    try await verifyNativeOriginalDestruction(&game, site: site, storage: storage)
   }
 
   @Test(arguments: [false, true])
-  func actualWeaponDamageRechargesDuringBothManualAndGuidedPhysicalMovement(guided: Bool)
+  func actualWeaponDamageNeverRechargesDuringManualAndGuidedPhysicalMovement(guided: Bool)
     throws
   {
-    var game = try NativeStationTestFixture.headquartersAttack()
-    try verifyNativeStationRecharge(&game, guided: guided)
+    var game = try NativeStationTestFixture.originalSiteAttack(site: .dhole)
+    try verifyNativeStationNoRecharge(&game, guided: guided)
   }
 
-  @Test(arguments: NativeStationGeometry.Kind.allCases)
+  @Test(arguments: OriginalStationSite.allCases)
   func actualNativeEntryCommitsSelectedStationAndLaunchesFromItsOwnExit(
-    kind: NativeStationGeometry.Kind
+    site: OriginalStationSite
   ) async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try NativeStationTestFixture.approach(kind: kind)
-    try await verifyNativeEntryAndExit(&game, kind: kind, storage: storage)
+    var game = try NativeStationTestFixture.approach(site: site)
+    try await verifyNativeEntryAndExit(&game, site: site, storage: storage)
   }
 
   @Test(arguments: ["speed", "facing", "aperture", "nonfinite", "stationPose"])
   func unsafeActualApproachCannotIssueADockingReceipt(reason: String) async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try NativeStationTestFixture.approach(kind: .headquarters)
+    var game = try NativeStationTestFixture.approach(site: .dhole)
     try await verifyUnsafeNativeApproach(&game, reason: reason, storage: storage)
   }
 
@@ -153,44 +176,64 @@ struct NativeStationIntegrationTests {
 /// Shared fixture setup preserves every body's system position and model orientation.
 /// Tests still cross the actual doorway through GameRuntime.advance; setup mints no receipt.
 enum NativeStationTestFixture {
-  static func launched() throws -> Game {
+  static func launched(
+    system: SystemIdentity = .init(galaxy: 0, system: 7), withDockingComputer: Bool = false
+  ) throws -> Game {
     var game = Game(executive: false)
-    // Current G04-S149 declares both station kinds; G01-S237 declares only headquarters.
-    game.commander.galaxy = 3
-    game.commander.system = 149
-    game.systems = Universe.systemsIncludingPlugh(number: game.commander.galaxy)
-    let sources = NativeStationSource.bindings.filter { $0.system == game.systemIdentity }
-    guard sources.count == 2,
-      NativeStationGeometry.Kind.allCases.allSatisfy({ kind in
-        sources.filter { $0.kind == kind }.count == 1
-      })
-    else { throw NativeStationRuntimeError.invalidSource }
+    game.commander.galaxy = system.galaxy
+    game.systems = Universe.systemsIncludingPlugh(number: system.galaxy)
+    try game.commander.prepareEquipment(legacy: false)
+    if withDockingComputer {
+      let shop = try #require(game.systems.first { !$0.isPlugh && $0.technology >= TargetingTier.docking.technology })
+      game.commander.system = shop.id
+      game.commander.credits = 1_000_000
+      game.screen = .equipment
+      let originalLimits = game.workLimits
+      let originalHull = game.commander.shipID
+      let originalCargo = game.commander.cargo
+      for tier in TargetingTier.allCases where tier <= .docking {
+        let device = try #require(Equipment.all.first { $0.name == tier.equipmentName })
+        let quote = try game.quoteEquipmentPurchase(device)
+        let before = game.commander.credits
+        let applied = try game.applyEquipmentPurchase(quote)
+        try #require(applied)
+        #expect(game.commander.credits == before - quote.purchase.requiredDebit)
+        #expect(game.commander.targetingTier == tier)
+      }
+      try #require(game.commander.hasAutomaticDocking && game.commander.valid)
+      #expect(game.workLimits == originalLimits && game.commander.shipID == originalHull)
+      #expect(game.commander.cargo == originalCargo)
+    }
+    game.commander.system = system.system
+    game.selectedSystem = system.system
     game.screen = .status
     game.launch()
-    guard !game.docked, game.commander.nativeStationStateValid,
-      let owner = game.commander.equipmentOwnerID
-    else { throw NativeStationRuntimeError.invalidState }
-    let expected = Set(sources.map { $0.identity(world: owner) })
-    let actual = game.bodies.compactMap(\.nativeStationIdentity)
-    guard actual.count == expected.count, Set(actual) == expected else {
-      throw NativeStationRuntimeError.invalidState
-    }
+    try #require(!game.docked, Comment(rawValue: game.message))
+    try #require(game.commander.valid && game.commander.nativeStationStateValid)
+    let owner = try #require(game.commander.equipmentOwnerID)
+    let sites = OriginalStationSite.allCases.filter { $0.system == system }
+    let expected = Set(sites.map { $0.identity(world: owner) })
+    let sources = try NativeStationSource.requireBindings().filter { $0.system == system }
+    try #require(Set(sources.map(\.site)) == Set(sites))
+    let actual = game.bodies.filter { $0.nativeStationIdentity != nil }
+    try #require(actual.count == expected.count && Set(actual.compactMap(\.nativeStationIdentity)) == expected)
+    try #require(actual.allSatisfy { game.nativeStationBodyIsCurrent($0) })
     return game
   }
 
-  static func approach(kind: NativeStationGeometry.Kind) throws -> Game {
-    var game = try launched()
-    guard let world = game.commander.nativeStations,
-      let body = game.bodies.first(where: {
-        $0.nativeStationIdentity?.definition == kind.sourceDefinition
-      }), let identity = body.nativeStationIdentity,
-      let saved = world.pose(for: identity),
-      let orientation = saved.orientation(at: game.commander.flightSimulation.physicalTime)
-    else { throw NativeStationRuntimeError.invalidState }
-    let geometry = kind == .waystation ? NativeStationGeometry.waystation : .headquarters
-    let port = geometry.docking
+  static func approach(site: OriginalStationSite) throws -> Game {
+    var game = try launched(system: site.system)
+    let world = try #require(game.commander.nativeStations)
+    let identity = site.identity(world: world.ledger.world)
+    let source = try #require(NativeStationSource.binding(for: identity))
+    let body = try #require(game.bodies.first { $0.nativeStationIdentity == identity })
+    try #require(game.nativeStationBodyIsCurrent(body) && source.geometry.docking.fits(game.commander.playerMesh))
+    let time = game.commander.flightSimulation.physicalTime
+    let position = try #require(world.currentPosition(for: .originalStation(identity), at: time))
+    let orientation = try #require(world.currentOrientation(for: identity, at: time))
+    let port = source.geometry.docking
     var pose = ShipPose()
-    pose.position = saved.position + orientation.apply(port.center + port.outward)
+    pose.position = position + orientation.apply(port.center + port.outward)
     pose.orientation.y = orientation.apply(port.up)
     pose.orientation.z = orientation.apply(port.outward) * -1
     pose.orientation.x = pose.orientation.y.cross(pose.orientation.z)
@@ -199,44 +242,52 @@ enum NativeStationTestFixture {
     return game
   }
 
-  static func headquartersAttack() throws -> Game {
-    var game = try launched()
+  static func originalSiteAttack(site: OriginalStationSite) throws -> Game {
+    var game = try launched(system: site.system)
     game.enableXYZzy()
-    // Actual player preferences: keep the selected offensive lock and avoid friendly ECM.
     game.secretKey("b")
     game.secretKey("e")
-    guard game.commander.xyzzyActive, game.commander.unlimitedMissiles,
-      let body = game.bodies.first(where: {
-        $0.nativeStationIdentity?.definition
-          == NativeStationGeometry.Kind.headquarters.sourceDefinition
-      }), let identity = body.nativeStationIdentity,
-      let saved = game.commander.nativeStations?.pose(for: identity),
-      let orientation = saved.orientation(at: game.commander.flightSimulation.physicalTime),
-      let anchors = game.commander.flightSimulation.anchors
-    else { throw NativeStationRuntimeError.invalidState }
-    let geometry = NativeStationGeometry.headquarters
-    let main = anchors.station.position
-    let outward = (saved.position - main).unit
-    let radius = game.commander.playerMesh.vertices.map(\.length).max() ?? .infinity
-    let support =
-      geometry.mesh.vertices.map { orientation.apply($0).dot(outward) }.max() ?? .infinity
+    try #require(game.commander.xyzzyActive && game.commander.unlimitedMissiles)
+    let world = try #require(game.commander.nativeStations)
+    let identity = site.identity(world: world.ledger.world)
+    let source = try #require(NativeStationSource.binding(for: identity))
+    let body = try #require(game.bodies.first { $0.nativeStationIdentity == identity })
+    try #require(game.nativeStationBodyIsCurrent(body))
+    let time = game.commander.flightSimulation.physicalTime
+    let position = try #require(world.currentPosition(for: .originalStation(identity), at: time))
+    let orientation = try #require(world.currentOrientation(for: identity, at: time))
+    let anchors = try #require(game.commander.flightSimulation.anchors)
+    let radial = (position - anchors.station.position).unit
+    let surfaces = source.geometry.mesh.faces.compactMap { face -> (center: Vector3, normal: Vector3)? in
+      guard face.count >= 3 else { return nil }
+      let points = face.map { source.geometry.mesh.vertices[$0] }
+      let center = points.reduce(Vector3(0, 0, 0), +) * (1 / Double(points.count))
+      let normal = (points[1] - points[0]).cross(points[2] - points[0]).unit
+      guard normal.finite, normal.length > 0, orientation.apply(normal).dot(radial) > 0 else { return nil }
+      return (center, normal)
+    }
+    let surface = try #require(surfaces.max {
+      orientation.apply($0.center).dot(radial) < orientation.apply($1.center).dot(radial)
+    })
+    let outward = orientation.apply(surface.normal)
+    let radius = try #require(game.commander.playerMesh.vertices.map(\.length).max())
     let separation = 5000.0
-    guard radius.isFinite, support.isFinite, separation - support > radius else {
-      throw NativeStationRuntimeError.unsafePlacement
-    }
+    try #require(radius.isFinite && separation > radius)
     var pose = ShipPose()
-    // Keep the real HQ in missile range, beyond main-station security's 20,000-unit pursuit.
-    // This placement is independent of the saved HQ orientation; all world actors remain live.
-    pose.position = saved.position + outward * separation
+    pose.position = position + orientation.apply(surface.center) + outward * separation
     pose.orientation.z = outward * -1
-    guard (pose.position - main).length > 20000 else {
-      throw NativeStationRuntimeError.unsafePlacement
-    }
     let up = abs(pose.orientation.z.y) < 0.9 ? Vector3(0, 1, 0) : .init(1, 0, 0)
     pose.orientation.y = (up - pose.orientation.z * up.dot(pose.orientation.z)).unit
     pose.orientation.x = pose.orientation.y.cross(pose.orientation.z)
-    guard pose.orientation.validRotation, pose.position.finite else {
-      throw NativeStationRuntimeError.invalidState
+    try #require(pose.orientation.validRotation && pose.position.finite)
+    // Original sites remain at their real locations. No security range or actor is changed.
+    for other in game.bodies where other.energy > 0 {
+      let otherRadius = try #require(game.gameplayMesh(for: other).vertices.map(\.length).max())
+      let point = game.commander.flightSimulation.pose.systemPoint(other.position)
+      try #require((pose.position - point).length > radius + otherRadius + 8)
+    }
+    for celestial in [anchors.planet, anchors.sun] {
+      try #require((pose.position - celestial.position).length > radius + celestial.radius + 8)
     }
     reframe(&game, to: pose)
     game.speed = 0
@@ -264,9 +315,17 @@ struct NativeStationTestStorage {
   var directory: URL { root.appendingPathComponent("save", isDirectory: true) }
   var url: URL { directory.appendingPathComponent("commander.json") }
   var backup: URL { root.appendingPathComponent("backup", isDirectory: true) }
+  // The caller owns cleanup of this already isolated physical fixture directory.
+  init(root: URL) { self.root = root }
+
   init() throws {
-    root = FileManager.default.temporaryDirectory.appendingPathComponent(
-      "native-station-" + UUID().uuidString, isDirectory: true)
+    // Page storage rejects linked ancestors, including the macOS /var temporary alias.
+    let temporary = FileManager.default.temporaryDirectory.path
+    let resolved = temporary.withCString { realpath($0, nil) }
+    let physical = try #require(resolved)
+    defer { free(physical) }
+    root = URL(fileURLWithPath: String(cString: physical), isDirectory: true)
+      .appendingPathComponent("native-station-" + UUID().uuidString, isDirectory: true)
     try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
   }
   func blockWriter() throws {
@@ -286,20 +345,21 @@ private func verifyNativePopulation(_ game: inout Game) throws {
   #expect(main.nativeStationIdentity == nil && main.hull == .station)
   #expect(main.physical?.identity == game.commander.flightSimulation.anchors?.station.identity)
   #expect(main.physical?.identity.entity == 1)
+  let sites: [OriginalStationSite] = [.salamander, .frog, .dhole]
+  let expected = Set(sites.map { $0.identity(world: world.ledger.world) })
   let stations = game.bodies.filter { $0.nativeStationIdentity != nil }
-  #expect(stations.count == 2)
-  #expect(Set(stations.compactMap { $0.physical?.identity }).count == 2)
+  #expect(stations.count == 3 && Set(stations.compactMap(\.nativeStationIdentity)) == expected)
+  #expect(Set(stations.compactMap { $0.physical?.identity }).count == 3)
   for station in stations {
     let identity = try #require(station.nativeStationIdentity)
     let source = try #require(NativeStationSource.binding(for: identity))
     #expect(identity.world == game.commander.equipmentOwnerID)
     #expect(game.nativeStationBodyIsCurrent(station))
-    #expect(station.energy == source.maximumEnergy && station.rotationRate == source.rotationRate)
+    #expect(station.energy == source.maximumEnergy && station.rotationRate == 0 && !station.ecmEnabled)
+    #expect(station.physical?.catalogueShipID == source.catalogueShipID)
     #expect(game.gameplayMesh(for: station).vertices == source.geometry.mesh.vertices)
-    let saved = try #require(world.pose(for: identity))
-    #expect(
-      (game.commander.flightSimulation.pose.systemPoint(station.position)
-        - saved.position).length < 1e-8)
+    let point = try #require(world.currentPosition(for: .originalStation(identity), at: game.commander.flightSimulation.physicalTime))
+    #expect((game.commander.flightSimulation.pose.systemPoint(station.position) - point).length < 1e-8)
   }
   let commander = game.commander
   let bodies = game.bodies
@@ -307,7 +367,7 @@ private func verifyNativePopulation(_ game: inout Game) throws {
   try game.populateNativeStations()
   #expect(game.commander == commander && game.bodies == bodies && game.nextBodyID == nextBodyID)
   #expect(world.ledger.currentDock == nil && world.currentMainDock == nil)
-  #expect(world.ledger.records.count == 382 && world.mainStations.count == 1)
+  #expect(world.ledger.records.count == 4 && world.mainStations.count == 1)
 }
 
 private func verifyNativePopulationCapacity(_ game: inout Game) throws {
@@ -330,24 +390,26 @@ private func verifyNativePopulationCapacity(_ game: inout Game) throws {
 }
 
 private func verifyNativeStationWeaponMesh(_ game: inout Game) throws {
-  let body = try #require(
-    game.bodies.first {
-      $0.nativeStationIdentity?.definition == NativeStationGeometry.Kind.waystation.sourceDefinition
-    })
-  let mesh = NativeStationGeometry.waystation.mesh
-  let face = mesh.faces[0]
+  let owner = try #require(game.commander.equipmentOwnerID)
+  let identity = OriginalStationSite.salamander.identity(world: owner)
+  let body = try #require(game.bodies.first { $0.nativeStationIdentity == identity })
+  let source = try #require(NativeStationSource.binding(for: identity))
+  let mesh = source.geometry.mesh
+  let face = try #require(mesh.faces.first)
   let points = face.map { mesh.vertices[$0] }
   let center = points.reduce(Vector3(0, 0, 0), +) * (1 / Double(points.count))
   let outward = (points[1] - points[0]).cross(points[2] - points[0]).unit
-  // This actual source triangle lies at x > 90, outside the original orbital mesh.
-  #expect(center.x > 90 && outward.length > 0)
+  let main = try #require(game.bodies.first { $0.id == 0 })
+  let mainRadius = try #require(game.gameplayMesh(for: main).vertices.map(\.length).max())
+  #expect((body.position + body.modelVector(center) - main.position).length > mainRadius)
+  try #require(outward.length > 0 && outward.finite)
   let origin = body.position + body.modelVector(center + outward * 1000)
   let direction = body.modelVector(outward * -1)
   let contact = try #require(
-    try game.nearestMissionCollision(
-      from: origin, direction: direction, range: 2000, radius: 0, includePlayer: false))
+    try game.nearestMissionCollision(from: origin, direction: direction, range: 2000, radius: 0, includePlayer: false))
   #expect(contact.hit.target == .body(body.id))
   #expect(game.gameplayMeshOverrides[body.id]?.vertices == mesh.vertices)
+  #expect(game.gameplayMesh(for: body).faces == mesh.faces)
 }
 
 private func verifyOriginalMainImmunity(_ game: inout Game) throws {
@@ -374,50 +436,39 @@ private func verifyOriginalMainImmunity(_ game: inout Game) throws {
   #expect(game.commander.flightSimulation == flight)
 }
 
-private func verifyNativeStationRecharge(_ game: inout Game, guided: Bool) throws {
-  let hq = try #require(
-    game.bodies.first {
-      $0.nativeStationIdentity?.definition
-        == NativeStationGeometry.Kind.headquarters.sourceDefinition
-    })
+private func verifyNativeStationNoRecharge(_ game: inout Game, guided: Bool) throws {
+  let owner = try #require(game.commander.equipmentOwnerID)
+  let identity = OriginalStationSite.dhole.identity(world: owner)
+  let body = try #require(game.bodies.first { $0.nativeStationIdentity == identity })
+  let actor = try #require(body.physical?.identity)
+  let source = try #require(NativeStationSource.binding(for: identity))
+  try #require(source.recharge == 0 && source.rotationRate == 0)
   game.fireLaser()
-  #expect(game.bodies.first { $0.id == hq.id }?.energy == hq.energy - LaserKind.naval.damage)
+  let damaged = try #require(game.bodies.first { $0.id == body.id })
+  #expect(damaged.energy == body.energy - LaserKind.naval.damage)
   if guided {
-    // This controller/recharge case uses the genuine legacy cluster policy; its HQ world
-    // need not have a newly generated ring in the authenticated original catalogue.
-    game.commander.miningLedger = .legacyUnworked()
-    try game.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
-    game.rebuildMiningFields()
-    let rock = try #require(game.miningFields.first?.rocks.first)
-    var pose = ShipPose()
-    pose.position = rock.position - Vector3(0, 0, 500)
-    NativeStationTestFixture.reframe(&game, to: pose)
-    game.activateNearbyMiningFields()
-    game.key("f")
-    #expect(game.workTargetFilter == .mining)
-    for _ in 0..<64 where game.workGuidance == nil { game.key("tab") }
-    #expect(game.workGuidance != nil)
+    for _ in 0...game.bodies.count where game.autoPilot.targetActor != actor { game.key("tab") }
+    try #require(game.commander.hasAutomaticDocking && game.dockingComputer)
+    try #require(game.autoPilot.targetActor == actor && game.autoPilot.targetID == body.id)
   }
   let clock = game.commander.flightSimulation.physicalTime
   game.tick(delta: 0.1)
   #expect(game.commander.flightSimulation.physicalTime == clock + 0.1)
-  #expect(game.bodies.first { $0.id == hq.id }?.energy == hq.energy - LaserKind.naval.damage + 10)
+  #expect(game.bodies.first { $0.id == body.id }?.energy == damaged.energy)
   #expect(!game.docked && !game.paused)
+  if guided { #expect(game.autoPilot.targetActor == actor && game.lastAppliedWorkMotion != nil) }
 }
 
-private func verifyNativeHeadquartersDestruction(
-  _ game: inout Game, storage: NativeStationTestStorage
+private func verifyNativeOriginalDestruction(
+  _ game: inout Game, site: OriginalStationSite, storage: NativeStationTestStorage
 ) async throws {
-  let hq = try #require(
-    game.bodies.first {
-      $0.nativeStationIdentity?.definition
-        == NativeStationGeometry.Kind.headquarters.sourceDefinition
-    })
+  let owner = try #require(game.commander.equipmentOwnerID)
+  let expectedIdentity = site.identity(world: owner)
+  let hq = try #require(game.bodies.first { $0.nativeStationIdentity == expectedIdentity })
   let identity = try #require(hq.nativeStationIdentity)
   let actor = try #require(hq.physical?.identity)
-  let anchors = try #require(game.commander.flightSimulation.anchors)
-  #expect((game.commander.flightSimulation.pose.position - anchors.station.position).length > 20000)
-  #expect(hq.energy == 25000 && !hq.ecmEnabled)
+  let source = try #require(NativeStationSource.binding(for: identity))
+  #expect(hq.energy == source.maximumEnergy && source.recharge == 0 && !hq.ecmEnabled)
   #expect(game.commander.credits == Commander.xyzzyStartingCredits && !game.commander.unlimitedCash)
   let contact = try #require(
     try game.nearestMissionCollision(
@@ -425,7 +476,7 @@ private func verifyNativeHeadquartersDestruction(
       includePlayer: false))
   #expect(contact.hit.target == .body(hq.id))
   let runtime = GameRuntime(game: game, saveURL: storage.url)
-  for _ in 0..<16 where game.weaponsTargetID != hq.id {
+  for _ in 0...game.bodies.count where game.weaponsTargetID != hq.id {
     await runtime.key("tab")
     game = await runtime.snapshot()
   }
@@ -435,11 +486,12 @@ private func verifyNativeHeadquartersDestruction(
   controls.fire = true
   await runtime.setControls(controls)
   game = await runtime.advance(delta: 0.1)
-  #expect(game.bodies.first { $0.id == hq.id }?.energy == hq.energy - LaserKind.naval.damage + 10)
+  #expect(game.bodies.first { $0.id == hq.id }?.energy == hq.energy - LaserKind.naval.damage)
   await runtime.setControls(Controls())
   var launches = 0
-  // Finite horizon: ceil((25000 + 100 * 24) / (160 - 100 * 1.1)) + 1 = 549 launches.
-  // Include the last 24s flight; actual impacts, ECM and destruction still decide success.
+  // Keep the original bounded horizon; real missiles and source damage determine destruction.
+  let beforeMissiles = try #require(game.bodies.first { $0.id == hq.id })
+  try #require(beforeMissiles.energy > 0)
   for frame in 0..<6269
   where game.bodies.contains(where: { $0.id == hq.id })
     && game.screen != .gameOver && !game.paused
@@ -453,10 +505,10 @@ private func verifyNativeHeadquartersDestruction(
     }
     game = await runtime.advance(delta: 0.1)
   }
-  #expect(launches > 100 && !game.paused && game.screen != .gameOver)
+  #expect(launches > 0 && !game.paused && game.screen != .gameOver)
   #expect(
     !game.bodies.contains { $0.nativeStationIdentity == identity },
-    "HQ energy after \(launches) launches: \(String(describing: game.bodies.first { $0.nativeStationIdentity == identity }?.energy))"
+    "Original station energy after \(launches) launches: \(String(describing: game.bodies.first { $0.nativeStationIdentity == identity }?.energy))"
   )
   let world = try #require(game.commander.nativeStations)
   let record = try #require(world.ledger.records.first { $0.identity == identity })
@@ -476,12 +528,11 @@ private func verifyNativeHeadquartersDestruction(
 }
 
 private func verifyNativeEntryAndExit(
-  _ game: inout Game, kind: NativeStationGeometry.Kind, storage: NativeStationTestStorage
+  _ game: inout Game, site: OriginalStationSite, storage: NativeStationTestStorage
 ) async throws {
-  let station = try #require(
-    game.bodies.first {
-      $0.nativeStationIdentity?.definition == kind.sourceDefinition
-    })
+  let owner = try #require(game.commander.equipmentOwnerID)
+  let expectedIdentity = site.identity(world: owner)
+  let station = try #require(game.bodies.first { $0.nativeStationIdentity == expectedIdentity })
   let identity = try #require(station.nativeStationIdentity)
   let actor = try #require(station.physical?.identity)
   let runtime = GameRuntime(game: game, saveURL: storage.url)
@@ -491,7 +542,8 @@ private func verifyNativeEntryAndExit(
   #expect(receipt.station == identity)
   #expect(receipt.dockingBinding == .init(actor: actor, bodyID: station.id))
   #expect(receipt.sequence == 1 && receipt.commanderOwner == identity.world)
-  #expect(game.nativeStationDockEvidenceIsCurrent && game.nativeStationBoardContext != nil)
+  #expect(game.nativeStationDockEvidenceIsCurrent)
+  #expect((game.nativeStationBoardContext != nil) == (site != .remoteUtility))
   let (disk, _) = try ScriptSaveStore.read(Data(contentsOf: storage.url), from: storage.url)
   #expect(disk.nativeStations?.ledger.currentDock == receipt)
   let calendar = game.commander.scriptState.calendarSeconds
@@ -524,15 +576,18 @@ private func verifyUnsafeNativeApproach(
     NativeStationTestFixture.reframe(&game, to: pose)
   case "aperture":
     var pose = game.commander.flightSimulation.pose
-    pose.position = pose.position + pose.orientation.x * 125
+    let owner = try #require(game.commander.equipmentOwnerID)
+    let identity = OriginalStationSite.dhole.identity(world: owner)
+    let source = try #require(NativeStationSource.binding(for: identity))
+    let extent = try #require(source.geometry.docking.aperture.map { abs($0.x) }.max())
+    let player = try #require(game.commander.playerMesh.vertices.map { abs($0.x) }.max())
+    pose.position = pose.position + pose.orientation.x * (extent + player + 1)
     NativeStationTestFixture.reframe(&game, to: pose)
   case "nonfinite": game.commander.flightSimulation.pose.position.x = .nan
   case "stationPose":
-    let index = try #require(
-      game.bodies.firstIndex {
-        $0.nativeStationIdentity?.definition
-          == NativeStationGeometry.Kind.headquarters.sourceDefinition
-      })
+    let owner = try #require(game.commander.equipmentOwnerID)
+    let identity = OriginalStationSite.dhole.identity(world: owner)
+    let index = try #require(game.bodies.firstIndex { $0.nativeStationIdentity == identity })
     game.bodies[index].position.x += 300
   default: throw NativeStationRuntimeError.invalidState
   }
@@ -582,9 +637,9 @@ private func verifyOriginalMainArrival(
   let receipt = try #require(game.commander.nativeStations?.currentMainDock)
   #expect(receipt.station.system == game.systemIdentity && receipt.actor.entity == 1)
   #expect(
-    receipt.station.resource == Game.worldResourceIdentity("main-station-v1:main-orbital:3:149"))
+    receipt.station.resource == Game.worldResourceIdentity("main-station-v1:main-orbital:0:7"))
   #expect(game.commander.nativeStations?.ledger.currentDock == nil)
-  #expect(game.commander.nativeStations?.ledger.records.count == 382)
+  #expect(game.commander.nativeStations?.ledger.records.count == 4)
   #expect(game.nativeMainStationDockEvidenceIsCurrent)
   let context = try #require(game.nativeMainStationArrivalContext(for: receipt.station))
   #expect(game.acceptsNativeMainStationArrivalContext(context))

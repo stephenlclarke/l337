@@ -1,0 +1,10 @@
+{
+  "status": "FIRST_NEW_NATIVE_WORD_RETURN_EXPRESSION_LAYOUT_BEFORE_MUTATION",
+  "path": "Sources/L337Core/AmbientEncounterPolicy.swift",
+  "beforeBytes": 4504,
+  "beforeSHA256": "2b5e139b0271eb39bb897b1a2d6cb780fa40c7b8a3a7fd449484a5c6a606c969",
+  "before": "    return\n      seed\n      ^ mix(UInt64(actor.system.galaxy)",
+  "after": "    return seed\n      ^ mix(UInt64(actor.system.galaxy)",
+  "reason": "Keep return and its operand explicit on one line in the new factored helper. All original UInt64 operands/operators/salts and original guard/resolve arithmetic remain exact, no optimizer attribute or RNG/source/state change.",
+  "scope": "Only whitespace between return and seed in newly owned helper. This is not an original law change or numerical execution."
+}

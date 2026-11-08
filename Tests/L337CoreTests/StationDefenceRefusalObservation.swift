@@ -1,6 +1,7 @@
 import Foundation
 
 @testable import L337Core
+@testable import L337TestSupport
 
 /// One opt-in observation of the two actual CI566 refusals; never simulation authority.
 enum StationDefenceRefusalObservation {

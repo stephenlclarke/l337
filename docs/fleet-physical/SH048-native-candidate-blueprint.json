@@ -1,0 +1,96 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH048-complete18part-native-candidate-v1",
+  "ship": "SH048",
+  "name": "Lanner",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "f8ed0cb8dcbc123a34d9c6718041de1913b6c63c4958adfbe455f1500dcacaaf",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH048-design.toml",
+    "bytes": 417915,
+    "sha256": "e55137ce5a91f7b2fc6521f3ebe11be865ee7b2c1467452844f33bb10edc90f6"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH048.toml",
+    "bytes": 442032,
+    "sha256": "614a29ae15792706a524deaee382c66318f6f05567a743ee4c2ffb28247215bf"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH048.json",
+    "bytes": 46905,
+    "sha256": "ffadcbf087c16b54f922fe3fb1ed8b568cec2034194c56e2f3233f5134dd7f29"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH048-native-candidate-recipe.py",
+    "bytes": 8971,
+    "sha256": "30249df7a70a38087ec7be15238b23d1f85e4848fcaac5aa38c4ad019de864a7"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH048-native-candidate-tests.py",
+    "bytes": 8092,
+    "sha256": "c54914bb5235205cae87780292b8422ed4a123c7ddaf4b57576fceb3fc9ba112"
+  },
+  "baseline": {
+    "declaredNativeFaces": 936,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 6,
+    "arcSegments": 12,
+    "arcMinorSamples": 4,
+    "changedOriginalPartIndices": [
+      0,
+      1,
+      6,
+      9,
+      10,
+      12,
+      13
+    ],
+    "unchangedFixedOriginalParts": 11,
+    "status": "NEW angular approximation only; actual output count/profile/void fidelity UNKNOWN"
+  },
+  "retained": [
+    "Original open bow loop at(0,-.04,0),rx=beam*.46,ry=length*.44,tube.15,axisY",
+    "Actual angular endpoints PI/2+.25 and PI/2+TAU-.25, original gap and BOTH end caps",
+    "Original complete five-station primary pressure envelope AND all FOUR analytical native service wells",
+    "Full cockpit glazing envelope AND connected crossmember",
+    "Both connected drive supports, full casings AND luminous recesses",
+    "All FOUR material-owned bountyHunter/military structural mount pieces, without issuing installed weapons",
+    "Original plum-gold palette/emission/texture/license/source fields; genuine serializer regenerates every face UV/texture association"
+  ],
+  "coordinates": "Original length3.8/beam2.00, axes/origin/source units; no rescale/recentre. Existing calibration5000000/597893 uncomputed.",
+  "coupledRuntime": {
+    "domain": "Actual R3 human ship contract remains pending; original game table unchanged",
+    "nativeCrew": 1,
+    "conversionCrew": 1,
+    "status": "R3 declaration is not actual crew/installed accommodation; geometric mounts are not guns/attack origin/paid equipment",
+    "authority": "Existing authenticated source/actor/fitting/acquisition/EMP/current-save guards unchanged"
+  },
+  "stopRules": [
+    "Reject changed original source/creator/primitive/current-resource hashes before geometry",
+    "Exact original packaged detailed/native tables required",
+    "All18 positive original components/material sets remain; no missing bow endcap/service well/drive recess/weapon mount",
+    "Complete output<=512 and genuine checked closure/winding required; no waiver",
+    "Independent tests require11 fixed parts exact original vertices/localfaces/material sequences/UVs",
+    "Both original bow endpoints/caps and actual gap must remain; source void/profile fidelity still requires actual G1 comparison",
+    "Actual native/occupied/hardware/people/power/loaded physical qualification remains separate"
+  ],
+  "blocker": {
+    "missing": "Actual full source-profile/void/material/UV fidelity, native evidence and occupied/installed physical hardware/people/power inputs",
+    "responsibleOwner": "G1 actual generation/source/native qualification; authentic source owner supplies installed/occupied facts",
+    "next": "G1 generate once and run actual18part/exact11fixed/open-gap/endcap/UV/input checks; reject failed fidelity without cap or assertion waiver. G4 continues independent fleet entries."
+  }
+}

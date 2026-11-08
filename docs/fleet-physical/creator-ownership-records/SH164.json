@@ -1,0 +1,5358 @@
+{
+  "id": "SH164",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "b1563bbc135d0c6ec1ea44ccceabf8f3677363030bbf5af816a7a78d0c51c4e4",
+  "contractSHA256": "29b8cae2acf68eee7f05547c5c0487dceb866c4ba6d3280da5d20b68e55fa4cf",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "dock lateral structural member 0",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "dock lateral structural member 1",
+          "vertexStart": 8,
+          "vertexCount": 8,
+          "faceStart": 12,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "dock transverse structural member 0",
+          "vertexStart": 16,
+          "vertexCount": 8,
+          "faceStart": 24,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "dock transverse structural member 1",
+          "vertexStart": 24,
+          "vertexCount": 8,
+          "faceStart": 36,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "dock aperture guidance marker 0",
+          "vertexStart": 32,
+          "vertexCount": 8,
+          "faceStart": 48,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "dock aperture guidance marker 1",
+          "vertexStart": 40,
+          "vertexCount": 8,
+          "faceStart": 60,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "factory transverse processing envelope",
+          "vertexStart": 48,
+          "vertexCount": 120,
+          "faceStart": 72,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "factory transverse processing envelope/service-well-0-0",
+          "vertexStart": 168,
+          "vertexCount": 12,
+          "faceStart": 308,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 180,
+          "vertexCount": 8,
+          "faceStart": 328,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 188,
+          "vertexCount": 8,
+          "faceStart": 340,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 196,
+          "vertexCount": 8,
+          "faceStart": 352,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "factory transverse processing envelope/service-well-0-1",
+          "vertexStart": 204,
+          "vertexCount": 12,
+          "faceStart": 364,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 216,
+          "vertexCount": 8,
+          "faceStart": 384,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 224,
+          "vertexCount": 8,
+          "faceStart": 396,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 232,
+          "vertexCount": 8,
+          "faceStart": 408,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "factory transverse processing envelope/service-well-0-2",
+          "vertexStart": 240,
+          "vertexCount": 12,
+          "faceStart": 420,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 252,
+          "vertexCount": 8,
+          "faceStart": 440,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 260,
+          "vertexCount": 8,
+          "faceStart": 452,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 268,
+          "vertexCount": 8,
+          "faceStart": 464,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "factory transverse processing envelope/service-well-1-0",
+          "vertexStart": 276,
+          "vertexCount": 12,
+          "faceStart": 476,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 288,
+          "vertexCount": 8,
+          "faceStart": 496,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 296,
+          "vertexCount": 8,
+          "faceStart": 508,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 304,
+          "vertexCount": 8,
+          "faceStart": 520,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "factory transverse processing envelope/service-well-1-1",
+          "vertexStart": 312,
+          "vertexCount": 12,
+          "faceStart": 532,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 324,
+          "vertexCount": 8,
+          "faceStart": 552,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 332,
+          "vertexCount": 8,
+          "faceStart": 564,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 340,
+          "vertexCount": 8,
+          "faceStart": 576,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "factory transverse processing envelope/service-well-1-2",
+          "vertexStart": 348,
+          "vertexCount": 12,
+          "faceStart": 588,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 360,
+          "vertexCount": 8,
+          "faceStart": 608,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 368,
+          "vertexCount": 8,
+          "faceStart": 620,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 376,
+          "vertexCount": 8,
+          "faceStart": 632,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "factory transverse processing envelope/service-well-2-0",
+          "vertexStart": 384,
+          "vertexCount": 12,
+          "faceStart": 644,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 396,
+          "vertexCount": 8,
+          "faceStart": 664,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 33,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 404,
+          "vertexCount": 8,
+          "faceStart": 676,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 34,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 412,
+          "vertexCount": 8,
+          "faceStart": 688,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 35,
+          "name": "factory transverse processing envelope/service-well-2-1",
+          "vertexStart": 420,
+          "vertexCount": 12,
+          "faceStart": 700,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 36,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 432,
+          "vertexCount": 8,
+          "faceStart": 720,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 37,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 440,
+          "vertexCount": 8,
+          "faceStart": 732,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 38,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 448,
+          "vertexCount": 8,
+          "faceStart": 744,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 39,
+          "name": "factory transverse processing envelope/service-well-2-2",
+          "vertexStart": 456,
+          "vertexCount": 12,
+          "faceStart": 756,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 40,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 468,
+          "vertexCount": 8,
+          "faceStart": 776,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 41,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 476,
+          "vertexCount": 8,
+          "faceStart": 788,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 42,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 484,
+          "vertexCount": 8,
+          "faceStart": 800,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 43,
+          "name": "factory transverse processing envelope/service-well-3-0",
+          "vertexStart": 492,
+          "vertexCount": 12,
+          "faceStart": 812,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 44,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 504,
+          "vertexCount": 8,
+          "faceStart": 832,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 45,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 512,
+          "vertexCount": 8,
+          "faceStart": 844,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 46,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 520,
+          "vertexCount": 8,
+          "faceStart": 856,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 47,
+          "name": "factory transverse processing envelope/service-well-3-1",
+          "vertexStart": 528,
+          "vertexCount": 12,
+          "faceStart": 868,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 48,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 540,
+          "vertexCount": 8,
+          "faceStart": 888,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 49,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 548,
+          "vertexCount": 8,
+          "faceStart": 900,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 50,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 556,
+          "vertexCount": 8,
+          "faceStart": 912,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 51,
+          "name": "factory transverse processing envelope/service-well-3-2",
+          "vertexStart": 564,
+          "vertexCount": 12,
+          "faceStart": 924,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 52,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 576,
+          "vertexCount": 8,
+          "faceStart": 944,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 53,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 584,
+          "vertexCount": 8,
+          "faceStart": 956,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 54,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 592,
+          "vertexCount": 8,
+          "faceStart": 968,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 55,
+          "name": "factory transverse processing envelope/longitudinal-service-strut-0",
+          "vertexStart": 600,
+          "vertexCount": 8,
+          "faceStart": 980,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 56,
+          "name": "factory transverse processing envelope/longitudinal-service-strut-1",
+          "vertexStart": 608,
+          "vertexCount": 8,
+          "faceStart": 992,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 57,
+          "name": "factory lower service support",
+          "vertexStart": 616,
+          "vertexCount": 8,
+          "faceStart": 1004,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 58,
+          "name": "factory transverse processing envelope",
+          "vertexStart": 624,
+          "vertexCount": 120,
+          "faceStart": 1016,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 59,
+          "name": "factory transverse processing envelope/service-well-0-0",
+          "vertexStart": 744,
+          "vertexCount": 12,
+          "faceStart": 1252,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 60,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 756,
+          "vertexCount": 8,
+          "faceStart": 1272,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 61,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 764,
+          "vertexCount": 8,
+          "faceStart": 1284,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 62,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 772,
+          "vertexCount": 8,
+          "faceStart": 1296,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 63,
+          "name": "factory transverse processing envelope/service-well-0-1",
+          "vertexStart": 780,
+          "vertexCount": 12,
+          "faceStart": 1308,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 64,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 792,
+          "vertexCount": 8,
+          "faceStart": 1328,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 65,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 800,
+          "vertexCount": 8,
+          "faceStart": 1340,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 66,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 808,
+          "vertexCount": 8,
+          "faceStart": 1352,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 67,
+          "name": "factory transverse processing envelope/service-well-0-2",
+          "vertexStart": 816,
+          "vertexCount": 12,
+          "faceStart": 1364,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 68,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 828,
+          "vertexCount": 8,
+          "faceStart": 1384,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 69,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 836,
+          "vertexCount": 8,
+          "faceStart": 1396,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 70,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 844,
+          "vertexCount": 8,
+          "faceStart": 1408,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 71,
+          "name": "factory transverse processing envelope/service-well-1-0",
+          "vertexStart": 852,
+          "vertexCount": 12,
+          "faceStart": 1420,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 72,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 864,
+          "vertexCount": 8,
+          "faceStart": 1440,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 73,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 872,
+          "vertexCount": 8,
+          "faceStart": 1452,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 74,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 880,
+          "vertexCount": 8,
+          "faceStart": 1464,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 75,
+          "name": "factory transverse processing envelope/service-well-1-1",
+          "vertexStart": 888,
+          "vertexCount": 12,
+          "faceStart": 1476,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 76,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 900,
+          "vertexCount": 8,
+          "faceStart": 1496,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 77,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 908,
+          "vertexCount": 8,
+          "faceStart": 1508,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 78,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 916,
+          "vertexCount": 8,
+          "faceStart": 1520,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 79,
+          "name": "factory transverse processing envelope/service-well-1-2",
+          "vertexStart": 924,
+          "vertexCount": 12,
+          "faceStart": 1532,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 80,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 936,
+          "vertexCount": 8,
+          "faceStart": 1552,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 81,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 944,
+          "vertexCount": 8,
+          "faceStart": 1564,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 82,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 952,
+          "vertexCount": 8,
+          "faceStart": 1576,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 83,
+          "name": "factory transverse processing envelope/service-well-2-0",
+          "vertexStart": 960,
+          "vertexCount": 12,
+          "faceStart": 1588,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 84,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 972,
+          "vertexCount": 8,
+          "faceStart": 1608,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 85,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 980,
+          "vertexCount": 8,
+          "faceStart": 1620,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 86,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 988,
+          "vertexCount": 8,
+          "faceStart": 1632,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 87,
+          "name": "factory transverse processing envelope/service-well-2-1",
+          "vertexStart": 996,
+          "vertexCount": 12,
+          "faceStart": 1644,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 88,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 1008,
+          "vertexCount": 8,
+          "faceStart": 1664,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 89,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 1016,
+          "vertexCount": 8,
+          "faceStart": 1676,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 90,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 1024,
+          "vertexCount": 8,
+          "faceStart": 1688,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 91,
+          "name": "factory transverse processing envelope/service-well-2-2",
+          "vertexStart": 1032,
+          "vertexCount": 12,
+          "faceStart": 1700,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 92,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 1044,
+          "vertexCount": 8,
+          "faceStart": 1720,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 93,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 1052,
+          "vertexCount": 8,
+          "faceStart": 1732,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 94,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 1060,
+          "vertexCount": 8,
+          "faceStart": 1744,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 95,
+          "name": "factory transverse processing envelope/service-well-3-0",
+          "vertexStart": 1068,
+          "vertexCount": 12,
+          "faceStart": 1756,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 96,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 1080,
+          "vertexCount": 8,
+          "faceStart": 1776,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 97,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 1088,
+          "vertexCount": 8,
+          "faceStart": 1788,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 98,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 1096,
+          "vertexCount": 8,
+          "faceStart": 1800,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 99,
+          "name": "factory transverse processing envelope/service-well-3-1",
+          "vertexStart": 1104,
+          "vertexCount": 12,
+          "faceStart": 1812,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 100,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 1116,
+          "vertexCount": 8,
+          "faceStart": 1832,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 101,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 1124,
+          "vertexCount": 8,
+          "faceStart": 1844,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 102,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 1132,
+          "vertexCount": 8,
+          "faceStart": 1856,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 103,
+          "name": "factory transverse processing envelope/service-well-3-2",
+          "vertexStart": 1140,
+          "vertexCount": 12,
+          "faceStart": 1868,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 104,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 1152,
+          "vertexCount": 8,
+          "faceStart": 1888,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 105,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 1160,
+          "vertexCount": 8,
+          "faceStart": 1900,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 106,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 1168,
+          "vertexCount": 8,
+          "faceStart": 1912,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 107,
+          "name": "factory transverse processing envelope/longitudinal-service-strut-0",
+          "vertexStart": 1176,
+          "vertexCount": 8,
+          "faceStart": 1924,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 108,
+          "name": "factory transverse processing envelope/longitudinal-service-strut-1",
+          "vertexStart": 1184,
+          "vertexCount": 8,
+          "faceStart": 1936,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 109,
+          "name": "factory lower service support",
+          "vertexStart": 1192,
+          "vertexCount": 8,
+          "faceStart": 1948,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 110,
+          "name": "factory transverse processing envelope",
+          "vertexStart": 1200,
+          "vertexCount": 120,
+          "faceStart": 1960,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 111,
+          "name": "factory transverse processing envelope/service-well-0-0",
+          "vertexStart": 1320,
+          "vertexCount": 12,
+          "faceStart": 2196,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 112,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 1332,
+          "vertexCount": 8,
+          "faceStart": 2216,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 113,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 1340,
+          "vertexCount": 8,
+          "faceStart": 2228,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 114,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 1348,
+          "vertexCount": 8,
+          "faceStart": 2240,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 115,
+          "name": "factory transverse processing envelope/service-well-0-1",
+          "vertexStart": 1356,
+          "vertexCount": 12,
+          "faceStart": 2252,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 116,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 1368,
+          "vertexCount": 8,
+          "faceStart": 2272,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 117,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 1376,
+          "vertexCount": 8,
+          "faceStart": 2284,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 118,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 1384,
+          "vertexCount": 8,
+          "faceStart": 2296,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 119,
+          "name": "factory transverse processing envelope/service-well-0-2",
+          "vertexStart": 1392,
+          "vertexCount": 12,
+          "faceStart": 2308,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 120,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 1404,
+          "vertexCount": 8,
+          "faceStart": 2328,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 121,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 1412,
+          "vertexCount": 8,
+          "faceStart": 2340,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 122,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 1420,
+          "vertexCount": 8,
+          "faceStart": 2352,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 123,
+          "name": "factory transverse processing envelope/service-well-1-0",
+          "vertexStart": 1428,
+          "vertexCount": 12,
+          "faceStart": 2364,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 124,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 1440,
+          "vertexCount": 8,
+          "faceStart": 2384,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 125,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 1448,
+          "vertexCount": 8,
+          "faceStart": 2396,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 126,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 1456,
+          "vertexCount": 8,
+          "faceStart": 2408,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 127,
+          "name": "factory transverse processing envelope/service-well-1-1",
+          "vertexStart": 1464,
+          "vertexCount": 12,
+          "faceStart": 2420,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 128,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 1476,
+          "vertexCount": 8,
+          "faceStart": 2440,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 129,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 1484,
+          "vertexCount": 8,
+          "faceStart": 2452,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 130,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 1492,
+          "vertexCount": 8,
+          "faceStart": 2464,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 131,
+          "name": "factory transverse processing envelope/service-well-1-2",
+          "vertexStart": 1500,
+          "vertexCount": 12,
+          "faceStart": 2476,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 132,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 1512,
+          "vertexCount": 8,
+          "faceStart": 2496,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 133,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 1520,
+          "vertexCount": 8,
+          "faceStart": 2508,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 134,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 1528,
+          "vertexCount": 8,
+          "faceStart": 2520,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 135,
+          "name": "factory transverse processing envelope/service-well-2-0",
+          "vertexStart": 1536,
+          "vertexCount": 12,
+          "faceStart": 2532,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 136,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 1548,
+          "vertexCount": 8,
+          "faceStart": 2552,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 137,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 1556,
+          "vertexCount": 8,
+          "faceStart": 2564,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 138,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 1564,
+          "vertexCount": 8,
+          "faceStart": 2576,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 139,
+          "name": "factory transverse processing envelope/service-well-2-1",
+          "vertexStart": 1572,
+          "vertexCount": 12,
+          "faceStart": 2588,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 140,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 1584,
+          "vertexCount": 8,
+          "faceStart": 2608,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 141,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 1592,
+          "vertexCount": 8,
+          "faceStart": 2620,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 142,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 1600,
+          "vertexCount": 8,
+          "faceStart": 2632,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 143,
+          "name": "factory transverse processing envelope/service-well-2-2",
+          "vertexStart": 1608,
+          "vertexCount": 12,
+          "faceStart": 2644,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 144,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 1620,
+          "vertexCount": 8,
+          "faceStart": 2664,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 145,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 1628,
+          "vertexCount": 8,
+          "faceStart": 2676,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 146,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 1636,
+          "vertexCount": 8,
+          "faceStart": 2688,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 147,
+          "name": "factory transverse processing envelope/service-well-3-0",
+          "vertexStart": 1644,
+          "vertexCount": 12,
+          "faceStart": 2700,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 148,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 1656,
+          "vertexCount": 8,
+          "faceStart": 2720,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 149,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 1664,
+          "vertexCount": 8,
+          "faceStart": 2732,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 150,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 1672,
+          "vertexCount": 8,
+          "faceStart": 2744,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 151,
+          "name": "factory transverse processing envelope/service-well-3-1",
+          "vertexStart": 1680,
+          "vertexCount": 12,
+          "faceStart": 2756,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 152,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 1692,
+          "vertexCount": 8,
+          "faceStart": 2776,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 153,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 1700,
+          "vertexCount": 8,
+          "faceStart": 2788,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 154,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 1708,
+          "vertexCount": 8,
+          "faceStart": 2800,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 155,
+          "name": "factory transverse processing envelope/service-well-3-2",
+          "vertexStart": 1716,
+          "vertexCount": 12,
+          "faceStart": 2812,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 156,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 1728,
+          "vertexCount": 8,
+          "faceStart": 2832,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 157,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 1736,
+          "vertexCount": 8,
+          "faceStart": 2844,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 158,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 1744,
+          "vertexCount": 8,
+          "faceStart": 2856,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 159,
+          "name": "factory transverse processing envelope/longitudinal-service-strut-0",
+          "vertexStart": 1752,
+          "vertexCount": 8,
+          "faceStart": 2868,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 160,
+          "name": "factory transverse processing envelope/longitudinal-service-strut-1",
+          "vertexStart": 1760,
+          "vertexCount": 8,
+          "faceStart": 2880,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 161,
+          "name": "factory lower service support",
+          "vertexStart": 1768,
+          "vertexCount": 8,
+          "faceStart": 2892,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 162,
+          "name": "factory transverse processing envelope",
+          "vertexStart": 1776,
+          "vertexCount": 120,
+          "faceStart": 2904,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 163,
+          "name": "factory transverse processing envelope/service-well-0-0",
+          "vertexStart": 1896,
+          "vertexCount": 12,
+          "faceStart": 3140,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 164,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 1908,
+          "vertexCount": 8,
+          "faceStart": 3160,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 165,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 1916,
+          "vertexCount": 8,
+          "faceStart": 3172,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 166,
+          "name": "factory transverse processing envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 1924,
+          "vertexCount": 8,
+          "faceStart": 3184,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 167,
+          "name": "factory transverse processing envelope/service-well-0-1",
+          "vertexStart": 1932,
+          "vertexCount": 12,
+          "faceStart": 3196,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 168,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 1944,
+          "vertexCount": 8,
+          "faceStart": 3216,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 169,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 1952,
+          "vertexCount": 8,
+          "faceStart": 3228,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 170,
+          "name": "factory transverse processing envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 1960,
+          "vertexCount": 8,
+          "faceStart": 3240,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 171,
+          "name": "factory transverse processing envelope/service-well-0-2",
+          "vertexStart": 1968,
+          "vertexCount": 12,
+          "faceStart": 3252,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 172,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 1980,
+          "vertexCount": 8,
+          "faceStart": 3272,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 173,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 1988,
+          "vertexCount": 8,
+          "faceStart": 3284,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 174,
+          "name": "factory transverse processing envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 1996,
+          "vertexCount": 8,
+          "faceStart": 3296,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 175,
+          "name": "factory transverse processing envelope/service-well-1-0",
+          "vertexStart": 2004,
+          "vertexCount": 12,
+          "faceStart": 3308,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 176,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 2016,
+          "vertexCount": 8,
+          "faceStart": 3328,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 177,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 2024,
+          "vertexCount": 8,
+          "faceStart": 3340,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 178,
+          "name": "factory transverse processing envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 2032,
+          "vertexCount": 8,
+          "faceStart": 3352,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 179,
+          "name": "factory transverse processing envelope/service-well-1-1",
+          "vertexStart": 2040,
+          "vertexCount": 12,
+          "faceStart": 3364,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 180,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 2052,
+          "vertexCount": 8,
+          "faceStart": 3384,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 181,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 2060,
+          "vertexCount": 8,
+          "faceStart": 3396,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 182,
+          "name": "factory transverse processing envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 2068,
+          "vertexCount": 8,
+          "faceStart": 3408,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 183,
+          "name": "factory transverse processing envelope/service-well-1-2",
+          "vertexStart": 2076,
+          "vertexCount": 12,
+          "faceStart": 3420,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 184,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 2088,
+          "vertexCount": 8,
+          "faceStart": 3440,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 185,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 2096,
+          "vertexCount": 8,
+          "faceStart": 3452,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 186,
+          "name": "factory transverse processing envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 2104,
+          "vertexCount": 8,
+          "faceStart": 3464,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 187,
+          "name": "factory transverse processing envelope/service-well-2-0",
+          "vertexStart": 2112,
+          "vertexCount": 12,
+          "faceStart": 3476,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 188,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 2124,
+          "vertexCount": 8,
+          "faceStart": 3496,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 189,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 2132,
+          "vertexCount": 8,
+          "faceStart": 3508,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 190,
+          "name": "factory transverse processing envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 2140,
+          "vertexCount": 8,
+          "faceStart": 3520,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 191,
+          "name": "factory transverse processing envelope/service-well-2-1",
+          "vertexStart": 2148,
+          "vertexCount": 12,
+          "faceStart": 3532,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 192,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 2160,
+          "vertexCount": 8,
+          "faceStart": 3552,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 193,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 2168,
+          "vertexCount": 8,
+          "faceStart": 3564,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 194,
+          "name": "factory transverse processing envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 2176,
+          "vertexCount": 8,
+          "faceStart": 3576,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 195,
+          "name": "factory transverse processing envelope/service-well-2-2",
+          "vertexStart": 2184,
+          "vertexCount": 12,
+          "faceStart": 3588,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 196,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 2196,
+          "vertexCount": 8,
+          "faceStart": 3608,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 197,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 2204,
+          "vertexCount": 8,
+          "faceStart": 3620,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 198,
+          "name": "factory transverse processing envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 2212,
+          "vertexCount": 8,
+          "faceStart": 3632,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 199,
+          "name": "factory transverse processing envelope/service-well-3-0",
+          "vertexStart": 2220,
+          "vertexCount": 12,
+          "faceStart": 3644,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 200,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 2232,
+          "vertexCount": 8,
+          "faceStart": 3664,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 201,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 2240,
+          "vertexCount": 8,
+          "faceStart": 3676,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 202,
+          "name": "factory transverse processing envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 2248,
+          "vertexCount": 8,
+          "faceStart": 3688,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 203,
+          "name": "factory transverse processing envelope/service-well-3-1",
+          "vertexStart": 2256,
+          "vertexCount": 12,
+          "faceStart": 3700,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 204,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 2268,
+          "vertexCount": 8,
+          "faceStart": 3720,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 205,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 2276,
+          "vertexCount": 8,
+          "faceStart": 3732,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 206,
+          "name": "factory transverse processing envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 2284,
+          "vertexCount": 8,
+          "faceStart": 3744,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 207,
+          "name": "factory transverse processing envelope/service-well-3-2",
+          "vertexStart": 2292,
+          "vertexCount": 12,
+          "faceStart": 3756,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 208,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 2304,
+          "vertexCount": 8,
+          "faceStart": 3776,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 209,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 2312,
+          "vertexCount": 8,
+          "faceStart": 3788,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 210,
+          "name": "factory transverse processing envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 2320,
+          "vertexCount": 8,
+          "faceStart": 3800,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 211,
+          "name": "factory transverse processing envelope/longitudinal-service-strut-0",
+          "vertexStart": 2328,
+          "vertexCount": 8,
+          "faceStart": 3812,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 212,
+          "name": "factory transverse processing envelope/longitudinal-service-strut-1",
+          "vertexStart": 2336,
+          "vertexCount": 8,
+          "faceStart": 3824,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 213,
+          "name": "factory lower service support",
+          "vertexStart": 2344,
+          "vertexCount": 8,
+          "faceStart": 3836,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 214,
+          "name": "factory lower transverse bridge",
+          "vertexStart": 2352,
+          "vertexCount": 8,
+          "faceStart": 3848,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 215,
+          "name": "factory lower transverse bridge",
+          "vertexStart": 2360,
+          "vertexCount": 8,
+          "faceStart": 3860,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 216,
+          "name": "factory lower transverse bridge",
+          "vertexStart": 2368,
+          "vertexCount": 8,
+          "faceStart": 3872,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 217,
+          "name": "station outer service well",
+          "vertexStart": 2376,
+          "vertexCount": 12,
+          "faceStart": 3884,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 218,
+          "name": "station outer service well/recess-service-strut-0",
+          "vertexStart": 2388,
+          "vertexCount": 8,
+          "faceStart": 3904,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 219,
+          "name": "station outer service well/recess-service-strut-1",
+          "vertexStart": 2396,
+          "vertexCount": 8,
+          "faceStart": 3916,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 220,
+          "name": "station outer service well/recess-service-strut-2",
+          "vertexStart": 2404,
+          "vertexCount": 8,
+          "faceStart": 3928,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 221,
+          "name": "station outer service well",
+          "vertexStart": 2412,
+          "vertexCount": 12,
+          "faceStart": 3940,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 222,
+          "name": "station outer service well/recess-service-strut-0",
+          "vertexStart": 2424,
+          "vertexCount": 8,
+          "faceStart": 3960,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 223,
+          "name": "station outer service well/recess-service-strut-1",
+          "vertexStart": 2432,
+          "vertexCount": 8,
+          "faceStart": 3972,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 224,
+          "name": "station outer service well/recess-service-strut-2",
+          "vertexStart": 2440,
+          "vertexCount": 8,
+          "faceStart": 3984,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 225,
+          "name": "station outer service well",
+          "vertexStart": 2448,
+          "vertexCount": 12,
+          "faceStart": 3996,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 226,
+          "name": "station outer service well/recess-service-strut-0",
+          "vertexStart": 2460,
+          "vertexCount": 8,
+          "faceStart": 4016,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 227,
+          "name": "station outer service well/recess-service-strut-1",
+          "vertexStart": 2468,
+          "vertexCount": 8,
+          "faceStart": 4028,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 228,
+          "name": "station outer service well/recess-service-strut-2",
+          "vertexStart": 2476,
+          "vertexCount": 8,
+          "faceStart": 4040,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 229,
+          "name": "station outer service well",
+          "vertexStart": 2484,
+          "vertexCount": 12,
+          "faceStart": 4052,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 230,
+          "name": "station outer service well/recess-service-strut-0",
+          "vertexStart": 2496,
+          "vertexCount": 8,
+          "faceStart": 4072,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 231,
+          "name": "station outer service well/recess-service-strut-1",
+          "vertexStart": 2504,
+          "vertexCount": 8,
+          "faceStart": 4084,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 232,
+          "name": "station outer service well/recess-service-strut-2",
+          "vertexStart": 2512,
+          "vertexCount": 8,
+          "faceStart": 4096,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [],
+      "vertices": 2520,
+      "faces": 4108
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "dock lateral structural member 0",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "dock lateral structural member 1",
+          "vertexStart": 8,
+          "vertexCount": 8,
+          "faceStart": 12,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "dock transverse structural member 0",
+          "vertexStart": 16,
+          "vertexCount": 8,
+          "faceStart": 24,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "dock transverse structural member 1",
+          "vertexStart": 24,
+          "vertexCount": 8,
+          "faceStart": 36,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "dock aperture guidance marker 0",
+          "vertexStart": 32,
+          "vertexCount": 8,
+          "faceStart": 48,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "dock aperture guidance marker 1",
+          "vertexStart": 40,
+          "vertexCount": 8,
+          "faceStart": 60,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "factory transverse processing envelope",
+          "vertexStart": 48,
+          "vertexCount": 60,
+          "faceStart": 72,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "factory transverse processing envelope/service-well-0-0",
+          "vertexStart": 108,
+          "vertexCount": 12,
+          "faceStart": 188,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "factory transverse processing envelope/service-well-1-0",
+          "vertexStart": 120,
+          "vertexCount": 12,
+          "faceStart": 208,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "factory transverse processing envelope/service-well-2-0",
+          "vertexStart": 132,
+          "vertexCount": 12,
+          "faceStart": 228,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "factory transverse processing envelope/service-well-3-0",
+          "vertexStart": 144,
+          "vertexCount": 12,
+          "faceStart": 248,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "factory lower service support",
+          "vertexStart": 156,
+          "vertexCount": 8,
+          "faceStart": 268,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "factory transverse processing envelope",
+          "vertexStart": 164,
+          "vertexCount": 60,
+          "faceStart": 280,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "factory transverse processing envelope/service-well-0-0",
+          "vertexStart": 224,
+          "vertexCount": 12,
+          "faceStart": 396,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "factory transverse processing envelope/service-well-1-0",
+          "vertexStart": 236,
+          "vertexCount": 12,
+          "faceStart": 416,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "factory transverse processing envelope/service-well-2-0",
+          "vertexStart": 248,
+          "vertexCount": 12,
+          "faceStart": 436,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "factory transverse processing envelope/service-well-3-0",
+          "vertexStart": 260,
+          "vertexCount": 12,
+          "faceStart": 456,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "factory lower service support",
+          "vertexStart": 272,
+          "vertexCount": 8,
+          "faceStart": 476,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "factory transverse processing envelope",
+          "vertexStart": 280,
+          "vertexCount": 60,
+          "faceStart": 488,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "factory transverse processing envelope/service-well-0-0",
+          "vertexStart": 340,
+          "vertexCount": 12,
+          "faceStart": 604,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "factory transverse processing envelope/service-well-1-0",
+          "vertexStart": 352,
+          "vertexCount": 12,
+          "faceStart": 624,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "factory transverse processing envelope/service-well-2-0",
+          "vertexStart": 364,
+          "vertexCount": 12,
+          "faceStart": 644,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "factory transverse processing envelope/service-well-3-0",
+          "vertexStart": 376,
+          "vertexCount": 12,
+          "faceStart": 664,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "factory lower service support",
+          "vertexStart": 388,
+          "vertexCount": 8,
+          "faceStart": 684,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "factory transverse processing envelope",
+          "vertexStart": 396,
+          "vertexCount": 60,
+          "faceStart": 696,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "factory transverse processing envelope/service-well-0-0",
+          "vertexStart": 456,
+          "vertexCount": 12,
+          "faceStart": 812,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "factory transverse processing envelope/service-well-1-0",
+          "vertexStart": 468,
+          "vertexCount": 12,
+          "faceStart": 832,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "factory transverse processing envelope/service-well-2-0",
+          "vertexStart": 480,
+          "vertexCount": 12,
+          "faceStart": 852,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "factory transverse processing envelope/service-well-3-0",
+          "vertexStart": 492,
+          "vertexCount": 12,
+          "faceStart": 872,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "factory lower service support",
+          "vertexStart": 504,
+          "vertexCount": 8,
+          "faceStart": 892,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "factory lower transverse bridge",
+          "vertexStart": 512,
+          "vertexCount": 8,
+          "faceStart": 904,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "factory lower transverse bridge",
+          "vertexStart": 520,
+          "vertexCount": 8,
+          "faceStart": 916,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "factory lower transverse bridge",
+          "vertexStart": 528,
+          "vertexCount": 8,
+          "faceStart": 928,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "process-factory",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [],
+      "vertices": 536,
+      "faces": 940
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

@@ -13,7 +13,7 @@ private func actualNPCSceneRestorationGame(nearby: Bool = false) throws -> Game 
       }
     }?.id)
   game.screen = .status
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.mirrorFittedEquipment()
   let folder = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
     .deletingLastPathComponent().deletingLastPathComponent()

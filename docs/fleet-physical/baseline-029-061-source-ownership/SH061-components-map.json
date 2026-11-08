@@ -1,0 +1,3284 @@
+{
+  "status": "OWN_EXACT_SOURCE_INTEGER_OPERATION_COMPONENT_MAP_NOT_GEOMETRY",
+  "id": "SH061",
+  "sourceSHA256": "fad88f0e9cfc1f9a3748ab995b9fca058f675a0c8a6fc89bc72ccefd8399e26b",
+  "ownershipTraceSHA256": "00205460ab315a511c3040f992bacbfb5f4b81bec3b97b0279dcb2902c81011d",
+  "design": [
+    {
+      "index": 0,
+      "name": "radial pressure envelope",
+      "vertexStart": 0,
+      "vertexCount": 120,
+      "faceStart": 0,
+      "faceCount": 236,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 236
+        }
+      ],
+      "creatorMethod": "Hull.loft / Hull.solid",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 1,
+      "name": "radial pressure envelope/service-well-0-0",
+      "vertexStart": 120,
+      "vertexCount": 12,
+      "faceStart": 236,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 2,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-0",
+      "vertexStart": 132,
+      "vertexCount": 8,
+      "faceStart": 256,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 3,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-1",
+      "vertexStart": 140,
+      "vertexCount": 8,
+      "faceStart": 268,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 4,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-2",
+      "vertexStart": 148,
+      "vertexCount": 8,
+      "faceStart": 280,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 5,
+      "name": "radial pressure envelope/service-well-0-1",
+      "vertexStart": 156,
+      "vertexCount": 12,
+      "faceStart": 292,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 6,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-0",
+      "vertexStart": 168,
+      "vertexCount": 8,
+      "faceStart": 312,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 7,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-1",
+      "vertexStart": 176,
+      "vertexCount": 8,
+      "faceStart": 324,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 8,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-2",
+      "vertexStart": 184,
+      "vertexCount": 8,
+      "faceStart": 336,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 9,
+      "name": "radial pressure envelope/service-well-0-2",
+      "vertexStart": 192,
+      "vertexCount": 12,
+      "faceStart": 348,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 10,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-0",
+      "vertexStart": 204,
+      "vertexCount": 8,
+      "faceStart": 368,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 11,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-1",
+      "vertexStart": 212,
+      "vertexCount": 8,
+      "faceStart": 380,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 12,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-2",
+      "vertexStart": 220,
+      "vertexCount": 8,
+      "faceStart": 392,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 13,
+      "name": "radial pressure envelope/service-well-1-0",
+      "vertexStart": 228,
+      "vertexCount": 12,
+      "faceStart": 404,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 14,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-0",
+      "vertexStart": 240,
+      "vertexCount": 8,
+      "faceStart": 424,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 15,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-1",
+      "vertexStart": 248,
+      "vertexCount": 8,
+      "faceStart": 436,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 16,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-2",
+      "vertexStart": 256,
+      "vertexCount": 8,
+      "faceStart": 448,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 17,
+      "name": "radial pressure envelope/service-well-1-1",
+      "vertexStart": 264,
+      "vertexCount": 12,
+      "faceStart": 460,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 18,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-0",
+      "vertexStart": 276,
+      "vertexCount": 8,
+      "faceStart": 480,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 19,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-1",
+      "vertexStart": 284,
+      "vertexCount": 8,
+      "faceStart": 492,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 20,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-2",
+      "vertexStart": 292,
+      "vertexCount": 8,
+      "faceStart": 504,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 21,
+      "name": "radial pressure envelope/service-well-1-2",
+      "vertexStart": 300,
+      "vertexCount": 12,
+      "faceStart": 516,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 22,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-0",
+      "vertexStart": 312,
+      "vertexCount": 8,
+      "faceStart": 536,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 23,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-1",
+      "vertexStart": 320,
+      "vertexCount": 8,
+      "faceStart": 548,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 24,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-2",
+      "vertexStart": 328,
+      "vertexCount": 8,
+      "faceStart": 560,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 25,
+      "name": "radial pressure envelope/service-well-2-0",
+      "vertexStart": 336,
+      "vertexCount": 12,
+      "faceStart": 572,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 26,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-0",
+      "vertexStart": 348,
+      "vertexCount": 8,
+      "faceStart": 592,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 27,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-1",
+      "vertexStart": 356,
+      "vertexCount": 8,
+      "faceStart": 604,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 28,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-2",
+      "vertexStart": 364,
+      "vertexCount": 8,
+      "faceStart": 616,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 29,
+      "name": "radial pressure envelope/service-well-2-1",
+      "vertexStart": 372,
+      "vertexCount": 12,
+      "faceStart": 628,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 30,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-0",
+      "vertexStart": 384,
+      "vertexCount": 8,
+      "faceStart": 648,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 31,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-1",
+      "vertexStart": 392,
+      "vertexCount": 8,
+      "faceStart": 660,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 32,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-2",
+      "vertexStart": 400,
+      "vertexCount": 8,
+      "faceStart": 672,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 33,
+      "name": "radial pressure envelope/service-well-2-2",
+      "vertexStart": 408,
+      "vertexCount": 12,
+      "faceStart": 684,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 34,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-0",
+      "vertexStart": 420,
+      "vertexCount": 8,
+      "faceStart": 704,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 35,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-1",
+      "vertexStart": 428,
+      "vertexCount": 8,
+      "faceStart": 716,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 36,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-2",
+      "vertexStart": 436,
+      "vertexCount": 8,
+      "faceStart": 728,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 37,
+      "name": "radial pressure envelope/service-well-3-0",
+      "vertexStart": 444,
+      "vertexCount": 12,
+      "faceStart": 740,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 38,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-0",
+      "vertexStart": 456,
+      "vertexCount": 8,
+      "faceStart": 760,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 39,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-1",
+      "vertexStart": 464,
+      "vertexCount": 8,
+      "faceStart": 772,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 40,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-2",
+      "vertexStart": 472,
+      "vertexCount": 8,
+      "faceStart": 784,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 41,
+      "name": "radial pressure envelope/service-well-3-1",
+      "vertexStart": 480,
+      "vertexCount": 12,
+      "faceStart": 796,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 42,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-0",
+      "vertexStart": 492,
+      "vertexCount": 8,
+      "faceStart": 816,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 43,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-1",
+      "vertexStart": 500,
+      "vertexCount": 8,
+      "faceStart": 828,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 44,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-2",
+      "vertexStart": 508,
+      "vertexCount": 8,
+      "faceStart": 840,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 45,
+      "name": "radial pressure envelope/service-well-3-2",
+      "vertexStart": 516,
+      "vertexCount": 12,
+      "faceStart": 852,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 46,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-0",
+      "vertexStart": 528,
+      "vertexCount": 8,
+      "faceStart": 872,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 47,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-1",
+      "vertexStart": 536,
+      "vertexCount": 8,
+      "faceStart": 884,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 48,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-2",
+      "vertexStart": 544,
+      "vertexCount": 8,
+      "faceStart": 896,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 49,
+      "name": "radial pressure envelope/longitudinal-service-strut-0",
+      "vertexStart": 552,
+      "vertexCount": 8,
+      "faceStart": 908,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 50,
+      "name": "radial pressure envelope/longitudinal-service-strut-1",
+      "vertexStart": 560,
+      "vertexCount": 8,
+      "faceStart": 920,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 51,
+      "name": "radial connected support",
+      "vertexStart": 568,
+      "vertexCount": 8,
+      "faceStart": 932,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 52,
+      "name": "radial pressure envelope",
+      "vertexStart": 576,
+      "vertexCount": 120,
+      "faceStart": 944,
+      "faceCount": 236,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 236
+        }
+      ],
+      "creatorMethod": "Hull.loft / Hull.solid",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 53,
+      "name": "radial pressure envelope/service-well-0-0",
+      "vertexStart": 696,
+      "vertexCount": 12,
+      "faceStart": 1180,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 54,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-0",
+      "vertexStart": 708,
+      "vertexCount": 8,
+      "faceStart": 1200,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 55,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-1",
+      "vertexStart": 716,
+      "vertexCount": 8,
+      "faceStart": 1212,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 56,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-2",
+      "vertexStart": 724,
+      "vertexCount": 8,
+      "faceStart": 1224,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 57,
+      "name": "radial pressure envelope/service-well-0-1",
+      "vertexStart": 732,
+      "vertexCount": 12,
+      "faceStart": 1236,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 58,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-0",
+      "vertexStart": 744,
+      "vertexCount": 8,
+      "faceStart": 1256,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 59,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-1",
+      "vertexStart": 752,
+      "vertexCount": 8,
+      "faceStart": 1268,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 60,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-2",
+      "vertexStart": 760,
+      "vertexCount": 8,
+      "faceStart": 1280,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 61,
+      "name": "radial pressure envelope/service-well-0-2",
+      "vertexStart": 768,
+      "vertexCount": 12,
+      "faceStart": 1292,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 62,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-0",
+      "vertexStart": 780,
+      "vertexCount": 8,
+      "faceStart": 1312,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 63,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-1",
+      "vertexStart": 788,
+      "vertexCount": 8,
+      "faceStart": 1324,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 64,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-2",
+      "vertexStart": 796,
+      "vertexCount": 8,
+      "faceStart": 1336,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 65,
+      "name": "radial pressure envelope/service-well-1-0",
+      "vertexStart": 804,
+      "vertexCount": 12,
+      "faceStart": 1348,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 66,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-0",
+      "vertexStart": 816,
+      "vertexCount": 8,
+      "faceStart": 1368,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 67,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-1",
+      "vertexStart": 824,
+      "vertexCount": 8,
+      "faceStart": 1380,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 68,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-2",
+      "vertexStart": 832,
+      "vertexCount": 8,
+      "faceStart": 1392,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 69,
+      "name": "radial pressure envelope/service-well-1-1",
+      "vertexStart": 840,
+      "vertexCount": 12,
+      "faceStart": 1404,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 70,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-0",
+      "vertexStart": 852,
+      "vertexCount": 8,
+      "faceStart": 1424,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 71,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-1",
+      "vertexStart": 860,
+      "vertexCount": 8,
+      "faceStart": 1436,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 72,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-2",
+      "vertexStart": 868,
+      "vertexCount": 8,
+      "faceStart": 1448,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 73,
+      "name": "radial pressure envelope/service-well-1-2",
+      "vertexStart": 876,
+      "vertexCount": 12,
+      "faceStart": 1460,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 74,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-0",
+      "vertexStart": 888,
+      "vertexCount": 8,
+      "faceStart": 1480,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 75,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-1",
+      "vertexStart": 896,
+      "vertexCount": 8,
+      "faceStart": 1492,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 76,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-2",
+      "vertexStart": 904,
+      "vertexCount": 8,
+      "faceStart": 1504,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 77,
+      "name": "radial pressure envelope/service-well-2-0",
+      "vertexStart": 912,
+      "vertexCount": 12,
+      "faceStart": 1516,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 78,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-0",
+      "vertexStart": 924,
+      "vertexCount": 8,
+      "faceStart": 1536,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 79,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-1",
+      "vertexStart": 932,
+      "vertexCount": 8,
+      "faceStart": 1548,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 80,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-2",
+      "vertexStart": 940,
+      "vertexCount": 8,
+      "faceStart": 1560,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 81,
+      "name": "radial pressure envelope/service-well-2-1",
+      "vertexStart": 948,
+      "vertexCount": 12,
+      "faceStart": 1572,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 82,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-0",
+      "vertexStart": 960,
+      "vertexCount": 8,
+      "faceStart": 1592,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 83,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-1",
+      "vertexStart": 968,
+      "vertexCount": 8,
+      "faceStart": 1604,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 84,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-2",
+      "vertexStart": 976,
+      "vertexCount": 8,
+      "faceStart": 1616,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 85,
+      "name": "radial pressure envelope/service-well-2-2",
+      "vertexStart": 984,
+      "vertexCount": 12,
+      "faceStart": 1628,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 86,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-0",
+      "vertexStart": 996,
+      "vertexCount": 8,
+      "faceStart": 1648,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 87,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-1",
+      "vertexStart": 1004,
+      "vertexCount": 8,
+      "faceStart": 1660,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 88,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-2",
+      "vertexStart": 1012,
+      "vertexCount": 8,
+      "faceStart": 1672,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 89,
+      "name": "radial pressure envelope/service-well-3-0",
+      "vertexStart": 1020,
+      "vertexCount": 12,
+      "faceStart": 1684,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 90,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-0",
+      "vertexStart": 1032,
+      "vertexCount": 8,
+      "faceStart": 1704,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 91,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-1",
+      "vertexStart": 1040,
+      "vertexCount": 8,
+      "faceStart": 1716,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 92,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-2",
+      "vertexStart": 1048,
+      "vertexCount": 8,
+      "faceStart": 1728,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 93,
+      "name": "radial pressure envelope/service-well-3-1",
+      "vertexStart": 1056,
+      "vertexCount": 12,
+      "faceStart": 1740,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 94,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-0",
+      "vertexStart": 1068,
+      "vertexCount": 8,
+      "faceStart": 1760,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 95,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-1",
+      "vertexStart": 1076,
+      "vertexCount": 8,
+      "faceStart": 1772,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 96,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-2",
+      "vertexStart": 1084,
+      "vertexCount": 8,
+      "faceStart": 1784,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 97,
+      "name": "radial pressure envelope/service-well-3-2",
+      "vertexStart": 1092,
+      "vertexCount": 12,
+      "faceStart": 1796,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 98,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-0",
+      "vertexStart": 1104,
+      "vertexCount": 8,
+      "faceStart": 1816,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 99,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-1",
+      "vertexStart": 1112,
+      "vertexCount": 8,
+      "faceStart": 1828,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 100,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-2",
+      "vertexStart": 1120,
+      "vertexCount": 8,
+      "faceStart": 1840,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 101,
+      "name": "radial pressure envelope/longitudinal-service-strut-0",
+      "vertexStart": 1128,
+      "vertexCount": 8,
+      "faceStart": 1852,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 102,
+      "name": "radial pressure envelope/longitudinal-service-strut-1",
+      "vertexStart": 1136,
+      "vertexCount": 8,
+      "faceStart": 1864,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 103,
+      "name": "radial connected support",
+      "vertexStart": 1144,
+      "vertexCount": 8,
+      "faceStart": 1876,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 104,
+      "name": "radial pressure envelope",
+      "vertexStart": 1152,
+      "vertexCount": 120,
+      "faceStart": 1888,
+      "faceCount": 236,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 236
+        }
+      ],
+      "creatorMethod": "Hull.loft / Hull.solid",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 105,
+      "name": "radial pressure envelope/service-well-0-0",
+      "vertexStart": 1272,
+      "vertexCount": 12,
+      "faceStart": 2124,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 106,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-0",
+      "vertexStart": 1284,
+      "vertexCount": 8,
+      "faceStart": 2144,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 107,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-1",
+      "vertexStart": 1292,
+      "vertexCount": 8,
+      "faceStart": 2156,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 108,
+      "name": "radial pressure envelope/service-well-0-0/recess-service-strut-2",
+      "vertexStart": 1300,
+      "vertexCount": 8,
+      "faceStart": 2168,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 109,
+      "name": "radial pressure envelope/service-well-0-1",
+      "vertexStart": 1308,
+      "vertexCount": 12,
+      "faceStart": 2180,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 110,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-0",
+      "vertexStart": 1320,
+      "vertexCount": 8,
+      "faceStart": 2200,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 111,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-1",
+      "vertexStart": 1328,
+      "vertexCount": 8,
+      "faceStart": 2212,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 112,
+      "name": "radial pressure envelope/service-well-0-1/recess-service-strut-2",
+      "vertexStart": 1336,
+      "vertexCount": 8,
+      "faceStart": 2224,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 113,
+      "name": "radial pressure envelope/service-well-0-2",
+      "vertexStart": 1344,
+      "vertexCount": 12,
+      "faceStart": 2236,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 114,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-0",
+      "vertexStart": 1356,
+      "vertexCount": 8,
+      "faceStart": 2256,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 115,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-1",
+      "vertexStart": 1364,
+      "vertexCount": 8,
+      "faceStart": 2268,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 116,
+      "name": "radial pressure envelope/service-well-0-2/recess-service-strut-2",
+      "vertexStart": 1372,
+      "vertexCount": 8,
+      "faceStart": 2280,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 117,
+      "name": "radial pressure envelope/service-well-1-0",
+      "vertexStart": 1380,
+      "vertexCount": 12,
+      "faceStart": 2292,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 118,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-0",
+      "vertexStart": 1392,
+      "vertexCount": 8,
+      "faceStart": 2312,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 119,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-1",
+      "vertexStart": 1400,
+      "vertexCount": 8,
+      "faceStart": 2324,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 120,
+      "name": "radial pressure envelope/service-well-1-0/recess-service-strut-2",
+      "vertexStart": 1408,
+      "vertexCount": 8,
+      "faceStart": 2336,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 121,
+      "name": "radial pressure envelope/service-well-1-1",
+      "vertexStart": 1416,
+      "vertexCount": 12,
+      "faceStart": 2348,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 122,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-0",
+      "vertexStart": 1428,
+      "vertexCount": 8,
+      "faceStart": 2368,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 123,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-1",
+      "vertexStart": 1436,
+      "vertexCount": 8,
+      "faceStart": 2380,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 124,
+      "name": "radial pressure envelope/service-well-1-1/recess-service-strut-2",
+      "vertexStart": 1444,
+      "vertexCount": 8,
+      "faceStart": 2392,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 125,
+      "name": "radial pressure envelope/service-well-1-2",
+      "vertexStart": 1452,
+      "vertexCount": 12,
+      "faceStart": 2404,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 126,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-0",
+      "vertexStart": 1464,
+      "vertexCount": 8,
+      "faceStart": 2424,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 127,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-1",
+      "vertexStart": 1472,
+      "vertexCount": 8,
+      "faceStart": 2436,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 128,
+      "name": "radial pressure envelope/service-well-1-2/recess-service-strut-2",
+      "vertexStart": 1480,
+      "vertexCount": 8,
+      "faceStart": 2448,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 129,
+      "name": "radial pressure envelope/service-well-2-0",
+      "vertexStart": 1488,
+      "vertexCount": 12,
+      "faceStart": 2460,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 130,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-0",
+      "vertexStart": 1500,
+      "vertexCount": 8,
+      "faceStart": 2480,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 131,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-1",
+      "vertexStart": 1508,
+      "vertexCount": 8,
+      "faceStart": 2492,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 132,
+      "name": "radial pressure envelope/service-well-2-0/recess-service-strut-2",
+      "vertexStart": 1516,
+      "vertexCount": 8,
+      "faceStart": 2504,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 133,
+      "name": "radial pressure envelope/service-well-2-1",
+      "vertexStart": 1524,
+      "vertexCount": 12,
+      "faceStart": 2516,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 134,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-0",
+      "vertexStart": 1536,
+      "vertexCount": 8,
+      "faceStart": 2536,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 135,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-1",
+      "vertexStart": 1544,
+      "vertexCount": 8,
+      "faceStart": 2548,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 136,
+      "name": "radial pressure envelope/service-well-2-1/recess-service-strut-2",
+      "vertexStart": 1552,
+      "vertexCount": 8,
+      "faceStart": 2560,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 137,
+      "name": "radial pressure envelope/service-well-2-2",
+      "vertexStart": 1560,
+      "vertexCount": 12,
+      "faceStart": 2572,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 138,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-0",
+      "vertexStart": 1572,
+      "vertexCount": 8,
+      "faceStart": 2592,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 139,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-1",
+      "vertexStart": 1580,
+      "vertexCount": 8,
+      "faceStart": 2604,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 140,
+      "name": "radial pressure envelope/service-well-2-2/recess-service-strut-2",
+      "vertexStart": 1588,
+      "vertexCount": 8,
+      "faceStart": 2616,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 141,
+      "name": "radial pressure envelope/service-well-3-0",
+      "vertexStart": 1596,
+      "vertexCount": 12,
+      "faceStart": 2628,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 142,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-0",
+      "vertexStart": 1608,
+      "vertexCount": 8,
+      "faceStart": 2648,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 143,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-1",
+      "vertexStart": 1616,
+      "vertexCount": 8,
+      "faceStart": 2660,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 144,
+      "name": "radial pressure envelope/service-well-3-0/recess-service-strut-2",
+      "vertexStart": 1624,
+      "vertexCount": 8,
+      "faceStart": 2672,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 145,
+      "name": "radial pressure envelope/service-well-3-1",
+      "vertexStart": 1632,
+      "vertexCount": 12,
+      "faceStart": 2684,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 146,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-0",
+      "vertexStart": 1644,
+      "vertexCount": 8,
+      "faceStart": 2704,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 147,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-1",
+      "vertexStart": 1652,
+      "vertexCount": 8,
+      "faceStart": 2716,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 148,
+      "name": "radial pressure envelope/service-well-3-1/recess-service-strut-2",
+      "vertexStart": 1660,
+      "vertexCount": 8,
+      "faceStart": 2728,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 149,
+      "name": "radial pressure envelope/service-well-3-2",
+      "vertexStart": 1668,
+      "vertexCount": 12,
+      "faceStart": 2740,
+      "faceCount": 20,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 16
+        },
+        {
+          "material": 3,
+          "faces": 2
+        },
+        {
+          "material": 1,
+          "faces": 2
+        }
+      ],
+      "creatorMethod": "Mesh.well",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 150,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-0",
+      "vertexStart": 1680,
+      "vertexCount": 8,
+      "faceStart": 2760,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 151,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-1",
+      "vertexStart": 1688,
+      "vertexCount": 8,
+      "faceStart": 2772,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 152,
+      "name": "radial pressure envelope/service-well-3-2/recess-service-strut-2",
+      "vertexStart": 1696,
+      "vertexCount": 8,
+      "faceStart": 2784,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 153,
+      "name": "radial pressure envelope/longitudinal-service-strut-0",
+      "vertexStart": 1704,
+      "vertexCount": 8,
+      "faceStart": 2796,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 154,
+      "name": "radial pressure envelope/longitudinal-service-strut-1",
+      "vertexStart": 1712,
+      "vertexCount": 8,
+      "faceStart": 2808,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 4,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 155,
+      "name": "radial connected support",
+      "vertexStart": 1720,
+      "vertexCount": 8,
+      "faceStart": 2820,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 156,
+      "name": "radial structural collar",
+      "vertexStart": 1728,
+      "vertexCount": 576,
+      "faceStart": 2832,
+      "faceCount": 1152,
+      "exactMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 1152
+        }
+      ],
+      "creatorMethod": "Mesh.torus / Mesh.raw",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 157,
+      "name": "radial structural collar",
+      "vertexStart": 2304,
+      "vertexCount": 576,
+      "faceStart": 3984,
+      "faceCount": 1152,
+      "exactMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 1152
+        }
+      ],
+      "creatorMethod": "Mesh.torus / Mesh.raw",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 158,
+      "name": "cockpit glazing envelope",
+      "vertexStart": 2880,
+      "vertexCount": 120,
+      "faceStart": 5136,
+      "faceCount": 236,
+      "exactMaterialRuns": [
+        {
+          "material": 5,
+          "faces": 236
+        }
+      ],
+      "creatorMethod": "Hull.loft / Hull.solid",
+      "creatorForm": "tri-stack",
+      "role": "cockpit-glazing-stock",
+      "stockKgPerSquareMetre": 5
+    },
+    {
+      "index": 159,
+      "name": "cockpit connected structural crossmember",
+      "vertexStart": 3000,
+      "vertexCount": 8,
+      "faceStart": 5372,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 160,
+      "name": "engine_pair/negative side/connected support",
+      "vertexStart": 3008,
+      "vertexCount": 8,
+      "faceStart": 5384,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 161,
+      "name": "engine_pair/negative side/propulsion casing",
+      "vertexStart": 3016,
+      "vertexCount": 48,
+      "faceStart": 5396,
+      "faceCount": 92,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 92
+        }
+      ],
+      "creatorMethod": "Hull.loft / Hull.solid",
+      "creatorForm": "tri-stack",
+      "role": "creator-declared-drive-casing-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 162,
+      "name": "engine_pair/negative side/propulsion luminous recess",
+      "vertexStart": 3064,
+      "vertexCount": 48,
+      "faceStart": 5488,
+      "faceCount": 92,
+      "exactMaterialRuns": [
+        {
+          "material": 6,
+          "faces": 92
+        }
+      ],
+      "creatorMethod": "Hull.loft / Hull.solid",
+      "creatorForm": "tri-stack",
+      "role": "creator-declared-drive-recess-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 163,
+      "name": "engine_pair/positive side/connected support",
+      "vertexStart": 3112,
+      "vertexCount": 8,
+      "faceStart": 5580,
+      "faceCount": 12,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 12
+        }
+      ],
+      "creatorMethod": "Mesh.strut / Hull.box",
+      "creatorForm": "tri-stack",
+      "role": "opaque-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 164,
+      "name": "engine_pair/positive side/propulsion casing",
+      "vertexStart": 3120,
+      "vertexCount": 48,
+      "faceStart": 5592,
+      "faceCount": 92,
+      "exactMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 92
+        }
+      ],
+      "creatorMethod": "Hull.loft / Hull.solid",
+      "creatorForm": "tri-stack",
+      "role": "creator-declared-drive-casing-stock",
+      "stockKgPerSquareMetre": 14
+    },
+    {
+      "index": 165,
+      "name": "engine_pair/positive side/propulsion luminous recess",
+      "vertexStart": 3168,
+      "vertexCount": 48,
+      "faceStart": 5684,
+      "faceCount": 92,
+      "exactMaterialRuns": [
+        {
+          "material": 6,
+          "faces": 92
+        }
+      ],
+      "creatorMethod": "Hull.loft / Hull.solid",
+      "creatorForm": "tri-stack",
+      "role": "creator-declared-drive-recess-stock",
+      "stockKgPerSquareMetre": 14
+    }
+  ]
+}

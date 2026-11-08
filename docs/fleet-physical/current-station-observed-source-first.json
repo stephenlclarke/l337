@@ -1,0 +1,47 @@
+{
+  "status": "FIRST_PROPOSED_SOURCE_ONLY_OBSERVATION_RESOURCE_VALIDATOR_EXTRACTION_NO_EDITS",
+  "beforeCommit": "b3d8b7debf71654b05e1691e94f5070f9b89e923",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36134,
+      "sha256": "ea48568940ba3b1dd6e45c3777db50f163fd0e203d00a63610075ef0979b21df"
+    },
+    {
+      "path": "Sources/L337Core/StationAutoDefence.swift",
+      "bytes": 40661,
+      "sha256": "9716806df987458c82ce71e882c5b9590374d60797ee5a210ed90129272fb687"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 157257,
+      "sha256": "f9d60d718a6324e2c848cf0a247fe01b18c13f6a3465262fee0bbdcedb055996"
+    },
+    {
+      "path": "Sources/L337Core/EMPSourceCustody.swift",
+      "bytes": 5355,
+      "sha256": "b711a926156a536a31f8c42e519fcb872d2aa2309d5c02dfefab47ff38973714"
+    },
+    {
+      "path": "Sources/L337Core/EMPPirateBlasterRuntime.swift",
+      "bytes": 1675,
+      "sha256": "7e07f7a1bdba00a534b76f6f382a5aac7c7c090bef46fc371bbad13247a77fb7"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    }
+  ],
+  "reason": "Observation must authenticate actual per-ID current resource source without treating separate EMP/protected owners as ordinary persistence actors. Existing readonly snapshot private currentCatalogueSourceIsValid already validates exact current source/profile/capacities/missiles/known fuel/cargo, independently of capture owner exclusions. Reuse this exact predicate rather than duplicate its fields or bypass capture by editing a body.",
+  "sourceScope": [
+    "NPCPersistenceSnapshot: extract existing private currentCatalogueSourceIsValid property body to an internal static currentCatalogueSourceIsValid(catalogueShipID:String?,npc:NPCState,missiles:Int)->Bool; valid calls exact same static predicate with same fields. Keep nil legacy snapshot behavior, all exact existing comparison/loop/operators. This is readonly shared implementation, no new source/owner permission.",
+    "StationAutoDefence.stationAutoThreatObserved: replace only let native/nil-or-nativeID two lines with mandatory physical catalogueID == context snapshot catalogueID and static current source predicate. Keep all other original guard fields including existing physical.empSource == nil || isEMPDisabled(body), all actual owner/EMP policy unchanged. Do NOT use ordinary capture or clear owner state. New explicit current source/profile validation adds fail-closed constraints to old observation.",
+    "No changes to isEMPDisabled/nativeEMPCustodyRecord/EMP state/custody/rates/law/emitters/geometry/handover/bounds. Braking and known-target previous reserved hunks remain exact."
+  ],
+  "testScope": [
+    "New parameterized method in existing station suite, actual stationAutoGame plus stationAutoAddNativeAttacker at existing tested position300,0,800 facing player; stationAutoRequireNativePressureLane then actual emitGameplayNPCBeam and require real current unlawful-attack ledger. Current source must yield active hazard; missing/unknown source, wrong current profile, unknown fuel yield conservative unknown hazard. Preserve whole commander/body/heat/cooldown/locks across readonly stationAutoGuidance. All mandatory actual source/ray requirements, no skip/synthetic incident.",
+    "Existing current NPC source ledger tests remain exact; extraction full inverse must restore complete old file. Existing real station source/flee/protected/staleEMP tests retained exactly to qualify current interaction later. Additional direct braking-path test remains to freeze separately; no test hook/access expansion."
+  ],
+  "limits": "Proposal only, UNCOMPILED UNRUN. Six before pins frozen; no test/source aftercode or execution. Current025 remains mandatory and blocked pending native source repair; no substitution or qualification. Need Root exact shared scope reservation before edits."
+}

@@ -657,3 +657,54 @@ func relativeWorkStationaryNearHoldConvergesWithoutCrossingItsWorkPoint(delta: D
   #expect(minimumGap >= 138 && minimumGap.isFinite)
   #expect((try #require(input.target)).pose.orientation != target.pose.orientation)
 }
+
+
+@Test(arguments: ["clear", "rayBlocked", "sweepBlocked", "range"])
+func nativeHoldNormalApproachRequiresFaceRayRangeAndSweptHullProof(control: String) throws {
+  let hull = try rwClearancePlaneHull()
+  var target = rwTarget()
+  target.surfaceNormal = .init(0, 0, 1)
+  var input = rwInput(target: target)
+  input.ship.position = .init(0, 0, 400)
+  input.playerRadius = 10
+  input.cutterRange = control == "range" ? 130 : 300
+  let direction = Vector3(sqrt(1 - 0.01), 0, 0.1)
+  var state = FlightWorkGuidance(
+    parent: rwActor, mode: .hold(.salvage),
+    surface: .init(point: target.surfacePoint, normal: target.surfaceNormal,
+      radius: 10, section: .init(wreck: rwWreck, section: 1)),
+    collectionOffset: 0,
+    controller: .init(parent: rwActor, wreck: rwWreck, category: .wreck,
+      approachDirection: direction),
+    scoop: .init(parent: rwActor), velocity: input.velocity,
+    angularVelocity: input.angularVelocity)
+  let obstacles: [HullSweepObstacle] = control == "sweepBlocked"
+    ? [.init(hull: hull, pose: .init(position: .init(0, 0, 400)))] : []
+  var rayChecks = 0
+  var workProofs = 0
+  let output = state.stepHold(input, surfaceNormalRayIsClear: {
+    rayChecks += 1
+    return control != "rayBlocked"
+  }) { sweep in
+    let proof = HullSweepSafety.validate(sweep, target: hull, obstacles: obstacles)
+    if sweep.purpose == .work && proof.safe { workProofs += 1 }
+    return proof.clearance
+  }
+  #expect(rayChecks == 1 && state.attemptedSurfaceNormalApproach)
+  if control == "clear" {
+    let sweep = try #require(output.validatedSweep)
+    #expect(sweep.purpose == .work && workProofs > 0)
+    #expect(abs(sweep.workPosition.z - 131) < 1e-9)
+    #expect(sweep.requiredClearance == 120 && input.cutterRange == 300)
+    #expect(output.acceleration.length <= input.limits.acceleration)
+    #expect(output.status != .blocked(.toolRange))
+  } else {
+    #expect(output.status == .blocked(.toolRange))
+    #expect(output.validatedSweep?.purpose != .work)
+    #expect(workProofs == 0)
+  }
+  _ = state.stepHold(input, surfaceNormalRayIsClear: {
+    Issue.record("A guidance selection must try the normal ray at most once")
+    return true
+  }) { HullSweepSafety.validate($0, target: hull, obstacles: obstacles).clearance }
+}

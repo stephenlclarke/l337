@@ -1,0 +1,94 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH050-complete24part-native-candidate-v1",
+  "ship": "SH050",
+  "name": "Yak",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "bbe9e3acc93bd75e24ee42500c8b836d1a4d7eecf765c9f34bd879a6c38eaa0a",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH050-design.toml",
+    "bytes": 501643,
+    "sha256": "7f555c4821c9de8bea3026e88273c58acf7a778299ec67883f1e5990a31768b0"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH050.toml",
+    "bytes": 525740,
+    "sha256": "5b6e9eb756970bb36e2974d574e6dccea0a5d50b9a2a2c1481c5146aec8471c4"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH050.json",
+    "bytes": 106462,
+    "sha256": "d6f912f4ea39a32c2f99ae817eaaa2c592ad49910c6be7f91fffa87a1ee10c97"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH050-native-candidate-recipe.py",
+    "bytes": 7568,
+    "sha256": "1074966f451e4986c8897bc04c4e4a79f0321f90ac1e633afaccba229b14ddfb"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH050-native-candidate-tests.py",
+    "bytes": 7888,
+    "sha256": "a774a840ce5494338282906fe7b8550ceb79c65dc09d51f80da9325bd85002bd"
+  },
+  "baseline": {
+    "declaredNativeFaces": 928,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "allLoftSides": 4,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      10,
+      16,
+      19,
+      20,
+      22,
+      23
+    ],
+    "unchangedFixedOriginalParts": 16,
+    "status": "NEW angular approximation only; actual output count/full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "All THREE complete original5station stacked pods/endcaps, at originalY[-.50,0,.50],length4.1,widthbeam*.48,height.21,material1",
+    "ALL TWELVE actual service wells with own original analytical station/normal/tangent/radii/width/length and skin1/inset3 materials",
+    "Complete vertical structural spine fromY-.70to+.70, actual dimensions/material",
+    "Full original cockpit/support atYbeam*.33+.21,Zlength*.25 and both connected drives/full casings/luminous recesses at xbeam*.38/radius.28",
+    "Exact original sage-umber palette/material/emission/textures/license/source; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Original length4.1/beam1.65/source axes/coordinates/origin/units retained. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Yak R3/name/game remain pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "Pod/spine labels grant no installed pressure system/hardware/power/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All24 original positive components/material sets stay, especially allTHREEstackedpods/ALL12wells/spine/cockpit/drives",
+    "All FIVE original stations per pod and TWO per drive remain",
+    "Complete actual output must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require16 fixed components exact original vertices/localfaces/material sequence/UVs and all3stack stations/heights",
+    "Full actual curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run24part/exact16fixed/all12wells/all3stackstations-heights/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

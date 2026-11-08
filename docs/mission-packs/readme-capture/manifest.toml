@@ -1,0 +1,177 @@
+schemaVersion = 2
+missionAPI = 2
+id = "media.original-docking-capture"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "profiled-encounters-v2"]
+priority = 600
+source = "Original capture encounter. NPC fit values are explicit project staging values; approved catalogue geometry retains its original authoring identity and metre coordinates."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "main.lua"
+
+[mission]
+id = "capture"
+title = "Original docking-under-attack capture"
+briefing = "Disposable renderer fixture. Four original craft attack during an actual station approach. This encounter is never installed in a player's mission library."
+destination = "Starting orbital station"
+reward = "No reward or player equipment"
+milestones = ["Capture encounter admitted"]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"
+[[handlers]]
+event = "station.undocked"
+function = "undocked"
+[[handlers]]
+event = "encounter.admitted"
+function = "admitted"
+
+[[npcs]]
+id = "lead"
+name = "Gyrfalcon Assault capture opponent"
+source = "Original L337 catalogue SH002; dedicated capture-only fit"
+basis = "Authored capture fit, metres and seconds. Original hull dynamics remain intact under an authored flyby goal and a real bounded gimballed laser; no player hardware is issued."
+model = "catalogue:SH002"
+scale = 1.0
+energy = 420.0
+recharge = 5.4
+speed = 44.8
+acceleration = 15.4
+pitch = 1.16
+yaw = 1.08
+roll = 1.32
+missiles = 0
+fuel = 12.0
+ecm = false
+bounty = 0
+
+[[npcs.lasers]]
+id = "forward"
+kind = "laser"
+muzzle = {x=0.0,y=0.0,z=15.1}
+direction = {x=0.0,y=0.0,z=1.0}
+arc = 0.7
+trackingRate = 0.8
+damage = 15.0
+range = 6000.0
+interval = 0.1
+energy = 1.0
+heat = 3.2
+cooling = 12.0
+maximumHeat = 256.0
+
+[[npcs]]
+id = "wing"
+name = "Ibex capture opponent"
+source = "Original L337 catalogue SH027; dedicated capture-only fit"
+basis = "Authored capture fit, metres and seconds. Original hull dynamics remain intact under an authored flyby goal and a real bounded gimballed laser; no player hardware is issued."
+model = "catalogue:SH027"
+scale = 1.0
+energy = 270.0
+recharge = 3.8
+speed = 36.2
+acceleration = 11.0
+pitch = 0.91
+yaw = 0.84
+roll = 1.03
+missiles = 0
+fuel = 13.0
+ecm = false
+bounty = 0
+
+[[npcs.lasers]]
+id = "forward"
+kind = "laser"
+muzzle = {x=0.0,y=0.0,z=17.0}
+direction = {x=0.0,y=0.0,z=1.0}
+arc = 0.7
+trackingRate = 0.8
+damage = 15.0
+range = 6000.0
+interval = 0.1
+energy = 1.0
+heat = 3.2
+cooling = 12.0
+maximumHeat = 256.0
+
+[[npcs]]
+id = "port"
+name = "Kite Interceptor capture opponent"
+source = "Original L337 catalogue SH031; dedicated capture-only fit"
+basis = "Authored capture fit, metres and seconds. Original hull dynamics remain intact under an authored flyby goal and a real bounded gimballed laser; no player hardware is issued."
+model = "catalogue:SH031"
+scale = 1.0
+energy = 270.0
+recharge = 4.6
+speed = 55.0
+acceleration = 15.68
+pitch = 1.131
+yaw = 1.053
+roll = 1.288
+missiles = 0
+fuel = 14.0
+ecm = false
+bounty = 0
+
+[[npcs.lasers]]
+id = "forward"
+kind = "laser"
+muzzle = {x=0.0,y=0.0,z=20.5}
+direction = {x=0.0,y=0.0,z=1.0}
+arc = 0.7
+trackingRate = 0.8
+damage = 15.0
+range = 6000.0
+interval = 0.1
+energy = 1.0
+heat = 3.2
+cooling = 12.0
+maximumHeat = 256.0
+
+[[npcs]]
+id = "upper"
+name = "Redtail Mk III capture opponent"
+source = "Original L337 catalogue SH103; dedicated capture-only fit"
+basis = "Authored capture fit, metres and seconds. Original hull dynamics remain intact under an authored flyby goal and a real bounded gimballed laser; no player hardware is issued."
+model = "catalogue:SH103"
+scale = 1.0
+energy = 430.0
+recharge = 6.2
+speed = 51.4
+acceleration = 13.93
+pitch = 0.998
+yaw = 0.929
+roll = 1.135
+missiles = 0
+fuel = 13.0
+ecm = false
+bounty = 0
+
+[[npcs.lasers]]
+id = "forward"
+kind = "laser"
+muzzle = {x=0.0,y=0.0,z=19.5}
+direction = {x=0.0,y=0.0,z=1.0}
+arc = 0.7
+trackingRate = 0.8
+damage = 15.0
+range = 6000.0
+interval = 0.1
+energy = 1.0
+heat = 3.2
+cooling = 12.0
+maximumHeat = 256.0
+
+[[encounters]]
+id = "opponents"
+galaxy = 0
+system = 7
+profile = "profiled-local-freeze-v1"
+actors = [
+  {id="lead", npc="lead", x=-1000.0, y=0.0, z=3000.0, hostile=true},
+  {id="wing", npc="wing", x=1000.0, y=127.0, z=3500.0, hostile=true},
+  {id="port", npc="port", x=0.0, y=1000.0, z=4500.0, hostile=true},
+  {id="upper", npc="upper", x=0.0, y=-1000.0, z=5000.0, hostile=true}
+]

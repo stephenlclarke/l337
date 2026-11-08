@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct OriginalVerifiedWarrantFixture {
   let flight: OriginalSealedDispatchFixture
@@ -172,6 +173,21 @@ struct OriginalVerifiedWarrantNativeTests {
       accepted.commander.cargo == before.cargo && accepted.commander.credits == before.credits)
     #expect(accepted.commander.scriptState.instances[id]?.ownedEncounters.isEmpty == true)
     #expect(accepted.commander.scriptState.savedClueJournal == nil)
+
+    try await fixture.objective(runtime, id: id)
+    let arrived = await runtime.snapshot()
+    let state = try #require(arrived.commander.scriptState.instances[id])
+    let encounter = try #require(state.ownedEncounters[OriginalVerifiedWarrant.encounterID])
+    #expect(encounter.admitted && Set(encounter.actors.keys) == [OriginalVerifiedWarrant.actorID])
+    let actor = try #require(OriginalVerifiedWarrant.target(state))
+    let npc = try #require(actor.body.scriptNPC)
+    let reference = OriginalScopedScriptedHull.peregrine.reference
+    let hash = OriginalScriptedPeregrine.geometrySHA256
+    #expect(actor.presence == .present && actor.body.hostile)
+    #expect(npc.intent?.mode == .attack && npc.intent?.player == true)
+    #expect(npc.fit.definition == OriginalVerifiedWarrant.npc && npc.fit.models == [reference: hash])
+    let geometry = try #require(fixture.pack.models[reference])
+    #expect(arrived.commander.scriptState.geometry[hash] == geometry)
   }
 
   @Test func warrantPlayerKillReturnReportPaysOnceAndSurvivesLaterTravel() async throws {

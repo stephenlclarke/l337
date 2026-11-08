@@ -5,46 +5,22 @@ import Testing
 
 struct EquipmentGrantPreparationTests {
   @Test(arguments: [false, true])
-  func matchingStockGrantPublishesPreparedOwnershipAndKeepsItOnRepeat(navigation: Bool) throws {
+  func matchingStockGrantRefusesAbsentOwnershipWithoutPublishing(navigation: Bool) throws {
     var commander = grantPreparationCommander()
     try #require(commander.valid && commander.equipmentInventory == nil)
     let before = commander
     let name = navigation ? NavigationTier.basic.equipmentName : LaserKind.pulse.equipmentName
     let slot: ComponentFittingSlot = navigation ? .navigation : .laser(.front)
-    try commander.grantEquipment(name, at: slot, provenance: .grant("stock-preparation-test"))
-    let inventory = try #require(commander.equipmentInventory)
-    let fitted = try #require(commander.fittedEquipment(at: slot))
-    #expect(fitted.node == EquipmentRuntimeCatalog.node(for: name))
-    #expect(fitted.provenance == .standard && inventory.items.contains(fitted))
-    #expect(fitted.location == .init(hullInstanceID: inventory.activeHull, slot: slot))
-    #expect(
-      commander.equipmentOwnerID == inventory.owner
-        && commander.hullInstanceID == inventory.activeHull)
-    #expect(commander.equipmentPurchaseHistory?.owner == inventory.owner)
-    #expect(commander.equipmentPurchaseHistory?.paid.isEmpty == true)
-    #expect(commander.valid)
-    #expect(commander.credits == before.credits && commander.cargo == before.cargo)
-    #expect(commander.fuel == before.fuel && commander.missiles == before.missiles)
-    #expect(commander.scriptState == before.scriptState && commander.contracts == before.contracts)
-    #expect(commander.accommodation == before.accommodation)
-    var expected = before
-    expected.savedEquipmentInventory = commander.savedEquipmentInventory
-    expected.savedEquipmentPurchaseHistory = commander.savedEquipmentPurchaseHistory
-    expected.savedEquipmentVersion = commander.savedEquipmentVersion
-    #expect(commander == expected)
-    let first = commander
-    try commander.grantEquipment(name, at: slot, provenance: .grant("repeat-stock-test"))
-    #expect(commander == first && commander.fittedEquipment(at: slot)?.id == fitted.id)
-    #expect(commander.equipmentOwnerID == inventory.owner)
-    let decoded = try JSONDecoder().decode(Commander.self, from: JSONEncoder().encode(commander))
-    #expect(decoded == first && decoded.fittedEquipment(at: slot)?.id == fitted.id)
-    #expect(decoded.equipmentOwnerID == inventory.owner && decoded.valid)
+    #expect(throws: CommanderEquipmentError.incompleteState) {
+      try commander.grantEquipment(name, at: slot, provenance: .grant("stock-preparation-test"))
+    }
+    #expect(commander == before)
   }
 
   @Test(arguments: [false, true])
   func alreadyCanonicalMatchingStockGrantIsAWholeCommanderNoOp(navigation: Bool) throws {
     var commander = grantPreparationCommander()
-    try commander.prepareEquipment()
+    try commander.prepareEquipment(legacy: false)
     try #require(commander.valid && commander.equipmentInventory != nil)
     let name = navigation ? NavigationTier.basic.equipmentName : LaserKind.pulse.equipmentName
     let slot: ComponentFittingSlot = navigation ? .navigation : .laser(.front)
@@ -57,11 +33,18 @@ struct EquipmentGrantPreparationTests {
   @Test(arguments: [false, true])
   func invalidGrantPublishesNeitherPreparationNorPartialNewEquipment(prepared: Bool) throws {
     var commander = grantPreparationCommander()
-    if prepared { try commander.prepareEquipment() }
+    if prepared { try commander.prepareEquipment(legacy: false) }
     let before = commander
-    #expect(throws: EquipmentRuntimeError.unavailable) {
-      try commander.grantEquipment(
-        "Unknown equipment", at: .navigation, provenance: .grant("invalid"))
+    if prepared {
+      #expect(throws: EquipmentRuntimeError.unavailable) {
+        try commander.grantEquipment(
+          "Unknown equipment", at: .navigation, provenance: .grant("invalid"))
+      }
+    } else {
+      #expect(throws: CommanderEquipmentError.incompleteState) {
+        try commander.grantEquipment(
+          "Unknown equipment", at: .navigation, provenance: .grant("invalid"))
+      }
     }
     #expect(commander == before)
     #expect(throws: (any Error).self) {
@@ -74,7 +57,7 @@ struct EquipmentGrantPreparationTests {
 
   @Test func matchingStockGrantCannotPublishAnInvalidPreparedCommander() throws {
     var commander = grantPreparationCommander()
-    try commander.prepareEquipment()
+    try commander.prepareEquipment(legacy: false)
     commander.credits = -1
     let before = commander
     #expect(throws: EquipmentRuntimeError.incompatibleFit) {

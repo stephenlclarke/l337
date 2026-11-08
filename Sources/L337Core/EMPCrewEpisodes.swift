@@ -6,22 +6,13 @@ struct EMPCrewEjection: Equatable, Codable, Sendable {
   var emittedAt: Double?
 }
 
-struct EMPLegacyCrewEjection: Equatable, Codable, Sendable {
-  let ordinal: Int
-  let time: Double
-}
-
 /// Timing evidence. Electrical recovery and traffic ownership stay with the runtime.
 struct EMPCrewDisableEpisode: Equatable, Codable, Sendable {
   let incident: CombatIncident
   let weapon: OwnedEquipmentItem
   let weaponOwner: UUID
   var ejections: [EMPCrewEjection]
-  let legacyTiming: Bool
   var actorBindings: [ActorIdentity]
-  let legacyPods: [Int]
-  let legacyNextEjectionAt: Double?
-  var legacyEmissions: [EMPLegacyCrewEjection]
   var deadline: Double { incident.physicalTime + 30 }
   func valid(source: ActorIdentity, crewTotal: Int) -> Bool {
     incident.id > 0 && incident.kind == .emp && incident.outcome == .hit
@@ -35,19 +26,8 @@ struct EMPCrewDisableEpisode: Equatable, Codable, Sendable {
       && incident.origin.owner.visit == incident.victim?.visit
       && incident.physicalTime.isFinite && incident.physicalTime >= 0
       && deadline.isFinite && incident.origin.emittedAt == incident.physicalTime
-      && (legacyTiming ? ejections.isEmpty : (1...crewTotal).contains(ejections.count))
-      && (legacyTiming
-        || (legacyPods.isEmpty && legacyEmissions.isEmpty && legacyNextEjectionAt == nil))
-      && legacyPods.count <= crewTotal && legacyEmissions.count <= crewTotal
-      && legacyPods == Array(0..<legacyPods.count)
-      && (!legacyTiming
-        || legacyNextEjectionAt.map { $0.isFinite && $0 >= incident.physicalTime } == true)
-      && legacyEmissions.enumerated().allSatisfy { index, entry in
-        (0..<crewTotal).contains(entry.ordinal) && entry.time.isFinite && entry.time < deadline
-          && entry.time
-            >= (index == 0
-              ? (legacyNextEjectionAt ?? .infinity) : legacyEmissions[index - 1].time + 1)
-      }
+      && (0...EMPState.maximumPeople).contains(crewTotal)
+      && ejections.count >= (crewTotal == 0 ? 0 : 1) && ejections.count <= crewTotal
       && (1...EMPState.maximumPeople).contains(actorBindings.count)
       && Set(actorBindings).count == actorBindings.count
       && actorBindings.first == incident.victim
@@ -68,9 +48,7 @@ struct EMPCrewDisableEpisode: Equatable, Codable, Sendable {
 
 extension EMPCrewDisableEpisode {
   private enum CodingKeys: String, CodingKey {
-    case incident, weapon, weaponOwner, ejections, legacyTiming, actorBindings, legacyPods,
-      legacyNextEjectionAt,
-      legacyEmissions
+    case incident, weapon, weaponOwner, ejections, actorBindings
   }
   init(from decoder: any Decoder) throws {
     let values = try decoder.container(keyedBy: CodingKeys.self)
@@ -82,19 +60,11 @@ extension EMPCrewDisableEpisode {
       let bindings = try NativePeopleDecoding.array(
         values, key: .actorBindings, type: ActorIdentity.self)
     else { throw SaveError.invalidCommander }
-    guard let legacyPods = try NativePeopleDecoding.array(values, key: .legacyPods, type: Int.self),
-      let legacyEmissions = try NativePeopleDecoding.array(
-        values, key: .legacyEmissions, type: EMPLegacyCrewEjection.self)
-    else { throw SaveError.invalidCommander }
     self.init(
       incident: try values.decode(CombatIncident.self, forKey: .incident),
       weapon: try values.decode(OwnedEquipmentItem.self, forKey: .weapon),
       weaponOwner: try values.decode(UUID.self, forKey: .weaponOwner),
-      ejections: schedule,
-      legacyTiming: try values.decode(Bool.self, forKey: .legacyTiming), actorBindings: bindings,
-      legacyPods: legacyPods,
-      legacyNextEjectionAt: try values.decodeIfPresent(Double.self, forKey: .legacyNextEjectionAt),
-      legacyEmissions: legacyEmissions)
+      ejections: schedule, actorBindings: bindings)
   }
 }
 
@@ -117,19 +87,13 @@ extension EMPHullRecord {
       if let emitted = episode.ejections.first(where: { $0.ordinal == ordinal })?.emittedAt {
         return emitted
       }
-      if let emitted = episode.legacyEmissions.first(where: { $0.ordinal == ordinal }) {
-        return emitted.time
-      }
-      if episode.legacyPods.contains(ordinal) { return episode.incident.physicalTime }
     }
-    // A genuine pre-24 pod has no historical ejection timestamp.
-    return disableEpisodes.isEmpty ? disableIncident.physicalTime : nil
+    return nil
   }
   func nextDueCrew(at time: Double) -> Int? {
     guard time.isFinite, let episode = disableEpisodes.last, time < episode.deadline else {
       return nil
     }
-    if episode.legacyTiming { return time >= nextEjectionAt ? aboardOrdinals.first : nil }
     return episode.ejections.filter {
       crewOutcome(ordinal: $0.ordinal) == .aboard
         && episode.incident.physicalTime + $0.delay <= time
@@ -144,21 +108,12 @@ extension EMPHullRecord {
   )
     -> Bool
   {
-    if disableEpisodes.isEmpty, incident != disableIncident {
-      var candidate = self
-      guard candidate.installLegacyCrewEpisode(),
-        candidate.appendCrewDisableEpisode(
-          incident: incident, weapon: weapon, owner: owner, ejections: ejections)
-      else { return false }
-      self = candidate
-      return true
-    }
     guard let victim = incident.victim else { return false }
     let episode = EMPCrewDisableEpisode(
       incident: incident, weapon: weapon, weaponOwner: owner,
-      ejections: ejections, legacyTiming: false, actorBindings: [victim],
-      legacyPods: [], legacyNextEjectionAt: nil, legacyEmissions: [])
-    guard !terminal, crewAboard > 0, disableEpisodes.count < Self.maximumDisableEpisodes,
+      ejections: ejections, actorBindings: [victim])
+    guard !terminal, (crewTotal == 0 || crewAboard > 0),
+      disableEpisodes.count < Self.maximumDisableEpisodes,
       episode.valid(source: source, crewTotal: crewTotal),
       owner == weaponOwner,
       Set(ejections.map(\.ordinal)) == Set(aboardOrdinals),
@@ -183,10 +138,10 @@ extension EMPHullRecord {
   // Preserve the census algorithm while ending each phase's transient values before the next.
   @inline(never)
   private func crewCensusBoundsAreValid() -> Bool {
-    guard (1...EMPState.maximumPeople).contains(crewTotal), pods.count <= crewTotal,
+    guard (0...EMPState.maximumPeople).contains(crewTotal), pods.count <= crewTotal,
       crewCaptures.count <= EMPState.maximumPeople,
       disableEpisodes.count <= Self.maximumDisableEpisodes,
-      savedDisableEpisodes == nil || !disableEpisodes.isEmpty,
+      !disableEpisodes.isEmpty,
       savedDeceasedOrdinals == nil || !deceasedOrdinals.isEmpty,
       (0...crewTotal).contains(lostCrewCount), deceasedOrdinals.count == lostCrewCount
     else { return false }
@@ -233,23 +188,10 @@ extension EMPHullRecord {
 
   @inline(never)
   private func currentCrewCensusIsValid() -> Bool {
-    if let current = disableEpisodes.last {
-      guard
-        current.legacyTiming
-          || Set(aboardOrdinals).isSubset(of: Set(current.ejections.map(\.ordinal)))
-      else { return false }
-      if !current.legacyTiming, savedDeceasedOrdinals != nil,
-        !Set(deceasedOrdinals).isSubset(of: Set(current.ejections.map(\.ordinal)))
-      {
-        return false
-      }
-    } else if savedCrewCaptures != nil || savedDeceasedOrdinals != nil {
-      return false
-    } else if !pods.enumerated().allSatisfy({
-      $0.element.body.physical?.empCrewPod?.ordinal == $0.offset
-    }) {
-      return false
-    }
+    guard let current = disableEpisodes.last,
+      Set(aboardOrdinals).isSubset(of: Set(current.ejections.map(\.ordinal))),
+      Set(deceasedOrdinals).isSubset(of: Set(current.ejections.map(\.ordinal)))
+    else { return false }
     return true
   }
 
@@ -258,11 +200,8 @@ extension EMPHullRecord {
     // Historical schedules retain discharged IDs, but no later episode can reissue them.
     for (index, episode) in disableEpisodes.enumerated() {
       let members = Set(episode.ejections.map(\.ordinal))
-      if index == 0, !episode.legacyTiming, members != Set(0..<crewTotal) { return false }
-      if episode.legacyTiming && (index != 0 || episode.incident != disableIncident) {
-        return false
-      }
-      if index > 0, !disableEpisodes[index - 1].legacyTiming,
+      if index == 0, members != Set(0..<crewTotal) { return false }
+      if index > 0,
         !members.isSubset(of: Set(disableEpisodes[index - 1].ejections.map(\.ordinal)))
       {
         return false
@@ -274,8 +213,6 @@ extension EMPHullRecord {
       }
       if disableEpisodes.prefix(index).contains(where: { prior in
         prior.ejections.contains { $0.emittedAt != nil && members.contains($0.ordinal) }
-          || prior.legacyPods.contains(where: { members.contains($0) })
-          || prior.legacyEmissions.contains(where: { members.contains($0.ordinal) })
       }) {
         return false
       }
@@ -286,33 +223,18 @@ extension EMPHullRecord {
   @inline(never)
   private func crewCensusEmissionsAreValid(ejected: [Int], captured: [Int]) -> Bool {
     let emissions = disableEpisodes.flatMap(\.ejections).filter { $0.emittedAt != nil }
-    let legacy =
-      disableEpisodes.flatMap(\.legacyPods)
-      + disableEpisodes.flatMap(\.legacyEmissions).map(\.ordinal)
-    let emittedOrdinals = emissions.map(\.ordinal) + legacy
+    let emittedOrdinals = emissions.map(\.ordinal)
     guard Set(emittedOrdinals).count == emittedOrdinals.count,
       emissions.allSatisfy({ podIndex(for: $0.ordinal) != nil }),
       Set(emittedOrdinals).isDisjoint(with: captured)
     else { return false }
-    if !disableEpisodes.isEmpty {
-      // Only the frozen legacy prefix has unknown historical timing.
-      guard Set(ejected) == Set(emittedOrdinals) else { return false }
-    }
+    guard Set(ejected) == Set(emittedOrdinals) else { return false }
     return true
   }
 
   mutating func recordCrewEjection(ordinal: Int, at time: Double) -> Bool {
     guard var episodes = savedDisableEpisodes, let index = episodes.indices.last else {
       return false
-    }
-    if episodes[index].legacyTiming {
-      guard time.isFinite, time >= nextEjectionAt, time < episodes[index].deadline,
-        crewOutcome(ordinal: ordinal) == .aboard,
-        episodes[index].legacyEmissions.count < EMPState.maximumPeople
-      else { return false }
-      episodes[index].legacyEmissions.append(.init(ordinal: ordinal, time: time))
-      savedDisableEpisodes = episodes
-      return true
     }
     guard
       let entry = episodes[index].ejections.firstIndex(where: { $0.ordinal == ordinal }),
@@ -323,21 +245,6 @@ extension EMPHullRecord {
     // Schedule delay and original ID never change after sampling.
     episodes[index].ejections[entry].emittedAt = time
     savedDisableEpisodes = episodes
-    return true
-  }
-
-  mutating func installLegacyCrewEpisode() -> Bool {
-    guard disableEpisodes.isEmpty, crewCaptures.isEmpty, let original = disableIncident.victim,
-      let current = hull.body.physical?.identity
-    else { return false }
-    let episode = EMPCrewDisableEpisode(
-      incident: disableIncident, weapon: weapon, weaponOwner: weaponOwner,
-      ejections: [], legacyTiming: true,
-      actorBindings: original == current ? [original] : [original, current],
-      legacyPods: pods.compactMap { $0.body.physical?.empCrewPod?.ordinal },
-      legacyNextEjectionAt: nextEjectionAt, legacyEmissions: [])
-    guard episode.valid(source: source, crewTotal: crewTotal) else { return false }
-    savedDisableEpisodes = [episode]
     return true
   }
 
@@ -375,7 +282,6 @@ extension EMPHullRecord {
         && (incident.victim?.visit ?? UInt64.max) <= flight.visit
         && (incident.victim?.entity ?? UInt64.max) < flight.nextActor
         && episode.ejections.allSatisfy { ($0.emittedAt ?? 0) <= flight.physicalTime }
-        && episode.legacyEmissions.allSatisfy { $0.time <= flight.physicalTime }
         && episode.actorBindings.allSatisfy {
           $0.visit <= flight.visit && $0.entity < flight.nextActor
         }

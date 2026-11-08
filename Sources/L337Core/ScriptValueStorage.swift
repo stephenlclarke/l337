@@ -20,6 +20,45 @@ enum ScriptValueStorage {
   }
 }
 
+/// Own a complete unchanged value on the heap before JSON's generic frame begins.
+/// Delegation adds no container, key, path component or alternative save representation.
+final class NativeSaveEncodingValue<Value: Encodable>: Encodable {
+  private let value: Value
+
+  @inline(never)
+  private init(_ value: consuming Value) { self.value = consume value }
+
+  @inline(never)
+  static func prepare(_ value: borrowing Value) -> NativeSaveEncodingValue<Value> {
+    let owned = copy value
+    return NativeSaveEncodingValue(consume owned)
+  }
+
+  @inline(never)
+  static func prepareIfPresent(_ value: borrowing Value?) -> NativeSaveEncodingValue<Value>? {
+    guard let owned = copy value else { return nil }
+    return NativeSaveEncodingValue(consume owned)
+  }
+
+  @inline(never)
+  func encode(to encoder: any Encoder) throws { try value.encode(to: encoder) }
+}
+
+/// Encode the same ordered elements, without a full element value in a JSON generic frame.
+final class NativeSaveEncodingArray<Value: Encodable>: Encodable {
+  private let values: [Value]
+  init(_ values: [Value]) { self.values = values }
+
+  @inline(never)
+  func encode(to encoder: any Encoder) throws {
+    var container = encoder.unkeyedContainer()
+    for index in values.indices {
+      let value = NativeSaveEncodingValue<Value>.prepare(values[index])
+      try container.encode(value)
+    }
+  }
+}
+
 /// Decoder-local semantic limits match the interpreter wire, including every nested value.
 final class ScriptValueDecodeBudget: Sendable {
   private struct State: Sendable {

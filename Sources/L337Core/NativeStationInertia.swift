@@ -2,12 +2,42 @@ import Foundation
 
 enum StationInertialIdentity: Hashable, Codable, Sendable {
   case main(NativeMainStationIdentity)
-  case rrs(NativeStationIdentity)
-
+  case originalStation(NativeStationIdentity)
   var system: SystemIdentity {
+    switch self { case .main(let id): id.system; case .originalStation(let id): id.system }
+  }
+  var sourceMassKilograms: Double? {
     switch self {
-    case .main(let id): id.system
-    case .rrs(let id): id.system
+    case .main(let id): return id.valid ? AsteroidImpactPolicy.massKg(hull: .station) : nil
+    case .originalStation(let id): return NativeStationSource.binding(for: id)?.physical.dryMassKilograms
+    }
+  }
+  private enum CodingKeys: String, CodingKey { case main, originalStation }
+  private enum PayloadKeys: String, CodingKey { case _0 }
+  init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, [], optional: ["main", "originalStation"])
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    guard c.allKeys.count == 1, let key = c.allKeys.first else { throw SaveError.invalidCommander }
+    let payload = try c.superDecoder(forKey: key)
+    try NativeUtilityCoding.require(payload, ["_0"])
+    let v = try payload.container(keyedBy: PayloadKeys.self)
+    switch key {
+    case .main:
+      let id = try v.decode(NativeMainStationIdentity.self, forKey: ._0)
+      guard id.valid else { throw SaveError.invalidCommander }
+      self = .main(id)
+    case .originalStation: self = .originalStation(try v.decode(NativeStationIdentity.self, forKey: ._0))
+    }
+  }
+  func encode(to encoder: Encoder) throws {
+    var c = encoder.container(keyedBy: CodingKeys.self)
+    switch self {
+    case .main(let id):
+      var v = c.nestedContainer(keyedBy: PayloadKeys.self, forKey: .main)
+      try v.encode(id, forKey: ._0)
+    case .originalStation(let id):
+      var v = c.nestedContainer(keyedBy: PayloadKeys.self, forKey: .originalStation)
+      try v.encode(id, forKey: ._0)
     }
   }
 }
@@ -23,6 +53,7 @@ struct NativeStationInertia: Equatable, Codable, Sendable {
   let refusedMotionTime: Double
   let refusedSteps: UInt64
   let station: StationInertialIdentity
+  let massKilograms: Double
   private(set) var displacement: Vector3
   private(set) var momentum: Vector3
   private(set) var physicalTime: Double
@@ -32,15 +63,37 @@ struct NativeStationInertia: Equatable, Codable, Sendable {
   private(set) var priorTime: Double
   private(set) var impactTime: Double
 
-  var velocity: Vector3 { momentum * (1 / AsteroidImpactPolicy.massKg(hull: .station)) }
+  private enum CodingKeys: String, CodingKey { case segment, refusedStepDuration, refusedMotionTime, refusedSteps, station, massKilograms, displacement, momentum, physicalTime, contacts, priorDisplacement, priorMomentum, priorTime, impactTime }
+  init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, ["segment", "refusedStepDuration", "refusedMotionTime", "refusedSteps", "station", "massKilograms", "displacement", "momentum", "physicalTime", "contacts", "priorDisplacement", "priorMomentum", "priorTime", "impactTime"])
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    segment = try c.decode(Segment.self, forKey: .segment)
+    refusedStepDuration = try c.decode(Double.self, forKey: .refusedStepDuration)
+    refusedMotionTime = try c.decode(Double.self, forKey: .refusedMotionTime)
+    refusedSteps = try c.decode(UInt64.self, forKey: .refusedSteps)
+    station = try c.decode(StationInertialIdentity.self, forKey: .station)
+    massKilograms = try c.decode(Double.self, forKey: .massKilograms)
+    displacement = try c.decode(Vector3.self, forKey: .displacement)
+    momentum = try c.decode(Vector3.self, forKey: .momentum)
+    physicalTime = try c.decode(Double.self, forKey: .physicalTime)
+    contacts = try c.decode(UInt64.self, forKey: .contacts)
+    priorDisplacement = try c.decode(Vector3.self, forKey: .priorDisplacement)
+    priorMomentum = try c.decode(Vector3.self, forKey: .priorMomentum)
+    priorTime = try c.decode(Double.self, forKey: .priorTime)
+    impactTime = try c.decode(Double.self, forKey: .impactTime)
+    guard valid else { throw SaveError.invalidCommander }
+  }
+
+  var velocity: Vector3 { momentum * (1 / massKilograms) }
   var previousVelocity: Vector3 {
-    priorMomentum * (1 / AsteroidImpactPolicy.massKg(hull: .station))
+    priorMomentum * (1 / massKilograms)
   }
   private var impactOffset: Vector3 {
     priorDisplacement + previousVelocity * (impactTime - priorTime)
   }
   var valid: Bool {
-    guard displacement.finite, displacement.length.isFinite, momentum.finite,
+    guard let currentMass = station.sourceMassKilograms, currentMass == massKilograms,
+      massKilograms.isFinite, massKilograms > 0, displacement.finite, displacement.length.isFinite, momentum.finite,
       momentum.length.isFinite,
       priorDisplacement.finite, priorDisplacement.length.isFinite, priorMomentum.finite,
       priorMomentum.length.isFinite,
@@ -81,6 +134,17 @@ struct NativeStationInertia: Equatable, Codable, Sendable {
     }
   }
 
+  /// Only this exact derived coast may share a captured native frame's lineage.
+  func isCapturedCoastSuccessor(of prior: Self, through time: Double) -> Bool {
+    guard prior.valid, time.isFinite, time >= prior.physicalTime,
+      let offset = prior.offset(at: time)
+    else { return false }
+    var expected = prior
+    expected.displacement = offset
+    expected.physicalTime = time
+    return expected.valid && self == expected
+  }
+
   /// Retain one actual pre-impact segment for this step's doorway and collision consumers.
   func offset(at time: Double) -> Vector3? {
     guard valid, time.isFinite, time >= priorTime else { return nil }
@@ -97,7 +161,7 @@ struct NativeStationInertia: Equatable, Codable, Sendable {
     return value.finite && value.length.isFinite ? value : nil
   }
 
-  /// RRS spin follows admitted movement time as well. A refused interval must
+  /// Source spin follows admitted movement time as well. A refused interval must
   /// not rotate an unproved surface merely because the event clock advanced.
   fileprivate func motionTime(at time: Double) -> Double? {
     guard valid, time.isFinite, time >= priorTime else { return nil }
@@ -123,6 +187,8 @@ struct NativeStationInertia: Equatable, Codable, Sendable {
     proof: StationContactTransfer, previous: NativeStationInertia?,
     sourcePosition: Vector3
   ) {
+    guard let sourceMass = proof.station.sourceMassKilograms else { return nil }
+    massKilograms = sourceMass
     let oldMomentum = previous?.momentum ?? .init(0, 0, 0)
     let oldVelocity = previous?.velocity ?? .init(0, 0, 0)
     guard previous == nil || previous?.station == proof.station,
@@ -147,7 +213,7 @@ struct NativeStationInertia: Equatable, Codable, Sendable {
     contacts = (previous?.contacts ?? 0) + 1
     displacement =
       priorDisplacement + oldVelocity * (impactTime - priorTime)
-      + momentum * ((physicalTime - impactTime) / AsteroidImpactPolicy.massKg(hull: .station))
+      + momentum * ((physicalTime - impactTime) / massKilograms)
     guard valid, (velocity - proof.finalVelocity).length < 1e-7,
       (sourcePosition + displacement - proof.finalPosition).length < 1e-5
     else { return nil }
@@ -157,8 +223,10 @@ struct NativeStationInertia: Equatable, Codable, Sendable {
     refusal: StationMotionRefusal, previous: NativeStationInertia?,
     sourcePosition: Vector3
   ) {
+    guard let sourceMass = refusal.station.sourceMassKilograms else { return nil }
+    massKilograms = sourceMass
     if previous == nil {
-      guard case .rrs = refusal.station else { return nil }
+      guard case .originalStation = refusal.station else { return nil }
     }
     guard previous == nil || (previous?.valid == true && previous?.station == refusal.station),
       refusal.fromTime.isFinite, refusal.toTime.isFinite,
@@ -212,7 +280,7 @@ extension NativeStationWorld {
   }
 
   func currentOrientation(for station: NativeStationIdentity, at time: Double) -> Basis3? {
-    guard let saved = pose(for: station), let phase = motionTime(for: .rrs(station), at: time)
+    guard let saved = pose(for: station), let phase = motionTime(for: .originalStation(station), at: time)
     else {
       return nil
     }
@@ -224,7 +292,7 @@ extension NativeStationWorld {
     case .main(let identity):
       guard mainStations.contains(identity), identity.world == ledger.world else { return nil }
       return .init(0, 0, 0)
-    case .rrs(let identity):
+    case .originalStation(let identity):
       guard identity.world == ledger.world else { return nil }
       return pose(for: identity)?.position
     }
@@ -251,33 +319,47 @@ extension NativeStationWorld {
 }
 
 extension Game {
-  func stationInertialIdentity(for body: SpaceBody) -> StationInertialIdentity? {
-    guard body.hull == .station, body.energy > 0, let physical = body.physical,
-      let world = commander.nativeStations, world.valid,
-      physical.identity.system == systemIdentity,
-      physical.identity.visit == commander.flightSimulation.visit
+  func stationInertialIdentity(
+    for body: borrowing SpaceBody, at sampleTime: Double? = nil
+  ) -> StationInertialIdentity? {
+    guard body.hull == .station, body.energy > 0,
+      let physicalIdentity = body.nativeStationPhysicalIdentity,
+      let world = storedNativeStationWorld(), world.valid,
+      physicalIdentity.system == systemIdentity,
+      physicalIdentity.visit == storedFlightSimulation().visit
     else { return nil }
-    if let id = body.nativeStationIdentity, nativeStationBodyIsCurrent(body) { return .rrs(id) }
-    guard body.id == 0, let anchors = commander.flightSimulation.anchors,
-      physical.identity == anchors.station.identity,
+    if let id = body.nativeStationIdentity {
+      guard let record = world.ledger.records.first(where: { $0.identity == id }),
+        record.tombstone == nil, NativeStationSource.authentic(record, owner: world.ledger.world),
+        record.binding == .init(actor: physicalIdentity, bodyID: body.id),
+        let source = NativeStationSource.binding(for: id),
+        body.nativeStationPhysicalCatalogueShipID == source.catalogueShipID,
+        world.pose(for: id)?.energy == body.energy,
+        world.bodyRigidPoseIsConsistent(body, flight: storedFlightSimulation(),
+          at: sampleTime ?? storedFlightSimulation().physicalTime)
+      else { return nil }
+      return .originalStation(id)
+    }
+    guard body.id == 0, let anchors = storedFlightSimulation().anchors,
+      physicalIdentity == anchors.station.identity,
       bodies.filter({ $0.id == 0 }).count == 1,
       let id = world.mainStations.first(where: { $0.system == systemIdentity }),
-      let resource = commander.scriptState.stationResources[id.key],
+      let resource = storedNativeStationResource(for: id.key),
       resource.identity == id.resource, !resource.destroyed
     else { return nil }
     return .main(id)
   }
 
   func nativeStationVelocity(_ body: SpaceBody) -> Vector3 {
-    guard commander.nativeStations?.stationInertia.isEmpty == false else { return .init(0, 0, 0) }
+    guard storedNativeStationWorld()?.stationInertia.isEmpty == false else { return .init(0, 0, 0) }
     guard let id = stationInertialIdentity(for: body) else { return .init(0, 0, 0) }
-    return commander.nativeStations?.inertia(for: id)?.velocity ?? .init(0, 0, 0)
+    return storedNativeStationWorld()?.inertia(for: id)?.velocity ?? .init(0, 0, 0)
   }
 
   func nativeStationRelativeEntrySpeed(_ body: SpaceBody) -> Double {
-    guard commander.nativeStations?.stationInertia.isEmpty == false,
+    guard storedNativeStationWorld()?.stationInertia.isEmpty == false,
       let identity = stationInertialIdentity(for: body),
-      let motion = commander.nativeStations?.inertia(for: identity)
+      let motion = storedNativeStationWorld()?.inertia(for: identity)
     else { return max(speed * 18, autoPilot.velocity.length) }
     return (flightWorldVelocity - motion.velocity).length
   }
@@ -289,7 +371,7 @@ extension Game {
   )
     -> Bool
   {
-    guard let world = commander.nativeStations else { return true }
+    guard let world = storedNativeStationWorld() else { return true }
     guard world.stationInertia.contains(where: { $0.station.system == systemIdentity }) else {
       return true
     }
@@ -297,19 +379,21 @@ extension Game {
     var changes: [(index: Int, position: Vector3, velocity: Vector3)] = []
     for index in bodies.indices where bodies[index].hull == .station {
       let body = bodies[index]
-      guard let id = stationInertialIdentity(for: body), let state = world.inertia(for: id) else {
+      let identity = stationInertialIdentity(for: body, at: time)
+        ?? oldTime.flatMap { stationInertialIdentity(for: body, at: $0) }
+      guard let id = identity, let state = world.inertia(for: id) else {
         continue
       }
       guard let point = world.currentPosition(for: id, at: time),
-        let physical = body.physical, (physical.velocity - state.velocity).length < 1e-7
+        let velocity = body.nativeStationPhysicalVelocity, (velocity - state.velocity).length < 1e-7
       else { return false }
-      let actual = commander.flightSimulation.pose.systemPoint(body.position)
+      let actual = storedFlightSimulation().pose.systemPoint(body.position)
       let previous = oldTime.flatMap { world.currentPosition(for: id, at: $0) }
       guard
         (actual - point).length < 1e-5
           || previous.map({ (actual - $0).length < 1e-5 }) == true
       else { return false }
-      changes.append((index, commander.flightSimulation.pose.shipPoint(point), state.velocity))
+      changes.append((index, storedFlightSimulation().pose.shipPoint(point), state.velocity))
     }
     for change in changes {
       bodies[change.index].position = change.position
@@ -320,29 +404,34 @@ extension Game {
 
   /// The same once-consumed native frame that rejects movement owns this rebase.
   /// Every restored station is checked before publishing any new coast origin.
-  mutating func retainNativeStationRefusal(_ proofs: [StationMotionRefusal]) -> Bool {
-    guard !proofs.isEmpty else { return true }
-    guard proofs.count <= 3, Set(proofs.map(\.station)).count == proofs.count,
-      var world = commander.nativeStations, world.valid
+  mutating func retainNativeStationRefusal(
+    _ proofs: [StationMotionRefusal], captured: NativeStationRefusalCohort
+  ) -> Bool {
+    guard captured.matchesRestored(self), proofs.count == captured.members.count,
+      Set(proofs.map(\.station)) == Set(captured.members.map(\.station)),
+      Set(proofs.map(\.actor)).count == proofs.count,
+      Set(proofs.map(\.bodyID)).count == proofs.count
     else { return false }
+    if proofs.isEmpty { return captured.members.isEmpty }
+    guard var world = storedNativeStationWorld(), world.valid else { return false }
     for proof in proofs {
-      guard proof.system == systemIdentity, proof.visit == commander.flightSimulation.visit,
-        proof.toTime == commander.flightSimulation.physicalTime,
+      guard let member = captured.members.first(where: { $0.station == proof.station }),
+        proof.system == systemIdentity, proof.visit == storedFlightSimulation().visit,
+        proof.toTime == storedFlightSimulation().physicalTime,
+        proof.fromTime == captured.start, proof.duration == captured.usedDuration,
+        proof.actor == member.actor, proof.bodyID == member.bodyID,
         let body = bodies.first(where: { $0.id == proof.bodyID }),
         body.physical?.identity == proof.actor,
-        stationInertialIdentity(for: body) == proof.station,
-        (commander.flightSimulation.pose.systemPoint(body.position) - proof.position).length < 1e-5,
+        stationInertialIdentity(for: body, at: captured.start) == proof.station,
+        (storedFlightSimulation().pose.systemPoint(body.position) - proof.position).length < 1e-5,
         let velocity = body.physical?.velocity, (velocity - proof.velocity).length < 1e-7,
         let source = world.sourcePosition(for: proof.station),
-        let retained = NativeStationInertia(
-          refusal: proof, previous: world.inertia(for: proof.station), sourcePosition: source)
+        let retained = NativeStationInertia(refusal: proof, previous: member.prior, sourcePosition: source)
       else { return false }
       if let index = world.stationInertia.firstIndex(where: { $0.station == proof.station }) {
         world.stationInertia[index] = retained
       } else {
-        guard world.stationInertia.count < NativeStationWorld.maximumInertialStations else {
-          return false
-        }
+        guard world.stationInertia.count < NativeStationWorld.maximumInertialStations else { return false }
         world.stationInertia.append(retained)
       }
     }
@@ -352,9 +441,9 @@ extension Game {
   }
 
   func stationTransferCanCommit(_ proof: StationContactTransfer) -> Bool {
-    guard proof.system == systemIdentity, proof.visit == commander.flightSimulation.visit,
-      proof.physicalTime == commander.flightSimulation.physicalTime,
-      let world = commander.nativeStations, world.valid,
+    guard proof.system == systemIdentity, proof.visit == storedFlightSimulation().visit,
+      proof.physicalTime == storedFlightSimulation().physicalTime,
+      let world = storedNativeStationWorld(), world.valid,
       let body = bodies.first(where: { $0.id == proof.bodyID }),
       body.physical?.identity == proof.actor,
       stationInertialIdentity(for: body) == proof.station,
@@ -389,7 +478,7 @@ final class PreparedStationTransfers {
     for proof in proofs {
       guard game.stationTransferCanCommit(proof) else { return nil }
     }
-    guard var staged = game.commander.nativeStations else { return nil }
+    guard var staged = game.storedNativeStationWorld() else { return nil }
     var bodyEffects: [(index: Int, energy: Double, velocity: Vector3)] = []
     var originalResource: ScriptStationResource?
     for proof in proofs {
@@ -402,22 +491,28 @@ final class PreparedStationTransfers {
       let energy = max(0, game.bodies[index].energy - proof.damage)
       switch proof.station {
       case .main(let id):
-        guard var resource = game.commander.scriptState.stationResources[id.key],
+        guard var resource = game.storedNativeStationResource(for: id.key),
           resource.identity == id.resource, !resource.destroyed
         else { return nil }
         resource.energy = energy
         resource.destroyed = energy == 0
         guard resource.valid else { return nil }
         originalResource = resource
-      case .rrs(let id):
+      case .originalStation(let id):
         guard let poseIndex = staged.poses.firstIndex(where: { $0.station == id }),
           let binding = staged.ledger.records.first(where: { $0.identity == id })?.binding,
           binding == .init(actor: proof.actor, bodyID: proof.bodyID)
         else { return nil }
-        if energy == 0 {
-          do { try staged.ledger.destroy(id, binding: binding) } catch { return nil }
+        if energy == 0, NativeUtilityState.isTarget(id) {
+          guard game.nativeOriginalUtilityFatalIntervalMatches(station: id, binding: binding) else { return nil }
+          // Actual body damage follows this plan. The real destruction incident then
+          // lets the existing persistence owner publish source and people death together.
+        } else {
+          if energy == 0 {
+            do { try staged.ledger.destroy(id, binding: binding) } catch { return nil }
+          }
+          staged.poses[poseIndex].energy = energy
         }
-        staged.poses[poseIndex].energy = energy
       }
       if let old = staged.stationInertia.firstIndex(where: { $0.station == proof.station }) {
         staged.stationInertia[old] = motion
@@ -447,53 +542,53 @@ final class PreparedStationTransfers {
 
 extension Game {
   func currentNativeMainStationAnchor(at time: Double) -> StationAnchor? {
-    guard let source = commander.flightSimulation.anchors?.station else { return nil }
-    guard let world = commander.nativeStations,
+    guard let source = storedFlightSimulation().anchors?.station else { return nil }
+    guard let world = storedNativeStationWorld(),
       let id = world.mainStations.first(where: { $0.system == systemIdentity }),
       let motion = world.inertia(for: .main(id))
     else { return source }
     guard let offset = motion.offset(at: time) else { return nil }
-    return commander.flightSimulation.projectedMainStationAnchor(displacement: offset)
+    return storedFlightSimulation().projectedMainStationAnchor(displacement: offset)
   }
 
   /// Re-admit a genuinely registered original source at its owned current physical pose.
   /// The original canonical anchor and registration identity remain unchanged.
   mutating func projectRegisteredMainStationForScene() throws {
-    guard let world = commander.nativeStations,
+    guard let world = storedNativeStationWorld(),
       let id = world.mainStations.first(where: { $0.system == systemIdentity }),
       let motion = world.inertia(for: .main(id))
     else { return }
-    guard world.valid, let anchor = commander.flightSimulation.anchors?.station,
-      let current = currentNativeMainStationAnchor(at: commander.flightSimulation.physicalTime),
+    guard world.valid, let anchor = storedFlightSimulation().anchors?.station,
+      let current = currentNativeMainStationAnchor(at: storedFlightSimulation().physicalTime),
       let index = bodies.firstIndex(where: { $0.id == 0 && $0.hull == .station }),
       bodies.filter({ $0.id == 0 }).count == 1,
       bodies[index].physical?.identity == anchor.identity,
-      let resource = commander.scriptState.stationResources[id.key],
+      let resource = storedNativeStationResource(for: id.key),
       resource.identity == id.resource, !resource.destroyed
     else {
       throw NativeStationRuntimeError.invalidState
     }
-    let position = commander.flightSimulation.pose.systemPoint(bodies[index].position)
+    let position = storedFlightSimulation().pose.systemPoint(bodies[index].position)
     guard (position - anchor.position).length < 1e-5 || (position - current.position).length < 1e-5
     else {
       throw NativeStationRuntimeError.invalidSource
     }
-    bodies[index].position = commander.flightSimulation.pose.shipPoint(current.position)
+    bodies[index].position = storedFlightSimulation().pose.shipPoint(current.position)
     bodies[index].physical?.velocity = motion.velocity
   }
 
   /// Preserve the existing zero-motion launch exactly. A moved station launches relative
   /// to its real current location and carries its actual inertial velocity into departure.
   mutating func offsetMovingMainStationDeparture() throws {
-    guard let world = commander.nativeStations,
+    guard let world = storedNativeStationWorld(),
       let id = world.mainStations.first(where: { $0.system == systemIdentity }),
       let state = world.inertia(for: .main(id))
     else { return }
-    guard let offset = state.offset(at: commander.flightSimulation.physicalTime) else {
+    guard let offset = state.offset(at: storedFlightSimulation().physicalTime) else {
       throw NativeStationRuntimeError.unsafeExit
     }
     if offset == .init(0, 0, 0), state.velocity == .init(0, 0, 0) { return }
-    let old = commander.flightSimulation.pose
+    let old = storedFlightSimulation().pose
     var pose = old
     pose.position = pose.position + offset
     let radius = commander.playerMesh.vertices.map(\.length).max() ?? .infinity
@@ -506,7 +601,7 @@ extension Game {
         ).safe
       else { throw NativeStationRuntimeError.unsafeExit }
     }
-    if let anchors = commander.flightSimulation.anchors {
+    if let anchors = storedFlightSimulation().anchors {
       for celestial in [anchors.planet, anchors.sun] {
         guard (pose.position - celestial.position).length > radius + celestial.radius + 8 else {
           throw NativeStationRuntimeError.unsafeExit

@@ -1,0 +1,79 @@
+# SH040 cryostasis source successor. Bind as the current R3 row with the new asset and physical record.
+schema = "l337.fleet-design/2"
+id = "SH040"
+name = "Newt Escape Pod"
+family = "newt-escape-pod"
+classification = "capsule"
+objectKind = "capsule"
+capital = false
+origin = "human"
+primaryUse = "escape"
+decisionStatus = "new-authored-design; implementation-and-playtesting-pending"
+
+[access]
+playerFlyable = true
+purchasePolicy = "never"
+discoveryPolicy = "existing-explicit-native-gallery-milestone; no-purchase-right"
+missionGate = "none"
+normalPurchaseRequiresCrew = false
+
+[source]
+previousName = "Newt Escape Pod"
+statsFile = "fleet-specs/SH040.toml"
+statsSHA256 = "75c4cc44d54261be21ae459f533715b42bb48277e21f8c8c9e3a0be5c689fe9f"
+geometryFile = "docs/fleet-design-v2/successors/SH040-cryostasis.toml"
+geometrySHA256 = "5b52208ecf64228a843dc792ff4614af3ff9109034de4bedb6ddb0b7918072d9"
+nameDecision = "Retain the accepted animal stem and identity."
+
+[geometry]
+basis = "retain Newt capsule identity; user-directed cylindrical cryostasis design"
+originalIntent = "Person-sized cylindrical rescue cryostasis pod with a glazed lid, recognizable frozen occupant on an opaque cradle, and enclosed local attitude hardware."
+dimensionsWHLMetres = [1.1368421052631579, 0.9631578947368421, 2.4]
+dimensionStatus = "source design envelope at retained calibration; physical qualification pending"
+scaleRule = "Retain exact 60/19 metres per source unit and original +Z/+Y frame; no recentering or fit to the historical six-metre target."
+cockpitRule = "Opaque connected structural support under all glazing; verify in every view."
+surfaceRule = "opaque ceramic shell and gasket framing; one opt-in transparent visual pane over opaque cradle"
+variantFeature = "capsule"
+nativeFaceLimit = 512
+
+[performance]
+cargoTonnes = 0
+maxSpeed = 18.0
+acceleration = 3.0
+energyCapacity = 70
+energyRecharge = 0.6
+roll = 0.55
+pitch = 0.48
+yaw = 0.45
+shieldCapacityPerBank = 30
+shieldRechargePerBank = 0.4
+fuelTankLY = 0
+maxJumpLY = 0.0
+jumpChargeSeconds = 0
+missileCapacity = 0
+laserFacingMask = 0
+cargoExpansionTonnes = 0
+hullPriceCR = 0
+
+[accommodation]
+basis = "new-per-hull-design-layout-estimate; not-historical-crew-or-E01"
+minimumOperatingCrewIncludingCommander = 1
+intrinsicCrewPlaces = 1
+nativeAutonomous = false
+nativeCrew = 1
+playerConversionCrew = 1
+initialPurchasedCabins = 0
+cabinModuleMassTonnes = 5
+cabinModuleEquipmentUnits = 1
+maximumPhysicalCabinModules = 0
+holdBasis = "Cargo is usable empty hold after intrinsic crew/core structure; purchased modules consume this hold."
+
+[fitting]
+equipmentBudgetUnits = 0
+utilityMounts = 0
+compatibleUtilities = []
+recommendedRoleKit = []
+roleKitIncludedInBareHull = false
+passengerCabinGrades = []
+externalMissilePylons = false
+missileStorage = "modelled-mounts-and-magazine"

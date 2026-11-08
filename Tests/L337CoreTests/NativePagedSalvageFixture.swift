@@ -103,6 +103,453 @@ enum NativePagedSalvageFixture {
     return ledger
   }
 
+  /// Source identity from the existing grant-backed EMP unit boundary. This is
+  /// an actually disabled and emptied ordinary hull, never a generated SalvageSite.
+  struct EMPWorkSource {
+    let identity: WreckIdentity
+    let actor: ActorIdentity
+    let sequence: UInt64
+    let section: WreckSectionIdentity
+  }
+
+  private struct EMPOrdinaryHistory: Decodable {
+    let motions: [WreckIdentity: SalvageWreckMotion]
+    let lastOperation: UInt64?
+  }
+
+  @inline(never)
+  static func equippedNewtStowedGame() throws -> Game {
+    var game = try preparedEMPUnitEquipmentGame()
+    game.launch()
+    try requireActualLaunchSnapshotPolicy(game)
+    let previousDiagnostic = game.nativeEncounterBirthDiagnostic
+    let prepared = try finishEquippedNewtStowedGame(&game)
+    #expect(prepared.nativeEncounterBirthDiagnostic === previousDiagnostic)
+    return prepared
+  }
+
+  @inline(never)
+  private static func preparedEMPUnitEquipmentGame() throws -> Game {
+    var game = Game(executive: false)
+    expectStartupResourcePolicy(game)
+    try configureEMPUnitGame(&game)
+    try game.commander.prepareEquipment(legacy: false)
+    try grantEMPUnitEquipment(&game)
+    expectStartupResourcePolicy(game)
+    return game
+  }
+
+  @inline(never)
+  private static func configureEMPUnitGame(_ game: inout Game) throws {
+    let ownedStartupCheck7 = game.nativeQueryStoredShipID() == "SH025"
+    try #require(ownedStartupCheck7)
+    let fitting = try #require(OriginalFleetR3Fitting.contract(for: ShipCatalogue.ship(game.nativeQueryStoredShipID())!)?.fitting)
+    try #require(fitting.utilityMounts == 3)
+    let ownedStartupCheck8 = game.nativeStartupNativePerformance().workTools?.contains(.salvageCutter) == true
+    try #require(ownedStartupCheck8)
+    // One fixed ordinary unit input, derived from actual catalogue/director source arithmetic.
+    game.commander.system = 2
+    game.selectedSystem = 2
+    game.market = MarketItem.at(game.currentSystem)
+    let ownedStartupCheck9 = game.commanderGalaxy == 0 && game.currentSystem.name == "Aetaria"
+    try #require(ownedStartupCheck9)
+    let ownedStartupCheck10 = game.gameplaySeed == 268890839879961
+    try #require(ownedStartupCheck10)
+    game.energy = game.nativeStartupEnergy()
+    game.frontShield = game.nativeStartupFrontShield()
+    game.rearShield = game.nativeStartupRearShield()
+    game.commander.fuel = game.nativeStartupFuelCapacity()
+  }
+
+  @inline(never)
+  private static func grantEMPUnitEquipment(_ game: inout Game) throws {
+    for (name, slot) in [
+      (Equipment.empPirateBlaster, ComponentFittingSlot.utility(.empPirateBlaster)),
+      ("Salvage Cutter", .utility(.salvageCutter)), ("Fuel Scoops", .utility(.fuelScoops)),
+      ("Targeting: Salvage Module", .targetingSalvage),
+      (TargetingTier.military.equipmentName, .targetingCore),
+    ] {
+      try game.commander.grantEquipment(name, at: slot, provenance: .grant("EMP regression"))
+    }
+  }
+
+  // Compare the concrete read path with the unchanged public policy on actual
+  // fresh and actually fitted states. No extra Game/UUID/actor is constructed.
+  @inline(never)
+  private static func expectStartupResourcePolicy(_ game: Game) {
+    let energy = game.nativeStartupEnergy()
+    let front = game.nativeStartupFrontShield()
+    let rear = game.nativeStartupRearShield()
+    let fuel = game.nativeStartupFuelCapacity()
+    let energyMatches = energy == game.commander.performance.energy
+    let frontMatches = front == game.commander.shieldCapacity
+    let rearMatches = rear == game.commander.rearShieldCapacity
+    let fuelMatches = fuel == game.commander.fuelCapacity
+    #expect(energyMatches && frontMatches && rearMatches && fuelMatches)
+    let opening = game
+    let tier = game.nativeStationAutoTargetingTier()
+    let docking = game.nativeStationAutoHasDocking()
+    let xyzzy = game.nativeStationAutoXYZzyActive()
+    let targeting = game.nativeStationAutoTargetFlag()
+    let ecm = game.nativeStationAutoHasECM()
+    let mounts = game.nativeStationAutoLaserMounts()
+    let performance = game.nativeFramePerformance()
+    let energyRate = game.nativeFrameEnergyRecharge()
+    let frontRate = game.nativeFrameFrontRecharge()
+    let rearRate = game.nativeFrameRearRecharge()
+    let stationAutoOwnedCheck1 = tier == game.commander.targetingTier && docking == game.commander.hasAutomaticDocking
+    #expect(stationAutoOwnedCheck1)
+    let stationAutoOwnedCheck2 = xyzzy == game.commander.xyzzyActive && targeting == game.commander.autoTarget
+    #expect(stationAutoOwnedCheck2)
+    let stationAutoOwnedCheck3 = ecm == (game.commander.fittedEquipment(at: .utility(.ecm)) != nil)
+    #expect(stationAutoOwnedCheck3)
+    let stationAutoOwnedCheck4 = mounts == game.commander.laserMounts && performance == game.commander.performance
+    #expect(stationAutoOwnedCheck4)
+    let stationAutoOwnedCheck5 = energyRate == game.commander.energyRechargeMultiplier
+    #expect(stationAutoOwnedCheck5)
+    let stationAutoOwnedCheck6 = frontRate == game.commander.frontShieldRecharge && rearRate == game.commander.rearShieldRecharge
+    #expect(stationAutoOwnedCheck6)
+    let stationAutoOwnedCheck7 = game.currentNewtNativeCommanderMatches(opening)
+    #expect(stationAutoOwnedCheck7)
+  }
+
+  @inline(never)
+  private static func requireActualLaunchSnapshotPolicy(_ game: Game) throws {
+    let opening = game
+    let flight = game.storedFlightSimulation()
+    let nativeLaunchOwnedCheck18 = !game.docked && flight.visit == 1
+    try #require(nativeLaunchOwnedCheck18)
+    let nativeLaunchOwnedCheck19 = game.gameplayContext()
+    let context = try #require(nativeLaunchOwnedCheck19)
+    for body in game.bodies {
+      let original = originalLaunchSnapshot(body: body, pose: flight.pose,
+        physicalTime: context.physicalTime, protection: context.protection)
+      let projected = NPCPersistenceSnapshot.capture(body: body, pose: flight.pose,
+        physicalTime: context.physicalTime, protection: context.protection)
+      #expect(projected == original)
+    }
+    let nativeLaunchOwnedCheck20 = game.currentNewtNativeCommanderMatches(opening) && game.bodies == opening.bodies
+    #expect(nativeLaunchOwnedCheck20)
+    let nativeLaunchOwnedCheck21 = game.scriptWorldSave == opening.scriptWorldSave
+    #expect(nativeLaunchOwnedCheck21)
+  }
+
+  @inline(never)
+  private static func originalLaunchSnapshot(
+    body: SpaceBody, pose: ShipPose, physicalTime: Double, protection: MissionProtection
+  ) -> NPCPersistenceSnapshot? {
+    guard let physical = body.physical, var npc = physical.npc,
+      physical.empSource == nil, physical.empCrewPod == nil,
+      !body.navalTarget, body.blackjackRole == nil, body.blackjackIdentity == nil,
+      !physical.blocksNavalEncounter, physical.rock == nil, physical.payload == nil,
+      physical.ordnance == nil, physical.salvage == nil,
+      !protection.protectedActors.contains(physical.identity),
+      pose.position.finite, pose.orientation.validRotation
+    else { return nil }
+    if npc.intention == nil, let suspended = physical.suspendedNPCIntention {
+      npc.intention = suspended
+    }
+    let snapshot = NPCPersistenceSnapshot(
+      actor: physical.identity, population: physical.population, hull: body.hull,
+      position: pose.systemPoint(body.position),
+      orientation: body.orientation.transformed(by: pose.orientation),
+      velocity: physical.velocity, angularVelocity: physical.angularVelocity,
+      rotation: body.rotation, rotationRate: body.rotationRate,
+      energy: body.energy, missiles: body.missiles, ecmEnabled: body.ecmEnabled,
+      hostile: body.hostile, laserCooldown: physical.laserCooldown,
+      catalogueShipID: physical.catalogueShipID, npc: npc, physicalTime: physicalTime,
+      currentNewtKitStock: physical.currentNewtKitStock)
+    return snapshot.valid ? snapshot : nil
+  }
+
+  @inline(never)
+  private static func finishEquippedNewtStowedGame(_ game: inout Game) throws -> Game {
+    try prepareEMPUnitScene(&game)
+    return try prepareEquippedNewtAfterUnitScene(&game)
+  }
+
+  @inline(never)
+  private static func prepareEquippedNewtAfterUnitScene(_ game: inout Game) throws -> Game {
+    let anchors = try placeEquippedNewtUnitScene(&game)
+    let kitSource = try #require(CurrentNewtKitSource.current)
+    let previousDiagnostic = game.nativeEncounterBirthDiagnostic
+    game.nativeEncounterBirthDiagnostic = GameplayEncounterBirthDiagnostic()
+    defer { game.nativeEncounterBirthDiagnostic = previousDiagnostic }
+    try withEMPUnitWriter(&game) { scene, publish, _ in
+      let publish = try #require(publish)
+      try prepareEquippedNewtThroughWriter(&scene, publish: publish, anchors: anchors, kitSource: kitSource)
+    }
+    game.selectFlightTool(.empPirateBlaster)
+    let nativeLaunchOwnedCheck15 = game.commander.savedEMPState == nil && game.commander.savedEMPCharge == nil
+    try #require(nativeLaunchOwnedCheck15)
+    let nativeLaunchOwnedCheck16 = game.bodies.first?.physical?.currentNewtKitStock?.phase == .stowed
+    try #require(nativeLaunchOwnedCheck16)
+    let nativeLaunchOwnedCheck17 = game.commander.valid
+    try #require(nativeLaunchOwnedCheck17)
+    // Restore before copying the return value; defer only cleans throwing exits.
+    game.nativeEncounterBirthDiagnostic = previousDiagnostic
+    return game
+  }
+
+  @inline(never)
+  private static func prepareEquippedNewtThroughWriter(
+    _ scene: inout Game, publish: @escaping ScriptPublisher, anchors: SystemAnchors, kitSource: CurrentNewtKitSource
+  ) throws {
+    let nativeLaunchOwnedCheck4 = scene.currentEMPPlayerModule()
+    let module = try #require(nativeLaunchOwnedCheck4)
+    let history = scene.nativeStationAutoPurchaseHistory()
+    try advanceEquippedNewtBankAndBirth(&scene, publish: publish, anchors: anchors, kitSource: kitSource)
+    try verifyEquippedNewtBirthAndAim(&scene, publish: publish, anchors: anchors,
+      kitSource: kitSource, module: module, history: history)
+  }
+
+  @inline(never)
+  private static func advanceEquippedNewtBankAndBirth(
+    _ scene: inout Game, publish: @escaping ScriptPublisher, anchors: SystemAnchors, kitSource: CurrentNewtKitSource
+  ) throws {
+    // Share the existing bank-preparation allowance with actual ordinary birth.
+    for _ in 0..<256 {
+      let ready = equippedNewtBankIsReady(scene)
+      let born = equippedNewtBirthIsPresent(scene, kitSource: kitSource)
+      if ready && born { break }
+      try empUnitFrame(&scene, publish: publish)
+      if !born { try observeFirstEquippedNewtBirth(scene, anchors: anchors, kitSource: kitSource) }
+    }
+  }
+
+  @inline(never)
+  private static func equippedNewtBankIsReady(_ scene: Game) -> Bool {
+    scene.currentEMPPlayerModule()?.empBank?.remaining == 8
+  }
+
+  @inline(never)
+  private static func equippedNewtBirthIsPresent(_ scene: Game, kitSource: CurrentNewtKitSource) -> Bool {
+    scene.bodies.contains {
+      $0.physical?.catalogueShipID == "SH029"
+        && $0.physical?.currentNewtKitStock?.issue.configuration == kitSource.configuration
+    }
+  }
+
+  @inline(never)
+  private static func observeFirstEquippedNewtBirth(
+    _ scene: Game, anchors: SystemAnchors, kitSource: CurrentNewtKitSource
+  ) throws {
+    guard let body = scene.bodies.first(where: {
+      $0.physical?.currentNewtKitStock?.issue.configuration == kitSource.configuration
+    }) else { return }
+
+    let physical = try #require(body.physical)
+    let stock = try #require(physical.currentNewtKitStock)
+    let time = scene.storedFlightSimulation().physicalTime
+    // The fixed real producer is the inbound trader at the actual arrival
+    // anchor. Its T1 admission cannot consume the preceding frame's motion.
+    let heading = (anchors.station.position - anchors.arrival).unit
+    let pose = scene.modelPose(of: body)
+    try #require(stock.issue.issuedAt == time && stock.observedAt == time)
+    #expect((pose.position - anchors.arrival).length < 1e-7)
+    #expect((pose.orientation.z - heading).length < 1e-7)
+    #expect((physical.velocity - heading * 60).length < 1e-7)
+    #expect(physical.angularVelocity == .init(0, 0, 0) && body.rotation == 0)
+    #expect(body.rotationRate == 0 && physical.laserCooldown == 0)
+    #expect(stock.phase == .stowed && stock.actuation == nil && stock.receipt == nil)
+    #expect(stock.work.loweredFraction == 0 && stock.work.rodMetres == 0
+      && stock.work.rodVelocity == 0 && stock.work.guideWorkJoules == 0
+      && stock.work.ejectionWorkJoules == 0)
+  }
+
+  @inline(never)
+  private static func verifyEquippedNewtBirthAndAim(
+    _ scene: inout Game, publish: @escaping ScriptPublisher, anchors: SystemAnchors,
+    kitSource: CurrentNewtKitSource, module: OwnedEquipmentItem, history: EquipmentPurchaseHistory?
+  ) throws {
+    let index = try verifiedEquippedNewtBirthIndex(scene, kitSource: kitSource, module: module, history: history)
+    aimExistingEquippedNewt(&scene, index: index)
+    try openEMPUnitHeader(&scene, publish: publish)
+  }
+
+  @inline(never)
+  private static func verifiedEquippedNewtBirthIndex(
+    _ scene: Game, kitSource: CurrentNewtKitSource, module: OwnedEquipmentItem,
+    history: EquipmentPurchaseHistory?
+  ) throws -> Int {
+    let indexCandidate = scene.bodies.firstIndex {
+      $0.physical?.catalogueShipID == "SH029"
+        && $0.physical?.currentNewtKitStock?.issue.configuration == kitSource.configuration
+    }
+    let index = try #require(indexCandidate, indexCandidate == nil ? equippedNewtBirthFailure(scene) : nil)
+    let nativeLaunchOwnedCheck5 = scene.bodies[index].physical
+    let physical = try #require(nativeLaunchOwnedCheck5)
+    let spawn = try #require(physical.spawnIdentity)
+    let stock = try #require(physical.currentNewtKitStock)
+    let nativeLaunchOwnedCheck6 = scene.commander.encounterDirector
+    let director = try #require(nativeLaunchOwnedCheck6)
+    try #require(spawn.producer == .ambient && spawn.member == 0)
+    try #require(spawn.system == .init(galaxy: 0, system: 2) && spawn.visit == 1)
+    try #require(spawn.sequence == 2 && director.decisionCount == 2 && director.admittedCount > 0)
+    try #require(!director.pendingRequests.contains { $0.identity == spawn })
+    try #require(stock.issue.birthActor == physical.identity && stock.issue.birthSpawn == spawn)
+    let observed = try #require(scene.nativeEncounterBirthDiagnostic?.observations)
+    #expect(observed.contains { observation in
+      observation.time == stock.issue.issuedAt && observation.decision == spawn.sequence
+        && observation.requests.contains {
+          $0.identity == spawn && $0.catalogueShipID == "SH029"
+            && $0.configuration == kitSource.configuration
+        }
+        && observation.receipts.contains {
+          $0.request == spawn && $0.actor == physical.identity && $0.refusal == nil
+        }
+    })
+    try #require(stock.issue.person == .init(source: physical.identity, ordinal: 0))
+    try #require(stock.issue.personProfile == kitSource.personProfile && kitSource.matches(stock.issue))
+    let nativeLaunchOwnedCheck7 = kitSource.matches(stock, at: scene.storedFlightSimulation().physicalTime)
+    try #require(nativeLaunchOwnedCheck7)
+    let nativeLaunchOwnedCheck8 = scene.commander.npcPersistence.logicalIdentity(for: physical.identity)
+    let logical = try #require(nativeLaunchOwnedCheck8)
+    let nativeLaunchOwnedCheck9 = scene.commander.npcPersistence.snapshot(for: logical)
+    let snapshot = try #require(nativeLaunchOwnedCheck9)
+    try #require(snapshot.currentNewtKitStock == stock)
+    try #require(stock.phase == .stowed && stock.remaining == 1 && stock.actuation == nil && stock.receipt == nil)
+    let nativeLaunchOwnedCheck10 = scene.empPulseEligible(scene.bodies[index])
+    try #require(nativeLaunchOwnedCheck10)
+    let nativeLaunchOwnedCheck11 = scene.currentEMPPlayerModule()
+    let ready = try #require(nativeLaunchOwnedCheck11)
+    let nativeLaunchOwnedCheck12 = ready.empBank?.remaining == 8 && (scene.commander.savedPlayerElectrical?.remaining ?? 0) > 0
+    try #require(nativeLaunchOwnedCheck12)
+    #expect(ready.id == module.id && ready.empGrades == module.empGrades)
+    let nativeLaunchOwnedCheck13 = scene.nativeStationAutoPurchaseHistory() == history
+    #expect(nativeLaunchOwnedCheck13)
+    let nativeLaunchOwnedCheck14 = scene.commander.savedEMPState == nil
+    try #require(nativeLaunchOwnedCheck14)
+    return index
+  }
+
+  @inline(never)
+  private static func aimExistingEquippedNewt(_ scene: inout Game, index: Int) {
+    // Only array order changes for the existing unit aim helper; the actor is already born.
+    scene.bodies.swapAt(0, index)
+    let body = scene.bodies[0]
+    let model = scene.modelPose(of: body)
+    let aim = Game.nativePlayerSurfaceAim(from: .init(0, 0, -1000), mesh: scene.gameplayMesh(for: body))
+    var observer = model
+    observer.position = model.systemPoint(aim) - model.orientation.z * 1000
+    moveObserver(&scene, to: observer)
+  }
+
+  @inline(never)
+  private static func equippedNewtBirthFailure(_ scene: Game) -> Comment {
+    let flight = scene.storedFlightSimulation()
+    let director = scene.commander.encounterDirector
+    let module = scene.currentEMPPlayerModule()
+    let context = scene.gameplayContext()
+    let pending = director?.pendingRequests.prefix(32).map {
+      "spawn=\($0.identity),ship=\($0.catalogueShipID ?? "nil"),kit=\($0.currentNewtKitConfiguration ?? "nil")"
+    }.joined(separator: ";") ?? "nil"
+    let bodies = scene.bodies.prefix(32).map {
+      "id=\($0.id),ship=\($0.physical?.catalogueShipID ?? "nil"),spawn=\(String(describing: $0.physical?.spawnIdentity))"
+        + ",stock=\($0.physical?.currentNewtKitStock?.issue.configuration ?? "nil"),energy=\($0.energy)"
+    }.joined(separator: ";")
+    return Comment(rawValue: "No source-equipped ordinary SH029 birth in the existing bank-preparation allowance."
+      + " time=\(flight.physicalTime) visit=\(flight.visit) paused=\(scene.paused) docked=\(scene.docked) screen=\(scene.screen)"
+      + " bank=\(String(describing: module?.empBank)) electrical=\(String(describing: scene.commander.savedPlayerElectrical?.remaining))"
+      + " sourceQualified=\(String(describing: CurrentNewtKitSource.current?.sourceQualifiedForBirth))"
+      + " decision=\(String(describing: director?.decisionCount)) admitted=\(String(describing: director?.admittedCount))"
+      + " deadline=\(String(describing: director?.nextDecisionTime)) pending=[\(pending)]"
+      + " region=\(String(describing: context.map { EncounterGeography.region(at: $0.player.position, anchors: $0.anchors) }))"
+      + " protection=\(String(describing: context?.protection)) budget=\(String(describing: context?.budget))"
+      + " actualDecisions=[\(scene.nativeEncounterBirthDiagnostic?.detail() ?? "nil")] bodyCount=\(scene.bodies.count) bodies=[\(bodies)]")
+  }
+
+  @inline(never)
+  private static func placeEquippedNewtUnitScene(_ game: inout Game) throws -> SystemAnchors {
+    let nativeLaunchOwnedCheck1 = game.storedFlightSimulation().visit == 1
+    try #require(nativeLaunchOwnedCheck1)
+    let nativeLaunchOwnedCheck2 = game.storedFlightSimulation().anchors
+    let anchors = try #require(nativeLaunchOwnedCheck2)
+    let observer = ShipPose(
+      position: (anchors.arrival + anchors.station.position) * 0.5,
+      orientation: game.storedFlightSimulation().pose.orientation)
+    moveObserver(&game, to: observer)
+    let nativeLaunchOwnedCheck3 = game.gameplayContext()
+    let context = try #require(nativeLaunchOwnedCheck3)
+    let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
+    try #require(EncounterGeography.region(at: context.player.position, anchors: context.anchors) == .tradeLane)
+    try #require(EncounterGeography.safe(context.anchors.arrival, context: context, civilianEntry: true))
+    try #require(source.permitsAmbientTrader(context: context, position: context.anchors.arrival))
+    return anchors
+  }
+
+  static func empGame(fullOrdinaryPools: Bool = false) throws -> (Game, EMPWorkSource) {
+    var game = try equippedNewtStowedGame()
+    return try finishEMPGame(&game, fullOrdinaryPools: fullOrdinaryPools)
+  }
+
+  @inline(never)
+  private static func finishEMPGame(
+    _ game: inout Game, fullOrdinaryPools: Bool
+  ) throws -> (Game, EMPWorkSource) {
+    try #require(game.commander.shipID == "SH025")
+    try #require(try releaseDamagedEMPBoundary(&game))
+    let disabledCandidate = game.bodies.first { $0.physical?.empSource != nil }
+    let disabled = try #require(disabledCandidate)
+    let source = try #require(disabled.physical?.empSource)
+    try ejectScheduledEMPCrewBoundary(&game, source: source)
+    let record = try #require(game.commander.savedEMPState?.records[source])
+    try #require(record.crewAboard == 0 && record.pods.count == record.crewTotal)
+    let bodyCandidate = game.bodies.first {
+      $0.physical?.empSource == source && $0.physical?.salvage?.wreck == record.wreck
+    }
+    let body = try #require(bodyCandidate)
+    try #require(body.physical?.npc == nil && body.physical?.catalogueShipID == "SH029")
+    let metadata = try #require(body.physical?.salvage)
+    let profile = try #require(SalvageCatalogue.empProfile(catalogueShipID: "SH029"))
+    try #require(!profile.sourceRoles.contains(.thargoid) && game.salvageSites.isEmpty)
+    // Retain through the real EMP source validator before filling unrelated history.
+    // No section inspection, plan or work budget is introduced by this setup.
+    let retainedSource = game.retainNativeSalvageWreck(body)
+    try #require(retainedSource)
+    let retained = try #require(
+      game.commander.alienStorageState?.current.salvage.native.wrecks[record.wreck])
+    try #require(retained.source == .emp(actor: source, sequence: record.sequence))
+    if fullOrdinaryPools {
+      let history = try JSONDecoder().decode(
+        EMPOrdinaryHistory.self, from: JSONEncoder().encode(game.commander.salvageLedger))
+      try #require(history.motions.count == 1 && history.motions[record.wreck] != nil)
+      let seed = game.commander.salvageLedger.nativeInspectionSeed
+      game.commander.salvageLedger = try fullOrdinaryLedger(
+        starting: game.commander.salvageLedger,
+        initialOperation: history.lastOperation ?? 0, retainedWrecks: history.motions.count)
+      try #require(game.commander.salvageLedger.nativeInspectionSeed == seed)
+    }
+    let model = game.modelPose(of: body)
+    for section in profile.sections {
+      var candidate = game
+      let surface = model.systemPoint(section.localPosition)
+      let normal = model.orientation.apply(section.normal).unit
+      var basis = Basis3()
+      basis.z = normal * -1
+      let up = abs(basis.z.y) < 0.8 ? Vector3(0, 1, 0) : .init(1, 0, 0)
+      basis.x = up.cross(basis.z).unit
+      basis.y = basis.z.cross(basis.x).unit
+      moveObserver(&candidate, to: .init(position: surface + normal * 200, orientation: basis))
+      guard let hit = try candidate.nearestMissionCollision(
+        from: .init(0, 0, 0), direction: .init(0, 0, 1), range: 300, radius: 0,
+        includePlayer: false), hit.hit.target == .body(body.id),
+        (candidate.commander.flightSimulation.pose.systemPoint(hit.hit.point) - surface).length < 0.001,
+        let actualBody = candidate.bodies.first(where: { $0.id == body.id }),
+        candidate.workSurface(for: actualBody, metadata: metadata)?.section
+          == WreckSectionIdentity(wreck: record.wreck, section: section.index)
+      else { continue }
+      candidate.selectFlightTool(.salvageCutter)
+      try NativeSaveTestFixture.prepareCurrentPolicy(&candidate)
+      try #require(candidate.nativeSalvageWork == nil)
+      try #require(candidate.commander.alienStorageState?.current.salvage.native.plans.isEmpty == true)
+      return (candidate, .init(
+        identity: record.wreck, actor: source, sequence: record.sequence,
+        section: .init(wreck: record.wreck, section: section.index)))
+    }
+    throw SaveError.invalidCommander
+  }
+
   /// A real deterministic site is admitted by the production encounter path.
   /// Human compatibility fixtures omit scoops and use the original manifest section.
   /// Only the observer is positioned for a verified visible catalogue face.
@@ -111,8 +558,8 @@ enum NativePagedSalvageFixture {
   ) throws -> (Game, SalvageSite) {
     for system in 0..<256 {
       var game = Game(executive: false)
-      // Select an actual cutter-capable observer before fitting and native launch.
-      game.commander.shipID = "SH023"
+      // Keep the genuine current starter and its owned hull identity before fitting.
+      try #require(game.commander.shipID == "SH025")
       game.commander.fuel = game.commander.fuelCapacity
       game.energy = game.commander.performance.energy
       game.frontShield = game.commander.shieldCapacity
@@ -192,25 +639,6 @@ enum NativePagedSalvageFixture {
         try NativeSaveTestFixture.prepareCurrentPolicy(&game)
         return (game, site)
       }
-    }
-    throw SaveError.invalidCommander
-  }
-
-  static func originalRelease(
-    ledger: inout SalvageLedger, section: SalvageSectionProfile, identity: WreckSectionIdentity,
-    source: SalvageLootSource, remaining: Double, operation: inout UInt64
-  ) throws -> [SalvageLot] {
-    var left = remaining
-    while left > 0 {
-      let elapsed = min(1, left)
-      operation += 1
-      let result = ledger.advance(
-        wreck: identity.wreck, section: section, pose: .init(), velocity: .init(0, 0, 0),
-        angularVelocity: .init(0, 0, 0), tool: .cutter, elapsed: elapsed,
-        operation: operation, conditions: permitted, source: source)
-      left -= elapsed
-      if case .released(let lots) = result { return lots }
-      guard case .progress = result else { throw SaveError.invalidCommander }
     }
     throw SaveError.invalidCommander
   }

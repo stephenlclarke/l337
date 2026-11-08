@@ -48,7 +48,10 @@ public struct ShipPerformance: Codable, Sendable, Equatable {
 }
 extension Commander {
   public var ship: CatalogueShip { ShipCatalogue.ship(shipID)! }
-  public var nativePerformance: ShipPerformance { ship.game! }
+  public var nativePerformance: ShipPerformance {
+    precondition(!OriginalDetailedHullStage.blocksRuntime(shipID), "Pending original hull has no physical performance")
+    return ship.game!
+  }
   public var performance: ShipPerformance {
     var result = nativePerformance
     if let ratio = fittedComponent(at: .energy)?.statistics[.energyCapacity] {
@@ -64,8 +67,28 @@ extension Commander {
   public var standardCargoCapacity: Int {
     performance.cargo + (equipment.contains("Large Cargo Bay") ? performance.cargoExpansion : 0)
   }
-  public var playerMesh: Mesh {
-    if shipID == "SH061", let physical = ShipCatalogue.rawMesh(shipID) { return physical }
+  public var playerMesh: Mesh { Self.playerMesh(for: shipID) }
+
+  @inline(never)
+  static func playerMesh(for shipID: String) -> Mesh {
+    precondition(!OriginalDetailedHullStage.blocksRuntime(shipID), "Pending original hull has no player mesh")
+    if shipID == "SH005" || shipID == "SH006"
+      || shipID == "SH013" || shipID == "SH014" || shipID == "SH026"
+    {
+      guard let native = ShipCatalogue.ship(shipID)!.nativeDesign else {
+        preconditionFailure("Original hull requires its authored native design")
+      }
+      return native.rawMesh
+    }
+    if shipID == "SH061" || shipID == "SH025", let physical = ShipCatalogue.rawMesh(shipID) {
+      return physical
+    }
+    if OriginalFleetPhysicalData.registrations[shipID] != nil {
+      guard let physical = ShipCatalogue.rawMesh(shipID) else {
+        preconditionFailure("Current original player hull requires its calibrated physical mesh")
+      }
+      return physical
+    }
     // These activated originals have explicit metre contracts, independent of preview scaling.
     if [
       "SH002", "SH003", "SH004", "SH007", "SH012", "SH018", "SH019", "SH025", "SH027", "SH029",
@@ -73,11 +96,11 @@ extension Commander {
     ]
     .contains(
       shipID),
-      let native = ship.nativeDesign
+      let native = ShipCatalogue.ship(shipID)!.nativeDesign
     {
       return native.rawMesh
     }
-    let source = ship.previewMesh!
+    let source = ShipCatalogue.ship(shipID)!.previewMesh!
     return Mesh(
       vertices: source.vertices.map { $0 * 0.69 }, faces: source.faces, details: source.details,
       materials: source.materials, faceMaterials: source.faceMaterials,

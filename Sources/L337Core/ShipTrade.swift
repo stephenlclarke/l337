@@ -27,8 +27,21 @@ extension Game {
     guard let selected = showroomShip else { return nil }
     return shipTradeQuote(for: selected)
   }
-  func shipTradeQuote(for selected: CatalogueShip) -> ShipTradeQuote? {
-    guard let next = selected.game else { return nil }
+  func shipTradeQuote(for requested: CatalogueShip) -> ShipTradeQuote? {
+    let bison: OriginalBisonActivation.Source?
+    let selected: CatalogueShip
+    if OriginalBisonActivation.contains(requested.id) {
+      guard let source = OriginalBisonActivation.source(for: requested.id) else { return nil }
+      bison = source
+      selected = source.ship
+    } else {
+      bison = nil
+      guard let canonical = ShipCatalogue.ship(requested.id) else { return nil }
+      selected = canonical
+    }
+    guard !OriginalDetailedHullStage.blocksRuntime(selected.id), let next = selected.game else {
+      return nil
+    }
     let purchase = next.price * 10
     let allowance = commander.performance.price * 10 * 3 / 4
     let net = purchase - allowance
@@ -37,6 +50,16 @@ extension Game {
     if next.price <= 0 { issues.append("This hull is unpriced and not for sale.") }
     if selected.catalogue.purchasePolicy == .never {
       issues.append("This hull is not for sale.")
+    }
+    if selected.catalogue.purchasePolicy == .pendingFabrication {
+      issues.append("Fabrication for this hull is not yet available.")
+    }
+    if selected.id == OriginalImpalaVoyagerActivation.id {
+      if !OriginalImpalaVoyagerActivation.authenticates(selected) {
+        issues.append("Original Impala source is unavailable.")
+      } else if currentSystem.technology < OriginalImpalaVoyagerActivation.minimumBuildTechLevel {
+        issues.append("Impala fabrication requires TL14.")
+      }
     }
     if selected.catalogue.purchasePolicy == .xyzzyOnly && !commander.xyzzyActive {
       issues.append("This hull requires XYZZY access.")
@@ -50,14 +73,51 @@ extension Game {
       projected = try commander.projectedEquipmentTransfer(to: selected.id)
     } catch {
       issues.append("Physical fittings or carried resources are incompatible with this hull.")
+      // The entry guard has already refused every staged physical hull.
       var fallback = commander
       fallback.shipID = selected.id
       projected = fallback
     }
     issues += shipTransferIssues(to: projected)
+    if selected.catalogue.purchasePolicy == .blueprintFabrication {
+      issues += originalFabricationIssues(
+        ship: selected, minimumTechnology: bison?.minimumTechnology
+          ?? selected.catalogue.minimumBuildTechLevel)
+    }
     return .init(
       selected: selected, purchase: purchase, allowance: allowance, net: net, balance: balance,
       issues: issues)
+  }
+  /// Fabrication uses fresh owned arrival and blueprint evidence, never the displayed quote.
+  private func originalFabricationIssues(ship: CatalogueShip, minimumTechnology: Int?) -> [String] {
+    var issues: [String] = []
+    if commander.fleetBlueprintAcquisition(for: ship.id) == nil {
+      issues.append(
+        "Earn this hull's blueprint through paid EMP disable, "
+          + "authorized empty-section cutting and physical sample recovery.")
+    }
+    if !scriptDurabilityAvailable { issues.append("Choose a commander save before fabrication.") }
+    guard case .living(let destination) = nativeOriginalMainStationDestination,
+      destination.identity.system == systemIdentity, nativeCrewExchangeEpoch != nil
+    else {
+      issues.append("Fabrication requires a current arrival at a living main station.")
+      return issues
+    }
+    let system = destination.identity.system
+    guard let worlds = try? OriginalWorldCatalogue.loadBundled(),
+      let world = try? worlds.world(galaxy: system.galaxy, system: system.system)
+    else {
+      issues.append("The current fabrication world's source is unavailable.")
+      return issues
+    }
+    guard let minimumTechnology else {
+      issues.append("This hull has no authenticated fabrication technology requirement.")
+      return issues
+    }
+    if world.technology < minimumTechnology {
+      issues.append("This hull requires TL\(minimumTechnology) fabrication.")
+    }
+    return issues
   }
   private func shipTransferIssues(to projected: Commander) -> [String] {
     let next = projected.performance
@@ -101,6 +161,7 @@ extension Game {
     {
       issues.append("Clear the incompatible navigation route before exchanging.")
     }
+    if let issue = commander.nativeCrewTransferIssue(to: projected.shipID) { issues.append(issue) }
     return issues
   }
   mutating func confirmShipTrade() {
@@ -129,7 +190,8 @@ extension Game {
   private mutating func commitShipTradeCandidate(_ quote: ShipTradeQuote) throws {
     var candidate = self
     try candidate.commander.prepareEquipment()
-    try candidate.commander.transferEquipment(to: quote.selected.id, hullID: UUID())
+    try candidate.commander.transferEquipment(
+      to: quote.selected.id, hullID: UUID(), crewEpoch: nativeCrewExchangeEpoch)
     candidate.commander.credits = quote.balance
     candidate.preserveEquipmentResourceFractions(from: self)
     self = candidate

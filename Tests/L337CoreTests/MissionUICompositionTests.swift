@@ -74,6 +74,7 @@ struct MissionUICompositionTests {
     var game = Game(executive: false)
     game.screen = .status
     game.scriptPacks = [pack]
+    try game.commander.prepareEquipment(legacy: false)
     game.openGallery()
     let runtime = GameRuntime(game: game)
     let parent = await runtime.snapshot()

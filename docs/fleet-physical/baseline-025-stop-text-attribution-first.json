@@ -1,0 +1,24 @@
+{
+  "status": "FROZEN_RAW_TEXT_ONLY_STOP_ATTRIBUTION_BEFORE_SCAN",
+  "sourcePin": {
+    "path": "Sources/L337Core/Resources/Ships/SH025.toml",
+    "bytes": 690857,
+    "sha256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883"
+  },
+  "resultPin": {
+    "path": "docs/fleet-physical/baseline-005-006-025-source-ownership/result.json",
+    "bytes": 1814,
+    "sha256": "5644776ddd090503c7c9fb1f600a265e38e3af57d5ea3831aac7281cab36206a"
+  },
+  "literalAlgorithm": "Require exact frozen source bytes/hash; select the unique [nativeDesign] text section. Read only its unique vertices/faces declaration lines; count [ characters minus outer array (no TOML parsing, no array decoding, no coordinate/index value conversion). Print exact current lexical counts and corresponding >0/<=4096 vertex and >0/<=512 face boundary booleans. Read only literal license/appearanceLicense declaration text. This attributes failed pre-index current-native guard; not a rerun of ownership/mass or geometry operation.",
+  "bounds": {
+    "rawFiles": 1,
+    "maximumRawBytes": 2097152,
+    "declarationLines": 4,
+    "tomlParses": 0,
+    "numericCoordinateOrIndexEvaluations": 0,
+    "geometryMassTensor": 0,
+    "originalCreatorOrHelperExecution": 0,
+    "nativeCompilerTests": 0
+  }
+}

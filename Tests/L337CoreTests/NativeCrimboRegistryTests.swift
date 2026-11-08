@@ -70,7 +70,7 @@ enum CrimboFixture {
     game.commander.galaxy = system.galaxy
     game.commander.system = system.system
     game.systems = Universe.systemsIncludingPlugh(number: system.galaxy)
-    try game.commander.prepareEquipment()
+    try game.commander.prepareEquipment(legacy: false)
     game.commander.flightSimulation.enter(system, arriving: false)
     game.screen = .front
     game.docked = false
@@ -247,13 +247,13 @@ struct NativeCrimboRegistryTests {
 
   @Test func derivedWholeCircleClearsActualSpheresAndWeakestCatalogueLimits() throws {
     let registry = try CrimboFixture.registry()
-    let santa = try #require(ShipCatalogue.ship("SH150"))
-    let rudolf = try #require(ShipCatalogue.ship("SH151"))
-    let radii = try (0..<7).map { slot in
-      try #require((slot == 6 ? santa : rudolf).design.rawMesh.vertices.map(\.length).max())
+    let santa = try #require(OriginalFleetRuntimeHullSource.source(for: "SH150"))
+    let rudolf = try #require(OriginalFleetRuntimeHullSource.source(for: "SH151"))
+    let radii = (0..<7).map { slot in
+      (slot == 6 ? santa : rudolf).envelope.clearanceRadius
     }
-    let limits = try (0..<7).map { slot -> OrbitFormationLimits in
-      let p = try #require((slot == 6 ? santa : rudolf).game)
+    let limits = (0..<7).map { slot -> OrbitFormationLimits in
+      let p = (slot == 6 ? santa : rudolf).performance
       return .init(
         speed: p.speed * 18, acceleration: p.acceleration * 18, turnRate: min(p.pitch, p.yaw))
     }
@@ -346,7 +346,9 @@ struct NativeCrimboRegistryTests {
     rebound.actor = actor
     rebound.physicalTime = 20
     var body = SpaceBody(id: 3, hull: original.hull, position: .init(0, 0, 0))
-    body.physical = .init(identity: actor, population: .civilian, npc: original.npc)
+    body.physical = .init(
+      identity: actor, population: .civilian, npc: original.npc,
+      catalogueShipID: original.catalogueShipID)
     var pose = ShipPose()
     pose.position = .init(12000, 500, -16000)
     pose.orientation.rotate(pitch: 0.3, roll: 0.2, yaw: -0.4)

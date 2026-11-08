@@ -101,8 +101,9 @@ struct CampaignGalleryFixture {
 
   func clean() { try? FileManager.default.removeItem(at: directory) }
 
-  func game() -> Game {
+  func game() throws -> Game {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .status
     game.scriptPacks = [child] + parents + [nested]
     game.scriptDurabilityAvailable = true
@@ -198,7 +199,7 @@ func campaignGallerySavedContractRootRefusesChildTrialAndPreservesProviderTrial(
 {
   let fixture = try CampaignGalleryFixture(parentOnly: true)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let campaign = try fixture.startContractCampaign(&game, nested: nested)
   game.commander.name = "LIVE OWNER"
   #expect(game.commander.valid)
@@ -213,7 +214,7 @@ func campaignGallerySavedContractRootRefusesChildTrialAndPreservesProviderTrial(
   )
   #expect(game.campaignTrialReview == nil && !game.canReviewSelectedCampaignTrial)
   #expect(!game.canTrialSelectedMission)
-  // Match the actor's canonical equipment preparation before checking rejected UI actions.
+  // Current fixture ownership must remain unchanged before checking rejected UI actions.
   let unprepared = game.commander
   try game.commander.prepareEquipment()
   game.commander.mirrorFittedEquipment()
@@ -295,7 +296,7 @@ func campaignGallerySavedContractRootRefusesChildTrialAndPreservesProviderTrial(
 @Test func campaignGalleryNavigatesTwoActualParentsByInstanceAndRestoresReadingPosition() throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let first = try fixture.start(&game)
   let second = try fixture.start(&game, parent: fixture.parents[1])
   let before = game.commander
@@ -327,7 +328,7 @@ func campaignGallerySavedContractRootRefusesChildTrialAndPreservesProviderTrial(
 @Test func campaignGalleryNestedChildUsesImmediateOwnerAndSeparateRootForTrial() throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (root, owner) = try fixture.start(&game, parent: fixture.nested)
   let child = try #require(
     game.commander.scriptState.instances[owner]?.campaignChildren["patrol"]?.child)
@@ -343,7 +344,7 @@ func campaignGallerySavedContractRootRefusesChildTrialAndPreservesProviderTrial(
 @Test func campaignGalleryUnstartedPreviewAndMissingContentNeverCreateOrDiscardInstances() throws {
   let fixture = try CampaignGalleryFixture(unstarted: true)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let parent = try game.acceptScriptMission(fixture.parents[0])
   try fixture.select(parent, game: &game)
   let before = game.commander
@@ -369,7 +370,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (parent, child) = try fixture.start(&game)
   // Projection fixture only: terminal engine transitions are covered by physical-play acceptance.
   game.commander.scriptState.instances[child]?.outcome = outcome
@@ -385,7 +386,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryMissingOwnerAndRootKeepChildVisibleAndTrialUnavailable() throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (parent, child) = try fixture.start(&game)
   game.scriptPacks = [fixture.child]
   try fixture.select(child, game: &game)
@@ -401,7 +402,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryOwnedTrialReviewRequiresChoiceAndRejectsChangedSelection() async throws {
   let fixture = try CampaignGalleryFixture(parentOnly: true)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let first = try fixture.start(&game)
   let second = try fixture.start(&game, parent: fixture.parents[1])
   try fixture.select(first.1, game: &game)
@@ -427,7 +428,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryPointerAndKeyboardChooseTheSameActualChild() async throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (parent, child) = try fixture.start(&game)
   try fixture.select(parent, game: &game)
   try fixture.prepareNativeCommanderForComparison(&game)
@@ -446,7 +447,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryRootTrialFliesItsOwnedPatrolAndRestoresLiveSaveBytes() async throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var live = fixture.game()
+  var live = try fixture.game()
   live.commander.name = "CAMPAIGN OWNER"
   live.commander.credits = 76543
   let first = try fixture.start(&live)
@@ -588,11 +589,11 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 {
   let fixture = try CampaignGalleryFixture(dependency: true)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (_, child) = try fixture.start(&game)
   try fixture.select(child, game: &game)
   game.scriptPacks.removeAll { $0.digest == fixture.parents[1].digest }
-  // Establish the same native state as GameRuntime.init without changing campaign property.
+  // Validate existing current ownership without changing campaign property.
   let unprepared = game.commander
   try game.commander.prepareEquipment()
   game.commander.mirrorFittedEquipment()
@@ -622,7 +623,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryPointerBackAndScrollingPreserveExactRelationshipContext() throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (parent, child) = try fixture.start(&game)
   try fixture.select(child, game: &game)
   let before = game.commander
@@ -645,7 +646,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryLayoutKeepsRelationshipTextAndActionsInsideBothViewports() throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (parent, child) = try fixture.start(&game)
   for (width, height) in [(512.0, 518.0), (1512.0, 982.0)] {
     game.viewportWidth = width
@@ -682,7 +683,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (_, child) = try fixture.start(&game)
   try fixture.select(child, game: &game)
   try fixture.prepareNativeCommanderForComparison(&game)
@@ -700,7 +701,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryProofDistinguishesPreviewAliasesAndStaysCompact() throws {
   let fixture = try CampaignGalleryFixture(unstarted: true, additionalAliases: 1)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let parent = try game.acceptScriptMission(fixture.parents[0])
   try fixture.select(parent, game: &game)
   let before = game.commander
@@ -720,7 +721,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGallerySamePaintedReviewChoosesOnceAndOldReturnCannotRestartIt() async throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let (_, child) = try fixture.start(&game)
   try fixture.select(child, game: &game)
   try fixture.prepareNativeCommanderForComparison(&game)
@@ -751,7 +752,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryProofBindsScrollResizeRetryRevisionAndRowReordering() async throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   game.viewportWidth = 512
   game.viewportHeight = 518
   let (_, child) = try fixture.start(&game)
@@ -783,7 +784,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryProofRejectsCrossPageCommandsAndChangedVisibleLinkMaps() async throws {
   let fixture = try CampaignGalleryFixture(unstarted: true, additionalAliases: 5)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   game.viewportWidth = 512
   game.viewportHeight = 518
   let parent = try game.acceptScriptMission(fixture.parents[0])
@@ -809,7 +810,7 @@ func campaignGalleryDisplaysActualChildOutcomesAndKeepsSuspensionReason(outcome:
 @Test func campaignGalleryFailedRetryConsumesItsPaintedAttemptEvenIfTheFaultRepeats() async throws {
   let fixture = try CampaignGalleryFixture(retryFault: true)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   game.commander.credits = 1000  // Exercise the authored working-capital fault below 2000.
   let (_, child) = try fixture.start(&game)
   game.emitScriptEvent("contact.requested", only: child)

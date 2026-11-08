@@ -1,0 +1,53 @@
+{
+  "status": "FIRST_REVIEWED_D697_FOUR_HUNK_COMPOSITION_BEFORE_MUTATION_WITH_ACTUAL_AA5_PARENT",
+  "beforeCommit": "1717e552dc51705fa7605bbbc611e65496b40383",
+  "child": {
+    "path": "/tmp/elite-mc1-three-current-native-bank-history-callers-child/manifest.json",
+    "bytes": 2196,
+    "sha256": "d6978abca5f2ff5827b4017877608cb735dc0521144e1adf759c709267676321"
+  },
+  "review": {
+    "path": "/tmp/elite-g2-d697-current-native-bank-history-source-review/review.json",
+    "bytes": 3392,
+    "sha256": "c0943aab27593d66f4cc0ca631c988f76d5c7266fe1b102a09a59a254422dab5"
+  },
+  "actualParentCommit": "1717e552dc51705fa7605bbbc611e65496b40383",
+  "parentSource": {
+    "path": "Tests/L337CoreTests/EMPBankOwnershipTests.swift",
+    "bytes": 18670,
+    "sha256": "d064060514cde0a532d3cf40034685b3de77d60f3f0a535d9d6675b5280693a4"
+  },
+  "targetBefore": {
+    "path": "Tests/L337CoreTests/EMPBankNativeCodecTests.swift",
+    "bytes": 13198,
+    "sha256": "2adedf6158f8bafbda508526ccf1c3e629aa7547f75ff65814f7a8a3fd382f0a"
+  },
+  "protectedCurrent495744DcaAndAa5": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/StationAutoDefence.swift",
+      "bytes": 40973,
+      "sha256": "90fc152975cc2ea60839429b02da297a8ca3287733ee8cebb68982f58912daaf"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 42926,
+      "sha256": "833eb2b203ad2ec37d0b17d2af436841cf90f61e44ae126f78c3045616232bdd"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 162476,
+      "sha256": "efdca609e257b8b2ff1ed445b2d2b42a5181f4f457258f2e861ff340e448abfd"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPBankOwnershipTests.swift",
+      "bytes": 18670,
+      "sha256": "d064060514cde0a532d3cf40034685b3de77d60f3f0a535d9d6675b5280693a4"
+    }
+  ],
+  "scope": "Only private defaultfalse forwarding and three CURRENT codec optins. Existing670emptybank/SH001/raw/schema/defaultfalse/alloriginalassertions preserved; modeledhistory remains modeled, no earnednative/savejourney grant."
+}

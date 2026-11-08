@@ -5,7 +5,15 @@ import Testing
 
 struct ShipCapitalHierarchyTests {
   @Test func stationsAreCapitalChildrenWithoutBecomingDestructionTargets() throws {
-    let stationIDs = Set(["SH028", "SH034", "SH102", "SH141", "SH156", "SH161", "SH164"])
+    let stationIDs = Set(["SH028", "SH034", "SH102", "SH141", "SH161", "SH164"])
+    let expectedDamagePolicies: [String: ShipCatalogueDamagePolicy] = [
+      "SH028": .activeStationIndestructible,
+      "SH034": .destructible,
+      "SH102": .destructible,
+      "SH141": .destructible,
+      "SH161": .destructible,
+      "SH164": .destructible,
+    ]
     let capitals = ShipCatalogue.all.filter { $0.catalogue.isCapital }
     #expect(capitals.count == 10)
     #expect(
@@ -18,13 +26,19 @@ struct ShipCapitalHierarchyTests {
       let metadata = ship.catalogue
       #expect(metadata.isCapital && metadata.capitalSubtype == .station)
       #expect(metadata.objectKind == .station || metadata.objectKind == .platform)
-      #expect(
-        metadata.collectionMilestone == .docking
-          && metadata.damagePolicy == .activeStationIndestructible)
+      // Damage policy is per source; station collection still requires docking.
+      let expectedDamagePolicy = try #require(expectedDamagePolicies[id])
+      #expect(metadata.collectionMilestone == .docking)
+      #expect(metadata.damagePolicy == expectedDamagePolicy)
       #expect(metadata.purchasePolicy == .never && metadata.minimumBuildTechLevel == nil)
       #expect(metadata.valid(shipID: id, performance: ship.game, nativeCombat: ship.nativeCombat))
     }
-    #expect(ShipCatalogue.ship("SH156")?.catalogue.objectKind == .platform)
+    let platform = try #require(ShipCatalogue.ship("SH156"))
+    #expect(platform.catalogue.objectKind == .platform)
+    #expect(platform.catalogue.isCapital && platform.catalogue.capitalSubtype == .platform)
+    #expect(platform.catalogue.collectionMilestone == .none && !platform.catalogue.discoveryEligible)
+    #expect(platform.catalogue.purchasePolicy == .never && !platform.catalogue.playerFlyable)
+    #expect(OriginalDetailedHullStage.blocksRuntime(platform.id))
     #expect(ShipCatalogue.ship("SH161")?.catalogue.objectKind == .station)
   }
 
@@ -32,19 +46,29 @@ struct ShipCapitalHierarchyTests {
     let ships = ShipCatalogue.all
     #expect(ships.count == 171 && Set(ships.map(\.id)).count == ships.count)
     let eligible = ships.filter { $0.catalogue.discoveryEligible }
-    #expect(eligible.count == 168 && Set(eligible.map(\.id)).count == eligible.count)
+    #expect(eligible.count == 167 && Set(eligible.map(\.id)).count == eligible.count)
     #expect(ShipCatalogueType.allCases.count == 8 && ShipCatalogueRole.allCases.count == 7)
     for ship in ships where !ship.catalogue.isCapital {
       #expect(ship.catalogue.capitalSubtype == nil)
     }
-    for id in ["SH005", "SH078", "SH079", "SH155"] {
+    for id in ["SH005", "SH006"] {
       let metadata = try #require(ShipCatalogue.ship(id)?.catalogue)
       #expect(!metadata.isCapital && metadata.purchasePolicy == .blueprintFabrication)
+      #expect(metadata.normalPurchaseEligible && metadata.mechanicsStatus == .ready)
     }
-    let liberator = try #require(ShipCatalogue.ship("SH171"))
-    #expect(!liberator.catalogue.isCapital && liberator.catalogue.capitalSubtype == nil)
+    for id in ["SH013", "SH014"] {
+      let metadata = try #require(ShipCatalogue.ship(id)?.catalogue)
+      #expect(!metadata.isCapital && metadata.purchasePolicy == .pendingFabrication)
+      #expect(!metadata.normalPurchaseEligible)
+    }
+    for id in ["SH078", "SH079", "SH155"] {
+      let metadata = try #require(ShipCatalogue.ship(id)?.catalogue)
+      #expect(!metadata.isCapital && metadata.purchasePolicy == .pendingFabrication)
+    }
+    let medusa = try #require(ShipCatalogue.ship("SH171"))
+    #expect(!medusa.catalogue.isCapital && medusa.catalogue.capitalSubtype == nil)
     #expect(
-      liberator.catalogue.primaryType == .alien && liberator.catalogue.purchasePolicy == .xyzzyOnly)
+      medusa.catalogue.primaryType == .alien && medusa.catalogue.purchasePolicy == .never)
   }
 
   @Test func parentCapitalNeverOverridesTheStationMilestone() throws {

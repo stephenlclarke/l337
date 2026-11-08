@@ -1,0 +1,93 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH092-complete18part-native-candidate-v1",
+  "ship": "SH092",
+  "name": "Aurochs",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "160a1fb62c14ac65098bf97be6ef956c7c791e93d1efe16869cf2368551ff78a",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH092-design.toml",
+    "bytes": 375309,
+    "sha256": "5636b640e4ece28c7985d56f9643e6f6a24e011fd826ea085f1e811ccf5d30d7"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH092.toml",
+    "bytes": 399402,
+    "sha256": "c914c1d28437e4109c59f63a94488c37906a10d2ec04024a97c603c348c4960f"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH092.json",
+    "bytes": 74467,
+    "sha256": "0ec0447fe2ebee2a6e07623527d15149a7c4f5cd40818becccc7292a1429fc9a"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH092-native-candidate-recipe.py",
+    "bytes": 7660,
+    "sha256": "5ef26ed3786baba3a57b736aaf3e65e21a448712d66634c8b4f6ad8ac07c7b6d"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH092-native-candidate-tests.py",
+    "bytes": 7661,
+    "sha256": "c154dc88d71125f2df7f295935ed0985446f0c79432b65ce79ed032a80516df9"
+  },
+  "baseline": {
+    "declaredNativeFaces": 720,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 6,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      10,
+      13,
+      14,
+      16,
+      17
+    ],
+    "unchangedFixedOriginalParts": 11,
+    "status": "NEW angular approximation only; actual output count and full curved-profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "BOTH distinct five-station envelopes with original offsets/dimensions/end caps, not symmetric helper copies",
+    "Lower centre(0,-.23,-length*.22),podlengthlength*.65,widthbeam*.44,height.38",
+    "Upper centre(0,.42,length*.12),podlengthlength*.68,widthbeam*.28,height.24",
+    "ALL eight original analytical recessed service wells, own stations/length/width and shadow/rim material",
+    "Complete cockpit glazing AND connected structural crossmember",
+    "Both original drive supports, complete propulsion casings AND luminous recesses",
+    "Exact original navy-copper palette/material/emission/textures/license/source; genuine serializer regenerates every face UV"
+  ],
+  "coordinates": "Original own ID092 recipe length4.2/beam1.75, source axes/coordinates/origin/units retained. No recenter/rescale/calibration evaluation or historical family alias.",
+  "coupledRuntime": {
+    "domain": "Own actual Aurochs R3/current name/game remain pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "No source/actor/crew/quarters/installed hardware/power/paid kit/acquisition/current-save grant; all existing gates unchanged"
+  },
+  "stopRules": [
+    "Reject changed actual source/creator/primitive/current-resource hashes before geometry",
+    "Both packaged original detailed/native tables remain exact",
+    "All18 original positive parts/material sets retained, including every one of eight wells",
+    "Complete actual candidate must satisfy512 and genuine closure/winding without omissions/waivers/count claims",
+    "Independent tests require exact11fixed original vertices/localfaces/material sequence/UVs",
+    "Both envelopes retain own original offset/longitudinal extent/width; these checks do not prove full continuous profile/void fidelity",
+    "Full actual source/native/occupied/installed physical qualification remains G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner actual occupied/installed input",
+    "next": "G1 generate once and run actual18part/exact11fixed/own stagger-extents/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

@@ -43,7 +43,7 @@ chapters = [
 ]
 
 [trial]
-ship = "SH023"
+ship = "SH025"
 galaxy = 0
 system = 7
 credits = 1000

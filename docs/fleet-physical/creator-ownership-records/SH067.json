@@ -1,0 +1,500 @@
+{
+  "id": "SH067",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "7cd4727a35a98a558d717bb3f16cf2d92a7bbd20d40f391f31b1854c1fa7736f",
+  "contractSHA256": "18e33608d5ff332934812bfcf40b6f99cafdcc900727a0a5f2090ab183dd15af",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "low freight deck",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "raised aft pressure envelope",
+          "vertexStart": 8,
+          "vertexCount": 8,
+          "faceStart": 12,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "longitudinal low deck support",
+          "vertexStart": 16,
+          "vertexCount": 8,
+          "faceStart": 24,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "longitudinal low deck support",
+          "vertexStart": 24,
+          "vertexCount": 8,
+          "faceStart": 36,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "longitudinal low deck support",
+          "vertexStart": 32,
+          "vertexCount": 8,
+          "faceStart": 48,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 40,
+          "vertexCount": 120,
+          "faceStart": 60,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 6,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 160,
+          "vertexCount": 8,
+          "faceStart": 296,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 168,
+          "vertexCount": 8,
+          "faceStart": 308,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 176,
+          "vertexCount": 48,
+          "faceStart": 320,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 224,
+          "vertexCount": 48,
+          "faceStart": 412,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 272,
+          "vertexCount": 8,
+          "faceStart": 504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 280,
+          "vertexCount": 48,
+          "faceStart": 516,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 328,
+          "vertexCount": 48,
+          "faceStart": 608,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        8,
+        11
+      ],
+      "vertices": 376,
+      "faces": 700
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "low freight deck",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "raised aft pressure envelope",
+          "vertexStart": 8,
+          "vertexCount": 8,
+          "faceStart": 12,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "longitudinal low deck support",
+          "vertexStart": 16,
+          "vertexCount": 8,
+          "faceStart": 24,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "longitudinal low deck support",
+          "vertexStart": 24,
+          "vertexCount": 8,
+          "faceStart": 36,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "longitudinal low deck support",
+          "vertexStart": 32,
+          "vertexCount": 8,
+          "faceStart": 48,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 40,
+          "vertexCount": 60,
+          "faceStart": 60,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 6,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 100,
+          "vertexCount": 8,
+          "faceStart": 176,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 108,
+          "vertexCount": 8,
+          "faceStart": 188,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 116,
+          "vertexCount": 24,
+          "faceStart": 200,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 140,
+          "vertexCount": 24,
+          "faceStart": 244,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 164,
+          "vertexCount": 8,
+          "faceStart": 288,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "low-loader",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 172,
+          "vertexCount": 24,
+          "faceStart": 300,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 196,
+          "vertexCount": 24,
+          "faceStart": 344,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "low-loader",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        8,
+        11
+      ],
+      "vertices": 220,
+      "faces": 388
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

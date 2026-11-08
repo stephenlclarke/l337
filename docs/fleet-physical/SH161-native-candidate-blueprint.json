@@ -1,0 +1,96 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH161-complete31part-native-candidate-v1",
+  "ship": "SH161",
+  "name": "Wolf Citadel",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "354edb2f79b3b82e39dda176b9b68a6407172467547381e0a873665cb9d5e53b",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH161-design.toml",
+    "bytes": 330651,
+    "sha256": "0335361ca8aac1cc868e380b3312e2ffb222318803329f5a10c70a21cdf89621"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH161.toml",
+    "bytes": 334768,
+    "sha256": "7bf1de5fb1589f47a9ef65433f854e0645c97433f0e7cbe025d96851db813821"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH161.json",
+    "bytes": 71627,
+    "sha256": "9e5b1202d19f0831e195e4ace107d8ba0677721066cafdb33d87914f259f7817"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH161-native-candidate-recipe.py",
+    "bytes": 9714,
+    "sha256": "909e5ae2e4e2de64c7ef66a3f0884760de0b164c3c25d2195a05c969c4a6352a"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH161-native-candidate-tests.py",
+    "bytes": 6765,
+    "sha256": "124aae01a7743f0625bbcb8ebce05b25a07ea7f009ee47aa41d6a8ea39b4ca68"
+  },
+  "baseline": {
+    "declaredNativeFaces": 788,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 4,
+    "changedOriginalPartIndices": [
+      12,
+      17,
+      20,
+      21,
+      23,
+      24
+    ],
+    "unchangedFixedOriginalParts": 25,
+    "status": "NEW angular approximation only; actual output count and full source fidelity UNKNOWN"
+  },
+  "retained": [
+    "All31 original native components in exact original order and material ownership",
+    "Both spine pressure/shoulder boxes, all SIX shoulder recessed wells, both transverse bridges",
+    "Original five-station central pod and ALL FOUR original recessed service wells with exact analytical station interpolation",
+    "Complete cockpit glazing AND connected structural crossmember",
+    "Both connected engine supports, both full casings AND both luminous recesses",
+    "ALL six original geometric docking-frame pieces and clear central opening",
+    "Original Wolf family members157..161 and exact recipe mark scaling",
+    "Exact original palette/material emission/textures/license/source metadata; genuine serializer regenerates every face UV/texture association"
+  ],
+  "coordinates": "Original coordinates/axes/origin/units unchanged, no rescale/recentre. Existing calibration1000000/22443 uncomputed.",
+  "coupledRuntime": {
+    "domain": "Current R3 station environment, no ordinary ship game/performance table",
+    "staffing": "environment.playerCrewRequired=false grants no zero-person census or hardware absence",
+    "authority": "Geometric docking frame does not install an operational port, provider, service, occupied ward or station actor; existing Stage/source/save/native guards unchanged"
+  },
+  "stopRules": [
+    "Reject changed original source/creator/primitive/family/current-resource hashes before geometry",
+    "Exact original packaged detailed/native tables required",
+    "All31 original positive components/material sets required; never omit a well/propulsion recess/docking frame piece",
+    "Complete generated output<=512 and genuine checked closure/winding required; no cap waiver",
+    "25 fixed parts must retain exact original vertices/faces/materials/UVs in independent source tests",
+    "Actual curved source-profile/void/material/UV fidelity and native/occupied/physical qualification require G1; no source-only acceptance"
+  ],
+  "blocker": {
+    "missing": "Actual complete source/fidelity/native evidence and installed station ports/provider/occupied hardware/people/power/loaded physical source",
+    "responsibleOwner": "G1 actual native/source qualification; source owner supplies authentic installed/occupied input",
+    "next": "G1 generate once and run actual31part/fixed-source/UV/input-refusal tests, then full fidelity/native checks. G4 continues other remaining fleet entries independently."
+  }
+}

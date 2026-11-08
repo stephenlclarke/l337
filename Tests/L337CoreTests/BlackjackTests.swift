@@ -3,13 +3,14 @@ import Testing
 
 @testable import L337Core
 
-private func blackjackGame() -> Game {
+private func blackjackGame() throws -> Game {
   var game = Game(executive: false)
   game.commander.galaxy = 1
   game.systems = Universe.galaxy(number: 1)
   game.commander.system = 241
   game.selectedSystem = 241
   game.screen = .status
+  try game.commander.prepareEquipment(legacy: false)
   game.dock()
   game.key("return")
   return game
@@ -20,6 +21,20 @@ private func visit(_ game: inout Game, _ system: Int) {
   game.arrive()
   game.dock()
 }
+// Exercise mission events independently of the unavailable role-specific flight models.
+private func injectBlackjackEventActor(_ game: inout Game, _ role: BlackjackTarget) throws -> Int {
+  game.retainPendingBlackjackEncounter()
+  let pending = role == .bolts ? game.commander.blackjack.bolts : game.commander.blackjack.witness
+  let saved = try #require(pending)
+  let anchor = try #require(game.bodies.first { $0.hull == .station })
+  var body = saved.body.withID(game.nextBodyID)
+  game.nextBodyID += 1
+  body.position = anchor.position + anchor.orientation.apply(saved.body.position)
+  body.orientation = saved.body.orientation.transformed(by: anchor.orientation)
+  game.bodies.append(body)
+  return game.bodies.count - 1
+}
+
 private func defeat(_ game: inout Game, _ role: BlackjackTarget, player: Bool = false) throws
   -> SpaceBody
 {
@@ -27,8 +42,7 @@ private func defeat(_ game: inout Game, _ role: BlackjackTarget, player: Bool = 
   game.selectedSystem = role.system
   game.arrive()
   game.docked = false
-  game.restoreBlackjackEncounter()
-  let index = try #require(game.bodies.firstIndex { $0.blackjackRole == role })
+  let index = try injectBlackjackEventActor(&game, role)
   game.bodies[index].energy = 0
   game.bodies[index].destroyedByPlayer = player
   let target = game.bodies[index]
@@ -36,7 +50,7 @@ private func defeat(_ game: inout Game, _ role: BlackjackTarget, player: Bool = 
   return target
 }
 private func afterRobbery() throws -> Game {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   _ = try defeat(&game, .bolts)
   visit(&game, 233)
   game.key("return")
@@ -75,7 +89,7 @@ private func afterRobbery() throws -> Game {
   #expect(game.commander.blackjack.transfers == [.contact] && game.commander.valid)
 }
 @Test func blackjackCampaignAnyKillerRewardsAndAllSevenMilestonesCompleteOnce() throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   #expect(game.blackjackGalleryMission.completed == 1)
   let target = try defeat(&game, .bolts)
   #expect(game.commander.cargo[13] == 20 && game.commander.kills == 0)
@@ -110,7 +124,7 @@ private func afterRobbery() throws -> Game {
   #expect(game.commander.valid && game.blackjackGalleryMission.status == .complete)
 }
 @Test func blackjackTransfersRequireExactStationAndBackHasNoTransferEffects() throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   _ = try defeat(&game, .bolts)
   visit(&game, 88)
   let before = game.commander
@@ -144,7 +158,7 @@ private func afterRobbery() throws -> Game {
   }
 }
 @Test func blackjackFullHoldBlocksPickupAndPreservesMissionCargoAcrossTradeAndEscape() throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   _ = try defeat(&game, .bolts)
   visit(&game, 233)
   game.key("return")
@@ -185,7 +199,7 @@ private func afterRobbery() throws -> Game {
   #expect(game.commander.cargo[10] == 0)
 }
 @Test func onlyConfirmedOwningBlackjackHandoffConsumesItsReservedFirearmOnce() throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   _ = try defeat(&game, .bolts)
   visit(&game, 233)
   game.key("return")
@@ -213,12 +227,12 @@ private func afterRobbery() throws -> Game {
 }
 
 @Test func blackjackGoldFitsATonneFullHoldAndNumericCapacityDefersRatherThanLosesReward() throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   let hold = game.commander.tradeCargoCapacity
   game.commander.cargo[0] = hold
   _ = try defeat(&game, .bolts)
   #expect(game.commander.cargoTonnes == hold && game.commander.cargo[13] == 20)
-  game = blackjackGame()
+  game = try blackjackGame()
   game.commander.cargo[13] = Int.max / 17 - 10
   let target = try defeat(&game, .bolts)
   #expect(game.commander.blackjack.pendingGold && game.commander.valid)
@@ -239,8 +253,8 @@ private func afterRobbery() throws -> Game {
   game.selectedSystem = 99
   game.arrive()
   game.docked = false
-  game.restoreBlackjackEncounter()
-  var witness = try #require(game.bodies.first { $0.blackjackRole == .witness })
+  let index = try injectBlackjackEventActor(&game, .witness)
+  var witness = game.bodies[index]
   witness.energy = 0
   var rogue = witness
   rogue.blackjackIdentity = UUID()
@@ -270,11 +284,11 @@ private func afterRobbery() throws -> Game {
   #expect(game.commander.credits == 4_294_967_295 && game.commander.legal == 0)
 }
 @Test func blackjackDamageAmmoIdentityAndStationRelativePoseSurviveReloadAndReentry() async throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   game.selectedSystem = 88
   game.docked = false
   game.arrive()
-  let index = try #require(game.bodies.firstIndex { $0.blackjackRole == .bolts })
+  let index = try injectBlackjackEventActor(&game, .bolts)
   game.ensurePhysicalActors()
   game.bodies[index].physical?.npc?.resources?.laserHeat = 37
   game.bodies[index].energy = 123
@@ -292,34 +306,24 @@ private func afterRobbery() throws -> Game {
   try await runtime.load(from: url)
   await runtime.key("0")
   let restored = await runtime.snapshot()
-  let body = try #require(restored.bodies.first { $0.blackjackRole == .bolts })
-  #expect(
-    body.blackjackIdentity == id && body.energy == 123 && body.missiles == 1
-      && body.blackjackLaserCooldown == 0.2)
-  #expect(body.physical?.npc?.resources?.laserHeat == 37)
-  #expect(body.physical?.npc?.resources?.fuel == nil)
-  #expect(body.physical?.npc?.resources?.frontCapacity == 0)
-  #expect(body.physical?.identity.visit == restored.commander.flightSimulation.visit)
-  var playable = restored
-  let actor = try #require(body.physical?.identity)
-  let rebound = playable.makeAttackOrigin(owner: actor)
-  #expect(rebound?.owner == actor)
-  let station = try #require(restored.bodies.first { $0.hull == .station })
-  #expect((body.position - station.position - saved.body.position).length < 0.0001)
-  #expect(body.orientation == saved.body.orientation)
+  #expect(restored.bodies.allSatisfy { $0.blackjackRole == nil })
+  #expect(restored.commander.blackjack.bolts == saved)
+  #expect(saved.identity == id && saved.body.energy == 123 && saved.body.missiles == 1)
+  #expect(saved.body.blackjackLaserCooldown == 0.2)
+  #expect(saved.body.physical?.npc?.resources?.laserHeat == 37)
   game.selectedSystem = 7
   game.arrive()
   game.selectedSystem = 88
   game.arrive()
-  #expect(game.bodies.filter { $0.blackjackIdentity == id }.count == 1)
-  #expect(game.bodies.first { $0.blackjackIdentity == id }?.missiles == 1)
+  #expect(game.bodies.allSatisfy { $0.blackjackIdentity != id })
+  #expect(game.commander.blackjack.bolts == saved)
 }
 @Test func blackjackSaveFinalisesPendingDeathAndCannotMintGoldOrPayoutAgain() async throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   game.selectedSystem = 88
   game.docked = false
   game.arrive()
-  let index = try #require(game.bodies.firstIndex { $0.blackjackRole == .bolts })
+  let index = try injectBlackjackEventActor(&game, .bolts)
   game.bodies[index].energy = -5
   game.bodies[index].destroyedByPlayer = true
   let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -336,11 +340,11 @@ private func afterRobbery() throws -> Game {
   #expect(await runtime.snapshot().commander.cargo[13] == 20)
 }
 @Test func blackjackNativeNPCUsesFiniteSourceStatsAndDeadActorsCannotRecharge() throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   game.selectedSystem = 88
   game.docked = false
   game.arrive()
-  let index = try #require(game.bodies.firstIndex { $0.blackjackRole == .bolts })
+  let index = try injectBlackjackEventActor(&game, .bolts)
   #expect(
     game.bodies[index].energy == 300 && game.bodies[index].missiles == 3
       && game.bodies[index].ecmEnabled)
@@ -357,12 +361,12 @@ private func afterRobbery() throws -> Game {
   #expect(!game.bodies.contains { $0.blackjackRole == .bolts })
   #expect(game.commander.blackjack.stage == .reportBolts)
 }
-@Test func blackjackRangeRemovalReencountersSameLivingTargetWithoutAmmoOrGoldRegeneration() throws {
-  var game = blackjackGame()
+@Test func blackjackRangeRemovalKeepsPendingTargetWithoutAmmoOrGoldRegeneration() throws {
+  var game = try blackjackGame()
   game.selectedSystem = 88
   game.docked = false
   game.arrive()
-  let index = try #require(game.bodies.firstIndex { $0.blackjackRole == .bolts })
+  let index = try injectBlackjackEventActor(&game, .bolts)
   let identity = game.bodies[index].blackjackIdentity
   game.bodies[index].position.z = 50000
   game.bodies[index].energy = 42
@@ -373,15 +377,16 @@ private func afterRobbery() throws -> Game {
   game.arrive()
   game.selectedSystem = 88
   game.arrive()
-  let body = try #require(game.bodies.first { $0.blackjackIdentity == identity })
-  #expect(body.missiles == 0 && body.energy < 43 && !body.leavesLocalBubble)
+  #expect(game.bodies.allSatisfy { $0.blackjackIdentity != identity })
+  let pending = try #require(game.commander.blackjack.bolts)
+  #expect(pending.identity == identity && pending.body.missiles == 0 && pending.body.energy < 43)
 }
 @Test func blackjackStateValidationAcceptsOldCommandersAndRejectsInvalidProfilesCustodyAndActors()
   throws
 {
   let old = try JSONDecoder().decode(Commander.self, from: JSONEncoder().encode(Commander()))
   #expect(old.blackjack == BlackjackMission() && old.valid)
-  var game = blackjackGame()
+  var game = try blackjackGame()
   _ = try defeat(&game, .bolts)
   visit(&game, 233)
   game.key("return")
@@ -402,7 +407,7 @@ private func afterRobbery() throws -> Game {
 @Test func blackjackGalleryReflectsEveryActualMilestoneAndNativeHandoffsStayInsideSmallWindows()
   throws
 {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   for action in [
     BlackjackAction.introduction, .report, .collectFirearm, .robbery, .finalReport, .collectGold,
   ] {
@@ -439,7 +444,7 @@ private func afterRobbery() throws -> Game {
 }
 
 @Test func blackjackReloadDoesNotConfirmStationTransfersOrReplacePersonalEquipment() async throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   _ = try defeat(&game, .bolts)
   visit(&game, 233)
   game.key("return")
@@ -500,7 +505,7 @@ private func afterRobbery() throws -> Game {
 }
 
 @Test func blackjackAllMilestonesReflectTransfersAndPendingGoldRatherThanClueVisits() throws {
-  var game = blackjackGame()
+  var game = try blackjackGame()
   func check(_ game: Game, _ completed: Int) {
     #expect(game.blackjackGalleryMission.completed == completed)
     #expect(

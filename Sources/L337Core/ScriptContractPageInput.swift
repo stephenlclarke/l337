@@ -25,7 +25,6 @@ extension Game {
   }
   var scriptContractPageIdentity: ScriptContractPageIdentity {
     var fields = contractPageResourceFacts()
-    fields += rrsCourierPageFacts
     fields += financePageFacts
     fields += nativePeoplePageFacts
     fields += providerContractPageFacts
@@ -33,6 +32,7 @@ extension Game {
     fields += wayfarerColdChainPageFacts
     fields += wayfarerRepairLoopPageFacts
     fields += fieldReliefPageFacts
+    fields += isolationWorkPageFacts
     return contractPageIdentity(fields: fields)
   }
 
@@ -93,6 +93,7 @@ extension Game {
     var review: UUID? = nil
     if contractBoard.detail {
       review = contractBoard.wayfarerInductionQuote?.reviewToken
+      if review == nil { review = contractBoard.isolationWorkParentQuote?.reviewToken }
       if review == nil { review = contractBoard.glassMeridianQuote?.reviewToken }
       if review == nil { review = contractBoard.flightReceptionQuote?.reviewToken }
       if review == nil { review = contractBoard.measuredExtractionQuote?.reviewToken }
@@ -105,7 +106,6 @@ extension Game {
       if review == nil {
         review =
           contractBoard.peopleQuote?.reviewToken ?? contractBoard.financeQuote?.reviewToken
-          ?? contractBoard.rrsQuote?.reviewToken
       }
       if review == nil { review = contractBoard.quote?.reviewToken ?? contractBoard.reviewToken }
     }

@@ -1,0 +1,313 @@
+{
+  "maximumRows": 16,
+  "maximumSourceParses": 32,
+  "maximumWrites": 16,
+  "coordinateTransformations": 0,
+  "preserveExistingPerIDRuntimeCalibration": true,
+  "records": [
+    {
+      "id": "SH002",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH002-design.toml",
+          "sha256": "ed432e405f5051018a389f40bb76c4b1ab84a8babc6324986ca6a09ad6143b81",
+          "bytes": 1086421
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH002-design.toml",
+          "sha256": "5e665c3443a3f1fb2341d418dc9d5cbde7bc1f11d2761c67289defeb26e3c51a",
+          "bytes": 604362
+        }
+      ],
+      "oldResourceSHA256": "09a694955a926e2597a8b4634039c258684a2897fe7a2b420593059ec66321e7",
+      "currentR3SHA256": "c2319489558505ed3d4eb6a437e8870e4f6f20055912e337792e324200d0230f"
+    },
+    {
+      "id": "SH003",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH003-design.toml",
+          "sha256": "393f9921eb263690be1aa95ba3fbcc75f008fb31d3bceeef5b413e27c7bf10f5",
+          "bytes": 1537963
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH003-design.toml",
+          "sha256": "fb28b8fbf3ac54e12bd0513f70ab6ca9140e8c361086b42bc3bfe5e71b91a90a",
+          "bytes": 981089
+        }
+      ],
+      "oldResourceSHA256": "8a16bd4912404510d798461fec3053191b6bcd705d8845598d71d5a9dbc7a109",
+      "currentR3SHA256": "e4470633a66738c674f5e6cb61e1b464a89fd83c2f9b1c4b8a77b4b022788e0b"
+    },
+    {
+      "id": "SH004",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH004-design.toml",
+          "sha256": "1435b9432c036aee15b1f29e365292ee03068a59610fa5316d86c7513fdbaf75",
+          "bytes": 905915
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH004-design.toml",
+          "sha256": "aa7bd053625093d77bdb1414e43c77278e68f1bbb6db3ab37c409700bcdcfeb5",
+          "bytes": 483583
+        }
+      ],
+      "oldResourceSHA256": "9eb66b1338a86b17dce390226bf1b46d061115731f7118ff859823d6485f8002",
+      "currentR3SHA256": "9d5f40fbdb42fe6539e9cee6906a07aff1a6caa192f164cffda019e8b79e3d47"
+    },
+    {
+      "id": "SH012",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH012-design.toml",
+          "sha256": "8c8e319011fb2eb8920105ee6215e1f40f062468eb38c72531a9d3bdcab50223",
+          "bytes": 767476
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH012-design.toml",
+          "sha256": "980854a3c77366b6c0e1d8f559ffcbdad7bbf2fe510988fdd86a380477f6e297",
+          "bytes": 568083
+        }
+      ],
+      "oldResourceSHA256": "2e473c07e206de97a0025d1602527139a290b5cdb642b2d2bda900e846120278",
+      "currentR3SHA256": "a59ed199acd7c681bc4e590076b0853d19db9724c777c0aee483878d30fcb0df"
+    },
+    {
+      "id": "SH018",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH018-design.toml",
+          "sha256": "828a8e224097609690ed2f495ebebae2d5abbb71d5d771f5e9da30074d3e6e33",
+          "bytes": 678643
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH018-design.toml",
+          "sha256": "40e2a5fdd0f7945141cb55701deab76a64f974a38133f86333bb4fd8d199fbf6",
+          "bytes": 485189
+        }
+      ],
+      "oldResourceSHA256": "79c8e5f90f6ff13288e4ecd7d15240353259e6e1827ddfbb3492bd7157fb4f2d",
+      "currentR3SHA256": "93ec89428324d31d6639ad069107c767d7c0129d1683d26f27475fc89a56cc38"
+    },
+    {
+      "id": "SH019",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH019-design.toml",
+          "sha256": "58af5b5b80956d19cb2139d0bb26e2f0b76acc9d68be0bbe4f058dfb04833f0d",
+          "bytes": 990439
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH019-design.toml",
+          "sha256": "56172839f14cc1aca09814de34d181b98832e87e071130d0c4c930a760d66944",
+          "bytes": 749936
+        }
+      ],
+      "oldResourceSHA256": "ed2032dd1b81b675ad31d702f20482c8713744272dffac15301244fbe06172b3",
+      "currentR3SHA256": "9eb70cd7503964f5613f86cd6ceec2cf34f64598e8018779380fc6eca5b08a04"
+    },
+    {
+      "id": "SH027",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH027-design.toml",
+          "sha256": "4fc483ea2f2ed125a9809d0a83877901dde52f5ae453f160c32e1f00e40e3ade",
+          "bytes": 535665
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH027-design.toml",
+          "sha256": "db3494ecc09b427242eed021bae074124aad87c38fe03b654161d49269952484",
+          "bytes": 388221
+        }
+      ],
+      "oldResourceSHA256": "f2b807b0ebcda83d09475a9a5ce70519deb5a2926c406e48393e060093e308dd",
+      "currentR3SHA256": "7b038e5e6675b715d56d0ffbecf5ebaed4dd0216109c63aaf5c7dd990efa1aa8"
+    },
+    {
+      "id": "SH029",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH029-design.toml",
+          "sha256": "0d0741f3c0a1eed7595b65274eab5726bc1b22c258b6943f6fdb5332931e91b7",
+          "bytes": 403032
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH029-design.toml",
+          "sha256": "585cb9a7f47fb13f6249c09f2ccc262eb852c98ad10721a95730b68fc4eb7b5c",
+          "bytes": 296962
+        }
+      ],
+      "oldResourceSHA256": "a1912c9e56270b900069c89f1824d985f3cc32d482a1037a0927e213f9e685fc",
+      "currentR3SHA256": "229d27ea2c5213bd0993c99b9545997e065673e578b7120829e5c6bd06dafc59"
+    },
+    {
+      "id": "SH030",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH030-design.toml",
+          "sha256": "ec5b6c6c9f16103434f34c362e3e0d7645a784270cbc0456d5d846ee5de50027",
+          "bytes": 528693
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH030-design.toml",
+          "sha256": "92a8ba49e684eca12580df930e999bd6f21186821b92b87f8c381b0a3e017e66",
+          "bytes": 386731
+        }
+      ],
+      "oldResourceSHA256": "ce783ea0033a09d89358f3153b377fc069c8f1a74c145dc69c308f93867d66ff",
+      "currentR3SHA256": "774d49d514d03dba198d09762d04d30e74d3ea07dad7f1c34167f0978defb36d"
+    },
+    {
+      "id": "SH031",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH031-design.toml",
+          "sha256": "419207f7da1370f6d94926de946fa3fabaa5e2d406994aa17910d3d392655efd",
+          "bytes": 541818
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH031-design.toml",
+          "sha256": "099246e4cea539c64042a0749ba1873e3fdbe2dfba92c53bc7370c03719dea56",
+          "bytes": 390333
+        }
+      ],
+      "oldResourceSHA256": "97abaddeae4a6d27e92ee608a09a1cbaded935496765fe9952f16286d8f43922",
+      "currentR3SHA256": "cedbde09b76675e9fb3f6022d9c78330524be816ec3d3878f600c0b5244fc8b0"
+    },
+    {
+      "id": "SH032",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH032-design.toml",
+          "sha256": "b788996a9ff02d965244effa0179e6da3fcfa49daa7c65d1093f961937188a32",
+          "bytes": 977544
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH032-design.toml",
+          "sha256": "d87094362d608526b5e257173478f305b0b2f786d573abdb51f7ef613a4bb131",
+          "bytes": 713030
+        }
+      ],
+      "oldResourceSHA256": "251bddcc561cdfbc06c205268f41c0847b1f05fe112a64be379b16f1861eee16",
+      "currentR3SHA256": "9bbbecb8af20c7c20d0d95e0a1d82aeb27950d4a6243329af3a0e6848ecd3a6f"
+    },
+    {
+      "id": "SH033",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH033-design.toml",
+          "sha256": "915f8527f1e5766f20dca0424d921a8107da19a29385de6bc70d347b9777117d",
+          "bytes": 903953
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH033-design.toml",
+          "sha256": "2bdbe5b0f70a0d0316d8288d73457f96364fdad930fd7b746ce311437dacf435",
+          "bytes": 663207
+        }
+      ],
+      "oldResourceSHA256": "9421af5c6b8b01583b3f514664f614531279497047f39beae194d76b13a46a98",
+      "currentR3SHA256": "f2e0376401c62989cac6f1faad27d484e53627008818dabe0e49ae2e3f194c76"
+    },
+    {
+      "id": "SH035",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH035-design.toml",
+          "sha256": "bf2fc5f6dfc8e24ae4ee836af7d23879eb6dd76ead5ad28aea21f4d2f0cff280",
+          "bytes": 609375
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH035-design.toml",
+          "sha256": "78f0f2a3940b7c50c9dafc17323320da23173b25af19c16a0be427167949334a",
+          "bytes": 438871
+        }
+      ],
+      "oldResourceSHA256": "b8f752b12c7c3521df7180f3885dbb90cd4515791b58c03052a5885ca5b763ed",
+      "currentR3SHA256": "dff26cfb4027b272cb7e82c1fd967ec5aa8e27e4a74d2cdfd28a5a01a5836dae"
+    },
+    {
+      "id": "SH061",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "replacement-hulls/SH061-design.toml",
+          "sha256": "fad88f0e9cfc1f9a3748ab995b9fca058f675a0c8a6fc89bc72ccefd8399e26b",
+          "bytes": 856035
+        },
+        {
+          "role": "native",
+          "path": "replacement-hulls/SH061-design.toml",
+          "sha256": "fad88f0e9cfc1f9a3748ab995b9fca058f675a0c8a6fc89bc72ccefd8399e26b",
+          "bytes": 856035
+        }
+      ],
+      "oldResourceSHA256": "234f1bb05f53a1bf657fa27513732c758d4aa51bccba061edccb1039b82cf1ba",
+      "currentR3SHA256": "a5b9e65f897bebac9f94ab7ba88c5f38908bf13da7c85c5c3eff5b74ed96a4a4"
+    },
+    {
+      "id": "SH103",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH103-design.toml",
+          "sha256": "39ec7a78c9da5b4ff652255b4d278d1169821bb27941e1d34ccc2f97ce61eb90",
+          "bytes": 292935
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH103-design.toml",
+          "sha256": "39ec7a78c9da5b4ff652255b4d278d1169821bb27941e1d34ccc2f97ce61eb90",
+          "bytes": 292935
+        }
+      ],
+      "oldResourceSHA256": "965f48f068fe1ec43be1b7bf2bf3c022612ecaffbf5c3eb21b61f3adac541c8a",
+      "currentR3SHA256": "a867f71cdc9693f245c54a8c63d15a657a00c6ba7db782cfa384b6f6ee41ccdf"
+    },
+    {
+      "id": "SH108",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH108-design.toml",
+          "sha256": "ef7d78789eed53b721c6f9417abe5f79a0394613540ff901d8af1fd9c76e13f1",
+          "bytes": 510375
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH108-design.toml",
+          "sha256": "ef7d78789eed53b721c6f9417abe5f79a0394613540ff901d8af1fd9c76e13f1",
+          "bytes": 510375
+        }
+      ],
+      "oldResourceSHA256": "841a55e4d52914daf3eed067be322cd06661944b8d1279cba23df7cd338e48c2",
+      "currentR3SHA256": "e6dd044e8985abfeb14b7a23296389c5acbb210e901bebe64aa4cbbdc49c4de8"
+    }
+  ]
+}

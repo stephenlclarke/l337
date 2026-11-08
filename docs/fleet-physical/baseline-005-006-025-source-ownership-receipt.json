@@ -1,0 +1,106 @@
+{
+  "status": "ONE_AUTHORIZED_METADATA_PASS_TWO_SUCCESS_ONE_COMPLETED_VALIDATION_FAIL_NO_RETRY",
+  "inputFIRST": {
+    "path": "docs/fleet-physical/baseline-005-006-025-source-ownership-first.json",
+    "bytes": 13443,
+    "sha256": "9545a245e9672518ab3b551fd6b8419a0d7596e9b158d8be210f198d825d2d36"
+  },
+  "authoringFIRST": {
+    "path": "docs/fleet-physical/baseline-005-006-025-source-ownership-authoring-first.json",
+    "bytes": 1146,
+    "sha256": "ca78cb6f59757c32572355174dc7b5f60948d85d30164c5012cc8f48c00d0399"
+  },
+  "authoringSource": {
+    "path": "docs/fleet-physical/author-baseline-005-006-025-source-ownership.py",
+    "bytes": 29286,
+    "sha256": "f1fcea4f628856b9f22987f1fcf9c63cbb4f3da880ea86d7ef2413aaafb3ff9b"
+  },
+  "exactCommand": "python3 -E -B docs/fleet-physical/author-baseline-005-006-025-source-ownership.py",
+  "exitCode": 0,
+  "reportedWallTimeSeconds": 0.334200916,
+  "result": {
+    "path": "docs/fleet-physical/baseline-005-006-025-source-ownership/result.json",
+    "bytes": 1814,
+    "sha256": "5644776ddd090503c7c9fb1f600a265e38e3af57d5ea3831aac7281cab36206a"
+  },
+  "results": [
+    {
+      "bytes": 79624,
+      "currentNativeFaces": 492,
+      "currentNativeOwnership": "UNISSUED_CURRENT_CUSTOM_NATIVE_APPEND_PROVENANCE",
+      "file": "baseline-005-006-025-source-ownership/SH005.json",
+      "id": "SH005",
+      "originalDetailedFaces": 2212,
+      "sha256": "72987d6cbc182b6f4c10d4b24f7ab08131d2401ff4e25c6e49ad8f4b531638c0",
+      "status": "INTEGER_SOURCE_COMPONENT_CORRESPONDENCE_ONLY_NOT_GEOMETRY_OR_ENGINEERING_ADOPTION"
+    },
+    {
+      "bytes": 79672,
+      "currentNativeFaces": 492,
+      "currentNativeOwnership": "UNISSUED_CURRENT_CUSTOM_NATIVE_APPEND_PROVENANCE",
+      "file": "baseline-005-006-025-source-ownership/SH006.json",
+      "id": "SH006",
+      "originalDetailedFaces": 2212,
+      "sha256": "e718fad1d2d38d323451aeed3299064da1e533170367674949ee3213afce461b",
+      "status": "INTEGER_SOURCE_COMPONENT_CORRESPONDENCE_ONLY_NOT_GEOMETRY_OR_ENGINEERING_ADOPTION"
+    },
+    {
+      "artifact": {
+        "presence": "ABSENT"
+      },
+      "error": "AssertionError: ",
+      "id": "SH025",
+      "status": "SOURCE_CORRESPONDENCE_STOP_NO_RECORD"
+    }
+  ],
+  "used": {
+    "currentCorrespondenceFaceComparisons": 7908,
+    "currentNativeFaces": 984,
+    "designParses": 6,
+    "faceIndexChecks": 58548,
+    "faceMaterialChecks": 19516,
+    "partRecords": 480,
+    "resultRecords": 2
+  },
+  "caps": {
+    "maximumDesignParses": 6,
+    "maximumPartRecords": 1024,
+    "maximumFaceIndexChecks": 60204,
+    "maximumFaceMaterialChecks": 20068,
+    "maximumCurrentCorrespondenceFaceComparisons": 7908,
+    "maximumCurrentNativeFaces": 1536,
+    "maximumResultRecords": 3,
+    "maximumRecordBytes": 1048576
+  },
+  "SH025RecordAbsenceEstablished": true,
+  "ownedTemporaryNamesAbsent": true,
+  "separateSourceTextAttributionFIRST": {
+    "path": "docs/fleet-physical/baseline-025-stop-text-attribution-first.json",
+    "bytes": 1280,
+    "sha256": "4b70a8b67ce059814054d207a691b3fc030a68a3ede6963d2cf84cf955e6bef4"
+  },
+  "separateSourceTextAttribution": {
+    "path": "docs/fleet-physical/baseline-025-stop-text-attribution.json",
+    "bytes": 676,
+    "sha256": "bbec0d649b755968cbf712ace88c43fe931855e64be4c216f7a3e6c292036136"
+  },
+  "sourceTextBoundary": "964face/536vertex source declaration brackets counted without TOML parse/coordinate conversion/index ownership rerun; failed<=512guard identified. Not geometry/fidelity/game acceptance.",
+  "proposedRoles": {
+    "path": "docs/fleet-physical/baseline-005-006-role-engineering-proposal.json",
+    "bytes": 128063,
+    "sha256": "c6c8fb32f0f3b2b1ca58297e3e023cafbf7f0b7e9859a7c40df4cc69a436cbd2"
+  },
+  "consumerGapMap": {
+    "path": "docs/fleet-physical/baseline-005-006-025-consumer-gap-map.json",
+    "bytes": 8589,
+    "sha256": "76ef713c74274ee058ea30dfef30c2a5d814333d3ebe57bb0e77de6b45ddf17a"
+  },
+  "rootEngineeringOrNumericAuthority": false,
+  "coordinateConversions": 0,
+  "areaCentroidMassTensorEvaluations": 0,
+  "sourceGeometryWrites": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "nativeCompilerRendererTests": 0,
+  "retries": 0,
+  "capRaises": 0
+}

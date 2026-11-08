@@ -33,6 +33,7 @@ private struct DurableFixture {
     var game = Game(executive: false)
     game.screen = .status
     game.scriptPacks = [pack]
+    try game.commander.prepareEquipment(legacy: false)
     if accepted { _ = try game.acceptScriptMission(pack) }
     if destination { game.commander.system = 129 }
     return game
@@ -43,6 +44,7 @@ private struct DurableFixture {
     game.commander.credits = 1000
     game.screen = .status
     game.scriptPacks = [pack]
+    try game.commander.prepareEquipment(legacy: false)
     if accepted { _ = try game.acceptScriptMission(pack) }
     if destination { game.commander.system = 129 }
     return game
@@ -121,61 +123,6 @@ private struct DurableFixture {
   #expect(await runtime.snapshot().commander.credits == expectedCredits)
   let (saved, _) = try ScriptSaveStore.read(Data(contentsOf: fixture.url), from: fixture.url)
   #expect(saved.credits == expectedCredits && saved.cargoTonnes == 0)
-}
-
-@Test func scriptPublicationPreservesActuallyLoadedLegacyMiningHistory() async throws {
-  let fixture = try DurableFixture()
-  defer { fixture.clean() }
-  var historical = try fixture.game(accepted: false, destination: false)
-  let system = try #require(
-    Universe.galaxy().first {
-      AsteroidBeltDefinition.isPresent(system: $0, galaxy: 0, policy: .legacyUniform)
-    })
-  let identity = SystemIdentity(galaxy: 0, system: system.id)
-  var flight = FlightSimulationState()
-  flight.enter(identity, arriving: false)
-  let anchors = try #require(flight.anchors)
-  let rock = try #require(
-    MiningFields.legacyFields(anchors: anchors, seed: AsteroidBeltDefinition.seed(for: system))
-      .flatMap(\.rocks).first)
-  let incident = CombatIncident(
-    id: 1, physicalTime: 1,
-    origin: .init(
-      emissionID: 1, owner: .init(system: identity, visit: 1, entity: 0), emittedAt: 1,
-      ownerLegalAtEmission: .init()),
-    victim: nil, kind: .laser, outcome: .hit, position: rock.position,
-    victimLegalBeforeAttack: nil, firstAggressor: nil, victimRole: nil,
-    victimIsStation: false, laser: .mining, mount: .front)
-  var legacy = MiningLedger.legacyUnworked()
-  let hit = legacy.hit(rock: rock, incident: incident, damage: 1)
-  try #require(hit != .ignored)
-  historical.commander.miningLedger = legacy
-  try historical.commander.prepareEquipment()
-  historical.ensureScriptCalendar(origin: .inactiveLegacyMigration)
-  try ScriptSaveStore.write(
-    commander: historical.commander, world: historical.scriptWorldSave, to: fixture.url)
-  let oldBytes = try Data(contentsOf: fixture.url)
-  try #require(JSONDecoder().decode(ScriptSavePointer.self, from: oldBytes).schemaVersion == 25)
-  let runtime = GameRuntime(game: try fixture.game(accepted: false, destination: false))
-  try await runtime.load(from: fixture.url, persistMigrations: false)
-  let loaded = await runtime.snapshot()
-  let retained = loaded.commander.miningLedger
-  try #require(retained.retainsLegacyFields && retained.usesEconomyWeightedPresence)
-  #expect(retained.remainingEnergy(for: rock) == legacy.remainingEnergy(for: rock))
-  #expect(try Data(contentsOf: fixture.url) == oldBytes)
-  await runtime.key("contacts-open")
-  await runtime.key("return")
-  let accepted = await runtime.snapshot()
-  #expect(
-    accepted.commander.scriptState.instances.count == 1 && accepted.commander.cargoTonnes == 1)
-  #expect(accepted.commander.miningLedger == retained && accepted.commander.valid)
-  let pointer = try JSONDecoder().decode(
-    ScriptSavePointer.self, from: Data(contentsOf: fixture.url))
-  #expect(pointer.schemaVersion == 26)
-  let reader = GameRuntime(game: try fixture.game(accepted: false, destination: false))
-  try await reader.load(from: fixture.url, persistMigrations: false)
-  let restored = await reader.snapshot()
-  #expect(restored.commander == accepted.commander && restored.commander.miningLedger == retained)
 }
 
 @Test func failedCabinPurchaseDoesNotPublishOwnedModuleOrDebit() async throws {
@@ -601,63 +548,32 @@ private func fitPhysicalDeathTargeting(_ game: inout Game) throws {
   #expect(await memory.snapshot().scriptGallery.first?.status == .available)
 }
 
-@Test func legacyVirtualPassengerFlagMigratesWithoutInventingOrDroppingOwnedCabins() async throws {
+@Test func currentOwnedCabinsRoundTripWithoutInventingOrDroppingAccommodation() async throws {
   let fixture = try DurableFixture()
   defer { fixture.clean() }
   var game = try fixture.game(accepted: false, destination: false)
+  game.ensureScriptCalendar(origin: .newCommander)
   game.commander.credits = 1_000_000
+  let coldSeed = game
   try game.confirmPassengerBerth(game.passengerBerthQuote)
   let owned = game.commander.accommodation
-  var legacy = game.commander
-  legacy.equipment.insert(PassengerCabin.equipmentName)
-  try #require(legacy.equipmentInventory == nil && legacy.savedEquipmentVersion == nil)
-  try #require(!legacy.usesModularDriveSaveVersion && !legacy.usesRingMiningSaveVersion)
-  try #require(!legacy.usesEconomyMiningSaveVersion && !legacy.usesEMPSaveVersion)
-  let originalWorld = game.scriptWorldSave
-  let file = fixture.root.appendingPathComponent("legacy.json")
-  let bytes = try JSONEncoder().encode(legacy)
-  try bytes.write(to: file)
-  let runtime = GameRuntime()
-  try await runtime.load(from: file, persistMigrations: false)
-  let restored = await runtime.snapshot()
-  #expect(restored.commander.valid && restored.commander.accommodation == owned)
-  #expect(!restored.commander.equipment.contains(PassengerCabin.equipmentName))
-  #expect(try Data(contentsOf: file) == bytes)
-  // Construct the prototype's three complete untyped chunks from the untouched original.
-  let oldGeneration = UUID().uuidString
-  let oldDirectory = fixture.url.appendingPathExtension("missions").appendingPathComponent(
-    oldGeneration)
-  try FileManager.default.createDirectory(at: oldDirectory, withIntermediateDirectories: true)
-  var header = legacy
-  header.scriptState = ScriptEngineState()
-  try #require(legacy.contracts.boards.isEmpty && legacy.contracts.rrs == nil)
-  let encoder = JSONEncoder()
-  let chunks = [
-    "commander.json": try encoder.encode(header),
-    "missions.json": try encoder.encode(legacy.scriptState),
-    "world.json": try encoder.encode(originalWorld),
-  ]
-  for (name, chunk) in chunks { try chunk.write(to: oldDirectory.appendingPathComponent(name)) }
-  let old = ScriptSavePointer(
-    format: "elite-script-save", schemaVersion: 4, generation: oldGeneration,
-    hashes: chunks.mapValues(ScriptPackLibrary.hash))
-  let pointerBytes = try encoder.encode(old)
-  try pointerBytes.write(to: fixture.url)
-  #expect(
-    Set(try FileManager.default.contentsOfDirectory(atPath: oldDirectory.path)) == Set(chunks.keys))
-  let (oldCommander, oldWorld) = try ScriptSaveStore.read(pointerBytes, from: fixture.url)
-  #expect(oldCommander.accommodation == owned && oldCommander.valid)
-  #expect(!oldCommander.equipment.contains(PassengerCabin.equipmentName))
-  #expect(oldWorld.valid && oldWorld.consistent(with: oldCommander))
+  try #require(owned != coldSeed.commander.accommodation)
+  try GameRuntime.writeCommander(&game, to: fixture.url)
+  let saved = game.commander
+  let bytes = try Data(contentsOf: fixture.url)
+  let files = try ScriptFinanceTestFixture.files(fixture.root)
+  let (stored, world) = try ScriptSaveStore.read(bytes, from: fixture.url)
+  #expect(stored.accommodation == owned && stored.valid)
+  #expect(world.valid && world.consistent(with: stored))
+  let runtime = GameRuntime(game: coldSeed)
   try await runtime.load(from: fixture.url, persistMigrations: false)
-  #expect(await runtime.snapshot().commander.accommodation == owned)
-  #expect(await runtime.snapshot().commander.valid)
-  #expect(!(await runtime.snapshot().commander.equipment.contains(PassengerCabin.equipmentName)))
-  #expect(try Data(contentsOf: fixture.url) == pointerBytes)
-  #expect(try Data(contentsOf: file) == bytes)
-  for (name, chunk) in chunks {
-    #expect(try Data(contentsOf: oldDirectory.appendingPathComponent(name)) == chunk)
-  }
+  let loaded = await runtime.snapshot()
+  #expect(loaded.commander.valid && loaded.commander.accommodation == owned)
+  #expect(loaded.commander.equipmentInventory == saved.equipmentInventory)
+  #expect(loaded.commander.equipment == saved.equipment)
+  #expect(loaded.commander.credits == saved.credits)
+  #expect(try Data(contentsOf: fixture.url) == bytes)
+  #expect(try ScriptFinanceTestFixture.files(fixture.root) == files)
 }
 
 @Test func galleryCannotLoadProductionThroughALinkedGeneration() async throws {

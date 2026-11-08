@@ -1,0 +1,201 @@
+{
+  "id": "SH125",
+  "geometrySHA256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1",
+  "contractSHA256": "66671c43983362d99fa0ecbc361fe224db0a7ac50799fd7d35cedb4d3fa4506e",
+  "status": "EXACT_SOURCE_OWNERSHIP_NEW_STOCK_DECLARATIONS_NOT_PHYSICAL_QUALIFICATION",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "closed jade shell source interval 0",
+          "vertexStart": 0,
+          "vertexCount": 2234,
+          "faceStart": 0,
+          "faceCount": 4464,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "closed jade shell source interval 1",
+          "vertexStart": 2234,
+          "vertexCount": 864,
+          "faceStart": 4464,
+          "faceCount": 1728,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "closed jade shell source interval 2",
+          "vertexStart": 3098,
+          "vertexCount": 864,
+          "faceStart": 6192,
+          "faceCount": 1728,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "closed jade shell source interval 3",
+          "vertexStart": 3962,
+          "vertexCount": 2234,
+          "faceStart": 7920,
+          "faceCount": 4464,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "single complete gold core sphere",
+          "vertexStart": 6196,
+          "vertexCount": 3386,
+          "faceStart": 12384,
+          "faceCount": 6768,
+          "allowedSourceMaterials": [
+            2
+          ],
+          "creatorMethod": "larvaal.patch complete core",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredPropulsionPartIndices": [],
+      "creatorDeclaredSensoryPartIndices": [],
+      "vertices": 9582,
+      "faces": 19152
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "closed jade shell source interval 0",
+          "vertexStart": 0,
+          "vertexCount": 578,
+          "faceStart": 0,
+          "faceCount": 1152,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "closed jade shell source interval 1",
+          "vertexStart": 578,
+          "vertexCount": 288,
+          "faceStart": 1152,
+          "faceCount": 576,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "closed jade shell source interval 2",
+          "vertexStart": 866,
+          "vertexCount": 288,
+          "faceStart": 1728,
+          "faceCount": 576,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "closed jade shell source interval 3",
+          "vertexStart": 1154,
+          "vertexCount": 578,
+          "faceStart": 2304,
+          "faceCount": 1152,
+          "allowedSourceMaterials": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "creatorMethod": "larvaal.patch outer/inner/edge closure",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "single complete gold core sphere",
+          "vertexStart": 1732,
+          "vertexCount": 830,
+          "faceStart": 3456,
+          "faceCount": 1656,
+          "allowedSourceMaterials": [
+            2
+          ],
+          "creatorMethod": "larvaal.patch complete core",
+          "creatorDomain": "generate.py larvaal(native), explicit four closed shell intervals and one core",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredPropulsionPartIndices": [],
+      "creatorDeclaredSensoryPartIndices": [],
+      "vertices": 2562,
+      "faces": 5112
+    }
+  },
+  "proposedStock": "New explicit structural/organ-envelope stock equivalent14kg/m2; named Vulture glass equivalent5kg/m2 only. No recovered tissue/density or mechanism mass.",
+  "units": "Exact frame evidence is separate; no source scale or coordinates evaluated.",
+  "hardware": "Source organ/casing function recorded where explicit; no human system defaults or mass granted."
+}

@@ -9,6 +9,7 @@ private func savedSolarMission() throws -> Game {
     .deletingLastPathComponent().appendingPathComponent("docs/mission-packs/scripted-courier")
   let pack = try ScriptPackLibrary.read(folder)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   _ = try game.acceptScriptMission(pack)

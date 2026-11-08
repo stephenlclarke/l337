@@ -1,0 +1,95 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH049-complete26part-native-candidate-v1",
+  "ship": "SH049",
+  "name": "Hyena",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "5259887cd03e65b86d4430361cbedfa2c6a1f6876d3e212540fa2c2c79c3f04a",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH049-design.toml",
+    "bytes": 520118,
+    "sha256": "2a7b44a76ef0f5c34c5e0596d5636f746145dfdc08cc75f151834bf11e477b10"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH049.toml",
+    "bytes": 544200,
+    "sha256": "cd6f340288d45b7091b6b1e0e266c7110c2f9939e48f98f939c47481097fe93e"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH049.json",
+    "bytes": 109462,
+    "sha256": "4e4154a33d18b1ab955e82a51fe64c3203f7f14fc0f892a310e80181afb15f02"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH049-native-candidate-recipe.py",
+    "bytes": 8006,
+    "sha256": "dd357a6df8a833c5695aa688938e41d5e5b9a104d6cc7497e10dcbc2c5bee17b"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH049-native-candidate-tests.py",
+    "bytes": 9550,
+    "sha256": "94ec208bfbdcdc0ef6d31d9a0ac2fb80fb4af2987e4459ee7f2f4f488501e6f3"
+  },
+  "baseline": {
+    "declaredNativeFaces": 952,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "allLoftSides": 4,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      13,
+      18,
+      21,
+      22,
+      24,
+      25
+    ],
+    "unchangedFixedOriginalParts": 18,
+    "status": "NEW angular approximation only; actual output count/full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "BOTH full5station forward pod envelopes/endcaps atX+-beam*.34,Y-.10,Zlength*.11,length*.91,widthbeam*.20,heightwidth*.72",
+    "BOTH original complete longitudinal shoulder envelopes with actual dimensions/material1 and full aft cross bridge/material2",
+    "Complete5station centralbody/endcaps at(0,.28,-length*.11),length*.55,width.28,height.23",
+    "ALL TWELVE analytical recessed wells with own original pod/centralbody source geometry and skin0/inset3",
+    "Full cockpit/support and both complete connected drives/casings/luminous recesses at xbeam*.38/radius.23",
+    "Exact own original sand-graphite palette/material/emission/textures/license/source; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Own original length2.5/beam2.15/source axes/coordinates/origin/units retained. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Hyena R3/name/game remain pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "Fork/shoulder/envelope labels grant no installed hardware/power/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry; other original fork entry cannot substitute",
+    "Both actual packaged original geometry tables remain exact",
+    "All26 original positive components/material sets stay, including BOTHforkpods/centralbody/ALL12wells/BOTHshoulders/bridge/cockpit/full drives",
+    "All FIVE original stations per pod and TWO per drive remain",
+    "Complete actual output must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require18 fixed components exact original vertices/localfaces/material sequences/UVs and all3pod station/extrema/offsets",
+    "Full actual curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run26part/exact18fixed/all12wells/BOTHshoulders/3podstations-extrema-offsets/cross-entry/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

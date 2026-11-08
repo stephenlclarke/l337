@@ -8,7 +8,7 @@ import Testing
     "xyzzy.constrictor/constrictor", "xyzzy.plans/plans", "xyzzy.blackjack/blackjack",
   ]
   let names = [
-    "Constrictor Hunt", "Thargoid Plans", "Blackjack's Bullion",
+    "Aegis Prototype Hunt", "Thargoid Plans", "Blackjack's Bullion",
     "Native crew capture and escape-pod rescue",
   ]
   let milestones = [
@@ -75,8 +75,9 @@ import Testing
   game.commander.galaxy = 2
   #expect(game.missionCatalogue[1].status == .available)
 }
-@Test func galleryFreezesFlightAndPreservesSettingsPausedStateAndMissionOffers() async {
+@Test func galleryFreezesFlightAndPreservesSettingsPausedStateAndMissionOffers() async throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.screen = .rear
   game.commander.xyzzyActive = true

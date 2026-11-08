@@ -13,6 +13,7 @@ import Testing
       "docs/mission-packs/courier.toml")
   let entry = try MissionPackLibrary.read(example)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.missionPacks = try MissionPackLibrary.checked(MissionPackLibrary.bundled.entries + [entry])
   let runtime = GameRuntime(game: game, saveURL: root.appendingPathComponent("commander.json"))

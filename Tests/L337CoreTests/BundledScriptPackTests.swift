@@ -29,17 +29,14 @@ private let bundledSealedDispatchDigest =
   "93289d5daf873d0cf878b37fa55178e4ab91cf6fa1947f379a54c3bc04267ae7"
 
 private let bundledOriginalRescueDigest = NativeOriginalRescueJourney.digest
-private let bundledOrbitalOutlookDigest =
-  "cf5076adbecad912603ddd146aeb2ead31621bf698ff4a4a7071a2b66b2cf798"
+private let bundledOrbitalOutlookDigest = NativeOrbitalOutlookJourney.digest
 
 private let bundledCabinJourneyDigest =
   "2e2f46e0bed56f79c489cf21c438289c07469511336beaf1ef953f38253dc800"
 private let bundledConsentedFreightDigest =
   "37ca73ed1b3f3656c42baedaf8dbaa3ee8aa3798ccf23e376c3c25ceac9bd572"
-private let bundledCorridorDefenceDigest =
-  "ec6b00bfe07466f4d205c415adff00ef1fb0a9a56b487d5a1312dfe3f314762c"
-private let bundledVerifiedWarrantDigest =
-  "f125be8200d0dd3ae834f2dc4cd52da46f7c571de7e67cbec61f76c7beab9911"
+private let bundledCorridorDefenceDigest = OriginalCorridorDefence.digest
+private let bundledVerifiedWarrantDigest = OriginalVerifiedWarrant.digest
 
 /// Preserve the original 23 provider/people rows while accounting for later authored services.
 private func originalBundledBoardRows(_ rows: [ContractBoardRow]) -> [ContractBoardRow] {
@@ -344,6 +341,8 @@ struct BundledScriptPackTests {
     defer { try? FileManager.default.removeItem(at: namespace) }
     let trial = await runtime.snapshot()
     #expect(trial.isMissionTrial && trial.screen == .contracts)
+    #expect(trial.commander.shipID == "SH025" && trial.commander.valid)
+    #expect(trial.commander.nativeCrewMissing == 0)
     #expect(trial.contractBoard.rows.filter { $0.people == .journey(.request) }.count == 1)
     #expect(trial.contractBoard.rows.filter { $0.people == .outlook(.request) }.count == 1)
     #expect(contracts.contractBoard.rows.filter { $0.people == .outlook(.request) }.count == 1)

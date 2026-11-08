@@ -11,13 +11,13 @@ public struct ContractBoardRow: Sendable {
   public var offer: ScriptContractOffer? { offerStorage.first }
   public let title: String
   public let reason: String?
-  var rrs: RRSCourierRow?
   var finance: ScriptFinanceRow?
   var people: NativePeopleStationRow?
   var provider: ProviderContractRow?
   var repairLoop: WayfarerRepairLoopBoardRow?
   var coldChain: WayfarerColdChainBoardRow?
   var survey: NativeOriginalSurveyAction?
+  var inquiry: NativeC01InquiryPhase?
   var glassMeridian: NativeGlassMeridianAction?
   var wayfarerInduction: NativeWayfarerInductionAction?
   var inductionCapacityUnit: UUID?
@@ -31,19 +31,26 @@ public struct ContractBoardRow: Sendable {
   var recordRecovery: WayfarerRecordRecoveryAction?
   var identifiedSalvage: NativeIdentifiedSalvageAction?
   var utility: NativeUtilityAction?
+  var underTow: NativeUnderTowAction?
+  var borrowedVoice: NativeBorrowedVoiceAction?
+  var quietChoir: NativeQuietChoirAction?
+  var memoryAtlas: NativeMemoryAtlasAction?
+  var signedPassageOpening: NativeSignedPassageOpeningAction?
+  var assemblyOfOrbits: NativeAssemblyOfOrbitsAction?
+  var isolationWorkParent: NativeIsolationWorkParentAction?
 
   init(
     board: String,
     offer: ScriptContractOffer?,
     title: String,
     reason: String?,
-    rrs: RRSCourierRow? = nil,
     finance: ScriptFinanceRow? = nil,
     people: NativePeopleStationRow? = nil,
     provider: ProviderContractRow? = nil,
     repairLoop: WayfarerRepairLoopBoardRow? = nil,
     coldChain: WayfarerColdChainBoardRow? = nil,
     survey: NativeOriginalSurveyAction? = nil,
+    inquiry: NativeC01InquiryPhase? = nil,
     glassMeridian: NativeGlassMeridianAction? = nil,
     wayfarerInduction: NativeWayfarerInductionAction? = nil,
     inductionCapacityUnit: UUID? = nil,
@@ -56,19 +63,26 @@ public struct ContractBoardRow: Sendable {
     measuredExtraction: NativeMeasuredExtractionAction? = nil,
     recordRecovery: WayfarerRecordRecoveryAction? = nil,
     identifiedSalvage: NativeIdentifiedSalvageAction? = nil,
-    utility: NativeUtilityAction? = nil
+    utility: NativeUtilityAction? = nil,
+    underTow: NativeUnderTowAction? = nil,
+    borrowedVoice: NativeBorrowedVoiceAction? = nil,
+    quietChoir: NativeQuietChoirAction? = nil,
+    memoryAtlas: NativeMemoryAtlasAction? = nil,
+    signedPassageOpening: NativeSignedPassageOpeningAction? = nil,
+    assemblyOfOrbits: NativeAssemblyOfOrbitsAction? = nil,
+    isolationWorkParent: NativeIsolationWorkParentAction? = nil
   ) {
     self.board = board
     if let offer { offerStorage = [offer] } else { offerStorage = [] }
     self.title = title
     self.reason = reason
-    self.rrs = rrs
     self.finance = finance
     self.people = people
     self.provider = provider
     self.repairLoop = repairLoop
     self.coldChain = coldChain
     self.survey = survey
+    self.inquiry = inquiry
     self.glassMeridian = glassMeridian
     self.wayfarerInduction = wayfarerInduction
     self.inductionCapacityUnit = inductionCapacityUnit
@@ -82,15 +96,30 @@ public struct ContractBoardRow: Sendable {
     self.recordRecovery = recordRecovery
     self.identifiedSalvage = identifiedSalvage
     self.utility = utility
+    self.underTow = underTow
+    self.borrowedVoice = borrowedVoice
+    self.quietChoir = quietChoir
+    self.memoryAtlas = memoryAtlas
+    self.signedPassageOpening = signedPassageOpening
+    self.assemblyOfOrbits = assemblyOfOrbits
+    self.isolationWorkParent = isolationWorkParent
   }
   public var key: String {
     if let utility { return utility.utilityKey }
+    if let underTow { return underTow.key }
+    if let borrowedVoice { return borrowedVoice.key }
+    if let quietChoir { return quietChoir.key }
+    if let memoryAtlas { return memoryAtlas.key }
+    if let signedPassageOpening { return signedPassageOpening.key }
+    if let assemblyOfOrbits { return assemblyOfOrbits.key }
+    if let isolationWorkParent { return isolationWorkParent.key }
     if let key = wayfarerInduction?.key {
       return key + (inductionCapacityUnit.map { "/unit/" + $0.uuidString } ?? "")
         + (inductionClinicReference.map { "/clinic/" + $0.uuidString } ?? "")
         + (inductionWorkshopReference.map { "/workshop/" + $0.uuidString } ?? "")
         + (inductionSeedReference.map { "/seed/" + $0.uuidString } ?? "")
     }
+    if inquiry == .requestCase { return NativeC01InquiryBoard.requestKey }
     if let key = glassMeridian?.key { return key }
     if let key = flightReception?.key { return key }
     if let key = defensiveFlight?.key { return key }
@@ -104,11 +133,10 @@ public struct ContractBoardRow: Sendable {
     if let key: String = provider?.key { return key }
     if let key: String = people?.key { return key }
     if let key: String = finance?.key { return key }
-    if let key: String = rrs?.key { return key }
     return board + "/" + (offer?.id.uuidString ?? "unavailable")
   }
 }
-public struct ContractScreenSave: Codable, Sendable {
+public struct ContractScreenSave: Codable, Sendable, Equatable {
   public let selection: String?
   public let detail: Bool
   public let action: ContractBoardAction
@@ -120,13 +148,13 @@ public struct ContractScreenSave: Codable, Sendable {
 }
 private indirect enum ContractBoardReview: Sendable {
   case contract(ContractAcceptanceQuote)
-  case rrs(RRSCourierQuote)
   case finance(ScriptFinanceQuote)
   case people(NativePeopleStationQuote)
   case provider(ProviderContractQuote)
   case repairLoop(WayfarerRepairLoopBoardReview)
   case coldChain(WayfarerColdChainBoardReview)
   case survey(NativeOriginalSurveyReview)
+  case inquiry(NativeC01InquiryRequestReview)
   case glassMeridian(NativeGlassMeridianReview)
   case wayfarerInduction(NativeWayfarerInductionReview)
   case flightReception(NativeFlightReceptionReview)
@@ -136,6 +164,13 @@ private indirect enum ContractBoardReview: Sendable {
   case recordRecovery(WayfarerRecordRecoveryReview)
   case identifiedSalvage(NativeIdentifiedSalvageReview)
   case utility(NativeUtilityBoardReview)
+  case underTow(NativeUnderTowReview)
+  case borrowedVoice(NativeBorrowedVoiceReview)
+  case quietChoir(NativeQuietChoirReview)
+  case memoryAtlas(NativeMemoryAtlasReview)
+  case signedPassageOpening(NativeSignedPassageOpeningReview)
+  case assemblyOfOrbits(NativeAssemblyOfOrbitsReview)
+  case isolationWorkParent(NativeIsolationWorkParentReview)
 }
 
 public struct ContractBoardUI: Sendable {
@@ -145,6 +180,7 @@ public struct ContractBoardUI: Sendable {
   public var scroll = 0
   public var rows: [ContractBoardRow] = []
   private var review: ContractBoardReview?
+  var presentationGeneration = UUID()
   public var quote: ContractAcceptanceQuote? {
     get {
       guard case .contract(let quote)? = review else { return nil }
@@ -158,20 +194,6 @@ public struct ContractBoardUI: Sendable {
       }
     }
   }
-  var rrsQuote: RRSCourierQuote? {
-    get {
-      guard case .rrs(let quote)? = review else { return nil }
-      return quote
-    }
-    set {
-      if let newValue {
-        review = .rrs(newValue)
-      } else if case .rrs(_)? = review {
-        review = nil
-      }
-    }
-  }
-  var presentationGeneration = UUID()
   var financeQuote: ScriptFinanceQuote? {
     get {
       guard case .finance(let quote)? = review else { return nil }
@@ -181,6 +203,97 @@ public struct ContractBoardUI: Sendable {
       if let newValue {
         review = .finance(newValue)
       } else if case .finance(_)? = review {
+        review = nil
+      }
+    }
+  }
+  var signedPassageOpeningQuote: NativeSignedPassageOpeningReview? {
+    get {
+      guard case .signedPassageOpening(let value)? = review else { return nil }
+      return value
+    }
+    set {
+      if let newValue {
+        review = .signedPassageOpening(newValue)
+      } else if case .signedPassageOpening(_)? = review {
+        review = nil
+      }
+    }
+  }
+  var memoryAtlasQuote: NativeMemoryAtlasReview? {
+    get {
+      guard case .memoryAtlas(let value)? = review else { return nil }
+      return value
+    }
+    set {
+      if let newValue {
+        review = .memoryAtlas(newValue)
+      } else if case .memoryAtlas(_)? = review {
+        review = nil
+      }
+    }
+  }
+  var quietChoirQuote: NativeQuietChoirReview? {
+    get {
+      guard case .quietChoir(let value)? = review else { return nil }
+      return value
+    }
+    set {
+      if let newValue {
+        review = .quietChoir(newValue)
+      } else if case .quietChoir(_)? = review {
+        review = nil
+      }
+    }
+  }
+  var borrowedVoiceQuote: NativeBorrowedVoiceReview? {
+    get {
+      guard case .borrowedVoice(let value)? = review else { return nil }
+      return value
+    }
+    set {
+      if let newValue {
+        review = .borrowedVoice(newValue)
+      } else if case .borrowedVoice(_)? = review {
+        review = nil
+      }
+    }
+  }
+  var underTowQuote: NativeUnderTowReview? {
+    get {
+      guard case .underTow(let value)? = review else { return nil }
+      return value
+    }
+    set {
+      if let newValue {
+        review = .underTow(newValue)
+      } else if case .underTow(_)? = review {
+        review = nil
+      }
+    }
+  }
+  var assemblyOfOrbitsQuote: NativeAssemblyOfOrbitsReview? {
+    get {
+      guard case .assemblyOfOrbits(let value)? = review else { return nil }
+      return value
+    }
+    set {
+      if let newValue {
+        review = .assemblyOfOrbits(newValue)
+      } else if case .assemblyOfOrbits(_)? = review {
+        review = nil
+      }
+    }
+  }
+  var inquiryQuote: NativeC01InquiryRequestReview? {
+    get {
+      guard case .inquiry(let quote)? = review else { return nil }
+      return quote
+    }
+    set {
+      if let newValue {
+        review = .inquiry(newValue)
+      } else if case .inquiry(_)? = review {
         review = nil
       }
     }
@@ -370,6 +483,19 @@ public struct ContractBoardUI: Sendable {
       }
     }
   }
+  var isolationWorkParentQuote: NativeIsolationWorkParentReview? {
+    get {
+      guard case .isolationWorkParent(let value)? = review else { return nil }
+      return value
+    }
+    set {
+      if let newValue {
+        review = .isolationWorkParent(newValue)
+      } else if case .isolationWorkParent(_)? = review {
+        review = nil
+      }
+    }
+  }
   public init() {}
   var selected: ContractBoardRow? { rows.indices.contains(selection) ? rows[selection] : nil }
   var save: ContractScreenSave {
@@ -380,24 +506,18 @@ public struct ContractBoardUI: Sendable {
 }
 extension Game {
   mutating func openContractBoard() {
-    guard docked, dockedAtMainStation || nativeStationBoardContext != nil, !paused,
+    guard docked, dockedAtMainStation || nativeStationBoardContext != nil || nativeUtilityServiceContext != nil, !paused,
       ![Screen.title, .demo, .gameOver, .help, .secret, .mission, .handoff].contains(screen),
       !showroom.trading
     else {
-      notify("CONTRACTS REQUIRE A MAIN ORBITAL STATION OR PROVED RRS DOCK")
+      notify("CONTRACTS REQUIRE AN ACTUAL AUTHORISED STATION DOCK")
       return
     }
     var candidate = self
     if screen != .contracts { candidate.contractBoard.previous = screen }
     var failures: [String: String] = [:]
-    if candidate.nativeStationBoardContext != nil {
-      do { try candidate.ensureRRSCourierBoard() } catch {
-        notify(String(error.localizedDescription.prefix(512)))
-        return
-      }
-    }
     for pack in scriptPacks
-    where dockedAtMainStation && pack.manifest.board != nil
+    where contractBoardStation(for: pack) != nil && pack.manifest.board != nil
       && scriptUnavailable(pack) == nil
     {
       do { _ = try candidate.ensureContractBoard(pack) } catch {
@@ -410,7 +530,6 @@ extension Game {
     candidate.screen = .contracts
     candidate.contractBoard.detail = false
     candidate.contractBoard.quote = nil
-    candidate.contractBoard.rrsQuote = nil
     candidate.contractBoard.financeQuote = nil
     candidate.contractBoard.peopleQuote = nil
     candidate.contractBoard.providerQuote = nil
@@ -418,12 +537,20 @@ extension Game {
     candidate.contractBoard.coldChainQuote = nil
     candidate.contractBoard.surveyQuote = nil
     candidate.contractBoard.wayfarerInductionQuote = nil
+    candidate.contractBoard.inquiryQuote = nil
     candidate.contractBoard.glassMeridianQuote = nil
     candidate.contractBoard.flightReceptionQuote = nil
     candidate.contractBoard.measuredExtractionQuote = nil
     candidate.contractBoard.recordRecoveryQuote = nil
     candidate.contractBoard.identifiedSalvageQuote = nil
     candidate.contractBoard.utilityQuote = nil
+    candidate.contractBoard.underTowQuote = nil
+    candidate.contractBoard.signedPassageOpeningQuote = nil
+    candidate.contractBoard.borrowedVoiceQuote = nil
+    candidate.contractBoard.quietChoirQuote = nil
+    candidate.contractBoard.memoryAtlasQuote = nil
+    candidate.contractBoard.assemblyOfOrbitsQuote = nil
+    candidate.contractBoard.isolationWorkParentQuote = nil
     candidate.gallery.providerIntent = nil
     candidate.contractBoard.presentationGeneration = UUID()
     publishContractBoard(&candidate)
@@ -437,8 +564,15 @@ extension Game {
   ) {
     let selected = save?.selection ?? contractBoard.selected?.key ?? contractBoard.restoredSelection
     var rows =
-      rrsCourierRows + financeRows + nativePeopleRows + providerContractRows + originalSurveyRows
+      financeRows + nativePeopleRows + providerContractRows + originalSurveyRows
       + wayfarerInductionRows
+      + c01InquiryRequestRows
+      + underTowRows
+      + borrowedVoiceRows
+      + quietChoirRows
+      + memoryAtlasRows
+      + signedPassageOpeningRows
+      + assemblyOfOrbitsRows
       + glassMeridianRows
       + flightReceptionRows
       + safeGunneryRows
@@ -449,13 +583,15 @@ extension Game {
       + wayfarerColdChainRows(failures: failures)
       + wayfarerRepairLoopRows(failures: failures)
       + nativeUtilityRows
+      + isolationWorkParentRows
     for pack in scriptPacks.sorted(by: {
       ($0.manifest.id, $0.manifest.version, $0.digest) < (
         $1.manifest.id, $1.manifest.version, $1.digest
       )
     }) {
-      guard dockedAtMainStation, let definition = pack.manifest.board else { continue }
-      let key = pack.digest + "/" + definition.id + "/" + contractStation.key
+      guard let origin = contractBoardStation(for: pack),
+        let definition = pack.manifest.board else { continue }
+      let key = pack.digest + "/" + definition.id + "/" + origin.key
       if let reason = failures[pack.digest] ?? scriptUnavailable(pack) {
         rows.append(.init(board: key, offer: nil, title: definition.title, reason: reason))
       } else if let board = commander.contracts.boards[key],
@@ -483,6 +619,13 @@ extension Game {
         || contractBoard.peopleQuote != nil || contractBoard.providerQuote != nil
         || contractBoard.coldChainQuote != nil || contractBoard.repairLoopQuote != nil
         || contractBoard.surveyQuote != nil || contractBoard.wayfarerInductionQuote != nil
+        || contractBoard.inquiryQuote != nil
+        || contractBoard.underTowQuote != nil
+        || contractBoard.borrowedVoiceQuote != nil
+        || contractBoard.quietChoirQuote != nil
+        || contractBoard.memoryAtlasQuote != nil
+        || contractBoard.signedPassageOpeningQuote != nil
+        || contractBoard.assemblyOfOrbitsQuote != nil
         || contractBoard.glassMeridianQuote != nil
         || contractBoard.flightReceptionQuote != nil
         || contractBoard.safeGunneryQuote != nil
@@ -490,6 +633,7 @@ extension Game {
         || contractBoard.measuredExtractionQuote != nil
         || contractBoard.recordRecoveryQuote != nil
         || contractBoard.identifiedSalvageQuote != nil || contractBoard.utilityQuote != nil
+        || contractBoard.isolationWorkParentQuote != nil
       {
         contractBoard.action = .back
       }
@@ -511,17 +655,57 @@ extension Game {
   // Specialized review buffers retire before the ordinary acceptance preview begins.
   @inline(never)
   private mutating func refreshSpecializedContractQuote() -> Bool {
+    if let action = contractBoard.selected?.borrowedVoice {
+      contractBoard.borrowedVoiceQuote = borrowedVoiceReview(action)
+      return true
+    }
+    if let action = contractBoard.selected?.quietChoir {
+      contractBoard.quietChoirQuote = quietChoirReview(action)
+      return true
+    }
+    if let action = contractBoard.selected?.memoryAtlas {
+      contractBoard.memoryAtlasQuote = memoryAtlasReview(action)
+      return true
+    }
+    if let action = contractBoard.selected?.signedPassageOpening {
+      contractBoard.signedPassageOpeningQuote = signedPassageOpeningReview(action)
+      return true
+    }
+    if let action = contractBoard.selected?.assemblyOfOrbits {
+      contractBoard.assemblyOfOrbitsQuote = assemblyOfOrbitsReview(action)
+      return true
+    }
+    if let action = contractBoard.selected?.underTow {
+      contractBoard.underTowQuote = underTowReview(action)
+      return true
+    }
+    contractBoard.underTowQuote = nil
+    contractBoard.signedPassageOpeningQuote = nil
+    contractBoard.borrowedVoiceQuote = nil
+    contractBoard.quietChoirQuote = nil
+    contractBoard.memoryAtlasQuote = nil
+    contractBoard.assemblyOfOrbitsQuote = nil
     if let action = contractBoard.selected?.utility {
       contractBoard.utilityQuote = nativeUtilityReview(action)
       return true
     }
     contractBoard.utilityQuote = nil
+    if let action = contractBoard.selected?.isolationWorkParent {
+      contractBoard.isolationWorkParentQuote = isolationWorkParentReview(action)
+      return true
+    }
+    contractBoard.isolationWorkParentQuote = nil
     if let action = contractBoard.selected?.wayfarerInduction {
       contractBoard.wayfarerInductionQuote = wayfarerInductionReview(
         action, prepareClinicQuote: true, prepareWorkshopQuote: true, prepareSeedQuote: true,
         prepareCharterAudit: true)
       return true
     }
+    if contractBoard.selected?.inquiry == .requestCase {
+      contractBoard.inquiryQuote = c01InquiryRequestReview()
+      return true
+    }
+    contractBoard.inquiryQuote = nil
     if let action = contractBoard.selected?.glassMeridian {
       contractBoard.glassMeridianQuote = glassMeridianReview(action)
       return true
@@ -587,7 +771,6 @@ extension Game {
       return true
     }
     contractBoard.financeQuote = nil
-    contractBoard.rrsQuote = contractBoard.selected?.rrs.map { rrsCourierQuote(for: $0) }
     return false
   }
   mutating func contractBoardKey(_ key: String) {
@@ -603,13 +786,20 @@ extension Game {
       if contractBoard.detail {
         contractBoard.detail = false
         contractBoard.quote = nil
-        contractBoard.rrsQuote = nil
         contractBoard.financeQuote = nil
         contractBoard.peopleQuote = nil
         contractBoard.providerQuote = nil
         contractBoard.repairLoopQuote = nil
         contractBoard.coldChainQuote = nil
+        contractBoard.inquiryQuote = nil
         contractBoard.utilityQuote = nil
+      contractBoard.underTowQuote = nil
+      contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.borrowedVoiceQuote = nil
+      contractBoard.quietChoirQuote = nil
+      contractBoard.memoryAtlasQuote = nil
+      contractBoard.assemblyOfOrbitsQuote = nil
+      contractBoard.isolationWorkParentQuote = nil
         gallery.providerIntent = nil
       } else {
         screen = contractBoard.previous
@@ -651,12 +841,12 @@ extension Game {
     if contractBoard.action == .back {
       contractBoard.detail = false
       contractBoard.quote = nil
-      contractBoard.rrsQuote = nil
       contractBoard.financeQuote = nil
       contractBoard.peopleQuote = nil
       contractBoard.providerQuote = nil
       contractBoard.repairLoopQuote = nil
       contractBoard.coldChainQuote = nil
+      contractBoard.inquiryQuote = nil
       contractBoard.surveyQuote = nil
       contractBoard.wayfarerInductionQuote = nil
       contractBoard.glassMeridianQuote = nil
@@ -665,6 +855,13 @@ extension Game {
       contractBoard.recordRecoveryQuote = nil
       contractBoard.identifiedSalvageQuote = nil
       contractBoard.utilityQuote = nil
+      contractBoard.underTowQuote = nil
+      contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.borrowedVoiceQuote = nil
+      contractBoard.quietChoirQuote = nil
+      contractBoard.memoryAtlasQuote = nil
+      contractBoard.assemblyOfOrbitsQuote = nil
+      contractBoard.isolationWorkParentQuote = nil
       gallery.providerIntent = nil
       return
     }
@@ -679,9 +876,17 @@ extension Game {
   }
 
   private enum ContractDetailCompletion {
+    case borrowedVoice
+    case quietChoir
+    case memoryAtlas
+    case signedPassageOpening
+    case underTow
+    case assemblyOfOrbits
     case utility
+    case isolationWorkParent
     case wayfarerInduction
     case glassMeridian
+    case inquiry
     case defensiveFlight
     case safeGunnery
     case flightReception
@@ -693,13 +898,61 @@ extension Game {
     case coldChain
     case people
     case finance
-    case rrs
     case ordinary
   }
 
   // Return before refreshing rows: native quotes can validate and encode loss witnesses.
   @inline(never)
   private mutating func confirmContractDetailAction() throws -> ContractDetailCompletion? {
+    if let action = contractBoard.selected?.borrowedVoice {
+      guard contractBoard.action == .accept, let quote = contractBoard.borrowedVoiceQuote,
+        quote.action == action, quote.allowed
+      else { throw MissionPackError("Review Dain's current Borrowed Voice investigation; Back changes nothing.") }
+      try confirmBorrowedVoice(quote)
+      return .borrowedVoice
+    }
+    if let action = contractBoard.selected?.quietChoir {
+      guard contractBoard.action == .accept, let quote = contractBoard.quietChoirQuote,
+        quote.action == action, quote.allowed
+      else { throw MissionPackError("Review Holt's current Quiet Choir investigation; Back changes nothing.") }
+      try confirmQuietChoir(quote)
+      return .quietChoir
+    }
+    if let action = contractBoard.selected?.memoryAtlas {
+      guard contractBoard.action == .accept, let quote = contractBoard.memoryAtlasQuote,
+        quote.action == action, quote.allowed
+      else { throw MissionPackError("Review Vale's current The Memory Atlas commission; Back changes nothing.") }
+      try confirmMemoryAtlas(quote)
+      return .memoryAtlas
+    }
+    if let action = contractBoard.selected?.signedPassageOpening {
+      guard contractBoard.action == .accept, let quote = contractBoard.signedPassageOpeningQuote,
+        quote.action == action, quote.allowed
+      else { throw MissionPackError("Review Senn's current Signed Passage commission; Back changes nothing.") }
+      try confirmSignedPassageOpening(quote)
+      return .signedPassageOpening
+    }
+    if let action = contractBoard.selected?.assemblyOfOrbits {
+      guard contractBoard.action == .accept, let quote = contractBoard.assemblyOfOrbitsQuote,
+        quote.action == action, quote.allowed
+      else { throw MissionPackError("Review Voss's current Assembly action; Back changes nothing.") }
+      try confirmAssemblyOfOrbits(quote)
+      return .assemblyOfOrbits
+    }
+    if let action = contractBoard.selected?.underTow {
+      guard contractBoard.action == .accept, let quote = contractBoard.underTowQuote,
+        quote.action == action, quote.allowed
+      else { throw MissionPackError("Review Penn's current Under Tow action; Back changes nothing.") }
+      try confirmUnderTow(quote)
+      return .underTow
+    }
+    if let action = contractBoard.selected?.isolationWorkParent {
+      guard contractBoard.action == .accept,
+        let quote = contractBoard.isolationWorkParentQuote, quote.action == action, quote.allowed
+      else { throw MissionPackError("Review Lerr's current isolation action; Back changes nothing.") }
+      try confirmIsolationWorkParent(quote)
+      return .isolationWorkParent
+    }
     if let action = contractBoard.selected?.utility {
       guard contractBoard.action == .accept, let review = contractBoard.utilityQuote,
         review.action == action, let quote = review.quote, review.allowed
@@ -718,9 +971,17 @@ extension Game {
       try confirmWayfarerInduction(quote)
       return .wayfarerInduction
     }
+    if contractBoard.selected?.inquiry == .requestCase {
+      guard contractBoard.action == .accept,
+        let quote = contractBoard.inquiryQuote, quote.allowed
+      else { throw MissionPackError("Review the current inquiry request and choose Confirm or Back.") }
+      try confirmC01InquiryRequest(quote)
+      return .inquiry
+    }
     if let action = contractBoard.selected?.glassMeridian {
-      guard action == .accept || action == .auditReservations, contractBoard.action == .accept,
-        let quote = contractBoard.glassMeridianQuote
+      guard action == .accept || action == .auditReservations || action.isC01Completion,
+        contractBoard.action == .accept,
+        let quote = contractBoard.glassMeridianQuote, quote.action == action
       else {
         throw MissionPackError("Read the current investigation; Back preserves it.")
       }
@@ -822,23 +1083,7 @@ extension Game {
       try confirmFinance(quote, declining: contractBoard.action == .decline)
       return .finance
     }
-    if let row = contractBoard.selected?.rrs {
-      guard let quote = contractBoard.rrsQuote, quote.row == row else {
-        throw MissionPackError("Review the RRS briefing before confirming.")
-      }
-      if contractBoard.action == .accept {
-        try confirmRRSCourier(quote)
-        switch row {
-        case .offer: notify("RRS DOCUMENT PACKET ACCEPTED - ORIGINAL MAIN STATION")
-        case .debrief: notify("RRS DOCUMENTS DELIVERED - 30.0 CR / REPUTATION +2")
-        case .abandon: notify("RRS ASSIGNMENT ABANDONED - 0 CR / REPUTATION -10")
-        }
-      } else {
-        try declineRRSCourier(quote)
-        notify("RRS OFFER DECLINED")
-      }
-      return .rrs
-    }
+
     guard let row = contractBoard.selected, let offer = row.offer else {
       throw MissionPackError("This provider is unavailable.")
     }
@@ -854,6 +1099,9 @@ extension Game {
             ? "CEDAMAR ORBITAL RELIEF RESERVE RECEIVED 500.0 CR - NO CASH REWARD"
             : "DONATION COMPLETE - LOCAL STANDING RECORDED")
     } else {
+      guard scriptDurabilityAvailable else {
+        throw MissionPackError("Choose a writable commander save before declining a contract offer.")
+      }
       try declineContract(board: row.board, offer: offer.id)
       notify("OFFER DECLINED")
     }
@@ -865,10 +1113,31 @@ extension Game {
     refreshContractRows()
     contractBoard.detail = false
     switch completion {
+    case .borrowedVoice:
+      contractBoard.borrowedVoiceQuote = nil
+    case .quietChoir:
+      contractBoard.quietChoirQuote = nil
+    case .memoryAtlas:
+      contractBoard.memoryAtlasQuote = nil
+    case .signedPassageOpening:
+      contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.borrowedVoiceQuote = nil
+      contractBoard.quietChoirQuote = nil
+      contractBoard.memoryAtlasQuote = nil
+    case .isolationWorkParent:
+      contractBoard.isolationWorkParentQuote = nil
     case .utility:
       contractBoard.utilityQuote = nil
+      contractBoard.underTowQuote = nil
+      contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.borrowedVoiceQuote = nil
+      contractBoard.quietChoirQuote = nil
+      contractBoard.memoryAtlasQuote = nil
+      contractBoard.assemblyOfOrbitsQuote = nil
     case .wayfarerInduction:
       contractBoard.wayfarerInductionQuote = nil
+    case .inquiry:
+      contractBoard.inquiryQuote = nil
     case .glassMeridian:
       contractBoard.wayfarerInductionQuote = nil
       contractBoard.glassMeridianQuote = nil
@@ -899,6 +1168,13 @@ extension Game {
       contractBoard.recordRecoveryQuote = nil
       contractBoard.identifiedSalvageQuote = nil
       contractBoard.utilityQuote = nil
+      contractBoard.underTowQuote = nil
+      contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.borrowedVoiceQuote = nil
+      contractBoard.quietChoirQuote = nil
+      contractBoard.memoryAtlasQuote = nil
+      contractBoard.assemblyOfOrbitsQuote = nil
+      contractBoard.isolationWorkParentQuote = nil
     case .survey:
       contractBoard.surveyQuote = nil
     case .repairLoop:
@@ -912,9 +1188,14 @@ extension Game {
     case .finance:
       contractBoard.financeQuote = nil
       notify("FINANCIAL DECISION RECORDED")
-    case .rrs:
-      contractBoard.rrsQuote = nil
-      contractBoard.quote = nil
+    case .underTow:
+      contractBoard.underTowQuote = nil
+      contractBoard.signedPassageOpeningQuote = nil
+      contractBoard.borrowedVoiceQuote = nil
+      contractBoard.quietChoirQuote = nil
+      contractBoard.memoryAtlasQuote = nil
+    case .assemblyOfOrbits:
+      contractBoard.assemblyOfOrbitsQuote = nil
     case .ordinary:
       contractBoard.quote = nil
     }
@@ -927,17 +1208,7 @@ extension Game {
     contractBoard.scroll = window.moved(key == "up" || key == "pageup" ? -4 : 4)
   }
   public var activeContractSummary: [String] {
-    let rrs =
-      commander.contracts.rrs?.active.map { job in
-        [
-          RRSCourierContent.title + " / "
-            + Universe.systemsIncludingPlugh(number: job.destination.system.galaxy)[
-              job.destination.system.system
-            ].name + " / PROTECTED PACKET"
-        ]
-      } ?? []
-    return rrs
-      + commander.scriptState.instances.values.filter {
+    return commander.scriptState.instances.values.filter {
         $0.outcome == .active && $0.contract != nil
       }
       .sorted { $0.id.uuidString < $1.id.uuidString }.map { instance in

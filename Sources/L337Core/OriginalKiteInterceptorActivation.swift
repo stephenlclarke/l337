@@ -4,7 +4,7 @@ import Foundation
 enum OriginalKiteInterceptorActivation {
   static let id = "SH031"
   static let specificationSHA256 =
-    "a31f939eef99eb861e9a0d3699c6b106872e4d9b824fb6029b830202f058827a"
+    "cedbde09b76675e9fb3f6022d9c78330524be816ec3d3878f600c0b5244fc8b0"
 
   enum Failure: Error { case unsupportedDefinition }
 

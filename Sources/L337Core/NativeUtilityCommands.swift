@@ -90,7 +90,7 @@ extension Game {
         edgeWeight: { a, b, initial in
           worlds[a].distance(to: worlds[b]) <= (initial ? first : full) ? 1 : nil
         })
-    else { throw MissionPackError("No natively reachable route to the receiving headquarters.") }
+    else { throw MissionPackError("No natively reachable route to the receiving original utility.") }
     return route
   }
 
@@ -99,6 +99,7 @@ extension Game {
     guard current == quote else {
       throw MissionPackError("The utility operation changed; review it again.")
     }
+    var inspection: NativeUtilityEngineerMutationPlan?
     var state = quote.expected
     state.revision += 1
     switch quote.action {
@@ -132,8 +133,13 @@ extension Game {
         let installed = state.consignments[index].installation
       else { throw SaveError.invalidCommander }
       let id = state.consignments[index].id
+      let operation = state.operation(id, stage: "receive", revision: state.revision)
+      let people = try prepareNativeUtilityEngineerInspection(target.authority,
+        installation: installed, consignment: id, operation: operation,
+        prospectiveUtilityRevision: state.revision)
+      inspection = people
       state.consignments[index].reception = .init(
-        operation: state.operation(id, stage: "receive", revision: state.revision),
+        operation: people.operation,
         installation: installed.operation, engineer: target.engineer,
         contact: .init(target.receipt), revision: state.revision)
       state.consignments[index].phase = .received
@@ -144,7 +150,7 @@ extension Game {
       state.consignments[index].returned = .init(source.receipt)
       state.consignments[index].phase = .returned
     }
-    try replaceNativeUtility(state, previous: quote.expected, action: quote.action)
+    try replaceNativeUtility(state, previous: quote.expected, action: quote.action, inspection: inspection)
     notify(
       quote.action == .receive
         ? "CREW RECEIPT AND FIELD RELIEF PAYMENT RECORDED"
@@ -152,22 +158,17 @@ extension Game {
   }
 
   private mutating func replaceNativeUtility(
-    _ state: NativeUtilityState, previous: NativeUtilityState, action: NativeUtilityAction?
+    _ state: NativeUtilityState, previous: NativeUtilityState, action: NativeUtilityAction?,
+    inspection: NativeUtilityEngineerMutationPlan? = nil
   ) throws {
     guard var world = commander.nativeStations else { throw SaveError.invalidCommander }
     try world.ledger.replaceUtility(state)
-    var candidate = commander
-    candidate.nativeStations = world
-    // Swap with the existing candidate, so native and story joins become valid together.
-    // On refusal the original Commander is restored before the actor publication boundary.
-    swap(&commander, &candidate)
-    do {
-      try applyFieldReliefTransition(previous: previous, action: action)
-      guard commander.valid else { throw SaveError.invalidCommander }
-    } catch {
-      swap(&commander, &candidate)
-      throw error
-    }
+    var candidate = self
+    if let inspection { try candidate.commitNativeUtilityEngineerMutation(inspection) }
+    candidate.commander.nativeStations = world
+    try candidate.applyFieldReliefTransition(previous: previous, action: action)
+    guard candidate.commander.valid else { throw SaveError.invalidCommander }
+    self = candidate
   }
 
   mutating func recordNativeUtilityLoss(_ cause: NativeUtilityLossCause) throws {

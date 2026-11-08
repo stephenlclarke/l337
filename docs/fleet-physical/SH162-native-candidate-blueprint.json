@@ -1,0 +1,100 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH162-complete-three-part-native-candidate-v1",
+  "ship": "SH162",
+  "status": "NEW_SOURCE_RECIPE_UNEXECUTED_NO_NATIVE_OR_PHYSICAL_QUALIFICATION",
+  "sourceGeometry": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH162-design.toml",
+    "bytes": 237719,
+    "sha256": "14d4e261029ca1fcf61a2688c43c192e17c7e523a268ffb9c9b726b087b14151"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH162-native-candidate-recipe.py",
+    "bytes": 5881,
+    "sha256": "e399cda4061b1e03fe515f17e5f7607abe39a0201867f3ad5ad3d9036ef1b171",
+    "entryPoint": "build_candidate_native",
+    "executionOwner": "G1 only; G4 must never import/parse/compile/execute the recipe or creator"
+  },
+  "baseline": {
+    "declaredNativeFaces": 596,
+    "limit": 512,
+    "basis": "Pinned creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true,
+    "originalDetailedAndNativeSourceUnchanged": true
+  },
+  "newSamplingProposal": {
+    "loftSides": 8,
+    "arcSegments": 8,
+    "arcMinorSamples": 4,
+    "basis": "New geometric representation proposal only; actual output count/profile/material/void fidelity unknown"
+  },
+  "componentRetention": [
+    {
+      "index": 0,
+      "name": "alien probe primary envelope",
+      "originalMaterialRuns": [
+        {
+          "material": 0,
+          "faces": 116
+        }
+      ],
+      "sourceOperation": "Hull.loft / Hull.solid"
+    },
+    {
+      "index": 1,
+      "name": "alien probe open structural arc",
+      "originalMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 364
+        }
+      ],
+      "sourceOperation": "Mesh.torus / Mesh.raw"
+    },
+    {
+      "index": 2,
+      "name": "alien luminous aft organ",
+      "originalMaterialRuns": [
+        {
+          "material": 6,
+          "faces": 116
+        }
+      ],
+      "sourceOperation": "Hull.loft / Hull.solid"
+    }
+  ],
+  "retainedParameters": {
+    "originalRecipe": "SH162 alien-probe/jade/length2.0/beam1.45/modules1; no military or biological/propulsion role inferred",
+    "primary": "Original five-station pod at(0,0,.10),length*.83,beam*.32,height.22,material0; both ends closed",
+    "arc": "Original centre(.19,0,-.10),rx=beam*.44,ry=length*.48,tube.07,axisY,start.3,endTAU-.3,material2. Actual open gap retained, BOTH end caps retained. New sampling changes polygon approximation; no fidelity claim.",
+    "aft": "Original five-station pod at(0,-.08,-length*.35),length*.16,width.16,height.08,material6; no drive/hardware interpretation",
+    "appearance": "Pinned creator.mesh_dict(adaptation=False) regenerates every UV/texture face assignment; exact original materials/palette/emissive/textures/appearance metadata required",
+    "coordinates": "Original creator coordinates, no metre inference/recenter/rescale. Existing calibration12000000/2058667 stays uncomputed/unevaluated."
+  },
+  "physicalAndMissionFacts": {
+    "installedMaterialHardwarePower": "UNISSUED",
+    "emptyLoadedMassCOMTensor": "UNCOMPUTED; current empty source estimate unchanged",
+    "missionProducerProviderCustody": "UNISSUED; a missionProbe environment purpose is not actual actor ownership",
+    "people": "UNISSUED; no zero census inferred from environment.playerCrewRequired=false",
+    "nativeAdmission": "UNQUALIFIED; all actual source fidelity/void/collision/current-save/actor gates remain"
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive digests",
+    "Every original part emits positive geometry with its material",
+    "Reject complete output above512; no omission or cap waiver",
+    "Retain actual arc gap and both end caps",
+    "Actual closure/winding/appearance/count guards do not prove full source shape/material/void fidelity or native admission",
+    "If actual candidate fails, keep source blocked; no weakened tolerance, fabricated evidence or source material removal"
+  ],
+  "handoff": "Development source only. G2 coherent source review/G1 sole actual generation and qualification. Coupled mission tests preserve existing main028 station owner and deny all five current pending imported objects before geometry publication; all Swift UNCOMPILED UNRUN."
+}

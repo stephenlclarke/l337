@@ -8,6 +8,7 @@ import Testing
 ])
 func scriptAnchorPreservesLivePreferenceAndExactSavedFrameFallback(selection: String) throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let station = try #require(game.bodies.first { $0.id == 0 && $0.hull == .station })
   var saved = station

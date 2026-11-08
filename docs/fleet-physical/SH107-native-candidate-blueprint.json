@@ -1,0 +1,95 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH107-complete27part-native-candidate-v1",
+  "ship": "SH107",
+  "name": "Magpie",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "0469be178a7140df3f8643b275580e9fee75d02a5843f07d8274c9747aaba905",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH107-design.toml",
+    "bytes": 524922,
+    "sha256": "9f8ba7417e607a8ce5c16433e673249754853ef57312ff2b5a1ce6bbeecd73e6"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH107.toml",
+    "bytes": 549045,
+    "sha256": "a19e2b044bc08313afb3c6157c7cbb919f8c1579148f98d09a1289208fefe446"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH107.json",
+    "bytes": 110229,
+    "sha256": "c2450de4882a60d21d9c9738721485f71a3e4025a26f50b0d8d2943428f6a0ce"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH107-native-candidate-recipe.py",
+    "bytes": 8393,
+    "sha256": "7cbe900396eea7a198aca8510c2cc3d741f021990835925a825d967030ce72fc"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH107-native-candidate-tests.py",
+    "bytes": 9913,
+    "sha256": "085e52da4db52d226807f69157ffc432ce43903757ada51f31e11b71676ea0e8"
+  },
+  "baseline": {
+    "declaredNativeFaces": 964,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "bodyAndCockpitLoftSides": 4,
+    "driveLoftSides": 3,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      7,
+      12,
+      19,
+      22,
+      23,
+      25,
+      26
+    ],
+    "unchangedFixedOriginalParts": 19,
+    "status": "NEW angular approximations only, including coarse triangular drive proposal; actual output count/full profile/void/material/UV fidelity UNKNOWN and may fail qualification"
+  },
+  "retained": [
+    "Complete original5station centralbody/endcaps and BOTH original5station sidepods/endcaps",
+    "ALL TWELVE analytical recessed wells with actual own body0/sidepod1 skins/inset3",
+    "BOTH full original wing profiles and BOTH complete vertical stepped fins atX+-beam*.30,Y.33,Z-length*.24,extent(.12,.68,.48),material2",
+    "Full cockpit/support and both connected complete drives/casings/luminous recesses at xbeam*.42/radius.20; original BOTH drive rings/radii stay despite newangular3",
+    "Exact own navy-copper palette/emission/material/texture/license/source and full regenerated face UVs"
+  ],
+  "coordinates": "Own original length2.6/beam2.05/source axes/coordinates/origin/units retained. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Magpie R3/name/game remain pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "Pod/spine labels grant no installed pressure system/hardware/power/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All27 original parts/material sets remain, especially ALL12wells/BOTHwings/BOTHcompletefins/cockpit/full drives",
+    "All FIVE original stations per pod and TWO per drive with original radii stay; new3side drive profile requires explicit full fidelity review",
+    "Complete actual output must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require19 fixed components exact original vertices/localfaces/materialsequence/UVs plus original podprofiles/drive rings-radii",
+    "Full actual curved-source/profile/void/material/UV fidelity/native/occupied/installed qualification remains G1/source-owner work; no automatic acceptance for angular3"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run27part/exact19fixed/all12wells/bothcompletefins/podprofiles/drive3originalrings-radii/UV/input checks then assess actual coarse drive/full source/native fidelity. Reject unfaithful candidate without omission/waiver. G4 continues independent originals."
+  }
+}

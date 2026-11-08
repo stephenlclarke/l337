@@ -20,6 +20,34 @@ public struct ScriptTrialDefinition: Codable, Sendable {
       && (offer.map { (0..<16).contains($0) } ?? true)
   }
 }
+private extension ScriptPack {
+  var effectiveGalleryTrial: ScriptTrialDefinition? {
+    guard let scene = manifest.trial else { return nil }
+    // These exact published packs also identify live courier jobs and branch receipts.
+    guard manifest.version == "1.0.0", scene.ship == "SH023" else { return scene }
+    switch (manifest.stateID, digest) {
+    case ("project.generated-couriers/courier",
+          "65ff79fef1171fa0c0af8808754c075e93c0302a33fb3e0b04fa59f59585b369"),
+         ("example.branch-choice/route",
+          "ccfbf58a495be39a7b4976b8b60fe44f864824880498686e589d889ab71a4ba1"):
+      break
+    default:
+      return scene
+    }
+    return .init(ship: "SH025", galaxy: scene.galaxy, system: scene.system, credits: scene.credits,
+      cabins: scene.cabins, flight: scene.flight, offer: scene.offer)
+  }
+
+  func requireGalleryTrialHull() throws -> ScriptTrialDefinition? {
+    guard let scene = effectiveGalleryTrial else { return nil }
+    try OriginalDetailedHullStage.requireRuntime(scene.ship)
+    guard scene.valid, ShipCatalogue.ship(scene.ship)?.catalogue.playerFlyable == true else {
+      throw MissionPackError("This Gallery trial does not have an available player hull.")
+    }
+    return scene
+  }
+}
+
 struct GalleryParentState: Sendable {
   let game: Game
   let controls: Controls
@@ -59,6 +87,12 @@ extension Game {
   }
   // Keep isolated trial storage out of the selected-entry/catalogue lookup frame.
   private func isolatedMissionTrialAvailable(_ pack: ScriptPack) -> Bool {
+    guard !NativeSignedPassageOpening.applies(pack) else { return false }
+    guard !NativeMemoryAtlasDefinition.applies(pack) else { return false }
+    guard !NativeQuietChoirDefinition.applies(pack) else { return false }
+    guard !NativeBorrowedVoiceDefinition.applies(pack) else { return false }
+    guard !NativeUnderTowDefinition.applies(pack) else { return false }
+    guard !NativeAssemblyOfOrbitsDefinition.applies(pack) else { return false }
     guard pack.manifest.stateID != NativeInductionSeedPack.stateID,
       pack.digest != NativeInductionSeedPack.digest,
       pack.manifest.stateID != NativeInductionWorkshopPack.stateID,
@@ -85,6 +119,9 @@ extension Game {
     guard pack.manifest.flightReception == nil,
       pack.manifest.stateID != NativeFlightReception.stateID
     else { return false }
+    do {
+      _ = try pack.requireGalleryTrialHull()
+    } catch { return false }
     var isolatedAvailability = self
     isolatedAvailability.scriptDurabilityAvailable = true
     isolatedAvailability.commander.scriptState = ScriptEngineState()
@@ -100,6 +137,24 @@ extension Game {
       state.outcome == .active && state.suspension != nil || hasSuspendedWorldJobs(origin: id),
       let pack = scriptPack(for: state)
     else { return false }
+    guard !NativeSignedPassageOpening.applies(pack), !NativeSignedPassageOpening.marked(state) else {
+      return false
+    }
+    guard !NativeMemoryAtlasDefinition.applies(pack), !NativeMemoryAtlasDefinition.marked(state) else {
+      return false
+    }
+    guard !NativeQuietChoirDefinition.applies(pack), !NativeQuietChoirDefinition.marked(state) else {
+      return false
+    }
+    guard !NativeBorrowedVoiceDefinition.applies(pack), !NativeBorrowedVoiceDefinition.marked(state) else {
+      return false
+    }
+    guard !NativeUnderTowDefinition.applies(pack), !NativeUnderTowDefinition.marked(state) else {
+      return false
+    }
+    guard !NativeAssemblyOfOrbitsDefinition.applies(pack), !NativeAssemblyOfOrbitsDefinition.marked(state) else {
+      return false
+    }
     return scriptUnavailable(pack) == nil
       && (state.outcome != .active || campaignExecutionIssue(state) == nil)
   }
@@ -117,6 +172,25 @@ extension Game {
     guard let pack = scriptPacks.first(where: { $0.digest == packDigest }) else {
       throw MissionPackError("Choose an installed mission for a trial.")
     }
+    guard !NativeSignedPassageOpening.applies(pack) else {
+      throw MissionPackError("Signed Passage uses the actual commander and native commissioning history.")
+    }
+    guard !NativeMemoryAtlasDefinition.applies(pack) else {
+      throw MissionPackError("The Memory Atlas uses the actual commander and native commissioning history.")
+    }
+    guard !NativeQuietChoirDefinition.applies(pack) else {
+      throw MissionPackError("A Choir Beneath the Static uses the actual commander and native commissioning history.")
+    }
+    guard !NativeBorrowedVoiceDefinition.applies(pack) else {
+      throw MissionPackError("The Borrowed Voice uses the actual commander and native commissioning history.")
+    }
+    guard !NativeUnderTowDefinition.applies(pack) else {
+      throw MissionPackError("Under Tow uses the actual commander, original loan and native custody.")
+    }
+    guard !NativeAssemblyOfOrbitsDefinition.applies(pack) else {
+      throw MissionPackError("An Assembly of Orbits uses the actual commander and original reference custody.")
+    }
+    let scene = try pack.requireGalleryTrialHull()
     var trial = Game(executive: false)
     trial.screen = .status
     trial.scriptPacks = scriptPacks
@@ -133,7 +207,7 @@ extension Game {
     }
     trial.ensureScriptCalendar(origin: .newCommander)
     trial.seedScriptTrial(seed)
-    if let scene = pack.manifest.trial {
+    if let scene {
       var commander = Commander()
       commander.shipID = scene.ship
       commander.galaxy = scene.galaxy

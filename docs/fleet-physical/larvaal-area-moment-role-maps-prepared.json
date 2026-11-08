@@ -1,0 +1,2351 @@
+{
+  "schema": "l337.fleet-area-moment-role-maps/1",
+  "status": "PREPARED_EXACT_ELEVEN_LARVAAL_ROLE_MAPS_NOT_ADOPTED_NO_NUMERIC_EVALUATION",
+  "proposalMarkdownSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "roleProposalSHA256": "34237241c36bf353060014a2af440099523b2931b34f4725f88a9c1c5219e11b",
+  "metadataFirstSHA256": "36c9bc6a34651fe95ca2d6e6ebbf44a297378d3564f48bf62d3a31e8fa060bdc",
+  "rows": [
+    {
+      "id": "SH112",
+      "name": "Larvaal Warden",
+      "contractSHA256": "cbcdc5e45436d78d490b00f76b8e3f430e963fb5204cd6162f51fc802ad8674b",
+      "source": {
+        "id": "SH112",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-design.toml",
+        "geometrySHA256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1",
+        "geometryBytes": 880289,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-components.json",
+        "componentSHA256": "8e92b8b5b65efa8bbd8544e7270d980c9d4b39d2033ca1e32a39a4b652d10bc3",
+        "componentBytes": 1849,
+        "detailedComponents": 6,
+        "detailedFaceBound": 6816,
+        "detailedVertexBound": 3418
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "broad closed protective mantle",
+          "vertexStart": 0,
+          "vertexCount": 768,
+          "faceStart": 0,
+          "faceCount": 1536
+        },
+        {
+          "name": "exposed gold nucleus",
+          "vertexStart": 768,
+          "vertexCount": 722,
+          "faceStart": 1536,
+          "faceCount": 1440
+        },
+        {
+          "name": "long curved mantle lobe",
+          "vertexStart": 1490,
+          "vertexCount": 242,
+          "faceStart": 2976,
+          "faceCount": 480
+        },
+        {
+          "name": "small inner organ",
+          "vertexStart": 1732,
+          "vertexCount": 722,
+          "faceStart": 3456,
+          "faceCount": 1440
+        },
+        {
+          "name": "long curved mantle lobe",
+          "vertexStart": 2454,
+          "vertexCount": 242,
+          "faceStart": 4896,
+          "faceCount": 480
+        },
+        {
+          "name": "small inner organ",
+          "vertexStart": 2696,
+          "vertexCount": 722,
+          "faceStart": 5376,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 3,
+          "anchorName": "small inner organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 5,
+          "anchorName": "small inner organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "broad closed protective mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "broad closed protective mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 2,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "broad closed protective mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "broad closed protective mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "broad closed protective mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "broad closed protective mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 2,
+        "playerConversionCrew": 2
+      },
+      "operationBounds": {
+        "coordinateConversions": 10254,
+        "faceIndexChecks": 20448,
+        "triangleAreaEvaluations": 6816,
+        "analyticMomentEvaluations": 6816,
+        "quadratureMomentEvaluations": 20448,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH113",
+      "name": "Larvaal Ravager",
+      "contractSHA256": "1a86eadf7eae395da5bf6f1329cc56d4bf24e14f97bfa34a39b598ed6ff3062f",
+      "source": {
+        "id": "SH113",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-design.toml",
+        "geometrySHA256": "5e9d7670be4b1997ad270d55f1cbecb1009eafc697ab4ddd2df1b34cc7a9e007",
+        "geometryBytes": 808399,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-components.json",
+        "componentSHA256": "47a627f4f7e90e3bf639b346bdbf4cf2944b97124cd71b6a0d17ee1bf2d3eabb",
+        "componentBytes": 1863,
+        "detailedComponents": 6,
+        "detailedFaceBound": 6136,
+        "detailedVertexBound": 3080
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "swept dorsal carapace",
+          "vertexStart": 0,
+          "vertexCount": 242,
+          "faceStart": 0,
+          "faceCount": 480
+        },
+        {
+          "name": "open hooked forward growth",
+          "vertexStart": 242,
+          "vertexCount": 336,
+          "faceStart": 480,
+          "faceCount": 668
+        },
+        {
+          "name": "inner forward gold gland",
+          "vertexStart": 578,
+          "vertexCount": 722,
+          "faceStart": 1148,
+          "faceCount": 1440
+        },
+        {
+          "name": "open hooked forward growth",
+          "vertexStart": 1300,
+          "vertexCount": 336,
+          "faceStart": 2588,
+          "faceCount": 668
+        },
+        {
+          "name": "inner forward gold gland",
+          "vertexStart": 1636,
+          "vertexCount": 722,
+          "faceStart": 3256,
+          "faceCount": 1440
+        },
+        {
+          "name": "stern gold organ",
+          "vertexStart": 2358,
+          "vertexCount": 722,
+          "faceStart": 4696,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 5,
+          "anchorName": "stern gold organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "swept dorsal carapace",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "swept dorsal carapace",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 1,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "swept dorsal carapace",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "swept dorsal carapace",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "swept dorsal carapace",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "swept dorsal carapace",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1
+      },
+      "operationBounds": {
+        "coordinateConversions": 9240,
+        "faceIndexChecks": 18408,
+        "triangleAreaEvaluations": 6136,
+        "analyticMomentEvaluations": 6136,
+        "quadratureMomentEvaluations": 18408,
+        "hardwareAllocations": 7,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH114",
+      "name": "Larvaal Sentinel",
+      "contractSHA256": "52fa731ac2d363006a35c0dd4a7318b5e94cf51892f0e6abae6f70bb01c94143",
+      "source": {
+        "id": "SH114",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-design.toml",
+        "geometrySHA256": "d999e2f3324a8a593191765c20fcd48c03ed17fefa102d4ed1156710685d51f0",
+        "geometryBytes": 1135060,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-components.json",
+        "componentSHA256": "f71459dc1dda6040a8014bd8dc9426e6a618bb3093c27b899ab041aaee606e51",
+        "componentBytes": 1878,
+        "detailedComponents": 6,
+        "detailedFaceBound": 8736,
+        "detailedVertexBound": 4378
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "upright sagittal guard",
+          "vertexStart": 0,
+          "vertexCount": 768,
+          "faceStart": 0,
+          "faceCount": 1536
+        },
+        {
+          "name": "smooth upper lower guard lobe",
+          "vertexStart": 768,
+          "vertexCount": 722,
+          "faceStart": 1536,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward luminous gland",
+          "vertexStart": 1490,
+          "vertexCount": 722,
+          "faceStart": 2976,
+          "faceCount": 1440
+        },
+        {
+          "name": "smooth upper lower guard lobe",
+          "vertexStart": 2212,
+          "vertexCount": 722,
+          "faceStart": 4416,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward luminous gland",
+          "vertexStart": 2934,
+          "vertexCount": 722,
+          "faceStart": 5856,
+          "faceCount": 1440
+        },
+        {
+          "name": "central golden reserve",
+          "vertexStart": 3656,
+          "vertexCount": 722,
+          "faceStart": 7296,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 2,
+          "anchorName": "inward luminous gland",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 4,
+          "anchorName": "inward luminous gland",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "upright sagittal guard",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "upright sagittal guard",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 3,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "upright sagittal guard",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "upright sagittal guard",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "upright sagittal guard",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "upright sagittal guard",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 3,
+        "playerConversionCrew": 3
+      },
+      "operationBounds": {
+        "coordinateConversions": 13134,
+        "faceIndexChecks": 26208,
+        "triangleAreaEvaluations": 8736,
+        "analyticMomentEvaluations": 8736,
+        "quadratureMomentEvaluations": 26208,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH115",
+      "name": "Larvaal Lancer",
+      "contractSHA256": "6ed36170e9691f0f12aaf19b49eb0eeee314135c1931af965806c823dac7bf45",
+      "source": {
+        "id": "SH115",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-design.toml",
+        "geometrySHA256": "9b38f9641e6503b8aa2a7430f81d91c6f6870bc28f0c9dc13baee16397b01ab2",
+        "geometryBytes": 811798,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-components.json",
+        "componentSHA256": "ab757c36e7dc8d09fba3bf129cf670fad4db02b11984ea282ccdd50d4aa422ab",
+        "componentBytes": 1873,
+        "detailedComponents": 6,
+        "detailedFaceBound": 6184,
+        "detailedVertexBound": 3104
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "single smooth tapered lance",
+          "vertexStart": 0,
+          "vertexCount": 242,
+          "faceStart": 0,
+          "faceCount": 480
+        },
+        {
+          "name": "short swept rear growth",
+          "vertexStart": 242,
+          "vertexCount": 348,
+          "faceStart": 480,
+          "faceCount": 692
+        },
+        {
+          "name": "small rear green organ",
+          "vertexStart": 590,
+          "vertexCount": 722,
+          "faceStart": 1172,
+          "faceCount": 1440
+        },
+        {
+          "name": "short swept rear growth",
+          "vertexStart": 1312,
+          "vertexCount": 348,
+          "faceStart": 2612,
+          "faceCount": 692
+        },
+        {
+          "name": "small rear green organ",
+          "vertexStart": 1660,
+          "vertexCount": 722,
+          "faceStart": 3304,
+          "faceCount": 1440
+        },
+        {
+          "name": "elongated gold inner channel",
+          "vertexStart": 2382,
+          "vertexCount": 722,
+          "faceStart": 4744,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 2,
+          "anchorName": "small rear green organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 4,
+          "anchorName": "small rear green organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "single smooth tapered lance",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "single smooth tapered lance",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 1,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "single smooth tapered lance",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "single smooth tapered lance",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "single smooth tapered lance",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "single smooth tapered lance",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1
+      },
+      "operationBounds": {
+        "coordinateConversions": 9312,
+        "faceIndexChecks": 18552,
+        "triangleAreaEvaluations": 6184,
+        "analyticMomentEvaluations": 6184,
+        "quadratureMomentEvaluations": 18552,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH116",
+      "name": "Larvaal Broodlord",
+      "contractSHA256": "0ac287f26c28101ac8999e38dc9a7b26a145370ccdaa248ba6d7eed04afe1fb2",
+      "source": {
+        "id": "SH116",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-design.toml",
+        "geometrySHA256": "62153467e98fbf3e98a095a50bfc536227d322345d74a6a048e720b65c9fed73",
+        "geometryBytes": 921446,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-components.json",
+        "componentSHA256": "efe5e0d62c7da1368080cabc2d03946d7a455ed265ffbde6eca04703cd3edc6a",
+        "componentBytes": 1923,
+        "detailedComponents": 6,
+        "detailedFaceBound": 7048,
+        "detailedVertexBound": 3536
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "broad smooth dorsal hood",
+          "vertexStart": 0,
+          "vertexCount": 722,
+          "faceStart": 0,
+          "faceCount": 1440
+        },
+        {
+          "name": "visible ventral golden brood sac",
+          "vertexStart": 722,
+          "vertexCount": 722,
+          "faceStart": 1440,
+          "faceCount": 1440
+        },
+        {
+          "name": "open lower protective growth",
+          "vertexStart": 1444,
+          "vertexCount": 324,
+          "faceStart": 2880,
+          "faceCount": 644
+        },
+        {
+          "name": "recessed lower tendril organ",
+          "vertexStart": 1768,
+          "vertexCount": 722,
+          "faceStart": 3524,
+          "faceCount": 1440
+        },
+        {
+          "name": "open lower protective growth",
+          "vertexStart": 2490,
+          "vertexCount": 324,
+          "faceStart": 4964,
+          "faceCount": 644
+        },
+        {
+          "name": "recessed lower tendril organ",
+          "vertexStart": 2814,
+          "vertexCount": 722,
+          "faceStart": 5608,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 3,
+          "anchorName": "recessed lower tendril organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 5,
+          "anchorName": "recessed lower tendril organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "broad smooth dorsal hood",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "broad smooth dorsal hood",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 5,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "broad smooth dorsal hood",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "broad smooth dorsal hood",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "broad smooth dorsal hood",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "broad smooth dorsal hood",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 5,
+        "playerConversionCrew": 5
+      },
+      "operationBounds": {
+        "coordinateConversions": 10608,
+        "faceIndexChecks": 21144,
+        "triangleAreaEvaluations": 7048,
+        "analyticMomentEvaluations": 7048,
+        "quadratureMomentEvaluations": 21144,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH117",
+      "name": "Larvaal Provoker",
+      "contractSHA256": "d3bd98bd547c59cf62b6c1891f1fe3554754a140796f1dbb2060b89369ac6442",
+      "source": {
+        "id": "SH117",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-design.toml",
+        "geometrySHA256": "9a48f2e812240a38f2b90ea0333eda83f8032b0472dcba9fcb694931cc0a902e",
+        "geometryBytes": 973424,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-components.json",
+        "componentSHA256": "135d71d900fa087677ebbeeb5a03b9496a7888f89339aefb8209d69ebb92af64",
+        "componentBytes": 1841,
+        "detailedComponents": 6,
+        "detailedFaceBound": 7480,
+        "detailedVertexBound": 3752
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "opposed open crescent",
+          "vertexStart": 0,
+          "vertexCount": 672,
+          "faceStart": 0,
+          "faceCount": 1340
+        },
+        {
+          "name": "inner crescent organ",
+          "vertexStart": 672,
+          "vertexCount": 722,
+          "faceStart": 1340,
+          "faceCount": 1440
+        },
+        {
+          "name": "opposed open crescent",
+          "vertexStart": 1394,
+          "vertexCount": 672,
+          "faceStart": 2780,
+          "faceCount": 1340
+        },
+        {
+          "name": "inner crescent organ",
+          "vertexStart": 2066,
+          "vertexCount": 722,
+          "faceStart": 4120,
+          "faceCount": 1440
+        },
+        {
+          "name": "short smooth central growth",
+          "vertexStart": 2788,
+          "vertexCount": 242,
+          "faceStart": 5560,
+          "faceCount": 480
+        },
+        {
+          "name": "forward gold knot",
+          "vertexStart": 3030,
+          "vertexCount": 722,
+          "faceStart": 6040,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 1,
+          "anchorName": "inner crescent organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 3,
+          "anchorName": "inner crescent organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "opposed open crescent",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "opposed open crescent",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 1,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "opposed open crescent",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "opposed open crescent",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "opposed open crescent",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "opposed open crescent",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1
+      },
+      "operationBounds": {
+        "coordinateConversions": 11256,
+        "faceIndexChecks": 22440,
+        "triangleAreaEvaluations": 7480,
+        "analyticMomentEvaluations": 7480,
+        "quadratureMomentEvaluations": 22440,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH118",
+      "name": "Larvaal Reaver",
+      "contractSHA256": "960a541ea826d2cb8634794e52772874570d4d9e7dc5dc949527ec1db41d80f7",
+      "source": {
+        "id": "SH118",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-design.toml",
+        "geometrySHA256": "65a9c46ec8547b76bc94aa261668b05f6a651bd39ee735c671d90f338be6f0e6",
+        "geometryBytes": 1999661,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-components.json",
+        "componentSHA256": "93637233a52a586243e7f998c435e12a2d01a9d0f1ea2b3d112ee05cd1272820",
+        "componentBytes": 4250,
+        "detailedComponents": 14,
+        "detailedFaceBound": 15360,
+        "detailedVertexBound": 7708
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "thin central jade blade",
+          "vertexStart": 0,
+          "vertexCount": 242,
+          "faceStart": 0,
+          "faceCount": 480
+        },
+        {
+          "name": "separate smooth diagonal leaf",
+          "vertexStart": 242,
+          "vertexCount": 242,
+          "faceStart": 480,
+          "faceCount": 480
+        },
+        {
+          "name": "curved leaf root",
+          "vertexStart": 484,
+          "vertexCount": 722,
+          "faceStart": 960,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward leaf glow",
+          "vertexStart": 1206,
+          "vertexCount": 722,
+          "faceStart": 2400,
+          "faceCount": 1440
+        },
+        {
+          "name": "separate smooth diagonal leaf",
+          "vertexStart": 1928,
+          "vertexCount": 242,
+          "faceStart": 3840,
+          "faceCount": 480
+        },
+        {
+          "name": "curved leaf root",
+          "vertexStart": 2170,
+          "vertexCount": 722,
+          "faceStart": 4320,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward leaf glow",
+          "vertexStart": 2892,
+          "vertexCount": 722,
+          "faceStart": 5760,
+          "faceCount": 1440
+        },
+        {
+          "name": "separate smooth diagonal leaf",
+          "vertexStart": 3614,
+          "vertexCount": 242,
+          "faceStart": 7200,
+          "faceCount": 480
+        },
+        {
+          "name": "curved leaf root",
+          "vertexStart": 3856,
+          "vertexCount": 722,
+          "faceStart": 7680,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward leaf glow",
+          "vertexStart": 4578,
+          "vertexCount": 722,
+          "faceStart": 9120,
+          "faceCount": 1440
+        },
+        {
+          "name": "separate smooth diagonal leaf",
+          "vertexStart": 5300,
+          "vertexCount": 242,
+          "faceStart": 10560,
+          "faceCount": 480
+        },
+        {
+          "name": "curved leaf root",
+          "vertexStart": 5542,
+          "vertexCount": 722,
+          "faceStart": 11040,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward leaf glow",
+          "vertexStart": 6264,
+          "vertexCount": 722,
+          "faceStart": 12480,
+          "faceCount": 1440
+        },
+        {
+          "name": "long gold central organ",
+          "vertexStart": 6986,
+          "vertexCount": 722,
+          "faceStart": 13920,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 3,
+          "anchorName": "inward leaf glow",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 6,
+          "anchorName": "inward leaf glow",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 9,
+          "anchorName": "inward leaf glow",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 12,
+          "anchorName": "inward leaf glow",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "thin central jade blade",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "thin central jade blade",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 2,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "thin central jade blade",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "thin central jade blade",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "thin central jade blade",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "thin central jade blade",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 2,
+        "playerConversionCrew": 2
+      },
+      "operationBounds": {
+        "coordinateConversions": 23124,
+        "faceIndexChecks": 46080,
+        "triangleAreaEvaluations": 15360,
+        "analyticMomentEvaluations": 15360,
+        "quadratureMomentEvaluations": 46080,
+        "hardwareAllocations": 10,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH119",
+      "name": "Larvaal Wraith",
+      "contractSHA256": "f44ea27d0015ea2fdc28491277d4d5fc2625f66a597670db8351c68211dd91f3",
+      "source": {
+        "id": "SH119",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-design.toml",
+        "geometrySHA256": "3d7d4b77a9f9c44ff9b15c3cf379bf68b4ca0106628a59eaae978e59394fa7d1",
+        "geometryBytes": 1077700,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-components.json",
+        "componentSHA256": "3a787daecebc52105fb6547440a19e1fc5edb3805821cf44da73fb3bf2a90b35",
+        "componentBytes": 2205,
+        "detailedComponents": 7,
+        "detailedFaceBound": 8160,
+        "detailedVertexBound": 4094
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "thin laminar jade mantle",
+          "vertexStart": 0,
+          "vertexCount": 722,
+          "faceStart": 0,
+          "faceCount": 1440
+        },
+        {
+          "name": "exposed gold underwing organ",
+          "vertexStart": 722,
+          "vertexCount": 722,
+          "faceStart": 1440,
+          "faceCount": 1440
+        },
+        {
+          "name": "short aft stabilising growth",
+          "vertexStart": 1444,
+          "vertexCount": 242,
+          "faceStart": 2880,
+          "faceCount": 480
+        },
+        {
+          "name": "aft lower green organ",
+          "vertexStart": 1686,
+          "vertexCount": 722,
+          "faceStart": 3360,
+          "faceCount": 1440
+        },
+        {
+          "name": "exposed gold underwing organ",
+          "vertexStart": 2408,
+          "vertexCount": 722,
+          "faceStart": 4800,
+          "faceCount": 1440
+        },
+        {
+          "name": "short aft stabilising growth",
+          "vertexStart": 3130,
+          "vertexCount": 242,
+          "faceStart": 6240,
+          "faceCount": 480
+        },
+        {
+          "name": "aft lower green organ",
+          "vertexStart": 3372,
+          "vertexCount": 722,
+          "faceStart": 6720,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 3,
+          "anchorName": "aft lower green organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 6,
+          "anchorName": "aft lower green organ",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "thin laminar jade mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "thin laminar jade mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 1,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "thin laminar jade mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "thin laminar jade mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "thin laminar jade mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "thin laminar jade mantle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 1,
+        "playerConversionCrew": 1
+      },
+      "operationBounds": {
+        "coordinateConversions": 12282,
+        "faceIndexChecks": 24480,
+        "triangleAreaEvaluations": 8160,
+        "analyticMomentEvaluations": 8160,
+        "quadratureMomentEvaluations": 24480,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH120",
+      "name": "Larvaal Seeker",
+      "contractSHA256": "b510e195c30517d6ad5cd4a04277612fdb4800198dffc8f01c695a95573f2eaf",
+      "source": {
+        "id": "SH120",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-design.toml",
+        "geometrySHA256": "4968b8ce9ac6fc316fe67b58dd04e7fb2297ab8d40aa20e8322a26540437fedc",
+        "geometryBytes": 872098,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-components.json",
+        "componentSHA256": "656d34be6678c64aa07043d0a0ccfaaae80feaedda6344b76fcce834097edfa4",
+        "componentBytes": 1867,
+        "detailedComponents": 6,
+        "detailedFaceBound": 6816,
+        "detailedVertexBound": 3418
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "tall forward sensing vault",
+          "vertexStart": 0,
+          "vertexCount": 768,
+          "faceStart": 0,
+          "faceCount": 1536
+        },
+        {
+          "name": "tall gold sensing nucleus",
+          "vertexStart": 768,
+          "vertexCount": 722,
+          "faceStart": 1536,
+          "faceCount": 1440
+        },
+        {
+          "name": "rear curved balance lobe",
+          "vertexStart": 1490,
+          "vertexCount": 242,
+          "faceStart": 2976,
+          "faceCount": 480
+        },
+        {
+          "name": "inward sensing gland",
+          "vertexStart": 1732,
+          "vertexCount": 722,
+          "faceStart": 3456,
+          "faceCount": 1440
+        },
+        {
+          "name": "rear curved balance lobe",
+          "vertexStart": 2454,
+          "vertexCount": 242,
+          "faceStart": 4896,
+          "faceCount": 480
+        },
+        {
+          "name": "inward sensing gland",
+          "vertexStart": 2696,
+          "vertexCount": 722,
+          "faceStart": 5376,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 3,
+          "anchorName": "inward sensing gland",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 5,
+          "anchorName": "inward sensing gland",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "tall forward sensing vault",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "tall forward sensing vault",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 2,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "tall forward sensing vault",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "tall forward sensing vault",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "tall forward sensing vault",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "tall forward sensing vault",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 2,
+        "playerConversionCrew": 2
+      },
+      "operationBounds": {
+        "coordinateConversions": 10254,
+        "faceIndexChecks": 20448,
+        "triangleAreaEvaluations": 6816,
+        "analyticMomentEvaluations": 6816,
+        "quadratureMomentEvaluations": 20448,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH121",
+      "name": "Larvaal Mender",
+      "contractSHA256": "48146ed3f79c033f8b3b6342c9642cfaaf62c949ec6a479e28a22e0a88a6d270",
+      "source": {
+        "id": "SH121",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-design.toml",
+        "geometrySHA256": "f205cf86f74b26cc75542f65a940aa92f287d24c58d53d4e250ba6e24a05218b",
+        "geometryBytes": 1113768,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-components.json",
+        "componentSHA256": "9df9ef2f2f5cf136111aaca92e4ebb1404b7a96d3dd3ee0fb30facaf924b1b3b",
+        "componentBytes": 1863,
+        "detailedComponents": 6,
+        "detailedFaceBound": 8540,
+        "detailedVertexBound": 4282
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "forward open repair cradle",
+          "vertexStart": 0,
+          "vertexCount": 672,
+          "faceStart": 0,
+          "faceCount": 1340
+        },
+        {
+          "name": "short rear living body",
+          "vertexStart": 672,
+          "vertexCount": 722,
+          "faceStart": 1340,
+          "faceCount": 1440
+        },
+        {
+          "name": "forward gold repair organ",
+          "vertexStart": 1394,
+          "vertexCount": 722,
+          "faceStart": 2780,
+          "faceCount": 1440
+        },
+        {
+          "name": "inner green emitter",
+          "vertexStart": 2116,
+          "vertexCount": 722,
+          "faceStart": 4220,
+          "faceCount": 1440
+        },
+        {
+          "name": "forward gold repair organ",
+          "vertexStart": 2838,
+          "vertexCount": 722,
+          "faceStart": 5660,
+          "faceCount": 1440
+        },
+        {
+          "name": "inner green emitter",
+          "vertexStart": 3560,
+          "vertexCount": 722,
+          "faceStart": 7100,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 1,
+          "anchorName": "short rear living body",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "forward open repair cradle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "forward open repair cradle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 4,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "forward open repair cradle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "forward open repair cradle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "forward open repair cradle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "forward open repair cradle",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 4,
+        "playerConversionCrew": 4
+      },
+      "operationBounds": {
+        "coordinateConversions": 12846,
+        "faceIndexChecks": 25620,
+        "triangleAreaEvaluations": 8540,
+        "analyticMomentEvaluations": 8540,
+        "quadratureMomentEvaluations": 25620,
+        "hardwareAllocations": 7,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH122",
+      "name": "Larvaal Harvester",
+      "contractSHA256": "65f2ecb53a56251a6b3e38f5d459f636732bfdb017ae341a32aef0361d32d6f3",
+      "source": {
+        "id": "SH122",
+        "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-design.toml",
+        "geometrySHA256": "c0392366f0a900584961def6feed02002cced6a9760fa0178518f2f020600556",
+        "geometryBytes": 1588487,
+        "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-components.json",
+        "componentSHA256": "76599c75eabb8c2499cd8a8ce76a93fe47774e6f21f71fba6bc779951b1d7090",
+        "componentBytes": 2837,
+        "detailedComponents": 9,
+        "detailedFaceBound": 12096,
+        "detailedVertexBound": 6064
+      },
+      "units": "metres",
+      "scale": 1,
+      "origin": "Authored original origin, +Z forward/+Y up; no source geometry edits",
+      "status": "PREPARED_EXACT_PROPOSED_ROLE_MAP_AWAITING_ROOT_ADOPTION_NO_CALCULATION",
+      "components": [
+        {
+          "name": "open circular collection mouth",
+          "vertexStart": 0,
+          "vertexCount": 768,
+          "faceStart": 0,
+          "faceCount": 1536
+        },
+        {
+          "name": "smooth rear processing body",
+          "vertexStart": 768,
+          "vertexCount": 242,
+          "faceStart": 1536,
+          "faceCount": 480
+        },
+        {
+          "name": "collection mantle bulb",
+          "vertexStart": 1010,
+          "vertexCount": 722,
+          "faceStart": 2016,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward luminous intake organ",
+          "vertexStart": 1732,
+          "vertexCount": 722,
+          "faceStart": 3456,
+          "faceCount": 1440
+        },
+        {
+          "name": "collection mantle bulb",
+          "vertexStart": 2454,
+          "vertexCount": 722,
+          "faceStart": 4896,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward luminous intake organ",
+          "vertexStart": 3176,
+          "vertexCount": 722,
+          "faceStart": 6336,
+          "faceCount": 1440
+        },
+        {
+          "name": "collection mantle bulb",
+          "vertexStart": 3898,
+          "vertexCount": 722,
+          "faceStart": 7776,
+          "faceCount": 1440
+        },
+        {
+          "name": "inward luminous intake organ",
+          "vertexStart": 4620,
+          "vertexCount": 722,
+          "faceStart": 9216,
+          "faceCount": 1440
+        },
+        {
+          "name": "visible inner gold chamber",
+          "vertexStart": 5342,
+          "vertexCount": 722,
+          "faceStart": 10656,
+          "faceCount": 1440
+        }
+      ],
+      "faceStockAssignments": [
+        {
+          "materialIndex": 0,
+          "exactSourceMaterialName": "jade-skin",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 1,
+          "exactSourceMaterialName": "deep-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 2,
+          "exactSourceMaterialName": "gold-core",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 3,
+          "exactSourceMaterialName": "recess-shadow",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 4,
+          "exactSourceMaterialName": "soft-jade",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 5,
+          "exactSourceMaterialName": "gold-green-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 6,
+          "exactSourceMaterialName": "luminous-organ",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        },
+        {
+          "materialIndex": 7,
+          "exactSourceMaterialName": "jade-inlay",
+          "stockRole": "Explicit proposed opaque organ-envelope engineering stock; not tissue, density, glazing or biological-function inference",
+          "kgPerSquareMetre": 14,
+          "meaning": "NEW proposed engineering budget on this exact named material"
+        }
+      ],
+      "intrinsicHardware": [
+        {
+          "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+          "count": 1,
+          "eachKg": 900,
+          "anchorComponent": 1,
+          "anchorName": "smooth rear processing body",
+          "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained."
+        },
+        {
+          "name": "Empty intrinsic power system",
+          "count": 1,
+          "eachKg": 750,
+          "anchorComponent": 0,
+          "anchorName": "open circular collection mouth",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty fuel-containment and transfer system",
+          "count": 1,
+          "eachKg": 180,
+          "anchorComponent": 0,
+          "anchorName": "open circular collection mouth",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+          "count": 4,
+          "eachKg": 120,
+          "anchorComponent": 0,
+          "anchorName": "open circular collection mouth",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Control and sensing system",
+          "count": 1,
+          "eachKg": 90,
+          "anchorComponent": 0,
+          "anchorName": "open circular collection mouth",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty carried-equipment interfaces",
+          "count": 1,
+          "eachKg": 140,
+          "anchorComponent": 0,
+          "anchorName": "open circular collection mouth",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        },
+        {
+          "name": "Empty launcher system, no ammunition",
+          "count": 1,
+          "eachKg": 160,
+          "anchorComponent": 0,
+          "anchorName": "open circular collection mouth",
+          "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented."
+        }
+      ],
+      "nativeStaffingDeclaration": {
+        "nativeAutonomous": false,
+        "nativeCrew": 4,
+        "playerConversionCrew": 4
+      },
+      "operationBounds": {
+        "coordinateConversions": 18192,
+        "faceIndexChecks": 36288,
+        "triangleAreaEvaluations": 12096,
+        "analyticMomentEvaluations": 12096,
+        "quadratureMomentEvaluations": 36288,
+        "hardwareAllocations": 7,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    }
+  ],
+  "blocked": [],
+  "totalOperationBounds": {
+    "coordinateConversions": 140502,
+    "faceIndexChecks": 280116,
+    "triangleAreaEvaluations": 93372,
+    "analyticMomentEvaluations": 93372,
+    "quadratureMomentEvaluations": 280116,
+    "hardwareAllocations": 87,
+    "sourceParses": 11,
+    "resultRecords": 11
+  },
+  "metadataComponentJSONReads": 11,
+  "sourceGeometryReads": 0,
+  "areaCentroidMassTensorEvaluations": 0,
+  "originalCreatorOrNativeExecution": 0,
+  "forbidden": [
+    "Original creator imports/execution",
+    "Geometry transforms/search/probes/queries",
+    "Native/compiler/renderer/tests",
+    "Evaluation before explicit role adoption and authoring-code FIRST freeze",
+    "Retries/cap raises/overwrite"
+  ]
+}

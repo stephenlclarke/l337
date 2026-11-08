@@ -2,10 +2,15 @@ import Testing
 
 @testable import L337Core
 
-private func cueFrame(_ game: Game) -> Frame {
+private func cueFrame(_ game: Game, source: SpaceBody? = nil) -> Frame {
   var frame = Frame()
   frame.rasterizeGraphics = false
-  Display.flightObjects(game, projection: .legacy, into: &frame)
+  if let source {
+    let scene = GameplayRaycast.prepareOcclusionScene(game, projection: .legacy)
+    Display.targetWorldGlow(source, game: game, projection: .legacy,
+      scene: scene, context: game.gameplayContext(), into: &frame)
+    Display.draw(source, game: game, into: &frame, projection: .legacy)
+  } else { Display.flightObjects(game, projection: .legacy, into: &frame) }
   return frame
 }
 
@@ -26,13 +31,16 @@ struct TargetColourCueTests {
     #expect(game.bodies[0].hostile)
     #expect(
       game.empTargetStatus(game.bodies[0])?.contains("CREW ABOARD / CUTTER CAPTURE") == true)
-    #expect(game.flightStatus == "Safe")
+    let otherThreat = game.bodies.contains {
+      $0.id != game.bodies[0].id && $0.hostile && $0.energy > 0 && !game.isEMPDisabled($0)
+    }
+    #expect(game.flightStatus == (otherThreat ? "Hostile" : "Safe"))
     for style in ShipDisplayStyle.allCases {
       game.commander.shipDisplayStyle = style
       for selected in [false, true] {
         game.weaponsTargetID = selected ? game.bodies[0].id : nil
         #expect(game.targetColourCue(for: game.bodies[0]) == .recoverable)
-        let frame = cueFrame(game)
+        let frame = cueFrame(game, source: game.bodies[0])
         let lines = glowLines(frame)
         #expect(!lines.isEmpty && lines.allSatisfy { $0.ink == .orange })
         #expect(lines.count <= 12)
@@ -64,7 +72,7 @@ struct TargetColourCueTests {
     #expect(game.empTargetStatus(body) == "ENGINES AND WEAPONS DISABLED - UNOCCUPIED SALVAGE")
     for style in ShipDisplayStyle.allCases {
       game.commander.shipDisplayStyle = style
-      let lines = glowLines(cueFrame(game))
+      let lines = glowLines(cueFrame(game, source: body))
       #expect(!lines.isEmpty && lines.allSatisfy { $0.ink == .orange })
     }
     let context = try #require(game.gameplayContext())

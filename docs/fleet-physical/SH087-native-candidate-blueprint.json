@@ -1,0 +1,90 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH087-complete14part-native-candidate-v1",
+  "ship": "SH087",
+  "name": "Elk",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "ee415f26d288d66cbc448c51a5c15bcd362acd0e3e4220d085c5e2162a695b0e",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH087-design.toml",
+    "bytes": 241583,
+    "sha256": "63298c43a80e0134b18cb10c9bc93cde9abcda8158db1094b036235a14270e94"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH087.toml",
+    "bytes": 265660,
+    "sha256": "3f2ff31b4c25cef0e00d2b8a1ce91ebc9d04c233d22be7c0c4cbf6b5e4795aa5"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH087.json",
+    "bytes": 43018,
+    "sha256": "457f64c0b7a70516e1269978b34a2e597bfcd474ee032b54a8dcf5a3b3f759b3"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH087-native-candidate-recipe.py",
+    "bytes": 7410,
+    "sha256": "6aea0ba59593a2be111ce3f739a1f1c17c67c2ba55ecb37efbabe56a6a1bc55d"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH087-native-candidate-tests.py",
+    "bytes": 6601,
+    "sha256": "769a9cb67dc0b4b9bf3098eeb2ac6b9bb9610d6ed879901a96dd403b08f972bc"
+  },
+  "baseline": {
+    "declaredNativeFaces": 536,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 10,
+    "changedOriginalPartIndices": [
+      0,
+      6,
+      9,
+      10,
+      12,
+      13
+    ],
+    "unchangedFixedOriginalParts": 8,
+    "status": "NEW angular approximation only; actual output count and full curved-profile/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Complete original five-station belly envelope at(0,-.24,0),length*.90,widthbeam*.48,height.64, both end caps",
+    "ALL four original analytical native recessed wells and their shadow/rim materials",
+    "Full raised bridge structural envelope at(0,.50,.05),dimensions(.45,.38,length*.43)",
+    "Complete cockpit glazing envelope AND connected structural crossmember",
+    "Both original drive supports, complete propulsion casings AND luminous recesses",
+    "Exact original forest-silver materials/emission/textures/license/source fields; genuine serializer regenerates complete face UVs"
+  ],
+  "coordinates": "Original length3.8/beam1.80, frame/axes/origin/source units retained, no rescale/recentre. Existing per-ID calibration not evaluated.",
+  "coupledRuntime": {
+    "domain": "Actual R3 human ship and own game table stay pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "No actual people, installed accommodation/hardware/power, paid role kit or source/actor/acquisition/current-save grant. All existing gates unchanged."
+  },
+  "stopRules": [
+    "Reject changed original source/creator/primitive/current-resource hashes before geometry",
+    "Exact original packaged detailed/native tables required",
+    "All14 positive original parts and material sets remain; no omitted well/bridge/cockpit support/drive recess",
+    "Complete candidate must satisfy512 and genuine closure/winding; no waiver or count claim",
+    "Independent tests require all8 fixed parts exact actual original vertices/localfaces/material sequence/UVs",
+    "Actual complete curved-source profile/void/material/UV fidelity and native/occupied/physical qualification remain G1 work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner actual installed/occupied input",
+    "next": "G1 generate once and run actual14part/exact8fixed/UV/input checks, then full source/native qualification. G4 continues independent original entries."
+  }
+}

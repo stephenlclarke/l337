@@ -24,6 +24,7 @@ private enum ActorMotionFixture {
     game.commander.galaxy = 7
     game.commander.system = 8
     game.systems = Universe.systemsIncludingPlugh(number: 7)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     try #require(!game.docked)
     let owner = try #require(game.commander.equipmentOwnerID)
@@ -191,13 +192,12 @@ struct NativeCrimboActorMotionTests {
     #expect(contacted)
   }
 
-  @Test func actualRefusedRRSEntryConsumesSampleAndKeepsCompletedPhysicalClock() async throws {
+  @Test func actualRefusedOriginalStationEntryConsumesSampleAndKeepsCompletedPhysicalClock() async throws {
     let priorRuntime = GameRuntime(game: try ActorMotionFixture.game())
     let prior = await priorRuntime.advance(delta: 0.01)
     let priorFact = try #require(prior.nativeCrimboAttainedMotion)
     let priorSample = try ActorMotionFixture.sample(from: priorFact, in: prior)
-    // Current original-world routes do not require RRS/convoy coexistence. Test
-    // cleanup of genuine but foreign-world/owner observations at an authentic RRS.
+    // Test cleanup of genuine foreign-world/owner observations at an actual source-bound station.
     var game = try NativeStationTestFixture.launched()
     game.nativeCrimboAttainedMotion = priorFact
     game.nativeCrimboMotionSample = priorSample
@@ -205,8 +205,7 @@ struct NativeCrimboActorMotionTests {
     let world = try #require(game.commander.nativeStations)
     let station = try #require(
       game.bodies.first {
-        $0.nativeStationIdentity?.definition
-          == NativeStationGeometry.Kind.waystation.sourceDefinition
+        $0.nativeStationIdentity == OriginalStationSite.salamander.identity(world: world.ledger.world)
       })
     let rigid = world.bodyRigidPoseIsConsistent(station, flight: game.commander.flightSimulation)
     try #require(rigid)
@@ -214,7 +213,7 @@ struct NativeCrimboActorMotionTests {
     let saved = try #require(world.pose(for: identity))
     let orientation = try #require(
       saved.orientation(at: game.commander.flightSimulation.physicalTime))
-    let port = NativeStationGeometry.waystation.docking
+    let port = try #require(NativeStationSource.binding(for: identity)?.geometry.docking)
     var pose = ShipPose()
     pose.position = saved.position + orientation.apply(port.center + port.outward)
     pose.orientation.y = orientation.apply(port.up)
@@ -235,7 +234,7 @@ struct NativeCrimboActorMotionTests {
       (endOrientation.inverse(frame.commander.flightSimulation.pose.position - saved.position)
       - port.center).dot(port.outward)
     #expect(oldDepth > 0 && depth <= 0 && depth > -port.tunnelDepth)
-    #expect(frame.message == "CHOOSE A SAVE LOCATION BEFORE RRS DOCKING")
+    #expect(frame.message == "CHOOSE A SAVE LOCATION BEFORE STATION DOCKING")
     #expect(!frame.docked && frame.pendingNativeStationDock == nil)
     #expect(
       frame.commander.flightSimulation.physicalTime > before.commander.flightSimulation.physicalTime

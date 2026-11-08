@@ -1,0 +1,464 @@
+{
+  "id": "SH099",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "b80ded1ddf179eab04e383c13a2017d0f07c990f5c69daa5de084ed9372391d9",
+  "contractSHA256": "4576979bb379ce9e5560be83fbe2085973136518104c7f144ed9fe1aaaa869cc",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "twin deck pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "twin deck pressure envelope",
+          "vertexStart": 8,
+          "vertexCount": 8,
+          "faceStart": 12,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "twin deck connected support",
+          "vertexStart": 16,
+          "vertexCount": 8,
+          "faceStart": 24,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "twin deck connected support",
+          "vertexStart": 24,
+          "vertexCount": 8,
+          "faceStart": 36,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 32,
+          "vertexCount": 120,
+          "faceStart": 48,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 5,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 152,
+          "vertexCount": 8,
+          "faceStart": 284,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 160,
+          "vertexCount": 8,
+          "faceStart": 296,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 168,
+          "vertexCount": 48,
+          "faceStart": 308,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 216,
+          "vertexCount": 48,
+          "faceStart": 400,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 264,
+          "vertexCount": 8,
+          "faceStart": 492,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 272,
+          "vertexCount": 48,
+          "faceStart": 504,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 320,
+          "vertexCount": 48,
+          "faceStart": 596,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        7,
+        10
+      ],
+      "vertices": 368,
+      "faces": 688
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "twin deck pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "twin deck pressure envelope",
+          "vertexStart": 8,
+          "vertexCount": 8,
+          "faceStart": 12,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "twin deck connected support",
+          "vertexStart": 16,
+          "vertexCount": 8,
+          "faceStart": 24,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "twin deck connected support",
+          "vertexStart": 24,
+          "vertexCount": 8,
+          "faceStart": 36,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 32,
+          "vertexCount": 60,
+          "faceStart": 48,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 5,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 92,
+          "vertexCount": 8,
+          "faceStart": 164,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 100,
+          "vertexCount": 8,
+          "faceStart": 176,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 108,
+          "vertexCount": 24,
+          "faceStart": 188,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 132,
+          "vertexCount": 24,
+          "faceStart": 232,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 156,
+          "vertexCount": 8,
+          "faceStart": 276,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "twin-deck",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 164,
+          "vertexCount": 24,
+          "faceStart": 288,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 188,
+          "vertexCount": 24,
+          "faceStart": 332,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "twin-deck",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        7,
+        10
+      ],
+      "vertices": 212,
+      "faces": 376
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

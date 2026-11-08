@@ -2,28 +2,41 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 private func dispatchCurrentEnvelopes(_ game: consuming Game, root: URL) throws {
   let prepared = try GameRuntime.prepareNativeSaveState(game)
-  let normal = root.appendingPathComponent("normal-\(UUID())/commander.json")
-  try ScriptSaveStore.write(
-    commander: prepared.commander, world: prepared.game.scriptWorldSave, to: normal)
-  let (loaded, world) = try ScriptSaveStore.read(Data(contentsOf: normal), from: normal)
-  #expect(world.consistent(with: loaded) && loaded.scriptState == prepared.commander.scriptState)
-  var alien = game
-  let owner = try #require(alien.commander.equipmentOwnerID)
-  // Empty storage proves current envelope composition, not Alien acquisition.
-  try alien.commander.replaceAlienStorage(
-    with: .init(
-      owner: owner, revision: 0, worldRevision: 0, world: [], sources: [], attachments: [],
-      upgrades: [], receipts: [], commands: []))
-  let adapted = try GameRuntime.prepareNativeSaveState(alien)
-  let url = root.appendingPathComponent("alien-\(UUID())/commander.json")
-  try ScriptSaveStore.write(
-    commander: adapted.commander, world: adapted.game.scriptWorldSave, to: url)
-  let (cold, coldWorld) = try ScriptSaveStore.read(Data(contentsOf: url), from: url)
-  #expect(cold.usesAlienStorageSaveVersion && coldWorld.consistent(with: cold))
-  #expect(cold.scriptState == adapted.commander.scriptState)
+  let storage = prepared.commander.alienStorageState?.current.snapshot
+  #expect(prepared.commander.usesAlienStorageSaveVersion == (storage != nil))
+  if let storage {
+    try #require(!storage.world.isEmpty)
+    // The actual hull acquisition has append-only salvage history. Erasure must still fail.
+    var erased = prepared.commander
+    #expect(throws: AlienStorageError.historyChanged) {
+      try erased.replaceAlienStorage(
+        with: .init(
+          owner: storage.owner, revision: 0, worldRevision: 0, world: [], sources: [],
+          attachments: [], upgrades: [], receipts: [], commands: []))
+    }
+    #expect(erased == prepared.commander)
+  } else {
+    // A genuine commander without this feature must retain absence, without a synthetic store.
+    #expect(prepared.commander.alienStorageState == nil && prepared.commander.savedAlienStorageReference == nil)
+  }
+  let url = root.appendingPathComponent("current-\(UUID())/commander.json")
+  let publication = try ScriptSaveStore.write(
+    commander: prepared.commander, world: prepared.game.scriptWorldSave, to: url)
+  #expect((publication != nil) == (storage != nil))
+  var published = prepared.commander
+  published.publishAlienStorage(publication)
+  let (cold, world) = try ScriptSaveStore.read(Data(contentsOf: url), from: url)
+  #expect(cold.usesAlienStorageSaveVersion == (storage != nil) && world.consistent(with: cold))
+  #expect(world == prepared.game.scriptWorldSave && cold == published)
+  #expect(cold.alienStorageState?.current.snapshot == storage)
+  if storage == nil {
+    #expect(cold.alienStorageState == nil && cold.savedAlienStorageReference == nil)
+  }
+  #expect(cold.scriptState == prepared.commander.scriptState)
   #expect(ScriptClueVersionedSave.validateClaims(cold, trust: .production))
 }
 
@@ -31,16 +44,17 @@ struct OriginalSealedDispatchTests {
   @Test func defaultDispatchBoardBackRealTonneAndStaleAcceptancePreserveProperty() async throws {
     let fixture = try OriginalSealedDispatchFixture()
     defer { fixture.files.clean() }
-    let runtime = try await fixture.runtime(defaults: true)
+    let runtime = try await fixture.runtime(at: .salamander, defaults: true)
     await runtime.key("contracts-open")
     let board = await runtime.snapshot().contractBoard
-    let index = try #require(
-      board.rows.firstIndex { $0.board.hasPrefix(fixture.pack.digest + "/") && $0.offer != nil })
+    let ownedPreparationRequired1 = board.rows.firstIndex { $0.board.hasPrefix(fixture.pack.digest + "/") && $0.offer != nil }
+    let index = try #require(ownedPreparationRequired1)
     for _ in 0..<abs(index - board.selection) {
       await runtime.key(index < board.selection ? "up" : "down")
     }
     await runtime.key("return")
     let shown = await runtime.snapshot()
+    let baseline = try fixture.originalCargoBaseline(shown.commander)
     let quote = try #require(shown.contractBoard.quote)
     #expect(quote.allowed && shown.contractBoard.detail && shown.contractBoard.action == .back)
     let detail = Display.contractDetailRows(shown, width: shown.viewportWidth).joined(
@@ -52,7 +66,7 @@ struct OriginalSealedDispatchTests {
     await runtime.key("escape")
     #expect(await runtime.snapshot().commander == shown.commander)
     await runtime.nativeCommand { game in
-      game.commander.cargo[0] = game.commander.standardCargoCapacity
+      game.commander.cargo[0] = game.commander.standardCargoCapacity - baseline
     }
     let full = await runtime.contractAcceptanceQuote(board: quote.board, offer: quote.offer)
     #expect(!full.allowed)
@@ -75,7 +89,7 @@ struct OriginalSealedDispatchTests {
   @Test func dispatchWriterRollbackRetryAndRepeatSuccessKeepOneClue() async throws {
     let fixture = try OriginalSealedDispatchFixture()
     defer { fixture.files.clean() }
-    let runtime = try await fixture.runtime()
+    let runtime = try await fixture.runtime(at: .frog)
     let (key, offer) = try await fixture.offer(runtime)
     let quote = await runtime.contractAcceptanceQuote(board: key, offer: offer.id)
     let before = await runtime.snapshot()
@@ -107,7 +121,10 @@ struct OriginalSealedDispatchTests {
     let award = try #require(
       paid.commander.scriptState.savedClueJournal?.awards[OriginalSealedDispatch.stateID])
     #expect(paid.commander.credits == ready.commander.credits + terms.reward)
+    try #require(paid.commander.alienStorageState?.current.snapshot != nil)
     try dispatchCurrentEnvelopes(paid, root: fixture.files.root)
+    // Buy departure fuel at this genuine receiving main berth before the next board freezes.
+    try await runtime.procurementRefuelForTurnaround(expectedSystem: paid.commander.system)
     // A distinct native offer at the actual new source issues a new item, never the delivered original.
     let second = try await fixture.accept(runtime)
     #expect(second != id)
@@ -167,10 +184,17 @@ struct OriginalSealedDispatchTests {
     #expect(throws: MissionPackError.self) {
       try OriginalServiceReservationPolicy.requireAvailableSlot(game.commander.scriptState)
     }
+    try #require(game.commander.alienStorageState == nil && game.commander.savedAlienStorageReference == nil)
     try dispatchCurrentEnvelopes(game, root: relief.files.root)
     try await runtime.save(to: relief.save)
     try await runtime.load(from: relief.save, persistMigrations: false)
-    #expect(await runtime.snapshot().commander == game.commander)
+    let cold = await runtime.snapshot()
+    #expect(cold.commander == game.commander)
+    #expect(cold.commander.alienStorageState == nil && cold.commander.savedAlienStorageReference == nil)
+    #expect(OriginalServiceReservationPolicy.activeCount(cold.commander.scriptState) == 3)
+    #expect(throws: MissionPackError.self) {
+      try OriginalServiceReservationPolicy.requireAvailableSlot(cold.commander.scriptState)
+    }
   }
 
   @Test func dispatchWrongContactStaleTokenAndCurrentSaveCorruptionCannotConsumeOriginal()
@@ -178,7 +202,7 @@ struct OriginalSealedDispatchTests {
   {
     let fixture = try OriginalSealedDispatchFixture()
     defer { fixture.files.clean() }
-    let runtime = try await fixture.runtime(defaults: true)
+    let runtime = try await fixture.runtime(at: .dhole, defaults: true)
     let id = try await fixture.accept(runtime)
     try await fixture.contact(runtime, action: "Abandon")
     let game = await runtime.snapshot()
@@ -192,6 +216,7 @@ struct OriginalSealedDispatchTests {
     wrong.id = OriginalSealedDispatch.definition.deliveryContact
     #expect(throws: (any Error).self) { try candidate.confirmCourierDialogue(id, dialogue: wrong) }
     #expect(candidate.commander == game.commander)
+    try #require(game.commander.alienStorageState?.current.snapshot != nil)
     try dispatchCurrentEnvelopes(game, root: fixture.files.root)
     let pointer = try JSONDecoder().decode(
       ScriptSavePointer.self, from: Data(contentsOf: fixture.save))

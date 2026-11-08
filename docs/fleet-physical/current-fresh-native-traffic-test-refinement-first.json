@@ -1,0 +1,9 @@
+{
+  "status": "FIRST_REMOVE_REDUNDANT_NEW_TEST_BEFORE_MUTATION",
+  "beforePath": "Tests/L337CoreTests/NativeFleetLaunchSourceTests.swift",
+  "beforeBytes": 3565,
+  "beforeSHA256": "a477ff83e3b93f9d3ba3a85d58279b7100ca5ed9708585a6ef5b1ad34638f4a8",
+  "removeExact": "  @Test func nativeSourceSelectionDoesNotConsumeTheSavedRandomStream() throws {\n    let context = crimeTestContext(4)\n    let game = Game(executive: false)\n    let before = game.scriptSimulationSave.randomState\n    _ = NativeFleetLaunchSource.resolve(\n      role: .pirate, actor: crimeTestID(2), seed: context.seed, context: context,\n      position: context.anchors.arrival)\n    _ = NativeFleetLaunchSource.resolve(\n      role: .trader, actor: crimeTestID(2), seed: context.seed, context: context,\n      position: context.anchors.arrival)\n    #expect(game.scriptSimulationSave.randomState == before)\n  }",
+  "reason": "The pure selector receives no Game/random stream and the test did not exercise an actual simulation mutation boundary. Existing policy schedule/distribution tests and exact source hash-word factorization proof cover original RNG behavior; keep meaningful mutating clearance-world conservation checks. No production or other old/new test changes.",
+  "execution": "Source-only UNCOMPILED UNRUN; no test pass implied."
+}

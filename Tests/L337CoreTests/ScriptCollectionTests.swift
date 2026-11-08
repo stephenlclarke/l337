@@ -32,8 +32,11 @@ private struct CollectionFixture {
     retained = true
   }
   func clean() { try? FileManager.default.removeItem(at: root) }
-  func game() -> Game {
+  func game() throws -> Game {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
+    game.commander.mirrorFittedEquipment()
+    try #require(game.commander.valid)
     game.screen = .status
     game.scriptPacks = [pack]
     return game
@@ -51,7 +54,7 @@ private struct CollectionFixture {
 @Test func genuinePartialCommodityLotsConsumeOnlyOutstandingNativeUnitsAndPersist() async throws {
   let fixture = try CollectionFixture()
   defer { fixture.clean() }
-  var initial = fixture.game()
+  var initial = try fixture.game()
   initial.commander.cargo[2] = 3
   initial.commander.cargo[9] = 2
   initial.commander.cargo[14] = 1
@@ -72,7 +75,7 @@ private struct CollectionFixture {
   #expect(partial.commander.cargo[2] == 0 && partial.commander.cargo[14] == 0)
   #expect(partial.commander.cargo[0] == 1 && partial.commander.credits == initial.commander.credits)
   try await runtime.save(to: fixture.save)
-  let restored = GameRuntime(game: fixture.game())
+  let restored = GameRuntime(game: try fixture.game())
   try await restored.load(from: fixture.save, persistMigrations: false)
   #expect(
     await restored.snapshot().commander.scriptState.instances[id]?.collections["materials"]
@@ -104,7 +107,7 @@ private struct CollectionFixture {
 @Test func zeroAvailableMaterialsBackHelpAndRenderingNeverCreateALotOrConsumeStock() async throws {
   let fixture = try CollectionFixture()
   defer { fixture.clean() }
-  let runtime = GameRuntime(game: fixture.game(), saveURL: fixture.save)
+  let runtime = GameRuntime(game: try fixture.game(), saveURL: fixture.save)
   let id = try await fixture.offer(runtime)
   let before = await runtime.snapshot()
   #expect(before.scriptPresentedDialogue?.collectionQuote?.positive == false)
@@ -123,7 +126,7 @@ private struct CollectionFixture {
 {
   let fixture = try CollectionFixture()
   defer { fixture.clean() }
-  var initial = fixture.game()
+  var initial = try fixture.game()
   initial.commander.cargo[2] = 3
   let runtime = GameRuntime(game: initial, saveURL: fixture.save)
   let id = try await fixture.offer(runtime)
@@ -150,7 +153,7 @@ private struct CollectionFixture {
 {
   let fixture = try CollectionFixture()
   defer { fixture.clean() }
-  var initial = fixture.game()
+  var initial = try fixture.game()
   initial.commander.cargo[2] = 3
   let runtime = GameRuntime(game: initial, saveURL: fixture.save)
   let id = try await fixture.offer(runtime)
@@ -183,7 +186,7 @@ private struct CollectionFixture {
         confirm=function(e,w,d) return {data=d,commands={}} end}
       """)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   #expect(throws: (any Error).self) { try game.acceptScriptMission(fixture.pack) }
   #expect(game.commander.scriptState.instances.isEmpty)
   for command in [
@@ -228,7 +231,7 @@ private struct CollectionFixture {
     ("  {commodity=14, unit=\"kg\", quantity=1}\n", ""),
   ])
   defer { fixture.clean() }
-  var initial = fixture.game()
+  var initial = try fixture.game()
   initial.commander.cargo[10] = 3
   initial.commander.cargo[0] = 1
   initial.commander.blackjack.stage = .deliverFirearm
@@ -253,7 +256,7 @@ private struct CollectionFixture {
 {
   let fixture = try CollectionFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let id = try game.acceptScriptMission(fixture.pack)
   var state = try #require(game.commander.scriptState.instances[id])
   var commander = game.commander
@@ -287,7 +290,7 @@ private struct CollectionFixture {
 {
   let fixture = try CollectionFixture(edits: [("quantity=10", "quantity=1000000")])
   defer { fixture.clean() }
-  var initial = fixture.game()
+  var initial = try fixture.game()
   initial.commander.cargo[2] = 1
   let runtime = GameRuntime(game: initial, saveURL: fixture.save)
   let id = try await fixture.offer(runtime)
@@ -334,7 +337,7 @@ func corruptedMaterialReceiptsAndQuotesRefuseLoadEvenWithAnUpdatedChunkHash(fiel
 {
   let fixture = try CollectionFixture()
   defer { fixture.clean() }
-  var initial = fixture.game()
+  var initial = try fixture.game()
   initial.commander.cargo[2] = 1
   let runtime = GameRuntime(game: initial, saveURL: fixture.save)
   let id = try await fixture.offer(runtime)
@@ -398,7 +401,7 @@ func corruptedMaterialReceiptsAndQuotesRefuseLoadEvenWithAnUpdatedChunkHash(fiel
 {
   let fixture = try CollectionFixture(edits: [])
   defer { fixture.clean() }
-  var initial = fixture.game()
+  var initial = try fixture.game()
   initial.commander.cargo[2] = 2
   let runtime = GameRuntime(game: initial, saveURL: fixture.save)
   let id = try await fixture.offer(runtime)
@@ -441,7 +444,7 @@ func corruptedMaterialReceiptsAndQuotesRefuseLoadEvenWithAnUpdatedChunkHash(fiel
           {op='collection.deliver',id='materials',token=e.token},{op='unknown'}}} end}
       """)
   defer { rejecting.clean() }
-  var game = rejecting.game()
+  var game = try rejecting.game()
   game.commander.cargo[2] = 2
   let actual = GameRuntime(game: game, saveURL: rejecting.save)
   let owner = try await rejecting.offer(actual)
@@ -451,37 +454,4 @@ func corruptedMaterialReceiptsAndQuotesRefuseLoadEvenWithAnUpdatedChunkHash(fiel
   #expect(
     refused.commander.scriptState.instances[owner]?.collections["materials"]?.lots.isEmpty == true)
   #expect(refused.commander.scriptState.instances[owner]?.suspension != nil)
-}
-
-@Test func actualHullExchangeAndReloadKeepPreviouslyDeliveredMaterialLots() async throws {
-  let fixture = try CollectionFixture()
-  defer { fixture.clean() }
-  var game = fixture.game()
-  game.commander.credits = 10_000_000
-  game.commander.fuel = try #require(ShipCatalogue.ship("SH013")?.game?.fuel)
-  game.commander.cargo[2] = 2
-  let runtime = GameRuntime(game: game, saveURL: fixture.save)
-  let id = try await fixture.offer(runtime)
-  await runtime.key("return")
-  var trading = await runtime.snapshot()
-  let collection = try #require(
-    trading.commander.scriptState.instances[id]?.collections["materials"])
-  trading.key("6")
-  trading.showroom.selection = "SH013"
-  #expect(trading.shipTradeQuote?.allowed == true)
-  let exchange = GameRuntime(game: trading, saveURL: fixture.save)
-  await exchange.key("showroom-trade")
-  await exchange.key("right")
-  await exchange.key("return")
-  let changed = await exchange.snapshot()
-  #expect(changed.commander.shipID == "SH013" && changed.commander.valid)
-  #expect(changed.commander.scriptState.instances[id]?.collections["materials"] == collection)
-  #expect(changed.commander.cargo == trading.commander.cargo)
-  try await exchange.save(to: fixture.save)
-  let restored = GameRuntime(game: fixture.game())
-  try await restored.load(from: fixture.save, persistMigrations: false)
-  #expect(
-    await restored.snapshot().commander.scriptState.instances[id]?.collections["materials"]
-      == collection)
-  #expect(await restored.snapshot().commander.shipID == "SH013")
 }

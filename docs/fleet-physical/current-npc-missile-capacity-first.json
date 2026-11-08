@@ -1,0 +1,39 @@
+{
+  "status": "FROZEN_CURRENT_CATALOGUE_NPC_MISSILE_CAPACITY_GUARD_BEFORE_MUTATION",
+  "beforeCommit": "ce39e2d7ad2aa3c5b5803bdfdc80b3b668a0d8b4",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 35587,
+      "sha256": "0fd05fd23fcf414cc6bc6023220a5e9a419618413f93f1d7542d75527e83d18d"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 26681,
+      "sha256": "430fc41cd695ab090db21ea9ab503505e116cf3a9549c4bdb849999151eb89ff"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+      "bytes": 283481,
+      "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    }
+  ],
+  "exactProductionHunk": {
+    "file": "Sources/L337Core/NPCPersistenceLedger.swift",
+    "after": "    return actual.profile == expected.profile && actual.legacyElectricalRecharge == nil\n",
+    "insert": "      && missiles <= source.performance.missiles\n"
+  },
+  "testScope": "Append one independent currentSH031/Kite source-backed pure ledger/body test (no blocked025helper). Require strict current runtime-source/native stock; exact maximum accepted and above max/Int.max rejected on capture and unbound update without ledger/body mutation. Zero spent missiles and consumed damage/shield/fuel retained through cold ledger and acknowledged restore with exact source identity. Existing helper and all old test methods byte-exact. This is controlled source/ledger component evidence authored UNRUN, not actual game admission/earned or native proof.",
+  "ownerScope": "WholefleetNPC/save/runtime guard; no provider/station/Gallery/EMPModule/MC1reserved edits, no geometry/model/native/compiler/tests.",
+  "semantics": "Declared current catalogue NPCs must obey the same hull missile capacity as stock source, alongside existing energy/shield/fuel capacities. Uncatalogued distinct owners and actual lower consumed pools retain existing behavior. No refill, equipment/ordnance grant, mass or qualification authority."
+}

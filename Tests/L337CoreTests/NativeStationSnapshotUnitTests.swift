@@ -49,7 +49,7 @@ struct NativeStationSnapshotUnitTests {
   }
 
   @Test func inPlaceStationMeshReadPreservesGeometryAndRejectsMissingOrForeignActors() throws {
-    let fixture = NativeStationMeshReaderFixture()
+    let fixture = try NativeStationMeshReaderFixture()
     let station = try #require(fixture.game.bodies.first { $0.nativeStationIdentity != nil })
     let original = fixture.game.gameplayMesh(for: station)
     let inPlace = fixture.game.nativeStationApproachGameplayMesh(for: station)
@@ -135,9 +135,10 @@ private final class NativeStationSnapshotFixture {
 private final class NativeStationMeshReaderFixture {
   var game = Game(executive: false)
 
-  init() {
+  init() throws {
     game.commander.system = 237
     game.screen = .status
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
   }
 }

@@ -27,7 +27,7 @@ public enum PayloadIdentity: Hashable, Codable, Sendable {
 
 public enum SpawnProducer: String, Codable, Sendable {
   case ambient, asteroids, cargo, mining, salvage, security, mission, persistence, ordnance,
-    derelicts, emp, provider
+    derelicts, emp, provider, c01Inquiry
 }
 
 public struct SpawnIdentity: Hashable, Codable, Sendable {
@@ -212,10 +212,14 @@ public struct SpawnRequest: Equatable, Codable, Sendable {
   public let payload: PayloadIdentity?
   public let priority: AdmissionPriority
   public var catalogueShipID: String?
+  /// Only the qualified ordinary birth path may issue this finite installed kit.
+  public var currentNewtKitConfiguration: String? = nil
   /// Persisted admissions supply their actual remaining hull energy.
   public var energy: Double?
   public var angularVelocity = Vector3(0, 0, 0)
   public var salvage: SalvageTargetMetadata?
+  /// Actual recovered custody identity; this key alone never authorizes admission.
+  public var recoveredSecuritySource: ActorIdentity? = nil
 }
 
 public struct SpawnBatch: Equatable, Codable, Sendable {
@@ -225,6 +229,7 @@ public struct SpawnBatch: Equatable, Codable, Sendable {
 
 public enum AdmissionRefusal: String, Codable, Sendable {
   case staleContext, populationLimit, reservedCapacity, missionSuppression, unsafePosition
+  case unqualifiedOriginalHull
 }
 
 public struct SpawnReceipt: Equatable, Codable, Sendable {

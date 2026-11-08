@@ -26,16 +26,29 @@ extension SpaceBody {
     nativeStationIdentity.flatMap { NativeStationSource.binding(for: $0)?.geometry.docking }
   }
   public var entrancePosition: Vector3 {
-    position + modelVector(nativePort?.center ?? MainStationGeometry.docking.center)
+    if nativeStationIdentity != nil {
+      guard let nativePort else { return .init(.nan, .nan, .nan) }
+      return position + modelVector(nativePort.center)
+    }
+    return position + modelVector(MainStationGeometry.docking.center)
   }
   public var entranceNormal: Vector3 {
-    modelVector(nativePort?.outward ?? MainStationGeometry.docking.outward)
+    if nativeStationIdentity != nil {
+      guard let nativePort else { return .init(.nan, .nan, .nan) }
+      return modelVector(nativePort.outward)
+    }
+    return modelVector(MainStationGeometry.docking.outward)
   }
-  public var entranceUp: Vector3 { modelVector(nativePort?.up ?? MainStationGeometry.docking.up) }
+  public var entranceUp: Vector3 {
+    if nativeStationIdentity != nil {
+      guard let nativePort else { return .init(.nan, .nan, .nan) }
+      return modelVector(nativePort.up)
+    }
+    return modelVector(MainStationGeometry.docking.up)
+  }
   var stationClearanceRadius: Double {
-    guard let identity = nativeStationIdentity,
-      let source = NativeStationSource.binding(for: identity)
-    else { return 400 }
+    guard let identity = nativeStationIdentity else { return 400 }
+    guard let source = NativeStationSource.binding(for: identity) else { return .infinity }
     return (source.geometry.mesh.vertices.map(\.length).max() ?? .infinity) + 400
   }
   var stationApproachDistance: Double {
@@ -500,10 +513,21 @@ public struct AutoTargetControl: Sendable {
 
 extension Game {
   public var autoTargetBody: SpaceBody? {
-    bodies.first {
-      $0.id == autoPilot.targetID && $0.energy > 0
-        && (autoPilot.targetActor == nil || $0.physical?.identity == autoPilot.targetActor)
+    guard autoPilot.targetID != nil else { return nil }
+    return bodies.withUnsafeBufferPointer { stored in
+      for index in stored.indices {
+        let body = stored.baseAddress!.advanced(by: index)
+        if nativeAutoTargetBodyMatches(body.pointee) { return body.pointee }
+      }
+      return nil
     }
+  }
+
+  @inline(never)
+  private func nativeAutoTargetBodyMatches(_ body: borrowing SpaceBody) -> Bool {
+    guard body.id == autoPilot.targetID, body.energy > 0 else { return false }
+    if autoPilot.targetActor == nil { return true }
+    return body.nativeGeometryIdentity() == autoPilot.targetActor
   }
   public var autoHUDLines: [String] {
     guard targetingEnabled || dockingComputer || autoPilot.manualEngagement else { return [] }
@@ -529,7 +553,7 @@ extension Game {
     let stationActive = autoTargetBody?.hull == .station
     let stationVelocity =
       stationActive
-      ? commander.flightSimulation.pose.shipVector(flightWorldVelocity) : nil
+      ? storedFlightSimulation().pose.shipVector(flightWorldVelocity) : nil
     let preserveMomentum = workGuidance != nil || workBraking != nil || manualResidualFlight
     releaseWorkGuidance()
     let remainingVelocity = autoPilot.velocity
@@ -566,12 +590,14 @@ extension Game {
     }
     targetPanelScroll = 0
     guard !docked, screen.isFlight else { return }
-    guard let tier = commander.targetingTier else {
+    guard let tier = nativeStationAutoTargetingTier() else {
       if cycleInductionUtilityContact() { return }
+      if cycleIsolationWorkContact() { return }
       notify("FIT A TARGETING COMPUTER")
       return
     }
     inductionUtilityWorkRuntime.contact = nil
+    isolationWorkRuntime.contact = nil
     stationAutoDefence = nil
     let initialVelocity = flightWorldVelocity
     releaseWorkGuidance()
@@ -597,7 +623,7 @@ extension Game {
       origin: context.player.identity)
     if manualResidualFlight {
       speed = 0
-      autoPilot.setApproachVelocity(commander.flightSimulation.pose.shipVector(initialVelocity))
+      autoPilot.setApproachVelocity(storedFlightSimulation().pose.shipVector(initialVelocity))
     }
     weaponsTargetID = autoPilot.targetID
     screen = .front
@@ -638,7 +664,7 @@ extension Game {
   private mutating func beginStationGuidance(velocity: Vector3) {
     spin.stop(immediate: true)
     manualResidualFlight = false
-    autoPilot.setApproachVelocity(commander.flightSimulation.pose.shipVector(velocity))
+    autoPilot.setApproachVelocity(storedFlightSimulation().pose.shipVector(velocity))
     speed = 0
   }
   mutating func applyAutoTarget(delta: Double, controls: Controls) {
@@ -657,7 +683,7 @@ extension Game {
     let station = autoTargetBody?.hull == .station
     let enabled =
       station
-      ? commander.hasAutomaticDocking && (targetingEnabled || autoPilot.manualEngagement)
+      ? nativeStationAutoHasDocking() && (targetingEnabled || autoPilot.manualEngagement)
       : (targetingEnabled || autoPilot.manualEngagement)
     if !enabled
       || controls.pitch != 0 || controls.yaw != 0

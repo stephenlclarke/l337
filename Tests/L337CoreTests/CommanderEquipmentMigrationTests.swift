@@ -212,13 +212,29 @@ struct CommanderEquipmentMigrationTests {
     #expect(commander.valid)
   }
 
-  @Test func highCoreAndHeldMiningLaserCannotInventSpecialistModuleOwnership() throws {
+  @Test func currentHighCoreAndHeldMiningLaserCannotInventSpecialistModuleOwnership() throws {
     var commander = Commander()
-    commander.installTargetingComputer(.military)
-    commander.laserMounts = .init(front: .pulse)
-    commander.equipment.insert("Mining Laser")
-    #expect(commander.laserMounts.front == .pulse)
-    try cemInitialize(&commander)
+    try commander.prepareEquipment(legacy: false)
+    try commander.grantEquipment(
+      TargetingTier.military.equipmentName, at: .targetingCore,
+      provenance: .grant("current specialist module boundary"))
+    let pulse = try #require(commander.fittedEquipment(at: .laser(.front)))
+    try commander.grantEquipment(
+      "Mining Laser", at: .laser(.front),
+      provenance: .grant("current specialist module boundary"))
+    let mining = try #require(commander.equipmentInventory?.items.first {
+      $0.node.key == "Mining Laser"
+    })
+    if mining.location != nil {
+      let revision = try #require(commander.equipmentInventory?.revision)
+      try commander.storeEquipment(mining, expectedRevision: revision)
+    }
+    if commander.fittedEquipment(at: .laser(.front))?.id != pulse.id {
+      let held = try #require(commander.equipmentInventory?.items.first { $0.id == pulse.id })
+      let revision = try #require(commander.equipmentInventory?.revision)
+      try commander.fitEquipment(held, at: .laser(.front), expectedRevision: revision)
+    }
+    #expect(commander.laserMounts.front == .pulse && commander.targetingTier == .military)
     let inventory = try #require(commander.equipmentInventory)
     #expect(inventory.items.contains { $0.node.key == "Mining Laser" && $0.location == nil })
     #expect(

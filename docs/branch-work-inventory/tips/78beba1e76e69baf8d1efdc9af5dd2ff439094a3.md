@@ -1,0 +1,59 @@
+# Branch work: feat(fleet): bind original Barbary with Meridian equipment budget
+
+Audited 2026-11-01T12:45:12.064769+00:00. Baseline `0cc45dca928c7bae18a388fa775d7b53c6653d21`. Tip `78beba1e76e69baf8d1efdc9af5dd2ff439094a3` (2026-10-25T20:59:10Z).
+
+Status: **useful-unintegrated**. Important inspected work only. Whole-tree counters retain all differences/absent paths; squash equality and unknown inherited work are not inferred from ancestry/name.
+
+## Refs
+
+- `local-git-database:refs/heads/feat/m04-barbary`
+- `local-git-database:refs/remotes/origin/feat/m04-barbary`
+
+## Work and commits
+
+- `78beba1e76e69baf8d1efdc9af5dd2ff439094a3` - feat(fleet): bind original Barbary with Meridian equipment budget. Changed paths and exact subjects are in [commits.json](../commits.json).
+- `d618cbedad640c3acd050321ef68d3a8110981a5` - feat(fleet): bind original Falconet with Meridian crew estimate. Changed paths and exact subjects are in [commits.json](../commits.json).
+- `3e03fa163bb1d45350c93b631c5b6565d533a833` - feat(fleet): bind original Condor with bounded pirate role support. Changed paths and exact subjects are in [commits.json](../commits.json).
+- `62eee9f54d8b917f3fb65ba0faa079adff52415a` - feat(fleet): bind original Hobby Fighter on approved metre hull. Changed paths and exact subjects are in [commits.json](../commits.json).
+
+## Important files
+
+| Path | Compared with main | Symbols / exact change locators |
+| --- | --- | --- |
+| `Sources/L337Core/OriginalBarbaryActivation.swift` | absent-in-main | `OriginalBarbaryActivation, Failure, supports, resolve, originalEquipmentBudget; @@ -0,0 +1,57 @@` |
+| `Tests/L337CoreTests/OriginalBarbaryUnitTests.swift` | absent-in-main | `OriginalBarbaryUnitTests, retained, exactMetreContractRejectsOtherHullIdentityUnitsPathAndHash, changed, originalMilitaryMechanicsRetainAllHistoricalFieldsAndOtherHullBindings, physicalPlayerAndSourceNotesKeepCompleteApprovedGeometryAndAppearance; @@ -0,0 +1,214 @@` |
+| `docs/ISSUE-m04-barbary.md` | absent-in-main | `Exact resource/document path` |
+| `docs/PR-m04-barbary.md` | absent-in-main | `Exact resource/document path` |
+| `Sources/L337Core/OriginalCondorActivation.swift` | absent-in-main | `OriginalCondorActivation, Failure, supports, resolve, originalEquipmentBudget; @@ -0,0 +1,57 @@` |
+| `Sources/L337Core/OriginalFalconetActivation.swift` | absent-in-main | `OriginalFalconetActivation, Failure, supports, resolve, originalCrewEstimate; @@ -0,0 +1,59 @@` |
+| `Sources/L337Core/OriginalFleetDefinition.swift` | differs-from-main | `OriginalFleetValue, OriginalFleetDefinition, definition, sourceLabel; @@ -27,3 +27,4 @@ public struct OriginalFleetDefinition: Sendable {; @@ -27,3 +27,4 @@ public struct OriginalFleetDefinition: Sendable {` |
+| `Sources/L337Core/OriginalHobbyFighterActivation.swift` | absent-in-main | `OriginalHobbyFighterActivation, Failure, supports, resolve; @@ -0,0 +1,33 @@` |
+| `Sources/L337Core/OriginalHullPhysicalContract.swift` | differs-from-main | `OriginalHullEnvelope, admission, OriginalHullPhysicalContract, Failure, field; @@ -231,2 +231,10 @@ struct OriginalHullPhysicalContract: Sendable {; @@ -450,2 +458,12 @@ struct OriginalHullPhysicalContract: Sendable {` |
+| `Sources/L337Core/OriginalPlayerHullActivation.swift` | differs-from-main | `OriginalPlayerHullActivation, Failure, resolve, acquisitionPolicy, metadata, standardProfile; @@ -29,2 +29,3 @@ enum OriginalPlayerHullActivation {; @@ -28,2 +28,3 @@ enum OriginalPlayerHullActivation {` |
+| `Sources/L337Core/ShipPerformance.swift` | differs-from-main | `ShipPerformance, valid, supports; @@ -72,3 +72,3 @@ extension Commander {; @@ -72,3 +72,3 @@ extension Commander {` |
+| `Tests/L337CoreTests/OriginalBurroActivationUnitTests.swift` | differs-from-main | `OriginalBurroActivationUnitTests, retained, originalMechanicsReplaceOnlyTheBurroRuntimeAndKeepHistoricalFields, playerAndPhysicalMeshesKeepEveryApprovedMetreVertexMaterialAndTexture, standardFitUsesOriginalLimitsWithoutAddingEquipmentOrWorkTools, number; @@ -37,3 +37,3 @@ struct OriginalBurroActivationUnitTests {; @@ -115,3 +115,3 @@ struct OriginalBurroActivationUnitTests {` |
+| `Tests/L337CoreTests/OriginalCondorUnitTests.swift` | absent-in-main | `OriginalCondorUnitTests, retained, exactMetreContractRejectsOtherHullIdentityUnitsPathAndHash, changed, originalPirateMechanicsRetainAllHistoricalFieldsAndOtherHullBindings, physicalPlayerAndSourceNotesKeepCompleteApprovedGeometryAndAppearance; @@ -102,3 +102,3 @@ struct OriginalCondorUnitTests {; @@ -173,3 +173,3 @@ struct OriginalCondorUnitTests {` |
+| `Tests/L337CoreTests/OriginalDonkeyUnitTests.swift` | differs-from-main | `OriginalDonkeyUnitTests, retained, exactMetreContractRejectsOtherHullIdentityUnitsPathAndHash, changed, originalTraderMechanicsRetainAllHistoricalFieldsAndOtherHullBindings, physicalPlayerAndSourceNotesKeepCompleteApprovedGeometryAndAppearance; @@ -67,3 +67,3 @@ struct OriginalDonkeyUnitTests {; @@ -137,3 +137,3 @@ struct OriginalDonkeyUnitTests {` |
+| `Tests/L337CoreTests/OriginalEagleCruiserUnitTests.swift` | absent-in-main | `OriginalEagleCruiserUnitTests, retained, exactMetreContractRejectsForeignUnitsPathsAndFingerprints, originalCapitalMechanicsPreserveAllHistoricalFieldsAndOtherHullBindings, Battle, everyPhysicalPlayerVertexAndAppearanceAssignmentKeepsAuthoredMetres; @@ -92,3 +92,3 @@ struct OriginalEagleCruiserUnitTests {; @@ -92,3 +92,3 @@ struct OriginalEagleCruiserUnitTests {` |
+| `Tests/L337CoreTests/OriginalErneCorvetteUnitTests.swift` | absent-in-main | `OriginalErneCorvetteUnitTests, retained, exactMetreContractRejectsOtherHullIdentityUnitsPathAndHash, changed, originalMilitaryMechanicsRetainAllHistoricalFieldsAndOtherHullBindings, physicalPlayerAndSourceNotesKeepCompleteApprovedGeometryAndAppearance; @@ -87,3 +87,3 @@ struct OriginalErneCorvetteUnitTests {; @@ -156,3 +156,3 @@ struct OriginalErneCorvetteUnitTests {` |
+
+Whole-tree evidence: reused previous exact-tip/exact-baseline blob comparison; no repeated comparison. 3336 byte-identical paths; 84 absent paths; 653 differing paths. Important-file equality alone does not prove all inherited changes redundant.
+
+## Dependencies and limits
+
+- Use current GameRuntime actor isolation, actual current world/hull/equipment authorities and exact pack trust digest; old branch code is reference until reconciled.
+- Consult the exact commit/path diff; do not merge all carried history.
+- Pre-release: do not reintroduce old-content fallback or historical save/ownership maintenance.
+
+Missing/divergent work is itemized in [branches.json](../branches.json). No compiler, native game, tests, CI, renderer or repository helper executed. Existing documents/commit claims are not independently verified test passes.
+
+Existing source or document statements to check; these are not audit test results:
+
+- `docs/PR-m04-barbary.md:13`: `Strict Swift formatting, Markdown/whitespace and20 Python isolated-report checks pass. Independent source review and hosted Swift qualification remain pending at freeze; authored tests are not passing evidence. No local`
+- `Sources/L337Core/ShipPerformance.swift:23`: `/// Optional on historical TOMLs: absent work-tool support is fail-closed.`
+
+## Identity references
+
+Literal source references: `SH002`, `SH003`, `SH004`, `SH007`, `SH012`, `SH015`, `SH018`, `SH019`, `SH020`, `SH025`, `SH027`, `SH028`, `SH029`, `SH030`, `SH031`, `SH032`, `SH033`, `SH035`, `SH036`, `SH041`, `SH042`, `SH043`, `SH044`, `SH045`. Shared-registry mentions alone do not implement those missions.
+
+Use [the work-item index](../WORK-ITEM-INDEX.md) before taking a work packet. Keep delivery status in the main completion ledger.

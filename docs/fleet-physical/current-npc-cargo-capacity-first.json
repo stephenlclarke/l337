@@ -1,0 +1,35 @@
+{
+  "status": "FROZEN_CURRENT_NPC_TONNE_HOLD_CAPACITY_SOURCE_FIX_BEFORE_MUTATION",
+  "beforeCommit": "b01c2dfe325fc63a32d6fc4194e84684d48dc7ea",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 35636,
+      "sha256": "eb56613130caaa0c2b2a752da0f4657f88a9d7f143e41e6c9716b47e75788721"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 29760,
+      "sha256": "2b294a97181052ca628b2f8f31584eaf64a14723e76ba75b970a15f269211988"
+    },
+    {
+      "path": "Sources/L337Core/GameplayContracts.swift",
+      "bytes": 10021,
+      "sha256": "b0511a970309fd3a9727ae66e376c165d365616eb31b99fa824b052f1d8bf830"
+    },
+    {
+      "path": "Sources/L337Core/GameplayEncounters.swift",
+      "bytes": 19957,
+      "sha256": "e01d4b1971b46c6ee1de1548edd2eb7eb3d7df74f3f31f5ac0fea999cf058c3d"
+    },
+    {
+      "path": "Sources/L337Core/EncounterDirector.swift",
+      "bytes": 11010,
+      "sha256": "440ca4cd2dfad9f3133b39c60879a827e00d993e2ff5c696fced61a6bbd86448"
+    }
+  ],
+  "productionScope": "Only currentCatalogueSourceIsValid after strict source/stock resolve: use existing CommodityAmount.valid/tonnes to debit remaining actual source.performance.cargo, refusing any invalid/above-remaining amount before subtraction. Avoid aggregate overflow, count duplicate tonne entries, retain non-tonne units0 allocation. Existing missile/energy/shield/fuel guards and uncatalogued distinct owners unchanged. No cargo mass, fit expansion, stock/refill or acquisition/people grant.",
+  "unitAuthority": "CommodityAmount.tonnes delegates exact CommodityIdentity.unit/Commodity.all; existing NPC collectOreForNPC also charges only tonne commodities against currentbase cargo. Do not sum kg/g as tonnes or infer actual loaded physical mass.",
+  "testScope": "Append one independent current031 strictsource/native-stock body+ledger test with exact fulltonne hold plus non-tonne gold, max+1, duplicate tonne overflow and individually-valid huge quantity refusal without body/ledger mutation. Preserve true unit-tagged manifests and consumed pools through cold/request/exactsource restore. No blocked025helper or newglobalfixture, no native/genuinejourney claim.",
+  "boundaries": "No provider/station/Gallery/EMP/MC1reserved/codegeometry/cap/commodity-unit edits, no source mass/native readiness override; UNCOMPILEDUNRUN source/tests."
+}

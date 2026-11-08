@@ -3,6 +3,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct ScriptFreightFixture {
   let root: URL

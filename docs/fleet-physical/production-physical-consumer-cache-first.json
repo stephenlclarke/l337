@@ -1,0 +1,16 @@
+{
+  "status": "ADDITIONAL_BEFORE_PINS_AND_CACHE_SCOPE_BEFORE_EDIT_OR_GENERATION",
+  "parentFIRSTSHA256": "7d377d6d0665ec8751b401ece07327fe6e7121bd3920bab93a639614186fb71a",
+  "scope": "Read-only calibrated physical facts remain inspectable without actor grant; lazy per-ID immutable cache prevents source asset loads in frame/UI loops. All actor/raw/player/salvage gates retained.",
+  "beforePins": [
+    {
+      "path": "Sources/L337Core/OriginalFleetCurrentHullSource.swift",
+      "bytes": 2788,
+      "sha256": "d4f0ba7da4b132acc77f068671164d8c7f5a1cada42ddc3c4bb0a42a811f69a9"
+    }
+  ],
+  "newSources": [
+    "Sources/L337Core/OriginalFleetPhysicalContractCache.generated.swift"
+  ],
+  "codeGeneration": "Own stdlib metadata-only per-ID static cache writer. No geometry/numeric/native evaluation.130 exact authenticated record IDs, no mass defaults."
+}

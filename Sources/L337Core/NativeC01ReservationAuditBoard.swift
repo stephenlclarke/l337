@@ -120,7 +120,7 @@ extension Game {
         "The apparent local separation conceals a +60 second clock offset and one extra reservation counter.",
         "Confirm records only Sorel's audit. Back changes nothing.",
         "The original 8kg recorder remains protected cargo. No cash, equipment, reward or final clue is granted.",
-        "Next: recover-standard at Enlirin. That later stage remains unavailable.",
+        "Next: recover the one-tonne timing standard from the abandoned maintenance cradle at Enlirin.",
       ]
       if value.audit != nil {
         lines.append(

@@ -5,7 +5,7 @@ version = "1.0.0"
 minimumEngine = "2.0.0"
 capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2", "profiled-encounters-v2", "native-glass-meridian-v1"]
 priority = 600
-source = "Original Glass Meridian campaign. Current native opening: Venn commission at Avenor, then both certified Renas clock beacons; later authored stages remain unavailable, without payment or final clue."
+source = "Original Glass Meridian campaign. Native source-bound investigation, original recorder custody, lane repair, clinic escort and final Avenor evidence receiving."
 license = "MIT"
 environments = ["space", "orbital-station"]
 module = "scripts/main.lua"
@@ -13,9 +13,9 @@ module = "scripts/main.lua"
 [mission]
 id = "glass-meridian"
 title = "The Glass Meridian"
-briefing = "Captain Elara Venn: Our clinic convoy cannot launch while two ships can hold the same reservation. Accept at the actual Avenor berth after visiting three different systems and identifying two real ship types. At Renas, scan both certified clock beacons in either order with fitted targeting: front view, within 2 degrees, 250-1500 surface flight units and clear native nearest-hit sight, for 12 continuous seconds per target. Pause freezes progress; interruption or loading resets unfinished dwell. Completed readings persist. These first two stages pay nothing and grant no final clue. The remaining seven authored stages are not yet available."
+briefing = "Captain Elara Venn: Our clinic convoy cannot launch while two ships can hold the same reservation. Accept at the actual Avenor berth after visiting three different systems and identifying two real ship types. At Renas, scan both certified clock beacons in either order with fitted targeting: front view, within 2 degrees, 250-1500 surface flight units and clear native nearest-hit sight, for 12 continuous seconds per target. Pause freezes progress; interruption or loading resets unfinished dwell. Completed readings persist. Follow the investigation through the original recorder, booking audit, timing-standard recovery, lane repair and clinic escort. Return to Avenor to choose how to release the complete ledger, then archive the same original 8kg recorder with Venn. Payment and the final clue are committed only with successful final receiving."
 destination = "Both certified navigation beacons at Renas"
-reward = "Full campaign advertises 4800 CR at final reception; opening stages pay 0 CR."
+reward = "4800 CR once at final Avenor receiving, atomically with the same original 8kg recorder archive and permanent clue. Earlier stages pay 0 CR."
 milestones = ["Accept the lane investigation at Avenor.", "Scan both certified navigation beacons at Renas.", "Locate the disabled Harrier and recover its flight recorder at Navidor.", "Dock at Enmadan and compare the recorder with the convoy booking ledger.", "Recover the one-tonne timing standard from the abandoned maintenance cradle at Enlirin.", "Use the standard to recalibrate three relay nodes at Lareria.", "Escort the clinic tender from the maintenance cradle to Lareria main station.", "Return to Avenor and choose how to release the booking evidence.", "Confirm the completed lane-safety report and collect payment."]
 
 [glassMeridian]

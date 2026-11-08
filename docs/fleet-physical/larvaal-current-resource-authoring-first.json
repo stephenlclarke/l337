@@ -1,0 +1,11 @@
+{
+  "status": "CODE_AND_INPUT_FROZEN_BEFORE_FIRST_SOURCE_COPY_PASS",
+  "inputSHA256": "189202763b20f6c249c897678412b9bb3746b4c7bc3b93e82a557829f758b572",
+  "authoringSourceSHA256": "e2886d9df18923bd5692e9819056e85af3e1f807c05407b0a778b00f71cd7516",
+  "algorithm": "Authenticated original TOML block copy or exact accepted immutable SH123 JSON-to-TOML display-only serialization. Current R3 capacities/provenance; no coordinate transforms/normals/physics/creator execution. Prepare all15 and verify source dictionaries before any writes. One pass, no retries.",
+  "maximumSourceParses": 15,
+  "maximumOutputParses": 15,
+  "maximumWrites": 15,
+  "geometryNumericEvaluations": 0,
+  "stationProviderPortEdits": 0
+}

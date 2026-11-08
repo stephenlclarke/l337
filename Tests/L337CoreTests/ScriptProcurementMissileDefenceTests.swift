@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 @Test(arguments: [
   "allowed", "heat", "not-pulse", "cooldown", "empty", "unlimited", "own-missile",

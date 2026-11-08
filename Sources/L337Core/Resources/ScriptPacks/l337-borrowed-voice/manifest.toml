@@ -1,0 +1,24 @@
+# Original Borrowed Voice commission; no patient, verifier or authenticated record is issued here.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.borrowed-voice"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2"]
+priority = 620
+source = "Original Borrowed Voice from Meridian c70110b292077588a0855fb48127adfb1b611c9d; borrowed-voice.json SHA256 302542daa4a97fcf7bdf46329327e156171544a367ee4e19974c3ad46d0c62f8. Original commission only. No physical beacon, clock, witness, record, receiving, settlement, payment or clue is produced by this module."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "borrowed-voice"
+title = "The Borrowed Voice"
+briefing = "SERA DAIN: Our tenders have been called to three empty wrecks. Meanwhile, a real casualty waited alone. Compare the relay records at Ilasaeli. Do not broadcast patient locations; someone may be listening with one of our own keys.\n\nRescue tenders in the Taledea cluster are answering empty distress calls while real casualties wait. A covert salvage syndicate has enrolled a second operator under a dispatcher's credentials and is selling rescue movements to ambushers. Dispatcher Neris Sol discovered the duplicate account and went into hiding. The commander validates the false calls, equips an independent verifier, brings Sol to safety and chooses between publicly revoking the compromised key or quietly drawing a syndicate observer to an empty decoy. Both routes recover an authenticated access record. The commander exposes the infiltrating account and restores the rescue channels.\n\nAt Taledea in Galaxy 3, after visiting five different systems, speak to rescue coordinator Sera Dain. No combat score, prior campaign, purchased scanner or military fitting is required."
+destination = "Taledea / Ilasaeli / Noserin / Aiven / Galaxy 3"
+reward = "7,200 CR and the anomalous-reply clue only after actual casualty comparisons, protected witness reception, authenticated chosen-operation record, verifier return and clean beacon service tests."
+milestones = ["Accept the rescue-channel investigation at Taledea.", "Compare the three marked distress beacons with their local casualty sensors at Ilasaeli.", "Dock at Noserin and collect Ivo Renn's one-tonne independent verifier.", "At Noserin, use the private rescue terminal to confirm Neris Sol's account of the duplicate enrollment.", "Escort Sol's marked Harrier from the maintenance refuge to Noserin station.", "Return to Taledea and choose how to isolate the infiltrating operator.", "At Ilasaeli, carry out the selected operation and obtain its authenticated proof.", "Dock at Aiven and return the verifier with the authenticated record to Ivo Renn.", "Rekey the three marked rescue beacons at Ilasaeli and confirm a clean service test.", "Dock at Taledea, confirm the restored rescue network and collect the agreed fee."]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"

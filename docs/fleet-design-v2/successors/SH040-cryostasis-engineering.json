@@ -1,0 +1,231 @@
+{
+  "schema": "l337.sh040-cryostasis-engineering-design/1",
+  "id": "SH040",
+  "status": "NEW_DESIGN_INPUTS_NOT_DERIVED_MOMENTS_OR_ADMISSION",
+  "asset": {
+    "path": "docs/fleet-design-v2/successors/SH040-cryostasis.toml",
+    "sha256": "5b52208ecf64228a843dc792ff4614af3ff9109034de4bedb6ddb0b7918072d9",
+    "collisionTable": "nativeDesign",
+    "displayTable": "design"
+  },
+  "r3": {
+    "installPath": "docs/fleet-design-v2/ships/SH040.toml",
+    "successorPath": "docs/fleet-design-v2/successors/SH040-cryostasis-r3.toml",
+    "sha256": "6dd8182abf9a00406132db7926c962d470ea7f6c112bb29fad8646aef9aec0ed",
+    "historicalSHA256": "f0a2f7b763aa35cc65022cf5485eb5c91f742147782d34125ff6c24bf9b72e1c"
+  },
+  "frame": {
+    "metresPerSourceUnitExact": "60/19",
+    "axes": {
+      "forward": "+Z",
+      "up": "+Y"
+    },
+    "origin": "unchanged",
+    "minSource": [
+      -0.18,
+      -0.16,
+      -0.38
+    ],
+    "maxSource": [
+      0.18,
+      0.145,
+      0.38
+    ],
+    "spanSourceExact": [
+      "9/25",
+      "61/200",
+      "19/25"
+    ],
+    "dimensionsWHLMetresExact": [
+      "108/95",
+      "183/190",
+      "12/5"
+    ],
+    "targetDetailedLengthMetres": 2.4,
+    "basis": "Multiply all original-frame coordinate spans by retained 60/19. Do not fit to the previous 6 m mesh."
+  },
+  "stockComponents": [
+    {
+      "id": "ceramic-pressure-shell",
+      "faceRanges": [
+        {
+          "start": 0,
+          "count": 38
+        },
+        {
+          "start": 40,
+          "count": 52
+        }
+      ],
+      "stockKgPerSquareMetre": 14.0,
+      "basis": "Design equivalent 6 mm shell stock at 2000 kg/m3 plus 2 kg/m2 distributed shell seam and flange allowance. Fixed hardware is separate."
+    },
+    {
+      "id": "sealed-laminated-lid",
+      "faceRanges": [
+        {
+          "start": 38,
+          "count": 2
+        }
+      ],
+      "stockKgPerSquareMetre": 11.5,
+      "basis": "Design equivalent 8 mm laminate at 1250 kg/m3 plus 1.5 kg/m2 distributed seal allowance. Native faces are a closed collision lid; source mass ownership does not depend on opaque collision material or optical alpha."
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "id": "port-local-attitude-unit",
+      "massKg": 12,
+      "centreSource": [
+        -0.111,
+        -0.055,
+        -0.289
+      ],
+      "halfExtentsSource": [
+        0.024,
+        0.021,
+        0.036
+      ],
+      "basis": "12 kg compact sealed local impulse and regulator assembly. Fixed design mass allowance, no propellant inventory or weapon."
+    },
+    {
+      "id": "starboard-local-attitude-unit",
+      "massKg": 12,
+      "centreSource": [
+        0.111,
+        -0.055,
+        -0.289
+      ],
+      "halfExtentsSource": [
+        0.024,
+        0.021,
+        0.036
+      ],
+      "basis": "Identical mirrored fixed assembly. The clock role never drives these units."
+    },
+    {
+      "id": "port-power-pack",
+      "massKg": 12,
+      "centreSource": [
+        -0.065,
+        -0.101,
+        -0.13
+      ],
+      "halfExtentsSource": [
+        0.029,
+        0.024,
+        0.093
+      ],
+      "basis": "12 kg sealed battery and distribution allowance. Nominal mission energy is not a battery mass conversion."
+    },
+    {
+      "id": "starboard-power-pack",
+      "massKg": 12,
+      "centreSource": [
+        0.065,
+        -0.101,
+        -0.13
+      ],
+      "halfExtentsSource": [
+        0.029,
+        0.024,
+        0.093
+      ],
+      "basis": "Identical mirrored power assembly."
+    },
+    {
+      "id": "cryothermal-loop",
+      "massKg": 32,
+      "centreSource": [
+        0,
+        -0.056,
+        0.314
+      ],
+      "halfExtentsSource": [
+        0.068,
+        0.032,
+        0.039
+      ],
+      "basis": "32 kg thermal exchanger, pump, insulation and sealed coolant, as one fixed service assembly."
+    },
+    {
+      "id": "beacon-control-and-sensors",
+      "massKg": 6,
+      "centreSource": [
+        0,
+        -0.031,
+        -0.318
+      ],
+      "halfExtentsSource": [
+        0.057,
+        0.03,
+        0.035
+      ],
+      "basis": "6 kg controller and beacon instrumentation allowance, independent of scripted clock performance."
+    },
+    {
+      "id": "port-atmosphere-cartridge",
+      "massKg": 5,
+      "centreSource": [
+        -0.084,
+        -0.089,
+        0.16
+      ],
+      "halfExtentsSource": [
+        0.025,
+        0.019,
+        0.056
+      ],
+      "basis": "5 kg sealed atmosphere and monitoring cartridge including fixed contents."
+    },
+    {
+      "id": "starboard-atmosphere-cartridge",
+      "massKg": 5,
+      "centreSource": [
+        0.084,
+        -0.089,
+        0.16
+      ],
+      "halfExtentsSource": [
+        0.025,
+        0.019,
+        0.056
+      ],
+      "basis": "Identical mirrored fixed atmosphere cartridge."
+    },
+    {
+      "id": "cradle-mount-restraints",
+      "massKg": 18,
+      "centreSource": [
+        0,
+        -0.057,
+        0
+      ],
+      "layout": "Opaque cryostasis couch, opaque pressure-shell cradle mount and both restraint rails in the display part map. One engineering mass lump at the designed assembly centre.",
+      "basis": "18 kg budget for lightweight bed, shell mount and mechanical occupant restraints. Decorative triangles do not contribute stock mass."
+    },
+    {
+      "id": "lid-hinge-latch",
+      "massKg": 6,
+      "centreSource": [
+        0,
+        0.131,
+        0
+      ],
+      "layout": "Symmetric integrated lid-rail hardware along the two side rails. One engineering mass lump at their common midpoint.",
+      "basis": "6 kg hardware budget for hinges and latch. Distributed seal is already charged in lid stock."
+    }
+  ],
+  "absence": {
+    "dryOccupants": 0,
+    "decorativePersonMassKg": 0,
+    "cargoKg": 0,
+    "hyperspaceFuelKg": 0,
+    "weapons": [],
+    "paidFittings": [],
+    "externalThrusterCasing": false,
+    "basis": "Dry empty design. The frozen person is display-only. The new local attitude hardware is enclosed; no removed legacy casing or weapon assembly is carried forward."
+  },
+  "momentRule": "Existing independent triangle area moment plus fixed hardware point allocations. Scale each vertex and hardware centre by 60/19 once. Sum stock area times areal density, mass first and full second moments. Shift to COM and verify full positive inertia and source-origin parallel-axis consistency. Apply whole-kilogram round-up reserve at COM only. Do not include decorative geometry or the historical SH040 record.",
+  "qualification": "G1 computes and checks the physical record, validates envelope and assembly fit/clearance and composes exact same-ID source binding. Occupied capsule operation, actuated lid clearance, people/custody and installed power behaviour require actual runtime evidence. Glass Meridian clock IDs, placement, scale, energy, zero motion and weapons come from its unchanged mission definition."
+}

@@ -31,7 +31,7 @@ struct NativeFleetDiscoveryUnitTests {
       mainDock: nil, secondaryDock: nil)
   }
 
-  @Test func encounterAndIdentificationNeverGrantBlueprintWithoutPlayerDestruction() throws {
+  @Test func encounterIdentificationAndDestructionRemainDiscoveryFacts() throws {
     let target = try ship {
       $0.collectionMilestone == .blueprintAndFabrication
         && $0.purchasePolicy == .blueprintFabrication && $0.playerFlyable && $0.access == .normal
@@ -40,11 +40,11 @@ struct NativeFleetDiscoveryUnitTests {
     var state = NativeFleetDiscovery(owner: owner)
     try state.record(proof(ship: target.id, kind: .encounter, owner: owner))
     #expect(state.entries[target.id]?.status == "Encountered")
-    #expect(state.entries[target.id]?.blueprintEarned == false && state.identifiedTypes == 0)
+    #expect(state.identifiedTypes == 0)
     try state.record(proof(ship: target.id, kind: .identification, owner: owner, time: 13))
     #expect(state.entries[target.id]?.status == "Identified" && state.identifiedTypes == 1)
     try state.record(proof(ship: target.id, kind: .playerDestruction, owner: owner, time: 14))
-    #expect(state.valid && state.entries[target.id]?.blueprintEarned == true)
+    #expect(state.valid && state.entries[target.id]?.status == "Collection milestone recorded")
     let first = state
     try state.record(proof(ship: target.id, kind: .playerDestruction, owner: owner, time: 15))
     #expect(state == first)
@@ -94,7 +94,7 @@ struct NativeFleetDiscoveryUnitTests {
         owner: owner, ship: target.id, kind: .stationDocking, actor: actor,
         player: encounter.player, physicalTime: 13, death: nil, mainDock: dock, secondaryDock: nil))
     #expect(state.valid && state.entries[target.id]?.milestone?.kind == .stationDocking)
-    #expect(state.entries[target.id]?.blueprintEarned == false)
+    #expect(state.entries[target.id]?.milestone?.kind != .playerDestruction)
   }
 
   @Test func nonstationCapitalDestructionCompletesItsOwnMilestoneWithoutPurchaseRights() throws {
@@ -106,7 +106,7 @@ struct NativeFleetDiscoveryUnitTests {
     var state = NativeFleetDiscovery(owner: owner)
     try state.record(proof(ship: target.id, kind: .playerDestruction, owner: owner))
     #expect(state.entries[target.id]?.status == "Collection milestone recorded")
-    #expect(state.entries[target.id]?.blueprintEarned == false)
+    #expect(state.entries[target.id]?.milestone?.kind == .playerDestruction)
   }
 
   @Test(arguments: [false, true])

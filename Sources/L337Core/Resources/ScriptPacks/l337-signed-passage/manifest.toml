@@ -1,0 +1,24 @@
+# Current child of the owned Signed Passage commission; original stock pickup is separate.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.contract"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2"]
+priority = 574
+source = "Current child of owned original Signed Passage e427a78275efb5dc59ba4323b8ead3578dc6c0b7; canonical Meridian c70110b292077588a0855fb48127adfb1b611c9d courier.json SHA256 93061611f090d9e2b35a138f4026411ec425a35f38413f79586b44f17ecc63e3. Commission only, original l337.contract/courier identity preserved; no reference/serial/collection/stock/test-crate/cradle/carrier/consent/capacity/handoff/witness/receiving/settlement/payment/clue is produced by this module."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "courier"
+title = "Signed Passage"
+briefing = "SENN: Departure is a promise. Delivery is the receiver taking this exact consignment.\n\nAn orbital receiving service repeatedly loses custody of a harmless calibration shipment during carrier handoffs. No cargo is missing; the signatures claim delivery before a receiving cradle is assigned. The commander independently measures the handoffs, verifies actual safe transit and living reception of a consenting receipt witness and establishes either individually signed receiving locks or a common bounded custody register. It is a complete original induction, separate from ordinary repeat courier jobs.\n\nAt Neron in Galaxy 1, after one ordinary trade. No imported score gate or source campaign prerequisite. The reference loan needs one tonne of free hold. The original reference is collected here before the survey departure. The settlement choice is made with actual arrived delegates at the witness receiver; final return/audit remains at this issuer."
+destination = "Neron / Lalen / Illalis / Aetaria / Galaxy 1"
+reward = "4,300 CR and the empty-destination clue, only after real cradle observations, both atomic same-crate handoffs, witness reception, both independent selected receiving-lock/register proofs, original reference return and final audit."
+milestones = ["Accept Signed Passage at Neron.", "Collect the identified one-tonne reference instrument from Dispatcher Evi Senn.", "Observe three actual receiving cradles and compare allocation time with receipt-signing time.", "Move the same identified source-owned test crate through two actual cradle transfers under the onboard reference.", "Verify actual safe transit and living reception of the independent receiving witness to the archive berth.", "At the actual witness receiving station, choose the settlement with the arrived authorised operator delegates.", "Verify both independent proofs for the selected settlement.", "Return the reference instrument and confirm all physical receiving and settlement receipts.", "Confirm successful completion, the recorded settlement and the once-only fee."]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"

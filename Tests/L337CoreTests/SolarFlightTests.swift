@@ -47,6 +47,7 @@ private func solarEquipmentComparison(_ encoded: Any?) throws -> [String: Any] {
 
 private func solarGame(distance: Double = 2970) throws -> Game {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.bodies = []
   game.celestials = [.init(kind: .sun, position: .init(0, 0, distance), radius: 1100)]
@@ -173,7 +174,7 @@ private func solarWorldAfterRelaunch(
 @Test func dockingLoadingAndArrivalUseExistingDockedSaveSemantics() async throws {
   var game = try solarGame()
   do {
-    // The legacy loader has no saved flight world; use a genuinely pre-launch Commander.
+    // A supplied unowned commander cannot acquire equipment through loading.
     var legacy = Commander()
     legacy.equipment.insert("Fuel Scoops")
     legacy.fuel = 0
@@ -183,10 +184,13 @@ private func solarWorldAfterRelaunch(
     let decoded = try JSONDecoder().decode(Commander.self, from: bytes)
     game.cabinTemperature = 0.6
     try #require(!game.docked && !game.celestials.isEmpty)
+    let before = game
     let loaded = game.load(decoded)
-    #expect(loaded)
-    #expect(game.docked && game.celestials.isEmpty && game.cabinTemperature == 0)
-    #expect(decoded == legacy && game.commander.valid)
+    #expect(!loaded)
+    #expect(game.commander == before.commander && game.bodies == before.bodies)
+    #expect(game.docked == before.docked && game.celestials == before.celestials)
+    #expect(game.cabinTemperature == before.cabinTemperature && game.energy == before.energy)
+    #expect(decoded == legacy && game.inventoryContextEpoch == before.inventoryContextEpoch)
   }
   game = try solarGame()
   game.cabinTemperature = 0.9
@@ -196,7 +200,7 @@ private func solarWorldAfterRelaunch(
   #expect(Set(game.celestials.map(\.kind)) == [.sun, .planet])
   let scene = game.celestials
   game.cabinTemperature = 0.6
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.mirrorFittedEquipment()
   // A current world restores its saved flight state, so actually dock before saving it.
   game.dock()

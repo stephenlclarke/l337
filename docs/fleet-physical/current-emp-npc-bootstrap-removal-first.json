@@ -1,0 +1,66 @@
+{
+  "status": "FIRST_EXACT_COUPLED_UNREACHABLE_NPC_EMP_BOOTSTRAP_REMOVAL_NO_EDITS",
+  "beforeCommit": "4f3963b8be42e7ed6b2f19c2af747b58ee723295",
+  "pins": [
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 29555,
+      "sha256": "1f307e771b2d492b406bf31ce011ed9d5978fcd8568a57e079d71a78dbb0a134"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18548,
+      "sha256": "693623abd1436400efd66d30316e999f08aa02569cc46c1850aff7ad989727ca"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 13134,
+      "sha256": "7e042d3fe817b6386c7ec34794af3f823d5a4c77c65632a1faf26387deff2b7f"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPCurrentTargetSourceTests.swift",
+      "bytes": 2411,
+      "sha256": "e24b8f2e3809bc65f1c491c8c4fc8be10a830194f6ce88162d8e4955681789bc"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    }
+  ],
+  "sourcePath": "Sources/L337Core/EMPElectricalRuntime.swift",
+  "edits": [
+    [
+      "private struct EMPPulseBodyPreparation {\n  let id: Int\n  let index: Int\n  let remaining: Double\n  let legacyCatalogue: String?\n  let before: EMPPulseBeforeResult.Primary?\n}",
+      "private struct EMPPulseBodyPreparation {\n  let id: Int\n  let remaining: Double\n  let before: EMPPulseBeforeResult.Primary?\n}"
+    ],
+    [
+      "        // A positive partial hit retains its existing native mesh; custody already pins on zero.\n        if let catalogue = preparation.legacyCatalogue {\n          bodies[preparation.index].physical?.catalogueShipID = catalogue\n        }\n",
+      ""
+    ],
+    [
+      "    var legacyCatalogue: String?\n    if resources.profile == .legacyEnergyOnly {\n      guard\n        let catalogue = StationPoliceSource.empCatalogueID(for: bodies[index]),\n        let native = ShipCatalogue.ship(catalogue)?.game, native.valid,\n        resources.legacyElectricalRecharge == nil\n          || resources.legacyElectricalRecharge == native.recharge\n      else { return .refused }\n      resources.legacyElectricalRecharge = native.recharge\n      legacyCatalogue = catalogue\n    }\n",
+      ""
+    ],
+    [
+      "      .init(\n        id: id, index: index, remaining: reserve.remaining,\n        legacyCatalogue: legacyCatalogue, before: before))",
+      "      .init(id: id, remaining: reserve.remaining, before: before))"
+    ]
+  ],
+  "reachabilityProof": "prepareElectricalPulseVictim first requires empPulseEligible on the same actor, synchronously with no suspension or intervening Game mutation. Current eligibility requires explicitID and currentCatalogueSourceIsValid. That predicate requires actual.profile == NPCResources.stock(source.performance).profile, whose constructor explicitly yields nativeHull, and legacyElectricalRecharge nil. Thus the local legacyEnergyOnly bootstrap cannot run; legacyCatalogue always nil and body-preparation.index is used only by its zero-reserve relabel block.",
+  "scope": "Delete exact unreachable bootstrap/mapped-ID relabel, private legacyCatalogue and now-unused index fields, and constructor args. Preserve id/remaining/before, all actual native reserve/effect/cost/shield/pulse/crew/custody/schema/history code. No fallback, fake nil state, replacement algorithm or migration introduced. One source file only.",
+  "testPlan": "No implementation-mirroring new test for dead-code deletion. Reuse current-target eligibility one6variant method and existing genuine paid EMP release/effects tests unchanged, all UNRUN pending G1. Strict full-file inverse/four literal hunks; all6 readonly source/currenttest/fixture pins exact. No runtime coverage or executed counterexample claimed.",
+  "adjacentRemainingWork": "EMPRecoveryRuntime and generic record validation still contain legacy-resource handling for pre-existing records; this producer-only removal does not silently edit them or authorize permanent compatibility. Separate exact current-record/source cleanup must be scoped through Root, without inferring actual people/room/power data.",
+  "coordination": "Root requested exact coupled cleanup FIRST after4f3963. Shared G1 EMPkernel reservation before edits. No C01/Bridge/Weapons/Game/Runtime/render/occlusion or material4hook changes. Legitimate dependency notices untouched.",
+  "limits": "All SOURCEONLY UNCOMPILED UNRUN. No native/compiler/model/numeric/geometry execution byG4 or physical/people/hardware/power/native025/125autonomous/journey qualification. This is removal of an unreachable current-producer migration, not a save compatibility implementation."
+}

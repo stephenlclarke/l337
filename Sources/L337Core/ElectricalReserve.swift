@@ -24,6 +24,31 @@ public struct ElectricalReserve: Equatable, Codable, Sendable {
     disabledAt = nil
     guard valid else { return nil }
   }
+  /// Only a value issued by the actual Game owner can post this narrow player pool.
+  init?(posting interval: EMPPlayerElectricalInterval) {
+    let prior = interval.opening
+    capacity = interval.capacity
+    recharge = interval.recharge
+    physicalTime = interval.end
+    disabledAt = prior?.disabledAt
+    remaining = min(capacity, prior?.remaining ?? 0)
+    guard capacity.isFinite, capacity > 0, recharge.isFinite, recharge >= 0,
+      interval.acceptedDelta.isFinite, interval.acceptedDelta > 0, interval.acceptedDelta <= 0.1,
+      interval.end > interval.start, interval.end == interval.start + interval.acceptedDelta
+    else { return nil }
+    let sameTerms = prior.map { $0.capacity == capacity && $0.recharge == recharge } ?? true
+    if interval.earnsCurrentInterval && sameTerms {
+      let begin = max(interval.start, prior?.recoveryAt ?? interval.start)
+      let duration = min(interval.acceptedDelta, max(0, interval.end - begin))
+      let earned = duration * recharge
+      guard earned.isFinite else { return nil }
+      let total = min(capacity, remaining + earned)
+      remaining = total - remaining > earned ? max(remaining, total.nextDown) : total
+      if remaining > 0 { disabledAt = nil }
+    }
+    guard valid else { return nil }
+  }
+
   @discardableResult
   mutating func advance(to time: Double, capacity: Double, recharge: Double) -> Bool {
     guard valid, time.isFinite, time >= physicalTime,

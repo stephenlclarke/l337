@@ -23,7 +23,7 @@ struct NativeStationPopulationLifetimeTests {
       $0["nextSpawn"] = UInt64.max
     }
     let before = game
-    try #require(game.bodies.filter { $0.nativeStationIdentity != nil }.count == 2)
+    try #require(game.bodies.filter { $0.nativeStationIdentity != nil }.count == 3)
     try game.populateNativeStations()
     expectUnchanged(game, before: before)
   }
@@ -31,13 +31,14 @@ struct NativeStationPopulationLifetimeTests {
   @Test(arguments: [
     "docked", "missing-anchors", "invalid-world", "system-mismatch", "duplicate", "binding",
     "body-budget", "body-cursor",
-    "source", "clearance", "second-clearance", "spawn-cursor", "second-rebind", "final-flight",
+    "source", "clearance", "second-clearance", "planet-clearance", "sun-clearance",
+    "nonfinite-celestial", "spawn-cursor", "second-rebind", "final-flight",
   ])
   func refusedPopulationPreservesTheWholeCandidateAndErrorPriority(scenario: String) throws {
     var game =
       scenario == "duplicate" || scenario == "binding"
       ? try NativeStationTestFixture.launched() : try unpopulated()
-    let expected: NativeStationRuntimeError?
+    let expected: NativeStationRuntimeError
     switch scenario {
     case "docked":
       game.docked = true
@@ -52,7 +53,7 @@ struct NativeStationPopulationLifetimeTests {
     case "system-mismatch":
       try changeFlight(&game) { values in
         var anchors = try #require(values["anchors"] as? [String: Any])
-        anchors["system"] = ["galaxy": 0, "system": 7]
+        anchors["system"] = ["galaxy": 0, "system": 237]
         values["anchors"] = anchors
       }
       expected = .invalidState
@@ -73,7 +74,7 @@ struct NativeStationPopulationLifetimeTests {
       }
       expected = .capacity
     case "body-cursor":
-      game.nextBodyID = 1_000_000_000 - 2
+      game.nextBodyID = 1_000_000_000 - 3
       expected = .capacity
     case "source":
       try changeFlight(&game) { values in
@@ -96,7 +97,7 @@ struct NativeStationPopulationLifetimeTests {
     case "second-clearance":
       let world = try #require(game.commander.nativeStations)
       let records = world.ledger.records.filter { $0.identity.system == game.systemIdentity }
-      try #require(records.count == 2)
+      try #require(records.count == 3)
       let first = try #require(world.pose(for: records[0].identity))
       let second = try #require(world.pose(for: records[1].identity))
       let source = try #require(NativeStationSource.binding(for: records[0].identity))
@@ -112,7 +113,7 @@ struct NativeStationPopulationLifetimeTests {
       try #require(source.geometry.position(in: anchors) == first.position)
       try #require(world.currentOrientation(for: first.station, at: flight.physicalTime) != nil)
       let firstPosition = try #require(
-        world.currentPosition(for: .rrs(first.station), at: flight.physicalTime))
+        world.currentPosition(for: .originalStation(first.station), at: flight.physicalTime))
       for celestial in [anchors.planet, anchors.sun] {
         try #require(
           (firstPosition - celestial.position).length > stationRadius + celestial.radius + 8)
@@ -120,49 +121,60 @@ struct NativeStationPopulationLifetimeTests {
       try #require((firstPosition - second.position).length > stationRadius + obstacleRadius + 8)
       game.bodies = [obstacle]
       expected = .unsafePlacement
+    case "planet-clearance", "sun-clearance", "nonfinite-celestial":
+      let world = try #require(game.commander.nativeStations)
+      let source = try #require(world.poses.first { $0.station.system == game.systemIdentity })
+      try changeFlight(&game) { values in
+        var anchors = try #require(values["anchors"] as? [String: Any])
+        let key = scenario == "planet-clearance" ? "planet" : "sun"
+        var celestial = try #require(anchors[key] as? [String: Any])
+        if scenario == "nonfinite-celestial" {
+          celestial["radius"] = "fixture-infinity"
+        } else {
+          celestial["position"] = ["x": source.position.x, "y": source.position.y, "z": source.position.z]
+        }
+        anchors[key] = celestial
+        values["anchors"] = anchors
+      }
+      expected = .unsafePlacement
     case "spawn-cursor":
       try changeFlight(&game) { $0["nextSpawn"] = UInt64.max }
       expected = .capacity
     case "second-rebind":
-      // The first binding accepts Int64.max. The next allocated actor exceeds its source range.
-      try changeFlight(&game) { $0["nextActor"] = UInt64(Int64.max) }
-      expected = nil
+      // The first original actor is below the strict boundary; the second reaches it.
+      try changeFlight(&game) { $0["nextActor"] = UInt64(Int64.max) - 1 }
+      expected = .invalidSource
     case "final-flight":
-      // Both actors/rebinds succeed, but the incremented spawn cursor fails final validation.
-      try changeFlight(&game) { $0["nextSpawn"] = UInt64.max - 1 }
+      // Actor and spawn allocation succeed; an invalid untouched emission cursor
+      // reaches final staged-flight validation without publishing a partial cohort.
+      try changeFlight(&game) { $0["nextEmission"] = UInt64.max }
       expected = .invalidState
     default:
       Issue.record(Comment(rawValue: "Unrecognised station population fixture: " + scenario))
       return
     }
     let before = game
-    if let expected {
-      #expect(throws: expected) { try game.populateNativeStations() }
-    } else {
-      do {
-        try game.populateNativeStations()
-        Issue.record("Population accepted an actor outside the station binding range.")
-      } catch NativeStationStateError.unavailable {
-        // The original ledger rejects the second binding after the first local rebind.
-      }
-    }
+    #expect(throws: expected) { try game.populateNativeStations() }
     expectUnchanged(game, before: before)
   }
 
-  @Test func populationPublishesTheWholeCohortInOriginalSourceAndActorOrder() throws {
-    var game = try unpopulated()
+  @Test(arguments: [7, 237])
+  func populationPublishesTheWholeCohortInOriginalSourceAndActorOrder(system: Int) throws {
+    var game = try unpopulated(system: system)
     let before = game
     let worldBefore = try #require(game.commander.nativeStations)
     let records = worldBefore.ledger.records.filter { $0.identity.system == game.systemIdentity }
-    try #require(records.count == 2 && records.allSatisfy { $0.binding == nil })
+    let sites: [OriginalStationSite] = system == 7 ? [.salamander, .frog, .dhole] : [.remoteUtility]
+    let expected = sites.map { $0.identity(world: worldBefore.ledger.world) }
+    try #require(records.map(\.identity) == expected && records.allSatisfy { $0.binding == nil })
     let flightBefore = game.commander.flightSimulation
     try game.populateNativeStations()
     let world = try #require(game.commander.nativeStations)
     let flight = game.commander.flightSimulation
     #expect(world.valid && flight.valid)
     #expect(game.bodies.compactMap(\.nativeStationIdentity) == records.map(\.identity))
-    #expect(game.nextBodyID == before.nextBodyID + 2)
-    #expect(flight.nextActor == flightBefore.nextActor + 2)
+    #expect(game.nextBodyID == before.nextBodyID + expected.count)
+    #expect(flight.nextActor == flightBefore.nextActor + UInt64(expected.count))
     #expect(flight.nextSpawn == flightBefore.nextSpawn + 1)
     for (member, body) in game.bodies.enumerated() {
       let record = records[member]
@@ -176,23 +188,28 @@ struct NativeStationPopulationLifetimeTests {
       #expect(body.physical?.spawnIdentity?.member == UInt16(member))
       #expect(body.position == flightBefore.pose.shipPoint(saved.position))
       #expect(body.orientation == saved.orientation.relative(to: flightBefore.pose.orientation))
-      #expect(body.energy == saved.energy && body.rotationRate == source.rotationRate)
-      #expect(body.missiles == 0 && body.ecmEnabled == (source.kind == .waystation))
+      #expect(body.energy == saved.energy && body.rotationRate == 0 && source.recharge == 0)
+      #expect(body.physical?.catalogueShipID == source.catalogueShipID)
+      #expect(body.missiles == 0 && !body.ecmEnabled)
       #expect(
         world.ledger.records.first { $0.identity == record.identity }?.binding
           == .init(actor: actor, bodyID: body.id))
     }
     #expect(before.commander.nativeStations == worldBefore && before.bodies.isEmpty)
+    let remoteID = OriginalStationSite.remoteUtility.identity(world: world.ledger.world)
+    let utility = try #require(world.ledger.records.first { $0.identity == remoteID })
+    #expect((utility.utilitySourceBirth != nil) == (system == 237))
+    #expect(game.commander.valid && game.commander.nativeStationStateValid)
     let admitted = game
     try game.populateNativeStations()
     expectUnchanged(game, before: admitted)
   }
 
-  private func unpopulated() throws -> Game {
+  private func unpopulated(system: Int = 7) throws -> Game {
     var game = Game(executive: false)
-    game.commander.galaxy = 3
-    game.commander.system = 149
-    game.systems = Universe.systemsIncludingPlugh(number: 3)
+    game.commander.galaxy = 0
+    game.commander.system = system
+    game.systems = Universe.systemsIncludingPlugh(number: 0)
     try game.activateNativeStationWorld()
     game.commander.flightSimulation.enter(game.systemIdentity, arriving: false)
     game.docked = false
@@ -207,7 +224,12 @@ struct NativeStationPopulationLifetimeTests {
       JSONSerialization.jsonObject(with: JSONEncoder().encode(game.commander.flightSimulation))
         as? [String: Any])
     try change(&fields)
-    game.commander.flightSimulation = try JSONDecoder().decode(
+    let decoder = JSONDecoder()
+    // This creates an invalid typed test input only; the production save decoder is unchanged.
+    decoder.nonConformingFloatDecodingStrategy = .convertFromString(
+      positiveInfinity: "fixture-infinity", negativeInfinity: "fixture-negative-infinity",
+      nan: "fixture-nan")
+    game.commander.flightSimulation = try decoder.decode(
       FlightSimulationState.self, from: JSONSerialization.data(withJSONObject: fields))
   }
 

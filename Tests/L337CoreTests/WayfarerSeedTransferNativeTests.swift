@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct WayfarerSeedTransferNativeFixture {
   let files: ScriptFreightFixture
@@ -28,7 +29,8 @@ struct WayfarerSeedTransferNativeFixture {
     if escapeReady {
       let pod = try #require(Equipment.all.first { $0.name == "Escape Pod" })
       let quote = try game.quoteEquipmentPurchase(pod)
-      try #require(try game.applyEquipmentPurchase(quote))
+      let purchaseApplied = try game.applyEquipmentPurchase(quote)
+      try #require(purchaseApplied)
     }
     // Initial controlled world selection precedes launch; only native flight establishes this dock.
     game.commander.system = 241

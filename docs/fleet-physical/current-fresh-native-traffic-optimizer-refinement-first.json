@@ -1,0 +1,8 @@
+{
+  "status": "FIRST_ROOT_REQUIRED_EXACT_OPTIMIZER_ATTRIBUTE_OMISSION_BEFORE_SOURCE_MUTATION",
+  "parentFIRSTSHA256": "c84e49f6a4f0f74d87d11bbb8457a00c9526245d00a240259267dd24271d8cbc",
+  "beforeProposedSeparationHunkSHA256": "dbfcfabded8fa4a15a86f30305ea002dafb1e275ac098271a155d272b3545154",
+  "before": "  @inline(never)\n  private mutating func spawnSeparationIsSafe(",
+  "after": "  private mutating func spawnSeparationIsSafe(",
+  "scope": "Omit only newly introduced inline(never) attribute on extracted helper; original routine had no attribute. No optimizer policy, expression, source, count, timing, geometry margin, law or state change."
+}

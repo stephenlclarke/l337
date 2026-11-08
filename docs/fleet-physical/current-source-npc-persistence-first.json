@@ -1,0 +1,23 @@
+{
+  "status": "FIRST_FROZEN_BEFORE_CURRENT_SOURCE_PERSISTENCE_CAPACITY_JOIN",
+  "beforeCommit": "ade095e65fafd6fa32243f0b527f868128ada3ee",
+  "beforePins": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 34575,
+      "sha256": "e3453822b70657cfc9cc6e7298427f86313ce41ecffff3aaa3739dccba267321"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 22498,
+      "sha256": "fd5b027f0d0f9f2a4459a6ac97d2a1ca370bdc1c8174c553886329ab1a98f28f"
+    }
+  ],
+  "productionScope": "NPCPersistenceSnapshot.valid: a declared catalogueShipID must resolve the admitted current native Source and actual recorded resources must retain its current standard profile/energy/recharge/front+rear shield/recharge/fuel capacity/heat capacity+cooling; no nil stock, unknown ID, current-hull legacy-resource fallback. Actual damage, charge, fuel, heat, scoop remainder, chronology and all existing ledger/rebind rules retained.",
+  "uncataloguedBoundary": "Existing distinct uncatalogued owners remain unchanged; this is not final fullfleet producer coverage or a legacy-save migration.",
+  "fixtureScope": "Existing persistenceBody controlled component fixture moves pendingSH001+invented100/80/70 capacities to actual currentSH025 NPCResources.stock, retains exact energy34/shields17/23/heat51/fuel13/remainder.3 and all cargo/legal/pose/ordinal/receipt cases. Make helper throws and add try only at its existing callers; expected ID follows025; invalid energy101 becomes actualcapacity+1 to preserve above-cap refusal.",
+  "newTest": "Append exact current damaged-resource snapshot accept/roundtrip, unknownID/pendingID/missingresources/wrongcapacity/legacyprofile refuse without ledger mutation. No blueprint, paid equipment or acquisition claim.",
+  "sourceReadCaps": "One existing source lookup and eight fixed capacity comparisons, no geometry/model/numeric query or new RNG/actor/people grant.",
+  "protected": "Reserved NativePeopleCensus helper and previous review commits unchanged; no station/provider/port/resource edits.",
+  "execution": "UNCOMPILED UNRUN; no G4 compiler/tests/native/helpers/model/numeric execution."
+}

@@ -1,0 +1,352 @@
+{
+  "schemaVersion": 1,
+  "id": "SH040",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "6dd8182abf9a00406132db7926c962d470ea7f6c112bb29fad8646aef9aec0ed",
+  "detailedSourceSHA256": "5b52208ecf64228a843dc792ff4614af3ff9109034de4bedb6ddb0b7918072d9",
+  "componentSourceSHA256": "3c40451f7c6690059636e1d2baf654e47ea6f4b5ffab6699eee8668f378d2ee4",
+  "coordinateUnits": "metres",
+  "sourceCoordinateUnits": "Relative original units; no recovered SI declaration.",
+  "metresPerSourceUnit": 3.1578947368421053,
+  "metresPerSourceUnitExact": "60/19",
+  "targetDetailedLengthMetres": 2.4,
+  "scaleStatus": "NEW_ROOT_ADOPTED_UNIFORM_ENGINEERING_SCALE_NOT_RECOVERED",
+  "sourceOriginUnchanged": true,
+  "sourceGeometryNotEdited": true,
+  "sourceZSpanExact": "19/25",
+  "stockMassKg": 127.05133495722446,
+  "intrinsicHardwareMassKg": 120.0,
+  "unroundedMassKg": 247.05133495722447,
+  "dryMassKilograms": 248,
+  "roundingReserveKg": 0.9486650427755308,
+  "reserveLocationMetres": [
+    -1.432429374083494e-18,
+    -0.08877245895850502,
+    -0.004039220176708969
+  ],
+  "centreOfMassMetres": [
+    -1.432429374083494e-18,
+    -0.08877245895850502,
+    -0.004039220176708969
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    159.01711421642565,
+    4.095609550727572e-17,
+    5.5700885745886595e-05,
+    4.095609550727572e-17,
+    162.14744347245028,
+    -0.41661110632905385,
+    5.5700885745886595e-05,
+    -0.4166111063290544,
+    41.252894705227675
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    160.9680451996271,
+    9.540979117872439e-18,
+    5.5700885745885165e-05,
+    9.540979117872439e-18,
+    162.15147418900557,
+    -0.505196675900278,
+    5.5700885745885165e-05,
+    -0.5051966759002785,
+    43.19979497187384
+  ],
+  "positiveLeadingPrincipalMinors": [
+    159.01711421642565,
+    25784.21853856005,
+    1063646.0526514554
+  ],
+  "stockComponents": [
+    {
+      "id": "ceramic-pressure-shell",
+      "areaSquareMetres": 7.907802121004754,
+      "densityKgPerSquareMetre": 14.0,
+      "stockMassKg": 110.70922969406655,
+      "faceCount": 90
+    },
+    {
+      "id": "sealed-laminated-lid",
+      "areaSquareMetres": 1.4210526315789473,
+      "densityKgPerSquareMetre": 11.5,
+      "stockMassKg": 16.342105263157894,
+      "faceCount": 2
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "id": "port-local-attitude-unit",
+      "massKg": 12,
+      "centreMetres": [
+        -0.3505263157894737,
+        -0.1736842105263158,
+        -0.9126315789473685
+      ],
+      "halfExtentsMetres": [
+        0.07578947368421053,
+        0.06631578947368422,
+        0.11368421052631579
+      ],
+      "bounds": "DECLARED_BOX",
+      "strictlyContained": true,
+      "insideSamples": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "starboard-local-attitude-unit",
+      "massKg": 12,
+      "centreMetres": [
+        0.3505263157894737,
+        -0.1736842105263158,
+        -0.9126315789473685
+      ],
+      "halfExtentsMetres": [
+        0.07578947368421053,
+        0.06631578947368422,
+        0.11368421052631579
+      ],
+      "bounds": "DECLARED_BOX",
+      "strictlyContained": true,
+      "insideSamples": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "port-power-pack",
+      "massKg": 12,
+      "centreMetres": [
+        -0.20526315789473684,
+        -0.31894736842105265,
+        -0.4105263157894737
+      ],
+      "halfExtentsMetres": [
+        0.09157894736842105,
+        0.07578947368421053,
+        0.29368421052631577
+      ],
+      "bounds": "DECLARED_BOX",
+      "strictlyContained": true,
+      "insideSamples": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "starboard-power-pack",
+      "massKg": 12,
+      "centreMetres": [
+        0.20526315789473684,
+        -0.31894736842105265,
+        -0.4105263157894737
+      ],
+      "halfExtentsMetres": [
+        0.09157894736842105,
+        0.07578947368421053,
+        0.29368421052631577
+      ],
+      "bounds": "DECLARED_BOX",
+      "strictlyContained": true,
+      "insideSamples": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "cryothermal-loop",
+      "massKg": 32,
+      "centreMetres": [
+        0.0,
+        -0.17684210526315788,
+        0.991578947368421
+      ],
+      "halfExtentsMetres": [
+        0.21473684210526317,
+        0.10105263157894737,
+        0.1231578947368421
+      ],
+      "bounds": "DECLARED_BOX",
+      "strictlyContained": true,
+      "insideSamples": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "beacon-control-and-sensors",
+      "massKg": 6,
+      "centreMetres": [
+        0.0,
+        -0.09789473684210526,
+        -1.0042105263157894
+      ],
+      "halfExtentsMetres": [
+        0.18,
+        0.09473684210526316,
+        0.11052631578947368
+      ],
+      "bounds": "DECLARED_BOX",
+      "strictlyContained": true,
+      "insideSamples": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "port-atmosphere-cartridge",
+      "massKg": 5,
+      "centreMetres": [
+        -0.26526315789473687,
+        -0.2810526315789474,
+        0.5052631578947369
+      ],
+      "halfExtentsMetres": [
+        0.07894736842105263,
+        0.06,
+        0.17684210526315788
+      ],
+      "bounds": "DECLARED_BOX",
+      "strictlyContained": true,
+      "insideSamples": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "starboard-atmosphere-cartridge",
+      "massKg": 5,
+      "centreMetres": [
+        0.26526315789473687,
+        -0.2810526315789474,
+        0.5052631578947369
+      ],
+      "halfExtentsMetres": [
+        0.07894736842105263,
+        0.06,
+        0.17684210526315788
+      ],
+      "bounds": "DECLARED_BOX",
+      "strictlyContained": true,
+      "insideSamples": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "cradle-mount-restraints",
+      "massKg": 18,
+      "centreMetres": [
+        0.0,
+        -0.18,
+        0.0
+      ],
+      "halfExtentsMetres": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": "MASS_LUMP_CENTRE_ONLY",
+      "strictlyContained": true,
+      "insideSamples": [
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    },
+    {
+      "id": "lid-hinge-latch",
+      "massKg": 6,
+      "centreMetres": [
+        0.0,
+        0.41368421052631577,
+        0.0
+      ],
+      "halfExtentsMetres": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": "MASS_LUMP_CENTRE_ONLY",
+      "strictlyContained": true,
+      "insideSamples": [
+        true
+      ],
+      "contactOrCrossingFaceIndices": []
+    }
+  ],
+  "dimensionsWHLMetres": [
+    1.1368421052631579,
+    0.9631578947368421,
+    2.4
+  ],
+  "staticClearanceStatus": "ALL_DECLARED_BOUNDS_INSIDE",
+  "admission": "OPEN",
+  "decorativePersonMassKg": 0,
+  "roleMapSHA256": "3c40451f7c6690059636e1d2baf654e47ea6f4b5ffab6699eee8668f378d2ee4",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "auditedPhysicalDraftSHA256": "3d1f0d779f554f2d174c183b0a1cd046ccffec59548f1c442e77ccb252181812"
+}

@@ -7,6 +7,7 @@ struct MissionRuntimeNativeCompatibilityTests {
   @Test func theActualRuntimePausesNativeFlightAndCountdownWhileTheLibraryIsOpen() async throws {
     var game = Game(executive: false)
     game.screen = .status
+    try game.commander.prepareEquipment(legacy: false)
     game.commander.scriptState.calendarLedger = .init(origin: .newCommander)
     game.launch()
     game.bodies = []
@@ -56,6 +57,7 @@ struct MissionRuntimeNativeCompatibilityTests {
     let original = Data("original live commander".utf8)
     try original.write(to: live)
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.isMissionTrial = true
     let runtime = GameRuntime(game: game, saveURL: live)
     let proposedNamespace = await runtime.gallerySaveDirectory()
@@ -81,6 +83,7 @@ struct MissionRuntimeNativeCompatibilityTests {
     let url = folder.appendingPathComponent("commander.json")
     var game = Game(executive: false)
     game.screen = .status
+    try game.commander.prepareEquipment(legacy: false)
     let runtime = GameRuntime(game: game)
     let initial = await runtime.snapshot()
     #expect(initial.commander.scriptState == ScriptEngineState())
@@ -123,6 +126,7 @@ struct MissionRuntimeNativeCompatibilityTests {
     let url = folder.appendingPathComponent("commander.json")
     var game = Game(executive: false)
     game.screen = .status
+    try game.commander.prepareEquipment(legacy: false)
     game.commander.scriptState.calendarLedger = .init(origin: .newCommander)
     let runtime = GameRuntime(game: game)
     let initial = await runtime.snapshot()
@@ -153,6 +157,7 @@ struct MissionRuntimeNativeCompatibilityTests {
     game.commander.scriptState.calendarLedger = .init(origin: .newCommander)
     game.screen = .equipment
     game.selection = try #require(Equipment.all.firstIndex { $0.name == "Missile" })
+    try game.commander.prepareEquipment(legacy: false)
     let runtime = GameRuntime(game: game, saveURL: directory)
     let before = await runtime.snapshot()
     let context = try #require(before.equipmentPurchaseContext)

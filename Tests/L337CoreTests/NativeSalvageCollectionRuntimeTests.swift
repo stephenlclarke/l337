@@ -18,7 +18,8 @@ func nativeSalvageTestDirectory() throws -> URL {
 func nativeSalvageScoopFixture(
   definition: String = AlienModuleKind.energyCapacity.definitionID, system: Int = 7
 ) throws -> (Game, SalvageLot) {
-  var game = try missionGearGame()
+  // The real scoop journey launches without the Redtail's additional crew.
+  var game = try missionGearGame(shipID: NewCommanderDefaults.shipID)
   game.commander.system = system
   if system == Plugh.systemID { game.commander.discoverPlugh(in: game.commander.galaxy) }
   try game.commander.grantEquipment(
@@ -238,7 +239,93 @@ func dockAtActualPlughDoorway(_ input: Game, file: URL) async throws -> GameRunt
   game.speed = 3
   let runtime = GameRuntime(game: game, saveURL: file)
   for _ in 0..<100 where !game.docked { game = await runtime.advance(delta: 0.1) }
-  try #require(game.docked && game.dockedAtMainStation && game.commander.system == Plugh.systemID)
+  let docked = game.docked
+  let mainPredicate: Bool? = docked ? game.dockedAtMainStation : nil
+  let mainPrefix = docked && (mainPredicate ?? false)
+  let systemPredicate: Bool? = mainPrefix ? game.commander.system == Plugh.systemID : nil
+  let dockingReady = mainPrefix && (systemPredicate ?? false)
+  let dockingDiagnostic: String
+  if dockingReady {
+    dockingDiagnostic = ""
+  } else {
+    let observedMain = game.dockedAtMainStation
+    let screen = game.screen
+    let paused = game.paused
+    let galaxy = game.commander.galaxy
+    let system = game.commander.system
+    let shipPrefix = String(decoding: game.commander.shipID.utf8.prefix(16), as: UTF8.self)
+    let owner = game.commander.equipmentOwnerID
+    let flight = game.commander.flightSimulation
+    let world = game.commander.nativeStations
+    let receipt = world?.currentMainDock
+    let evidence = game.nativeMainStationDockEvidence
+    let epoch = game.nativeStationRuntimeEpoch
+    let pending = game.pendingNativeStationDock != nil
+    let impact = game.stationImpactRevision
+    let revision = game.gameplayRevision
+    let energy = game.energy
+    let front = game.frontShield
+    let rear = game.rearShield
+    let speed = game.speed
+    let pitch = game.pitch
+    let yaw = game.yaw
+    let roll = game.roll
+    let currentStation = game.bodies.first { $0.id == 0 && $0.hull == .station }
+    let mainText = mainPredicate.map { String($0) } ?? "not-evaluated"
+    let systemText = systemPredicate.map { String($0) } ?? "not-evaluated"
+    let core = "plugh-dock docked=\(docked) mainPredicate=\(mainText) systemPredicate=\(systemText)"
+      + " observedMain=\(observedMain) screen=\(screen.rawValue) galaxy=\(galaxy) system=\(system)"
+      + " expectedSystem=\(Plugh.systemID) time=\(flight.physicalTime) shipPrefix=\(shipPrefix)"
+      + " paused=\(paused) energy=\(energy) shields=\(front),\(rear) speed=\(speed)"
+      + " rates=\(pitch),\(yaw),\(roll) revision=\(revision) impact=\(String(describing: impact))"
+      + " pendingEntry=\(pending) world=\(world != nil) owner=\(String(describing: owner))"
+      + " worldOwner=\(String(describing: world?.ledger.world))"
+      + " mainCount=\(String(describing: world?.mainStations.count))"
+      + " observations=\(String(describing: world?.mainObservations.count)) receipt=\(receipt != nil)"
+      + " receiptActor=\(String(describing: receipt?.actor)) receiptSequence=\(String(describing: receipt?.sequence))"
+      + " evidence=\(evidence != nil) evidenceEpoch=\(evidence?.runtimeEpoch.uuidString ?? "nil")"
+      + " runtimeEpoch=\(epoch.uuidString) evidenceSequence=\(String(describing: evidence?.receipt.sequence))"
+      + " station=\(currentStation != nil) stationEnergy=\(String(describing: currentStation?.energy))"
+      + " stationActor=\(String(describing: currentStation?.physical?.identity))"
+      + " nativeIdentityPresent=\(currentStation?.nativeStationIdentity != nil)"
+      + " stationPosition=\(String(describing: currentStation?.position))"
+      + " stationBasis=\(String(describing: currentStation?.orientation))"
+      + " setupStationActor=\(String(describing: station.physical?.identity))"
+      + " anchor=\(String(describing: flight.anchors?.station.identity))"
+      + " playerSystem=\(String(describing: flight.system)) visit=\(flight.visit)"
+      + " playerPosition=\(flight.pose.position) playerBasis=\(flight.pose.orientation)"
+    let messageBytes = Array(game.message.utf8.prefix(61))
+    var prefixBytes = Array(messageBytes.prefix(60))
+    while !prefixBytes.isEmpty && String(bytes: prefixBytes, encoding: .utf8) == nil {
+      prefixBytes.removeLast()
+    }
+    let messageTruncated = messageBytes.count > prefixBytes.count
+    let prefix = String(bytes: prefixBytes, encoding: .utf8) ?? ""
+    var quotedMessage = "\""
+    for scalar in prefix.unicodeScalars {
+      switch scalar.value {
+      case 0x22: quotedMessage += "\\\""
+      case 0x5C: quotedMessage += "\\\\"
+      case 0...0x1F, 0x7F...0x9F, 0x2028...0x202E, 0x2066...0x2069:
+        quotedMessage += String(format: "\\u%04X", scalar.value)
+      default: quotedMessage += String(scalar)
+      }
+    }
+    if messageTruncated { quotedMessage += "...[truncated]" }
+    quotedMessage += "\""
+    let diagnostic = core + " messageTruncated=\(messageTruncated) messagePrefix=\(quotedMessage)"
+    if diagnostic.utf8.prefix(2049).count <= 2048 {
+      dockingDiagnostic = diagnostic
+    } else {
+      let marker = " [diagnostic-truncated]"
+      var bytes = Array(core.utf8.prefix(2048 - marker.utf8.count))
+      while !bytes.isEmpty && String(bytes: bytes, encoding: .utf8) == nil {
+        bytes.removeLast()
+      }
+      dockingDiagnostic = (String(bytes: bytes, encoding: .utf8) ?? "") + marker
+    }
+  }
+  try #require(dockingReady, "\(dockingDiagnostic)")
   try #require(game.nativeMainStationDockEvidenceIsCurrent && game.nativeAlienFittingAvailable)
   // Select inventory through the actor after the actual doorway supplies its receipt.
   await runtime.nativeCommand { $0.screen = .inventory }
@@ -879,7 +966,7 @@ extension NativeSalvageCollectionRuntimeTests {
     try #require(fitted.applied)
     await runtime.nativeCommand { game in
       game.screen = .showroom
-      game.showroom.selection = "SH013"
+      game.showroom.selection = "SH029"
       game.commander.credits = 10_000_000
     }
     let before = await runtime.snapshot()
@@ -890,7 +977,7 @@ extension NativeSalvageCollectionRuntimeTests {
     for _ in 0..<5 {
       let again = try #require(before.shipTradeQuote)
       #expect(again.balance == quote.balance && again.allowed)
-      let projected = try before.commander.projectedEquipmentTransfer(to: "SH013")
+      let projected = try before.commander.projectedEquipmentTransfer(to: "SH029")
       #expect(projected.hullInstanceID == oldHull)
       #expect(projected.alienStorageState?.current.snapshot == original)
     }
@@ -912,7 +999,7 @@ extension NativeSalvageCollectionRuntimeTests {
     let after = await runtime.snapshot()
     let newHull = try #require(after.commander.hullInstanceID)
     let next = try #require(after.commander.alienStorageState?.current.snapshot)
-    #expect(after.commander.shipID == "SH013" && newHull != oldHull)
+    #expect(after.commander.shipID == "SH029" && newHull != oldHull)
     #expect(after.commander.credits == quote.balance)
     #expect(next.sources == original.sources && next.upgrades == original.upgrades)
     let item = try #require(next.attachments.first { $0.id == id })

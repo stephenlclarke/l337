@@ -32,11 +32,12 @@ struct NativePagedSalvageRuntimeTests {
       from: pages)
     #expect(
       observedDecodedSnapshot == snapshot)
-    #expect(pages.pages.values.allSatisfy { $0.count <= AlienStoragePageCodec.maximumPageBytes })
-    let body = try #require(
-      game.bodies.first {
-        $0.physical?.salvage?.wreck == site.identity && $0.physical?.payload == nil
-      })
+    let allSatisfied = pages.pages.values.allSatisfy { $0.count <= AlienStoragePageCodec.maximumPageBytes }
+    #expect(allSatisfied)
+    let bodyCandidate = game.bodies.first {
+      $0.physical?.salvage?.wreck == site.identity && $0.physical?.payload == nil
+    }
+    let body = try #require(bodyCandidate)
     game.selectFlightTool(.salvageCutter)
     try NativePagedSalvageFixture.engageSalvageTarget(&game, body: body, section: hot.plan.section)
     let folder = try NativePagedSalvageFixture.folder()
@@ -78,7 +79,7 @@ struct NativePagedSalvageRuntimeTests {
   @Test func originalInspectionPartialBudgetAndActualMovingPoseSurviveNativeSaveAndNoWriteReload()
     async throws
   {
-    var (game, site) = try NativePagedSalvageFixture.game()
+    var (game, source) = try NativePagedSalvageFixture.empGame()
     game.selectFlightTool(.salvageCutter)
     let original = game.commander.salvageLedger
     let folder = try NativePagedSalvageFixture.folder()
@@ -96,15 +97,23 @@ struct NativePagedSalvageRuntimeTests {
     #expect(cycle.currentWorkSeconds == 0.1 && cycle.releases == 0)
     #expect(native.plans[hot.cycle.inspection.id]?.plan == hot.plan)
     #expect(ready.commander.salvageLedger == original)
-    let body = try #require(
-      ready.bodies.first {
-        $0.physical?.salvage?.wreck == site.identity && $0.physical?.payload == nil
-      })
-    #expect(native.wrecks[site.identity]?.motion.pose == ready.modelPose(of: body))
+    let bodyCandidate2 = ready.bodies.first {
+      $0.physical?.salvage?.wreck == source.identity && $0.physical?.payload == nil
+    }
+    let body = try #require(bodyCandidate2)
+    #expect(native.wrecks[source.identity]?.motion.pose == ready.modelPose(of: body))
     #expect(snapshot.sources.isEmpty && snapshot.attachments.isEmpty && snapshot.upgrades.isEmpty)
     let bytes = try Data(contentsOf: file)
     let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)
-    #expect(pointer.schemaVersion == 27)
+    let kitRecord = try #require(ready.commander.savedEMPState?.records[source.actor])
+    let kit = try #require(kitRecord.hull.body.physical?.currentNewtKitStock)
+    let receiptCandidate = kitRecord.pods.compactMap { $0.body.physical?.currentNewtKitReceipt }
+      .first { $0.issue.kitID == kit.issue.kitID }
+    let receipt = try #require(receiptCandidate)
+    try #require(kit.phase == .released && kit.remaining == 0 && kit.receipt == receipt)
+    try #require(CurrentNewtKitSave.hasClaims(ready.commander))
+    try #require(ready.commander.usesAlienStorageSaveVersion && !snapshot.world.isEmpty)
+    #expect(pointer.schemaVersion == CurrentNewtKitSave.alienVersion)
     var expectedDisk = ready.commander
     expectedDisk.npcPersistence.resetPhysicalBindings(system: ready.systemIdentity)
     expectedDisk.resetWantedCareerBindings(system: ready.systemIdentity)
@@ -129,8 +138,9 @@ struct NativePagedSalvageRuntimeTests {
   func actualActorWriterRefusalRetainsCompletedBudgetAndRetryMovesReleasedFragmentsInTheSameFrame()
     async throws
   {
-    var (game, site) = try NativePagedSalvageFixture.game()
-    let body = try #require(game.bodies.first { $0.physical?.salvage?.wreck == site.identity })
+    var (game, source) = try NativePagedSalvageFixture.empGame()
+    let bodyCandidate3 = game.bodies.first { $0.physical?.salvage?.wreck == source.identity }
+    let body = try #require(bodyCandidate3)
     game.selectFlightTool(.salvageCutter)
     let metadata = try #require(body.physical?.salvage)
     let originalSurface = game.workSurface(for: body, metadata: metadata)
@@ -179,8 +189,8 @@ struct NativePagedSalvageRuntimeTests {
     // The original ordinary producer is an independent custody/content oracle.
     // It uses the actual retained parent pose, without granting any scene admission.
     let emissionPlayerPose = refused.commander.flightSimulation.pose
-    let releaseBody = try #require(
-      refused.bodies.first { $0.physical?.identity == hot.actor })
+    let releaseBodyCandidate = refused.bodies.first { $0.physical?.identity == hot.actor }
+    let releaseBody = try #require(releaseBodyCandidate)
     let releasePhysical = try #require(releaseBody.physical)
     var oracle = SalvageLedger(seed: hot.seed)
     let inspected = oracle.inspectLoot(
@@ -232,14 +242,16 @@ struct NativePagedSalvageRuntimeTests {
       #expect(pending.lot.position == expectedPosition && pending.lot.velocity == lot.velocity)
       #expect(pending.offer == nil)
     }
-    #expect(native.pending.values.contains { $0.binding != nil })
+    let containsMatch = native.pending.values.contains { $0.binding != nil }
+    #expect(containsMatch)
     for pending in native.pending.values {
       guard let binding = pending.binding else {
         // A released lot can await safe placement without becoming a fake body.
         #expect(!retry.bodies.contains { $0.physical?.payload == .salvage(pending.lot.identity) })
         continue
       }
-      let released = try #require(retry.bodies.first { $0.physical?.identity == binding })
+      let releasedCandidate = retry.bodies.first { $0.physical?.identity == binding }
+      let released = try #require(releasedCandidate)
       let position = retry.commander.flightSimulation.pose.systemPoint(released.position)
       #expect((position - pending.lot.position - pending.lot.velocity * 0.02).length < 1e-7)
       #expect(retry.currentSalvageLot(for: released)?.identity == pending.lot.identity)
@@ -258,10 +270,10 @@ struct NativePagedSalvageRuntimeTests {
     var (game, site) = try NativePagedSalvageFixture.game()
     let observedCutterResult2 = game.fireSalvageCutter(delta: 0.1)
     #expect(observedCutterResult2)
-    let index = try #require(
-      game.bodies.firstIndex {
-        $0.physical?.salvage?.wreck == site.identity && $0.physical?.payload == nil
-      })
+    let indexCandidate = game.bodies.firstIndex {
+      $0.physical?.salvage?.wreck == site.identity && $0.physical?.payload == nil
+    }
+    let index = try #require(indexCandidate)
     let player = try #require(game.commander.flightSimulation.player)
     let allocatedAttackOrigin = game.makeAttackOrigin(owner: player)
     let origin = try #require(allocatedAttackOrigin)
@@ -278,7 +290,8 @@ struct NativePagedSalvageRuntimeTests {
     let native = try #require(game.commander.alienStorageState?.current.salvage.native)
     #expect(native.wrecks[site.identity]?.destroyedAt != nil)
     #expect(native.wrecks[site.identity]?.motion.energy.map { $0 <= 0 } == true)
-    #expect(native.depletedSections.contains { $0.wreck == site.identity })
+    let containsMatch2 = native.depletedSections.contains { $0.wreck == site.identity }
+    #expect(containsMatch2)
     let snapshot = try #require(game.commander.alienStorageState?.current.snapshot)
     game.activateNearbySalvageSites()
     #expect(game.commander.alienStorageState?.current.snapshot == snapshot)
@@ -288,79 +301,68 @@ struct NativePagedSalvageRuntimeTests {
 }
 
 extension NativePagedSalvageRuntimeTests {
-  @Test(arguments: [SalvageTool.cutter, .miningLaser])
-  func actualCutterContinuesTheOriginalImportedPartialBudgetWithoutRewritingUnknownHistory(
-    originalTool: SalvageTool
-  ) async throws {
-    var (game, site) = try NativePagedSalvageFixture.game()
+  @Test func actualCurrentHumanGeneratedCutKeepsItsPartialBudgetAcrossNoWriteReload()
+    async throws
+  {
+    var (game, site) = try NativePagedSalvageFixture.game(humanCargo: true)
     let profile = try #require(SalvageCatalogue.profile(catalogueShipID: site.catalogueShipID))
-    let body = try #require(game.bodies.first { $0.physical?.salvage?.wreck == site.identity })
-    let source = SalvageLootSource(
-      roles: profile.sourceRoles, legalValue: 0, economy: game.currentSystem.economy,
-      technology: game.currentSystem.technology, ownership: .abandoned)
-    // The old producer builds its genuine allocator and optional partial work. No
-    // inspection, issuance or acquisition date is invented for those old values.
-    for section in profile.sections {
-      let allocatedIncident = game.commander.flightSimulation.allocateIncident()
-      let operation = try #require(allocatedIncident)
-      let result = game.commander.salvageLedger.advance(
-        wreck: site.identity, section: section, pose: game.modelPose(of: body),
-        velocity: body.physical!.velocity, angularVelocity: body.physical!.angularVelocity,
-        tool: originalTool, elapsed: min(0.25, section.workSeconds / 4), operation: operation,
-        conditions: NativePagedSalvageFixture.permitted, source: source)
-      guard case .progress = result else { throw SaveError.invalidCommander }
+    #expect(!profile.sourceRoles.contains(.thargoid))
+    let sectionCandidate = profile.sections.first { $0.index == 1 }
+    let section = try #require(sectionCandidate)
+    let identity = WreckSectionIdentity(wreck: site.identity, section: section.index)
+    let parentCandidate = game.bodies.first {
+      $0.physical?.salvage?.wreck == site.identity && $0.physical?.payload == nil
     }
-    let ledger = game.commander.salvageLedger
+    let parent = try #require(parentCandidate)
+    let physical = try #require(parent.physical)
+    #expect(physical.spawnIdentity?.producer == .derelicts)
+    #expect(physical.catalogueShipID == site.catalogueShipID && physical.empSource == nil)
+    #expect(physical.npc == nil && physical.salvage == site.metadata)
+    #expect(physical.velocity.length > 0 && physical.angularVelocity.length > 0)
+    #expect(game.salvageSites.contains(site))
+    #expect(game.commander.salvageLedger.progress(identity) == 0)
     let cargo = game.commander.cargo
     let inventory = game.commander.equipmentInventory
     let credits = game.commander.credits
-    let observedCutterResult3 = game.fireSalvageCutter(delta: 0.1)
-    #expect(observedCutterResult3)
-    let hot = try #require(game.nativeSalvageWork)
-    guard case .legacy(let reference) = hot.cycle.inspection else {
-      throw SaveError.invalidCommander
-    }
-    let original = try ledger.exportNativeSection(hot.plan.section)
-    let imported = try #require(
-      game.commander.alienStorageState?.current.snapshot.world.compactMap {
-        record -> AlienStorageLegacySection? in
-        if case .legacySection(let item) = record, item.id == reference { return item }
-        return nil
-      }.first)
-    #expect(imported.plan == original.plan && imported.progress == original.progress)
-    #expect(imported.savedPartialWorkSeconds == original.partialWork)
-    #expect(imported.savedDamagedTechnology == original.damagedTechnology)
-    #expect(imported.savedLedgerLastOperation == original.lastOperation)
-    #expect(
-      hot.cycle.currentWorkSeconds
-        == min(hot.section.workSeconds, (original.partialWork ?? 0) + 0.1))
-    #expect(hot.cycle.releases == 0 && hot.cycle.lastRelease == nil)
-    #expect(hot.cycle.progress.discarded == original.progress.discarded)
-    #expect(hot.plan == original.plan && hot.seed == original.seed)
-    #expect(
-      game.commander.cargo == cargo && game.commander.equipmentInventory == inventory
-        && game.commander.credits == credits)
-    #expect(game.commander.salvageLedger.isNativeTransferred(hot.plan.section))
-    #expect(game.commander.alienStorageState?.current.snapshot.sources.isEmpty == true)
+    game.selectFlightTool(.salvageCutter)
+    let cut = game.fireSalvageCutter(delta: 0.1)
+    try #require(cut)
+    #expect(game.commander.salvageLedger.progress(identity) == 0.1)
+    #expect(game.nativeSalvageWork == nil && game.commander.alienStorageState == nil)
+    #expect(game.commander.cargo == cargo && game.commander.equipmentInventory == inventory)
+    #expect(game.commander.credits == credits)
+
     let folder = try NativePagedSalvageFixture.folder()
     defer { try? FileManager.default.removeItem(at: folder) }
     let file = folder.appendingPathComponent("commander.json")
-    let observedWorkFlush3 = game.flushNativeSalvageWork()
-    #expect(observedWorkFlush3)
     let runtime = GameRuntime(game: game)
     try await runtime.save(to: file)
+    let moved = await runtime.advance(delta: 0.02)
+    let movingParentCandidate = moved.bodies.first { $0.physical?.identity == physical.identity }
+    let movingParent = try #require(movingParentCandidate)
+    #expect(moved.modelPose(of: movingParent) != game.modelPose(of: parent))
+    #expect(moved.commander.salvageLedger.progress(identity) == 0.1)
+    try await runtime.save(to: file)
+    let saved = await runtime.snapshot()
+    let bytes = try Data(contentsOf: file)
     try await runtime.load(from: file, persistMigrations: false)
-    let restored = await runtime.snapshot()
-    let restoredCycle = try #require(
-      restored.commander.alienStorageState?.current.salvage.native.works[reference])
-    #expect(restoredCycle == hot.cycle)
-    #expect(
-      restored.commander.alienStorageState?.current.snapshot.world.contains(
-        .legacySection(imported)) == true)
+    var loaded = await runtime.snapshot()
+    #expect(loaded.commander == saved.commander && loaded.bodies == saved.bodies)
+    #expect(try Data(contentsOf: file) == bytes)
+    #expect(loaded.salvageSites == saved.salvageSites && loaded.salvageSites.contains(site))
+    #expect(loaded.commander.salvageLedger.progress(identity) == 0.1)
+    let restoredParentCandidate = loaded.bodies.first { $0.physical?.identity == physical.identity }
+    let restoredParent = try #require(restoredParentCandidate)
+    #expect(restoredParent.physical?.spawnIdentity == physical.spawnIdentity)
+    #expect(restoredParent.physical?.salvage == site.metadata)
+    let continued = loaded.fireSalvageCutter(delta: 0.1)
+    try #require(continued)
+    #expect(loaded.commander.salvageLedger.progress(identity) == 0.2)
+    #expect(loaded.nativeSalvageWork == nil && loaded.commander.alienStorageState == nil)
+    #expect(loaded.commander.cargo == cargo && loaded.commander.equipmentInventory == inventory)
+    #expect(loaded.commander.credits == credits)
   }
-}
 
-extension NativePagedSalvageRuntimeTests {
   @Test func genuineCullRevisitAndReloadPreserveTheExactRetainedMotionAndPartialBudget()
     async throws
   {
@@ -368,11 +370,13 @@ extension NativePagedSalvageRuntimeTests {
     let observedCutterResult4 = game.fireSalvageCutter(delta: 0.1)
     #expect(observedCutterResult4)
     let hot = try #require(game.nativeSalvageWork)
-    let parent = try #require(game.bodies.first { $0.physical?.salvage?.wreck == site.identity })
+    let parentCandidate2 = game.bodies.first { $0.physical?.salvage?.wreck == site.identity }
+    let parent = try #require(parentCandidate2)
     let actor = try #require(parent.physical?.identity)
     let pose = game.commander.flightSimulation.pose
     game.tick(delta: 0.1)
-    let moved = try #require(game.bodies.first { $0.physical?.identity == actor })
+    let movedCandidate = game.bodies.first { $0.physical?.identity == actor }
+    let moved = try #require(movedCandidate)
     #expect((game.modelPose(of: moved).position - game.modelPose(of: parent).position).length > 0)
     NativePagedSalvageFixture.moveObserver(
       &game, to: .init(position: pose.position + .init(50000, 0, 0), orientation: pose.orientation))
@@ -386,7 +390,8 @@ extension NativePagedSalvageRuntimeTests {
         .currentWorkSeconds == 0.1)
     NativePagedSalvageFixture.moveObserver(&game, to: pose)
     game.activateNearbySalvageSites()
-    let returned = try #require(game.bodies.first { $0.physical?.salvage?.wreck == site.identity })
+    let returnedCandidate = game.bodies.first { $0.physical?.salvage?.wreck == site.identity }
+    let returned = try #require(returnedCandidate)
     #expect(returned.physical?.identity != actor)
     #expect((game.modelPose(of: returned).position - parked.motion.pose.position).length < 1e-8)
     #expect(
@@ -414,8 +419,8 @@ extension NativePagedSalvageRuntimeTests {
     let loadedView = try #require(loaded.commander.alienStorageState?.current.salvage.native)
     let originalInspection = try #require(loadedView.inspections[hot.plan.section])
     let originalCycle = try #require(loadedView.works[hot.cycle.inspection.id])
-    let loadedParent = try #require(
-      loaded.bodies.first { $0.physical?.salvage?.wreck == site.identity })
+    let loadedParentCandidate = loaded.bodies.first { $0.physical?.salvage?.wreck == site.identity }
+    let loadedParent = try #require(loadedParentCandidate)
     let loadedActor = try #require(loadedParent.physical?.identity)
     let observer = loaded.commander.flightSimulation.pose
     var revisiting = loaded
@@ -459,10 +464,11 @@ extension NativePagedSalvageRuntimeTests {
   }
 
   @Test func coldSceneCensusRejectsMissingDuplicateAndReboundNativeWreckActors() throws {
-    var (game, site) = try NativePagedSalvageFixture.game()
+    var (game, source) = try NativePagedSalvageFixture.empGame()
     let observedPosePersistence = game.persistSalvagePoses()
     #expect(observedPosePersistence)
-    let body = try #require(game.bodies.first { $0.physical?.salvage?.wreck == site.identity })
+    let bodyCandidate4 = game.bodies.first { $0.physical?.salvage?.wreck == source.identity }
+    let body = try #require(bodyCandidate4)
     #expect(
       game.commander.nativeSalvageSceneIsConsistent(
         game.bodies, docked: false, atColdBoundary: true))
@@ -500,8 +506,19 @@ extension NativePagedSalvageRuntimeTests {
   func invalidActualMotionRefusesColdBoundariesWithoutLosingTheHotSession(boundary: String)
     async throws
   {
-    var (game, site) = try NativePagedSalvageFixture.game()
+    var (game, source) = try NativePagedSalvageFixture.empGame()
     if boundary == "galactic" {
+      // The authentic EMP unit scene occupies all three utility mounts. Store
+      // its retained weapon through the normal inventory path before fitting
+      // this case's existing drive; the source, hardware and bank remain owned.
+      let inventory = try #require(game.commander.equipmentInventory)
+      let emp = try #require(game.currentEMPPlayerModule())
+      try game.commander.storeEquipment(emp, expectedRevision: inventory.revision)
+      let storedInventory = try #require(game.commander.equipmentInventory)
+      let storedCandidate = storedInventory.items.first { $0.id == emp.id }
+      let stored = try #require(storedCandidate)
+      #expect(stored == emp.moved(to: nil))
+      #expect(Set(storedInventory.items.map(\.id)) == Set(inventory.items.map(\.id)))
       try game.commander.grantEquipment(
         "Galactic Hyperdrive", at: .utility(.galacticHyperdrive),
         provenance: .grant("cold boundary test"))
@@ -512,10 +529,10 @@ extension NativePagedSalvageRuntimeTests {
     #expect(observedPosePersistence2)
     let observedCutterResult5 = game.fireSalvageCutter(delta: 0.1)
     #expect(observedCutterResult5)
-    let index = try #require(
-      game.bodies.firstIndex {
-        $0.physical?.salvage?.wreck == site.identity && $0.physical?.payload == nil
-      })
+    let indexCandidate2 = game.bodies.firstIndex {
+      $0.physical?.salvage?.wreck == source.identity && $0.physical?.payload == nil
+    }
+    let index = try #require(indexCandidate2)
     game.bodies[index].physical?.angularVelocity = .init(.infinity, 0, 0)
     let original = game.commander
     let work = try #require(game.nativeSalvageWork)

@@ -1,0 +1,12 @@
+{
+  "status": "FIRST_FROZEN_BEFORE_GENERATED_TRADER_CARGO_RESTORATION",
+  "beforeCommit": "557cd70a4f832a94c22dbaf6bd63644afb362b93",
+  "file": "Sources/L337Core/EncounterDirector.swift",
+  "bytes": 10698,
+  "sha256": "814ab00c8d9b5d9c03affcc2da8fb305062973f1c035b88d628b8cec1a719808",
+  "exactBefore": "if role == .trader, count != 1 {",
+  "exactAfter": "if role == .trader {",
+  "scope": "Remove count condition ONLY from pre-existing ordinaryCargo producer. No other source/weight/draw/crew/law/stock/fixture change.",
+  "reason": "SAME G2 source finding: d960 unintentionally suppressed generated cargo for singleton traders, including Bison-selected sources. Empty controlled hostile fixture remains self-contained.",
+  "validation": "SOURCE ONLY UNCOMPILED UNRUN; observed native failure not claimed"
+}

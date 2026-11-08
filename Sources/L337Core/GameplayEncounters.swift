@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 /// Original synchronous beam queries finish before the live damage path opens.
 private final class GameplayNPCBeamPreparation {
@@ -35,15 +36,106 @@ private final class GameplayNPCBeamEmission {
   }
 }
 
+/// Only actual producer outputs and allocator receipts are observed. No replay or recheck.
+final class GameplayEncounterBirthDiagnostic: Sendable {
+  struct Request: Sendable {
+    let identity: SpawnIdentity
+    let catalogueShipID: String?
+    let configuration: String?
+  }
+  struct Observation: Sendable {
+    let openingDecision: UInt64
+    let decision: UInt64
+    let admitted: UInt64
+    let time: Double
+    let requests: [Request]
+    let receipts: [SpawnReceipt]
+  }
+  private let state = OSAllocatedUnfairLock(initialState: [Observation]())
+
+  @inline(never)
+  func record(openingDecision: UInt64, director: borrowing EncounterDirector,
+    plan: borrowing EncounterPlan, receipts: [SpawnReceipt], time: Double) {
+    guard director.decisionCount != openingDecision || !receipts.isEmpty else { return }
+    let observation = Observation(openingDecision: openingDecision, decision: director.decisionCount,
+      admitted: director.admittedCount, time: time,
+      requests: plan.batches.flatMap(\.requests).prefix(32).map {
+        .init(identity: $0.identity, catalogueShipID: $0.catalogueShipID,
+          configuration: $0.currentNewtKitConfiguration)
+      }, receipts: Array(receipts.prefix(32)))
+    state.withLock {
+      if $0.count == 8 { $0.removeFirst() }
+      $0.append(observation)
+    }
+  }
+
+  var observations: [Observation] { state.withLock { $0 } }
+
+  func detail() -> String {
+    observations.map { observation in
+      let requests = observation.requests.map {
+        "spawn=\($0.identity),ship=\($0.catalogueShipID ?? "nil"),kit=\($0.configuration ?? "nil")"
+      }.joined(separator: ";")
+      let receipts = observation.receipts.map {
+        "spawn=\($0.request),actor=\(String(describing: $0.actor)),refusal=\(String(describing: $0.refusal))"
+      }.joined(separator: ";")
+      return "time=\(observation.time),decisions=\(observation.openingDecision)->\(observation.decision)"
+        + ",admitted=\(observation.admitted),requests=[\(requests)],receipts=[\(receipts)]"
+    }.joined(separator: " | ")
+  }
+}
+
+/// Values that remain necessary after the encounter producer and source checks return.
+private final class GameplayIntentFrame {
+  let context: EncounterContext
+  let intents: [NPCIntent]
+  let bornNewtActors: Set<ActorIdentity>
+
+  @inline(never)
+  init(context: consuming EncounterContext, intents: [NPCIntent], bornNewtActors: Set<ActorIdentity>) {
+    self.context = consume context
+    self.intents = intents
+    self.bornNewtActors = bornNewtActors
+  }
+}
+
+private struct GameplayNPCBeamRequest {
+  let bodyID: Int
+  let target: ActorIdentity
+  let mining: Bool
+}
+
+private struct GameplayNPCBeamAim {
+  let index: Int
+  let owner: ActorIdentity
+  let position: Vector3
+  let direction: Vector3
+  let range: Double
+  let alignment: Double
+  let distance: Double
+}
+
 extension Game {
+  @inline(never)
   mutating func advanceGameplayEncounters(delta: Double) {
+    guard let frame = prepareGameplayIntentFrame(delta: delta) else { return }
+    advanceClassicMissionActors(context: frame.context, delta: delta)
+    for intent in frame.intents {
+      if frame.bornNewtActors.contains(intent.actor) { continue }
+      applyGameplayIntent(intent, context: frame.context, delta: delta)
+    }
+  }
+
+  @inline(never)
+  private mutating func prepareGameplayIntentFrame(delta: Double) -> GameplayIntentFrame? {
     ensurePhysicalActors()
+    let openingActors = Set(bodies.compactMap { $0.physical?.identity })
     advanceEMPActors()
     advanceNPCResources(delta: delta)
     _ = persistNPCStates()
     advanceUnboundNPCs()
     admitPersistentNPCs()
-    guard let context = gameplayContext() else { return }
+    guard let context = gameplayContext() else { return nil }
     let hasStation = bodies.contains { $0.id == 0 && $0.hull == .station && $0.energy > 0 }
     let security: SecurityPlan
     if hasStation {
@@ -59,10 +151,14 @@ extension Game {
     for notice in security.notices where message != notice.text || messageTime <= 0 {
       notify(notice.text)
     }
-    guard let current = gameplayContext() else { return }
+    guard let current = gameplayContext() else { return nil }
     var director = commander.encounterDirector ?? EncounterDirector(context: current)
+    let openingDecision = director.decisionCount
     let plan = director.advance(context: current)
-    director.acknowledge(receipts: admitEncounterPlan(plan))
+    let receipts = admitEncounterPlan(plan)
+    director.acknowledge(receipts: receipts)
+    nativeEncounterBirthDiagnostic?.record(openingDecision: openingDecision, director: director,
+      plan: plan, receipts: receipts, time: current.physicalTime)
     commander.encounterDirector = director
     activateNearbyMiningFields()
     activateNearbySalvageSites()
@@ -70,45 +166,57 @@ extension Game {
     admitPendingCargo()
     admitPendingSalvage()
     if nativeCrimboLifecycleAvailable { advanceNativeCrimbo(delta: delta) }
-    guard let live = gameplayContext() else { return }
+    guard let live = gameplayContext() else { return nil }
     let intents = (TrafficIntent.intents(context: live) + security.encounters.intents).filter {
       !isNativeCrimboMember($0.actor)
     }
+    let bornNewtActors = Set(bodies.compactMap { body -> ActorIdentity? in
+      guard let physical = body.physical, !openingActors.contains(physical.identity),
+        physical.currentNewtKitStock != nil || physical.currentNewtKitReceipt != nil
+      else { return nil }
+      return physical.identity
+    })
     for index in bodies.indices where bodies[index].physical?.spawnIdentity != nil {
+      if let actor = bodies[index].physical?.identity, bornNewtActors.contains(actor) { continue }
       let cooldown = max(0, (bodies[index].physical?.laserCooldown ?? 0) - delta)
       bodies[index].physical?.laserCooldown = cooldown
     }
-    advanceClassicMissionActors(context: live, delta: delta)
-    for intent in intents { applyGameplayIntent(intent, context: live, delta: delta) }
+    return .init(context: live, intents: intents, bornNewtActors: bornNewtActors)
   }
 
   /// Retained classic hulls use native steering and weapons, with one later translation owner.
   /// Profiled craft keep their authored driver; unjoined bodies gain no mission AI authority.
+  @inline(never)
   private mutating func advanceClassicMissionActors(context: EncounterContext, delta: Double) {
     let bodyIDs = bodies.filter {
       $0.energy > 0 && $0.scriptNPC == nil && $0.scriptShot == nil
         && $0.missionActorID != nil && $0.physical?.spawnIdentity != nil
     }.map(\.id)
     for bodyID in bodyIDs {
-      guard let descriptor = currentMissionActorDescriptor(bodyID: bodyID),
-        let body = bodies.first(where: { $0.id == bodyID }),
-        let binding = try? MissionNativeBridge.bindActor(
-          descriptor: descriptor, body: body, context: context),
-        let instance = commander.scriptState.instances[descriptor.instanceID],
-        let pack = scriptPack(for: instance),
-        let encounter = pack.manifest.encounters?.first(where: { $0.id == descriptor.encounterID }),
-        let declared = encounter.actors.first(where: { $0.id == descriptor.alias }),
-        let action = body.physical?.npc?.intention
-      else { continue }
-      switch action {
-      case .engage(let target):
-        guard declared.hostile, target == context.player.identity else { continue }
-      case .navigate, .flee, .dock: break
-      case .mine, .scoop: continue
-      }
-      applyGameplayIntent(
-        .init(actor: binding.nativeActor, action: action), context: context, delta: delta)
+      guard let intent = classicMissionIntent(bodyID: bodyID, context: context) else { continue }
+      applyGameplayIntent(intent, context: context, delta: delta)
     }
+  }
+
+  @inline(never)
+  private func classicMissionIntent(bodyID: Int, context: EncounterContext) -> NPCIntent? {
+    guard let descriptor = currentMissionActorDescriptor(bodyID: bodyID),
+      let body = bodies.first(where: { $0.id == bodyID }),
+      let binding = try? MissionNativeBridge.bindActor(
+        descriptor: descriptor, body: body, context: context),
+      let instance = commander.scriptState.instances[descriptor.instanceID],
+      let pack = scriptPack(for: instance),
+      let encounter = pack.manifest.encounters?.first(where: { $0.id == descriptor.encounterID }),
+      let declared = encounter.actors.first(where: { $0.id == descriptor.alias }),
+      let action = body.physical?.npc?.intention
+    else { return nil }
+    switch action {
+    case .engage(let target):
+      guard declared.hostile, target == context.player.identity else { return nil }
+    case .navigate, .flee, .dock: break
+    case .mine, .scoop: return nil
+    }
+    return .init(actor: binding.nativeActor, action: action)
   }
 
   mutating func activateNearbyMiningFields() {
@@ -171,20 +279,37 @@ extension Game {
     commander.miningLedger.acknowledge(receipts: receipts)
   }
 
+  @inline(never)
   private mutating func applyGameplayIntent(
     _ intent: NPCIntent, context: EncounterContext, delta: Double
   ) {
+    guard let index = gameplayIntentEnabledIndex(intent, context: context),
+      let request = prepareGameplayIntent(intent, index: index, context: context, delta: delta)
+    else { return }
+    emitGameplayNPCBeam(bodyID: request.bodyID, target: request.target, context: context, mining: request.mining)
+  }
+
+  @inline(never)
+  private func gameplayIntentEnabledIndex(_ intent: NPCIntent, context: EncounterContext) -> Int? {
     guard
       let index = bodies.firstIndex(where: {
         $0.physical?.identity == intent.actor && $0.energy > 0
           && $0.physical?.spawnIdentity != nil
-      }), let actor = context.actors.first(where: { $0.identity == intent.actor })
-    else { return }
+      }), context.actors.contains(where: { $0.identity == intent.actor })
+    else { return nil }
     guard
       bodies[index].physical?.suspendedNPCIntention == nil
         || bodies[index].physical?.npc?.intention != nil
-    else { return }
-    guard !isEMPDisabled(bodies[index]) else { return }
+    else { return nil }
+    guard !isEMPDisabled(bodies[index]) else { return nil }
+    return index
+  }
+
+  @inline(never)
+  private mutating func prepareGameplayIntent(
+    _ intent: NPCIntent, index: Int, context: EncounterContext, delta: Double
+  ) -> GameplayNPCBeamRequest? {
+    guard let actor = context.actors.first(where: { $0.identity == intent.actor }) else { return nil }
     bodies[index].hostile = intent.action == .engage(context.player.identity)
     // A fleeing trader keeps its original destination for later recovery.
     if bodies[index].physical?.npc?.role != .trader {
@@ -195,31 +320,38 @@ extension Game {
       steerGameplayActor(
         index: index, toward: destination, speed: speed, context: context, delta: delta)
     case .flee(let identity):
-      guard let threat = gameplayActor(identity, context: context) else { return }
+      guard let threat = gameplayActor(identity, context: context) else { return nil }
       let away = (actor.position - threat.position).unit
       steerGameplayActor(
         index: index, toward: actor.position + away * 6000,
         speed: actor.maximumSpeedUnitsPerSecond, context: context, delta: delta)
     case .engage(let identity):
+      observeNPCBeam(.engage, actor: intent.actor, position: bodies[index].position)
       guard let target = gameplayActor(identity, context: context), target.energy > 0 else {
-        return
+        observeNPCBeam(.targetUnavailable, actor: intent.actor)
+        return nil
+      }
+      var destination = target.position
+      if identity == context.player.identity {
+        let surface = Self.nativePlayerSurfaceAim(
+          from: bodies[index].position, mesh: nativeGuidanceStoredPlayerMesh())
+        destination = storedFlightSimulation().pose.systemPoint(surface)
       }
       steerGameplayActor(
-        index: index, toward: target.position, speed: actor.maximumSpeedUnitsPerSecond,
+        index: index, toward: destination, speed: actor.maximumSpeedUnitsPerSecond,
         stopDistance: 500, context: context, delta: delta)
-      emitGameplayNPCBeam(bodyID: bodies[index].id, target: identity, context: context)
+      return .init(bodyID: bodies[index].id, target: identity, mining: false)
     case .mine(let identity):
       guard let rock = context.actors.first(where: { $0.rock == identity && $0.energy > 0 }) else {
-        return
+        return nil
       }
       steerGameplayActor(
         index: index, toward: rock.position, speed: actor.maximumSpeedUnitsPerSecond,
         stopDistance: 250, context: context, delta: delta)
-      emitGameplayNPCBeam(
-        bodyID: bodies[index].id, target: rock.identity, context: context, mining: true)
+      return .init(bodyID: bodies[index].id, target: rock.identity, mining: true)
     case .scoop(let payload):
       guard let pod = context.actors.first(where: { $0.payload == payload && $0.energy > 0 }) else {
-        return
+        return nil
       }
       steerGameplayActor(
         index: index, toward: pod.position, speed: min(80, actor.maximumSpeedUnitsPerSecond),
@@ -228,7 +360,7 @@ extension Game {
         collectOreForNPC(actor: intent.actor, payload: payload, context: context)
       }
     case .dock(let station):
-      guard station == context.anchors.station.identity else { return }
+      guard station == context.anchors.station.identity else { return nil }
       let permission = commander.stationSecurity.dockingPermission(
         for: actor.identity, context: context)
       let destination =
@@ -240,12 +372,13 @@ extension Game {
       if permission.allowed && (actor.position - destination).length < 80 {
         // Departure is a traffic transition, never a death or bounty settlement.
         let departing = bodies[index]
-        guard retireRecoveredEMPActor(actor.identity, reason: .docked) else { return }
+        guard retireRecoveredEMPActor(actor.identity, reason: .docked) else { return nil }
         _ = commander.npcPersistence.terminal(actor: actor.identity, reason: .docked)
         clearRemovedTarget(departing)
         bodies.removeAll { $0.id == departing.id }
       }
     }
+    return nil
   }
 
   private func gameplayActor(_ identity: ActorIdentity, context: EncounterContext) -> ActorSnapshot?
@@ -261,7 +394,16 @@ extension Game {
     guard let physical = bodies[index].physical,
       let actor = context.actors.first(where: { $0.identity == physical.identity })
     else { return }
-    let craft = ShipCatalogue.nativeShip(actor.hull)?.game
+    let craft: ShipPerformance?
+    if let id = actor.catalogueShipID, OriginalBisonActivation.contains(id) {
+      guard let source = OriginalBisonActivation.source(for: id) else { return }
+      craft = source.game
+    } else if let id = actor.catalogueShipID {
+      guard let source = OriginalFleetRuntimeHullSource.source(for: id) else { return }
+      craft = source.performance
+    } else {
+      craft = ShipCatalogue.nativeShip(actor.hull)?.game
+    }
     let acceleration = max(1, (craft?.acceleration ?? 2) * 18)
     let offset = destination - actor.position
     let desired = offset.unit
@@ -302,24 +444,33 @@ extension Game {
   private mutating func prepareGameplayNPCBeam(
     bodyID: Int, target identity: ActorIdentity, context: borrowing EncounterContext, mining: Bool
   ) -> GameplayNPCBeamPreparation? {
-    guard let index = bodies.firstIndex(where: { $0.id == bodyID }),
-      !isEMPDisabled(bodies[index]),
-      let actor = bodies[index].physical, actor.laserCooldown <= 0, bodies[index].energy > 1,
-      actor.npc?.resources?.canFire ?? true,
-      let target = gameplayActor(identity, context: context)
+    guard let index = gameplayNPCBeamEnabledIndex(bodyID: bodyID),
+      let aim = prepareGameplayNPCBeamAim(index: index, target: identity, context: context, mining: mining)
     else { return nil }
-    let position = bodies[index].position
-    let destination = commander.flightSimulation.pose.shipPoint(target.position)
-    let direction = destination - position
-    let range = mining ? 500.0 : 1500.0
-    // Acquisition permits a near-forward target; the fixed front mount still fires forward.
-    let beamDirection = bodies[index].orientation.z.unit
-    guard direction.length <= range,
-      bodies[index].orientation.z.dot(direction.unit) > 0.98,
-      let contact = try? nearestMissionCollision(
-        from: position, direction: beamDirection, range: range, radius: 0,
+    return prepareAimedGameplayNPCBeam(aim, bodyID: bodyID, target: identity, context: context, mining: mining)
+  }
+
+  @inline(never)
+  private mutating func prepareAimedGameplayNPCBeam(
+    _ aim: GameplayNPCBeamAim, bodyID: Int, target identity: ActorIdentity,
+    context: borrowing EncounterContext, mining: Bool
+  ) -> GameplayNPCBeamPreparation? {
+    let contact: MissionCollisionContact
+    do {
+      guard let candidate = try nearestMissionCollision(
+        from: aim.position, direction: aim.direction, range: aim.range, radius: 0,
         excludingBodyIDs: [bodyID], includePlayer: true)
-    else { return nil }
+      else {
+        observeNPCBeam(.rayMiss, actor: aim.owner, position: aim.position,
+          alignment: aim.alignment, distance: aim.distance)
+        return nil
+      }
+      contact = candidate
+    } catch {
+      observeNPCBeam(.rayQueryRefused, actor: aim.owner, position: aim.position,
+        alignment: aim.alignment, distance: aim.distance)
+      return nil
+    }
     let hit = contact.hit
     let intended =
       identity == context.player.identity
@@ -337,28 +488,97 @@ extension Game {
       && incoming?.physical?.identity.system == system
       && incoming?.physical?.identity.visit == visit
       && incoming?.physical?.ordnance?.termination == nil
-      && incoming?.physical?.ordnance?.target == actor.identity
+      && incoming?.physical?.ordnance?.target == aim.owner
       && incoming?.physical?.ordnance?.origin.owner == identity
       && incoming?.physical?.ordnance?.origin.ordnance == incoming?.physical?.identity
-    let flightBeforeEmission = commander.flightSimulation
-    guard intended || interceptsIncomingMissile else { return nil }
+    let flightBeforeEmission = storedFlightSimulation()
+    guard intended || interceptsIncomingMissile else {
+      observeNPCBeam(.obstructed, actor: aim.owner, position: aim.position,
+        alignment: aim.alignment, contact: hit.target)
+      return nil
+    }
     let laser: LaserKind = mining ? .mining : .pulse
     if contact.selectedTargetBody?.scriptNPC != nil {
       do {
         _ = try preflightNativeMissionContact(
-          contact, owner: actor.identity, damage: laser.damage, laser: laser, mount: .front)
-      } catch { return nil }
+          contact, owner: aim.owner, damage: laser.damage, laser: laser, mount: .front)
+      } catch {
+        observeNPCBeam(.preflight, actor: aim.owner, contact: hit.target)
+        return nil
+      }
     }
     return .init(
-      index: index, owner: actor.identity, position: position, contact: contact,
+      index: aim.index, owner: aim.owner, position: aim.position, contact: contact,
       flightBeforeEmission: flightBeforeEmission, laser: laser)
+  }
+
+  @inline(never)
+  private mutating func gameplayNPCBeamEnabledIndex(bodyID: Int) -> Int? {
+    guard let index = bodies.firstIndex(where: { $0.id == bodyID }), bodies[index].nativeGeometryHasPhysical()
+    else { return nil }
+    guard !isEMPDisabled(bodies[index]) else {
+      observeNPCBeam(.readiness, actor: bodies[index].nativeGeometryIdentity()!, position: bodies[index].position)
+      return nil
+    }
+    return index
+  }
+
+  @inline(never)
+  private mutating func prepareGameplayNPCBeamAim(
+    index: Int, target identity: ActorIdentity, context: borrowing EncounterContext, mining: Bool
+  ) -> GameplayNPCBeamAim? {
+    guard let actor = bodies[index].physical else { return nil }
+    guard actor.laserCooldown <= 0, bodies[index].energy > 1,
+      actor.npc?.resources?.canFire ?? true
+    else {
+      observeNPCBeam(.readiness, actor: actor.identity, position: bodies[index].position)
+      return nil
+    }
+    guard let target = gameplayActor(identity, context: context) else {
+      observeNPCBeam(.targetUnavailable, actor: actor.identity)
+      return nil
+    }
+    if let npc = actor.npc, npc.role != .mission, let id = actor.catalogueShipID {
+      guard NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+        catalogueShipID: id, hull: bodies[index].hull, npc: npc, missiles: bodies[index].missiles)
+      else {
+        observeNPCBeam(.source, actor: actor.identity)
+        return nil
+      }
+    }
+    if mining, let id = actor.catalogueShipID {
+      guard let source = OriginalFleetRuntimeHullSource.source(for: id),
+        source.performance.workTools?.contains(.miningLaser) == true
+      else {
+        observeNPCBeam(.tool, actor: actor.identity)
+        return nil
+      }
+    }
+    let position = bodies[index].position
+    let destination = storedFlightSimulation().pose.shipPoint(target.position)
+    let direction = destination - position
+    let range = mining ? 500.0 : 1500.0
+    // Acquisition permits a near-forward target; the fixed front mount still fires forward.
+    let beamDirection = bodies[index].orientation.z.unit
+    let distance = direction.length
+    let alignment = bodies[index].orientation.z.dot(direction.unit)
+    guard distance <= range, alignment > 0.98 else {
+      observeNPCBeam(.acquisition, actor: actor.identity, position: position,
+        alignment: alignment, distance: distance)
+      return nil
+    }
+    return .init(index: index, owner: actor.identity, position: position,
+      direction: beamDirection, range: range, alignment: alignment, distance: distance)
   }
 
   @inline(never)
   private mutating func prepareGameplayNPCBeamEmission(_ preparation: GameplayNPCBeamPreparation)
     -> GameplayNPCBeamEmission?
   {
-    guard let origin = makeAttackOrigin(owner: preparation.owner) else { return nil }
+    guard let origin = makeAttackOrigin(owner: preparation.owner) else {
+      observeNPCBeam(.origin, actor: preparation.owner, contact: preparation.contact.hit.target)
+      return nil
+    }
     return .init(preparation: preparation, origin: origin)
   }
 
@@ -373,14 +593,19 @@ extension Game {
           emissionPosition: gameplayNPCBeamWorldPosition(preparation.position))
       else {
         commander.flightSimulation = preparation.flightBeforeEmission
+        observeNPCBeam(.impact, actor: preparation.owner, contact: preparation.contact.hit.target,
+          emission: emission.origin.emissionID)
         return false
       }
       projectScriptMissionImpact(receipt)
     } else {
-      applyCombatHit(
+      let incident = applyCombatHit(
         preparation.contact.hit, origin: emission.origin, kind: .laser,
         damage: preparation.laser.damage, laser: preparation.laser, mount: .front,
         emissionPosition: gameplayNPCBeamWorldPosition(preparation.position))
+      observeNPCBeam(incident == nil ? .recordRefused : .recorded, actor: preparation.owner,
+        contact: preparation.contact.hit.target, emission: emission.origin.emissionID,
+        incident: incident?.id)
     }
     return true
   }

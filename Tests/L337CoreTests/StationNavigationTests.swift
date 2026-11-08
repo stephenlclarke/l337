@@ -3,8 +3,9 @@ import Testing
 
 @testable import L337Core
 
-private func stationNavigationGame(_ position: Vector3) -> Game {
+private func stationNavigationGame(_ position: Vector3) throws -> Game {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   game.messageTime = 0
@@ -22,7 +23,7 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
 }
 
 @Test func stationBearingsUseAllFourCamerasWithoutMirroringTheWorld() throws {
-  var game = stationNavigationGame(.init(300, 200, 1000))
+  var game = try stationNavigationGame(.init(300, 200, 1000))
   let expected: [(Screen, Vector3, Double)] = [
     (.front, .init(300, 200, 1000), 1), (.rear, .init(-300, 200, -1000), -1),
     (.left, .init(1000, 200, -300), 1), (.right, .init(-1000, 200, 300), -1),
@@ -46,7 +47,7 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
 }
 
 @Test func aRealFlyPastMovesTheStationAcrossSideCamerasAndThenIntoTheRearView() throws {
-  var game = stationNavigationGame(.init(1000, 200, 300))
+  var game = try stationNavigationGame(.init(1000, 200, 300))
   game.speed = 32
   let initial = game.bodies[0].position
   game.screen = .right
@@ -74,7 +75,7 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
 }
 
 @Test func stationNavigationPersistsBeyondScannerRangeWithoutRevealingOtherTargets() throws {
-  var game = stationNavigationGame(.init(200_000, -80_000, -120_000))
+  var game = try stationNavigationGame(.init(200_000, -80_000, -120_000))
   game.bodies.append(.init(id: 7, hull: .constrictor, position: .init(100, 0, 1000), hostile: true))
   game.weaponsTargetID = 7
   #expect(game.commander.targetingTier == nil && game.targetInformation == nil)
@@ -92,7 +93,7 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
 
 @Test func stationChoiceUsesSelectedStationThenMainThenNearestAndRejectsDeadOrMissingBodies() throws
 {
-  var game = stationNavigationGame(.init(0, 0, 50_000))
+  var game = try stationNavigationGame(.init(0, 0, 50_000))
   let outpost = SpaceBody(id: 9, hull: .station, position: .init(500, 100, 1000))
   game.bodies.append(outpost)
   #expect(game.stationNavigation?.stationID == 0)
@@ -115,7 +116,7 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
   #expect(game.stationNavigation == nil)
   game.bodies = []
   #expect(game.stationNavigation == nil)
-  game = stationNavigationGame(.init(0, 0, 500))
+  game = try stationNavigationGame(.init(0, 0, 500))
   game.screen = .status
   #expect(game.stationNavigation == nil)
   game.screen = .front
@@ -124,7 +125,7 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
 }
 
 @Test func stationCueAvoidsTargetCameraAndFlightOverlaysAtTheSmallestWindow() throws {
-  var game = stationNavigationGame(.init(30_000, 40_000, -50_000))
+  var game = try stationNavigationGame(.init(30_000, 40_000, -50_000))
   try game.commander.grantEquipment(
     TargetingTier.military.equipmentName, at: .targetingCore,
     provenance: .grant("station cue targeting fixture"))
@@ -158,7 +159,7 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
 }
 
 @Test func stationCompassShowsDirectlyAheadAsternVerticalAndCrowdedHeaderFallback() throws {
-  var game = stationNavigationGame(.init(0, 0, 16_000))
+  var game = try stationNavigationGame(.init(0, 0, 16_000))
   var navigation = try #require(game.stationNavigation)
   #expect(navigation.arrowDirection == .init(0, 0))
   game.bodies[0].position = .init(0, 0, -16_000)
@@ -192,7 +193,7 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
 }
 
 @Test func stationCompassCentersWhenTinyAlignmentResidualsReadAsZeroDegrees() throws {
-  var game = stationNavigationGame(.init(-0.00001, 0.00002, 526))
+  var game = try stationNavigationGame(.init(-0.00001, 0.00002, 526))
   let layout = CockpitLayout(game: game, width: 512, height: 518)
   for position in [Vector3(-0.00001, 0.00002, 526), .init(4, -4, 526)] {
     game.bodies[0].position = position
@@ -209,4 +210,58 @@ private func stationLabels(_ navigation: StationNavigation, layout: CockpitLayou
   }
   game.bodies[0].position = .init(0, 0, -526)
   #expect(try #require(game.stationNavigation).arrowDirection == .init(1, 0))
+}
+
+@Test func manualDockingCueUsesTheRealPortWhenTheApertureIsOutsideTheViewport() throws {
+  var game = try stationNavigationGame(.init(0, 0, 747))
+  game.screen = .front
+  #expect(game.stationNavigation?.dockingLines == ["PORT ON FAR SIDE"])
+
+  game.bodies[0].position = .init(0, 0, 139.03)
+  game.bodies[0].orientation.y = .init(0, -1, 0)
+  game.bodies[0].orientation.z = .init(0, 0, -1)
+  game.bodies[0].rotation = .pi - 41 * .pi / 180
+  game.bodies[0].rotationRate = 0.3
+  let misaligned = ["PORT ROLL CCW 41.0 DEG", "MATCH SPIN CW 17.2 DEG/S"]
+  #expect(game.stationNavigation?.dockingLines == misaligned)
+  #expect(game.commander.targetingTier == nil)
+  let layout = CockpitLayout(game: game, width: 512, height: 518)
+  let frame = Display.cockpit(game, width: 512, height: 518)
+  for line in misaligned {
+    let label = try #require(frame.labels.first { $0.text == line })
+    #expect(label.bounds.x >= 12 && label.bounds.maxX <= 500)
+    #expect(label.bounds.y >= layout.flightClip.y && label.bounds.maxY <= layout.flightClip.maxY)
+  }
+
+  game.spin.toggleMode()
+  game.spin.begin(.clockwise)
+  let minimum = CockpitLayout(game: game, width: 320, height: 320)
+  var crowded = Frame()
+  crowded.canvas = .init(x: 0, y: 0, width: minimum.width, height: minimum.height)
+  crowded.flightClip = minimum.flightClip
+  crowded.label("Front view", 12, 8, scale: minimum.font)
+  let clip = minimum.flightClip
+  crowded.graphics.append(
+    .panel(
+      .init(
+        vertices: [
+          .init(clip.x, clip.y), .init(clip.maxX, clip.y),
+          .init(clip.maxX, clip.maxY), .init(clip.x, clip.maxY),
+        ], colour: Ink.black.rawValue)))
+  Display.stationDirection(game, layout: minimum, into: &crowded)
+  let header = try #require(crowded.labels.last)
+  #expect(header.text == "ROLL CCW 41.0/SPIN CW 17.2")
+  #expect(header.y == 8 && header.bounds.maxX <= 308)
+  #expect(header.bounds.x > crowded.labels[0].bounds.maxX)
+
+  game.bodies[0].position.z = 135
+  #expect(!game.bodies[0].canEnter(roll: 0.3, speed: 20))
+  game.bodies[0].rotation = .pi - 0.101
+  #expect(!game.bodies[0].canEnter(roll: 0.3, speed: 20))
+  game.bodies[0].rotation = .pi - 0.099
+  #expect(game.stationNavigation?.dockingLines.first == "PORT ROLL ALIGNED")
+  #expect(game.bodies[0].canEnter(roll: 0.3, speed: 20))
+  #expect(!game.bodies[0].canEnter(roll: 0.3, speed: 144))
+  game.screen = .rear
+  #expect(game.stationNavigation?.dockingLines.isEmpty == true)
 }

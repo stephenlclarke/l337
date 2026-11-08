@@ -1,0 +1,165 @@
+{
+  "status": "EXACT_CURRENT_BASELINE_PHYSICAL_CONSUMER_GAP_MAP_SOURCE_ONLY_NO_CONSUMER_EDITS",
+  "sourcePins": [
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH005-design.toml",
+      "bytes": 355469,
+      "sha256": "63aba498e570d6b6e33f77c261019502cbe2c23b7aed69629a84c7ac17f52a08"
+    },
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH005.toml",
+      "bytes": 403418,
+      "sha256": "a1592e007d95c8608f5bcc893d3ecf450fa94e9b4437d15f5fddc593f4d6e9fb"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH005.toml",
+      "bytes": 3502,
+      "sha256": "abb18a2f94877670d18008dddde590a16a2322bdcc2311cd11b3f241fac43bcd"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH006-design.toml",
+      "bytes": 362774,
+      "sha256": "fedf4bda1c86c1a580b4799f6476446c98bb7a319d39c8452245a92c5f9f1108"
+    },
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH006.toml",
+      "bytes": 407574,
+      "sha256": "1fcf843a53ef11d4b0f6c503219cebfebf81ef6b97051a9b395ddbd4acec46c8"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH006.toml",
+      "bytes": 3527,
+      "sha256": "a01ab6d02762226d4dc194b3311c731e694af1e179b07791755e7a330ba86f6c"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH025-design.toml",
+      "bytes": 534238,
+      "sha256": "5c76051fbb6f681065858b312dadfb1acad3e10ea22559d6da6f62d6684d25cc"
+    },
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH025.toml",
+      "bytes": 690857,
+      "sha256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH025.toml",
+      "bytes": 3492,
+      "sha256": "a305641b7be704a2af0129e146d4ef1d72d165a1cbc7b935458c4c35aea14cc0"
+    },
+    {
+      "path": "docs/fleet-physical/author-baseline-029-061-source-ownership.py",
+      "bytes": 22618,
+      "sha256": "b37e188fc3696a9c6421d59b80c3e21297333e62acda78e4985296b43cdb18f8"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetPhysicalRecord.swift",
+      "bytes": 9385,
+      "sha256": "ec6097c69c5380432df9d213a4064f3d07ed65cd13232d7e81008678134ef86f"
+    },
+    {
+      "path": "Sources/L337Core/OriginalHullPhysicalContract.swift",
+      "bytes": 20949,
+      "sha256": "4dfc05d6d886dc85ab48ea6071f735bf02f031c0874960518805afb542c51be2"
+    },
+    {
+      "path": "Sources/L337Core/ShipRawMeshCache.swift",
+      "bytes": 1626,
+      "sha256": "13879bfe6a2dd5871c5a26532e82231f25087401966931e6cce99ea8ac8ce23b"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/OriginalBisonActivation.swift",
+      "bytes": 14473,
+      "sha256": "46a345256bc7bc887ae2b049f6223ac4e54ea0662e7136466d0a56f32c3471f1"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetShowroomModels.swift",
+      "bytes": 5661,
+      "sha256": "657b8b24fda1ad75ca88cfb6bad9d09188c20e29a4985deca6876d678a0144ae"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+      "bytes": 48273,
+      "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+      "bytes": 32122,
+      "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet-redesign-manifest.json",
+      "bytes": 149499,
+      "sha256": "acbc9e01bd7c3dbc7ac301e46c793142805ecaa6a5e0041b000f02f4c30f182c"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+      "bytes": 69958,
+      "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+    }
+  ],
+  "currentSourceFacts": [
+    {
+      "id": "SH005",
+      "originalNativeFaces": 876,
+      "currentNativeFaces": 492,
+      "source": "own frozen integer metadata pass",
+      "fullDetailedFaces": 2212
+    },
+    {
+      "id": "SH006",
+      "originalNativeFaces": 876,
+      "currentNativeFaces": 492,
+      "source": "own frozen integer metadata pass",
+      "fullDetailedFaces": 2212
+    },
+    {
+      "id": "SH025",
+      "originalNativeFaces": 964,
+      "currentNativeFacesLexicalDeclarationCount": 964,
+      "source": "separate frozen raw-text STOP attribution; not native renderer/geometry test",
+      "fullDetailedFaces": 3484,
+      "metadataStatus": "VALIDATION_FAIL_NO_RECORD"
+    }
+  ],
+  "existingMethods": [
+    {
+      "path": "Sources/L337Core/ShipRawMeshCache.swift",
+      "method": "ShipCatalogue.rawMeshesByID",
+      "fact": "Explicit005006025 branch uses CURRENT ship.nativeDesign.rawMesh. Preserve those actual meshes; original showroom876/964 must never replace current492/F01."
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "method": "OriginalFleetRuntimeHullSource.sources",
+      "fact": "Requires triangulated mesh face count<=512; therefore current025964-declaration source cannot qualify. New Gallery/fixture source(for:025) dependencies remain blocked until genuine compliant native. Adding registration without a matching authenticated engineering consumer also makes current engineering-nil guard refuse source; registrations cannot be added alone."
+    },
+    {
+      "path": "Sources/L337Core/OriginalHullPhysicalContract.swift",
+      "method": "CatalogueShip.physicalSourceContract / OriginalHullPhysicalContract.init",
+      "fact": "No005006025 baseline switch/cache binding; default generic initializer resolves OriginalFleetCurrentHullSource from old OriginalFleetShowroomModel native. That old native is a different selected geometry, unsuitable as a current492/F01 physical model. Existing type retains nonoptional model; needs a real authenticated current-native source representation before adding these cases, never a fictitious source wrapper."
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetCurrentHullSource.swift",
+      "method": "init(id:model:)",
+      "fact": "Authenticates model source path/hash, units and<=512. Cannot weaken it or pass old native876/964 to get a current-baseline contract."
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetPhysicalRecord.swift",
+      "method": "OriginalFleetPhysicalData.load / Registration / Calibration",
+      "fact": "Whole atomic strict resource inventory/hash/currentR3/units/fullCOM/full9tensor checks stay. A future approved pass must freeze actual source/frame/transform correspondence and current native provenance first; no dry mass fallback or capacity-to-loaded mass."
+    },
+    {
+      "path": "Sources/L337Core/OriginalBisonActivation.swift",
+      "method": "source(for:)/matchesRequest/matchesNativeBody",
+      "fact": "Keep canonical current005006 stock/role/crew/blueprint/actualpaidEMP acquisition/fit policies; empty engineering must grant none of these authorities."
+    }
+  ],
+  "futureHunkBoundary": "Only after Root exact role+source+unit engineering adoption and separately frozen numeric methodology: pin real immutable current detailed/native geometry artifacts or current per-ID loader provenance, add an exact authentic current-native physical contract and paired registrations/cache/RuntimeSource engineering binding with mesh/frame equality and native/refusal tests. Keep old original display assets read-only. No invented URI/provenance wrapper or oldsource substitution; current custom-native append lineage still needs recovery/review.",
+  "coordinateCorrespondence": "INTEGER_ONLY_METADATA_DOES_NOT_CERTIFY_SCALE_OR_COORDINATE_TRANSFORMS. Current full detailed vertex ownership retained only by matching integer topology; no vertex numeric comparison performed.",
+  "excluded": "Current013014 corrected supports/translated bridge/lower cabin material unchanged;026existing25545 and all station budgets untouched. No sourcegeometry, consumer, scale or mass mutation in this child.",
+  "qualification": "UNCOMPILED_UNRUN/no game or loadedmass/native completion; only exact source dependencies and potential hunk sites."
+}

@@ -15,7 +15,8 @@ enum EMPVersionedSave {
         let location = item["location"] as? [String: Any]
         let slot = location?["slot"] as? [String: Any]
         let utility = slot?["utility"] as? [String: Any]
-        return node?["key"] as? String == Equipment.empPirateBlaster
+        return item.keys.contains("empBank") || item.keys.contains("empGrades")
+          || node?["key"] as? String == Equipment.empPirateBlaster
           || utility?["_0"] as? String == "empPirateBlaster"
       }
     }

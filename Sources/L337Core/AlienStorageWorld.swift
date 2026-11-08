@@ -106,7 +106,7 @@ enum AlienStorageWorldValidation {
           (0...256).contains(identity.wreck.system.system),
           identity.section < 64, sections.insert(identity).inserted,
           (0...255).contains(source.legalValue), (0...7).contains(source.economy),
-          (0...14).contains(source.technology), source.manifestSection < 64,
+          (0...Universe.originalWorlds.authoring.technologyMaximum).contains(source.technology), source.manifestSection < 64,
           (source.manifest?.count ?? 0) <= CommodityIdentity.allCases.count,
           value.inspectedAt.isFinite, value.inspectedAt >= 0,
           value.requiredWorkSeconds.isFinite, value.requiredWorkSeconds > 0,

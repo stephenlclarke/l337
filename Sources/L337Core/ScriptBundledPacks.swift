@@ -197,6 +197,24 @@ extension ScriptPackLibrary {
       to: &library)
     appendBundledPack(
       bundledInductionSeedDirectory, errorPrefix: "Bundled original Enlirin seed: ", to: &library)
+    appendBundledPack(
+      bundledUnderTowDirectory, errorPrefix: "Bundled Under Tow opening: ", to: &library)
+    appendBundledPack(
+      bundledAssemblyOfOrbitsDirectory, errorPrefix: "Bundled Assembly opening: ", to: &library)
+    appendBundledPack(
+      bundledBorrowedVoiceDirectory, errorPrefix: "Bundled Borrowed Voice investigation: ", to: &library)
+    appendBundledPack(
+      bundledQuietChoirDirectory, errorPrefix: "Bundled Quiet Choir investigation: ", to: &library)
+    appendBundledPack(
+      bundledMemoryAtlasDirectory, errorPrefix: "Bundled The Memory Atlas commission: ", to: &library)
+    appendBundledPack(
+      bundledSignedPassageDirectory, errorPrefix: "Bundled Signed Passage commission: ", to: &library)
+    appendBundledPack(
+      bundledIsolationWorkParentDirectory, errorPrefix: "Bundled original isolation contract: ",
+      to: &library)
+    appendBundledPack(
+      bundledIsolationWorkDirectory, errorPrefix: "Bundled original isolation source: ",
+      to: &library)
     return library
   }
 

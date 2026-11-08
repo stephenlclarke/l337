@@ -127,6 +127,18 @@ extension Commander {
       NativeIsolationProgrammerDefinition.occupiedTonnes(in: equipmentInventory))
     guard !programmer.overflow else { return false }
     total = programmer.partialValue
+    let underTow = total.addingReportingOverflow(
+      NativeUnderTowReferenceDefinition.occupiedTonnes(in: equipmentInventory))
+    guard !underTow.overflow else { return false }
+    total = underTow.partialValue
+    let assemblyOfOrbits = total.addingReportingOverflow(
+      NativeAssemblyReferenceDefinition.occupiedTonnes(in: equipmentInventory))
+    guard !assemblyOfOrbits.overflow else { return false }
+    total = assemblyOfOrbits.partialValue
+    let watcher = total.addingReportingOverflow(
+      NativeMemoryAtlasReferenceDefinition.occupiedTonnes(in: equipmentInventory))
+    guard !watcher.overflow else { return false }
+    total = watcher.partialValue
     let cabins = accommodation.fittedCabins.count.multipliedReportingOverflow(
       by: AccommodationFitting.tonnesPerCabin)
     guard !cabins.overflow else { return false }
@@ -170,13 +182,20 @@ extension Commander {
   @inline(never)
   private func addCheckedStoredMassCargo(total: inout Int) -> Bool {
     guard alienStorageStateValid else { return false }
-    // Combine actual stored mass before rounding once. Fitted modules and applied
-    // upgrades no longer occupy cargo space.
+    // Combine actual carried mass before rounding once. The explicit EMP package
+    // remains aboard when fitted; other existing module and upgrade rules stay separate.
     let recorderMass = scriptState.instances.values.reduce(0.0) { mass, mission in
       mass + (mission.hasHeldGlassMeridianRecorder ? 8 : 0)
+        + (mission.hasHeldGlassMeridianTimingStandard ? 1000 : 0)
     }
+    let empNode = EMPModuleGradePolicy.node
+    let empCount = equipmentInventory?.items.reduce(0) { count, item in
+      count + (item.node == empNode ? 1 : 0)
+    } ?? 0
+    let empMass = Double(empCount) * EMPModuleGradePolicy.massKilograms
     let mass =
       salvageLedger.inventoryMassKg + (alienStorageState?.current.storedMassKg ?? 0) + recorderMass
+      + empMass
     let tonnes = ceil(mass / 1000)
     guard mass.isFinite, mass >= 0, tonnes.isFinite, tonnes < Double(Int.max) else { return false }
     let reserved = total.addingReportingOverflow(Int(tonnes))

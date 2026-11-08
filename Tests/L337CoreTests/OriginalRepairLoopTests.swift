@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 private struct OriginalRepairLoopBoardFixture {
   let native: WayfarerRepairLoopNativeFixture

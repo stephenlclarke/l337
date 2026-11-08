@@ -1,0 +1,91 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH128-complete19part-native-candidate-v1",
+  "ship": "SH128",
+  "name": "Boar Transport",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "28b46e525d66545d6c34367574714913126558c765cef6d54d16764774563487",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH128-design.toml",
+    "bytes": 268224,
+    "sha256": "f5b934ab51d55b29d5cdcfc112b9e5300030dbc2d9f0f33d5290562c1b2cd4aa"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH128.toml",
+    "bytes": 292353,
+    "sha256": "6678128392d3d27d80463d0ae59ee62d8e26ef03efbe322c767953be8500ae8a"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH128.json",
+    "bytes": 54102,
+    "sha256": "aff16243e9a5bd78d2ed81a749d90e6449473772138499b8cd1a1356ed316760"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH128-native-candidate-recipe.py",
+    "bytes": 7997,
+    "sha256": "3d097ea4e4a7c91b109e6804651d9c47e0e1428688a10a1b21c98dba4b7a2d99"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH128-native-candidate-tests.py",
+    "bytes": 6607,
+    "sha256": "e6095cee420b5ef392a02d1e07b28a1a339c347c3b357f543596145e60b8490b"
+  },
+  "baseline": {
+    "declaredNativeFaces": 620,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 8,
+    "changedOriginalPartIndices": [
+      0,
+      11,
+      14,
+      15,
+      17,
+      18
+    ],
+    "unchangedFixedOriginalParts": 13,
+    "status": "NEW angular approximation only; actual output count/full curved-profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Complete five-station spine/body at(0,.30,0),length*.92,width.20,height.18 and all end caps",
+    "ALL four original analytical body service wells with actual shadow/rim materials",
+    "ALL THREE full transverse bin boxes from original np.linspace(-length*.28,length*.27,3)",
+    "Every bin original centre(0,-.08,z),widthbeam*.90,height.36,lengthlength*.18 and complete top recessed well",
+    "Full cockpit glazing/structural support at original y.55,zlength*.24,width.22,length.52",
+    "Both connected drive supports, complete casings AND luminous recesses with original radius.28",
+    "Exact original ochre-charcoal palette/material/emission/textures/license/source; genuine serializer regenerates complete per-face UVs"
+  ],
+  "coordinates": "Original length3.0/beam3.10, source axes/coordinates/origin/units retained. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Boar Transport R3/name/game remain pending and unchanged",
+    "nativeCrew": 5,
+    "conversionCrew": 5,
+    "authority": "No actual people/quarters/hardware/power/paid kit/source/actor/acquisition/current-save or mission grant; all existing gates unchanged"
+  },
+  "stopRules": [
+    "Reject changed original source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All19 positive original parts/material sets stay, including all3bins/topwells and4bodywells",
+    "Complete candidate must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require13 fixed components exact original vertices/localfaces/material sequence/UVs",
+    "Full continuous curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run19part/exact13fixed/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

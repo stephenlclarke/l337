@@ -72,10 +72,60 @@ public struct ScriptCourierActionProof: Codable, Sendable, Equatable {
   public let epoch: UUID
   public let clock: Double
   public let station: ContractStationIdentity
+  private let originalOrigins: [NativeStationEventFacts]
+  var originalOrigin: NativeStationEventFacts? { originalOrigins.first }
+
+  init(
+    sequence: UInt64, token: String, revision: UInt64, epoch: UUID, clock: Double,
+    station: ContractStationIdentity, originalOrigin: NativeStationEventFacts? = nil
+  ) {
+    self.sequence = sequence
+    self.token = token
+    self.revision = revision
+    self.epoch = epoch
+    self.clock = clock
+    self.station = station
+    originalOrigins = originalOrigin.map { [$0] } ?? []
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case sequence, token, revision, epoch, clock, station, originalOrigin
+  }
+  public init(from decoder: any Decoder) throws {
+    try NativeUtilityCoding.require(
+      decoder, ["sequence", "token", "revision", "epoch", "clock", "station"],
+      optional: ["originalOrigin"])
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    sequence = try values.decode(UInt64.self, forKey: .sequence)
+    token = try values.decode(String.self, forKey: .token)
+    revision = try values.decode(UInt64.self, forKey: .revision)
+    epoch = try values.decode(UUID.self, forKey: .epoch)
+    clock = try values.decode(Double.self, forKey: .clock)
+    station = try values.decode(ContractStationIdentity.self, forKey: .station)
+    originalOrigins = try values.decodeIfPresent(NativeStationEventFacts.self, forKey: .originalOrigin)
+      .map { [$0] } ?? []
+    guard valid else { throw SaveError.invalidCommander }
+  }
+  public func encode(to encoder: any Encoder) throws {
+    var values = encoder.container(keyedBy: CodingKeys.self)
+    try values.encode(sequence, forKey: .sequence)
+    try values.encode(token, forKey: .token)
+    try values.encode(revision, forKey: .revision)
+    try values.encode(epoch, forKey: .epoch)
+    try values.encode(clock, forKey: .clock)
+    try values.encode(station, forKey: .station)
+    try values.encodeIfPresent(originalOrigin, forKey: .originalOrigin)
+  }
+
   var valid: Bool {
     sequence > 0 && sequence < UInt64(Int64.max) && revision < UInt64(Int64.max)
       && (1...256).contains(token.utf8.count) && station.valid
       && clock.isFinite && (0...1e12).contains(clock)
+      && originalOrigins.count <= 1
+      && (station.stationClass == "main-orbital"
+        ? originalOrigin == nil
+        : originalOrigin.map { NativeOriginalSealedDispatchOrigin.matches($0, station: station) }
+          == true)
   }
 }
 public enum ScriptCourierTerminalCause: String, Codable, Sendable {
@@ -174,14 +224,24 @@ public struct ScriptCourierCustody: Codable, Sendable, Equatable {
     else { return false }
     switch receipt.cause {
     case .delivered:
+      if OriginalSealedDispatch.matches(terms.declaration) {
+        guard let arrival = cause.nativeMainDock, arrival.valid,
+          completion.committed.nativeMainDock == arrival,
+          arrival.station.key == receipt.proof.station.key,
+          arrival.calendarSeconds <= cause.calendarSeconds
+        else { return false }
+      }
       return cause.docked && cause.mainStation && receipt.amount == terms.reward
         && OriginalSealedDispatch.deliveryAllowed(job, at: receipt.proof.clock)
         && receipt.proof.station.galaxy == job.offer.destinationGalaxy
         && receipt.proof.station.system == job.offer.destinationSystem
         && receipt.proof.token.hasSuffix(":" + terms.declaration.deliveryContact)
     case .abandoned:
-      return cause.docked && cause.mainStation && receipt.amount == 0
-        && receipt.proof.station == job.station
+      return cause.docked
+        && (cause.mainStation ? receipt.proof.station.stationClass == "main-orbital"
+          : receipt.proof.originalOrigin != nil
+            && receipt.proof.originalOrigin == cause.nativeStation)
+        && receipt.amount == 0 && receipt.proof.station == job.station
         && receipt.proof.token.hasSuffix(":" + terms.declaration.abandonContact)
     case .expired:
       return !OriginalSealedDispatch.matches(terms.declaration) && receipt.amount == 0

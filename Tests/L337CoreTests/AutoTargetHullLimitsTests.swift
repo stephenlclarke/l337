@@ -12,9 +12,11 @@ struct AutoTargetHullLimitsTests {
       game.energy = game.commander.performance.energy
       game.frontShield = game.commander.shieldCapacity
       game.rearShield = game.commander.rearShieldCapacity
-      game.commander.installTargetingComputer(.docking)
       game.commander.autoTarget = true
-      try game.commander.prepareEquipment()
+      try game.commander.prepareEquipment(legacy: false)
+      try game.commander.grantEquipment(
+        TargetingTier.docking.equipmentName, at: .targetingCore,
+        provenance: .grant("current targeting unit fixture"))
       #expect(game.commander.valid)
       game.launch()
       game.speed = 0

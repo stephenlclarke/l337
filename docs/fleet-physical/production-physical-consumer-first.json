@@ -1,0 +1,63 @@
+{
+  "status": "OWNED_PRODUCTION_MESH_AND_CURRENT_NATIVE_CRAFT_HUNKS_FROZEN_BEFORE_EDITS",
+  "beforeCommit": "b09e073580a3796141cebd6c014aa656c3f23a36",
+  "beforePins": [
+    {
+      "path": "Sources/L337Core/OriginalHullPhysicalContract.swift",
+      "bytes": 19036,
+      "sha256": "e3083ffe63dbb0c288cdc0340c5fcd12a0fd0b91262c8583c6229aeeb78d9691"
+    },
+    {
+      "path": "Sources/L337Core/ShipRawMeshCache.swift",
+      "bytes": 1306,
+      "sha256": "b2ca5d9a81f075d1a3694b3827778247fc48a5921735919525cb933d432c5381"
+    },
+    {
+      "path": "Sources/L337Core/ShipPerformance.swift",
+      "bytes": 3943,
+      "sha256": "aa2296b934c7b0fadf85cb4573a385c3011b8821ef63d27460ad0a8e7905c902"
+    },
+    {
+      "path": "Sources/L337Core/SalvageCatalogue.swift",
+      "bytes": 14757,
+      "sha256": "188abb20a3ebb4308d1637c2c5869c52aacb4db60178ae5fcfee55c850b02a01"
+    },
+    {
+      "path": "Sources/L337Core/GameplayEncounters.swift",
+      "bytes": 19789,
+      "sha256": "a05a88a371b60b581c8d16540166d11996736d8acf71f146acfd6527dfe7d46c"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 27069,
+      "sha256": "8c11d6e31207fae54efc585dc3964e6acef277583407f4f02fcb48152008e88b"
+    },
+    {
+      "path": "Sources/L337Core/EncounterDirector.swift",
+      "bytes": 10048,
+      "sha256": "ae12c6fb146cfd7c5de8641a9c71efdd7df9eb6dc6a3a5ec0f3e490fbe8eded3"
+    },
+    {
+      "path": "Package.swift",
+      "bytes": 11188,
+      "sha256": "7cb4e57717147878b6f7cf1120445aeef1fc90c35ce70b35853c0cc70ef08e42"
+    }
+  ],
+  "newSources": [
+    "Sources/L337Core/OriginalFleetRuntimeHullSource.swift"
+  ],
+  "actualProductionCallers": [
+    "OriginalHullPhysicalContract current-source default path -> CurrentHullSource exact calibration",
+    "ShipRawMeshCache physical current-source branch before salvage/normalisation",
+    "Commander.playerMesh current-source physical path",
+    "SalvageCatalogue native current-source physical mesh",
+    "GameplayEncounters current catalogue source performance",
+    "GameplayAdmission source-specific radii and ambient trader stock/source checks",
+    "EncounterDirector actual published current source trader pool, no hard-coded obsolete SH023 baseline"
+  ],
+  "newNativeReadyOrPopulationRights": false,
+  "geometryAuthoringOrQueriesInThisSourceEdit": 0,
+  "loadedMassBoundary": "Do not use dry estimate as occupied/loaded body mass. Known estimate/frame can be retained in physical contract; actual load ownership/anchors/tensor joins remain unissued and unfinished. No new mass fallback.",
+  "existingProtectedScope": "Bison strict source/law/admission unchanged; actual actors/crew/paid equipment and mission source owners remain authoritative. MC1 reserved fitting methods untouched. No station/provider/port edits.",
+  "nativeCompilerRendererTests": "UNRUN; soleG1executor"
+}

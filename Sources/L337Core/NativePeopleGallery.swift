@@ -11,7 +11,7 @@ extension Game {
       objective:
         "Use real EMP disablement, tracked capsule collection and orbital person transfers.",
       briefing:
-        "Original isolated demonstration in an anarchy system, with an owned Elite Energy Unit and capture tools. The wanted source craft holds its admitted position with full stock shields and electrical reserve. Leave every station no-fire zone before charging; repeated real ten-second EMP charges are needed. Each original crew member has a saved random ejection time. Before the 30-second recovery deadline, actual cutter contact captures crew still aboard, limited by real free hold. Escaped pods remain people: Tab and the Salvage filter select single-unit auto-approach with the fitted module and Fuel Scoops. Return to an original main orbital station for explicit care or sale. No historical campaign is enabled.",
+        "Original isolated demonstration in an anarchy system, with an owned Elite Energy Unit and capture tools. Your Peregrine flies out from the station before the wanted Bison appears. The source craft holds its admitted position with full stock shields and electrical reserve. Leave every station no-fire zone before charging; repeated real ten-second EMP charges are needed. Each original crew member has a saved random ejection time. Before the 30-second recovery deadline, actual cutter contact captures crew still aboard, limited by real free hold. Escaped pods remain people: Tab and the Salvage filter select single-unit auto-approach with the fitted module and Fuel Scoops. Return to an original main orbital station for explicit care or sale. No historical campaign is enabled.",
       destination: "A proved original main orbital station",
       reward: "No demonstration reward; actual sale prices remain native market transactions.",
       prerequisites: [
@@ -37,6 +37,15 @@ extension Game {
     trial.scriptDurabilityAvailable = true
     trial.viewportWidth = viewportWidth
     trial.viewportHeight = viewportHeight
+    guard trial.commander.shipID == NewCommanderDefaults.shipID,
+      let playerSource = OriginalFleetRuntimeHullSource.source(for: trial.commander.shipID),
+      playerSource.ship.id == "SH025", trial.commander.nativePerformance == playerSource.performance,
+      let source = OriginalBisonActivation.source(for: "SH005"),
+      source.ship.catalogue.galaxies.contains(trial.commander.galaxy),
+      EMPState.hasSupportedCrew(source.ship),
+      try ShipAccommodationProfile(ship: source.ship).operatingCrew
+        == source.requiredCrewIncludingCommander
+    else { throw MissionPackError("The native crew trial needs its current Peregrine and Bison sources.") }
     guard
       let system = trial.systems.sorted(by: { $0.id < $1.id }).first(where: {
         $0.government == 0 && $0.id != Plugh.systemID
@@ -48,13 +57,11 @@ extension Game {
     trial.commander.system = system.id
     trial.selectedSystem = system.id
     trial.market = MarketItem.at(trial.currentSystem)
-    trial.commander.shipID = "SH023"
     trial.commander.fuel = trial.commander.fuelCapacity
     trial.commander.credits = 100_000
     try trial.commander.prepareEquipment(legacy: false)
     for (name, slot) in [
-      (Equipment.empPirateBlaster, ComponentFittingSlot.utility(.empPirateBlaster)),
-      (Equipment.eliteEnergyUnit, .energy),
+      (Equipment.eliteEnergyUnit, ComponentFittingSlot.energy),
       ("Salvage Cutter", .utility(.salvageCutter)), ("Fuel Scoops", .utility(.fuelScoops)),
       ("Targeting: Salvage Module", .targetingSalvage),
       (TargetingTier.advanced.equipmentName, .targetingCore),
@@ -63,6 +70,7 @@ extension Game {
         name, at: slot, provenance: .grant("Original native people Gallery trial"))
     }
     trial.commander.mirrorFittedEquipment()
+    try trial.purchaseNativePeopleTrialEMPSetup()
     trial.energy = trial.commander.performance.energy
     trial.frontShield = trial.commander.shieldCapacity
     trial.rearShield = trial.commander.rearShieldCapacity
@@ -74,12 +82,13 @@ extension Game {
     trial.ensureScriptCalendar(origin: .newCommander)
     trial.seedScriptTrial(seed)
     trial.launch()
-    guard !trial.docked,
-      let ship = ShipCatalogue.all.sorted(by: { $0.id < $1.id }).first(where: {
-        $0.game != nil && EMPState.hasSupportedCrew($0)
-          && ((try? ShipAccommodationProfile(ship: $0).operatingCrew) ?? 0) > 30
-      }), let performance = ship.game,
-      let sequence = trial.commander.flightSimulation.allocateSpawn()
+    guard !trial.docked else {
+      throw MissionPackError("The native crew trial could not launch its current owned hull.")
+    }
+    try trial.departNativePeopleTrial(source: source)
+    let ship = source.ship
+    let performance = source.game
+    guard let sequence = trial.commander.flightSimulation.allocateSpawn()
     else { throw MissionPackError("The native crew trial cannot admit its original source craft.") }
     var npc = NPCState(
       role: .trader, origin: trial.systemIdentity, destination: trial.systemIdentity)
@@ -101,7 +110,8 @@ extension Game {
           sequence: sequence, member: 0, producer: .ambient), population: .civilian,
         hull: .cobra, position: position, orientation: Basis3(),
         velocity: .init(0, 0, 0), npc: npc, rock: nil, payload: nil,
-        priority: .ordinary, catalogueShipID: ship.id, energy: performance.energy)
+        priority: .ordinary, catalogueShipID: ship.id)
+      guard OriginalBisonActivation.matchesRequest(request, context: context) else { continue }
       let receipts = trial.admitEncounterPlan(
         .init(
           system: context.system, visit: context.visit,
@@ -115,5 +125,36 @@ extension Game {
       }
     }
     throw MissionPackError("The native trial's real source craft has no safe admission position.")
+  }
+
+  private mutating func departNativePeopleTrial(source: OriginalBisonActivation.Source) throws {
+    guard let initial = gameplayContext(), !docked, !paused, speed.isFinite, speed > 0 else {
+      throw MissionPackError("The native crew trial needs a real outward launch.")
+    }
+    let delta = 0.1
+    let step = speed * 18 * delta
+    let clearance = 1200 + step
+    let offset = initial.anchors.station.position - initial.player.position
+    let along = offset.dot(initial.player.orientation.z)
+    let perpendicularSquared = max(0, offset.dot(offset) - along * along)
+    let exitDistance = max(0, along + sqrt(max(0, clearance * clearance - perpendicularSquared)))
+    let frames = ceil(exitDistance / step) + 1
+    guard frames.isFinite, frames > 0, frames < Double(Int.max) else {
+      throw MissionPackError("The native crew trial has no finite departure budget.")
+    }
+    for _ in 0..<Int(frames) {
+      let previousTime = commander.flightSimulation.physicalTime
+      tick(delta: delta)
+      guard !docked, !paused, screen != .gameOver, let context = gameplayContext(),
+        context.physicalTime > previousTime,
+        let director = commander.encounterDirector,
+        director.decisionCount == 0, director.admittedCount == 0, director.pendingRequests.isEmpty
+      else { throw MissionPackError("The native crew trial departure met unrelated traffic or stopped flight.") }
+      let region = EncounterGeography.region(at: context.player.position, anchors: context.anchors)
+      if source.ship.catalogue.galaxies.contains(context.system.galaxy),
+        source.ship.catalogue.regions.contains(region)
+      { return }
+    }
+    throw MissionPackError("The native crew trial did not fly into an allowed source region.")
   }
 }

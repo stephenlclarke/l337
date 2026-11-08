@@ -44,6 +44,7 @@ struct ScriptProcurementFixture {
     game.market = MarketItem.at(game.currentSystem)
     game.commander.credits = escapeReady ? 190875 : 164875
     try #require(game.currentSystem.original == origin)
+    try game.commander.prepareEquipment(legacy: false)
     return game
   }
 

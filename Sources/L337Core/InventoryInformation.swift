@@ -41,6 +41,10 @@ extension Game {
         "Glass Meridian original flight recorder: 8kg protected; retained for the investigation",
         .cyan)
     }
+    if glassMeridianMission?.savedGlassMeridian?.timingStandard?.held == true {
+      append(
+        "Glass Meridian original timing standard: 1t protected; retained for lane repair", .cyan)
+    }
     if commander.nativeCaptiveCount > 0 {
       append(
         "Captured crew: \(commander.nativeCaptiveCount) (included once in Slaves tonnes)", .orange)

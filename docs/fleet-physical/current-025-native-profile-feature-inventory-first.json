@@ -1,0 +1,150 @@
+{
+  "status": "FROZEN_SOURCE_PROFILE_FEATURE_INVENTORY_AND_CONDITIONAL_INTEGER_TOPOLOGY_BOUND_BEFORE_NEW_CODE_OR_GEOMETRY",
+  "beforeCommit": "3a571605f42e19ae032e5cf8c5c6e8bfafe3c6be",
+  "inputMethod": {
+    "path": "docs/fleet-physical/current-025-native512-method-input-first.json",
+    "bytes": 10653,
+    "sha256": "0fb59f2f331fd08ae9535633de930ee5005fc5ed6bdf64198687652b13f232e7"
+  },
+  "inputCurrentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH025.toml",
+    "bytes": 690857,
+    "sha256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883"
+  },
+  "inputOriginalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH025-design.toml",
+    "bytes": 534238,
+    "sha256": "5c76051fbb6f681065858b312dadfb1acad3e10ea22559d6da6f62d6684d25cc"
+  },
+  "sourceCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "primitiveCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "frozenSourceMethodNotToExecute": {
+    "path": "docs/fleet-physical/author-current-025-native512.py",
+    "bytes": 38920,
+    "sha256": "7410e13b59b31ea6035feb3bd27cb035f56a22ed9d49015b5b161ac0bf1ce79f"
+  },
+  "featureGroups": [
+    {
+      "partIndices": [
+        0,
+        5,
+        13,
+        19
+      ],
+      "feature": "Every original pressure/glazing pod keeps all5authored longitudinal stations and each cardinal X/Y source profile point",
+      "minimumVerticesPerPart": 20,
+      "minimumTrianglesPerClosedPart": 36
+    },
+    {
+      "partIndices": [
+        22,
+        23,
+        25,
+        26
+      ],
+      "feature": "Both stations and four cardinal radial profile extrema of both drive casings and luminous recesses",
+      "minimumVerticesPerPart": 8,
+      "minimumTrianglesPerClosedPart": 12
+    },
+    {
+      "partIndices": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        14,
+        15,
+        16,
+        17
+      ],
+      "feature": "Each closed rectangular service well keeps4outer rim corners,4inner recess-floor corners and4back corners; three distinct noncoincident depth/profile rows",
+      "minimumVerticesPerPart": 12,
+      "minimumTrianglesPerClosedPart": 20
+    },
+    {
+      "partIndices": [
+        10,
+        11,
+        12,
+        18,
+        20,
+        21,
+        24
+      ],
+      "feature": "Each closed support/stock box retains all8source corners",
+      "minimumVerticesPerPart": 8,
+      "minimumTrianglesPerClosedPart": 12
+    }
+  ],
+  "podStationSourceExpressions": [
+    {
+      "station": 0,
+      "z": "centreZ-length*0.50",
+      "rx": "width*0.52",
+      "ry": "height*0.52"
+    },
+    {
+      "station": 1,
+      "z": "centreZ-length*0.34",
+      "rx": "width",
+      "ry": "height"
+    },
+    {
+      "station": 2,
+      "z": "centreZ+length*0.22",
+      "rx": "width*0.93",
+      "ry": "height*0.94"
+    },
+    {
+      "station": 3,
+      "z": "centreZ+length*0.45",
+      "rx": "width*0.55",
+      "ry": "height*0.57"
+    },
+    {
+      "station": 4,
+      "z": "centreZ+length*0.50",
+      "rx": "width*0.20",
+      "ry": "height*0.25"
+    }
+  ],
+  "sourceSlopeWitnessStrings": {
+    "successiveXRadiusPerZ": [
+      "48/16",
+      "-7/56",
+      "-38/23",
+      "-35/5"
+    ],
+    "successiveYRadiusPerZ": [
+      "48/16",
+      "-6/56",
+      "-37/23",
+      "-32/5"
+    ],
+    "meaning": "Successive symbolic slopes are unequal for positive original dimensions; no source-based exact station redundancy is established. These strings transcribe creator coefficients, not evaluated model coordinates."
+  },
+  "requiredAngularFeature": "Original12-angle rings include four cardinal extrema indices0/3/6/9. Retaining each longitudinal transition in both XZ and YZ source profile contours needs those4distinct points at each required station; fewer points would drop a declared profile feature even if global AABB survives.",
+  "integerProofToEvaluate": "Four5station*4cardinal pod profiles=80localvertices; four2station*4cardinal drive profiles=32; twelve12vertex closed wells=144; seven8vertex supports=56. Minimum local component vertices312.27separately closed triangulated genus0components require F=sum(2V_i-4)=2*312-4*27=516. Higher genus cannot lower it. All operations integer metadata only, no coordinate/normal/area/volume or source import.",
+  "conditionalBoundary": "This is a lower bound for the frozen independent-closed-component/fixed-source-point/profile-preserving representation, not proof that every possible newly authored native representation is impossible. Shared-vertex storage alone cannot lower per-component triangle counts. Any topology/component integration or geometric redundancy needs genuine source evidence and a separately frozen plan; no weld/union/proxy/omission/capraise inferred.",
+  "nextDisposition": "No defensible<=512fixed source-point subset plan presently issued. HOLD7410method despite publication correction; original0fb recipe omits forward shoulder. Keep source025 blocker and continue independent entries while source design/redundancy is investigated. Do not produce516native as accepted output.",
+  "executionBoundary": {
+    "newGeometryCodeOrExecution": 0,
+    "coordinateConversions": 0,
+    "modelOrNativeQueries": 0,
+    "creatorImports": 0,
+    "compilerRendererTests": 0,
+    "integerMetadataGroups": 4
+  }
+}

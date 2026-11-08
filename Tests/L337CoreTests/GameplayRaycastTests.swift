@@ -17,6 +17,26 @@ private func raycastBox(_ half: Vector3 = .init(10, 10, 10)) -> Mesh {
     preserveWinding: true)
 }
 
+@Test func retiredCobraMarkerRequiresAnExplicitMeshForRenderingAndRaycast() {
+  let body = SpaceBody(id: 7, hull: .cobra, position: .init(0, 0, 400))
+  var game = Game(executive: false)
+  game.screen = .front
+  var frame = Frame()
+  frame.rasterizeGraphics = false
+  Display.draw(body, game: game, into: &frame)
+  #expect(frame.graphics.isEmpty)
+  #expect(GameplayRaycast.nearest(
+    origin: .init(0, 0, 0), direction: .init(0, 0, 1), maxDistance: 500, bodies: [body]) == nil)
+
+  let mesh = raycastBox()
+  Display.draw(body, game: game, into: &frame, mesh: mesh)
+  #expect(!frame.graphics.isEmpty)
+  let hit = GameplayRaycast.nearest(
+    origin: .init(0, 0, 0), direction: .init(0, 0, 1), maxDistance: 500, bodies: [body],
+    meshOverrides: [7: mesh])
+  #expect(hit?.target == .body(7) && hit?.distance == 390)
+}
+
 @Test func gameplayRaycastChoosesNearestHullIndependentOfArrayOrderAndIgnoresEmitter() throws {
   let near = SpaceBody(id: 7, hull: .cobra, position: .init(0, 0, 100))
   let far = SpaceBody(id: 2, hull: .viper, position: .init(0, 0, 200))
@@ -42,18 +62,43 @@ private func raycastBox(_ half: Vector3 = .init(10, 10, 10)) -> Mesh {
 
 @Test func gameplayRaycastUsesTheActualNativeStationAsAnOccluder() throws {
   let station = SpaceBody(id: 0, hull: .station, position: .init(0, 0, 400))
-  let behind = SpaceBody(id: 3, hull: .cobra, position: .init(0, 0, 1000))
+  let port = MainStationGeometry.docking
+  let inward = station.modelVector(port.outward) * -1
+  // Original native lightbox faces482/483 span x68.12...70.12 at front z136.32.
+  // The centreline is the real open throat, so it cannot serve as a solid wall control.
+  let wall = station.position + station.modelVector(port.center + .init(69, 0, 0))
+  let origin = wall - inward * 100
+  let behind = SpaceBody(id: 3, hull: .cobra, position: origin + inward * 1000)
   for bodies in [[behind, station], [station, behind]] {
     let hit = try #require(
       GameplayRaycast.nearest(
-        origin: .init(0, 0, 0), direction: .init(0, 0, 1),
-        maxDistance: 2000, bodies: bodies, meshOverrides: [3: raycastBox()]))
-    #expect(hit.target == .body(0) && hit.distance < 500)
+        origin: origin, direction: inward, maxDistance: 2000,
+        bodies: bodies, meshOverrides: [3: raycastBox()]))
+    #expect(hit.target == .body(0))
+    #expect(hit.distance.isFinite && abs(hit.distance - 100) < 1e-8)
+    #expect((hit.point - wall).length < 1e-8)
   }
-  let unblocked = GameplayRaycast.nearest(
-    origin: .init(0, 0, 0), direction: .init(0, 0, 1),
-    maxDistance: 2000, bodies: [station, behind], ignoring: [0], meshOverrides: [3: raycastBox()])
-  #expect(unblocked?.target == .body(3))
+  let unblocked = try #require(
+    GameplayRaycast.nearest(
+      origin: origin, direction: inward, maxDistance: 2000,
+      bodies: [station, behind], ignoring: [0], meshOverrides: [3: raycastBox()]))
+  #expect(unblocked.target == .body(3))
+  #expect(unblocked.distance.isFinite && abs(unblocked.distance - 990) < 1e-8)
+
+  let opening = station.position + station.modelVector(port.center)
+  let portOrigin = opening - inward * 100
+  let throughPort = SpaceBody(id: 3, hull: .cobra, position: portOrigin + inward * 1000)
+  for bodies in [[throughPort, station], [station, throughPort]] {
+    let clear = try #require(
+      GameplayRaycast.nearest(
+        origin: portOrigin, direction: inward, maxDistance: 2000,
+        bodies: bodies, meshOverrides: [3: raycastBox()]))
+    #expect(clear.target == .body(3))
+    #expect(clear.distance.isFinite && abs(clear.distance - 990) < 1e-8)
+  }
+  #expect(
+    GameplayRaycast.nearest(
+      origin: portOrigin, direction: inward, maxDistance: 2000, bodies: [station]) == nil)
 }
 
 @Test func gameplayRaycastRejectsConeNearMissesAndConcavePolygonNotches() throws {

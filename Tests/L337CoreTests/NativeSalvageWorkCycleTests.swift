@@ -100,7 +100,7 @@ struct NativeSalvageWorkCycleTests {
   }
 
   @Test func aWorkCycleCannotAdvanceIssuedSerialsWithoutAReleaseOrReuseACompletedBudget() throws {
-    var (game, _) = try NativePagedSalvageFixture.game()
+    var (game, _) = try NativePagedSalvageFixture.empGame()
     let observedCutterResult = game.fireSalvageCutter(delta: 0.1)
     #expect(observedCutterResult)
     let hot = try #require(game.nativeSalvageWork)

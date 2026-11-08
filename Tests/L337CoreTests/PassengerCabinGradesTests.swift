@@ -259,6 +259,7 @@ func doubleStateroomBoardsTwoDistinctPeopleInTheirAgreedMode(mode: PassengerTran
   let url = directory.appendingPathComponent("commander.json")
   var game = Game(executive: false)
   game.commander.credits = 1_000_000
+  try game.commander.prepareEquipment(legacy: false)
   let runtime = GameRuntime(game: game, saveURL: url)
   try await runtime.save(to: url)
   let quote = await runtime.passengerCabinQuote(.cryogenic)

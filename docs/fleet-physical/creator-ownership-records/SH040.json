@@ -1,0 +1,356 @@
+{
+  "id": "SH040",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "94125f9da5db004437ac784ba47be3267271fe2401cf506f9a3715f2b2e3ae3a",
+  "contractSHA256": "f0a2f7b763aa35cc65022cf5485eb5c91f742147782d34125ff6c24bf9b72e1c",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "body primary pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 120,
+          "faceStart": 0,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 120,
+          "vertexCount": 120,
+          "faceStart": 236,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 2,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 240,
+          "vertexCount": 8,
+          "faceStart": 472,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "seed",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "seed circumferential collar",
+          "vertexStart": 248,
+          "vertexCount": 576,
+          "faceStart": 484,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "seed",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "seed circumferential collar",
+          "vertexStart": 824,
+          "vertexCount": 576,
+          "faceStart": 1636,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "seed",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "seed explicit drive 0/propulsion casing",
+          "vertexStart": 1400,
+          "vertexCount": 48,
+          "faceStart": 2788,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "seed explicit drive 0/propulsion luminous recess",
+          "vertexStart": 1448,
+          "vertexCount": 48,
+          "faceStart": 2880,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "seed explicit drive 1/propulsion casing",
+          "vertexStart": 1496,
+          "vertexCount": 48,
+          "faceStart": 2972,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "seed explicit drive 1/propulsion luminous recess",
+          "vertexStart": 1544,
+          "vertexCount": 48,
+          "faceStart": 3064,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        5,
+        7
+      ],
+      "vertices": 1592,
+      "faces": 3156
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "body primary pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 60,
+          "faceStart": 0,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 60,
+          "vertexCount": 60,
+          "faceStart": 116,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 2,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 120,
+          "vertexCount": 8,
+          "faceStart": 232,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "seed",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "seed circumferential collar",
+          "vertexStart": 128,
+          "vertexCount": 192,
+          "faceStart": 244,
+          "faceCount": 384,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 384
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "seed",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "seed circumferential collar",
+          "vertexStart": 320,
+          "vertexCount": 192,
+          "faceStart": 628,
+          "faceCount": 384,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 384
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "seed",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "seed explicit drive 0/propulsion casing",
+          "vertexStart": 512,
+          "vertexCount": 24,
+          "faceStart": 1012,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "seed explicit drive 0/propulsion luminous recess",
+          "vertexStart": 536,
+          "vertexCount": 24,
+          "faceStart": 1056,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "seed explicit drive 1/propulsion casing",
+          "vertexStart": 560,
+          "vertexCount": 24,
+          "faceStart": 1100,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "seed explicit drive 1/propulsion luminous recess",
+          "vertexStart": 584,
+          "vertexCount": 24,
+          "faceStart": 1144,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "seed",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        5,
+        7
+      ],
+      "vertices": 608,
+      "faces": 1188
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

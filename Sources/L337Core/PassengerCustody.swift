@@ -157,9 +157,6 @@ public struct ShipAccommodation: Codable, Sendable, Equatable {
   }
 }
 extension Commander {
-  /// An early prototype included this virtual hardware flag in maximum equipment.
-  /// Actual cabin/person ownership is stored separately and must remain untouched.
-  mutating func migrateLegacyPassengerMarker() { equipment.remove(PassengerCabin.equipmentName) }
   /// Charter fitting uses the real hold even when legacy unlimited-cargo policy is enabled.
   public var tradeCargoCapacity: Int {
     accommodation.fitted.isEmpty && !requiresContractFit && (nativePeople?.held.isEmpty ?? true)
@@ -226,11 +223,13 @@ extension Commander {
     guard accommodation.valid, NativeStationPassengerJourney.berthsValid(self),
       accommodation.people.values.allSatisfy({ scriptState.instances[$0.mission] != nil })
     else { return false }
-    // Legacy commanders without fitted cabins retain their established hardware behavior.
-    let legacyOutfit =
-      accommodation.fitted.isEmpty && !requiresContractFit && (nativePeople?.held.isEmpty ?? true)
-      && (scriptState.calendarLedger == nil || xyzzyActive)
-    return legacyOutfit || passengerFit?.allowed == true
+    return allowsXYZzyMaximumOutfit || passengerFit?.allowed == true
+  }
+
+  /// The secret refit cannot bypass an active passenger or contract fit.
+  var allowsXYZzyMaximumOutfit: Bool {
+    xyzzyActive && accommodation.fitted.isEmpty && !requiresContractFit
+      && (nativePeople?.held.isEmpty ?? true)
   }
 }
 extension Game {

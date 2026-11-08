@@ -114,6 +114,9 @@ public struct PreparedHull: Sendable {
   fileprivate let nodes: [SweepNode]
   fileprivate let components: [SweepComponent]
   fileprivate let hasUnresolvedSupport: Bool
+  fileprivate let c01TriangleFaceIndices: [Int]
+  fileprivate let c01SourceVertices: [Vector3]
+  fileprivate let c01SourceFaces: [[Int]]
   fileprivate let nativeGeometryID = UUID()
 
   public init(mesh: Mesh, maximumTriangles: Int = 20_000) throws {
@@ -139,7 +142,8 @@ public struct PreparedHull: Sendable {
     var faces: [[Int]] = []
     var faceTriangles: [[Int]] = []
     var triangles: [SweepTriangle] = []
-    for face in mesh.faces {
+    var c01TriangleFaceIndices: [Int] = []
+    for (sourceFaceIndex, face) in mesh.faces.enumerated() {
       guard face.count >= 3, face.allSatisfy(mesh.vertices.indices.contains) else {
         throw HullSweepFailure.invalidGeometry
       }
@@ -149,6 +153,7 @@ public struct PreparedHull: Sendable {
         throw HullSweepFailure.invalidGeometry
       }
       let generated = try sweepTriangulate(indices.map { vertices[$0] })
+      c01TriangleFaceIndices.append(contentsOf: repeatElement(sourceFaceIndex, count: generated.count))
       faces.append(indices)
       faceTriangles.append(Array(triangles.count..<(triangles.count + generated.count)))
       triangles += generated
@@ -159,6 +164,9 @@ public struct PreparedHull: Sendable {
     guard triangles.contains(where: \.hasResolvedArea)
     else { throw HullSweepFailure.invalidGeometry }
     self.triangles = triangles
+    self.c01TriangleFaceIndices = c01TriangleFaceIndices
+    self.c01SourceVertices = mesh.vertices
+    self.c01SourceFaces = mesh.faces
     hasUnresolvedSupport = triangles.contains(where: \.unresolvedSupport)
     triangleCount = triangles.count
     radius = vertices.map(\.length).max() ?? 0
@@ -168,6 +176,19 @@ public struct PreparedHull: Sendable {
     isClosed = components.allSatisfy { $0.closed && $0.hasResolvedSurface }
     self.nodes = sweepBVH(triangles)
   }
+  /// C01-only storage adoption after actual metered native preparation. No
+  /// lookup, geometry computation, work receipt or native admission is issued.
+  fileprivate init(c01PreparedTriangles triangles: [SweepTriangle], nodes: [SweepNode],
+    components: [SweepComponent], radius: Double, isClosed: Bool, unresolvedSupport: Bool,
+    sourceVertices: [Vector3], sourceFaces: [[Int]], faceIndices: [Int])
+  {
+    self.triangles = triangles; self.nodes = nodes; self.components = components
+    self.radius = radius; triangleCount = triangles.count; self.isClosed = isClosed
+    hasUnresolvedSupport = unresolvedSupport
+    c01SourceVertices = sourceVertices; c01SourceFaces = sourceFaces
+    c01TriangleFaceIndices = faceIndices
+  }
+
 }
 
 public enum HullSweepSafety {
@@ -303,7 +324,8 @@ public enum HullSweepSafety {
     guard sweepSame(expected, motion.end) else { throw HullSweepFailure.invalidMotion }
   }
 
-  private static func shipPose(_ sweep: HullSceneMotion, at time: Double) -> ShipPose {
+  /// Sample an already admitted trajectory without consuming or reapproving it.
+  static func shipPose(_ sweep: HullSceneMotion, at time: Double) -> ShipPose {
     var pose = sweepPose(
       sweep.start, velocity: sweep.initialVelocity, omega: sweep.worldAngularVelocity, time: time)
     pose.position = pose.position + sweep.acceleration * (0.5 * time * time)
@@ -1697,15 +1719,24 @@ struct NativeHullContact: Sendable {
   let upperTime: Double
   let point: Vector3
   let normal: Vector3
+  let clockWindow: NativeCurveClockWindow?
+  let sourcePose: ShipPose?
+  let targetPose: ShipPose?
+  var lowerPhysicalTime: Double? { clockWindow?.lowerBound(at: lowerTime) }
+  var upperPhysicalTime: Double? { clockWindow?.frontier(at: upperTime)?.physical }
   fileprivate let frontier: NativeContactFrontier?
   fileprivate init(
     lowerTime: Double, upperTime: Double, point: Vector3, normal: Vector3,
-    frontier: NativeContactFrontier? = nil
+    frontier: NativeContactFrontier? = nil, clockWindow: NativeCurveClockWindow? = nil,
+    sourcePose: ShipPose? = nil, targetPose: ShipPose? = nil
   ) {
     self.lowerTime = lowerTime
     self.upperTime = upperTime
     self.point = point
     self.normal = normal
+    self.clockWindow = clockWindow
+    self.sourcePose = sourcePose
+    self.targetPose = targetPose
     self.frontier = frontier
   }
 }
@@ -2412,7 +2443,7 @@ extension HullSweepSafety {
   /// supply the normal for a positive linear impulse and are searched past.
   private static func contactEntryNormal(
     point: Vector3, owner: HullSceneMotion, face: SweepTriangle, container: HullSceneMotion,
-    time: Double, ownerIsSource: Bool
+    time: Double, ownerIsSource: Bool, containerPose: ShipPose? = nil
   ) -> Vector3? {
     let oldPoint = contactWorldPoint(point, pose: owner.start)
     let oldA = contactWorldPoint(face.a, pose: container.start)
@@ -2420,7 +2451,7 @@ extension HullSweepSafety {
     let oldC = contactWorldPoint(face.c, pose: container.start)
     let side = (oldPoint - oldA).dot((oldB - oldA).cross(oldC - oldA))
     guard side.finite, side.lower > 0 || side.upper < 0 else { return nil }
-    let orientation = shipPose(container, at: time).orientation
+    let orientation = (containerPose ?? shipPose(container, at: time)).orientation
     var normal = orientation.apply((face.b - face.a).cross(face.c - face.a)).unit
     if side.lower > 0 { normal = normal * -1 }
     let velocity = owner.initialVelocity - container.initialVelocity
@@ -2436,10 +2467,11 @@ extension HullSweepSafety {
 
   private static func nativeContactWitness(
     _ hull: PreparedHull, motion source: HullSceneMotion, target: PreparedHull,
-    motion other: HullSceneMotion, time: Double, work: inout SweepWork
+    motion other: HullSceneMotion, time: Double,
+    sourcePose: ShipPose? = nil, targetPose actualTarget: ShipPose? = nil, work: inout SweepWork
   ) throws -> (Vector3, Vector3)? {
-    let pose = shipPose(source, at: time)
-    let targetPose = shipPose(other, at: time)
+    let pose = sourcePose ?? shipPose(source, at: time)
+    let targetPose = actualTarget ?? shipPose(other, at: time)
     for sourceTriangle in hull.triangles {
       let a = SweepTriangle(
         a: pose.systemPoint(sourceTriangle.a), b: pose.systemPoint(sourceTriangle.b),
@@ -2463,7 +2495,7 @@ extension HullSweepSafety {
             let normal = contactEntryNormal(
               point: local.0 + (local.1 - local.0) * hit.distance,
               owner: source, face: targetTriangle, container: other, time: time,
-              ownerIsSource: true)
+              ownerIsSource: true, containerPose: targetPose)
           {
             return (edge.0 + (edge.1 - edge.0) * hit.distance, normal)
           }
@@ -2478,7 +2510,7 @@ extension HullSweepSafety {
             let normal = contactEntryNormal(
               point: local.0 + (local.1 - local.0) * hit.distance,
               owner: other, face: sourceTriangle, container: source, time: time,
-              ownerIsSource: false)
+              ownerIsSource: false, containerPose: pose)
           {
             return (edge.0 + (edge.1 - edge.0) * hit.distance, normal)
           }
@@ -2490,18 +2522,19 @@ extension HullSweepSafety {
     // the real crossed entry face, rather than a contained face's arbitrary normal.
     if let found = try containedEntryWitness(
       hull, motion: source, target: target, motion: other, time: time,
-      ownerIsSource: true, work: &work)
+      ownerIsSource: true, ownerPose: pose, containerPose: targetPose, work: &work)
     {
       return found
     }
     return try containedEntryWitness(
       target, motion: other, target: hull, motion: source, time: time,
-      ownerIsSource: false, work: &work)
+      ownerIsSource: false, ownerPose: targetPose, containerPose: pose, work: &work)
   }
 
   private static func containedEntryWitness(
     _ hull: PreparedHull, motion owner: HullSceneMotion, target: PreparedHull,
     motion container: HullSceneMotion, time: Double, ownerIsSource: Bool,
+    ownerPose: ShipPose? = nil, containerPose: ShipPose? = nil,
     work: inout SweepWork
   ) throws -> (Vector3, Vector3)? {
     // Only this case has a straight material path in the container's frame.
@@ -2509,8 +2542,8 @@ extension HullSweepSafety {
     guard owner.worldAngularVelocity.length == 0, container.worldAngularVelocity.length == 0,
       (owner.acceleration - container.acceleration).length == 0
     else { return nil }
-    let pose = shipPose(owner, at: time)
-    let other = shipPose(container, at: time)
+    let pose = ownerPose ?? shipPose(owner, at: time)
+    let other = containerPose ?? shipPose(container, at: time)
     for triangle in hull.triangles {
       var candidates = [(triangle.a + triangle.b + triangle.c) * (1 / 3.0)]
       for index in 0..<3 {
@@ -2540,7 +2573,7 @@ extension HullSweepSafety {
             hit.distance + hit.uncertainty <= 1,
             let normal = contactEntryNormal(
               point: local, owner: owner, face: face, container: container,
-              time: time, ownerIsSource: ownerIsSource)
+              time: time, ownerIsSource: ownerIsSource, containerPose: other)
           {
             return (point, normal)
           }
@@ -2548,5 +2581,1080 @@ extension HullSweepSafety {
       }
     }
     return nil
+  }
+}
+
+// C01-only readonly primitive bridge. Existing native query bodies/semantics
+// and private kernel type visibility stay unchanged. No live receipt is issued.
+extension HullSweepSafety {
+  /// Reserve every variable metadata dimension BEFORE extracting the view.
+  /// Fixed triangle/component records cover mapping and index comparison;
+  /// original unused vertices and face corners also pay explicit records.
+  static func c01ReservePreparedGeometryMetadata(_ hull: PreparedHull,
+    work: inout NativeC01InquiryCurveGeometry.Work) throws
+  {
+    try work.reservePreparedMetadataRecords(hull.triangles.count)
+    try work.reservePreparedMetadataRecords(hull.components.count)
+    // Snapshot equality plus full common-source equality: at most two passes.
+    try work.reservePreparedMetadataRecords(hull.c01SourceVertices.count)
+    try work.reservePreparedMetadataRecords(hull.c01SourceVertices.count)
+    try work.reservePreparedMetadataRecords(hull.c01SourceFaces.count)
+    for face in hull.c01SourceFaces {
+      // Face-header debit above precedes even this count read. Reserve corners
+      // before any input-face equality can walk them, including refusal paths.
+      try work.reservePreparedMetadataRecords(face.count)
+      try work.reservePreparedMetadataRecords(face.count)
+    }
+  }
+
+  static func c01PreparedGeometry(_ hull: PreparedHull) throws -> NativeC01InquiryCurveGeometry.Prepared {
+    typealias G = NativeC01InquiryCurveGeometry
+    guard hull.c01TriangleFaceIndices.count == hull.triangles.count else { throw G.Failure.invalidInput }
+    return .init(nativeID: hull.nativeGeometryID, hull: hull,
+      sourceVertices: hull.c01SourceVertices, sourceFaces: hull.c01SourceFaces,
+      triangles: hull.triangles.enumerated().map { index, triangle in
+        .init(vertices: [triangle.a, triangle.b, triangle.c], sourceFace: hull.c01TriangleFaceIndices[index],
+          unresolvedSupport: triangle.unresolvedSupport)
+      }, components: hull.components.map {
+        .init(triangles: $0.triangles, representative: $0.representative,
+          closed: $0.closed, hasResolvedSurface: $0.hasResolvedSurface)
+      })
+  }
+
+  static func c01ValidateOrdinaryMotion(_ motion: HullSceneMotion, hull: PreparedHull,
+    budget: HullSweepBudget) throws
+  {
+    try validateMotion(motion, player: hull, budget: budget)
+  }
+
+  /// Every finite axis projects the COMPLETE interval triangle supports.
+  /// Approximate normals/closest features are hints and never contact proof.
+  static func c01IntervalTriangleSeparation(
+    _ lhs: [NativeC01InquiryCurveGeometry.B], _ rhs: [NativeC01InquiryCurveGeometry.B],
+    work: inout NativeC01InquiryCurveGeometry.Work
+  ) throws -> Double {
+    typealias G = NativeC01InquiryCurveGeometry
+    guard lhs.count == 3, rhs.count == 3, (lhs + rhs).allSatisfy(\.valid) else { throw G.Failure.invalidInput }
+    try work.triangle()
+    func enclosed(_ p: G.B) -> SweepIntervalVector {
+      .init(x: .init(lower: p.x.lower, upper: p.x.upper),
+        y: .init(lower: p.y.lower, upper: p.y.upper), z: .init(lower: p.z.lower, upper: p.z.upper))
+    }
+    func middle(_ p: G.B) -> Vector3 {
+      .init(p.x.lower * 0.5 + p.x.upper * 0.5, p.y.lower * 0.5 + p.y.upper * 0.5,
+        p.z.lower * 0.5 + p.z.upper * 0.5)
+    }
+    let a = lhs.map(middle), b = rhs.map(middle)
+    var axes = sweepSupportAxes
+    axes += [(a[1] - a[0]).cross(a[2] - a[0]), (b[1] - b[0]).cross(b[2] - b[0])]
+    for i in 0..<3 {
+      for j in 0..<3 {
+        let e = (a[i], a[(i + 1) % 3]), f = (b[j], b[(j + 1) % 3])
+        axes += [a[i] - b[j], (e.1 - e.0).cross(f.1 - f.0), sweepSegmentAxis(e, f)]
+      }
+    }
+    let left = lhs.map(enclosed), right = rhs.map(enclosed)
+    return axes.map { sweepEnclosedSeparationLowerBound(left, right, origin: a[0], axis: $0) }.max() ?? 0
+  }
+
+  /// Full closed solids, not just triangle surface distance. Conditioned native
+  /// rays and support projections are reused with one caller-owned budget.
+  static func c01InitialSolidSeparation(
+    _ source: PreparedHull, pose a: ShipPose, target: PreparedHull, pose b: ShipPose,
+    work: inout NativeC01InquiryCurveGeometry.Work
+  ) throws -> Double {
+    typealias G = NativeC01InquiryCurveGeometry
+    try work.query()
+    guard sweepValid(a), sweepValid(b), source.isClosed, target.isClosed,
+      try source.components.allSatisfy({ component in
+        try work.reservePreparedMetadataRecords(1)
+        return component.closed && component.hasResolvedSurface
+      }),
+      try target.components.allSatisfy({ component in
+        try work.reservePreparedMetadataRecords(1)
+        return component.closed && component.hasResolvedSurface
+      })
+    else { throw G.Failure.initialSolidUnproven }
+    func transformed(_ hull: PreparedHull, _ pose: ShipPose, work: inout NativeC01InquiryCurveGeometry.Work) throws -> [SweepTriangle] {
+      try hull.triangles.map { triangle in
+        try work.triangle()
+        return .init(a: pose.systemPoint(triangle.a), b: pose.systemPoint(triangle.b),
+          c: pose.systemPoint(triangle.c), conditioned: true, unresolvedSupport: triangle.unresolvedSupport)
+      }
+    }
+    let left = try transformed(source, a, work: &work)
+    let right = try transformed(target, b, work: &work)
+    var separation = Double.infinity
+    for first in left {
+      for second in right {
+        try work.triangle()
+        separation = min(separation, sweepSupportTriangleDistance(first, second))
+      }
+    }
+    guard separation.isFinite, separation > 0 else { throw G.Failure.initialSolidUnproven }
+    for component in source.components {
+      guard try c01OutsideWorldTriangles(a.systemPoint(component.representative), triangles: right,
+        components: target.components, work: &work) else { throw G.Failure.initialSolidUnproven }
+    }
+    for component in target.components {
+      guard try c01OutsideWorldTriangles(b.systemPoint(component.representative), triangles: left,
+        components: source.components, work: &work) else { throw G.Failure.initialSolidUnproven }
+    }
+    return separation
+  }
+
+  private static func c01OutsideWorldTriangles(_ point: Vector3, triangles: [SweepTriangle],
+    components: [SweepComponent], work: inout NativeC01InquiryCurveGeometry.Work
+  ) throws -> Bool {
+    typealias G = NativeC01InquiryCurveGeometry
+    guard sweepFinite(point) else { throw G.Failure.initialSolidUnproven }
+    for component in components {
+      var outside: Bool?
+      for direction in [Vector3(1, 0.371, 0.529), .init(0.293, 1, 0.613), .init(0.419, 0.227, 1)] {
+        var hits: [(lower: Double, upper: Double)] = []
+        var ambiguous = false
+        for index in component.triangles {
+          guard triangles.indices.contains(index) else { throw G.Failure.invalidInput }
+          try work.triangle()
+          if let hit = sweepConditionedRay(point, direction: direction, triangle: triangles[index], maximumDistance: nil) {
+            guard !hit.boundary, hit.distance.isFinite, hit.uncertainty.isFinite else { ambiguous = true; break }
+            hits.append((hit.distance.nextDown, (hit.distance + hit.uncertainty).nextUp))
+          }
+        }
+        if ambiguous { continue }
+        try hits.sort {
+          try work.reservePreparedMetadataRecords(1)
+          return $0.lower < $1.lower
+        }
+        if try zip(hits, hits.dropFirst()).contains(where: { pair in
+          try work.reservePreparedMetadataRecords(1)
+          return pair.0.upper >= pair.1.lower
+        }) { continue }
+        outside = hits.count.isMultiple(of: 2)
+        break
+      }
+      guard let outside else { throw G.Failure.initialSolidUnproven }
+      if !outside { return false }
+    }
+    return true
+  }
+}
+
+
+// C01-only metered native preparation. Ordinary preparation/query bodies and
+// original complexity limits above remain byte-exact. Source operation units
+// account records/predicates, not machine instructions or admission authority.
+extension HullSweepSafety {
+  static func c01PrepareGeometry(mesh: Mesh, maximumTriangles: Int,
+    work: inout NativeC01InquiryCurveGeometry.Work
+  ) -> NativeC01InquiryPreparationWork.Outcome<NativeC01InquiryCurveGeometry.Prepared> {
+    NativeC01InquiryPreparationWork.perform(work: &work) { meter in
+      let hull = try c01PrepareNativeHull(mesh: mesh, maximumTriangles: maximumTriangles, meter: meter)
+      return try c01PrepareGeometryView(hull, meter: meter)
+    }
+  }
+
+  /// Pays only this actual view extraction. G1 must separately retain/debit
+  /// the hull's real construction path; nativeGeometryID is not that record.
+  static func c01PrepareGeometryView(_ hull: PreparedHull,
+    work: inout NativeC01InquiryCurveGeometry.Work
+  ) -> NativeC01InquiryPreparationWork.Outcome<NativeC01InquiryCurveGeometry.Prepared> {
+    NativeC01InquiryPreparationWork.perform(work: &work) { meter in
+      try c01PrepareGeometryView(hull, meter: meter)
+    }
+  }
+
+  private static func c01PrepareGeometryView(_ hull: PreparedHull,
+    meter: NativeC01InquiryPreparationWork.Meter
+  ) throws -> NativeC01InquiryCurveGeometry.Prepared {
+    // Each triangle creates its metadata record and a three-vertex array.
+    try meter.records(hull.triangles.count, .metadata)
+    try meter.records(hull.triangles.count, .metadata)
+    try meter.records(hull.triangles.count, .metadata)
+    try meter.records(hull.triangles.count, .metadata)
+    try meter.records(hull.components.count, .metadata)
+    return try c01PreparedGeometry(hull)
+  }
+}
+
+private func c01PrepareNativeHull(mesh: Mesh, maximumTriangles: Int, meter: NativeC01InquiryPreparationWork.Meter) throws -> PreparedHull {
+    try meter.node(.hullInput)
+    guard maximumTriangles > 0, maximumTriangles <= 100_000,
+      !mesh.vertices.isEmpty, !mesh.faces.isEmpty
+    else { throw HullSweepFailure.invalidGeometry }
+    try meter.records(mesh.faces.count, .hullInput)
+    try meter.records(mesh.faces.count, .hullInput)
+    guard mesh.vertices.count <= maximumTriangles * 3,
+      mesh.faces.count <= maximumTriangles,
+      mesh.faces.allSatisfy({ $0.count <= 256 }),
+      mesh.faces.reduce(0, { $0 + max(1, $1.count - 2) }) <= maximumTriangles
+    else { throw HullSweepFailure.geometryTooComplex }
+    try meter.records(mesh.vertices.count, .hullInput)
+    guard mesh.vertices.allSatisfy(sweepFinite) else { throw HullSweepFailure.invalidGeometry }
+    var welded: [SweepVertexKey: Int] = [:]
+    var vertices: [Vector3] = []
+    let remap = try mesh.vertices.map { point in
+      try meter.records(1, .welding)
+      let key = SweepVertexKey(x: point.x, y: point.y, z: point.z)
+      try meter.records(1, .welding)
+      if let index = welded[key] { return index }
+      let index = vertices.count
+      try meter.records(1, .welding)
+      welded[key] = index
+      vertices.append(point)
+      return index
+    }
+    var faces: [[Int]] = []
+    var faceTriangles: [[Int]] = []
+    var triangles: [SweepTriangle] = []
+    var c01TriangleFaceIndices: [Int] = []
+    for (sourceFaceIndex, face) in mesh.faces.enumerated() {
+      try meter.records(1, .hullInput)
+      try meter.records(face.count, .hullInput)
+      guard face.count >= 3, face.allSatisfy(mesh.vertices.indices.contains) else {
+        throw HullSweepFailure.invalidGeometry
+      }
+      try meter.records(face.count, .hullInput)
+      var indices = face.map { remap[$0] }
+      if indices.first == indices.last { indices.removeLast() }
+      try meter.records(indices.count, .hullInput)
+      guard indices.count >= 3, Set(indices).count == indices.count else {
+        throw HullSweepFailure.invalidGeometry
+      }
+      try meter.records(indices.count, .triangulation)
+      let generated = try c01SweepTriangulate(indices.map { vertices[$0] }, meter: meter)
+      try meter.records(generated.count, .triangulation)
+      c01TriangleFaceIndices.append(contentsOf: repeatElement(sourceFaceIndex, count: generated.count))
+      faces.append(indices)
+      try meter.records(generated.count, .triangulation)
+      faceTriangles.append(Array(triangles.count..<(triangles.count + generated.count)))
+      try meter.records(generated.count, .triangulation)
+      triangles += generated
+    }
+    guard !triangles.isEmpty else { throw HullSweepFailure.invalidGeometry }
+    // Retain every original finite three-vertex convex support. A standalone
+    // collection with no certified surface is still invalid, not a manufactured solid.
+    try meter.records(triangles.count, .hullInput)
+    guard triangles.contains(where: \.hasResolvedArea)
+    else { throw HullSweepFailure.invalidGeometry }
+    try meter.records(triangles.count, .hullInput)
+    let hasUnresolvedSupport = triangles.contains(where: \.unresolvedSupport)
+    try meter.records(vertices.count, .hullInput)
+    try meter.records(vertices.count, .hullInput)
+    let radius = vertices.map(\.length).max() ?? 0
+    guard radius.isFinite, radius > 0 else { throw HullSweepFailure.invalidGeometry }
+    let components = try c01SweepComponents(
+      vertices: vertices, faces: faces, triangles: faceTriangles, geometry: triangles, meter: meter)
+    try meter.records(components.count, .components)
+    let isClosed = components.allSatisfy { $0.closed && $0.hasResolvedSurface }
+    let nodes = try c01SweepBVH(triangles, meter: meter)
+    return PreparedHull(c01PreparedTriangles: triangles, nodes: nodes, components: components,
+      radius: radius, isClosed: isClosed, unresolvedSupport: hasUnresolvedSupport,
+      sourceVertices: mesh.vertices, sourceFaces: mesh.faces, faceIndices: c01TriangleFaceIndices)
+}
+
+private func c01SweepBVH(_ triangles: [SweepTriangle], meter: NativeC01InquiryPreparationWork.Meter) throws -> [SweepNode] {
+  var nodes: [SweepNode] = []
+  func build(_ indices: [Int]) throws -> Int {
+    try meter.node(.bvh)
+    try meter.records(indices.count, .bvh)
+    let bounds = indices.dropFirst().reduce(triangles[indices[0]].bounds) {
+      $0.union(triangles[$1].bounds)
+    }
+    let index = nodes.count
+    nodes.append(.init(bounds: bounds, children: nil, triangles: []))
+    if indices.count <= 8 {
+      nodes[index] = .init(bounds: bounds, children: nil, triangles: indices)
+    } else {
+      let extent = bounds.upper - bounds.lower
+      let axis = sweepAxis(extent)
+      try meter.records(indices.count, .bvh)
+      let ordered = try indices.sorted {
+        try meter.records(1, .bvhComparison)
+        let lhs = sweepCoordinate(triangles[$0].bounds.center, axis)
+        let rhs = sweepCoordinate(triangles[$1].bounds.center, axis)
+        return lhs == rhs ? $0 < $1 : lhs < rhs
+      }
+      let middle = ordered.count / 2
+      try meter.records(middle, .bvh)
+      let left = try build(Array(ordered[..<middle]))
+      try meter.records(ordered.count - middle, .bvh)
+      let right = try build(Array(ordered[middle...]))
+      nodes[index] = .init(bounds: bounds, children: (left, right), triangles: [])
+    }
+    return index
+  }
+  try meter.records(triangles.count, .bvh)
+  _ = try build(Array(triangles.indices))
+  return nodes
+}
+
+
+private func c01SweepComponents(
+  vertices: [Vector3], faces: [[Int]], triangles: [[Int]], geometry: [SweepTriangle], meter: NativeC01InquiryPreparationWork.Meter
+) throws -> [SweepComponent] {
+  var edges: [SweepEdge: [Int]] = [:]
+  for (face, indices) in faces.enumerated() {
+    try meter.records(1, .components)
+    for index in indices.indices {
+      try meter.records(1, .components)
+      edges[.init(indices[index], indices[(index + 1) % indices.count]), default: []].append(face)
+    }
+  }
+  try meter.records(faces.count, .components)
+  var parents = Array(faces.indices)
+  func root(_ index: Int) throws -> Int {
+    var value = index
+    while parents[value] != value {
+      try meter.records(1, .components)
+      value = parents[value]
+    }
+    var current = index
+    while parents[current] != current {
+      try meter.records(1, .components)
+      let next = parents[current]
+      parents[current] = value
+      current = next
+    }
+    return value
+  }
+  for adjacent in edges.values {
+    try meter.records(1, .components)
+    for face in adjacent.dropFirst() {
+      try meter.records(1, .components)
+      let first = try root(adjacent[0])
+      let second = try root(face)
+      parents[max(first, second)] = min(first, second)
+    }
+  }
+  var groups: [Int: [Int]] = [:]
+  for index in faces.indices {
+    try meter.records(1, .components)
+    groups[try root(index), default: []].append(index)
+  }
+  try meter.records(groups.count, .components)
+  let sortedKeys = try groups.keys.sorted { a, b in
+    try meter.records(1, .components)
+    return a < b
+  }
+  return try sortedKeys.map { key in
+    try meter.records(1, .components)
+    let members = groups[key, default: []]
+    try meter.records(members.count, .components)
+    let points = try members.flatMap { face in
+      try meter.records(faces[face].count, .components)
+      return faces[face].map { vertices[$0] }
+    }
+    let initial = SweepBounds(lower: points[0], upper: points[0])
+    try meter.records(points.count, .components)
+    let bounds = points.dropFirst().reduce(initial) { $0.union(.init(lower: $1, upper: $1)) }
+    let closed = try members.allSatisfy { face in
+      try meter.records(1, .components)
+      let indices = faces[face]
+      return try indices.indices.allSatisfy {
+        try meter.records(1, .components)
+        return edges[.init(indices[$0], indices[($0 + 1) % indices.count])]?.count == 2
+      }
+    }
+    try meter.records(members.count, .components)
+    let componentTriangles = try members.flatMap { face in
+      try meter.records(triangles[face].count, .components)
+      return triangles[face]
+    }
+    // Thin connecting faces can make broad opposing plates part of a newly supported
+    // solid. Parity must condition the whole component even when the ray misses its bridge.
+    let conditioned = try componentTriangles.contains { index in
+      try meter.records(1, .components)
+      return geometry[index].conditioned
+    }
+    let hasResolvedSurface = try componentTriangles.contains { index in
+      try meter.records(1, .components)
+      return geometry[index].hasResolvedArea
+    }
+    return .init(
+      bounds: bounds, triangles: componentTriangles, closed: closed,
+      representative: points[0], conditioned: conditioned, hasResolvedSurface: hasResolvedSurface)
+  }
+}
+
+
+private func c01SweepTriangulate(_ vertices: [Vector3], meter: NativeC01InquiryPreparationWork.Meter) throws -> [SweepTriangle] {
+  // An original triangle needs no polygon projection or ear removal. In particular,
+  // absolute shoelace cutoffs would discard resolved small/translated source surfaces.
+  // PreparedHull applies the same certified area gate to every returned triangle.
+  if vertices.count == 3 {
+    try meter.records(1, .triangulation)
+    return [.init(a: vertices[0], b: vertices[1], c: vertices[2])]
+  }
+  var normal: Vector3?
+  for index in 1..<(vertices.count - 1) {
+    try meter.records(1, .triangulation)
+    let candidate = (vertices[index] - vertices[0]).cross(vertices[index + 1] - vertices[0])
+    if candidate.length > 1e-9 { normal = candidate; break }
+  }
+  guard let normal, sweepFinite(normal) else { throw HullSweepFailure.invalidGeometry }
+  let axis = sweepAxis(.init(abs(normal.x), abs(normal.y), abs(normal.z)))
+  let points = try vertices.map { point -> SweepPoint2 in
+    try meter.records(1, .triangulation)
+    return switch axis {
+    case 0: .init(x: point.y, y: point.z)
+    case 1: .init(x: point.x, y: point.z)
+    default: .init(x: point.x, y: point.y)
+    }
+  }
+  try c01SweepCheckEdges(points, meter: meter)
+  try meter.records(points.count, .triangulation)
+  let area = points.indices.reduce(0.0) {
+    $0 + points[$1].x * points[($1 + 1) % points.count].y
+      - points[($1 + 1) % points.count].x * points[$1].y
+  }
+  guard abs(area) > 1e-9, area.isFinite else { throw HullSweepFailure.invalidGeometry }
+  let sign = area > 0 ? 1.0 : -1.0
+  return try c01SweepEars(vertices, points: points, sign: sign, meter: meter)
+}
+
+
+private func c01SweepCheckEdges(_ points: [SweepPoint2], meter: NativeC01InquiryPreparationWork.Meter) throws {
+  for first in points.indices {
+    try meter.records(1, .triangulation)
+    for second in points.indices {
+      try meter.records(1, .triangulation)
+      guard second > first + 1 && !(first == 0 && second == points.count - 1) else { continue }
+      let a = points[first]
+      let b = points[(first + 1) % points.count]
+      let c = points[second]
+      let d = points[(second + 1) % points.count]
+      if sweepCross(a, b, c) * sweepCross(a, b, d) < 0
+        && sweepCross(c, d, a) * sweepCross(c, d, b) < 0
+      {
+        throw HullSweepFailure.invalidGeometry
+      }
+    }
+  }
+}
+
+private func c01SweepEars(
+  _ vertices: [Vector3], points: [SweepPoint2], sign: Double, meter: NativeC01InquiryPreparationWork.Meter
+) throws -> [SweepTriangle] {
+  try meter.records(vertices.count, .triangulation)
+  var polygon = Array(vertices.indices)
+  var result: [SweepTriangle] = []
+  while polygon.count > 3 {
+    try meter.node(.triangulation)
+    guard let ear = try c01SweepFindEar(polygon, points: points, sign: sign, meter: meter) else {
+      throw HullSweepFailure.invalidGeometry
+    }
+    if let (a, b, c) = ear.triangle {
+      try meter.records(1, .triangulation)
+      result.append(.init(a: vertices[a], b: vertices[b], c: vertices[c]))
+    }
+    try meter.records(polygon.count - ear.index, .triangulation)
+    polygon.remove(at: ear.index)
+  }
+
+  try meter.records(1, .triangulation)
+  guard polygon.count == 3,
+    (vertices[polygon[1]] - vertices[polygon[0]]).cross(vertices[polygon[2]] - vertices[polygon[0]])
+      .length > 1e-9
+  else { throw HullSweepFailure.invalidGeometry }
+  try meter.records(1, .triangulation)
+  result.append(.init(a: vertices[polygon[0]], b: vertices[polygon[1]], c: vertices[polygon[2]]))
+  return result
+}
+private func c01SweepFindEar(
+  _ polygon: [Int], points: [SweepPoint2], sign: Double, meter: NativeC01InquiryPreparationWork.Meter
+) throws -> (index: Int, triangle: (Int, Int, Int)?)? {
+  for index in polygon.indices {
+    try meter.records(1, .triangulation)
+    let a = polygon[(index + polygon.count - 1) % polygon.count]
+    let b = polygon[index]
+    let c = polygon[(index + 1) % polygon.count]
+    let turn = sweepCross(points[a], points[b], points[c]) * sign
+    if abs(turn) <= 1e-9 {
+      return (index, nil)
+    }
+    if turn < 0 { continue }
+    let occupied = try polygon.contains { other in
+      try meter.records(1, .triangulation)
+      return other != a && other != b && other != c
+        && sweepCross(points[a], points[b], points[other]) * sign >= -1e-9
+        && sweepCross(points[b], points[c], points[other]) * sign >= -1e-9
+        && sweepCross(points[c], points[a], points[other]) * sign >= -1e-9
+    }
+    if occupied { continue }
+    return (index, (a, b, c))
+  }
+  return nil
+}
+
+// C01-only instantaneous sphere support query; no motion, contact or admission seal.
+extension HullSweepSafety {
+  static func c01InitialSphereSeparation(
+    _ source: PreparedHull, pose: ShipPose, centre: Vector3, radius: Double,
+    work: inout NativeC01InquiryCurveGeometry.Work
+  ) throws -> Double {
+    typealias G = NativeC01InquiryCurveGeometry
+    try work.query()
+    try work.reservePreparedMetadataRecords(1)
+    guard sweepValid(pose), sweepFinite(centre), radius.isFinite, radius > 0,
+      source.isClosed, !source.triangles.isEmpty, !source.components.isEmpty,
+      try source.components.allSatisfy({ component in
+        try work.reservePreparedMetadataRecords(1)
+        return component.closed && component.hasResolvedSurface
+      })
+    else { throw G.Failure.initialSolidUnproven }
+    var lower = Vector3(Double.infinity, Double.infinity, Double.infinity)
+    var upper = Vector3(-Double.infinity, -Double.infinity, -Double.infinity)
+    for triangle in source.triangles {
+      try work.triangle()
+      // These are the actual rounded native shadow vertices, as in the solid query.
+      for local in [triangle.a, triangle.b, triangle.c] {
+        let point = pose.systemPoint(local)
+        guard sweepFinite(point) else { throw G.Failure.initialSolidUnproven }
+        lower.x = min(lower.x, point.x); upper.x = max(upper.x, point.x)
+        lower.y = min(lower.y, point.y); upper.y = max(upper.y, point.y)
+        lower.z = min(lower.z, point.z); upper.z = max(upper.z, point.z)
+      }
+    }
+    // Exact sphere support on each unit axis, rounded outward. No box mesh is
+    // prepared and a missing support gap supplies no collision/intersection fact.
+    let sphereLower = Vector3((centre.x - radius).nextDown,
+      (centre.y - radius).nextDown, (centre.z - radius).nextDown)
+    let sphereUpper = Vector3((centre.x + radius).nextUp,
+      (centre.y + radius).nextUp, (centre.z + radius).nextUp)
+    guard sweepFinite(lower), sweepFinite(upper), sweepFinite(sphereLower), sweepFinite(sphereUpper) else {
+      throw G.Failure.initialSolidUnproven
+    }
+    let gaps = [(lower.x - sphereUpper.x).nextDown, (sphereLower.x - upper.x).nextDown,
+      (lower.y - sphereUpper.y).nextDown, (sphereLower.y - upper.y).nextDown,
+      (lower.z - sphereUpper.z).nextDown, (sphereLower.z - upper.z).nextDown]
+    guard let separation = gaps.max(), separation.isFinite, separation > 0 else {
+      throw G.Failure.initialSolidUnproven
+    }
+    return separation
+  }
+}
+
+// Actual source curves use the same native full-solid distance and intersection
+// predicates. A chord is never used as their continuous separation proof.
+extension HullSweepSafety {
+  /// The real solid broad phase shares the same two-endpoint clock envelope as
+  /// its narrow phase. This boolean grants no geometry, contact or clock rights.
+  static func currentNewtCurvePairClearanceProven(separation: Double, travel: Double,
+    numerical: Double, sourceSamplingError: Double, targetSamplingError: Double) -> Bool {
+    guard separation.isFinite, travel.isFinite, travel >= 0, numerical.isFinite, numerical >= 0,
+      sourceSamplingError.isFinite, sourceSamplingError >= 0,
+      targetSamplingError.isFinite, targetSamplingError >= 0 else { return false }
+    let sum = sourceSamplingError + targetSamplingError
+    let temporal = sum == 0 ? 0 : (2 * sum.nextUp).nextUp
+    let bound = ((travel + numerical).nextUp + temporal).nextUp
+    return bound.isFinite && separation > bound
+  }
+
+  static func firstCurrentNewtCurveContact(
+    source hull: PreparedHull, target other: PreparedHull, duration: Double,
+    sourcePointSpeed: Double, targetPointSpeed: Double,
+    sourceAt: (Double) -> ShipPose?, targetAt: (Double) -> ShipPose?,
+    queryFrame: CurrentNewtQueryFrame? = nil,
+    sourceSamplingError: Double = 0, targetSamplingError: Double = 0,
+    clockWindow: NativeCurveClockWindow? = nil,
+    budget: HullSweepBudget = .standard
+  ) -> NativeHullContactResult {
+    var report = HullSweepResult(failure: nil, obstacle: nil, minimumSampledClearance: nil,
+      distanceQueries: 0, triangleTests: 0, nodeVisits: 0)
+    return firstCurrentNewtCurveContact(source: hull, target: other, duration: duration,
+      sourcePointSpeed: sourcePointSpeed, targetPointSpeed: targetPointSpeed,
+      sourceAt: sourceAt, targetAt: targetAt, queryFrame: queryFrame,
+      sourceSamplingError: sourceSamplingError, targetSamplingError: targetSamplingError,
+      clockWindow: clockWindow, budget: budget, report: &report)
+  }
+
+  static func firstCurrentNewtCurveContact(
+    source hull: PreparedHull, target other: PreparedHull, duration: Double,
+    sourcePointSpeed: Double, targetPointSpeed: Double,
+    sourceAt: (Double) -> ShipPose?, targetAt: (Double) -> ShipPose?,
+    queryFrame: CurrentNewtQueryFrame? = nil,
+    sourceSamplingError: Double = 0, targetSamplingError: Double = 0,
+    clockWindow: NativeCurveClockWindow? = nil,
+    budget: HullSweepBudget, report: inout HullSweepResult
+  ) -> NativeHullContactResult {
+    var work = SweepWork(budget: budget)
+    var reportedFailure: HullSweepFailure?
+    defer { report = result(reportedFailure, obstacle: nil, work: work) }
+    func sourcePose(_ time: Double) -> ShipPose? {
+      guard let pose = sourceAt(time) else { return nil }
+      if let queryFrame { return queryFrame.pose(pose, at: time) }
+      return pose
+    }
+    func targetPose(_ time: Double) -> ShipPose? {
+      guard let pose = targetAt(time) else { return nil }
+      if let queryFrame { return queryFrame.pose(pose, at: time) }
+      return pose
+    }
+    func actualWitness(at nominal: Double, lower: Double, through end: Double,
+      sourceStart: ShipPose, targetStart: ShipPose,
+      work: inout SweepWork) throws -> NativeHullContact? {
+      let attained: Double
+      if let clockWindow {
+        guard let frontier = clockWindow.frontier(at: nominal),
+          frontier.elapsed >= lower, frontier.elapsed <= end else { return nil }
+        attained = frontier.elapsed
+      } else { attained = nominal }
+      // Re-evaluate BOTH actual world curves at the same representable clock.
+      // The query frame conditions separation; it cannot mint a world witness.
+      guard let a = sourceAt(attained), let b = targetAt(attained), sweepValid(a), sweepValid(b),
+        let sourceWitness = currentNewtWitnessMotion(start: sourceStart, end: a, radius: hull.radius),
+        let targetWitness = currentNewtWitnessMotion(start: targetStart, end: b, radius: other.radius),
+        let found = try nativeContactWitness(hull, motion: sourceWitness,
+          target: other, motion: targetWitness, time: 1, sourcePose: a, targetPose: b, work: &work)
+      else { return nil }
+      return .init(lowerTime: lower, upperTime: attained, point: found.0, normal: found.1,
+        clockWindow: clockWindow, sourcePose: a, targetPose: b)
+    }
+    do {
+      guard duration.isFinite, duration > 0, duration <= 0.1 + 1e-9,
+        sourceSamplingError.isFinite, sourceSamplingError >= 0,
+        targetSamplingError.isFinite, targetSamplingError >= 0,
+        clockWindow.map({ $0.duration == duration }) ?? true,
+        sourcePointSpeed.isFinite, sourcePointSpeed >= 0,
+        targetPointSpeed.isFinite, targetPointSpeed >= 0,
+        budget.distanceQueries > 0, budget.triangleTests > 0, budget.nodeVisits > 0,
+        (0...20).contains(budget.subdivisionDepth),
+        let a0 = sourcePose(0), let b0 = targetPose(0), sweepValid(a0), sweepValid(b0),
+        let sourceStart = sourceAt(0), let targetStart = targetAt(0),
+        sweepValid(sourceStart), sweepValid(targetStart)
+      else { throw HullSweepFailure.invalidMotion }
+      try work.query()
+      let initial = try meshDistance(hull, pose: a0, obstacle: other, pose: b0, work: &work)
+      let initialRoundoff = 128 * Double.ulpOfOne * max(1, hull.radius + other.radius
+        + a0.position.length + b0.position.length + 2 * (queryFrame?.roundoffScale(at: 0) ?? 0))
+      let sum = sourceSamplingError + targetSamplingError
+      let temporal = sum == 0 ? 0 : (2 * sum.nextUp).nextUp
+      guard initialRoundoff.isFinite, initial > max(1e-9, initialRoundoff)
+        && temporal.isFinite && (initial - initialRoundoff).nextDown > temporal
+      else { throw HullSweepFailure.unproven }
+      let speed = (sourcePointSpeed + targetPointSpeed).nextUp
+      guard speed.isFinite else { throw HullSweepFailure.invalidMotion }
+      var pending = [NativeContactInterval(start: 0, end: duration, depth: 0, known: nil)]
+      while let interval = pending.popLast() {
+        try work.query()
+        let middle = interval.start + (interval.end - interval.start) * 0.5
+        guard middle > interval.start, middle < interval.end else { throw HullSweepFailure.unproven }
+        guard let a = sourcePose(middle), let b = targetPose(middle), sweepValid(a), sweepValid(b)
+        else { throw HullSweepFailure.invalidMotion }
+        let distance: Double
+        do { distance = try surfaceMeshDistance(hull, pose: a, obstacle: other, pose: b, work: &work) }
+        catch HullSweepFailure.insideHull { distance = 0 }
+        let numerical = 128 * Double.ulpOfOne
+          * max(1, hull.radius + other.radius + a.position.length + b.position.length
+            + 2 * (queryFrame?.roundoffScale(at: middle) ?? 0))
+        let envelope = (speed * ((interval.end - interval.start) * 0.5).nextUp).nextUp
+        guard distance.isFinite, envelope.isFinite, numerical.isFinite else {
+          throw HullSweepFailure.invalidMotion
+        }
+        let separation = ((distance - envelope).nextDown - numerical).nextDown
+        if temporal == 0 ? separation > 0 : (separation - temporal).nextDown > 0 { continue }
+        var witness = interval.known
+        if distance <= 1e-9,
+          let contact = try actualWitness(at: middle, lower: interval.start,
+            through: interval.end, sourceStart: sourceStart, targetStart: targetStart, work: &work),
+          witness == nil || contact.upperTime < witness!.upperTime
+        {
+          witness = contact
+        }
+        if interval.depth >= budget.subdivisionDepth {
+          guard let witness, witness.upperTime <= interval.end else {
+            throw HullSweepFailure.unproven
+          }
+          // Genuine native intersection on the actual sampled curves, after all
+          // earlier intervals were proved clear. No synthetic continuation seal.
+          return .contact(.init(lowerTime: interval.start, upperTime: witness.upperTime,
+            point: witness.point, normal: witness.normal, clockWindow: witness.clockWindow,
+            sourcePose: witness.sourcePose, targetPose: witness.targetPose))
+        }
+        pending.append(.init(start: middle, end: interval.end, depth: interval.depth + 1,
+          known: witness.flatMap { $0.upperTime > middle ? $0 : nil }))
+        pending.append(.init(start: interval.start, end: middle, depth: interval.depth + 1,
+          known: witness.flatMap { $0.upperTime <= middle ? $0 : nil }))
+      }
+      return .clear
+    } catch let failure as HullSweepFailure {
+      reportedFailure = failure
+      return .refused(failure)
+    } catch {
+      reportedFailure = .unproven
+      return .refused(.unproven)
+    }
+  }
+
+  /// Entry-side/normal hint from the actual opening to the actual witness.
+  /// Exact sampled poses supply intersection geometry separately. This hint's
+  /// interpolation never authorizes any curved path interval or clock frontier.
+  private static func currentNewtWitnessMotion(
+    start: ShipPose, end: ShipPose, radius: Double
+  ) -> HullSceneMotion? {
+    debrisRigidMotion(from: start, to: end, duration: 1, radius: radius)
+  }
+}
+
+extension HullSweepSafety {
+  /// Actual endpoint placement only. A newborn has no preceding positive-time
+  /// trajectory; this issues neither a motion/contact frontier nor clock credit.
+  static func currentNewtEndpointPairClearance(
+    source: PreparedHull, sourcePose: ShipPose, target: PreparedHull, targetPose: ShipPose,
+    budget: HullSweepBudget = .standard
+  ) -> HullSweepResult {
+    var work = SweepWork(budget: budget)
+    do {
+      guard sweepValid(sourcePose), sweepValid(targetPose),
+        budget.distanceQueries > 0, budget.triangleTests > 0, budget.nodeVisits > 0,
+        (0...20).contains(budget.subdivisionDepth)
+      else { throw HullSweepFailure.invalidGeometry }
+      try work.query()
+      let distance = try meshDistance(source, pose: sourcePose, obstacle: target,
+        pose: targetPose, work: &work)
+      let numerical = 128 * Double.ulpOfOne * max(1, source.radius + target.radius
+        + sourcePose.position.length + targetPose.position.length)
+      work.minimum = distance
+      guard distance.isFinite, distance > 1e-9 else { throw HullSweepFailure.clearanceViolation }
+      guard distance > numerical else { throw HullSweepFailure.unproven }
+      return result(nil, obstacle: nil, work: work)
+    } catch let failure as HullSweepFailure { return result(failure, obstacle: nil, work: work) }
+    catch { return result(.unproven, obstacle: nil, work: work) }
+  }
+}
+
+/// Native geometry observation only. It carries no actor, impact, continuation
+/// or clock authority; the scene owner must join the actual source/component.
+struct NativeSphereCurveContact: Sendable {
+  let lowerTime: Double
+  let upperTime: Double
+  let centre: Vector3
+  let radius: Double
+  let targetPose: ShipPose
+  let clockWindow: NativeCurveClockWindow?
+  var lowerPhysicalTime: Double? { clockWindow?.lowerBound(at: lowerTime) }
+  var upperPhysicalTime: Double? { clockWindow?.frontier(at: upperTime)?.physical }
+  fileprivate let geometry: UUID
+  fileprivate let feature: Int
+  fileprivate let interior: Bool
+
+  fileprivate init(lowerTime: Double, upperTime: Double, centre: Vector3, radius: Double,
+    targetPose: ShipPose, geometry: UUID, feature: Int, interior: Bool,
+    clockWindow: NativeCurveClockWindow? = nil)
+  {
+    self.lowerTime = lowerTime; self.upperTime = upperTime
+    self.centre = centre; self.radius = radius; self.targetPose = targetPose
+    self.geometry = geometry; self.feature = feature; self.interior = interior
+    self.clockWindow = clockWindow
+  }
+
+  func matches(_ target: PreparedHull) -> Bool { geometry == target.nativeGeometryID }
+}
+
+enum NativeSphereCurveContactResult: Sendable {
+  case clear(HullSweepResult)
+  case contact(NativeSphereCurveContact, HullSweepResult)
+  case refused(HullSweepResult)
+}
+
+// Native point/sphere specialization of the existing bounded curve query. All
+// target surfaces and solid/parity predicates remain the real PreparedHull data.
+extension HullSweepSafety {
+  private struct SphereCurveSample {
+    let separation: Double
+    let centre: Vector3
+    let pose: ShipPose
+    let feature: Int?
+    let interior: Bool
+  }
+
+  private struct SphereCurveInterval {
+    let start: Double
+    let end: Double
+    let depth: Int
+    let known: NativeSphereCurveContact?
+  }
+
+  static func firstCurrentNewtSphereCurveContact(
+    target hull: PreparedHull, radius: Double, duration: Double,
+    pointSpeed: Double, targetPointSpeed: Double,
+    pointAt: (Double) -> Vector3?, targetAt: (Double) -> ShipPose?,
+    queryFrame: CurrentNewtQueryFrame? = nil,
+    pointSamplingError: Double = 0, targetSamplingError: Double = 0,
+    clockWindow: NativeCurveClockWindow? = nil, budget: HullSweepBudget = .standard
+  ) -> NativeSphereCurveContactResult {
+    var work = SweepWork(budget: budget)
+    func sample(_ time: Double, work: inout SweepWork) throws -> SphereCurveSample {
+      guard let centre = pointAt(time), let target = targetAt(time),
+        sweepFinite(centre), sweepValid(target) else { throw HullSweepFailure.invalidMotion }
+      let point: Vector3
+      let pose: ShipPose
+      if let queryFrame {
+        guard let p = queryFrame.pose(.init(position: centre), at: time),
+          let t = queryFrame.pose(target, at: time) else { throw HullSweepFailure.invalidMotion }
+        point = p.position; pose = t
+      } else { point = centre; pose = target }
+      let numerical = 128 * Double.ulpOfOne * max(1, hull.radius + radius
+        + point.length + pose.position.length + 2 * (queryFrame?.roundoffScale(at: time) ?? 0))
+      guard numerical.isFinite else { throw HullSweepFailure.invalidMotion }
+      let native = try nativeSphereCurveSample(hull, pose: pose, point: point,
+        radius: radius, numerical: numerical, work: &work)
+      var feature = native.feature
+      if let index = feature, !native.interior {
+        // A translated query frame is conditioning only. Rejoin the actual
+        // rounded world triangle before accepting an exact touch/feature.
+        var cache: [Int: SweepTriangle] = [:]
+        let triangle = try nativeSphereTriangle(hull, pose: target, index: index, cache: &cache, work: &work)
+        let worldNumerical = 128 * Double.ulpOfOne * max(1, hull.radius + radius
+          + centre.length + target.position.length)
+        guard worldNumerical.isFinite else { throw HullSweepFailure.invalidMotion }
+        if !nativeSphereFeature(centre, radius: radius, numerical: worldNumerical, triangle: triangle) {
+          feature = nil
+        }
+      }
+      let sum = pointSamplingError + targetSamplingError
+      // Each endpoint of a distance comparison can differ from its ideal
+      // clock evaluation. Triangle inequality requires both error envelopes.
+      let temporal = sum == 0 ? 0 : (2 * sum.nextUp).nextUp
+      guard temporal.isFinite else { throw HullSweepFailure.invalidMotion }
+      let spatial = (native.separation - numerical).nextDown
+      return .init(separation: temporal == 0 ? spatial : (spatial - temporal).nextDown,
+        centre: centre, pose: target, feature: feature, interior: native.interior)
+    }
+    func witness(_ observed: SphereCurveSample, lower: Double, upper: Double,
+      through end: Double, work: inout SweepWork) throws -> NativeSphereCurveContact? {
+      let actual: SphereCurveSample
+      let attained: Double
+      if let clockWindow {
+        guard let frontier = clockWindow.frontier(at: upper),
+          frontier.elapsed >= lower, frontier.elapsed <= end else { return nil }
+        attained = frontier.elapsed
+        // Both source and target are evaluated at the SAME actual retained
+        // frontier, not a nominal time later relabelled with a rounded clock.
+        actual = attained == upper ? observed : try sample(attained, work: &work)
+      } else { actual = observed; attained = upper }
+      guard let feature = actual.feature else { return nil }
+      return .init(lowerTime: lower, upperTime: attained, centre: actual.centre, radius: radius,
+        targetPose: actual.pose, geometry: hull.nativeGeometryID,
+        feature: feature, interior: actual.interior, clockWindow: clockWindow)
+    }
+    func refineEarliestBracket(from start: Double, to known: NativeSphereCurveContact,
+      speed: Double, work: inout SweepWork) throws -> NativeSphereCurveContact {
+      var lower = start
+      var upper = known
+      let precision = (duration / Double(1 << budget.subdivisionDepth)).nextDown
+      guard speed > 0, precision > 0, upper.upperTime >= lower else { throw HullSweepFailure.unproven }
+      while (upper.upperTime - lower).nextUp > precision {
+        let middle = lower + (upper.upperTime - lower) * 0.5
+        guard middle > lower, middle < upper.upperTime else { throw HullSweepFailure.unproven }
+        let current = try sample(middle, work: &work)
+        if let found = try witness(current, lower: lower, upper: middle,
+          through: upper.upperTime, work: &work), found.upperTime < upper.upperTime {
+          upper = found
+          continue
+        }
+        let opening = try sample(lower, work: &work)
+        if let found = try witness(opening, lower: lower, upper: lower,
+          through: upper.upperTime, work: &work), found.upperTime < upper.upperTime {
+          upper = found
+          continue
+        }
+        guard opening.separation > 0 else { throw HullSweepFailure.unproven }
+        let safe = (opening.separation / speed).nextDown
+        let step = min((upper.upperTime - lower) * 0.5, safe * 0.5)
+        let next = lower + step
+        let elapsed = (next - lower).nextUp
+        let envelope = (speed * elapsed).nextUp
+        guard next > lower, next < upper.upperTime, elapsed.isFinite, envelope.isFinite,
+          (opening.separation - envelope).nextDown > 0 else { throw HullSweepFailure.unproven }
+        // Every point through this next lower bound is certified clear. An
+        // unresolved gap is never credited as separation or elapsed motion.
+        lower = next
+      }
+      guard (upper.upperTime - lower).nextUp <= precision else { throw HullSweepFailure.unproven }
+      return .init(lowerTime: lower, upperTime: upper.upperTime, centre: upper.centre,
+        radius: radius, targetPose: upper.targetPose, geometry: upper.geometry,
+        feature: upper.feature, interior: upper.interior, clockWindow: upper.clockWindow)
+    }
+    do {
+      guard radius.isFinite, radius >= 0, duration.isFinite, duration >= 0,
+        pointSamplingError.isFinite, pointSamplingError >= 0,
+        targetSamplingError.isFinite, targetSamplingError >= 0,
+        clockWindow.map({ $0.duration == duration }) ?? true,
+        duration <= 0.1 + 1e-9, pointSpeed.isFinite, pointSpeed >= 0,
+        targetPointSpeed.isFinite, targetPointSpeed >= 0,
+        budget.distanceQueries > 0, budget.triangleTests > 0, budget.nodeVisits > 0,
+        (0...20).contains(budget.subdivisionDepth)
+      else { throw HullSweepFailure.invalidMotion }
+      let initial = try sample(0, work: &work)
+      if let contact = try witness(initial, lower: 0, upper: 0, through: 0, work: &work) {
+        return .contact(contact, result(nil, obstacle: nil, work: work))
+      }
+      guard initial.separation > 0 else { throw HullSweepFailure.unproven }
+      if duration == 0 { return .clear(result(nil, obstacle: nil, work: work)) }
+      let speed = (pointSpeed + targetPointSpeed).nextUp
+      guard speed.isFinite else { throw HullSweepFailure.invalidMotion }
+      var pending = [SphereCurveInterval(start: 0, end: duration, depth: 0, known: nil)]
+      var earliestWitness: NativeSphereCurveContact?
+      while let interval = pending.popLast() {
+        let middle = interval.start + (interval.end - interval.start) * 0.5
+        guard middle > interval.start, middle < interval.end else { throw HullSweepFailure.unproven }
+        let current = try sample(middle, work: &work)
+        let envelope = (speed * ((interval.end - interval.start) * 0.5).nextUp).nextUp
+        guard envelope.isFinite else { throw HullSweepFailure.invalidMotion }
+        if (current.separation - envelope).nextDown > 0 { continue }
+        var known = interval.known
+        if let found = try witness(current, lower: interval.start, upper: middle,
+          through: interval.end, work: &work),
+          known == nil || found.upperTime < known!.upperTime {
+          known = found
+          if earliestWitness == nil || found.upperTime < earliestWitness!.upperTime { earliestWitness = found }
+        }
+        if interval.depth >= budget.subdivisionDepth {
+          guard let known, known.upperTime <= interval.end else {
+            guard let witnessed = earliestWitness else { throw HullSweepFailure.unproven }
+            let contact = try refineEarliestBracket(from: interval.start, to: witnessed, speed: speed, work: &work)
+            return .contact(contact, result(nil, obstacle: nil, work: work))
+          }
+          let contact = NativeSphereCurveContact(lowerTime: interval.start, upperTime: known.upperTime,
+            centre: known.centre, radius: radius, targetPose: known.targetPose,
+            geometry: known.geometry, feature: known.feature, interior: known.interior,
+            clockWindow: known.clockWindow)
+          return .contact(contact, result(nil, obstacle: nil, work: work))
+        }
+        pending.append(.init(start: middle, end: interval.end, depth: interval.depth + 1,
+          known: known.flatMap { $0.upperTime > middle ? $0 : nil }))
+        pending.append(.init(start: interval.start, end: middle, depth: interval.depth + 1,
+          known: known.flatMap { $0.upperTime <= middle ? $0 : nil }))
+      }
+      return .clear(result(nil, obstacle: nil, work: work))
+    } catch let failure as HullSweepFailure { return .refused(result(failure, obstacle: nil, work: work)) }
+    catch { return .refused(result(.unproven, obstacle: nil, work: work)) }
+  }
+
+  private static func nativeSphereCurveSample(_ hull: PreparedHull, pose: ShipPose,
+    point: Vector3, radius: Double, numerical: Double, work: inout SweepWork)
+    throws -> (separation: Double, feature: Int?, interior: Bool)
+  {
+    try work.query()
+    var cache: [Int: SweepTriangle] = [:]
+    var best = Double.infinity
+    var feature: Int?
+    var pending = [0]
+    while let index = pending.popLast() {
+      try work.node()
+      let node = hull.nodes[index]
+      let bounds = sweepTransformedBounds(node.bounds, pose: pose, target: .init())
+      guard bounds.finite else { throw HullSweepFailure.invalidGeometry }
+      if bounds.certifiedLowerSquared(to: point) >= SweepInterval(best).square.upper { continue }
+      if let (left, right) = node.children { pending += [right, left] }
+      else {
+        for index in node.triangles {
+          let triangle = try nativeSphereTriangle(hull, pose: pose, index: index, cache: &cache, work: &work)
+          try work.triangle()
+          best = min(best, sweepSupportPointDistance(point, triangle))
+          if nativeSphereFeature(point, radius: radius, numerical: numerical, triangle: triangle) {
+            feature = feature ?? index
+          }
+        }
+      }
+    }
+    if let feature { return (min(0, best - radius), feature, false) }
+    // Containment uses the same actual native conditioned rays and disjoint
+    // crossing intervals as the existing solid query, never a bounding sphere.
+    for (index, component) in hull.components.enumerated() {
+      let bounds = sweepTransformedBounds(component.bounds, pose: pose, target: .init())
+      guard bounds.finite else { throw HullSweepFailure.invalidGeometry }
+      guard bounds.contains(point) else { continue }
+      guard component.closed, component.hasResolvedSurface else {
+        if let feature { return (min(0, best - radius), feature, false) }
+        throw HullSweepFailure.unproven
+      }
+      if try nativeSphereInside(point, hull: hull, pose: pose, component: component,
+        cache: &cache, work: &work) {
+        // A strict native surface gap protects containment from frame-rounding
+        // uncertainty; an unresolved boundary is not turned into an overlap.
+        if best > numerical { return (-radius, index, true) }
+        if let feature { return (min(0, best - radius), feature, false) }
+        throw HullSweepFailure.unproven
+      }
+    }
+    guard best.isFinite else { throw HullSweepFailure.invalidGeometry }
+    work.minimum = min(work.minimum, best - radius)
+    return ((best - radius).nextDown, feature, false)
+  }
+
+  private static func nativeSphereTriangle(_ hull: PreparedHull, pose: ShipPose, index: Int,
+    cache: inout [Int: SweepTriangle], work: inout SweepWork) throws -> SweepTriangle
+  {
+    if let triangle = cache[index] { return triangle }
+    try work.triangle()
+    let source = hull.triangles[index]
+    let triangle = SweepTriangle(a: pose.systemPoint(source.a), b: pose.systemPoint(source.b),
+      c: pose.systemPoint(source.c), conditioned: true, unresolvedSupport: source.unresolvedSupport,
+      transformedFrom: source)
+    guard sweepFinite(triangle.a), sweepFinite(triangle.b), sweepFinite(triangle.c) else {
+      throw HullSweepFailure.invalidGeometry
+    }
+    cache[index] = triangle
+    return triangle
+  }
+
+  private static func nativeSphereInside(_ point: Vector3, hull: PreparedHull, pose: ShipPose,
+    component: SweepComponent, cache: inout [Int: SweepTriangle], work: inout SweepWork) throws -> Bool
+  {
+    for direction in [Vector3(1, 0.371, 0.529), .init(0.293, 1, 0.613), .init(0.419, 0.227, 1)] {
+      var hits: [(lower: Double, upper: Double)] = []
+      var ambiguous = false
+      for index in component.triangles {
+        let triangle = try nativeSphereTriangle(hull, pose: pose, index: index, cache: &cache, work: &work)
+        try work.triangle()
+        if let hit = sweepConditionedRay(point, direction: direction, triangle: triangle, maximumDistance: nil) {
+          guard !hit.boundary, hit.distance.isFinite, hit.uncertainty.isFinite else { ambiguous = true; break }
+          hits.append((hit.distance.nextDown, (hit.distance + hit.uncertainty).nextUp))
+        }
+      }
+      if ambiguous { continue }
+      hits.sort { $0.lower < $1.lower }
+      if zip(hits, hits.dropFirst()).contains(where: { $0.0.upper >= $0.1.lower }) { continue }
+      return !hits.count.isMultiple(of: 2)
+    }
+    throw HullSweepFailure.unproven
+  }
+
+  /// A real vertex/convex face point within the sphere is an upper-distance
+  /// witness. Support distances above remain lower bounds used only for clear.
+  private static func nativeSphereFeature(_ point: Vector3, radius: Double,
+    numerical: Double, triangle: SweepTriangle) -> Bool
+  {
+    guard triangle.hasResolvedArea, !triangle.unresolvedSupport else { return false }
+    let a = SweepIntervalVector(triangle.a), b = SweepIntervalVector(triangle.b), c = SweepIntervalVector(triangle.c)
+    let p = SweepIntervalVector(point)
+    for vertex in [triangle.a, triangle.b, triangle.c] {
+      if point == vertex { return true }
+      if (p - SweepIntervalVector(vertex)).length.upper < radius - numerical { return true }
+    }
+    let first = triangle.b - triangle.a, second = triangle.c - triangle.a, offset = point - triangle.a
+    let aa = first.dot(first), ab = first.dot(second), bb = second.dot(second)
+    let determinant = aa * bb - ab * ab
+    guard determinant.isFinite, determinant > 0 else { return false }
+    let u = (offset.dot(first) * bb - offset.dot(second) * ab) / determinant
+    let v = (offset.dot(second) * aa - offset.dot(first) * ab) / determinant
+    guard u.isFinite, v.isFinite, u > 0, v > 0, u + v < 1 else { return false }
+    let candidate = a + (b - a) * SweepInterval(u) + (c - a) * SweepInterval(v)
+    if (p - candidate).length.upper < radius - numerical { return true }
+    // Exact represented axis-plane contact can prove a genuine zero-time point
+    // touch. General near-zero/silhouette uncertainty remains refused.
+    let vertices = [triangle.a, triangle.b, triangle.c]
+    for axis in 0..<3 where vertices.allSatisfy({ sweepCoordinate($0, axis) == sweepCoordinate(triangle.a, axis) }) {
+      guard sweepCoordinate(point, axis) == sweepCoordinate(triangle.a, axis) else { continue }
+      let normal = (b - a).cross(c - a)
+      let positive = [(a, b), (b, c), (c, a)].allSatisfy {
+        ($0.1 - $0.0).cross(p - $0.0).dot(normal).lower > 0
+      }
+      if positive { return true }
+    }
+    return false
   }
 }

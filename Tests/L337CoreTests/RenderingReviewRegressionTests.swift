@@ -68,34 +68,35 @@ func nearPlaneShipKeepsVisibleGeometryWhenItsCenterIsBehind(style: ShipDisplaySt
   var game = Game(executive: false)
   game.commander.credits = 10_000_000
   // Carried fuel must fit the selected hull before the paid fitting and real exchange.
-  let target = try #require(ShipCatalogue.ship("SH013")?.game)
-  game.commander.fuel = target.fuel
+  let target = try #require(ShipCatalogue.ship("SH029")?.game)
+  game.commander.fuel = min(game.commander.fuel, target.fuel)
   game.screen = .equipment
   let bay = try #require(Equipment.all.first { $0.name == "Large Cargo Bay" })
   let quote = try game.quoteEquipmentPurchase(bay)
-  #expect(try game.applyEquipmentPurchase(quote))
+  let purchaseApplied = try game.applyEquipmentPurchase(quote)
+  #expect(purchaseApplied)
   let inventory = try #require(game.commander.equipmentInventory)
   let bound = try #require(inventory.items.first { $0.boundHull != nil })
   let performance = game.commander.nativePerformance
   #expect(game.commander.standardCargoCapacity == performance.cargo + performance.cargoExpansion)
   game.screen = .status
   game.openShowroom()
-  game.showroom.selection = "SH013"
+  game.showroom.selection = "SH029"
   let before = game.commander
   let projected = try #require(game.showroomProfile)
   let profileAgain = try #require(game.showroomProfile)
   #expect(projected.fields == profileAgain.fields)
-  let selected = try #require(ShipCatalogue.ship("SH013")?.game)
+  let selected = try #require(ShipCatalogue.ship("SH029")?.game)
   #expect(projected.fields.first { $0.key == "physical_hold" }?.number == Double(selected.cargo))
   game.showroom.baselineUsesCurrent = false
-  game.showroom.baseline = "SH013"
+  game.showroom.baseline = "SH029"
   #expect(game.showroomBaselineProfile?.fields == projected.fields)
   #expect(game.commander == before)
   #expect(game.shipTradeQuote?.allowed == true)
   let portable = Set(inventory.items.filter { $0.boundHull == nil }.map(\.id))
   game.showroom.trading = true
   game.confirmShipTrade()
-  #expect(game.commander.shipID == "SH013")
+  #expect(game.commander.shipID == "SH029")
   #expect(game.commander.gameShipProfile.fields == projected.fields)
   #expect(game.commander.equipmentInventory?.items.contains { $0.id == bound.id } == false)
   #expect(Set(game.commander.equipmentInventory?.items.map(\.id) ?? []) == portable)
@@ -104,7 +105,7 @@ func nearPlaneShipKeepsVisibleGeometryWhenItsCenterIsBehind(style: ShipDisplaySt
 
 @Test func incompatibleShowroomProjectionIsExplicitAndKeepsCustody() throws {
   var game = Game(executive: false)
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
   // An Adder cannot carry the Cobra's starting three missiles.
   game.showroom.selection = "SH001"
   let before = game.commander

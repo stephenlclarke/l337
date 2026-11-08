@@ -1,0 +1,94 @@
+{
+  "schema": "l337.branch-work-audit/1",
+  "auditedUTC": "2026-11-01T12:45:12.064769+00:00",
+  "baseline": "0cc45dca928c7bae18a388fa775d7b53c6653d21",
+  "repository": "stephenlclarke/l337",
+  "defaultBranch": "main",
+  "counts": {
+    "localBranchHeads": 349,
+    "remoteTrackingRefs": 78,
+    "symbolicRemoteAliases": 1,
+    "liveRemoteBranchHeads": 20,
+    "refRows": 447,
+    "distinctCombinedTips": 354,
+    "locallyAvailableTips": 353,
+    "remoteOnlyPatchInspectedTips": 1,
+    "priorExactComparisonsReused": 352,
+    "newLocalTipComparisons": 2,
+    "localExclusiveCommitRecords": 4304,
+    "totalCommitRecords": 4307,
+    "selectedCommitHunkInspections": 743,
+    "focusedSourceBlobInspections": 2935,
+    "itemKeys": 779,
+    "cleanupLocalCandidates": 1,
+    "cleanupLiveRemoteCandidates": 0,
+    "statusCounts": {
+      "uncertain": 34,
+      "useful-unintegrated": 149,
+      "partially-integrated": 163,
+      "already-integrated-equivalent": 7,
+      "superseded": 1
+    },
+    "canonicalMissionSourceLookupKeys": 64,
+    "catalogueHullLookupKeys": 171,
+    "noncatalogueHullPlaceholderKeys": 1,
+    "totalTipCards": 355,
+    "historicalObservedAdditionalTipCards": 1,
+    "lateSourceFilesInspected": 4
+  },
+  "priorEvidence": [
+    {
+      "path": "/tmp/elite-m02-m03-branch-salvage-audit-20261031/SUMMARY.json",
+      "sha256": "1474a363e45365574b207ac7f07beb4a5196683a1c9a8c4c9edbee4486d1c5f7"
+    },
+    {
+      "path": "/tmp/elite-m02-m03-branch-salvage-audit-20261031/local-branch-inventory.json",
+      "sha256": "8140e2d13334336dcfa9d443dc826ce9b3273f2aa5c0f3be2bf8c63478bea4e8"
+    },
+    {
+      "path": "/tmp/elite-m02-m03-branch-salvage-audit-20261031/all-tip-normalized-content-comparison.json",
+      "sha256": "4717f0d65cf3195c64971cb763194c72ad2f3fd3d2bcc03fe74482d51d58a7d1"
+    }
+  ],
+  "currentSnapshotChanges": {
+    "newOrAdvancedRefTipPairs": [
+      {
+        "ref": "refs/heads/fix/m04-compact-showroom-quote",
+        "tip": "195ebc7f255d1b1c7278124bd222c5667d42dae6"
+      }
+    ],
+    "retargetedOrRemovedOldPairs": [
+      {
+        "ref": "refs/heads/fix/m04-compact-showroom-quote",
+        "tip": "2dbc3f9666b6d14644cfcad969509c2ecb95ae62"
+      }
+    ]
+  },
+  "earlierCountCorrection": "Both previously enumerated checkouts share /Users/sclarke/github/elite/.git.854formerrows represented427unique refs read twice, not854distinct branches.",
+  "safeExecutionScope": "TMP files and read-only Git/GitHub queries only. No fetch, checkout, index/ref/object/source writes, compiler, native app, tests, CI, renderer or repository helper.",
+  "hunkSelection": "For743 recommended commits inspect up to24 changed text files, excluding huge generated/mesh/ledger payloads. Full changed-path metadata covers every exclusive commit.",
+  "protection": "GitHub branch protected flags and registered worktrees captured. G1 must recheck active sessions, rules and exact tips immediately before any delete.",
+  "validation": "Source claims and test definitions are evidence to consult, not newly executed or verified results.",
+  "lateRefRecheck": {
+    "recheckedUTC": "2026-11-01T13:07:46.155988+00:00",
+    "localRefDrift": [
+      {
+        "ref": "refs/heads/fix/m04-compact-showroom-quote",
+        "before": "195ebc7f255d1b1c7278124bd222c5667d42dae6",
+        "after": "0e937de2ef13e0ac2934f2cd81d87ed0f346c06f"
+      }
+    ],
+    "liveRemoteDrift": [],
+    "meaning": "Inventory is pinned to snapshot time. Drift does not grant deletion authority; G1 rechecks actual refs before action."
+  },
+  "remoteOnlyComparison": {
+    "head": "06a119b0746c9360c46715958ba586750d37b606",
+    "aheadBy": 1,
+    "behindBy": 8,
+    "changedFiles": [
+      ".github/workflows/unit-tests.yml"
+    ],
+    "evidence": "remote-only-comparison.json",
+    "fullTreeFetched": false
+  }
+}

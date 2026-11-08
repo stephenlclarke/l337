@@ -441,6 +441,16 @@ public enum PlayerHelp {
           "SHORT PAYMENTS CARRY REMAINING DEBT",
           "RETURN TO THE ORIGINAL MAIN STATION",
         ])
+    case .journal:
+      .init(
+        title: "JOURNAL",
+        rows: [
+          "UP / DOWN - SELECT RECORDED SOURCE", "RETURN - READ ENTRY OR REQUEST",
+          "LEFT / RIGHT / TAB - CONFIRM / BACK", "RETURN - CHOOSE; BACK IS THE DEFAULT",
+          "UP / DOWN - READ LONG DETAILS", "ESC - LIST, THEN PREVIOUS SCREEN",
+          "RECORDED CLUES ARE READ ONLY", "REQUESTING AN INQUIRY DOES NOT EARN A CLUE",
+          "READING PAUSES FLIGHT AND THE MISSION CALENDAR",
+        ])
     case .library:
       .init(
         title: "MISSION LIBRARY",
@@ -502,7 +512,7 @@ public enum PlayerHelp {
         title: "XYZZY: COMMANDER CLARKE",
         rows: [
           "0 - WHITE / COLOUR / SHADED SHIPS", "1 - DOCKING TARGETING TIER",
-          "2 - MAXIMUM HARDWARE", "C - FREE COBRA MK III / MAXIMUM REFIT",
+          "2 - MAXIMUM HARDWARE", "C - FREE STARTER HULL / MAXIMUM REFIT",
           "3 - UNLIMITED MISSILES", "4 - UNLIMITED FUEL",
           "5 - SHOW FUEL / NAV JUMP LIMIT", "6 - AUTO TRADE (INCLUDING ILLEGAL)", "7 - SPEECH",
           "8 - UNLIMITED CARGO", "9 - SHOW CASH (STARTS AT 1M CR)",

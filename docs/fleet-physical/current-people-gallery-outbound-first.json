@@ -1,0 +1,52 @@
+{
+  "status": "FROZEN_CURRENT_PEOPLE_GALLERY_OWNERSHIP_AND_GENUINE_OUTBOUND_SOURCE_PLAN_BEFORE_EDITS",
+  "beforeCommit": "ac0926bab97f6084b1da7e6fba4a23550c20c55f",
+  "owner": "G4",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NativePeopleGallery.swift",
+      "bytes": 6281,
+      "sha256": "c9eb7f736d405e6567c8c4732c198a96c9cf9cedac7ee7bc8f3d1799693cec3b"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeopleGalleryTests.swift",
+      "bytes": 12843,
+      "sha256": "c3823a6e0e75ad71fd58a1a96c68f7725415bdc7c34a00e2913ba0808eed572f"
+    },
+    {
+      "path": "Sources/L337Core/OriginalBisonActivation.swift",
+      "bytes": 14473,
+      "sha256": "46a345256bc7bc887ae2b049f6223ac4e54ea0662e7136466d0a56f32c3471f1"
+    },
+    {
+      "path": "Sources/L337Core/EncounterGeography.swift",
+      "bytes": 2697,
+      "sha256": "0fee9c0d50e5f49279599d55f37f90d725b6271f993487cfbc1bced443ca3a9e"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 27877,
+      "sha256": "69d77381074b409e1fc6c3d185f74a149317711356b1942004dff8d62685b352"
+    },
+    {
+      "path": "Sources/L337Core/NewCommanderDefaults.swift",
+      "bytes": 1774,
+      "sha256": "7937c25bc12c53b6dd88a3b1eccd8feb2c0d0e222d5b9ed66dc5c9bc0a26a90f"
+    },
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 179800,
+      "sha256": "1645bba55a4069c4e899d73215246011aef59cf4913bd66b0d1b5e428783cdf5"
+    }
+  ],
+  "editableFiles": [
+    "Sources/L337Core/NativePeopleGallery.swift",
+    "Tests/L337CoreTests/NativePeopleGalleryTests.swift"
+  ],
+  "ownership": "Require actual NewCommanderDefaults/current SH025 and runtime source; retain its actual3utility slots, no hull transfer/pending023. Canonical OriginalBisonActivation.source SH005 only, actual current crew/accommodation/stock, no >30 search or fabricated crew. Existing trial grants remain explicitly controlled tools, not paid/earned progress. Existing isolated anarchy selection requires canonical source declaredgalaxy.",
+  "outboundFlight": "After actual launch, before allocating source spawn: new private helper consumes retained canonical source and actual gameplayContext/pose/launchspeed. Compute straight-heading ray exit from actual main station1200m EncounterGeography security sphere, clearance1200+one actual speed*.1 tick; solve along/perpendicular exit distance, divide by actual positive launchspeed*18*.1, ceil once+one frame finiteInt bounded. For at most that derived bound, inspect actual current player region against declared Bison regions; if not allowed advance ONLY ordinary Game.tick(delta:.1) with neutral controls, no pose/body/time/RNG/director/resource reset, teleport, stationary-fiction or force admission. Refuse on invalid/nonpositive speed/context/docking/gameOver or bound exhaustion; final actual declared region required. This is a newly frozen departure phase, no existing EMP/capture loop/seed/cap increase.",
+  "birth": "Same five1800/2200 candidate offsets and ordinary atomic admission, actual canonical005 stock/generated provenance/current context; energy:nil required for stock birth. Require allowedplayer andbirthregion via existing OriginalBisonActivation.matchesRequest; no source/body/clearance/crew waiver. Fullstock target stays actually stationary after birth as existing demo design.",
+  "testScope": "One existing test: expect initial actual025 notpending023; prove actual physicalTime>0 and current player/source regions allowed; exact canonical005source/actual12 operatingcrew and current stock. Retain seed0, live-savefiles, namespace protection, actual EMP disable/cutter/capture5/freehold, restart/return oracles. Existing prepareNativePeopleTraffic physicalTime==0 precondition becomes finitepositive actual flown setup time plus actual current025/source005 ownership; source helper/defer/reset/EMP-budget/cutter loops otherwise unchanged. Actual outbound time may still expose a real dependency: existing director decisionCount/admittedCount0 requirements remain and must not be waived. No other people/census test or helpers edited.",
+  "limits": "No new seed search or existing cap/timing changes, no tests executed/native queries, no acquired blueprint/crew/equipment/native qualification authority. All source/test proposal UNCOMPILED UNRUN pending source review and G1 execution. Actual seed0 capture5 on12-person source is unverified and must pass without timing/people-count waiver.",
+  "validation": "Own source text/hash/outside proof only; source numeric expressions authored, never imported/evaluated here."
+}

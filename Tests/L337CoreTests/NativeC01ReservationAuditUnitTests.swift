@@ -122,6 +122,77 @@ private final class C01ReservationAuditFixture {
     return runtime
   }
 
+  /// Controlled earlier clocks/visits are unit inputs; only the new cohort is admitted here.
+  func originalHarrierScene() throws -> Game {
+    game.screen = .equipment
+    // Controlled unit starting cash, before commission; this is not an earned gameplay reward.
+    game.commander.credits = 100_000
+    let basic = try #require(Equipment.all.first { $0.name == TargetingTier.basic.equipmentName })
+    try #require(game.equipmentAvailable(basic) && game.commander.availableCredits >= game.shopPrice(basic))
+    let cash = game.commander.credits
+    let history = try #require(game.commander.equipmentPurchaseHistory)
+    let quote = try game.quoteEquipmentPurchase(basic)
+    let purchased = try game.applyEquipmentPurchase(quote)
+    try #require(purchased)
+    let paid = try #require(game.commander.fittedEquipment(at: .targetingCore))
+    try #require(paid.id == quote.request.newItem)
+    try #require(paid.provenance == .paid(owner: history.owner, transaction: quote.request.transaction))
+    try #require(game.commander.credits == cash - quote.purchase.requiredDebit)
+    try #require(game.commander.equipmentPurchaseHistory!.paid.count == history.paid.count + 1)
+    try #require(game.commander.passengerFit?.allowed == true && game.commander.valid)
+    game.screen = .status
+    _ = try accept()
+    var mission = try #require(game.glassMeridianMission)
+    let opening = try #require(mission.savedGlassMeridian)
+    try #require(opening.permission.fit.contains { $0.id == paid.id && $0.location?.slot == "targeting.core" })
+    let component = try C01SurveyorFixture(commission: opening)
+    var controlled = component.state
+    try #require(controlled.readings.allSatisfy {
+      $0.authority.equipment.id == paid.id && $0.authority.equipment.provenance == paid.provenance
+    })
+    controlled.surveyor = nil
+    mission.savedGlassMeridian = controlled
+    mission.milestones = [0, 1]
+    mission.revision += 1
+    for sealed in controlled.readings {
+      let ordinal = sealed.reading.ordinal
+      var marker = sealed.authority.marker
+      marker.presence = .unloaded
+      var group = ScriptOwnedEncounter(
+        id: NativeGlassMeridian.encounters[ordinal], galaxy: 0, system: 185,
+        actors: [NativeGlassMeridian.targets[ordinal]: marker])
+      group.admitted = true
+      mission.ownedEncounters[group.id] = group
+    }
+    game.commander.scriptState.instances[mission.id] = mission
+    let pack = try #require(game.glassMeridianPack)
+    for design in pack.models.values {
+      let hash = ScriptPackLibrary.hash(try ScriptPackLibrary.canonicalGeometry(design))
+      game.commander.scriptState.geometry[hash] = design
+    }
+    // Reuse the existing component history's bounded actor/visit allocator, not its NPC bodies.
+    let historyCommander = try component.commander(component.state)
+    game.commander.flightSimulation = historyCommander.flightSimulation
+    game.commander.nativeStations?.currentMainDock = nil
+    game.nativeMainStationDockEvidence = nil
+    game.commander.system = NativeC01Surveyor.location.system
+    game.selectedSystem = game.commander.system
+    game.market = MarketItem.at(game.currentSystem)
+    game.launch()
+    try #require(!game.docked && game.commander.valid)
+    let context = try #require(game.gameplayContext())
+    let point = context.anchors.planet.position
+      + (context.anchors.sun.position - context.anchors.planet.position).unit
+        * (context.anchors.planet.radius + 25_000)
+    // Observe the source nearby so ordinary culling cannot masquerade as an admission result.
+    NativeStationTestFixture.reframe(&game, to: .init(position: point + .init(0, 0, -1000)))
+    game.speed = 0
+    let surveyorPrepared = try game.prepareC01Surveyor()
+    try #require(surveyorPrepared)
+    try #require(game.commander.valid)
+    return game
+  }
+
   func accept() throws -> NativeC01ReservationSource {
     let review = game.glassMeridianReview(.accept)
     try #require(review.allowed, Comment(rawValue: review.issues.joined(separator: "; ")))
@@ -600,5 +671,82 @@ struct NativeTrainingReservationCodecUnitTests {
     changed = gunnery
     changed.savedSafeGunnery = nil
     #expect(changed != gunnery && gunnery.savedSafeGunnery != nil)
+  }
+}
+
+extension NativeC01ReservationAuditUnitTests {
+  @Test func actualOriginalHarrierAdmissionKeepsNativeResourcesMeshAndCurrentSave() async throws {
+    let fixture = try await C01ReservationAuditFixture()
+    defer { fixture.clean() }
+    let initial = try fixture.originalHarrierScene()
+    let mission = try #require(initial.glassMeridianMission)
+    let group = try #require(mission.ownedEncounters[NativeC01Surveyor.encounter])
+    try #require(group.admitted && group.actors.count == 2)
+    let owned = try #require(group.actors[NativeC01Surveyor.aliases[0]])
+    let body = try #require(initial.bodies.first { $0.missionActorID == owned.identity })
+    try #require(owned.presence == .present && body.physical == owned.body.physical)
+    let physical = try #require(body.physical)
+    try #require(NativeC01Surveyor.nativeValid(physical, recorder: false))
+    let resources = try #require(physical.npc?.resources)
+    #expect(resources.profile == .nativeHull && resources.valid)
+    #expect(body.energy == 64 && resources.energyCapacity == 390 && resources.energyRecharge == 5.8)
+    #expect(resources.frontCapacity == 280 && resources.rearCapacity == 280)
+    #expect(resources.shieldRecharge == 2 && resources.frontShield == 0 && resources.rearShield == 0)
+    #expect(resources.fuelCapacity == 120 && resources.fuel == 0)
+    #expect(body.missiles == 0 && !body.ecmEnabled)
+    #expect(body.scriptNPC?.fit.definition.speed == 0 && body.scriptNPC?.fit.definition.acceleration == 0)
+    #expect(body.scriptNPC?.fit.definition.drive == nil && body.scriptNPC?.guns.isEmpty == true)
+    let record = try #require(ShipCatalogue.ship("SH026"))
+    let native = try #require(record.nativeDesign)
+    let actual = try #require(initial.scriptNPCMesh(body))
+    #expect(actual.vertices == native.rawMesh.vertices && actual.faces == native.rawMesh.faces)
+    let collision = try #require(initial.c01SurveyorCollision(body))
+    #expect(collision.mesh.vertices == actual.vertices && collision.mesh.faces == actual.faces)
+    #expect(collision.mass == 25545)
+    // Whole-mesh transverse fit does not prove an approach or let this disabled NPC dock.
+    #expect(MainStationGeometry.docking.fits(actual))
+    var foreign = body
+    foreign.missionActorID = UUID()
+    #expect(initial.c01SurveyorCollision(foreign) == nil)
+    var wrongResources = physical
+    wrongResources.npc?.resources = .legacyEnergyOnly(maximumEnergy: 390)
+    #expect(!NativeC01Surveyor.nativeValid(wrongResources, recorder: false))
+    let paid = initial.commander.equipmentPurchaseHistory
+    let inventory = initial.commander.equipmentInventory
+    let runtime = GameRuntime(game: initial, saveURL: fixture.save)
+    let advanced = await runtime.advance(delta: 0.05)
+    let moved = try #require(advanced.bodies.first { $0.missionActorID == owned.identity })
+    let afterResources = try #require(moved.physical?.npc?.resources)
+    #expect(afterResources.energyCapacity == resources.energyCapacity)
+    #expect(afterResources.energyRecharge == resources.energyRecharge)
+    #expect(afterResources.frontCapacity == 280 && afterResources.rearCapacity == 280)
+    #expect(afterResources.fuelCapacity == 120 && afterResources.fuel == 0)
+    // Recharge may change current energy and charge. It must not refill to full on admission/tick.
+    #expect(moved.energy >= 64 && moved.energy < 390)
+    #expect(afterResources.frontShield >= 0 && afterResources.frontShield < 280)
+    #expect(afterResources.rearShield >= 0 && afterResources.rearShield < 280)
+    #expect(advanced.commander.equipmentPurchaseHistory == paid)
+    #expect(advanced.commander.equipmentInventory == inventory)
+    try #require(advanced.commander.valid)
+    try await runtime.save(to: fixture.save)
+    let published = await runtime.snapshot()
+    let savedBody = try #require(published.bodies.first { $0.missionActorID == owned.identity })
+    let disk = try NativeSaveTestFixture.readVersionedCommander(from: fixture.save)
+    #expect(disk.equipmentPurchaseHistory == paid && disk.equipmentInventory == inventory)
+    var coldGame = Game(executive: false)
+    coldGame.scriptPacks = initial.scriptPacks
+    let cold = GameRuntime(game: coldGame)
+    try await cold.load(from: fixture.save, persistMigrations: false)
+    let restored = await cold.snapshot()
+    try #require(restored.commander.valid)
+    let loaded = try #require(restored.bodies.first { $0.missionActorID == owned.identity })
+    #expect(loaded.missionInstanceID == mission.id && loaded.energy == savedBody.energy)
+    #expect(loaded.physical?.npc?.resources == savedBody.physical?.npc?.resources)
+    let loadedCollision = try #require(restored.c01SurveyorCollision(loaded))
+    #expect(loadedCollision.mass == collision.mass)
+    #expect(loadedCollision.mesh.vertices == native.rawMesh.vertices)
+    #expect(loadedCollision.mesh.faces == native.rawMesh.faces)
+    #expect(restored.commander.equipmentPurchaseHistory == paid)
+    #expect(restored.commander.equipmentInventory == inventory)
   }
 }

@@ -6,6 +6,7 @@ import Testing
 struct NativeMissionFrameTests {
   private func movingMissionNPC() throws -> Game {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.bodies = []
     game.celestials = []
@@ -80,6 +81,7 @@ struct NativeMissionFrameTests {
 
   @Test func anOwnedScriptActorIsProtectedBeforeOrdinaryNPCPersistenceCanAdoptIt() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     var actor = SpaceBody(id: 90, hull: .cobra, position: .init(300, 0, 1700))
     actor.missionInstanceID = UUID()
@@ -96,6 +98,7 @@ struct NativeMissionFrameTests {
 
   private func flight() throws -> (Game, Vector3) {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let station = try #require(game.bodies.first { $0.id == 0 && $0.hull == .station })
     let world = game.commander.flightSimulation.pose.systemPoint(station.position)

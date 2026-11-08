@@ -126,7 +126,7 @@ struct NativeWayfarerInductionRescueFundingUnitTests {
     #expect(!reserve.valid(authorization: foreign.f.authorization))
   }
 
-  @Test func reachableOriginalCatalogueRouteKeepsBurroDriveTankAndActualMeasuredHops() throws {
+  @Test func reachableOriginalCatalogueRouteKeepsOkapiDriveTankAndActualMeasuredHops() throws {
     let f = try RescueFinanceFixture()
     let route = try NativeRescueRoutePlan(source: f.f.source, escortReachLY: 7)
     #expect(route.matches(source: f.f.source) && route.launch == f.f.source.manifest.launch)

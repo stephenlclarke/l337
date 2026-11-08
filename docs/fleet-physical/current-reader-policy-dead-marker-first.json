@@ -1,0 +1,46 @@
+{
+  "status": "FIRST_EXACT_DEAD_MARKER_AND_CURRENT_READER_POLICY_NO_EDITS",
+  "beforeCommit": "d08c5f0f5e3c10b9532bda8d376f3dc93f957cdc",
+  "pins": [
+    {
+      "path": "Sources/L337Core/PassengerCustody.swift",
+      "bytes": 16060,
+      "sha256": "80ac9700150b33cf4e5f43440f664c82f13954da91c85cd1d16fa77045c1eaef"
+    },
+    {
+      "path": "README.md",
+      "bytes": 139551,
+      "sha256": "8aea819929c590d5f1a375529802d0444c0c39d082ff3b46fb36ab4b6b601183"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "bytes": 59684,
+      "sha256": "32e1bae8dd1905b5025fb608f227945f41e92a599e5801f9f01392f71609004c"
+    },
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 178029,
+      "sha256": "12acd800a4755256d4272d7e8c1778029337b6fa85a3bae5cd40f007f48a4ebb"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptTransactionTests.swift",
+      "bytes": 33461,
+      "sha256": "d78c28940174424c6b000ac54d8a6f501b7d4c129f76c8bb9c9a8a467441673c"
+    }
+  ],
+  "edits": [
+    {
+      "path": "Sources/L337Core/PassengerCustody.swift",
+      "old": "  /// An early prototype included this virtual hardware flag in maximum equipment.\n  /// Actual cabin/person ownership is stored separately and must remain untouched.\n  mutating func migrateLegacyPassengerMarker() { equipment.remove(PassengerCabin.equipmentName) }\n",
+      "new": ""
+    },
+    {
+      "path": "README.md",
+      "old": "This development line targets the current model. Existing saves are disposable; backward compatibility with earlier saves, content formats, internal APIs and namespaces is not a delivery requirement. Current-format save/load and transaction correctness remain required.",
+      "new": "During pre-App-Store development, saves are disposable. We remove backward compatibility, migrations, historical save readers, obsolete aliases and superseded-content fallbacks. Current-format save/load, purchases and transaction correctness remain required. File loading requires a native save envelope and rejects retired prototype formats below 21. See the [completion ledger](docs/COMPLETION-LEDGER.md) for validation status and remaining work."
+    }
+  ],
+  "scope": "Remove now-unreferenced prototype passenger-marker migration function after committedd08 retired sole reader caller; preserve all actual cabin/person state and every surrounding trade-capacity rule. Update one README policy paragraph from compatibility-not-required wording to active pre-App-Store removal policy and committed native-envelope/protocol floor behavior, link actual validation ledger. No renderer/media/source-term/cabin/default/new API change. Other historical README sections remain a required larger reconciliation after remaining current-format migration cleanup, no all-policy closure.",
+  "testPlan": "No new implementation-mirroring test for dead function/doc deletion. Existing current purchased cabin/save assertions unchanged UNRUN; all three reader/cabin dependencies readonly. Exact literal/full-file inverse and reference search proof only; G1 sole executor.",
+  "limits": "SOURCE ONLY UNCOMPILED UNRUN. No actual cabin/native/save/CI qualification. Current21..25equipment/calendar/miningpolicy migrations and dormant rejector helpers/tests remain explicitly required next cleanup, not a compatibility waiver."
+}

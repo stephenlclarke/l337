@@ -273,8 +273,13 @@ private struct ContractFixture {
   let fixture = try ContractFixture()
   defer { fixture.clean() }
   var game = fixture.game()
-  game.commander.installTargetingComputer(.docking)
-  game.commander.installShieldBooster(.capital)
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.docking.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
+  try game.commander.grantEquipment(
+    ShieldBooster.capital.equipmentName, at: .shield,
+    provenance: .grant("current contract voyage fixture"))
   let runtime = GameRuntime(game: game, saveURL: fixture.save)
   let key = try await runtime.generateContractBoard(packDigest: fixture.pack.digest)
   let offer = try #require(await runtime.snapshot().commander.contracts.boards[key]?.offers.first)
@@ -337,23 +342,28 @@ private struct ContractFixture {
   let fixture = try ContractFixture()
   defer { fixture.clean() }
   var game = fixture.game()
+  // This capacity-change unit starts on a current original Besra before any board or custody.
+  game.commander.shipID = "SH108"
+  game.commander.fuel = min(game.commander.fuel, game.commander.fuelCapacity)
   game.scriptDurabilityAvailable = true
   game.commander.credits = 10_000_000
-  let destinationHull = try #require(ShipCatalogue.ship("SH013")?.game)
-  game.commander.fuel = destinationHull.fuel
+  let destinationHull = try #require(ShipCatalogue.ship("SH029")?.game)
+  game.commander.fuel = min(game.commander.fuel, destinationHull.fuel)
   try #require(game.commander.valid)
   let ordinaryCargo = game.commander.tradeCargoCapacity
+  try #require(game.commander.nativePerformance.cargo == 20 && destinationHull.cargo == 52)
+  try #require(ordinaryCargo < destinationHull.cargo)
   game.commander.cargo[0] = ordinaryCargo
   let key = try game.ensureContractBoard(fixture.pack)
   let board = try #require(game.commander.contracts.boards[key])
   let before = game.contractAcceptanceQuote(board: key, offer: board.offers[0].id)
   #expect(!before.allowed)
   game.key("6")
-  game.showroom.selection = "SH013"
+  game.showroom.selection = "SH029"
   game.key("showroom-trade")
   game.key("right")
   game.key("return")
-  #expect(game.commander.shipID == "SH013")
+  #expect(game.commander.shipID == "SH029")
   #expect(throws: MissionPackError.self) { try game.confirmContract(before) }
   let after = game.contractAcceptanceQuote(board: key, offer: board.offers[0].id)
   #expect(after.allowed && game.commander.contracts.boards[key] == board)
@@ -410,7 +420,7 @@ private struct ContractFixture {
   }
 }
 
-@Test func legacyFreeRefitPreservesOwnedEquipmentAndVirtualCargoButContractsStillRequireRealFit()
+@Test func currentFreeRefitPreservesOwnedEquipmentAndVirtualCargoButContractsStillRequireRealFit()
   async throws
 {
   let fixture = try ContractFixture()
@@ -421,8 +431,10 @@ private struct ContractFixture {
   game.commander.shipID = "SH013"
   game.commander.xyzzyActive = true
   game.commander.cargo[0] = 80
-  game.commander.equipment.insert(TargetingTier.basic.equipmentName)
   try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.basic.equipmentName, at: .targetingCore,
+    provenance: .grant("current free refit boundary"))
   let original = try #require(
     game.commander.equipmentInventory?.items.first {
       $0.node.key == TargetingTier.basic.equipmentName

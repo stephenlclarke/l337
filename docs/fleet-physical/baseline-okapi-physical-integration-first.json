@@ -1,0 +1,65 @@
+{
+  "status": "FIRST_FROZEN_BEFORE_ONLY_OKAPI_REAL_EMPTY_BUDGET_CONSUMER_JOIN",
+  "beforeCommit": "1fe6d2fe5430f24b7ddadd25e68878f942f03d21",
+  "beforePins": [
+    {
+      "path": "Sources/L337Core/OriginalHullPhysicalContract.swift",
+      "bytes": 20267,
+      "sha256": "0c9e11286567a64a888d1d6bb853eb2894e110ddc40e0f674725aa856ff5e8e1"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetPhysicalRegistrations.swift",
+      "bytes": 24466,
+      "sha256": "343e75b1836812c80660b2f6d506e1492358798967f4caf0a3c118fc1a195b86"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalFleetPhysicalRecordUnitTests.swift",
+      "bytes": 5017,
+      "sha256": "ae05b7fa54f36cdd77bc1074860385c78165b528df52a787f7733b201bee4b5c"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalFleetCurrentHullSourceUnitTests.swift",
+      "bytes": 3587,
+      "sha256": "3d76ba9a48c2a3f57db9dd2a2879675c00e2294ea3d746ccef1bed8e3012c622"
+    }
+  ],
+  "newSources": [
+    "Sources/L337Core/OriginalFleetBaselinePhysicalRegistrations.swift"
+  ],
+  "exactResult": {
+    "path": "docs/fleet-physical/baseline-029-061-area-moment-results.json",
+    "bytes": 2184,
+    "sha256": "a256323ac497aedd83fae2ba100bd129f911dbd341d24a321f6660ff05e4caf5"
+  },
+  "successfulRecord": {
+    "id": "SH029",
+    "status": "AUTHORED_SOURCE_BUDGET",
+    "file": "calculated-baseline-029-061-records/SH029.json",
+    "sha256": "f64a24c2863cf047f852d99313ca7ee131ebcda40c3e140f43572d6fbf3aa827",
+    "bytes": 33093,
+    "dryMassKg": 45520,
+    "operations": {
+      "sourceParses": 1,
+      "coordinateConversions": 3744,
+      "scaledCoordinateEvaluations": 3744,
+      "faceIndexChecks": 7128,
+      "triangleAreaEvaluations": 2376,
+      "analyticMomentEvaluations": 2376,
+      "quadratureMomentEvaluations": 7128,
+      "hardwareAllocations": 8,
+      "resultRecords": 1
+    }
+  },
+  "scope": [
+    "Copy exactly029 emptybudget to strictatomicphysicalresources, inventory140->141, exactdetailed0d074/componentmap/native585cb9/calibration1/rolemapcd6f binding",
+    "After fixed perIDphysical-switch calibration, bind any registered stillnil engineering ONLY after exactmodelsourcepath/SHA/currentR3/scale matches;029gains full9tensor property,061remainsnil/no record",
+    "Currentmetrecandidate test adds registeredmetrebaseline029; currentrecord test verifies actualphysical/cache join and preserves061nil/adopted20 separate source; existinginventory/coldload counts141"
+  ],
+  "sourceOrResourceGeometryWrites": 0,
+  "existing140PhysicalRecordBytesUnchanged": true,
+  "oldRecordScopesRerun": false,
+  "newNumericExecution": 0,
+  "loadedMassOrPeopleOrCabinsGranted": false,
+  "nativeQualificationGranted": false,
+  "remaining": "Saiga61analytic/quad radialstructuralcollar STOP andindependent1720native-face blocker; SH122STOPunchanged. Do not use bareempty estimate as occupied/loaded inertia. All Swift uncompiled/unrun."
+}

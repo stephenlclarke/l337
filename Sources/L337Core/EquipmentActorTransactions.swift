@@ -92,14 +92,15 @@ public enum EquipmentMutationResult: Sendable, Equatable {
 
 extension Game {
   public var equipmentPurchaseContext: EquipmentPurchaseContext? {
-    guard screen == .equipment, docked, !paused, Equipment.all.indices.contains(selection) else {
+    guard screen == .equipment, docked, !paused, !equipmentCrewSelected,
+      Equipment.all.indices.contains(selection) else {
       return nil
     }
     return .init(game: self)
   }
 
   public var passengerBerthSelected: Bool {
-    screen == .equipment && Equipment.all.indices.contains(selection)
+    screen == .equipment && !equipmentCrewSelected && Equipment.all.indices.contains(selection)
       && PassengerCabinGrade.equipment(Equipment.all[selection].name) != nil
   }
 
@@ -151,7 +152,8 @@ extension Game {
   private mutating func performShopPurchase(
     _ context: EquipmentPurchaseContext, requireEquipmentScreen: Bool
   ) -> EquipmentMutationResult {
-    guard stationAllowsEquipmentServices, !paused, !requireEquipmentScreen || screen == .equipment,
+    guard stationAllowsEquipmentServices, !paused, !equipmentCrewSelected,
+      !requireEquipmentScreen || screen == .equipment,
       inventoryContextEpoch == context.epoch, commander == context.commander,
       selection == context.selection, equipmentMount == context.mount,
       equipmentWorkTool == context.workTool, Equipment.all.indices.contains(selection),

@@ -1,0 +1,19 @@
+{
+  "status": "FROZEN_MISSING_AMBIENT_TRADER_SOURCE_REFUSAL_BEFORE_MUTATION",
+  "beforeCommit": "581a44d3dfdf2f9d91b7bbc5d51fb25c0227bc95",
+  "sourcePins": [
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5708,
+      "sha256": "5b317304a1cf7e88681dc61adcbf0825f0107e0695d4555264fdfad98094bca8"
+    },
+    {
+      "path": "Tests/L337CoreTests/EncounterDirectorTests.swift",
+      "bytes": 10633,
+      "sha256": "fe0d81b053ab4fb84d2bbd48f0dde29ea1fe720f74b33ba4825b33e88b47ee7b"
+    }
+  ],
+  "productionScope": "Only matchesAmbientTrader guard. First exclude nonambient/nontrader owners; require catalogueShipID or false; delegate declared Bison ID to existing distinct owner; preserve current source/profile/role/region guards. No producer draw, geometry, stock or opportunity changes.",
+  "testScope": "Inside existing actualAmbientPirateAndMinerProducerRequiresCurrentPublishedNativeSourceAndStock test, require existing fixed seed1/time120 actual producer includes a trader; each actual trader request passes source guard and nil-ID copy refuses. Existing pirate/miner branches and cargo-oracle remain byte-exact. No test addition/seed search/cap change/role substitution.",
+  "validation": "Own text/hash only; all Swift UNCOMPILED UNRUN, no actual game acceptance. Outsideproof inverse exact productionscope and existingtest additions."
+}

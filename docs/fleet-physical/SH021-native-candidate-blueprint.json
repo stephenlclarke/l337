@@ -1,0 +1,92 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH021-complete20part-native-candidate-v1",
+  "ship": "SH021",
+  "name": "Zebra",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "49908a275fb7e5af7c0715b384e8dcc0a9072e453c94c73826d177fccf3a20ea",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH021-design.toml",
+    "bytes": 371817,
+    "sha256": "90942461424c81049c241869ac934058a53ae9f75cd494e9c50bebf10f6313e9"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH021.toml",
+    "bytes": 395905,
+    "sha256": "78b8ba0570e4869297e8878c98df5f76503d20136da9e9636309de894ec2394b"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH021.json",
+    "bytes": 75269,
+    "sha256": "7cfd7a7ded55e219aecadf68c4f80118fd87ede55cccce35e3b3a0cbfedd73e6"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH021-native-candidate-recipe.py",
+    "bytes": 7570,
+    "sha256": "3904dab1b2a6c13c761591da04330248ee36bade478330ff5866e1f62e1c9e72"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH021-native-candidate-tests.py",
+    "bytes": 6615,
+    "sha256": "ab874d413bb815c09d93975abdc87c1755955802a53e9b02821a656e748895bf"
+  },
+  "baseline": {
+    "declaredNativeFaces": 744,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 4,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      12,
+      15,
+      16,
+      18,
+      19
+    ],
+    "unchangedFixedOriginalParts": 13,
+    "status": "NEW angular approximation only; actual output count and full source fidelity UNKNOWN"
+  },
+  "retained": [
+    "Both complete five-station keel envelopes with original length3.0/beam1.50, spacing/height/width and all end caps",
+    "ALL eight original recessed wells with analytical native station interpolation and shadow/rim materials",
+    "Both actual keel cross bridges",
+    "Complete cockpit glazing envelope AND structural crossmember",
+    "Both connected drive supports, both complete propulsion casings AND both luminous recesses",
+    "Original ice-blue palette, material/emission/texture/license/source fields; genuine serializer regenerates every face UV/texture association"
+  ],
+  "coordinates": "Original source coordinates/axes/origin/units unchanged. No source rescale/recentre; existing calibration40/3 uncomputed.",
+  "coupledRuntime": {
+    "domain": "Actual R3 human ship contract remains pending; ordinary game table source preserved",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "status": "Declared R3 staffing is not actual people/installed accommodation; no recommended kit or paid equipment granted",
+    "authority": "Existing Stage/source/actor/fitting/EMP/acquisition/current-save guards unchanged; no activation"
+  },
+  "stopRules": [
+    "Reject changed original source/creator/primitive/current-resource hashes before geometry",
+    "Exact original packaged detailed/native tables required",
+    "All20 original positive components and material sets required; no omitted keel well/drive recess/cockpit support",
+    "Complete generated output<=512 and genuine checked closure/winding required; no cap waiver",
+    "Independent tests require all13 fixed parts exact original vertices/localfaces/material sequences/UVs",
+    "Full curved-profile/void/material/UV source fidelity and native/occupied/physical evidence remain G1 checks"
+  ],
+  "blocker": {
+    "missing": "Actual complete source/fidelity/native qualification and occupied/installed hardware/people/power/loaded physical evidence",
+    "responsibleOwner": "G1 actual source/native qualification; authentic source owner supplies installed/occupied data",
+    "next": "G1 generate once and run actual20part/exact13fixed-source/UV/input-refusal tests then full fidelity/native qualification. G4 continues independent fleet code."
+  }
+}

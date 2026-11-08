@@ -1,0 +1,122 @@
+{
+  "schema": "l337.closed-family-native-tessellation-proposal/1",
+  "id": "goshawk-two-actual-variants-complete31part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH010",
+      "name": "Goshawk Mk II Custom",
+      "r3ContractSHA256": "755f776227dcb1d7816b5e426fbe239a98f0f9d1df46fc1ebdbd90c5b15e5983",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH010-design.toml",
+        "bytes": 541477,
+        "sha256": "3e131707177a4b934ad969dc62da49963adf9aa6a71985e6dcf21c8ba9dd179c"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH010.toml",
+        "bytes": 565604,
+        "sha256": "66f8a18a52854fad92f8c0b1cb76ef3d0b6f7405d6e8e66e944b1b9e63bb89d3"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH010.json",
+        "bytes": 113886,
+        "sha256": "5b3b4ff988a01b91e592fd73b048b2af8712c40b071406402def30b62f312bf9"
+      },
+      "declaredOriginalNativeFaces": 1012,
+      "originalComponents": 31,
+      "nativeCrew": 2,
+      "conversionCrew": 2,
+      "status": "Own original resource remains pending, no family/source/crew substitution"
+    },
+    {
+      "id": "SH011",
+      "name": "Goshawk Scout",
+      "r3ContractSHA256": "2d61d0afa8810dfec66208bee0b5b95555f64ddd9d2df76ce54b9a5c8a7c8ad1",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH011-design.toml",
+        "bytes": 541995,
+        "sha256": "f0e1bf789ccad1f445f9d576c03affc853b7beb41b6820c03739b7e45a5e6884"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH011.toml",
+        "bytes": 566126,
+        "sha256": "dec7c21964fd5e4521cde5c07fae024eb8c926607fc9223b2a3667830600729e"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH011.json",
+        "bytes": 113886,
+        "sha256": "7bd154d96c015d233a4689a00aeceb75d72f7bada29b0980fe290f706b102bc4"
+      },
+      "declaredOriginalNativeFaces": 1012,
+      "originalComponents": 31,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own original resource remains pending, no family/source/crew substitution"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/goshawk-two-native-candidate-recipe.py",
+    "bytes": 9987,
+    "sha256": "6c73a24bcff4c842cfb523021de053bacae6d45935311e04157d340a17c532d4"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/goshawk-two-native-candidate-tests.py",
+    "bytes": 11677,
+    "sha256": "5b7f31bf5937b047c6ed70a741f6a89dffe7a1a2ff58af1463e0fc54a19cad22"
+  },
+  "limit": 512,
+  "sampling": {
+    "allLoftSides": 3,
+    "allPodStationsRetained": 5,
+    "allDriveStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      1,
+      7,
+      14,
+      19,
+      22,
+      23,
+      25,
+      26
+    ],
+    "unchangedFixedPartsPerMember": 23,
+    "status": "NEW coarse all-triangular curved-component proposal; actual output count/full continuous source-profile/void/material/UV fidelity UNKNOWN and may fail qualification"
+  },
+  "retained": [
+    "BOTH complete original wishbone arms and five-station forward envelopes/endcaps",
+    "ALL TWELVE analytical recessed wells, BOTH original forward/aft bridges, full five-station centralbody/endcaps",
+    "Complete original five-station cockpit/support and both complete connected drive supports/casings/luminous recesses; all original stations/radii remain",
+    "ALL FOUR original military mount structures, not installed paid guns/attackorigins",
+    "Own original family marks2/3, exact forest-silver palette/emission/material/texture/license/source and full regenerated UVs"
+  ],
+  "coordinates": "Original RECIPES[SH008] base length3.8/beam2.20, actual four family[008009010011] marks2/3. Explicit candidateIDs010011 only,008009resources untouched. No recenter/rescale/unit/calibration inference.",
+  "runtime": "Own original resources/R3/native-conversion crews2vs1 and all runtime/source/fitting/EMP/acquisition/save/mission guards unchanged. No gun/paidkit/attackorigin/hardware/power/people/source/actor/blueprint authority.",
+  "stopRules": [
+    "Explicit closed IDs010011 and own hashes, no family/name/prefix/008009/othermember substitution",
+    "All31 original parts/material sets remain including ALL12wells/BOTHarms/BOTHbridges/ALL4mounts/full pods/cockpit/drives",
+    "All23 own fixed components exact original vertices/localfaces/materialsequence/UVs",
+    "All FIVE stations per pod and TWO per drive/radii remain; all3angular sampling is explicitly coarse and unqualified",
+    "Actual complete output must satisfy512/genuine closure/winding or refuse without omission/waiver",
+    "Full continuous source-profile/void/material/UV/native fidelity requires actual G1 assessment and may reject; no cap/fidelity acceptance inferred"
+  ],
+  "blocker": {
+    "missing": "Actual output/fidelity/native evidence and authentic occupied/installed hardware/people/power/empty-loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate/check each own31part/exact23fixed/all12wells/arms/bridges/mounts/mark2-3podprofiles/drive rings-radii/UV/inputcrossmember rejection, then assess full all-triangular curved-source/native fidelity. Reject unfaithful proposal without waiver. G4 continues independent originals."
+  }
+}

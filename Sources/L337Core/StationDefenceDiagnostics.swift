@@ -5,6 +5,7 @@ struct GameplayCombatTrace: Sendable {
   let epoch = UUID()
   private(set) var incidents: [CombatIncident] = []
   private(set) var dropped = 0
+  var beam: NPCBeamTrace?
 
   mutating func append(_ incident: CombatIncident) {
     incidents.append(incident)
@@ -12,6 +13,56 @@ struct GameplayCombatTrace: Sendable {
       dropped += incidents.count - 128
       incidents.removeFirst(incidents.count - 128)
     }
+  }
+}
+
+/// One explicitly selected actor. Each producer stage retains only its first and last sample.
+struct NPCBeamTrace: Sendable, CustomStringConvertible {
+  enum Stage: String, CaseIterable, Sendable {
+    case engage, targetUnavailable, readiness, source, tool, acquisition, rayMiss, rayQueryRefused, obstructed
+    case preflight, origin, impact, recordRefused, recorded
+  }
+
+  struct Sample: Sendable {
+    let time: Double
+    let position: Vector3?
+    let alignment: Double?
+    let distance: Double?
+    let contact: GameplayHitTarget?
+    let emission: UInt64?
+    let incident: UInt64?
+  }
+
+  let actor: ActorIdentity
+  private var stages: [Stage: (first: Sample, last: Sample)] = [:]
+
+  init(actor: ActorIdentity) { self.actor = actor }
+
+  mutating func append(_ stage: Stage, sample: Sample) {
+    let first = stages[stage]?.first ?? sample
+    stages[stage] = (first, sample)
+  }
+
+  var description: String {
+    Stage.allCases.compactMap { stage in
+      guard let pair = stages[stage] else { return nil }
+      return "\(stage.rawValue) first=\(pair.first) last=\(pair.last)"
+    }.joined(separator: " | ")
+  }
+}
+
+extension Game {
+  @inline(never)
+  mutating func observeNPCBeam(
+    _ stage: NPCBeamTrace.Stage, actor: ActorIdentity, position: Vector3? = nil,
+    alignment: Double? = nil, distance: Double? = nil, contact: GameplayHitTarget? = nil,
+    emission: UInt64? = nil, incident: UInt64? = nil
+  ) {
+    guard gameplayCombatTrace?.beam?.actor == actor else { return }
+    let sample = NPCBeamTrace.Sample(
+      time: commander.flightSimulation.physicalTime, position: position, alignment: alignment,
+      distance: distance, contact: contact, emission: emission, incident: incident)
+    gameplayCombatTrace?.beam?.append(stage, sample: sample)
   }
 }
 

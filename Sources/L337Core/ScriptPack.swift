@@ -424,11 +424,16 @@ public enum ScriptPackLibrary {
       digestInput.append(try ScriptWire.encode([.string(reference), .integer(Int64(model.count))]))
       digestInput.append(model)
     }
-    return ScriptPack(
+    let pack = ScriptPack(
       manifest: manifest, source: source, manifestBytes: bytes, digest: hash(digestInput),
       models: assets.designs,
       resourceBytes: assets.bytes.merging(modules.resources) { first, _ in first },
       entryBytes: entry)
+    for scoped in OriginalScopedScriptedHull.allCases
+    where pack.models[scoped.reference] != nil && !scoped.permits(pack) {
+      throw MissionPackError("The pending hull is restricted to its original mission roles.")
+    }
+    return pack
   }
   static func hash(_ data: Data) -> String {
     SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
@@ -447,6 +452,10 @@ public enum ScriptPackLibrary {
     try WayfarerFieldReliefSave.validateDeclaration(manifest)
     // Finish common resource frames before entering the native declaration validators.
     try validateManifestCoreDeclarations(manifest)
+    try NativeBorrowedVoiceDefinition.validateDeclaration(manifest)
+    try NativeQuietChoirDefinition.validateDeclaration(manifest)
+    try NativeMemoryAtlasDefinition.validateDeclaration(manifest)
+    try NativeSignedPassageOpening.validateDeclaration(manifest)
     try validateNPCDeclarations(manifest)
     try validateWorldJobs(manifest)
     try validateChoices(manifest)

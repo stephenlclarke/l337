@@ -11,6 +11,7 @@ public struct NativeStationPersonIdentity: Hashable, Codable, Sendable {
     (batch == NativeStationPassengerJourney.batch && ["mira-talen", "oren-vey"].contains(person))
       || (batch == NativeOrbitalOutlookJourney.batch
         && ["lysa-renn", "tovan-hale"].contains(person))
+      || (batch == NativeCrewService.batch && NativeCrewService.definition(person) != nil)
   }
 }
 

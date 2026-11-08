@@ -76,7 +76,8 @@ extension Game {
       measuredExtraction: measuredExtractionFacts(copy body, context: copy context),
       recordRecovery: recordRecoveryFacts(body, context: copy context),
       inductionCrewLog: inductionCrewLogFacts(body),
-      identifiedSalvage: identifiedSalvageFacts(body, context: copy context))
+      identifiedSalvage: identifiedSalvageFacts(body, context: copy context),
+      timingStandard: c01TimingStandardFacts(copy body, context: copy context))
   }
 
   func isCapitalHoldVessel(_ body: SpaceBody) -> Bool {
@@ -111,6 +112,9 @@ extension Game {
       let measured = recoverableMeasuredPayloadMetadata(for: body, physical: physical)
     {
       return measured
+    }
+    if let original = c01TimingStandardMetadata(copy body, context: copy context) {
+      return original
     }
     if let original = inductionCrewLogMetadata(body) { return original }
     if let original = recordRecoveryMetadata(body, context: copy context) { return original }

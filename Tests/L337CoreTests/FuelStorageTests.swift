@@ -5,11 +5,18 @@ import Testing
 
 @Test func fuelStorageUnitsAreCountedPricedAndNeverSupplyFreeFuel() throws {
   var game = Game(executive: false)
-  let stock = try #require(ShipCatalogue.ship(game.commander.shipID)?.game)
+  let ship = try #require(ShipCatalogue.ship(game.commander.shipID))
+  let stock = try #require(ship.game)
+  let fitting = try #require(OriginalFleetR3Fitting.contract(for: ship)?.fitting)
+  try #require(game.commander.shipID == NewCommanderDefaults.shipID && ship.id == "SH025")
+  try #require(fitting.utilityMounts == 3 && FuelStorage.maximumCount == 4)
+  let mountedCount = fitting.utilityMounts
+  game.screen = .equipment
   game.commander.credits = 100_000
   game.commander.fuel = 35
   game.selection = try #require(Equipment.all.firstIndex { $0.name == FuelStorage.equipmentName })
-  for count in 1...4 {
+  try game.commander.prepareEquipment(legacy: false)
+  for count in 1...mountedCount {
     game.purchase()
     #expect(
       game.commander.fuelStorageUnits == count
@@ -17,27 +24,36 @@ import Testing
     #expect(game.commander.fuel == 35 && game.commander.credits == 100_000 - count * 20_000)
     #expect(!game.commander.equipment.contains(FuelStorage.equipmentName) && game.commander.valid)
   }
-  game.purchase()
-  #expect(game.commander.fuelStorageUnits == 4 && game.message == "FUEL STORAGE FULL")
+  let mounted = game.commander
+  let epoch = game.inventoryContextEpoch
+  let storage = try #require(Equipment.all.first { $0.name == FuelStorage.equipmentName })
+  #expect(throws: EquipmentRuntimeError.incompatibleFit) {
+    try game.quoteEquipmentPurchase(storage)
+  }
+  let context = try #require(game.equipmentPurchaseContext)
+  #expect(game.performEquipmentMutation(.purchase(context)) == .refused(.invalidState))
+  #expect(game.commander == mounted && game.inventoryContextEpoch == epoch)
+  #expect(game.commander.fuelStorageUnits == mountedCount)
   game.selection = 0
   game.purchase()
-  let fullCapacity = stock.fuel + 4 * 70
+  let fullCapacity = stock.fuel + mountedCount * 70
   #expect(
     game.commander.fuel == fullCapacity
-      && game.commander.credits == 20_000 - (fullCapacity - 35) * 2)
-  // Capacity belongs to fitted physical tanks; a legacy counter assignment cannot remove one.
+      && game.commander.credits == mounted.credits - (fullCapacity - 35) * 2)
+  // A loaded physical tank cannot be stored while its capacity still contains fuel.
   let full = game.commander
-  let tank = try #require(game.commander.fittedEquipment(at: .fuelStorage(3)))
+  let tank = try #require(game.commander.fittedEquipment(at: .fuelStorage(mountedCount - 1)))
   let revision = try #require(game.commander.equipmentInventory?.revision)
   #expect(throws: EquipmentRuntimeError.incompatibleFit) {
     try game.storeEquipment(tank, expectedRevision: revision)
   }
-  #expect(game.commander == full && game.commander.fuelStorageUnits == 4)
+  #expect(game.commander == full && game.commander.fuelStorageUnits == mountedCount)
 
   var poor = Game(executive: false)
   poor.commander.fuel = 35
   poor.commander.credits = 19_999
   poor.selection = try #require(Equipment.all.firstIndex { $0.name == FuelStorage.equipmentName })
+  try poor.commander.prepareEquipment(legacy: false)
   let before = poor.commander
   poor.purchase()
   #expect(poor.commander.fuelStorageUnits == 0 && poor.message == "NOT ENOUGH CASH")
@@ -79,9 +95,44 @@ import Testing
   #expect(legacy.fuelStorageUnits == 0 && legacy.fuelCapacity == stock.fuel && legacy.valid)
   var game = Game(executive: false)
   try #require(game.commander.shipID == legacy.shipID)
-  game.commander.fuelStorageUnits = 4
+  let ship = try #require(ShipCatalogue.ship(game.commander.shipID))
+  let fitting = try #require(OriginalFleetR3Fitting.contract(for: ship)?.fitting)
+  try #require(ship.id == "SH025" && fitting.utilityMounts == 3)
+  let mountedCount = fitting.utilityMounts
+  game.screen = .equipment
+  game.selection = try #require(Equipment.all.firstIndex { $0.name == FuelStorage.equipmentName })
+  try game.commander.prepareEquipment(legacy: false)
+  let originalFuel = game.commander.fuel
+  let originalInventory = try #require(game.commander.equipmentInventory)
+  let originalHistory = try #require(game.commander.equipmentPurchaseHistory)
+  game.commander.credits = mountedCount * FuelStorage.price
+  for count in 1...mountedCount {
+    let context = try #require(game.equipmentPurchaseContext)
+    let result = game.performEquipmentMutation(.purchase(context))
+    let item = try #require(game.commander.fittedEquipment(at: .fuelStorage(count - 1)))
+    #expect(result == .applied(.purchase(
+      item: FuelStorage.equipmentName, physicalItem: item.id, fitted: true)))
+    let receipt = try #require(game.commander.equipmentPurchaseHistory?.paid.first {
+      $0.binding.request.newItem == item.id
+    })
+    #expect(
+      item.provenance == .paid(owner: originalInventory.owner, transaction: receipt.transaction))
+    #expect(receipt.owner == originalInventory.owner && receipt.node == item.node)
+    #expect(receipt.price == FuelStorage.price)
+    #expect(game.commander.equipmentInventory?.activeHull == originalInventory.activeHull)
+    #expect(
+      game.commander.equipmentPurchaseHistory!.paid.count == originalHistory.paid.count + count)
+    #expect(game.commander.credits == (mountedCount - count) * FuelStorage.price)
+    #expect(game.commander.fuel == originalFuel && game.commander.valid)
+  }
+  let paidInventory = try #require(game.commander.equipmentInventory)
+  let paidHistory = try #require(game.commander.equipmentPurchaseHistory)
+  let paidTanks = try (0..<mountedCount).map {
+    try #require(game.commander.fittedEquipment(at: .fuelStorage($0)))
+  }
+  #expect(Set(paidTanks.map(\.id)).count == mountedCount)
   game.commander.fuel = 100
-  let fullCapacity = stock.fuel + 4 * 70
+  let fullCapacity = stock.fuel + mountedCount * 70
   game.commander.credits = (fullCapacity - 100) * 2
   game.selectedSystem = game.commander.system
   for i in game.market.indices { game.market[i].quantity = 0 }
@@ -91,8 +142,16 @@ import Testing
   let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
   defer { try? FileManager.default.removeItem(at: url) }
   try await runtime.save(to: url)
+  let saved = await runtime.snapshot().commander
   try await runtime.load(from: url)
-  #expect(await runtime.snapshot().commander.fuelCapacity == fullCapacity)
+  let cold = await runtime.snapshot().commander
+  #expect(cold.fuelCapacity == fullCapacity && cold.fuelStorageUnits == mountedCount)
+  #expect(cold.fuel == fullCapacity && cold.credits == 0 && cold.valid)
+  #expect(cold == saved)
+  #expect(cold.equipmentInventory == paidInventory && cold.equipmentPurchaseHistory == paidHistory)
+  for (index, item) in paidTanks.enumerated() {
+    #expect(cold.fittedEquipment(at: .fuelStorage(index)) == item)
+  }
 }
 
 @Test func eachComputerStorageAndFuelCombinationControlsRingsSearchAndActualJump() throws {

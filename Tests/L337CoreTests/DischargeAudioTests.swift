@@ -5,7 +5,7 @@ import Testing
 
 @Test func heldBeamDischargesSoundOnConsecutivePositiveFlashSnapshots() async throws {
   var game = Game(executive: false)
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
   let pulse = try #require(game.commander.fittedEquipment(at: .laser(.front)))
   try game.commander.storeEquipment(
     pulse, expectedRevision: game.commander.equipmentInventory!.revision)

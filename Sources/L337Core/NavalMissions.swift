@@ -13,9 +13,9 @@ public enum NavalMissionStage: Int, Codable, Sendable, CaseIterable {
   public var status: String {
     switch self {
     case .notStarted: "NO NAVAL ASSIGNMENT"
-    case .huntingConstrictor: "HUNT THE CONSTRICTOR"
+    case .huntingConstrictor: "HUNT THE AEGIS PROTOTYPE"
     case .constrictorDestroyed: "REPORT TO THE NAVY"
-    case .constrictorComplete: "CONSTRICTOR MISSION COMPLETE"
+    case .constrictorComplete: "AEGIS PROTOTYPE MISSION COMPLETE"
     case .reportToCeerdi: "REPORT TO NERITH (GALAXY 3)"
     case .carryingPlans: "DELIVER PLANS TO VEYARA (GALAXY 3)"
     case .plansDelivered: "NAVAL MISSIONS COMPLETE"
@@ -39,16 +39,18 @@ public struct MissionNotice: Sendable, Equatable {
       $0.pack.dialog(message.rawValue.lowercased()) != nil
     }?.pack.dialog(message.rawValue.lowercased())
   }
-  public var showsShip: Bool { dialog?.ship ?? false }
+  public var showsShip: Bool {
+    dialog?.ship == true && AegisPrototype.source != nil
+  }
   public var pages: [[String]] {
     let lines = Self.wrap(text, width: 40)
-    let count = showsShip ? 9 : 17
+    let count = dialog?.ship == true ? 9 : 17
     return stride(from: 0, to: lines.count, by: count).map {
       Array(lines[$0..<min($0 + count, lines.count)])
     }
   }
   public var text: String {
-    let template = dialog?.text ?? "MESSAGE UNAVAILABLE"
+    let template = AegisPrototype.presentation(dialog?.text ?? "MESSAGE UNAVAILABLE")
     return template.replacingOccurrences(of: "{commander}", with: commander)
       .replacingOccurrences(of: "{captain}", with: galaxy == 0 ? "CARRUTHERS" : "FOSDYKE SMYTHE")
       .replacingOccurrences(
@@ -94,7 +96,7 @@ public enum MissionRules {
     guard let clue = clues.first(where: { $0.galaxy == galaxy && $0.systems.contains(system) }),
       !clue.texts.isEmpty
     else { return nil }
-    return clue.texts[abs(variation % clue.texts.count)]
+    return AegisPrototype.presentation(clue.texts[abs(variation % clue.texts.count)])
   }
 
 }
@@ -159,7 +161,7 @@ extension Game {
   }
 
   mutating func missionTargetRemoved(_ body: SpaceBody) {
-    if body.hull == .constrictor && body.navalTarget
+    if body.isAegisPrototype
       && commander.missionStage == .huntingConstrictor
     {
       // KILLSHP sets TP on removal, including FAROF culling, not just a credited kill.
@@ -194,14 +196,26 @@ extension Game {
     else { return }
     let x = randomByte() & 128 == 0 ? 6400.0 : -6400.0
     let y = randomByte() & 128 == 0 ? 6400.0 : -6400.0
-    addNavalShip(.constrictor, position: .init(x, y, 6400))
+    guard let combat = AegisPrototype.source?.combat, nextBodyID < Int.max else { return }
+    var target = SpaceBody(
+      id: nextBodyID, hull: .constrictor, position: .init(x, y, 6400), hostile: true)
+    target.navalTarget = true
+    target.energy = combat.energy
+    target.missiles = combat.missiles
+    target.ecmEnabled = combat.ecm
+    bodies.append(target)
+    nextBodyID += 1
     missionSpawnDelay = 1
   }
 
-  mutating func addNavalShip(_ hull: Hull, position: Vector3) {
-    var body = SpaceBody(id: nextBodyID, hull: hull, position: position, hostile: true)
-    body.navalTarget = hull == .constrictor
-    bodies.append(body)
+  @discardableResult
+  mutating func addNavalShip(_ hull: Hull, position: Vector3) -> Bool {
+    guard hull != .constrictor, let native = ShipCatalogue.nativeShip(hull),
+      !OriginalDetailedHullStage.blocksRuntime(native.id),
+      OriginalFleetRuntimeHullSource.source(for: native.id) != nil
+    else { return false }
+    bodies.append(SpaceBody(id: nextBodyID, hull: hull, position: position, hostile: true))
     nextBodyID += 1
+    return true
   }
 }

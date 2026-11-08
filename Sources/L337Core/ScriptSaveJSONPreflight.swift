@@ -52,6 +52,10 @@ extension ScriptSaveJSONPreflight {
   static func validateRepairLoopFields(
     _ data: Data, part: ScriptFreightVersionedSave.Part, schema: Int? = nil
   ) throws {
+    try NativeC01CompletionSave.validateFields(data, part: part, schema: schema)
+    try NativeC01ClinicEscortSave.validateFields(data, part: part, schema: schema)
+    try NativeC01LaneRepairSave.validateFields(data, part: part, schema: schema)
+    try NativeC01TimingStandardSave.validateFields(data, part: part, schema: schema)
     try NativeC01ReservationAuditSave.validateFields(data, part: part, schema: schema)
     let reservationSchema = NativeC01ReservationAuditSave.lowerSchema(schema)
     try NativeC01SurveyorSave.validateFields(data, part: part, schema: reservationSchema)
@@ -204,6 +208,22 @@ extension ScriptSaveJSONPreflight {
           || (board["offers"] as? [Any] ?? []).contains { offer($0) }
       }
     }
+    func validateContractKeys(_ value: Any?) throws {
+      guard let value else { return }
+      guard let object = value as? [String: Any], Set(object.keys) == ["boards"],
+        object["boards"] is [String: Any]
+      else { throw SaveError.invalidCommander }
+    }
+    switch location {
+    case .contracts: try validateContractKeys(root)
+    case .currentCommanderHeader:
+      try validateContractKeys(root["savedContracts"])
+      if root.keys.contains("nativeStations"), !(root["nativeStations"] is [String: Any]) {
+        throw SaveError.invalidCommander
+      }
+    case .rawCommander: try validateContractKeys(root["savedContracts"])
+    case .missions: break
+    }
     let containsNativeFields: Bool
     switch location {
     case .missions: containsNativeFields = missions(root)
@@ -211,18 +231,14 @@ extension ScriptSaveJSONPreflight {
     case .currentCommanderHeader:
       // Versioned station state lives in this header; its retained world is checked later.
       // Mission/contract custody still belongs exclusively in the separate native chunks.
-      let rrs = (root["savedContracts"] as? [String: Any])?["rrs"]
       containsNativeFields =
-        (rrs != nil && !(rrs is NSNull))
-        || missions(root["savedScriptState"] as? [String: Any] ?? [:])
+        missions(root["savedScriptState"] as? [String: Any] ?? [:])
         || contracts(root["savedContracts"] as? [String: Any] ?? [:])
     case .rawCommander:
       // Station custody requires the versioned world and its native save barrier.
       // A legacy Commander has no retained scene that can authenticate a dock receipt.
-      let stations = root["nativeStations"]
-      let rrs = (root["savedContracts"] as? [String: Any])?["rrs"]
       containsNativeFields =
-        (stations != nil && !(stations is NSNull)) || (rrs != nil && !(rrs is NSNull))
+        root.keys.contains("nativeStations")
         || missions(root["savedScriptState"] as? [String: Any] ?? [:])
         || contracts(root["savedContracts"] as? [String: Any] ?? [:])
     }

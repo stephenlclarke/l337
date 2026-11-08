@@ -3,7 +3,7 @@ import Foundation
 /// Closed G07 predicates consume existing native actor, station-choice and payment records.
 enum OriginalCorridorDefence {
   static let stateID = "l337.contract/corridor-defence"
-  static let digest = "ec6b00bfe07466f4d205c415adff00ef1fb0a9a56b487d5a1312dfe3f314762c"
+  static let digest = "112788e9abd82322514da1dd8aa496abc9fa061496edded45c1d4ec9203ef90a"
   static let issuer = ContractStationIdentity(galaxy: 0, system: 7, stationClass: "main-orbital")
   static let objective = SystemIdentity(galaxy: 0, system: 185)
   static let encounterID = "registered-corridor"

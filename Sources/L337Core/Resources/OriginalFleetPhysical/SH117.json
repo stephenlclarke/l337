@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "id": "SH117",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "d3bd98bd547c59cf62b6c1891f1fe3554754a140796f1dbb2060b89369ac6442",
+  "detailedSourceSHA256": "9a48f2e812240a38f2b90ea0333eda83f8032b0472dcba9fcb694931cc0a902e",
+  "componentSourceSHA256": "135d71d900fa087677ebbeeb5a03b9496a7888f89339aefb8209d69ebb92af64",
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "coordinateUnits": "metres",
+  "metresPerSourceUnit": 1,
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 2685.746759750568,
+  "stockMassKg": 37600.45463650792,
+  "intrinsicHardwareMassKg": 3240.0,
+  "unroundedMassKg": 40840.45463650792,
+  "roundingReserveKg": 0.5453634920777404,
+  "dryMassKilograms": 40841,
+  "centreOfMassMetres": [
+    -1.2145815539052605,
+    0.14566899447119577,
+    0.9925499450686303
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    4548162.23588682,
+    -7228.281893341079,
+    -181081.4250673274,
+    -7228.28189334108,
+    6968010.73692454,
+    115501.26205589536,
+    -181081.4250673274,
+    115501.26205589536,
+    2684419.596663356
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    4589263.042271308,
+    -2.507935624471692,
+    -131846.91520580623,
+    -2.5079356244726014,
+    7068493.110822843,
+    109596.39587235263,
+    -131846.91520580623,
+    109596.39587235263,
+    2745534.3886334663
+  ],
+  "reserveLocationMetres": [
+    -1.2145815539052605,
+    0.14566899447119577,
+    0.9925499450686303
+  ],
+  "positiveLeadingPrincipalMinors": [
+    4548162.23588682,
+    31691591044874.953,
+    8.478467102987713e+19
+  ],
+  "zeroAreaSourceFaces": 0,
+  "stockComponents": [
+    {
+      "name": "opposed open crescent",
+      "areaSquareMetres": 909.4131005221064,
+      "stockMassKg": 12731.783407309482,
+      "areaCentroidMetres": [
+        -8.469101220925461,
+        5.412645787079536e-12,
+        0.7003022379313535
+      ],
+      "massFirst": [
+        -107826.76239940364,
+        6.891300952105439e-08,
+        8916.096412996032
+      ],
+      "massSecond": [
+        1396142.4797814325,
+        -0.001873012918415462,
+        7781.052699493655,
+        -0.001873012918415462,
+        26421.152613065045,
+        0.0005528462774151421,
+        7781.052699493655,
+        0.0005528462774151421,
+        1813611.7173244243
+      ],
+      "verificationSecond": [
+        1396142.4797814353,
+        -0.0018730129214481472,
+        7781.052699493804,
+        -0.0018730129190895894,
+        26421.152613065027,
+        0.0005528462798594092,
+        7781.05269949375,
+        0.0005528462809962775,
+        1813611.7173244304
+      ]
+    },
+    {
+      "name": "inner crescent organ",
+      "areaSquareMetres": 63.33331424553595,
+      "stockMassKg": 886.6663994375033,
+      "areaCentroidMetres": [
+        -7.000000000000005,
+        -0.9999999999999992,
+        8.000000000000005
+      ],
+      "massFirst": [
+        -6206.664796062522,
+        -886.666399437503,
+        7093.331195500041
+      ],
+      "massSecond": [
+        44932.052686915136,
+        6206.664796062522,
+        -49653.31836850018,
+        6206.664796062522,
+        1648.6823609311557,
+        -7093.331195500019,
+        -49653.31836850018,
+        -7093.331195500019,
+        59084.38372129644
+      ],
+      "verificationSecond": [
+        44932.05268691517,
+        6206.664796062524,
+        -49653.3183685001,
+        6206.664796062524,
+        1648.6823609311568,
+        -7093.331195500043,
+        -49653.3183685001,
+        -7093.331195500043,
+        59084.38372129594
+      ]
+    },
+    {
+      "name": "opposed open crescent",
+      "areaSquareMetres": 909.4131005221062,
+      "stockMassKg": 12731.783407309484,
+      "areaCentroidMetres": [
+        5.530898779074517,
+        5.412663916147512e-12,
+        0.7003022379313524
+      ],
+      "massFirst": [
+        70418.20530292923,
+        6.891284609622517e-08,
+        8916.096412996028
+      ],
+      "massSecond": [
+        872422.680430794,
+        -0.001872048135240334,
+        132606.4024814376,
+        -0.001872048135240334,
+        26421.152613065035,
+        0.0005528462771451359,
+        132606.4024814376,
+        0.0005528462771451359,
+        1813611.7173244248
+      ],
+      "verificationSecond": [
+        872422.6804307974,
+        -0.0018720481365903652,
+        132606.40248143842,
+        -0.0018720481357803465,
+        26421.152613065024,
+        0.0005528462831208003,
+        132606.40248143842,
+        0.0005528462817494528,
+        1813611.7173244304
+      ]
+    },
+    {
+      "name": "inner crescent organ",
+      "areaSquareMetres": 63.33331424553595,
+      "stockMassKg": 886.6663994375034,
+      "areaCentroidMetres": [
+        7.000000000000011,
+        -0.9999999999999992,
+        8.000000000000005
+      ],
+      "massFirst": [
+        6206.664796062517,
+        -886.6663994375027,
+        7093.331195500042
+      ],
+      "massSecond": [
+        44932.05268691516,
+        -6206.664796062517,
+        49653.31836850016,
+        -6206.664796062517,
+        1648.6823609311564,
+        -7093.331195500023,
+        49653.31836850016,
+        -7093.331195500023,
+        59084.38372129644
+      ],
+      "verificationSecond": [
+        44932.05268691513,
+        -6206.664796062516,
+        49653.318368500106,
+        -6206.664796062516,
+        1648.682360931157,
+        -7093.331195500045,
+        49653.31836850011,
+        -7093.331195500045,
+        59084.383721295955
+      ]
+    },
+    {
+      "name": "short smooth central growth",
+      "areaSquareMetres": 473.4779948188086,
+      "stockMassKg": 6628.6919274633165,
+      "areaCentroidMetres": [
+        2.3748680391334175e-17,
+        1.999999999999999,
+        -4.42022020747101
+      ],
+      "massFirst": [
+        -2.999822612537173e-13,
+        13257.383854926615,
+        -29300.27800687336
+      ],
+      "massSecond": [
+        34829.419127053254,
+        2.5116807515352546,
+        -1.8465229345565604e-12,
+        2.5116807515352546,
+        53899.30502782519,
+        -58600.55601374675,
+        -1.8465229345565604e-12,
+        -58600.55601374675,
+        425639.8002780503
+      ],
+      "verificationSecond": [
+        34829.41912705323,
+        2.5116807515368844,
+        -1.347588707290015e-12,
+        2.5116807515383694,
+        53899.30502782515,
+        -58600.55601374662,
+        2.545297306255634e-12,
+        -58600.55601374662,
+        425639.8002780515
+      ]
+    },
+    {
+      "name": "forward gold knot",
+      "areaSquareMetres": 266.77593539647455,
+      "stockMassKg": 3734.863095550632,
+      "areaCentroidMetres": [
+        2.9963743789038786e-17,
+        -0.9999999999999981,
+        5.99999999999998
+      ],
+      "massFirst": [
+        -3.502753642692369e-14,
+        -3734.8630955506355,
+        22409.178573303874
+      ],
+      "massSecond": [
+        27638.57117338613,
+        -3.348432642269472e-13,
+        -1.794120407794253e-13,
+        -3.348432642269472e-13,
+        21313.18506514762,
+        -22409.178573303838,
+        -1.794120407794253e-13,
+        -22409.178573303838,
+        169172.67041763864
+      ],
+      "verificationSecond": [
+        27638.571173386124,
+        1.5173973189064327e-13,
+        -5.040412531798211e-14,
+        -1.8013368574543165e-14,
+        21313.185065147736,
+        -22409.178573303867,
+        5.639932965095795e-14,
+        -22409.178573303867,
+        169172.67041763826
+      ]
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 1,
+      "anchorName": "inner crescent organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -7.000000000000005,
+        -0.9999999999999992,
+        8.000000000000005
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 3,
+      "anchorName": "inner crescent organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        7.000000000000011,
+        -0.9999999999999992,
+        8.000000000000005
+      ]
+    },
+    {
+      "name": "Empty intrinsic power system",
+      "count": 1,
+      "eachKg": 750,
+      "anchorComponent": 0,
+      "anchorName": "opposed open crescent",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 750,
+      "anchorMetres": [
+        -8.469101220925461,
+        5.412645787079536e-12,
+        0.7003022379313535
+      ]
+    },
+    {
+      "name": "Empty fuel-containment and transfer system",
+      "count": 1,
+      "eachKg": 180,
+      "anchorComponent": 0,
+      "anchorName": "opposed open crescent",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 180,
+      "anchorMetres": [
+        -8.469101220925461,
+        5.412645787079536e-12,
+        0.7003022379313535
+      ]
+    },
+    {
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+      "count": 1,
+      "eachKg": 120,
+      "anchorComponent": 0,
+      "anchorName": "opposed open crescent",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 120,
+      "anchorMetres": [
+        -8.469101220925461,
+        5.412645787079536e-12,
+        0.7003022379313535
+      ]
+    },
+    {
+      "name": "Control and sensing system",
+      "count": 1,
+      "eachKg": 90,
+      "anchorComponent": 0,
+      "anchorName": "opposed open crescent",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 90,
+      "anchorMetres": [
+        -8.469101220925461,
+        5.412645787079536e-12,
+        0.7003022379313535
+      ]
+    },
+    {
+      "name": "Empty carried-equipment interfaces",
+      "count": 1,
+      "eachKg": 140,
+      "anchorComponent": 0,
+      "anchorName": "opposed open crescent",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 140,
+      "anchorMetres": [
+        -8.469101220925461,
+        5.412645787079536e-12,
+        0.7003022379313535
+      ]
+    },
+    {
+      "name": "Empty launcher system, no ammunition",
+      "count": 1,
+      "eachKg": 160,
+      "anchorComponent": 0,
+      "anchorName": "opposed open crescent",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 160,
+      "anchorMetres": [
+        -8.469101220925461,
+        5.412645787079536e-12,
+        0.7003022379313535
+      ]
+    }
+  ],
+  "operations": {
+    "coordinateConversions": 11256,
+    "faceIndexChecks": 22440,
+    "triangleAreaEvaluations": 7480,
+    "analyticMomentEvaluations": 7480,
+    "quadratureMomentEvaluations": 22440,
+    "hardwareAllocations": 8,
+    "sourceParses": 1,
+    "resultRecords": 1
+  },
+  "sourceGeometryNotEdited": true,
+  "nativeQualification": "UNRUN; source budget never activates a hull"
+}

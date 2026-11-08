@@ -1,0 +1,47 @@
+{
+  "status": "FIRST_REPLACEMENT_SCOPE_NO_EDITS",
+  "beforeCommit": "e9e593d285a1d6b546dca92f17972489a11f1e69",
+  "pins": [
+    {
+      "path": "Tests/L337CoreTests/EMPLegacyCatalogueTests.swift",
+      "bytes": 11700,
+      "sha256": "a2c4c08cd2a4c17c52420dc30e51f2c159c8d29a33e64a8d5dccc3850d6c7fd4"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPPirateBlasterTests.swift",
+      "bytes": 10783,
+      "sha256": "a35996efde7df14fe4888748470495a3c149c3bef4b2532579e4f7481e99ff8c"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    },
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 28711,
+      "sha256": "228462e782a2e60ba1b064c0a2c0d471b7ad1b70f91d4cce402ca1e93bdd6cb3"
+    },
+    {
+      "path": "Sources/L337Core/StationPoliceSource.swift",
+      "bytes": 4601,
+      "sha256": "0e890d988147065f1bb3f58158cb6f82d32f210c43eb5b34d3450ec64d2acd4d"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18744,
+      "sha256": "c66d53a177cd709582bdea8ba16df4f2d2894f3e648e752995b5c1c9e1074cf4"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 12543,
+      "sha256": "510f626c11e7a262b580ea1a5bd4c6ae3c52358d162167c0ad30e8fa4ae304e0"
+    }
+  ],
+  "oldPath": "Tests/L337CoreTests/EMPLegacyCatalogueTests.swift",
+  "newPath": "Tests/L337CoreTests/EMPCurrentCatalogueReleaseTests.swift",
+  "scope": "Replace obsolete legacy-alias/recharge migration test file with current-source unit release boundaries, preserving four functional scenarios: partial mesh and tracked-state preservation then actual zero; strict current save/cold load of spent reserve then zero; late changed resource/unknown source release refusal without cost or effects; late unrelated capture refusal rolls back whole pulse then same target retry. No production or shared fixture edits. No compatibility/schema/history test, no source fallback, no native geometry execution.",
+  "implementation": "Use existing empFixture(catalogue:SH025), exact currentSource/stock and explicit catalogue ID without nativePhysicalActorState rewrite. Controlled target may begin with an explicit valid spent reserve for partial-hit regression; actual release earns existing bank, advances authoritative clock and calls existing kernel. Compute expected reserve from actual opening and profile rather than old hardcoded20/crew1/SH023. Full-source replacement review must retain old mesh/pose/cargo/legal/whole-state/audio/strict-file/rollback assertions appropriate to current source; removed obsolete assertions recorded in proof. Existing four scenario methods retained in current names, parameterized refusal two variants retained.",
+  "testPlan": "All UNCOMPILED UNRUN, meaningful positive path requires real current source and actual release fixture. If actual input cannot meet partial reserve or fixture prerequisites, retain blocker rather than alter performance, charge, crew or power data. No new helper exposed outside private test file.",
+  "limits": "Current-source controlled unit fixture uses equipment grants and is not earned hardware/people acquisition or a whole native flight journey. All previous production/schema and shared test fixtures readonly."
+}

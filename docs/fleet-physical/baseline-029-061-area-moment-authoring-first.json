@@ -1,0 +1,77 @@
+{
+  "status": "NEW_TWO_ROW_FIXED_ADOPTED_UNIT_CODE_AND_OUTPUT_FIRST_BEFORE_NUMERIC_SCOPE_AUTHORIZATION",
+  "source": "docs/fleet-physical/baseline-029-061-area-moment-authoring.py",
+  "sourceBytes": 11259,
+  "sourceSHA256": "0716197a6e1ea3cc31ae55709763f8d0c3f1a9c051533f505de7288c48df29ce",
+  "roleMap": {
+    "path": "docs/fleet-physical/baseline-029-061-role-unit-map-first.json",
+    "bytes": 116777,
+    "sha256": "cd6f1104333dd94aa78b758e6ef0dac1504ab79fe6a3e6d5ef3ef3287536b3c3"
+  },
+  "parentOwnSource": {
+    "path": "docs/fleet-physical/area-moment-authoring.py",
+    "bytes": 10553,
+    "sha256": "70728675da99b0652b03eda9f1e777c6b24dfeae706337deb984e70f297ee9fd"
+  },
+  "changes": [
+    {
+      "before": "One frozen 49-source authoring pass.",
+      "after": "One frozen two-baseline-source authoring pass."
+    },
+    {
+      "before": "MAP = ROOT / \"area-moment-role-maps.json\"",
+      "after": "MAP = ROOT / \"baseline-029-061-role-unit-map-first.json\""
+    },
+    {
+      "before": "EXPECTED_MAP = \"c70c7d725480d8dd346a5b13799c53b966a50fe32312071cd808f8a4f94baf80\"",
+      "after": "EXPECTED_MAP = \"cd6f1104333dd94aa78b758e6ef0dac1504ab79fe6a3e6d5ef3ef3287536b3c3\""
+    },
+    {
+      "before": "output = ROOT / \"calculated-records\"",
+      "after": "output = ROOT / \"calculated-baseline-029-061-records\""
+    },
+    {
+      "before": "(ROOT/'area-moment-results.json')",
+      "after": "(ROOT/'baseline-029-061-area-moment-results.json')"
+    },
+    {
+      "before": "        assert document[\"proposal\"][\"coordinateUnits\"] == \"metres\"",
+      "after": "        assert document[\"proposal\"].get(\"coordinateUnits\") == row[\"sourceCoordinateUnits\"]\n        assert row[\"scale\"] == (1 if row[\"id\"] == \"SH029\" else 20)\n        assert row[\"id\"] in [\"SH029\", \"SH061\"]"
+    },
+    {
+      "before": "            vertices.append(point)",
+      "after": "            charge(\"scaledCoordinateEvaluations\", 3)\n            point = [value * row[\"scale\"] for value in point]\n            assert all(math.isfinite(value) for value in point)\n            vertices.append(point)"
+    },
+    {
+      "before": "\"metresPerSourceUnit\":1,\"sourceOriginUnchanged\":True",
+      "after": "\"metresPerSourceUnit\":row[\"scale\"],\"sourceOriginUnchanged\":True"
+    },
+    {
+      "before": "        encoded=(json.dumps(record,indent=2,allow_nan=False)+'\\n').encode()",
+      "after": "        if row[\"sourceCoordinateUnits\"] is None:\n            record.update(sourceCoordinateUnits=\"Relative original units; no recovered SI declaration.\",\n                          metresPerSourceUnitExact=row[\"scaleExact\"],\n                          scaleStatus=\"EXISTING_PER_ID_CALIBRATION_RETAINED_NO_R3_TARGET_FIT\")\n        encoded=(json.dumps(record,indent=2,allow_nan=False)+'\\n').encode()"
+    }
+  ],
+  "numericCoreBetweenPartsAndRecordByteExact": true,
+  "numericCoreSHA256": "014c071a558e78c6cbbb11e1351da462e26b6b376cd614a8009dd43cd032f102",
+  "algorithm": "Same analytic triangular area/first/second moments; independent3pointquadrature1e-9; namedcomponent area-centroid point hardware; full9parallelaxis+SPD; oneceilkg reserve atCOM. Inputlayer retains declared1/approved20 without span/query/target fit. Only061optional calibrationmetadata extends output.",
+  "operationCaps": {
+    "sourceParses": 2,
+    "coordinateConversions": 13392,
+    "scaledCoordinateEvaluations": 13392,
+    "faceIndexChecks": 24456,
+    "triangleAreaEvaluations": 8152,
+    "analyticMomentEvaluations": 8152,
+    "quadratureMomentEvaluations": 24456,
+    "hardwareAllocations": 16,
+    "resultRecords": 2
+  },
+  "outputDirectory": "calculated-baseline-029-061-records",
+  "result": "baseline-029-061-area-moment-results.json",
+  "rootScopeDispositionRequiredBeforeExecution": true,
+  "retries": 0,
+  "capRaises": 0,
+  "sourceGeometryWrites": 0,
+  "nativeCompilerRendererTests": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "notGranted": "No loadedmass, occupiedpeople, cabins, paidkit, population, purchase or native/geometry qualification. SH122 previousSTOP untouched."
+}

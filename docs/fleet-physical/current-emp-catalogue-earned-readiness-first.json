@@ -1,0 +1,34 @@
+{
+  "status": "FIRST_EXACT_SECOND_RELEASE_EARNED_READINESS_NO_EDITS",
+  "beforeCommit": "0825222a66ac673a64c7cacbbbe801a4c5568157",
+  "pins": [
+    {
+      "path": "Tests/L337CoreTests/EMPCurrentCatalogueReleaseTests.swift",
+      "bytes": 16394,
+      "sha256": "ae68d4762da3a034819375777365a0ae5d2fd216293d37073fd1d4b3f483aed7"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    },
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 28711,
+      "sha256": "228462e782a2e60ba1b064c0a2c0d471b7ad1b70f91d4cce402ca1e93bdd6cb3"
+    },
+    {
+      "path": "Sources/L337Core/EMPPlayerElectricalPosting.swift",
+      "bytes": 10211,
+      "sha256": "e551671cefdf4f08b8e3c48c9611048ea0477c860ddac04d403f9d715f268470"
+    }
+  ],
+  "edit": {
+    "path": "Tests/L337CoreTests/EMPCurrentCatalogueReleaseTests.swift",
+    "old": "    game.advanceEMPCharge(triggerHeld: false)\n    try #require(try releaseDamagedEMPBoundary(&game))",
+    "new": "    game.advanceEMPCharge(triggerHeld: false)\n    try withEMPUnitWriter(&game) { scene, publish, file in\n      let publish = try #require(publish)\n      scene.finishEMPPlayerElectricalInterval(publish: publish)\n      try earnEMPUnitBank(&scene, publish: publish, file: file)\n      scene.finishEMPPlayerElectricalInterval(publish: publish)\n      for _ in 0..<256 {\n        if scene.fireCooldown <= 0 { break }\n        try empUnitFrame(&scene, controls: empUnitAim(scene, actor: actor), publish: publish)\n      }\n      try #require(scene.fireCooldown <= 0)\n      let profile = try EMPPulseProfile.resolve(for: scene.commander)\n      try #require((scene.currentEMPPlayerModule()?.empBank?.remaining ?? 0) >= profile.energyCost)\n    }\n    try #require(try releaseDamagedEMPBoundary(&game))"
+  },
+  "finding": "G2 source report via Root: original missing-publisher cause corrected in082522 SOURCE only, but first partial-to-second-zero transition lacks earned cooldown/funded bank. Full independent report forthcoming, not claimed reviewed.",
+  "scope": "Single inserted writer-backed readiness block before existing second actual controlled-zero release. Finish actual outstanding interval through real publisher, existing earnEMPUnitBank, bounded real frames until cooldown expires, assert actual cost funding. No cooldownassignment/bankgrant/private receipt/source-term/helper/production/shared fixture changes. Preserve all four scenarios and existing first partial/second zero checks.",
+  "limits": "UNCOMPILED UNRUN, SAME G2 finding disposition required, G1 only executor; actual source/aim/earning/zero/writer prerequisites unverified. Broader crew schema FIRST drafted separately but no overlapping edits while correcting this source finding."
+}

@@ -22,31 +22,16 @@ public enum TargetingTier: Int, Sendable, Codable, CaseIterable, Comparable {
 }
 extension Commander {
   public var targetingTier: TargetingTier? {
-    if equipmentInventory != nil {
-      return fittedEquipment(at: .targetingCore).flatMap { TargetingTier.from($0.node.key) }
-    }
-    return
-      (equipment.compactMap(TargetingTier.from)
-      + (equipment.contains(Equipment.legacyDockingComputer) ? [.docking] : [])).max()
+    fittedEquipment(at: .targetingCore).flatMap { TargetingTier.from($0.node.key) }
   }
   public var hasAutomaticDocking: Bool { targetingTier.map { $0 >= .docking } ?? false }
-  public mutating func installTargetingComputer(_ tier: TargetingTier) {
-    let effective = max(tier, targetingTier ?? tier)
-    equipment.remove(Equipment.legacyDockingComputer)
-    equipment.subtract(TargetingTier.allCases.map(\.equipmentName))
-    equipment.insert(effective.equipmentName)
-  }
 }
 extension Hull {
   public var isTargetShip: Bool { ![Hull.station, .cargo, .asteroid, .missile].contains(self) }
   public var modelName: String {
     switch self {
-    case .cobra: "Cobra Mk III"
-    case .viper: "Viper"
-    case .sidewinder: "Sidewinder"
-    case .constrictor: "Constrictor"
-    case .thargoid: "Thargoid"
-    case .thargon: "Thargon"
+    case .cobra, .viper, .sidewinder, .constrictor, .thargoid, .thargon:
+      ShipCatalogue.nativeShip(self)?.name ?? "Unidentified craft"
     case .station: "Space station"
     case .cargo: "Cargo canister"
     case .asteroid: "Asteroid"
@@ -91,7 +76,7 @@ public struct TargetInformation: Sendable, Equatable {
 
 extension Game {
   public var targetingEnabled: Bool {
-    commander.targetingTier != nil && (!commander.xyzzyActive || commander.autoTarget)
+    nativeStationAutoTargetingTier() != nil && (!nativeStationAutoXYZzyActive() || nativeStationAutoTargetFlag())
   }
   public var informationTargetBody: SpaceBody? {
     guard commander.targetingTier != nil else { return nil }
@@ -131,15 +116,24 @@ extension Game {
         .init(label: "Range", value: String(format: "%.0f units", body.position.length)),
       ]
     } else {
+      let facts = telemetryFacts(for: body)
       fields += TargetTelemetry.fields(
-        facts: telemetryFacts(for: body), tier: tier, targetIsShip: body.hull.isTargetShip,
+        facts: facts, tier: tier, targetIsShip: body.hull.isTargetShip,
         observerGalaxy: commander.galaxy, discloseLegal: true)
       if tier >= .military, body.hull.isTargetShip {
+        // Ordinary catalogue hardware shares the same current source as its resource
+        // readings. Distinct mission and untagged legacy owners retain their field policy.
+        let ordinaryCatalogue = body.physical?.catalogueShipID != nil
+          && body.physical?.npc?.role != .mission && body.scriptNPC == nil
+          && body.missionInstanceID == nil && body.missionActorID == nil
+          && !body.navalTarget && body.blackjackRole == nil
+        let discloseHardware = !ordinaryCatalogue || (facts.resources != nil && body.missiles >= 0)
         fields += [
-          .init(label: "Missiles", value: String(body.missiles)),
-          .init(label: "ECM equipped", value: body.ecmEnabled ? "Yes" : "No"),
+          .init(label: "Missiles", value: discloseHardware ? String(body.missiles) : "Unknown"),
+          .init(label: "ECM equipped", value: discloseHardware ? (body.ecmEnabled ? "Yes" : "No") : "Unknown"),
           .init(
-            label: "ECM active", value: ecmFrames > 0 && enemyECMSource == body.id ? "Yes" : "No"),
+            label: "ECM active", value: discloseHardware
+              ? (ecmFrames > 0 && enemyECMSource == body.id ? "Yes" : "No") : "Unknown"),
         ]
       }
     }
@@ -159,11 +153,22 @@ extension Game {
             value: salvageSectionIsDepleted(section) ? "Exhausted" : "Available"))
       }
     }
-    return .init(
-      id: body.id,
-      model: TargetTelemetry.modelName(
+    let model: String
+    if let npc = body.scriptNPC {
+      if npc.fit.valid,
+        npc.fit.models.values.allSatisfy({ commander.scriptState.geometry[$0] != nil })
+      {
+        model = npc.fit.definition.name
+      } else {
+        model = "Unidentified craft"
+      }
+    } else if body.isAegisPrototype, let name = AegisPrototype.source?.name {
+      model = name
+    } else {
+      model = TargetTelemetry.modelName(
         catalogueShipID: body.physical?.catalogueShipID, missionName: body.blackjackRole?.name,
-        fallbackHull: body.hull), status: status,
-      fields: fields)
+        fallbackHull: body.hull)
+    }
+    return .init(id: body.id, model: model, status: status, fields: fields)
   }
 }

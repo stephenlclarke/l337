@@ -7,8 +7,10 @@ extension Game {
     recoverEMPHulls()
     guard let sources = coastEMPArchives() else { return }
     for source in sources {
-      if admitEMPArchiveObjects(source: source) { ejectOneEMPCrewMember(source: source) }
+      _ = admitEMPArchiveObjects(source: source)
     }
+    armCurrentNewtMechanisms(at: commander.flightSimulation.physicalTime)
+    releaseCurrentNewtKitsAtCurrentClock()
   }
 
   // Finish the archive pass before entering real actor admission and crew ejection.
@@ -17,12 +19,6 @@ extension Game {
     let now = commander.flightSimulation.physicalTime
     for source in state.sources {
       guard var record = state.records[source] else { continue }
-      if record.disableEpisodes.isEmpty, !record.terminal, !record.isRecovered,
-        record.crewAboard > 0
-      {
-        guard record.installLegacyCrewEpisode()
-        else { continue }
-      }
       if !record.terminal, !record.isRecovered, record.hull.binding == nil {
         do {
           if let native = try joinedNativeEMPWreck(record) {
@@ -30,7 +26,7 @@ extension Game {
             // ordinary EMP archive retains its existing offscreen coast behaviour.
             guard nativeEMPArchiveMatches(record.hull, wreck: native) else { return nil }
           } else {
-            coastEMPObject(&record.hull, to: now)
+            guard coastEMPObject(&record.hull, to: now) else { return nil }
           }
         } catch { return nil }
       }
@@ -38,7 +34,7 @@ extension Game {
       where record.pods[i].binding == nil
         && record.pods[i].body.physical?.empCrewPod.map({ commander.worldOwnedPod($0) }) == true
       {
-        coastEMPObject(&record.pods[i], to: now)
+        guard coastEMPObject(&record.pods[i], to: now) else { return nil }
       }
       state.records[source] = record
     }
@@ -64,14 +60,19 @@ extension Game {
     return !record.isRecovered
   }
 
-  private func coastEMPObject(_ object: inout EMPStoredObject, to now: Double) {
+  private func coastEMPObject(_ object: inout EMPStoredObject, to now: Double) -> Bool {
     let dt = now - object.physicalTime
-    guard dt.isFinite, dt > 0, let physical = object.body.physical else { return }
+    guard dt.isFinite, dt >= 0, let physical = object.body.physical else { return false }
+    if dt == 0 { return true }
+    if physical.currentNewtKitStock != nil || physical.currentNewtKitReceipt != nil {
+      return coastCurrentNewtArchiveObject(&object, to: now)
+    }
     object.body.position = object.body.position + physical.velocity * dt
     object.body.rotation += object.body.rotationRate * dt
     object.body.orientation = RelativeWorkController.rotated(
       object.body.orientation, omega: physical.angularVelocity, delta: dt)
     object.physicalTime = now
+    return true
   }
 
   @discardableResult
@@ -83,7 +84,11 @@ extension Game {
     {
       return admitJoinedNativeEMPObject(object, source: source, sequence: sequence)
     }
-    return admitEMPObjectInPlace(object, source: source, sequence: sequence, member: member)
+    var candidate = self
+    guard candidate.admitEMPObjectInPlace(object, source: source, sequence: sequence, member: member)
+    else { return false }
+    self = candidate
+    return true
   }
 
   private mutating func admitJoinedNativeEMPObject(
@@ -126,12 +131,22 @@ extension Game {
       orientation: object.body.orientation, velocity: saved.velocity, npc: saved.npc,
       rock: nil, payload: nil, priority: .ordinary, catalogueShipID: saved.catalogueShipID,
       energy: object.body.energy, angularVelocity: saved.angularVelocity, salvage: saved.salvage)
-    let receipts = admitEncounterPlan(
-      .init(
-        system: context.system, visit: context.visit,
-        revision: context.revision, batches: [.init(requests: [request], atomic: true)], intents: []
-      ))
-    guard let actor = receipts.first?.actor,
+    let claimsCurrentNewt = member > 0 && (
+      saved.currentNewtKitReceipt != nil
+        || commander.savedEMPState?.records[source]?.hull.body.physical?.currentNewtKitStock != nil
+        || commander.savedEMPState?.records[source]?.custody.original.body.physical?.currentNewtKitStock != nil)
+    let admitted: SpawnReceipt
+    if claimsCurrentNewt {
+      admitted = admitCurrentOccupiedNewtPodReadmission(object, source: source,
+        sequence: sequence, member: member)
+    } else {
+      let receipts = admitEncounterPlan(
+        .init(system: context.system, visit: context.visit, revision: context.revision,
+          batches: [.init(requests: [request], atomic: true)], intents: []))
+      guard let receipt = receipts.first else { return false }
+      admitted = receipt
+    }
+    guard let actor = admitted.actor, admitted.refusal == nil,
       let index = bodies.firstIndex(where: { $0.physical?.identity == actor }),
       var physical = bodies[index].physical
     else { return false }
@@ -150,6 +165,9 @@ extension Game {
     }
     physical.empSource = saved.empSource
     physical.empCrewPod = saved.empCrewPod
+    guard CurrentNewtKitStock.permitsTransition(from: saved.currentNewtKitStock,
+      to: physical.currentNewtKitStock) else { return false }
+    physical.currentNewtKitReceipt = saved.currentNewtKitReceipt
     physical.laserCooldown = saved.laserCooldown
     physical.canonicalSpin = saved.canonicalSpin
     physical.suspendedNPCIntention = saved.suspendedNPCIntention
@@ -172,97 +190,6 @@ extension Game {
     // Legal aggression is retained by stable source; the surviving record follows its current actor.
     commander.crimeLedger.rebindActors([saved.identity: actor])
     return true
-  }
-
-  private mutating func ejectOneEMPCrewMember(source: ActorIdentity) {
-    guard var record = commander.savedEMPState?.records[source], !record.terminal,
-      record.crewAboard > 0, let binding = record.hull.binding,
-      let index = bodies.firstIndex(where: { $0.physical?.identity == binding }),
-      let hull = bodies[index].physical, let context = gameplayContext(),
-      let ordinal = record.nextDueCrew(at: context.physicalTime),
-      record.crewDeadline.map({ context.physicalTime < $0 }) == true,
-      let podShip = ShipCatalogue.ship("SH040"),
-      let profile = record.hull.body.physical?.catalogueShipID
-        .flatMap({ SalvageCatalogue.empProfile(catalogueShipID: $0) })
-    else { return }
-    let radius = podShip.design.rawMesh.vertices.map(\.length).max() ?? 32
-    let pose = modelPose(of: bodies[index])
-    let direction = pose.orientation.x
-    let position =
-      pose.position + direction
-      * (profile.bounds.radius + profile.bounds.center.length + radius + 24)
-    let person = EMPCrewIdentity(source: source, ordinal: ordinal)
-    let metadata = SalvageTargetMetadata(
-      category: .occupiedPod, ownership: .occupied,
-      claimant: source, wreck: nil, section: nil, lot: nil,
-      bounds: .init(center: .init(0, 0, 0), radius: radius), workSurfaces: [])
-    let request = SpawnRequest(
-      identity: .init(
-        system: context.system, visit: context.visit, sequence: record.sequence,
-        member: UInt16(person.ordinal + 1), producer: .emp),
-      population: .cargo, hull: .cargo, position: position, orientation: pose.orientation,
-      velocity: hull.velocity + direction * 80, npc: nil, rock: nil, payload: nil,
-      priority: .ordinary, catalogueShipID: "SH040", energy: podShip.game?.energy ?? 100,
-      angularVelocity: .init(0, 0, 0), salvage: metadata)
-    var candidate = self
-    let receipts = candidate.admitEncounterPlan(
-      .init(
-        system: context.system, visit: context.visit,
-        revision: context.revision, batches: [.init(requests: [request], atomic: true)], intents: []
-      ))
-    guard let actor = receipts.first?.actor,
-      let podIndex = candidate.bodies.firstIndex(where: { $0.physical?.identity == actor })
-    else { return }
-    candidate.bodies[podIndex].physical?.empCrewPod = person
-    candidate.bodies[podIndex].rotationRate = 0
-    guard record.recordCrewEjection(ordinal: ordinal, at: context.physicalTime) else { return }
-    record.pods.append(
-      .init(
-        body: candidate.bodies[podIndex], pose: candidate.commander.flightSimulation.pose,
-        time: context.physicalTime))
-    record.nextEjectionAt =
-      record.disableEpisodes.last?.legacyTiming == true
-      ? context.physicalTime + 1
-      : record.disableEpisodes.last?.ejections.filter {
-        record.crewOutcome(ordinal: $0.ordinal) == .aboard
-      }.map { record.currentCrewDisableIncident.physicalTime + $0.delay }.min()
-        ?? record.crewDeadline ?? context.physicalTime
-    let birthNativeWreck =
-      record.crewAboard == 0
-      && (profile.sourceRoles.contains(.thargoid)
-        || candidate.commander.alienStorageState?.current.salvage.native.wrecks[record.wreck] != nil)
-    if record.crewAboard == 0 {
-      let bodyIndex = candidate.bodies.firstIndex(where: { $0.physical?.identity == binding })!
-      candidate.bodies[bodyIndex].physical?.npc = nil
-      candidate.bodies[bodyIndex].physical?.blocksNavalEncounter = false
-      candidate.bodies[bodyIndex].physical?.population = .wreck
-      candidate.bodies[bodyIndex].hostile = false
-      candidate.bodies[bodyIndex].physical?.salvage = .init(
-        category: .wreck, ownership: .abandoned, claimant: nil, wreck: record.wreck,
-        section: nil, lot: nil, bounds: profile.bounds,
-        workSurfaces: profile.surfaces(wreck: record.wreck))
-      record.hull = .init(
-        body: candidate.bodies[bodyIndex], pose: candidate.commander.flightSimulation.pose,
-        time: context.physicalTime)
-      guard
-        birthNativeWreck
-          || candidate.commander.salvageLedger.updateWreck(
-            identity: record.wreck,
-            motion: .init(
-              pose: candidate.modelPose(of: candidate.bodies[bodyIndex]),
-              velocity: hull.velocity, angularVelocity: hull.angularVelocity,
-              energy: candidate.bodies[bodyIndex].energy))
-      else { return }
-      candidate.notify("CREW EJECTED - UNOCCUPIED SALVAGE")
-    }
-    guard record.valid else { return }
-    candidate.commander.savedEMPState?.records[source] = record
-    if birthNativeWreck {
-      guard let body = candidate.bodies.first(where: { $0.physical?.identity == binding }),
-        candidate.retainNativeSalvageWreck(body)
-      else { return }
-    }
-    self = candidate
   }
 
   /// Capture irreversible death before scene removal so a saved hull cannot be re-admitted alive.
@@ -521,5 +448,47 @@ extension Game {
       && physical.velocity == wreck.motion.velocity
       && physical.angularVelocity == wreck.motion.angularVelocity
       && object.body.energy == wreck.motion.energy && object.binding == wreck.binding
+  }
+}
+
+extension Game {
+  /// A real captured-pod candidate can observe an already stopped, unbound parent
+  /// through its existing archive coast owner. No missing live actor is invented.
+  mutating func observeCurrentNewtArchiveForCapture(
+    _ receipt: CurrentNewtKitReceipt, at time: Double
+  ) -> Bool {
+    guard time == commander.flightSimulation.physicalTime,
+      let source = CurrentNewtKitSource.current,
+      var record = commander.savedEMPState?.records[receipt.issue.person.source],
+      record.hull.binding == nil, record.hull.physicalTime <= time,
+      let actor = record.hull.body.physical?.identity,
+      record.disableEpisodes.contains(where: { $0.actorBindings.contains(actor) }),
+      let stock = record.hull.body.physical?.currentNewtKitStock,
+      stock.receipt == receipt, stock.phase == .released,
+      source.matches(stock, at: record.hull.physicalTime),
+      stock.interruptedAt != nil || stock.work.rodMetres == source.stroke,
+      stock.work.rodVelocity == 0,
+      !bodies.contains(where: { $0.physical?.currentNewtKitStock?.issue.kitID == stock.issue.kitID })
+    else { return false }
+    do {
+      if let native = try joinedNativeEMPWreck(record) {
+        // Native custody deliberately keeps its last physical parked state.
+        // Observe portable service at the actual capture clock without coasting
+        // that state away from its existing authoritative native witness.
+        guard nativeEMPArchiveMatches(record.hull, wreck: native) else { return false }
+        var observed = stock
+        guard observed.observe(at: time, work: observed.work,
+          charges: source.charges(at: time, actuation: receipt.actuation, work: observed.work,
+            serviceCapturedAt: observed.serviceCapturedAt)) else { return false }
+        record.hull.body.physical?.currentNewtKitStock = observed
+        record.hull.physicalTime = time
+      } else {
+        guard coastEMPObject(&record.hull, to: time), record.hull.physicalTime == time,
+          let observed = record.hull.body.physical?.currentNewtKitStock,
+          observed.observedAt == time, source.matches(observed, at: time) else { return false }
+      }
+    } catch { return false }
+    commander.savedEMPState?.records[record.source] = record
+    return true
   }
 }

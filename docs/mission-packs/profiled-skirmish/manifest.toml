@@ -20,7 +20,7 @@ milestones = ["Accept skirmish", "Defeat both assigned ships", "Report at Lave o
 requiredDestructionEncounters = ["opponents"]
 
 [trial]
-ship = "SH023"
+ship = "SH025"
 galaxy = 0
 system = 7
 credits = 10000

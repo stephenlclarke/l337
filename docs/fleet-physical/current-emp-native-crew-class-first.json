@@ -1,0 +1,46 @@
+{
+  "status": "FIRST_EMP_NATIVE_CREW_DECLARATION_CLASSIFICATION_NO_EDITS",
+  "beforeCommit": "0e717c996d3782ff2779c34df13042a6e6b394ff",
+  "pins": [
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18382,
+      "sha256": "4e0b6190bc1abb8bc8b19ee255e21d28c4b0fbd1c594dbd19cadb10071803df4"
+    },
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 29427,
+      "sha256": "46458f06e42cd4fa6e072d81c78843c7b997b481b592cd0b05177b03aca9be9f"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+      "bytes": 283481,
+      "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Contract.swift",
+      "bytes": 2474,
+      "sha256": "a8d3a1afc767b068fc6c97ec1230a1100a94969b5b4a7a7adf3220418cf43ce6"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    },
+    {
+      "path": "Sources/L337Core/ShipAccommodation.swift",
+      "bytes": 11494,
+      "sha256": "13bf2d7e2c2d2513372535bf255d67ed1b9244e7dbd110733f6ecd98db003c38"
+    }
+  ],
+  "sourcePath": "Sources/L337Core/EMPState.swift",
+  "before": "  static func hasSupportedCrew(_ ship: CatalogueShip) -> Bool {\n    if let native = ship.nativeHull,\n      [.thargoid, .thargon, .station, .asteroid, .cargo, .missile].contains(native)\n    {\n      return false\n    }\n    let name = ship.name.lowercased()\n    return ![\"thargoid\", \"thargon\", \"drone\", \"satellite\"].contains(where: name.contains)\n  }",
+  "proposedAfter": "  /// Declared native crew class; conversion places never issue native people.\n  static func hasSupportedCrew(_ ship: CatalogueShip) -> Bool {\n    guard let source = OriginalFleetR3Data.contract(for: ship.id),\n      source.objectKind == .ship, ship.catalogue.objectKind == .ship,\n      source.name == ship.name, source.family == ship.catalogue.family,\n      source.origin.catalogueOrigin == ship.catalogue.origin,\n      let crew = source.accommodation\n    else { return false }\n    return crew.nativeCrew > 0\n  }",
+  "finding": "EMPState.hasSupportedCrew currently uses classic engine hull blacklist and name substrings rather than current per-ID native crew declaration. Current environment Larvaal Probe162 has no native accommodation but its name is not excluded. Renaming an autonomous Drone descriptor can also evade the name exclusion. Current125 nativeCrew0/conversionCrew1 must not be treated as native people, while124 nativeCrew4 remains a supported metadata class only.",
+  "scope": "Replace ONLY hasSupportedCrew body with exact currentR3 identity/domain/origin and nativeCrew>0 classification, no classic/name fallback. No EMP costs/pulse/record schema/crew totals/ejection/people allocation/ownership or source data changes. Metadata support class only, not runtime actor/actual people issuer or native geometry permission. Existing human25/31 and crewed124 stay supported; autonomous125/env162 remain unsupported.",
+  "testPath": "Tests/L337CoreTests/EMPCrewSourceClassificationTests.swift",
+  "testScope": "New metadata classification parameterized method for current25/31/124true,125/162/028false plus descriptor-spoof method renamed125withoutDrone and unknown-ID25 mustrefuse. Require125 nativeCrew0 and conversionCrew>0 and162 environment/noaccommodation directlyfromactualR3source to prove conversion places notused. No nativeSource/geometry queries, fakecrew or incident, no actual EMPdisable/ejection/acquisition success claimed. Existing EMP tests immutable.",
+  "explicitRemainingBlocker": "R3 autonomous125 acquisition calls for commanderEMPdisable, but existing generic crewedEMP record path still requirescrew>0. This change deliberately does NOT substitute conversionCrew1 or implement an autonomous disable schema. Native125 faces5112/unqualified, actual emitter/hardware/people/loadedsource and autonomous acquisition remain Root/researcher dependency; no new permission inferred.",
+  "coordination": "EMPState shared with G1 EMP/kernel and C02 acquisition readers; exact Root shared-hunk overlap/adoption before edits. No C02 emitter or registeredframe/power code change.",
+  "limits": "Metadata/source authoring only UNCOMPILED UNRUN. Catalogue/R3 metadata may lazyload source data; no geometry/model/native/compiler/numeric execution byG4, no actualpeople/crew/power/native025/loadedphysics/journey qualification."
+}

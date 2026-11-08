@@ -117,6 +117,10 @@ extension Game {
       openStationRumour()
       return true
     }
+    if key == "journal-open" {
+      openC01InquiryJournal()
+      return true
+    }
     if key == "library-open" {
       openReferenceLibrary()
       return true
@@ -141,7 +145,7 @@ extension Game {
       if screen == .chart { searchKey(key) } else { showroomKey(key) }
       return true
     }
-    if paused && ![Screen.gallery, .library, .showroom, .rumour].contains(screen) {
+    if paused && ![Screen.gallery, .library, .journal, .showroom, .rumour].contains(screen) {
       if key == "escape" { paused = false }
       if key == ":" { commander.speech.toggle() }
       if key == "l" { openGallery() }
@@ -152,7 +156,7 @@ extension Game {
       return true
     }
     if key.count == 1, let number = Int(key), (0...9).contains(number),
-      [Screen.showroom, .gallery, .library, .contracts, .rumour, .navigation].contains(screen)
+      [Screen.showroom, .gallery, .library, .journal, .contracts, .rumour, .navigation].contains(screen)
     {
       openNumberedScreen(number)
       return true
@@ -166,6 +170,9 @@ extension Game {
       return true
     case .handoff:
       blackjackHandoffKey(key)
+      return true
+    case .journal:
+      c01InquiryJournalKey(key)
       return true
     case .library:
       libraryKey(key)
@@ -234,8 +241,11 @@ extension Game {
       secretBuffer = String((secretBuffer + key).suffix(5))
       if secretBuffer == "xyzzy" {
         spin.stop(immediate: true)
-        commander.name = "CLARKE"
-        if !commander.xyzzyActive { enableXYZzy() } else { restoreXYZzyCobra() }
+        if commander.xyzzyActive {
+          restoreXYZzyStarter(renamingCommander: true)
+        } else {
+          enableXYZzy()
+        }
         secretReturn = screen
         secretScroll = 0
         screen = .secret
@@ -257,6 +267,9 @@ extension Game {
     switch screen {
     case .showroom: closeShowroom()
     case .library: screen = library.previous
+    case .journal:
+      screen = c01InquiryJournal.previous
+      c01InquiryJournal = .init()
     case .contracts: screen = contractBoard.previous
     case .gallery: closeGallery()
     case .rumour: screen = rumourReturn

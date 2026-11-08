@@ -1,0 +1,220 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH040-complete-nine-part-native-candidate-v1",
+  "ship": "SH040",
+  "status": "CURRENT_CAPSULE_SOURCE_CONTRACT_AND_THREE_PAIRED_TEST_METHODS_AUTHORED_UNRUN_NOT_QUALIFIED",
+  "sourceGeometry": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH040-design.toml",
+    "bytes": 486709,
+    "sha256": "94125f9da5db004437ac784ba47be3267271fe2401cf506f9a3715f2b2e3ae3a"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH040-native-candidate-recipe.py",
+    "bytes": 9310,
+    "sha256": "1f25bd6052a46e125d0e6cdf1f6e9f7fa71a8956272d1baa9c4dbbe71a5772c4",
+    "entryPoint": "build_candidate_native",
+    "requiredInputs": [
+      "source_bytes",
+      "creator_bytes",
+      "primitive_bytes",
+      "resource_bytes"
+    ],
+    "executionOwner": "G1only; G4targetparser/import/geometry/compiler/tests executions forbidden"
+  },
+  "baseline": {
+    "declaredNativeFaces": 1188,
+    "limit": 512,
+    "basis": "Existing pinned creator-ownership metadata, not recomputed by G4",
+    "installedOriginalResourceUnchanged": true,
+    "detailedOriginalSourceUnchanged": true
+  },
+  "newSamplingProposal": {
+    "loftSides": 8,
+    "collarMajorSamples": 8,
+    "collarMinorSamples": 4,
+    "basis": "Explicit NEW geometric representation choice; no generated count or fidelity result. Original source parameters/stations/components stay; angular polygon approximations change and may fail actual qualification."
+  },
+  "componentRetention": [
+    {
+      "index": 0,
+      "name": "body primary pressure envelope",
+      "originalMaterialRuns": [
+        {
+          "material": 0,
+          "faces": 116
+        }
+      ],
+      "sourceOperation": "Hull.loft / Hull.solid"
+    },
+    {
+      "index": 1,
+      "name": "cockpit glazing envelope",
+      "originalMaterialRuns": [
+        {
+          "material": 5,
+          "faces": 116
+        }
+      ],
+      "sourceOperation": "Hull.loft / Hull.solid"
+    },
+    {
+      "index": 2,
+      "name": "cockpit connected structural crossmember",
+      "originalMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 12
+        }
+      ],
+      "sourceOperation": "Mesh.strut / Hull.box"
+    },
+    {
+      "index": 3,
+      "name": "seed circumferential collar",
+      "originalMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 384
+        }
+      ],
+      "sourceOperation": "Mesh.torus / Mesh.raw"
+    },
+    {
+      "index": 4,
+      "name": "seed circumferential collar",
+      "originalMaterialRuns": [
+        {
+          "material": 2,
+          "faces": 384
+        }
+      ],
+      "sourceOperation": "Mesh.torus / Mesh.raw"
+    },
+    {
+      "index": 5,
+      "name": "seed explicit drive 0/propulsion casing",
+      "originalMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 44
+        }
+      ],
+      "sourceOperation": "Hull.loft / Hull.solid"
+    },
+    {
+      "index": 6,
+      "name": "seed explicit drive 0/propulsion luminous recess",
+      "originalMaterialRuns": [
+        {
+          "material": 6,
+          "faces": 44
+        }
+      ],
+      "sourceOperation": "Hull.loft / Hull.solid"
+    },
+    {
+      "index": 7,
+      "name": "seed explicit drive 1/propulsion casing",
+      "originalMaterialRuns": [
+        {
+          "material": 1,
+          "faces": 44
+        }
+      ],
+      "sourceOperation": "Hull.loft / Hull.solid"
+    },
+    {
+      "index": 8,
+      "name": "seed explicit drive 1/propulsion luminous recess",
+      "originalMaterialRuns": [
+        {
+          "material": 6,
+          "faces": 44
+        }
+      ],
+      "sourceOperation": "Hull.loft / Hull.solid"
+    }
+  ],
+  "retainedParameters": {
+    "seed": "Original length1.9/beam1.15, body width beam*.47/height.42, exact five-station pod construction/centres/endcaps",
+    "cockpit": "Original pod centre(0,.40,.15), length.60,width.33,height.33*.55 and exact strut endpoints/width.020/depth.025",
+    "collars": "Both complete closed z-axis tori at z=-length*.20 and length*.24; original rx=beam*.39,ry=.37,tube=.04, full sweep and original material2. No ring/cross-section omitted. New angular samples change polygon approximation; shape fidelity is UNPROVEN.",
+    "drives": "Both side*beam*.30, y=-.18,z=-length*.30,radius.09. Retain both exact two-station casing and recess lofts/material1/material6. No drive-count hardware inference.",
+    "appearance": "Pinned genuine creator.mesh_dict(adaptation=False) must regenerate every per-face texture/UV mapping and preserve exact original palette/material/emissive/texture/appearance metadata. Do not copy incompatible old face arrays or drop materials/textures.",
+    "coordinates": "Original creator coordinates only; source lacks coordinateUnits. No inferred metres/rescale/recentre. Existing physical calibration60/19 remains a separate pinned input for G1 actual complete-source derivation."
+  },
+  "physicalInputs": {
+    "occupiedCabinDoorsLifeSupportPowerPeople": "UNISSUED",
+    "massCOMFullTensor": "UNCOMPUTED; no empty or loaded record changed",
+    "nativeAdmission": "UNQUALIFIED; complete generated cap, closure/winding/material/void/profile/collision and actual runtime/escape/EMP/save journeys still required"
+  },
+  "stopRules": [
+    "Reject changed original/creator/primitive/currentresource bytes before parsing/geometry; exactcurrentcapsule identity/R3/originaltables required",
+    "Every one of nine parts must emit positive geometry with its original material",
+    "Complete output sum(len(face)-2)<=512, explicittriangularfaces required, no omission/capwaiver. Original1188source metadata is not candidatecompliance.",
+    "Actual closed primitive validation is necessary but is not fidelity/material/void/loaded/native qualification",
+    "If shape/material/void fidelity fails, keep current source blocked; no reduced tolerance or fake equivalence",
+    "Actual installed physical sources and occupants cannot be synthesized from declared crew1 or zero equipment/cargo allocation"
+  ],
+  "handoff": "Onecoherent currentcapsule binding/fullappearance/threepairedtests sourceartifact; G2review then G1sole genuinegenerationonce/3tests/fullqualification. Existinggeometry/sampling unchanged, allsourcefidelity/physical/escape/current-save gates open. No completed55/preparation/nativeinput/renderer rerun or policy/cap/tolerance change.",
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH040.toml",
+    "bytes": 493095,
+    "sha256": "6f4cec0e21142b9ed9d35393def302ca277090bedae7c4ccfdb56d3d218b2b45"
+  },
+  "currentR3Implementation": {
+    "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+    "bytes": 285669,
+    "sha256": "07c246424148f0e4dc47050648532834019467e57aadc25ba14856ddbdd20a0d"
+  },
+  "originalOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH040.json",
+    "bytes": 10458,
+    "sha256": "92ebb4fd0ee16dc98ae27acdfce184807461f28c222f6ba6518cfdcef4c89c9d"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH040-native-candidate-tests.py",
+    "bytes": 9594,
+    "sha256": "337695511fe345109752e0dd270f4d7124ba2250e17a6bf4840f5ec8279047de",
+    "className": "NewtCapsuleNativeCandidateTests",
+    "methods": [
+      "test_nine_own_parts_capsule_domain_and_full_appearance_without_occupied_authority",
+      "test_original_stations_fixed_crossmember_both_closed_collars_and_full_uv",
+      "test_changed_real_input_refuses_before_any_geometry"
+    ],
+    "genuineGeneration": "Exactlyonce in setUpClass; class.result reused; changedinput NoGeometry traps only",
+    "dependencies": [
+      "Python3.11+ tomllib",
+      "Pinned original fleet_redesign.py/generate.py",
+      "Originalcreator numpy/Pillow underG1resolvedpinnedruntime"
+    ],
+    "scope": "Source/part/cap/closure/appearance/refusal checks only, never continuousfidelity/nativeescape/occupiedphysical acceptance"
+  },
+  "r3ContractSHA256": "f0a2f7b763aa35cc65022cf5485eb5c91f742147782d34125ff6c24bf9b72e1c",
+  "currentDomain": {
+    "name": "Newt Escape Pod",
+    "family": "newt-escape-pod",
+    "objectKind": "capsule",
+    "origin": "human",
+    "sourceR3PlayerFlyable": true,
+    "currentPendingCataloguePlayerFlyable": false,
+    "purchasePolicy": "never",
+    "declaredNativeCrew": 1,
+    "declaredConversionCrew": 1,
+    "declaredEquipmentUnits": 0,
+    "declaredUtilityMounts": 0,
+    "actualOccupants": "UNISSUED",
+    "actualOccupiedHardwareLifeSupportPower": "UNISSUED",
+    "basis": "SourceR3 capsule declarations are distinct from staged catalogue eligibility, actual occupants and ordinaryship/oldEscape fallback. No source approval or physical authority is created."
+  }
+}

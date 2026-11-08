@@ -9,6 +9,7 @@ struct MarketCargoBoundsTests {
     async throws
   {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.commander.credits = 1_000_000
     game.screen = .buy
     game.selection = index
@@ -32,6 +33,7 @@ struct MarketCargoBoundsTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     let url = directory.appendingPathComponent("commander.json")
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.commander.credits = 1_000_000
     game.screen = .buy
     game.selection = index
@@ -63,6 +65,7 @@ struct MarketCargoBoundsTests {
 
   @Test func fittedCabinsAndFreightShowTheSameHoldLimitAsTheActorPurchase() async throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.commander.shipID = "SH023"
     game.commander.fuel = game.commander.fuelCapacity
     game.energy = game.commander.performance.energy

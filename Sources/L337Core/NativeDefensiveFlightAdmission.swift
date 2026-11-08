@@ -68,7 +68,10 @@ extension Game {
     guard let context = gameplayContext() else { return false }
     var meshes: [Int: Mesh] = [:]
     for body in bodies where body.energy > 0 {
-      meshes[body.id] = scriptNPCMesh(body) ?? gameplayMesh(for: body)
+      if body.physical?.currentNewtKitStock != nil || body.physical?.currentNewtKitReceipt != nil {
+        guard let envelope = currentNewtBroadPhaseEnvelope(for: body) else { return false }
+        meshes[body.id] = envelope
+      } else { meshes[body.id] = scriptNPCMesh(body) ?? gameplayMesh(for: body) }
     }
     return NativeDefensiveFlightAdmission.clear(
       practice: practice, pose: commander.flightSimulation.pose, context: context,

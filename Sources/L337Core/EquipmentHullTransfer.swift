@@ -3,6 +3,7 @@ import Foundation
 extension Commander {
   /// Read-only exchange projection reuses the real portable-fit rules and existing IDs.
   func projectedEquipmentTransfer(to shipID: String) throws -> Commander {
+    try OriginalDetailedHullStage.requireRuntime(shipID)
     guard ShipCatalogue.ship(shipID)?.game != nil else { throw EquipmentRuntimeError.unavailable }
     if shipID == self.shipID { return self }
     var candidate = self
@@ -17,7 +18,8 @@ extension Commander {
 
   /// A bound fitting leaves with the sold hull. Portable devices keep their identities,
   /// component receipts and acquisition facts; only their current fitting address changes.
-  mutating func transferEquipment(to shipID: String, hullID: UUID) throws {
+  mutating func transferEquipment(to shipID: String, hullID: UUID, crewEpoch: UUID? = nil) throws {
+    try OriginalDetailedHullStage.requireRuntime(shipID)
     guard ShipCatalogue.ship(shipID)?.game != nil else { throw EquipmentRuntimeError.unavailable }
     var candidate = self
     candidate.shipID = shipID
@@ -30,6 +32,7 @@ extension Commander {
     let context = EquipmentRuntimeCatalog.context(
       owner: inventory.owner, hull: hullID, performance: candidate.nativePerformance)
     let transferred = try inventory.transferringPortableItems(to: context)
+    try candidate.transferNativeCrew(to: hullID, shipID: shipID, epoch: crewEpoch)
     candidate.savedEquipmentInventory = transferred
     // Quotes reuse the current hull identity and must not create transfer history.
     if inventory.activeHull != hullID {

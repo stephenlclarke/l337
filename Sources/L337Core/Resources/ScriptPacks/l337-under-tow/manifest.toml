@@ -1,0 +1,24 @@
+# Original Under Tow native opening. Lua supplies original briefing text only.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.under-tow"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2"]
+priority = 591
+source = "Original C24 Under Tow from Meridian c70110b292077588a0855fb48127adfb1b611c9d; under-tow.json SHA256 b5dac526f44b1599b66400a47e4bbf0a5e38f4b0c9cd9fa8431992bab75a9cb2. No physical coupling, load test, consent, tug/crew arrival, settlement, fee or clue is produced by this module."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "under-tow"
+title = "Under Tow"
+briefing = "PENN: Matching form numbers do not make these collars fit.\n\nAn emergency transport network has standardised its forms but not the physical coupling limits of its vessels. A stranded work tender cannot accept the rescue tug sent for it. The commander measures real hull interfaces, recovers an independent coupler and verifies either interoperable local rescue pairs or a shared specialist tender. Crew identity, actual docking and return custody determine success.\n\nAt Luera in Galaxy 8, after one ordinary trade. No imported score gate or source campaign prerequisite. The reference loan needs one tonne of free hold. The original reference is collected here before the survey departure. The settlement choice is made with actual arrived delegates at the witness receiver; final return/audit remains at this issuer."
+destination = "Galaxy 8 / Luera / Allion / Ealaera / Rivain / original Luera audit"
+reward = "8300 CR only after actual collar observations, original mechanical tests, living tender receiving, both selected settlement proofs and original reference return. The source clue accompanies successful terminal settlement."
+milestones = ["Accept Under Tow at Luera.", "Collect the identified one-tonne reference instrument from Tug Lead Mira Penn.", "Measure three actual collar geometries and their signed independent load limits.", "Run two low-load mechanical tests through the source-owned test rig using the original service reference.", "Escort the identified rescued work tender to an actually compatible berth.", "At the actual witness receiving station, choose the settlement with the arrived authorised operator delegates.", "Verify both independent proofs for the selected settlement.", "Return the reference instrument and confirm all physical receiving and settlement receipts.", "Confirm successful completion, the recorded settlement and the once-only fee."]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"

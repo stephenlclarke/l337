@@ -33,6 +33,25 @@ private struct SecurityThreat: Equatable, Codable, Sendable {
   var stationAttacker: Bool
 }
 
+/// The same native launch geometry supplies queued requests and conservative envelopes.
+struct StationSecurityLaunchDescription {
+  static let maximumSlots = 8
+  static let hull = Hull.viper
+  static let speed = 180.0
+  let position: Vector3
+  let velocity: Vector3
+
+  static func forwardOffset(slot: Int) -> Double { Double(200 + slot * 220) }
+  static func lateralOffset(slot: Int) -> Double { slot % 2 == 0 ? -90 : 90 }
+
+  init(station: StationAnchor, direction: Vector3, slot: Int) {
+    position =
+      station.exitPosition + direction * Self.forwardOffset(slot: slot)
+      + station.orientation.x * Self.lateralOffset(slot: slot)
+    velocity = direction * Self.speed
+  }
+}
+
 /// Runtime-owned value state: reports and plans never mutate bodies or commander data.
 public struct StationSecurity: Equatable, Codable, Sendable {
   public private(set) var phase: StationSecurityPhase = .calm
@@ -50,6 +69,59 @@ public struct StationSecurity: Equatable, Codable, Sendable {
   private var announcedInvestigation = false
   private var cooldownAt: Double?
   public init() {}
+
+  /// Covers all native slots at any station angle and actual historical queued positions.
+  /// Does not run alarm/AI policy, acknowledge, allocate, or create a request.
+  func manualControlPairLaunchEnvelopes(station: StationAnchor, rotation: Double)
+    -> [(volume: ManualControlPairEnvelope, speed: Double)]?
+  {
+    typealias Bound = ManualControlPairEnvelope
+    guard station.position.finite, station.exitPosition.finite,
+      station.orientation.validRotation, station.exitDirection.finite,
+      station.exitDirection.length.isFinite, station.exitDirection.length > 2 * 1e-9,
+      rotation.isFinite, rotation >= 0 else { return nil }
+    guard pending.count <= StationSecurityLaunchDescription.maximumSlots else { return nil }
+    var queued = 0
+    let direction = station.exitDirection.unit
+    var result: [(volume: Bound, speed: Double)] = []
+    for slot in 0..<StationSecurityLaunchDescription.maximumSlots {
+      let launch = StationSecurityLaunchDescription(station: station, direction: direction, slot: slot)
+      guard launch.position.finite, launch.velocity.finite else { return nil }
+      let reach = Bound.sum(
+        Bound.l1(station.exitPosition - station.position),
+        Bound.product(Bound.l1(direction), abs(StationSecurityLaunchDescription.forwardOffset(slot: slot))),
+        Bound.product(Bound.l1(station.orientation.x), abs(StationSecurityLaunchDescription.lateralOffset(slot: slot))))
+      // Enclose the rotation of the native lever arms, not the whole station-to-slot ball.
+      // Four covers normalized direction and both approximate frame transforms.
+      let extent = Bound.product(reach, min(4, Bound.product(4, rotation)))
+      let radius = Bound.sum(extent, Bound.roundoff(Bound.sum(Bound.l1(station.position), reach)))
+      let volume = Bound(position: launch.position, radius: radius)
+      guard volume.valid else { return nil }
+      result.append((volume: volume, speed: Bound.product(2, StationSecurityLaunchDescription.speed)))
+    }
+    for batch in pending {
+      guard !batch.requests.isEmpty,
+        batch.requests.count <= StationSecurityLaunchDescription.maximumSlots - queued
+      else { return nil }
+      queued += batch.requests.count
+      for request in batch.requests {
+        guard request.hull == StationSecurityLaunchDescription.hull,
+          request.population == .police, request.position.finite, request.velocity.finite,
+          request.velocity.length.isFinite,
+          request.orientation.validRotation, request.identity.producer == .security,
+          request.priority == .police, request.energy == nil, request.salvage == nil,
+          request.angularVelocity == .init(0, 0, 0), request.npc?.resources == nil,
+          request.npc?.intention == nil,
+          request.npc?.role == .police, request.npc?.ordinaryCargo.isEmpty == true,
+          request.rock == nil, request.payload == nil, request.catalogueShipID == nil
+        else { return nil }
+        let volume = Bound(position: request.position, radius: Bound.roundoff(Bound.l1(request.position)))
+        guard volume.valid else { return nil }
+        result.append((volume: volume, speed: Bound.l1(request.velocity)))
+      }
+    }
+    return result
+  }
 
   public mutating func receive(_ report: VerifiedCrimeReport) {
     guard report.physicalTime.isFinite, report.physicalTime >= 0, report.position.finite,
@@ -75,6 +147,24 @@ public struct StationSecurity: Equatable, Codable, Sendable {
       ordinaryWaveSent = false
     }
     cooldownAt = nil
+  }
+
+  /// Exact current wave ownership is checked again before the atomic admission transaction.
+  func ownsPendingLaunch(_ request: SpawnRequest, context: EncounterContext) -> Bool {
+    guard system == context.system, visit == context.visit,
+      request.identity.system == context.system, request.identity.visit == context.visit,
+      request.identity.producer == .security, request.identity.sequence < sequence
+    else { return false }
+    return pending.contains { batch in
+      batch.atomic && !batch.requests.isEmpty && batch.requests.count <= 8
+        && batch.requests.contains(request)
+        && Set(batch.requests.map(\.identity)).count == batch.requests.count
+        && batch.requests.allSatisfy { member in
+          member.identity.sequence == request.identity.sequence
+            && member.identity.member < 8
+            && StationPoliceSource.matchesFresh(member, context: context)
+        }
+    }
   }
 
   /// Admission refusal leaves a queued launch intact; no launch is assumed successful.
@@ -159,13 +249,14 @@ public struct StationSecurity: Equatable, Codable, Sendable {
         skipOverdueWaves(after: due, now: context.physicalTime)
         break
       }
-      if police + pending.reduce(0, { $0 + $1.requests.count }) >= 8 {
+      if police + pending.reduce(0, { $0 + $1.requests.count }) >= StationSecurityLaunchDescription.maximumSlots {
         skipOverdueWaves(after: due, now: context.physicalTime)
         firstStationWave = false
         phase = .reinforcing
         break
       }
-      queueLaunch(count: firstStationWave ? 3 : 2, context: context, activePolice: police)
+      guard queueLaunch(count: firstStationWave ? 3 : 2, context: context, activePolice: police)
+      else { break }
       firstStationWave = false
       nextWaveAt = due + 10
       phase = .reinforcing
@@ -196,8 +287,8 @@ public struct StationSecurity: Equatable, Codable, Sendable {
     let first = ordinary.map(\.firstReportedAt).min() ?? context.physicalTime
     let delay = 8 - Double(max(0, min(7, context.government))) * 4 / 7
     if !ordinaryWaveSent && (defendingVisitor || context.physicalTime >= first + delay) {
-      queueLaunch(count: max(0, 2 - police), context: context, activePolice: police)
-      ordinaryWaveSent = true
+      ordinaryWaveSent = queueLaunch(
+        count: max(0, 2 - police), context: context, activePolice: police)
     }
   }
 
@@ -261,7 +352,7 @@ public struct StationSecurity: Equatable, Codable, Sendable {
     }
     if phase == .calm && context.government > 0 {
       let desired = context.government >= 5 ? 2 : 1
-      queueLaunch(count: max(0, desired - police), context: context, activePolice: police)
+      _ = queueLaunch(count: max(0, desired - police), context: context, activePolice: police)
     }
   }
 
@@ -303,28 +394,34 @@ public struct StationSecurity: Equatable, Codable, Sendable {
     visit = context.visit
   }
 
-  private mutating func queueLaunch(count: Int, context: EncounterContext, activePolice: Int) {
+  private mutating func queueLaunch(count: Int, context: EncounterContext, activePolice: Int) -> Bool {
     let queued = pending.reduce(0) { $0 + $1.requests.count }
-    let count = min(count, max(0, 8 - activePolice - queued))
-    guard count > 0 else { return }
+    let count = min(
+      count, max(0, StationSecurityLaunchDescription.maximumSlots - activePolice - queued))
+    guard count > 0 else { return true }
+    guard let deployment = StationPoliceSource.current() else { return false }
     let station = context.anchors.station
     let direction = station.exitDirection.unit
     let requests = (0..<count).map { member -> SpawnRequest in
       let slot = activePolice + queued + member
-      let position =
-        station.exitPosition + direction * Double(200 + slot * 220)
-        + station.orientation.x * (slot % 2 == 0 ? -90 : 90)
+      let launch = StationSecurityLaunchDescription(
+        station: station, direction: direction, slot: slot)
       return .init(
         identity: .init(
           system: context.system, visit: context.visit, sequence: sequence,
           member: UInt16(member), producer: .security),
-        population: .police, hull: .viper, position: position, orientation: station.orientation,
-        velocity: direction * 180,
-        npc: .init(role: .police, origin: context.system, destination: context.system),
-        rock: nil, payload: nil, priority: .police)
+        population: .police, hull: StationSecurityLaunchDescription.hull,
+        position: launch.position, orientation: station.orientation,
+        velocity: launch.velocity,
+        npc: .init(
+          role: .police, origin: context.system, destination: context.system,
+          legalProvenance: .generated, cargoProvenance: .generated,
+          routeProvenance: .generated, resources: deployment.stock),
+        rock: nil, payload: nil, priority: .police, catalogueShipID: deployment.source.ship.id)
     }
     sequence &+= 1
     pending.append(.init(requests: requests, atomic: true))
+    return true
   }
 
   private func policeIntent(

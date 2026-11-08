@@ -1,0 +1,11 @@
+# test(station): use the original Lion Citadel port and structure
+
+Update seven reserved helpers/methods in three existing test files. Current SH025 geometry inputs face inward through the actual positive-Z port and retain its real model/anchor identity. A three-metre lateral offset makes the whole-step conservative margin insufficient while allowing the attained solver to prove the actual oriented hull. Guard negatives first require a clear attained baseline. Rim and habitat collision/ray cases use the actual original structure; the centre ray passes through the hollow station. Nonfitting selection uses the current Commander player mesh.
+
+Add two methods with ten literal source cases for the bundled mesh/port join and actual standalone TOML loading. Each malformed case first loads the complete positive resource, then changes one real section or field and checks atomic refusal and unchanged bundled/global data. Independent literal port values are centerZ136.32, outward+Z, upY, depth53.52 and aperture124.64by101.6. These are authored source dimensions at the estimated80metres/source unit, not measured physical acceptance.
+
+Five existing methods/eight literal cases change, and two methods/ten literal cases are new: seven affected source methods/eighteen literal cases total. All are UNRUN and these are not discovery counts. The existing paid launch/TAB/3000-step runtime return/save method is byte-identical. The old32-half-height SH171 cap fixture is explicitly obsolete; production cap64 is unchanged and current cap-branch coverage remains unproven. Actual mission-NPC variants remain a separate required child after their final original source and admission dependencies.
+
+Validation here is source text, well-formed TOML data, exact patch/inverse replay and metadata identity only. G1 must execute the affected current tests and unchanged real paid launch/return/save, then required final gates on the composed candidate. No compiler, renderer, probe, source helper, test discovery or native test was run. No production, resource, CI, migration or legacy behavior changes are included. There is no new PR or gameplay-complete claim.
+
+Linked issue: ISSUE-original-station-regressions.md.

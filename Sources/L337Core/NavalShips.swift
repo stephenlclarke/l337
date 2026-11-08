@@ -13,7 +13,7 @@ public struct NativeCombat: Codable, Sendable, Equatable {
   }
 }
 extension Hull {
-  private var nativeCombat: NativeCombat? { ShipCatalogue.nativeShip(self)?.nativeCombat }
+  fileprivate var nativeCombat: NativeCombat? { ShipCatalogue.nativeShip(self)?.nativeCombat }
   public var navalEnergy: Double? { nativeCombat?.energy }
   public var navalBounty: Int? { nativeCombat?.bounty }
   public var hasECM: Bool { nativeCombat?.ecm ?? false }
@@ -24,6 +24,20 @@ extension Hull {
 }
 
 extension SpaceBody {
+  var isAegisPrototype: Bool {
+    hull == .constrictor && navalTarget && scriptNPC == nil
+      && missionInstanceID == nil && physical?.catalogueShipID == nil
+  }
+
+  var nativeNavalCombat: NativeCombat? {
+    if isAegisPrototype { return AegisPrototype.source?.combat }
+    return hull.nativeCombat
+  }
+
+  var nativeNavalBombImmune: Bool {
+    hull == .station || nativeNavalCombat?.bombImmune == true
+  }
+
   var leavesLocalBubble: Bool {
     if hull == .constrictor {
       return max(abs(position.x), abs(position.y), abs(position.z)) >= 57600

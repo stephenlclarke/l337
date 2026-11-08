@@ -17,12 +17,12 @@ enum OriginalGyrfalconFamilyActivation {
     case "SH003":
       return .init(
         id: id, name: "Gyrfalcon Command",
-        specificationSHA256: "9d27c7a3cb17e63a44b95a3c2d760e05634407750539d339a31169146b8701b2",
+        specificationSHA256: "e4470633a66738c674f5e6cb61e1b464a89fd83c2f9b1c4b8a77b4b022788e0b",
         modelSHA256: "fb28b8fbf3ac54e12bd0513f70ab6ca9140e8c361086b42bc3bfe5e71b91a90a")
     case "SH004":
       return .init(
         id: id, name: "Gyrfalcon Patrol",
-        specificationSHA256: "aa14680c9e193b217bc6c72ece2aa63ccb98482880f9425087a7f6322211ba0f",
+        specificationSHA256: "9d5f40fbdb42fe6539e9cee6906a07aff1a6caa192f164cffda019e8b79e3d47",
         modelSHA256: "aa7bd053625093d77bdb1414e43c77278e68f1bbb6db3ab37c409700bcdcfeb5")
     default: return nil
     }

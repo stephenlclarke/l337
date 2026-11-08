@@ -34,6 +34,7 @@ struct ScriptFinanceTestFixture {
     game.screen = .status
     game.scriptPacks = [pack]
     game.commander.credits = credits
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     try #require(!game.docked && game.commander.valid)
     game.market[0].quantity = 10
@@ -59,11 +60,22 @@ struct ScriptFinanceTestFixture {
     NativeStationTestFixture.reframe(&game, to: pose)
     game.speed = 3
   }
+  @inline(never)
   static func enterMain(_ runtime: GameRuntime) async throws {
+    await advanceMainEntry(runtime)
+    try await requireMainEntry(runtime)
+  }
+
+  @inline(never)
+  private static func advanceMainEntry(_ runtime: GameRuntime) async {
     for _ in 0..<100 {
       if await runtime.snapshot().docked { break }
       _ = await runtime.advance(delta: 0.05)
     }
+  }
+
+  @inline(never)
+  private static func requireMainEntry(_ runtime: GameRuntime) async throws {
     let game = await runtime.snapshot()
     try #require(game.docked && game.dockedAtMainStation)
     let receipt = try #require(game.commander.nativeStations?.currentMainDock)
@@ -195,7 +207,7 @@ struct ScriptFinanceTests {
     let page = try await ScriptFinanceTestFixture.review(runtime)
     #expect(await runtime.snapshot().contractBoard.financeQuote?.allowed == true)
     #expect(await runtime.snapshot().contractBoard.quote == nil)
-    #expect(await runtime.snapshot().contractBoard.rrsQuote == nil)
+    #expect(await runtime.snapshot().scriptCourierAdmission == nil)
     await runtime.scriptPageKey("right", expected: page)
     await runtime.scriptPageKey("return", expected: page)
     let borrowed = await runtime.snapshot().commander

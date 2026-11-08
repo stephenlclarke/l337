@@ -3,60 +3,11 @@ import Testing
 
 @testable import L337Core
 
-/// An authentic historical container fixture, not a modern writer with a forged old header.
-/// This fresh unit scene has no mining history or authored bodies to discard.
-private func writeHistoricalNativePeople22(_ game: Game, to url: URL) throws {
-  try #require(game.commander.miningLedger.requiredPresencePinSystems.isEmpty)
-  try #require(game.bodies.allSatisfy { $0.scriptNPC == nil && $0.missionInstanceID == nil })
-  var legacy = game.commander
-  let inventory = try #require(legacy.equipmentInventory)
-  legacy.savedEquipmentInventory = try .init(
-    owner: inventory.owner, activeHull: inventory.activeHull, revision: inventory.revision,
-    items: inventory.items.filter { $0.node.family != HyperspaceDriveDefinition.purchaseFamily })
-  legacy.savedEquipmentVersion = 2
-  legacy.savedPlayerElectrical = nil
-  legacy.savedEMPCharge = nil
-  legacy.mirrorFittedEquipment()
-  var object = try #require(
-    JSONSerialization.jsonObject(
-      with: JSONEncoder().encode(legacy)) as? [String: Any])
-  object.removeValue(forKey: "savedMiningLedger")
-  // Only actual native EMP/NPC resource archives are projected to their historical shape.
-  func oldElectricalShape(_ value: Any) -> Any {
-    if var dictionary = value as? [String: Any] {
-      dictionary.removeValue(forKey: "electrical")
-      dictionary.removeValue(forKey: "legacyElectricalRecharge")
-      return dictionary.mapValues(oldElectricalShape)
-    }
-    if let array = value as? [Any] { return array.map(oldElectricalShape) }
-    return value
-  }
-  for key in ["savedEMPState", "savedNPCPersistence"] {
-    if let value = object[key] { object[key] = oldElectricalShape(value) }
-  }
-  let header = try JSONSerialization.data(withJSONObject: object)
-  try ElectricalVersionedSave.rejectFields(header)
-  try NativePeopleVersionedSave.rejectFields(header)
-  try RingMiningVersionedSave.rejectFields(header)
-  try HyperspaceDriveVersionedSave.rejectFields(header)
-  legacy = try JSONDecoder().decode(Commander.self, from: header)
-  var worldObject = try #require(
-    JSONSerialization.jsonObject(
-      with: JSONEncoder().encode(game.scriptWorldSave)) as? [String: Any])
-  worldObject["bodies"] = oldElectricalShape(worldObject["bodies"] ?? [])
-  let worldBytes = try JSONSerialization.data(withJSONObject: worldObject)
-  try ElectricalVersionedSave.rejectFields(worldBytes)
-  let world = try JSONDecoder().decode(ScriptWorldSave.self, from: worldBytes)
-  try #require(legacy.valid && world.valid && world.consistent(with: legacy))
-  try ScriptSaveStore.write(commander: legacy, world: world, to: url)
-}
-
 struct NativePeoplePersistenceTests {
-  @Test func legacyDataHookAcceptsLaterGenuineEpisodeWithoutInventingAnOldSchedule() throws {
+  @Test func laterScheduleHookPreservesCurrentEpisodeAndRefusesMissingPrior() throws {
     var game = try NativePeopleTestFixture.withinWindow()
     let source = try NativePeopleTestFixture.source(game)
     var record = try #require(game.commander.savedEMPState?.records[source])
-    record.savedDisableEpisodes = nil
     let first = record.disableIncident
     let time = first.physicalTime + 31
     try game.commander.removeFittedEquipment(Equipment.empPirateBlaster)
@@ -93,9 +44,17 @@ struct NativePeoplePersistenceTests {
     record.savedCurrentCargo = currentCargo
     record.savedCurrentLegal = currentLegal
     #expect(record.disableIncident == first && record.disableEpisodes.count == 2)
-    #expect(record.disableEpisodes[0].legacyTiming && record.disableEpisodes[0].ejections.isEmpty)
+    #expect(record.disableEpisodes[0] == prior.disableEpisodes[0])
     #expect(record.currentCrewDisableIncident == later && record.crewDeadline == time + 30)
-    #expect(record.crewCensusValid && record.valid)
+    #expect(record.crewCensusValid)
+    // This hook cannot issue a later electrical disable or update its stored hull.
+    #expect(!record.valid)
+    var missingPrior = prior
+    missingPrior.savedDisableEpisodes = nil
+    let missingBefore = missingPrior
+    let missingAccepted = missingPrior.appendCrewDisableEpisode(
+      incident: later, weapon: replacement, owner: prior.weaponOwner, ejections: schedule)
+    #expect(!missingAccepted && missingPrior == missingBefore && !missingPrior.crewCensusValid)
     #expect(
       record.disableEpisodes[0].weapon == prior.weapon
         && record.disableEpisodes[1].weapon == replacement)
@@ -125,10 +84,7 @@ struct NativePeoplePersistenceTests {
       let valid = record.disableEpisodes[1]
       forged.savedDisableEpisodes?[1] = .init(
         incident: bad, weapon: valid.weapon,
-        weaponOwner: valid.weaponOwner, ejections: valid.ejections,
-        legacyTiming: valid.legacyTiming,
-        actorBindings: valid.actorBindings, legacyPods: valid.legacyPods,
-        legacyNextEjectionAt: valid.legacyNextEjectionAt, legacyEmissions: valid.legacyEmissions)
+        weaponOwner: valid.weaponOwner, ejections: valid.ejections, actorBindings: valid.actorBindings)
       #expect(!forged.crewCensusValid && !forged.valid)
     }
     let original = record
@@ -138,52 +94,87 @@ struct NativePeoplePersistenceTests {
     #expect(record == original)
   }
 
-  @Test func legacy22AbsentFieldsRemainAbsentUntilRealRuntimeUpgradeAndKeepUnknownOldTimes()
-    async throws
-  {
-    let storage = try NativeStationTestStorage()
-    defer { storage.clean() }
-    var game = try NativePeopleTestFixture.disabled()
+  @Test func currentRecordRequiresItsActualNonemptyScheduleWithoutRuntimeReconstruction() throws {
+    let game = try NativePeopleTestFixture.disabled()
     let source = try NativePeopleTestFixture.source(game)
-    // Restore the exact pre-24 record shape: original producer, no sampled schedule or captures.
-    game.commander.savedEMPState?.records[source]?.savedDisableEpisodes = nil
-    let nextLegacyEjection = game.commander.flightSimulation.physicalTime + 1
-    game.commander.savedEMPState?.records[source]?.nextEjectionAt = nextLegacyEjection
-    try #require(game.commander.valid)
-    game.ensureScriptCalendar(origin: .inactiveLegacyMigration)
-    try writeHistoricalNativePeople22(game, to: storage.url)
-    let bytes = try Data(contentsOf: storage.url)
-    #expect(try JSONDecoder().decode(ScriptSavePointer.self, from: bytes).schemaVersion == 22)
-    let reader = GameRuntime()
-    try await reader.load(from: storage.url, persistMigrations: false)
-    #expect(try Data(contentsOf: storage.url) == bytes)
-    #expect(await reader.snapshot().commander.savedEquipmentVersion == 3)
-    #expect(
-      await reader.snapshot().commander.savedEMPState?.records[source]?.savedDisableEpisodes == nil)
-    for _ in 0..<15 { _ = await reader.advance(delta: 0.1) }
-    let upgraded = await reader.snapshot()
-    let record = try #require(upgraded.commander.savedEMPState?.records[source])
-    let episode = try #require(record.disableEpisodes.first)
-    #expect(episode.legacyTiming && episode.ejections.isEmpty && episode.legacyPods.isEmpty)
-    #expect(episode.legacyEmissions.count == 1 && episode.legacyEmissions[0].ordinal == 0)
-    #expect(episode.legacyEmissions[0].time >= episode.legacyNextEjectionAt!)
-    #expect(record.valid && upgraded.commander.valid)
-    var frozenLegacy = record
-    frozenLegacy.savedDisableEpisodes = nil
-    try #require(frozenLegacy.valid)
-    let installed = frozenLegacy.installLegacyCrewEpisode()
-    try #require(installed)
-    #expect(frozenLegacy.disableEpisodes[0].legacyPods == [0])
-    #expect(frozenLegacy.disableEpisodes[0].legacyEmissions.isEmpty)
-    #expect(frozenLegacy.podEjectionLowerBound(for: 0) == record.disableIncident.physicalTime)
-    #expect(frozenLegacy.valid)
-    try await reader.save(to: storage.url)
-    #expect(
-      try JSONDecoder().decode(ScriptSavePointer.self, from: Data(contentsOf: storage.url))
-        .schemaVersion == 26)
-    var forged = record
-    forged.savedDisableEpisodes?[0].legacyEmissions = []
-    #expect(!forged.crewCensusValid)
+    let record = try #require(game.commander.savedEMPState?.records[source])
+    try #require(record.valid && !record.disableEpisodes.isEmpty)
+    let bytes = try JSONEncoder().encode(record)
+    #expect(try JSONDecoder().decode(EMPHullRecord.self, from: bytes) == record)
+    let object = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
+    for condition in ["missing", "null", "empty"] {
+      var malformed = object
+      switch condition {
+      case "missing": malformed.removeValue(forKey: "savedDisableEpisodes")
+      case "null": malformed["savedDisableEpisodes"] = NSNull()
+      default: malformed["savedDisableEpisodes"] = []
+      }
+      #expect(throws: SaveError.invalidCommander) {
+        _ = try JSONDecoder().decode(EMPHullRecord.self,
+          from: JSONSerialization.data(withJSONObject: malformed))
+      }
+    }
+    var missing = game
+    missing.commander.savedEMPState?.records[source]?.savedDisableEpisodes = nil
+    let before = missing
+    #expect(!missing.commander.valid)
+    missing.advanceEMPActors()
+    #expect(missing.commander == before.commander && missing.bodies == before.bodies)
+    #expect(missing.commander.savedEMPState?.records[source]?.savedDisableEpisodes == nil)
+  }
+
+  @Test func actualPaidKernelRecoveryAndRedisableKeepOriginalCurrentEpisode() async throws {
+    let paid = try await paidEMPNativeFixture()
+    defer { paid.clean() }
+    var game = await paid.runtime.snapshot()
+    let current = try #require(StationPoliceSource.current())
+    let allocatedActor = game.commander.flightSimulation.allocateActor()
+    let actor = try #require(allocatedActor)
+    let id = game.nextBodyID
+    game.nextBodyID += 1
+    var npc = NPCState(role: .police, origin: game.systemIdentity, destination: game.systemIdentity)
+    var worn = current.stock
+    worn.frontShield = 0
+    worn.rearShield = 0
+    worn.fuel = 0
+    let now = game.commander.flightSimulation.physicalTime
+    var reserve = try #require(ElectricalReserve(
+      capacity: worn.energyCapacity, recharge: worn.energyRecharge, at: now))
+    let drained = reserve.drain(worn.energyCapacity - 1, at: now)
+    try #require(drained)
+    worn.electrical = reserve
+    npc.resources = worn
+    var body = SpaceBody(id: id, hull: .viper, position: .init(0, 0, 1000))
+    body.energy = current.source.performance.energy - 3
+    body.missiles = 0
+    body.physical = .init(
+      identity: actor, population: .police, npc: npc, blocksNavalEncounter: true,
+      catalogueShipID: current.source.ship.id)
+    game.bodies.append(body)
+    _ = try await disableNativeEMPActor(actor, game: &game)
+    let key = try #require(game.bodies.first { $0.physical?.identity == actor }?.physical?.empSource)
+    let disabled = try #require(game.commander.nativeEMPCustodyRecord(for: key))
+    try #require(disabled.valid && !disabled.isRecovered && disabled.crewAboard > 0)
+    try #require(disabled.disableEpisodes.count == 1)
+    let episode = try #require(disabled.disableEpisodes.first)
+    let deadline = try #require(disabled.crewDeadline)
+    // Controlled owner-clock boundary, not an executed native recovery journey.
+    game.commander.flightSimulation.advancePhysicalTime(
+      deadline + 1 - game.commander.flightSimulation.physicalTime)
+    game.recoverEMPHulls()
+    let recovered = try #require(game.commander.nativeEMPCustodyRecord(for: key))
+    try #require(recovered.isRecovered && recovered.valid)
+    #expect(recovered.disableEpisodes == disabled.disableEpisodes)
+    #expect(recovered.crewAboard == disabled.crewAboard && recovered.crewTotal == disabled.crewTotal)
+    _ = try await disableNativeEMPActor(actor, game: &game)
+    let second = try #require(game.commander.nativeEMPCustodyRecord(for: key))
+    try #require(second.valid && !second.isRecovered && second.disableEpisodes.count == 2)
+    #expect(second.disableEpisodes[0] == episode && second.disableIncident == disabled.disableIncident)
+    #expect(second.disableEpisodes[1].incident.id > episode.incident.id)
+    #expect(second.disableEpisodes[1].incident.physicalTime >= episode.deadline)
+    #expect(Set(second.disableEpisodes[1].ejections.map(\.ordinal)) == Set(recovered.aboardOrdinals))
+    #expect(second.crewTotal == disabled.crewTotal && second.crewAboard == recovered.crewAboard)
+    #expect(second.hull.body.physical?.npc?.resources?.fuel == 0)
   }
 
   @Test func realCullAndReadmissionBeforeDeadlineAllowsOriginalCrewCaptureOnNewActor() async throws
@@ -271,8 +262,7 @@ struct NativePeoplePersistenceTests {
   }
 
   @Test(arguments: [
-    "captures", "ordinals", "episodes", "ejections", "bindings", "deceased", "legacyPods",
-    "legacyEmissions",
+    "captures", "ordinals", "episodes", "ejections", "bindings", "deceased",
   ])
   func nestedCollectionsRejectOversizeBeforeDecodingPoisonedChildren(collection: String) throws {
     let field: String
@@ -301,7 +291,7 @@ struct NativePeoplePersistenceTests {
       } else {
         // Supply earlier bounded siblings so the poisoned target is reached first.
         var object: [String: Any] = [
-          "ejections": [], "actorBindings": [], "legacyPods": [], "legacyEmissions": [],
+          "ejections": [], "actorBindings": [],
         ]
         object[field] = poison
         _ = try JSONDecoder().decode(

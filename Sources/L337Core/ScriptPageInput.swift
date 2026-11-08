@@ -33,7 +33,9 @@ public enum ScriptPageIdentity: Codable, Sendable, Equatable {
   case question(ScriptQuestionIdentity)
   case gallery(ScriptGalleryPageIdentity)
   case contract(ScriptContractPageIdentity)
+  case journal(NativeC01InquiryJournalPageIdentity)
   case inductionUtility(UUID)
+  case isolationWork(UUID)
   var valid: Bool {
     switch self {
     case .legacy(let page): page.valid
@@ -41,7 +43,9 @@ public enum ScriptPageIdentity: Codable, Sendable, Equatable {
     case .question(let question): question.valid
     case .gallery(let page): page.valid
     case .contract(let page): page.valid
+    case .journal(let page): page.valid
     case .inductionUtility: true
+    case .isolationWork: true
     }
   }
 }
@@ -81,10 +85,14 @@ extension Game {
           committed: offer.committed))
     } else if screen == .gallery {
       page = .gallery(scriptGalleryPageIdentity)
+    } else if screen == .journal {
+      page = .journal(scriptC01InquiryJournalPageIdentity)
     } else if screen == .contracts {
       page = .contract(scriptContractPageIdentity)
     } else if screen == .front, let review = inductionUtilityWorkRuntime.review {
       page = .inductionUtility(review.nonce)
+    } else if screen == .front, let review = isolationWorkRuntime.review {
+      page = .isolationWork(review.nonce)
     } else {
       page = nil
     }
@@ -97,6 +105,8 @@ extension GameRuntime {
     let allowed: Bool
     if case .gallery(let page)? = expected.page {
       allowed = page.allowedKeys.contains(key) || key == "contracts-open"
+    } else if case .journal(let page)? = expected.page {
+      allowed = page.allowedKeys.contains(key)
     } else if case .contract(let page)? = expected.page {
       allowed = page.allowedKeys.contains(key)
     } else if expected.page == nil {
@@ -122,7 +132,9 @@ extension GameRuntime {
       game.notify("CONTACT CHANGED - REVIEW THE CURRENT PAGE")
       return
     }
-    if case .gallery? = expected.page {
+    if case .journal? = expected.page {
+      return
+    } else if case .gallery? = expected.page {
       galleryClick(x: x, y: y)
     } else if case .contract? = expected.page {
       contractPageClick(x: x, y: y)

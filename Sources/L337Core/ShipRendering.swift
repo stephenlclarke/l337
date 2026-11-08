@@ -31,6 +31,17 @@ public struct ScreenPoint: Sendable, Equatable {
 public struct ShipPanel: Sendable, Equatable {
   public let vertices: [ScreenPoint]
   public let colour: UInt32
+  public let isOpticalPane: Bool
+  public let opticalAperture: [ScreenPoint]?
+
+  init(vertices: [ScreenPoint], colour: UInt32, isOpticalPane: Bool = false,
+    opticalAperture: [ScreenPoint]? = nil)
+  {
+    self.vertices = vertices
+    self.colour = colour
+    self.isOpticalPane = isOpticalPane
+    self.opticalAperture = opticalAperture
+  }
 }
 
 extension Hull {
@@ -163,6 +174,12 @@ extension Frame {
   }
 
   public mutating func panel(_ vertices: [ScreenPoint], colour: UInt32) {
+    panel(vertices, colour: colour, isOpticalPane: false)
+  }
+
+  mutating func panel(_ vertices: [ScreenPoint], colour: UInt32, isOpticalPane: Bool,
+    opticalAperture: [ScreenPoint]? = nil)
+  {
     guard vertices.count >= 3, vertices.allSatisfy({ $0.x.isFinite && $0.y.isFinite }) else {
       return
     }
@@ -179,8 +196,45 @@ extension Frame {
       clipped = Self.clipPolygon(clipped, axis: \.y, limit: flightClip.maxY - 1, above: false)
     }
     guard clipped.count >= 3 else { return }
-    graphics.append(.panel(ShipPanel(vertices: clipped, colour: colour)))
-    if rasterizeGraphics { fillPanel(clipped, colour: colour) }
+    graphics.append(.panel(ShipPanel(vertices: clipped, colour: colour, isOpticalPane: isOpticalPane,
+      opticalAperture: opticalAperture)))
+    if rasterizeGraphics {
+      let fill = opticalAperture.map { Self.clipPanel(clipped, to: $0) } ?? clipped
+      if fill.count >= 3 { fillPanel(fill, colour: colour, isOpticalPane: isOpticalPane) }
+    }
+  }
+
+  private static func clipPanel(_ vertices: [ScreenPoint], to aperture: [ScreenPoint]) -> [ScreenPoint] {
+    guard aperture.count >= 3 else { return [] }
+    let area = aperture.indices.reduce(0.0) { total, i in
+      let a = aperture[i], b = aperture[(i + 1) % aperture.count]
+      return total + a.x * b.y - a.y * b.x
+    }
+    guard area != 0 else { return [] }
+    var clipped = vertices
+    for i in aperture.indices {
+      let a = aperture[i], b = aperture[(i + 1) % aperture.count]
+      func distance(_ p: ScreenPoint) -> Double {
+        let value = (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x)
+        return area > 0 ? value : -value
+      }
+      guard var previous = clipped.last else { break }
+      var start = distance(previous)
+      var next: [ScreenPoint] = []
+      for current in clipped {
+        let end = distance(current)
+        if (start >= 0) != (end >= 0) {
+          let t = start / (start - end)
+          next.append(.init(previous.x + t * (current.x - previous.x),
+            previous.y + t * (current.y - previous.y)))
+        }
+        if end >= 0 { next.append(current) }
+        previous = current
+        start = end
+      }
+      clipped = next
+    }
+    return clipped
   }
 
   private static func clipPolygon(
@@ -205,9 +259,10 @@ extension Frame {
     return result
   }
 
-  private mutating func fillPanel(_ vertices: [ScreenPoint], colour: UInt32) {
-    let low = Int(vertices.map(\.y).min() ?? 12)
-    let high = Int(vertices.map(\.y).max() ?? 175)
+  private mutating func fillPanel(_ vertices: [ScreenPoint], colour: UInt32, isOpticalPane: Bool) {
+    let low = max(0, Int(vertices.map(\.y).min() ?? 12))
+    let high = min(Self.height - 1, Int(vertices.map(\.y).max() ?? 175))
+    guard low <= high else { return }
     for y in low...high {
       let row = Double(y) + 0.5
       var crossings: [Double] = []
@@ -220,8 +275,28 @@ extension Frame {
       }
       guard let left = crossings.min(), let right = crossings.max() else { continue }
       let first = max(0, Int(ceil(left - 0.5)))
-      let last = min(255, Int(floor(right - 0.5)))
-      if first <= last { for x in first...last { pixels[y * Self.width + x] = colour } }
+      // Shared pane edges belong to only one triangle at a sample center.
+      let rightSample = isOpticalPane ? ceil(right - 0.5) - 1 : floor(right - 0.5)
+      let last = min(255, Int(rightSample))
+      guard first <= last else { continue }
+      for x in first...last {
+        let index = y * Self.width + x
+        pixels[index] = isOpticalPane ? Self.opticalBlend(colour, over: pixels[index]) : colour
+      }
     }
+  }
+
+  private static func opticalBlend(_ source: UInt32, over destination: UInt32) -> UInt32 {
+    let sourceAlpha = source & 255
+    let foregroundWeight = sourceAlpha * 255
+    let backgroundWeight = (destination & 255) * (255 - sourceAlpha)
+    let total = foregroundWeight + backgroundWeight
+    guard total > 0 else { return 0 }
+    func channel(_ shift: UInt32) -> UInt32 {
+      let foreground = (source >> shift) & 255
+      let background = (destination >> shift) & 255
+      return (foreground * foregroundWeight + background * backgroundWeight + total / 2) / total
+    }
+    return channel(24) << 24 | channel(16) << 16 | channel(8) << 8 | (total + 127) / 255
   }
 }

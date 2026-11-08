@@ -1,0 +1,996 @@
+{
+  "schema": "l337.fleet-resource-replacement/1",
+  "status": "frozen-before-source-authoring",
+  "backlogSHA256": "fa6967df5b6210327748b63d3277dd6126bf1dd425ee63b7768ed203bd4a5063",
+  "maximumRows": 49,
+  "maximumSourceParses": 98,
+  "maximumResourceWrites": 49,
+  "coordinateTransformations": 0,
+  "nativeOrRendererExecutions": 0,
+  "sourceRoot": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859",
+  "records": [
+    {
+      "id": "SH036",
+      "contractSHA256": "4fc25d2778c8e0ab927313a279ca31fcb68df46557223e2cb268a99e7e97dcc4",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH036-design.toml",
+          "bytes": 597328,
+          "sha256": "0329307ac621426e5f71715000fb5b47f2578d575439598b08ca0ced56b2c77e"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH036-design.toml",
+          "bytes": 428988,
+          "sha256": "3dd03d7688ee39b0009b257bb5cb0b65f20f5c4ac4580549396b07a48fceb1de"
+        }
+      ],
+      "oldResourceSHA256": "18c43707706e5b7773a9ade79670c0baf776accf0800006ca9eacc6c8c21a659",
+      "physicalRecordSHA256": "c32a65aaa57bf82dc3a47e3e54820fe6c0d6fe9fd3da7c772da889d5ecf372b1"
+    },
+    {
+      "id": "SH041",
+      "contractSHA256": "7f7213ef84d6fc2e1895bf0097f9106c37df199b33d72bf6c78c975a9df197bb",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH041-design.toml",
+          "bytes": 685984,
+          "sha256": "2a9111ed38c8f023e5b4846bba62a74aeeb302d4300f687abdd19ed900a490ee"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH041-design.toml",
+          "bytes": 544633,
+          "sha256": "5d3e7b5da7bee8f62a47aeac58f13064e185d6dc49c842863da82e2a97679fa6"
+        }
+      ],
+      "oldResourceSHA256": "8ef78c2929a23b003692341668e0d8a4a6f3fe7adb7c3dd2e484ad01b644c118",
+      "physicalRecordSHA256": "fc24f453e5fa80317db52c61ffff755f1f7cd503196bd34b8a71f019edd14575"
+    },
+    {
+      "id": "SH042",
+      "contractSHA256": "36a903484eb884b1774baf0c18270d99916c54cc1cfa55aad32253284faf4293",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH042-design.toml",
+          "bytes": 684241,
+          "sha256": "1bb0ed2db6f14323e84a5073f57f75aef7aea86049fcd608b195146611780547"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH042-design.toml",
+          "bytes": 490932,
+          "sha256": "8b64ebb1529abe86018b7b2553c45f961c06f0e0a9182321ec1b528cb0a716c8"
+        }
+      ],
+      "oldResourceSHA256": "289326567cd83dc44ac15b122be44f04be991e6c9d2a26922eeb68eeb88e7d58",
+      "physicalRecordSHA256": "f113d1c0b723760cb7755ae51204d89e125bb5c3f8d1cf1f0070eaf96d54fa75"
+    },
+    {
+      "id": "SH043",
+      "contractSHA256": "be5d22e65550f8420a4f61ce6c784b1161fcc645d3e542c671dd864e9e736368",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH043-design.toml",
+          "bytes": 679524,
+          "sha256": "3452b1e2aec7c1a469baa68295f2925802b328b52c4420e49211f7993816e052"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH043-design.toml",
+          "bytes": 486035,
+          "sha256": "1c7a31a989c833da95651924fa5f44ce9d7fbb56be68b4b6cffe710b1c393216"
+        }
+      ],
+      "oldResourceSHA256": "63f7c2903177e97210fc082ace51d7822cf6557a0395f0c5be2c3916a1086fb4",
+      "physicalRecordSHA256": "8cf7dc3345f41175856ef1a571e7aebc709901fd9f186b4e454b0e81e7ce90a5"
+    },
+    {
+      "id": "SH044",
+      "contractSHA256": "4e52c59c8ea67c28ed0c85e6bc8d6bd2adc33ef268aac2b902a02a4860b94aab",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH044-design.toml",
+          "bytes": 613598,
+          "sha256": "057b38312494f17250f32aa60936ec400947ee161ad9dd32f390517339550a63"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH044-design.toml",
+          "bytes": 443960,
+          "sha256": "6221e902c9893e7c3e9b9557e7f3331dc95da26282b76c1edfdbeba8f9f94f25"
+        }
+      ],
+      "oldResourceSHA256": "3d5ae9bdb8f76611c839f9c7bfbca6b988e7bcf797cd61631369cec36cba0320",
+      "physicalRecordSHA256": "ced88e65a0c1d24d861578bb924de0998aba0d03d696afbd5b3f8224d2f11a4d"
+    },
+    {
+      "id": "SH045",
+      "contractSHA256": "7328c686a42309644a8a413272ba723bd367422e2e7315f5f10cf107a82f54bb",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH045-design.toml",
+          "bytes": 392915,
+          "sha256": "8954950c29b4616f2e41c20d39ef185abf8348ceb7004acfc20efa2087953cd7"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH045-design.toml",
+          "bytes": 291001,
+          "sha256": "af9e790882ec54bdc368ba1adc7edd757a032c3557d381a50a109bff5abc1ca9"
+        }
+      ],
+      "oldResourceSHA256": "2c88ca45661739411e5456b8879ac8fec70281bffdfd36b37be790a167d7e922",
+      "physicalRecordSHA256": "cc3c79b8e83df2db5d3fff549ebefbe5a751ec7f6a6cdb0ff7605050abd1420c"
+    },
+    {
+      "id": "SH046",
+      "contractSHA256": "18403611eadeb9ccad245863016046fb2df9ef19041f428d52492fdda9574951",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH046-design.toml",
+          "bytes": 541586,
+          "sha256": "c2c51d6dd573391d33a0b94216f8cdd2e1c5b9e5cbeab524b2038676a786cd56"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH046-design.toml",
+          "bytes": 397319,
+          "sha256": "2619b8ca62cad610226c8f3862882d17de9b6b83186c192eb0e099dc66eb1c4f"
+        }
+      ],
+      "oldResourceSHA256": "61b358437cb16e28825d1b8b64065162657745ce6aa4a9cbb7dfb79f129323f6",
+      "physicalRecordSHA256": "ceedb96a59a0c93e86658dff9f3e5e92720eb9fc256c6f481f820cf917397ffb"
+    },
+    {
+      "id": "SH047",
+      "contractSHA256": "9dfe04c0823e82541eb1cde7f54438b81b78ed3f6d94e21ab47fef7802879375",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-01/SH047-design.toml",
+          "bytes": 839488,
+          "sha256": "8a0dc3f33e4c88e2301c0c00c05d3c5708ee25db4b96f06e6cc919ec634e54b4"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-01-native-lod/SH047-design.toml",
+          "bytes": 642989,
+          "sha256": "7cb0dad60b3f677c8710677403cba2213ffd5bfb1a7ee1a2d2b012cacc381dd7"
+        }
+      ],
+      "oldResourceSHA256": "ceee7c57d0867ca738f573db788b762f03b6684ffb3b5320b909de531d8f7756",
+      "physicalRecordSHA256": "9fdc76b3008800424a93fea132abcc725884437a826ba027f7d5dfbb2529b043"
+    },
+    {
+      "id": "SH054",
+      "contractSHA256": "dafe7d8be715227740f0a7d3a05f106fa6f4bf7faa775955b456e8338f413848",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH054-design.toml",
+          "bytes": 750801,
+          "sha256": "10c4f78ca8cc703cb835d261ab470c09ac86b9173ffe872c5a51eb9292187353"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH054-design.toml",
+          "bytes": 587363,
+          "sha256": "1a933aff0cb9f12bfb23ef4d8a834350e33021f5d7942934db94401ce350ab54"
+        }
+      ],
+      "oldResourceSHA256": "149339fa0c6d65bceec41dae19449285ee288d4d4f8d2b8b20160c3d6f78adec",
+      "physicalRecordSHA256": "c2a250a9eaaffe6776ef3bfa8447ab9e9c96ddf83cdeb1f1b9098ff2e65208ef"
+    },
+    {
+      "id": "SH055",
+      "contractSHA256": "58333569187849df206f88e371a9102bda0d98eb2fdb922a317533ce5c3a4038",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH055-design.toml",
+          "bytes": 768053,
+          "sha256": "623613355d58dbe4bf7058237c041ba29c7f9aaa5ffba5891402e8ee4e7c0e5e"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH055-design.toml",
+          "bytes": 572920,
+          "sha256": "770a05d0e3faacffb915e1bc5ccfc3bb0e5142d940132843e182ca0b71d9752f"
+        }
+      ],
+      "oldResourceSHA256": "49d73633fa96e5dd5cfcf4afbc70e407cb521c5b6d677d0586578cb00032264a",
+      "physicalRecordSHA256": "aee0c5493ba99898321e3c883f1db848c145728cedfa7a142149ecf485aca723"
+    },
+    {
+      "id": "SH056",
+      "contractSHA256": "95499ece85aad0bf86717d4f71101e5be9e9f23251c26b6a68a482395383288d",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH056-design.toml",
+          "bytes": 395715,
+          "sha256": "b2f871fe7e55beb82bbf91ca688187081edc0264219df04d35489d3f541abb1e"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH056-design.toml",
+          "bytes": 293339,
+          "sha256": "625559c0932f56b8971d90606d0c861811dca3353318b632a300bdb5fbfcf11f"
+        }
+      ],
+      "oldResourceSHA256": "06f2f19f731014a2df41122b2669a0919af1535acd7fc9baa595789a7233825d",
+      "physicalRecordSHA256": "46dfd0fdf73694925122c7b4f13da5c98efdd698e3df4e3ae17358ba65e406d9"
+    },
+    {
+      "id": "SH057",
+      "contractSHA256": "ffe134c836380aa65bfa648403c6954daff113f4fef4dfc6467c03ef8e01410d",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH057-design.toml",
+          "bytes": 535440,
+          "sha256": "7a06dd10db79d5bf57e69067cb3f40daa0def49273ff0b853d629c2c2cd95576"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH057-design.toml",
+          "bytes": 388924,
+          "sha256": "08f2a4ceeb05e5ba652c2691301d17a285ec99de0c4f79d9fcdcdaec18bb5fa9"
+        }
+      ],
+      "oldResourceSHA256": "6b2fa9a4f36a199b13df37be9ddebe84a62e88b56f2f555676dafb08ab323137",
+      "physicalRecordSHA256": "60235d52f24576f85bb3eedb17e63af6d23659d29566d34dfed4cd3f7e5d06dd"
+    },
+    {
+      "id": "SH058",
+      "contractSHA256": "fd5f2d8a64762ab74e1849985e6cf3bf25184968e5cf6f7d6d15213eadd3b11c",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH058-design.toml",
+          "bytes": 742241,
+          "sha256": "1b743ac0d3fcc1bd5f0d94626cd942d3cbfa3066d28254cdd7e8435621ae0103"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH058-design.toml",
+          "bytes": 526786,
+          "sha256": "13ef038a1ab17ffb777bd43f6a63b0a973bbea8bfd6076248cc14f8f1d49b2b8"
+        }
+      ],
+      "oldResourceSHA256": "6f5e4f8dc4a115ed833086199b853e8b5ec9baf1332a90bd44fa9c3d26a571d9",
+      "physicalRecordSHA256": "3a45a010017b750f3eba59fcf486679328fdee5eca34bfb14b6ae2fec7baa104"
+    },
+    {
+      "id": "SH059",
+      "contractSHA256": "682ea6695deaf59ec229599d0fbcea0b86b8f307de68f220e15e1201bc8dbd94",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-02/SH059-design.toml",
+          "bytes": 639385,
+          "sha256": "2856679ad20446fd76ac6b28d4dbc67e04c819992ebd08cb75aba39e34953cb1"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-02-native-lod/SH059-design.toml",
+          "bytes": 486133,
+          "sha256": "1c642950f8d6c5ef773cc36b9c73c249e87e582de19d412e62e4e76e8f7b8b14"
+        }
+      ],
+      "oldResourceSHA256": "710825d61b4aa9744825c83e1e5716f4e14e1559fd95d04da5003d5dcaf46b8f",
+      "physicalRecordSHA256": "942af82dc68ac189928080fcaf582569cc5f44661be1b629a2db53a0737e55ec"
+    },
+    {
+      "id": "SH062",
+      "contractSHA256": "af7e5b06c322c002069f6c7ea99d3ba77a7c421a33231c983d49643572e84c42",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH062-design.toml",
+          "bytes": 434242,
+          "sha256": "ec91173e7ff65ed64271fabdae0c237519774c07d5ef6a97a2e21c36287324f0"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH062-design.toml",
+          "bytes": 434242,
+          "sha256": "ec91173e7ff65ed64271fabdae0c237519774c07d5ef6a97a2e21c36287324f0"
+        }
+      ],
+      "oldResourceSHA256": "859f4474aba0ff6421166ff55a0cebe2d426a9fe1e68dfb60ad083afc4d49b33",
+      "physicalRecordSHA256": "229b7639fa35a6612d84ebd7571be582c89f742ba18fc16d85887e6ebb73adba"
+    },
+    {
+      "id": "SH064",
+      "contractSHA256": "91172f72834f1078bb886c2bc8581fb880dc2641b7b5c92ab16eda4181d0f4ad",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH064-design.toml",
+          "bytes": 389790,
+          "sha256": "470c4f3530d75eb55cd74e896922e26b26df6771b65af04112639db4209d5c80"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH064-design.toml",
+          "bytes": 389790,
+          "sha256": "470c4f3530d75eb55cd74e896922e26b26df6771b65af04112639db4209d5c80"
+        }
+      ],
+      "oldResourceSHA256": "6ad7efdc10bc52175676cd3d91cadefaae92037a9f37b21c15b5d5a6245047a1",
+      "physicalRecordSHA256": "60e354044e7fcbba7c340868f4d4977da4c777798a7eee0dd6d5b7e07b228349"
+    },
+    {
+      "id": "SH065",
+      "contractSHA256": "9cf0eb3f8ec63b539dbb093734c1833f8cb95775c76d547580c99511b054fa83",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH065-design.toml",
+          "bytes": 537856,
+          "sha256": "b29e5447be715c56e804b43d4ef5b71ecad354d18c48cf7e6e16d2aac78771af"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH065-design.toml",
+          "bytes": 537856,
+          "sha256": "b29e5447be715c56e804b43d4ef5b71ecad354d18c48cf7e6e16d2aac78771af"
+        }
+      ],
+      "oldResourceSHA256": "4f56f31f6e22958f31c4532000ee090b526749f7e93122c0a08de3cb17779560",
+      "physicalRecordSHA256": "3cbe06321892ef549e7664c4ab66bd91deca4562eb2d936d22163c9be36cd591"
+    },
+    {
+      "id": "SH068",
+      "contractSHA256": "f715749177b8a3897f5af27b32f991205965847a1aa90da63ee37c5f11f74196",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH068-design.toml",
+          "bytes": 756685,
+          "sha256": "9a793c007844bbb9fe72ebc51cfe0e5d671739ac087b63628a3d91857e868fe5"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH068-design.toml",
+          "bytes": 756685,
+          "sha256": "9a793c007844bbb9fe72ebc51cfe0e5d671739ac087b63628a3d91857e868fe5"
+        }
+      ],
+      "oldResourceSHA256": "aada519d787d868c89e08ea33e2ff715ecc28e4bacd59632e2760ffb8e0c7e82",
+      "physicalRecordSHA256": "3281be54b432227dcdb00159dd93ec099f80a52a193d6c35e942683189925b36"
+    },
+    {
+      "id": "SH069",
+      "contractSHA256": "d807c75dab09754cdf61f174014ed1714dc8c03002f8fb5e4848d37524f18aa6",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH069-design.toml",
+          "bytes": 295312,
+          "sha256": "02c42c3c40b2a4542db58570f3b689c31dcaa49503c9b8d930f3aae52e1a6bb4"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH069-design.toml",
+          "bytes": 295312,
+          "sha256": "02c42c3c40b2a4542db58570f3b689c31dcaa49503c9b8d930f3aae52e1a6bb4"
+        }
+      ],
+      "oldResourceSHA256": "1c9d4ba72c3eaa4b960a72ce3e0ae1da7b54211b3e2e8e57efa50c0e072f694a",
+      "physicalRecordSHA256": "44bf5ec89e29744029ce18bcc72ccd0b031e835c392a3f2371f9442126220506"
+    },
+    {
+      "id": "SH070",
+      "contractSHA256": "a93cfc8d733b3d667ec1f24cf877e2d689102913a42acc30cdb77078ade6c6fe",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH070-design.toml",
+          "bytes": 302421,
+          "sha256": "25c56839704deba785e7c381a9db70ddc7e225d94ca37d144a4becb150f7c4fd"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH070-design.toml",
+          "bytes": 302421,
+          "sha256": "25c56839704deba785e7c381a9db70ddc7e225d94ca37d144a4becb150f7c4fd"
+        }
+      ],
+      "oldResourceSHA256": "513cdad540564cfb979c44fd10a8f874a8eb29b2432bf7f4e434b215242e68da",
+      "physicalRecordSHA256": "ce10a7f8f5d16dfa700ec3890f4667010306683d3bdf38d066c261140b9ba345"
+    },
+    {
+      "id": "SH074",
+      "contractSHA256": "0711a5d64904da6ecc41ecb46cf978dc5065321ce4757c7390c0172b6b4d6822",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH074-design.toml",
+          "bytes": 1177260,
+          "sha256": "85d5ac77d76ea8543428b015aca6c8a0025e332ca69f5f6900f83092cda40459"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH074-design.toml",
+          "bytes": 1177260,
+          "sha256": "85d5ac77d76ea8543428b015aca6c8a0025e332ca69f5f6900f83092cda40459"
+        }
+      ],
+      "oldResourceSHA256": "c56dc1cb7b601c8f30c68412cbefb1cdd9ab8f3acb3bc8ea35c802325e4a79ea",
+      "physicalRecordSHA256": "c3956342ca0d080df0c32fa0ea24c56f5ada70985cc4e82c3adee6dc32fc9aa7"
+    },
+    {
+      "id": "SH075",
+      "contractSHA256": "3f6f6790a6ba48313118d7ab8cfc191b05c03f42a1d1c2596c3e1c007e1b991a",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH075-design.toml",
+          "bytes": 1249912,
+          "sha256": "6f88aa80d06f3d269d925fde3ad1add3eaa655a64df229e30c0af37bff39397d"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH075-design.toml",
+          "bytes": 1249912,
+          "sha256": "6f88aa80d06f3d269d925fde3ad1add3eaa655a64df229e30c0af37bff39397d"
+        }
+      ],
+      "oldResourceSHA256": "3e184ee14710d3dcab259ffd9003648c087d7d35077e14b87a42f4a09fefb912",
+      "physicalRecordSHA256": "02d0e3a9747649377067b94b0282933a9af16f78f918d8567cd94cbe9ec8b282"
+    },
+    {
+      "id": "SH077",
+      "contractSHA256": "b47b47578defd762547b0f25c6c64697cc340eadb534b0543b3d0dd89325c9dc",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH077-design.toml",
+          "bytes": 486857,
+          "sha256": "9d21c021df62f73a9f15b11455f88439fd178cca60ac72d99e1253f0339ac441"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH077-design.toml",
+          "bytes": 486857,
+          "sha256": "9d21c021df62f73a9f15b11455f88439fd178cca60ac72d99e1253f0339ac441"
+        }
+      ],
+      "oldResourceSHA256": "3224b50c24872965b36cb0fa40f3233ab942828d3eed516b43fa2456bdf63882",
+      "physicalRecordSHA256": "c6b490088d15e9bf3bc4d3700b9f7fe97e6cf366efed74ff27bb868ae9d1b04f"
+    },
+    {
+      "id": "SH078",
+      "contractSHA256": "ec614af96ca542fc5ad47f512bd5d3a88aa04b46f86fa5a0cd7f72b7d00031b9",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH078-design.toml",
+          "bytes": 580805,
+          "sha256": "ca5f64a1c396f81cc062345f1659e36113ee6c81a127ac7d7dad872452184e6c"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH078-design.toml",
+          "bytes": 580805,
+          "sha256": "ca5f64a1c396f81cc062345f1659e36113ee6c81a127ac7d7dad872452184e6c"
+        }
+      ],
+      "oldResourceSHA256": "7b994fe0b00d4c19f5a4cf594cbf15c52c0bd5911607cddef513eac4ba699558",
+      "physicalRecordSHA256": "7c1d1b23584d79f839880e4786fe92274709a2be6c097201adf9dc5592107009"
+    },
+    {
+      "id": "SH079",
+      "contractSHA256": "f1e712171f85fce0e633fbff4dfe99e69eb77e07f52eaef46411cb7025e62024",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH079-design.toml",
+          "bytes": 313455,
+          "sha256": "5c3b5974e095cfe792ce8b518267cd5d848b4a36ec9ef37e04dabaacddea6c79"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH079-design.toml",
+          "bytes": 313455,
+          "sha256": "5c3b5974e095cfe792ce8b518267cd5d848b4a36ec9ef37e04dabaacddea6c79"
+        }
+      ],
+      "oldResourceSHA256": "b8cdaa868c55c0e21a13986b5ab753da997e98c2710991fe469421471dadf170",
+      "physicalRecordSHA256": "9e8e535d93ddcdfd5e4d9b2f31b0a099de7bccf7452c0903915c49245dac02c8"
+    },
+    {
+      "id": "SH080",
+      "contractSHA256": "e03e647a7312e9caa8dd86cedffa6df274ed4c5ef76b03ff526b97d7eb135782",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH080-design.toml",
+          "bytes": 363514,
+          "sha256": "e853662580668e4a89c37f46ffd6a49c69aee98b3f324dd0bc77acce960ea009"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH080-design.toml",
+          "bytes": 363514,
+          "sha256": "e853662580668e4a89c37f46ffd6a49c69aee98b3f324dd0bc77acce960ea009"
+        }
+      ],
+      "oldResourceSHA256": "3e62d4937abf8e85ea26c627b95b4bc6a8e828a854ad6e299c1a0ca3847489b9",
+      "physicalRecordSHA256": "37058a684deb956d934b69605485bc20f269e26aa850d99b9d8362f7e0f34d70"
+    },
+    {
+      "id": "SH081",
+      "contractSHA256": "57ea57735c368d832a43ed1bade04accf4bf71577dd3439a876a45f610f366f4",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH081-design.toml",
+          "bytes": 741633,
+          "sha256": "22f8667772b9461bdd59bb7f6d9ef26bf49303cf174ab1ef5415f34277d72b0d"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH081-design.toml",
+          "bytes": 741633,
+          "sha256": "22f8667772b9461bdd59bb7f6d9ef26bf49303cf174ab1ef5415f34277d72b0d"
+        }
+      ],
+      "oldResourceSHA256": "8717c72972a3bd07dfdec1ee52267bc370b6727114b96b1e4f76c9a56f098654",
+      "physicalRecordSHA256": "2dbd5e4563126ab862778bb98930932001a4096d503e00459931dfcb7ffcd2f4"
+    },
+    {
+      "id": "SH083",
+      "contractSHA256": "bb7350c1b3035b058625a398139fc15df0146e1c760a640e5ee9bd552ea88095",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH083-design.toml",
+          "bytes": 387831,
+          "sha256": "aa694d328600f03ee21f7f9c8496b229347e2e6c1c4d0f5d1da250aa9392ac0e"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH083-design.toml",
+          "bytes": 387831,
+          "sha256": "aa694d328600f03ee21f7f9c8496b229347e2e6c1c4d0f5d1da250aa9392ac0e"
+        }
+      ],
+      "oldResourceSHA256": "c920fac039b470c5b6baba6aa79ee1b02a37cbba4a5e4e45f4d0d2be7bba9649",
+      "physicalRecordSHA256": "76ae3537e9050a292aca093b9e3cdbeecac96d5cebc77456383a3cec5f2cb660"
+    },
+    {
+      "id": "SH084",
+      "contractSHA256": "d80ac8f22ee304bb730d16d2206a660168cb0a762a668eec0775a32c45d21467",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH084-design.toml",
+          "bytes": 388348,
+          "sha256": "63e88e1098ea8b59080a254675819a1330bf1ce9a274e2df28be4ca48d2a716d"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH084-design.toml",
+          "bytes": 388348,
+          "sha256": "63e88e1098ea8b59080a254675819a1330bf1ce9a274e2df28be4ca48d2a716d"
+        }
+      ],
+      "oldResourceSHA256": "7b794d76c9cf8e7b54559ebc742bb9f06f1b4adb6af9f2f33fe4ba49a782be41",
+      "physicalRecordSHA256": "d2bd879d2b924f85e87f5d1e37fc524ab57001ce4cb8ab433057258225f48e36"
+    },
+    {
+      "id": "SH085",
+      "contractSHA256": "fdf156b257cfa0ea113403c0b85b45d53ee87af25a56f5b891a06f448e92804f",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH085-design.toml",
+          "bytes": 392768,
+          "sha256": "1e1fad73a50483702f87fcbb64839d8954604b0751dcf4cede6283bb6197a85c"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH085-design.toml",
+          "bytes": 392768,
+          "sha256": "1e1fad73a50483702f87fcbb64839d8954604b0751dcf4cede6283bb6197a85c"
+        }
+      ],
+      "oldResourceSHA256": "129db0785da95f5f30eecff57e8183a006f7eb91de9907e20e8ffcf0a68dce94",
+      "physicalRecordSHA256": "9245c92c5e28b89c121da28a16619cc09ba2d4a7d45ce9e793efa2d488d11eb4"
+    },
+    {
+      "id": "SH091",
+      "contractSHA256": "eda1e9dceb8b3594fa99bb2d8ed9f21e2e7fab320ee1ae3dc154b1b82aa52f81",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH091-design.toml",
+          "bytes": 599955,
+          "sha256": "fd2fe452563dc9641dd4e48d5bf2beebec411ab225041c4da8c2ff97d36366e3"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH091-design.toml",
+          "bytes": 599955,
+          "sha256": "fd2fe452563dc9641dd4e48d5bf2beebec411ab225041c4da8c2ff97d36366e3"
+        }
+      ],
+      "oldResourceSHA256": "3464ab28bca08172de1ddb21eb5f82122c3c21c1717f9e4b8f1c638e40e2a75f",
+      "physicalRecordSHA256": "70e788982a0c7fb468ee835a913a122f5c7dec607e2bd3aef897e963fa0200e1"
+    },
+    {
+      "id": "SH093",
+      "contractSHA256": "763c3badc87a28e0d9c431d0ddc417297f0cc99066f83cf33e6bf9fe1fd96a8e",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH093-design.toml",
+          "bytes": 438985,
+          "sha256": "a19630347a9a31555430539402ad797754f16a30d51eceba6b27f7214e1ceab7"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH093-design.toml",
+          "bytes": 438985,
+          "sha256": "a19630347a9a31555430539402ad797754f16a30d51eceba6b27f7214e1ceab7"
+        }
+      ],
+      "oldResourceSHA256": "6b2b62222e7cc189feee812e2fd9f7b0e0895cc160db3af632359d20ef5d68ed",
+      "physicalRecordSHA256": "3a8575e843ab3ea8bf7e792c26852c247469ced469dc40cbc5017a75aaf17351"
+    },
+    {
+      "id": "SH101",
+      "contractSHA256": "1b9d47d25ced3e9ecdde52fe636747d3e456b959fa76be89d97b8de0af316019",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH101-design.toml",
+          "bytes": 388185,
+          "sha256": "82a26071a46ad1fc2cd4827ee8387e8cfa7d824c738cf29afbde35df740a042b"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH101-design.toml",
+          "bytes": 388185,
+          "sha256": "82a26071a46ad1fc2cd4827ee8387e8cfa7d824c738cf29afbde35df740a042b"
+        }
+      ],
+      "oldResourceSHA256": "b5cdc385801eb26acd476696ff72b704fb3eefc580776686a75b2059a2aedbc8",
+      "physicalRecordSHA256": "f56345014e3f31bfdc506ee3f0f7001489a66a2125761538f8ff9597cd37b46d"
+    },
+    {
+      "id": "SH109",
+      "contractSHA256": "f5ddce9ce6d78f9000775b8dc12adae3d8ccfb183618418e43babd944315913f",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH109-design.toml",
+          "bytes": 389841,
+          "sha256": "4f403f4d2f7e675428b853a67069778a3e501890b4444901a671e19dc130f02e"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH109-design.toml",
+          "bytes": 389841,
+          "sha256": "4f403f4d2f7e675428b853a67069778a3e501890b4444901a671e19dc130f02e"
+        }
+      ],
+      "oldResourceSHA256": "37ecac05c45f3fea40538ee894a51f7bde635141e9a562cacb3f87d857c828a0",
+      "physicalRecordSHA256": "6813d411feb87d14e228400fcc254dd269cf07f284733a4998bb53b34acc6b4a"
+    },
+    {
+      "id": "SH110",
+      "contractSHA256": "5673b36946ecb6cdcfeea77976e2bad35483c8124e761ab4374a778e6696b651",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH110-design.toml",
+          "bytes": 288932,
+          "sha256": "844723bc0ce222cfa70ebb6ec53d25130b9bd39a14cda2548b5c806ca1255318"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH110-design.toml",
+          "bytes": 288932,
+          "sha256": "844723bc0ce222cfa70ebb6ec53d25130b9bd39a14cda2548b5c806ca1255318"
+        }
+      ],
+      "oldResourceSHA256": "9c163616d128a2fb9c7d33075633c51784c99663f29663ee2605ddbf68d8b74c",
+      "physicalRecordSHA256": "6233fa1dd2f6d046b74db0aac1c19fac3e3531d7fedbe7dd20419f5a4fb67a39"
+    },
+    {
+      "id": "SH111",
+      "contractSHA256": "e4e13abef63d92f973cd41c2b15ce806754ddd1442cd34e65cc5e0e61bab4eef",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH111-design.toml",
+          "bytes": 390379,
+          "sha256": "8eef0062ca13fac1a993ab12c71a536dd25a0569d94cf14981dbd33afa308dad"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH111-design.toml",
+          "bytes": 390379,
+          "sha256": "8eef0062ca13fac1a993ab12c71a536dd25a0569d94cf14981dbd33afa308dad"
+        }
+      ],
+      "oldResourceSHA256": "77ed800f55051808a6ed37b2db2110e7ff44f09c6018eb5ce7cc2febb2aa9843",
+      "physicalRecordSHA256": "b11780ed56d800d266072a453d015ae4005de7d7e23895aebda58fb13ded1a51"
+    },
+    {
+      "id": "SH126",
+      "contractSHA256": "eb30d59059901c0273749a8abfb7aeff688f47136bb976099644a7919d5e0304",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH126-design.toml",
+          "bytes": 384906,
+          "sha256": "e99e3eec8c2898bb44ae37dce41a5c253068760ba438d9efbad0bdea0c2f698d"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH126-design.toml",
+          "bytes": 384906,
+          "sha256": "e99e3eec8c2898bb44ae37dce41a5c253068760ba438d9efbad0bdea0c2f698d"
+        }
+      ],
+      "oldResourceSHA256": "2cd0d6d29031654f9fc4873d654d830d9458287d11a0f057a4f901eebb4eef5f",
+      "physicalRecordSHA256": "957768f955490aa724a2862951e2ebcaa86b279b7c56db9ff0dfd0e3971bb6ae"
+    },
+    {
+      "id": "SH129",
+      "contractSHA256": "5a6e261a1f2c5224062c05bb35a24cd5d19f1cef920f565bd81bffc4d3797db9",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH129-design.toml",
+          "bytes": 401470,
+          "sha256": "1e1a84f58ecc47dceacffcaf0b3cbbffd9fdb1e4f55a596137ee30a3e1da5f19"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH129-design.toml",
+          "bytes": 401470,
+          "sha256": "1e1a84f58ecc47dceacffcaf0b3cbbffd9fdb1e4f55a596137ee30a3e1da5f19"
+        }
+      ],
+      "oldResourceSHA256": "8015fe178520169e09b47274629a89ff80ee17b3cbc0289cb8caedb6879ea9a9",
+      "physicalRecordSHA256": "503c854b0b4081561b590778d70e71e129d9dc950e73a4e702527996fe52ed2a"
+    },
+    {
+      "id": "SH130",
+      "contractSHA256": "83ce030b30b99f053df1a789a8f0656210cb01ec729b5db30c9166b8599951af",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH130-design.toml",
+          "bytes": 1080842,
+          "sha256": "585648ea93bf0d9cbd081057b5bc18b15f9de4e06323bb1895fad054ce3086bb"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH130-design.toml",
+          "bytes": 1080842,
+          "sha256": "585648ea93bf0d9cbd081057b5bc18b15f9de4e06323bb1895fad054ce3086bb"
+        }
+      ],
+      "oldResourceSHA256": "0f67de3f1b6b383e1ff8cc9387d7fbab7e73fccfa02aa3aae686ea61379d7ae7",
+      "physicalRecordSHA256": "f1669515728857220c23bcec4de82303e0971040fc65dfa74855e0c0f3ef87a6"
+    },
+    {
+      "id": "SH131",
+      "contractSHA256": "9f4d98e8805dc047394b1bbdc4faa339dedd387da734e1345a16445f8639cc8d",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH131-design.toml",
+          "bytes": 386115,
+          "sha256": "082cca85c6f5b3c2ca65818099ec43983507d85952d2085d8d8d262e6e9ecab3"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH131-design.toml",
+          "bytes": 386115,
+          "sha256": "082cca85c6f5b3c2ca65818099ec43983507d85952d2085d8d8d262e6e9ecab3"
+        }
+      ],
+      "oldResourceSHA256": "bfd195caf56de4c6f34cd1cda6947b8aab98241fd53854174fbc12c1dca38751",
+      "physicalRecordSHA256": "18574c138817aeac621940b4de018bf3811f721889b4b2fc4f8d2f91e24f7b79"
+    },
+    {
+      "id": "SH132",
+      "contractSHA256": "93daa375d45a467981bb6992291302a43d32e4ef5e98e7dcee981b6ac9494863",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH132-design.toml",
+          "bytes": 394597,
+          "sha256": "821d3467382c0b672a115f2c7d3ccc48d4a09a7e41fa0d872fd1cb5e517f438b"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH132-design.toml",
+          "bytes": 394597,
+          "sha256": "821d3467382c0b672a115f2c7d3ccc48d4a09a7e41fa0d872fd1cb5e517f438b"
+        }
+      ],
+      "oldResourceSHA256": "7fafa842af692393cd06f322446203cf4f1139b8a3716e4aad5faacfb1893900",
+      "physicalRecordSHA256": "490c02746613c885472063a9b903b8a8305300b5628a7dcb46d79e0b04c48354"
+    },
+    {
+      "id": "SH133",
+      "contractSHA256": "0680055333de4af0d353a5e7a3369ccff40ff4f60a73dd4c8cb47b3bb53affd3",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH133-design.toml",
+          "bytes": 394317,
+          "sha256": "a98398a837b69114e29784381918de0f1d2ded6fa7ad782b032d63247eed6aa1"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH133-design.toml",
+          "bytes": 394317,
+          "sha256": "a98398a837b69114e29784381918de0f1d2ded6fa7ad782b032d63247eed6aa1"
+        }
+      ],
+      "oldResourceSHA256": "df70d2831eaafd57e8477753a72ad3acf58e209192344f9458d314538ac6c80a",
+      "physicalRecordSHA256": "cafdaef61aacaa28d58ac5e0cb229762d65ecd8a7bfd7835c7bec5d305066d33"
+    },
+    {
+      "id": "SH134",
+      "contractSHA256": "7ce96ac1716e50c1a53919b5e46d2b93110676b357e9ff286819bb59ce9be36a",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-03/SH134-design.toml",
+          "bytes": 387482,
+          "sha256": "405632ced74ba51a1a9c76ecedad1cc42488dff8b9a1dc4f582212a9472c0de6"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-03/SH134-design.toml",
+          "bytes": 387482,
+          "sha256": "405632ced74ba51a1a9c76ecedad1cc42488dff8b9a1dc4f582212a9472c0de6"
+        }
+      ],
+      "oldResourceSHA256": "424119a1a5a7818fa39a6f3b2fb1121497b0c68033542b02f7ab7ef07b3877bc",
+      "physicalRecordSHA256": "2c5695791c0c708946e9f05ab03c2050cb7842b63b9dcad9793151de4c7690b7"
+    },
+    {
+      "id": "SH135",
+      "contractSHA256": "b825090136e4cdb090221ffc21de4eea157da71e2d06f15fed390b21332b6bdc",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH135-design.toml",
+          "bytes": 430522,
+          "sha256": "639883bc947fce13fbc77203825a9a705c51f224d558f0f47c393fc882097b25"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH135-design.toml",
+          "bytes": 430522,
+          "sha256": "639883bc947fce13fbc77203825a9a705c51f224d558f0f47c393fc882097b25"
+        }
+      ],
+      "oldResourceSHA256": "c26acc4ed35a931a91838deda6916b9cb9074b5842557364eae3d50d0bf691a1",
+      "physicalRecordSHA256": "051ce66f1250342d1a796d7bcd2c491f935fdeb76dc0aa7c00c5bbaa2e014025"
+    },
+    {
+      "id": "SH140",
+      "contractSHA256": "bc0475aaef5cc400e321fc3322a4b56ef20317cc2652f0cc93710fa0ae01a3e1",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH140-design.toml",
+          "bytes": 384636,
+          "sha256": "eb4503a63f35300965be5c0f892894e7d727dfd19a4d238bdd1a691ca812a8d7"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH140-design.toml",
+          "bytes": 384636,
+          "sha256": "eb4503a63f35300965be5c0f892894e7d727dfd19a4d238bdd1a691ca812a8d7"
+        }
+      ],
+      "oldResourceSHA256": "25ca1db8f2ce201b33c1bc2b4269bf7dc3133ada3f8c1c1a9a98e1ca387cb685",
+      "physicalRecordSHA256": "864b42d09ba3ce364ff0e83ba14ca0b06e7fd6611041554d46e9fb8b446b381e"
+    },
+    {
+      "id": "SH144",
+      "contractSHA256": "0d4c7423d819f109418ba2883edeff8f08290277f039148c70878b4e187e41cd",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH144-design.toml",
+          "bytes": 391342,
+          "sha256": "e30c1a84cb44852ddfbe6d397aa27f637a4387160af448859423e85437c04ac5"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH144-design.toml",
+          "bytes": 391342,
+          "sha256": "e30c1a84cb44852ddfbe6d397aa27f637a4387160af448859423e85437c04ac5"
+        }
+      ],
+      "oldResourceSHA256": "6b53e38b54636116d0c28a6af7472b26ea2ea7925bffb01a71eb15f0d64b8a32",
+      "physicalRecordSHA256": "6bdde2f0777e44ed0600fc0e89145ef46eff9db20413a1eb06e04e4517454f4f"
+    },
+    {
+      "id": "SH145",
+      "contractSHA256": "f9ea829a445cd5915bd02c53bb3b8c1d85324fa091ecd736a9ce14931478d89f",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH145-design.toml",
+          "bytes": 287469,
+          "sha256": "0c7e5f7ba56a5904fb8df1d76e750142e814ff5600b93fb0455ad616bc5e8e51"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH145-design.toml",
+          "bytes": 287469,
+          "sha256": "0c7e5f7ba56a5904fb8df1d76e750142e814ff5600b93fb0455ad616bc5e8e51"
+        }
+      ],
+      "oldResourceSHA256": "f60cbdc0e4ee5dd378ad49f1b430e8b9850731d9a1435d9914860915159abfc9",
+      "physicalRecordSHA256": "ed850d5989ee8e231e7f057cc4b2b99e78ece28fb3f7485b18de56a5b16a918e"
+    },
+    {
+      "id": "SH146",
+      "contractSHA256": "234f480466bc7a1bc549622073919a661034e511199ff4f9b8236015cf898b3b",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH146-design.toml",
+          "bytes": 386566,
+          "sha256": "893c7cfaa90cc7afc58efc6f061f02c73cd5a2dae1db0af896f53ae2f70e6566"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH146-design.toml",
+          "bytes": 386566,
+          "sha256": "893c7cfaa90cc7afc58efc6f061f02c73cd5a2dae1db0af896f53ae2f70e6566"
+        }
+      ],
+      "oldResourceSHA256": "8be1d1ce42cf1bc05f49c974c957b654b145093bd18ce2c64fcd0da1ff9c4e59",
+      "physicalRecordSHA256": "f5e954f9a6063449dcb8d2c31955876ef3e3ab78756619f67134aa3638da102e"
+    },
+    {
+      "id": "SH147",
+      "contractSHA256": "f868fb1ab5eb44df24e1db6d427bd95e793e390799fabf64d4195b70be3994e1",
+      "sources": [
+        {
+          "role": "detailed",
+          "path": "fleet-completion-20261019/batch-04/SH147-design.toml",
+          "bytes": 488222,
+          "sha256": "1f07968c2fbda290d73618a1d7039de2c8576d8879cfc8f8fa96a5a029288d40"
+        },
+        {
+          "role": "native",
+          "path": "fleet-completion-20261019/batch-04/SH147-design.toml",
+          "bytes": 488222,
+          "sha256": "1f07968c2fbda290d73618a1d7039de2c8576d8879cfc8f8fa96a5a029288d40"
+        }
+      ],
+      "oldResourceSHA256": "dd383135393520fa517c7cb2d84b96ecd9937a1b256f681f5a84f56596832ffd",
+      "physicalRecordSHA256": "f392487ad2c5d5d6c9907bf3122823e0569eaa5b1c6fb842de7825696215c728"
+    }
+  ],
+  "frozenInputSourceParses": 98,
+  "maximumSourceParsesIncludingInputFreeze": 196,
+  "authoringSourceSHA256": "a0dc4ed0966b9da9cede848d2a45d64cf780434acfe171e6917a56bc1526f2c3"
+}

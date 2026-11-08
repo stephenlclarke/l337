@@ -1,0 +1,94 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH086-complete14part-native-candidate-v1",
+  "ship": "SH086",
+  "name": "Alpaca",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "845645594b80228376299805b54e24044ddca1078a3bb573727de61f64fa2fdd",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH086-design.toml",
+    "bytes": 412006,
+    "sha256": "f1d7fc3e040aaf7f480ed0dadb32b35a3501c20b2c99452edf194c4bec80d0c0"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH086.toml",
+    "bytes": 436090,
+    "sha256": "0a41ccf69de01bd2d5a2902c92a73cc3594be300a3dfd6014f87c61449771970"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH086.json",
+    "bytes": 43065,
+    "sha256": "13f19c3b39a7bb01f492c4509f58d4dff839f81f6146732a71120f73aaaeecff"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH086-native-candidate-recipe.py",
+    "bytes": 8282,
+    "sha256": "2d751dc034bbfda4e7e5e749805a7c0cb96446fcab4db9f9b336848d9d72371e"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH086-native-candidate-tests.py",
+    "bytes": 8544,
+    "sha256": "3c0bff7dfa2f1221fa29a721b41d880fbdb1a7ea4f0ffdf13a7bbbf0d882de35"
+  },
+  "baseline": {
+    "declaredNativeFaces": 908,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 8,
+    "loopSegments": 16,
+    "loopMinorSamples": 4,
+    "changedOriginalPartIndices": [
+      0,
+      1,
+      6,
+      9,
+      10,
+      12,
+      13
+    ],
+    "unchangedFixedOriginalParts": 7,
+    "status": "NEW angular approximation only; actual output count and full curved-profile/material/UV/void fidelity UNKNOWN"
+  },
+  "retained": [
+    "FULL closed original load-bearing loop and central opening, no gap or missing tube sector",
+    "Loop centre(0,-.04,0),rx=beam*.46,ry=length*.44,tube.15,axisY, full TAU",
+    "Complete five-station body with all end caps AND all FOUR analytical recessed wells",
+    "Complete cockpit glazing AND connected structural support",
+    "Both original connected drive supports, full propulsion casings AND luminous recesses",
+    "Exact original petrol-brass palette/material/emission/textures/license/source; genuine serializer regenerates complete per-face UV mapping"
+  ],
+  "coordinates": "Original length3.0/beam2.50, source axes/coordinates/origin/units retained; no recenter/rescale. Existing calibration2000/147 uncomputed.",
+  "coupledRuntime": {
+    "domain": "Actual R3 human ship and original game table remain pending/unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "No people/quarters/installed hardware/power/paid kit/actor/acquisition/current-save authority. Existing source/runtime/fitting/EMP/save and mission guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables stay exact",
+    "All14 original positive parts/material sets retained; no omitted loop sector/service well/cockpit support/drive recess",
+    "Complete actual output must satisfy512 and genuine closure/winding; no waiver or count claim",
+    "Independent tests require7 fixed parts exact original vertices/localfaces/material sequence/UVs",
+    "Actual source closed-loop topology, full wrap join and original extrema required; topology does not prove full continuous source-void fidelity",
+    "Full source/native/occupied/installed physical qualification remains G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/source/native qualification; authentic source owner installed/occupied input",
+    "next": "G1 generate once and run14part/exact7fixed/loop-topology/wrap/extrema/UV/input checks then full actual source/native qualification. G4 continues other remaining entries."
+  }
+}

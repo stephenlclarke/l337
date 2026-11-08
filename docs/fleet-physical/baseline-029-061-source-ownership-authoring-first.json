@@ -1,0 +1,21 @@
+{
+  "status": "OWN_SOURCE_METADATA_RECORDER_CODE_FROZEN_BEFORE_EXECUTION",
+  "source": "docs/fleet-physical/author-baseline-029-061-source-ownership.py",
+  "bytes": 22618,
+  "sha256": "b37e188fc3696a9c6421d59b80c3e21297333e62acda78e4985296b43cdb18f8",
+  "inputFIRST": {
+    "path": "docs/fleet-physical/baseline-029-061-source-metadata-first.json",
+    "bytes": 5634,
+    "sha256": "bb7d479bca5cf2a3ddde4b9c902f9e8d09fe817a2599d1e42d4130bb1d294851"
+  },
+  "copiedOwnIntegerDefinitions": {
+    "parent": "docs/fleet-physical/author-creator-ownership.py",
+    "parentSHA256": "366a8b63aad9610d9ca6bd8a69613c4c50e10e0b5c21077dc9499f65da51b093",
+    "exactBlockSHA256": "fea81564e28cba3a105fcba22cda53b850e90bd5b3466fff228f1c560b57d03b",
+    "byteExact": true
+  },
+  "originalCreatorImportsOrExecutions": 0,
+  "coordinateConversions": 0,
+  "areaMassTensorEvaluations": 0,
+  "execution": "ONE metadata-only own integer append/index/material correspondence; originalcreator files hash-read only. No retry/capraise/sourcewrite/modelnativequery. Newnumericpass NOTauthorized by this metadata FIRST."
+}

@@ -59,10 +59,13 @@ struct CR05ECMElapsedTimeTests {
     }
   }
 
-  @Test func actualMilitaryRetaliationFiresOnceAcrossPhysicalTickPartitions() {
+  @Test func actualMilitaryRetaliationFiresOnceAcrossPhysicalTickPartitions() throws {
     for step in [1.0 / 60, 1.0 / 30, 0.1] {
       var game = Game(executive: false)
-      game.commander.installTargetingComputer(.military)
+      try game.commander.prepareEquipment(legacy: false)
+      try game.commander.grantEquipment(
+        TargetingTier.military.equipmentName, at: .targetingCore,
+        provenance: .grant("current targeting unit fixture"))
       game.launch()
       game.speed = 0
       game.celestials = []

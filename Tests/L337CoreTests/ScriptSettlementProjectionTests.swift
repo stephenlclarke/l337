@@ -34,14 +34,26 @@ struct ScriptSettlementProjectionTests {
     let decoder = JSONDecoder()
     decoder.nonConformingFloatDecodingStrategy = .convertFromString(
       positiveInfinity: "Infinity", negativeInfinity: "-Infinity", nan: "NaN")
-    let decoded = try decoder.decode(ScriptInstance.self, from: bytes)
-    #expect(decoded.retainedSettlementJob == ownedJob)
-    #expect(decoded.retainedSettlementDefinition == definition)
     if scenario == "nan-clock" {
-      #expect(decoded.retainedSettlementCourierTerminalClock?.isNaN == true)
+      let decoded = Result { try decoder.decode(ScriptInstance.self, from: bytes) }
+      let refused: Bool
+      switch decoded {
+      case .failure(let error as SaveError):
+        switch error {
+        case .invalidCommander: refused = true
+        }
+      case .success(_), .failure(_):
+        refused = false
+      }
+      #expect(refused)
     } else {
+      let decoded = try decoder.decode(ScriptInstance.self, from: bytes)
+      #expect(decoded.retainedSettlementJob == ownedJob)
+      #expect(decoded.retainedSettlementDefinition == definition)
       #expect(decoded == state && decoded.retainedSettlementCourierTerminalClock == clock)
     }
+    let afterDecodeBytes = try encoder.encode(state)
+    #expect(afterDecodeBytes == bytes)
     state.contract?.settled = true
     state.courier?.terminal = nil
     #expect(retained.retainedSettlementJob == ownedJob)

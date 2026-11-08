@@ -58,7 +58,18 @@ extension Game {
   mutating func moveEquipmentSelection(_ delta: Int) {
     let order = EquipmentGroups.itemIndices
     guard !order.isEmpty else { return }
+    if equipmentCrewSelected {
+      if delta > 0 {
+        equipmentCrewSelected = false
+        selection = order[0]
+      }
+      return
+    }
     let current = order.firstIndex(of: selection) ?? 0
+    if current == 0, delta < 0 {
+      equipmentCrewSelected = true
+      return
+    }
     selection = order[max(0, min(order.count - 1, current + delta))]
   }
 }

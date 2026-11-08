@@ -1,0 +1,31 @@
+{
+  "status": "FROZEN_CURRENT025_NATIVE512_SOURCE_METHOD_REVIEW_CANDIDATE_COMPLETE_FAILURE_COUNTERS_NOT_EXECUTED",
+  "beforeCommit": "deac613e0ee839ead60f4ff3455c485f7c3b957d",
+  "method": "current025-fixed-component-native512-v1",
+  "source": {
+    "path": "docs/fleet-physical/author-current-025-native512.py",
+    "bytes": 38314,
+    "sha256": "4da8b14e2cb9a88abefce484bdeb65430870e3e7c5d08bf98fe1d36cd723d4e4"
+  },
+  "input": {
+    "path": "docs/fleet-physical/current-025-native512-method-input-first.json",
+    "bytes": 10653,
+    "sha256": "0fb59f2f331fd08ae9535633de930ee5005fc5ed6bdf64198687652b13f232e7"
+  },
+  "ownCounterAndOperationGroupsAndCheckSourceExact": true,
+  "publicationHelpersExactReviewedCopy": true,
+  "authorityRequiredBeforeGeometry": "Future Root decision/sourceMethodReview/methodFirst exactpins, executionAuthorizedtrue/scopeSH025/method, plus own source/input/currentresource/originalsource/caller/creator pins. Process integrity only; not a cryptographic capability. No authority exists yet.",
+  "numericalBoundary": "Own fixed native authoring code; no import/syntax test/numerical or geometry evaluation performed. No original creator/repohelper/native/compiler/renderer/tests. Fixed all27components/310copiedvertices/512newtriangles; no search or adaptive rings/caps/tolerance.",
+  "sourceOrNativeQualification": false,
+  "limitations": "Source review needed for fixed ring topology/UV/provenance/output bounds and all retained parts; actual allview/nativeclearance/physical/gameplay qualified acceptance remains separate G1 work. Output TOML serialization is unparsed/unrun; decoder tests required later.",
+  "initialMethodFirst": {
+    "path": "docs/fleet-physical/current-025-native512-source-method-first.json",
+    "bytes": 1618,
+    "sha256": "17bc280cebf86cf495eac292cc2fa7aced3a0157e0cd409393abb66411545be3"
+  },
+  "counterFailureCorrectionFIRST": {
+    "path": "/tmp/elite-g4-current-025-native512-source-method/counter-failure-receipt-correction-FIRST.json",
+    "bytes": 884,
+    "sha256": "a1ad35ca51df884f6b9b96e98bc71cfdf4d00ff6f9c79c1f3e6725386b752a68"
+  }
+}

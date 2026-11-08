@@ -1,0 +1,113 @@
+{
+  "status": "BASELINE029061_METADATA_OWNERSHIP_SOURCE_FIRST_NO_NUMERICAL_AUTHORIZATION",
+  "beforeCommit": "cee857de27f7a5436e91958d16757e858ad59471",
+  "inputPins": [
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02/SH029-design.toml",
+      "relativePath": "fleet-completion-20261019/batch-02/SH029-design.toml",
+      "bytes": 403032,
+      "sha256": "0d0741f3c0a1eed7595b65274eab5726bc1b22c258b6943f6fdb5332931e91b7"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02/SH029-components.json",
+      "relativePath": "fleet-completion-20261019/batch-02/SH029-components.json",
+      "bytes": 8321,
+      "sha256": "f284cfd590e8d741a5b9f2b133cdf2879c6ed8104c9f6d5773252bb8df707b21"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02-native-lod/SH029-design.toml",
+      "relativePath": "fleet-completion-20261019/batch-02-native-lod/SH029-design.toml",
+      "bytes": 296962,
+      "sha256": "585cb9a7f47fb13f6249c09f2ccc262eb852c98ad10721a95730b68fc4eb7b5c"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH061-design.toml",
+      "relativePath": "replacement-hulls/SH061-design.toml",
+      "bytes": 856035,
+      "sha256": "fad88f0e9cfc1f9a3748ab995b9fca058f675a0c8a6fc89bc72ccefd8399e26b"
+    }
+  ],
+  "callerPins": [
+    {
+      "path": "Sources/L337Core/OriginalHullPhysicalContract.swift",
+      "bytes": 20267,
+      "sha256": "0c9e11286567a64a888d1d6bb853eb2894e110ddc40e0f674725aa856ff5e8e1"
+    },
+    {
+      "path": "Sources/L337Core/OriginalOkapiActivation.swift",
+      "bytes": 1424,
+      "sha256": "32587262dccec5bc7e0e37e9f1caf98860fed125577d7a98c62b06f229e2217e"
+    },
+    {
+      "path": "Sources/L337Core/OriginalSaigaActivation.swift",
+      "bytes": 1420,
+      "sha256": "495f413d9f1b1272e0db7689c62b27e5177f35b1ef37efbac48fc2b90ac4d7e2"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH029.toml",
+      "bytes": 3527,
+      "sha256": "229d27ea2c5213bd0993c99b9545997e065673e578b7120829e5c6bd06dafc59"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH061.toml",
+      "bytes": 3478,
+      "sha256": "a5b9e65f897bebac9f94ab7ba88c5f38908bf13da7c85c5c3eff5b74ed96a4a4"
+    }
+  ],
+  "creatorPins": {
+    "creatorPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+    "primitiveCreatorPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "primitiveCreatorSHA256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476",
+    "emissionManifestPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet-redesign-manifest.json",
+    "emissionManifestSHA256": "acbc9e01bd7c3dbc7ac301e46c793142805ecaa6a5e0041b000f02f4c30f182c",
+    "originalInputPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "originalInputSHA256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "ownPriorRecorder": {
+    "path": "docs/fleet-physical/author-creator-ownership.py",
+    "sha256": "366a8b63aad9610d9ca6bd8a69613c4c50e10e0b5c21077dc9499f65da51b093"
+  },
+  "calibrations": {
+    "SH029": "Retain exact declaredmetres1; detailed0d0741 +selectednative585cb9",
+    "SH061": "Retain independently adopted20m/sourceunit EXACT; no R3target40/span fitting"
+  },
+  "rows": [
+    {
+      "id": "SH061",
+      "name": "Saiga",
+      "sourceArchetype": "tri-stack",
+      "sourceModuleCount": 3,
+      "sourceRole": "trader",
+      "sourceMembers": [
+        "SH061"
+      ],
+      "sourceMark": 0,
+      "detailedVertexBound": 3216,
+      "detailedFaceBound": 5776,
+      "nativeVertexBound": 912,
+      "nativeFaceBound": 1720
+    }
+  ],
+  "metreSource": {
+    "id": "SH029",
+    "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02/SH029-components.json",
+    "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02/SH029-design.toml",
+    "maximumVertices": 16384,
+    "maximumFaces": 32768
+  },
+  "maximumDesignParses": 2,
+  "maximumPartRecords": 2048,
+  "maximumFaceIndexChecks": 120792,
+  "maximumFaceMaterialChecks": 40264,
+  "metadataOnly": true,
+  "coordinateConversions": 0,
+  "areaCentroidMassTensorEvaluations": 0,
+  "spanQueries": 0,
+  "sourceGeometryWrites": 0,
+  "nativeCompilerRendererTests": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "allowed": "Own prior integer append recorder definitions copied byteexact for061 topology/material/index correspondence; original029component metadata+material assignments verified. Parse source decimals as strings, never coordinates. Freeze exact material/drive/anchor map before requesting applicable bounded ownnumericpass.",
+  "outputDirectory": "baseline-029-061-source-ownership",
+  "remaining": "No emptyhull mass/tensor adopted/computed here. Saiga selectednative1720face source remains separate genuine<=512/fidelity blocker. No native readiness, occupiedpeople/cabins/paidkit or loadedmass authority."
+}

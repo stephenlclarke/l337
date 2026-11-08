@@ -4,14 +4,14 @@ import Testing
 @testable import L337Core
 
 struct NativeStationPersistenceTests {
-  @Test(arguments: NativeStationGeometry.Kind.allCases)
+  @Test(arguments: OriginalStationSite.allCases)
   func dockedSaveRestoresHistoricalReceiptWithFreshServiceEpochWithoutArrivalReplay(
-    kind: NativeStationGeometry.Kind
+    site: OriginalStationSite
   ) async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try NativeStationTestFixture.approach(kind: kind)
-    try await verifyDockedStationRestoration(&game, storage: storage)
+    var game = try NativeStationTestFixture.approach(site: site)
+    try await verifyDockedStationRestoration(&game, site: site, storage: storage)
   }
 
   @Test func retainedFlightRebindsOnlyNativeStationActorsAndPreservesCommanderResources()
@@ -26,7 +26,7 @@ struct NativeStationPersistenceTests {
   @Test func failedEntryWritePreservesPreviousFilesAndDoesNotPublishDockingCustody() async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try NativeStationTestFixture.approach(kind: .headquarters)
+    var game = try NativeStationTestFixture.approach(site: .dhole)
     try await verifyFailedNativeStationEntryWrite(&game, storage: storage)
   }
 
@@ -40,15 +40,15 @@ struct NativeStationPersistenceTests {
     try await verifyMalformedStationSave(&game, reason: reason, storage: storage)
   }
 
-  @Test func legacyCommanderLoadCreatesNoStationArrivalOrServiceAuthority() async throws {
+  @Test func currentSaveWithoutOriginalWorldCannotMintArrivalOrServiceAuthority() async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
     var game = Game(executive: false)
-    try await verifyLegacyStationAbsence(&game, storage: storage)
+    try await verifyCurrentStationAbsence(&game, storage: storage)
   }
 
   @Test(arguments: [false, true])
-  func saveCannotLaunderUnprovedRRSOrMainDockCustodyIntoRestoredAuthority(main: Bool)
+  func saveCannotLaunderUnprovedOriginalOrMainDockCustodyIntoRestoredAuthority(main: Bool)
     async throws
   {
     let storage = try NativeStationTestStorage()
@@ -76,13 +76,14 @@ private func stationSaveFiles(_ root: URL) throws -> [String: Data] {
 }
 
 private func verifyDockedStationRestoration(
-  _ game: inout Game, storage: NativeStationTestStorage
+  _ game: inout Game, site: OriginalStationSite, storage: NativeStationTestStorage
 ) async throws {
   let runtime = GameRuntime(game: game, saveURL: storage.url)
   game = await runtime.advance(delta: 0.1)
   #expect(game.docked && !game.dockedAtMainStation)
   let receipt = try #require(game.commander.nativeStations?.ledger.currentDock)
-  let previousContext = try #require(game.nativeStationBoardContext)
+  let previousContext = game.nativeStationBoardContext
+  #expect((previousContext != nil) == (site != .remoteUtility))
   try await runtime.save(to: storage.url)
   game = await runtime.snapshot()
   let commander = game.commander
@@ -97,11 +98,17 @@ private func verifyDockedStationRestoration(
   #expect(game.docked && !game.dockedAtMainStation && !game.paused)
   #expect(game.commander.nativeStations?.ledger.currentDock == receipt)
   #expect(game.commander.nativeStations?.ledger.nextDockSequence == receipt.sequence + 1)
-  let fresh = try #require(game.nativeStationBoardContext)
-  #expect(fresh.service.receipt == previousContext.service.receipt)
-  #expect(fresh.service.runtimeEpoch != previousContext.service.runtimeEpoch)
-  #expect(!game.acceptsNativeStationBoardContext(previousContext))
-  #expect(game.acceptsNativeStationBoardContext(fresh))
+  if site == .remoteUtility {
+    #expect(previousContext == nil && game.nativeStationBoardContext == nil)
+    #expect(game.nativeStationDockEvidenceIsCurrent)
+  } else {
+    let previous = try #require(previousContext)
+    let fresh = try #require(game.nativeStationBoardContext)
+    #expect(fresh.service.receipt == previous.service.receipt)
+    #expect(fresh.service.runtimeEpoch != previous.service.runtimeEpoch)
+    #expect(!game.acceptsNativeStationBoardContext(previous))
+    #expect(game.acceptsNativeStationBoardContext(fresh))
+  }
   #expect(try stationSaveFiles(storage.directory) == files)
 }
 
@@ -224,26 +231,28 @@ private func verifyMalformedStationSave(
   #expect(try stationSaveFiles(storage.directory) == files)
 }
 
-private func verifyLegacyStationAbsence(
+private func verifyCurrentStationAbsence(
   _ game: inout Game, storage: NativeStationTestStorage
 ) async throws {
-  let commander = game.commander
-  let legacy = storage.root.appendingPathComponent("legacy.json")
-  let bytes = try legacyStationRawSeedBytes(commander)
-  try bytes.write(to: legacy)
-  let beforeFiles = try legacyStationSourceFiles(storage.root)
-  let runtime = GameRuntime(game: game)
-  try await runtime.load(from: legacy, persistMigrations: false)
+  // A genuine fresh current game outside original-site systems needs no native source world.
+  game.commander.system = 0
+  game.screen = .status
+  try NativeSaveTestFixture.prepareCurrentPolicy(&game)
+  try #require(game.commander.nativeStations == nil)
+  let runtime = GameRuntime(game: game, saveURL: storage.url)
+  try await runtime.save(to: storage.url)
   game = await runtime.snapshot()
+  let before = game.commander
+  let files = try stationSaveFiles(storage.directory)
+  try #require(before.nativeStations == nil && before.valid)
+  let restored = emptyStationRuntime()
+  try await restored.load(from: storage.url, persistMigrations: false)
+  game = await restored.snapshot()
+  #expect(game.commander == before && game.commander.nativeStations == nil)
   #expect(game.docked && game.dockedAtMainStation)
-  #expect(game.commander.nativeStations == nil)
   #expect(game.nativeStationBoardContext == nil && game.nativeStationEventFacts == nil)
   #expect(!game.nativeStationDockEvidenceIsCurrent && !game.nativeMainStationDockEvidenceIsCurrent)
-  #expect(game.commander.credits == commander.credits && game.commander.cargo == commander.cargo)
-  try expectLegacyStationStockMigration(from: commander, to: game.commander)
-  let afterBytes = try Data(contentsOf: legacy)
-  let afterFiles = try legacyStationSourceFiles(storage.root)
-  #expect(afterBytes == bytes && afterFiles == beforeFiles)
+  #expect(try stationSaveFiles(storage.directory) == files)
 }
 
 private func verifyUnprovedStationSaveRefusal(

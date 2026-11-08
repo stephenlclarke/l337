@@ -1,0 +1,181 @@
+{
+  "schema": "l337.closed-family-native-tessellation-proposal/1",
+  "id": "falcon-four-actual-members-complete21part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH136",
+      "name": "Falcon Mk I",
+      "r3ContractSHA256": "7ab120fd7e6a97467bc5faf76d4bbb6f616d933219ea07e3845acf3ea5595625",
+      "originalRecipeMark": 0,
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH136-design.toml",
+        "bytes": 273115,
+        "sha256": "fdbf3fb120a965482dcf3f00cca9b27598f881aab297911f4ba802c17a90a6fc"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH136.toml",
+        "bytes": 297194,
+        "sha256": "c602702e4b5045ffad669cad5b8c777029b04d2e30b19d6e5fa13837b181b677"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH136.json",
+        "bytes": 53736,
+        "sha256": "bfdbaab06da4a0b1753e11d44b37f4cab49efe5fe94c80264b3a06015f88ab1a"
+      },
+      "declaredOriginalNativeFaces": 636,
+      "originalComponents": 21,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own complete original resource remains pending; no source/identity/mechanics/crew/calibration fallback"
+    },
+    {
+      "id": "SH137",
+      "name": "Falcon Mk II",
+      "r3ContractSHA256": "773713dedad2f1352d296b425a65ddeb2abebc3681c7201f6a9b42f78fd3012e",
+      "originalRecipeMark": 1,
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH137-design.toml",
+        "bytes": 278825,
+        "sha256": "1ae68958ef5c8372692b3540b03a3ce699c8de8f247958b06e5f18d344d78137"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH137.toml",
+        "bytes": 302902,
+        "sha256": "2893d72e520571aae41c2a0623e8d70ed806dec267a875aa6f8318427965409b"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH137.json",
+        "bytes": 53736,
+        "sha256": "e0ac415148b796bb6a518438af613a20bcbc0dcd74037747914387121b760a52"
+      },
+      "declaredOriginalNativeFaces": 636,
+      "originalComponents": 21,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own complete original resource remains pending; no source/identity/mechanics/crew/calibration fallback"
+    },
+    {
+      "id": "SH138",
+      "name": "Falcon Mk III",
+      "r3ContractSHA256": "7e1f9e93799c01e265397bc4737c99932c6f910142c68d06a0ba701711373814",
+      "originalRecipeMark": 2,
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH138-design.toml",
+        "bytes": 278652,
+        "sha256": "459a954252a56474df93d17d5e7e103d5cf2918af442c1630a26e65cb5e309ef"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH138.toml",
+        "bytes": 302737,
+        "sha256": "203d759a6df714cf7ea721c13650e1a29f8cc442ca4ba2e274265884ae7c94e5"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH138.json",
+        "bytes": 53736,
+        "sha256": "fef8c561e01c3bba9bbbfc006e1400d49d303b1e5d75392e0fc6525432f74e2b"
+      },
+      "declaredOriginalNativeFaces": 636,
+      "originalComponents": 21,
+      "nativeCrew": 2,
+      "conversionCrew": 2,
+      "status": "Own complete original resource remains pending; no source/identity/mechanics/crew/calibration fallback"
+    },
+    {
+      "id": "SH139",
+      "name": "Falcon Mk IV",
+      "r3ContractSHA256": "d033cfb048e5fb53bb9688bc4841b7bb9476431401c6a8e1f1c82c5d3945e19c",
+      "originalRecipeMark": 3,
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH139-design.toml",
+        "bytes": 278812,
+        "sha256": "2c55c3a5c5d954684cc71cf7ee9c6420771cd2f1243d1cb888f89f9f3e0cee39"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH139.toml",
+        "bytes": 302898,
+        "sha256": "5aef4995471fb4cf5741a563894a96323db3390a8718e6bfa892516307ac5da7"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH139.json",
+        "bytes": 53736,
+        "sha256": "eee93a9062468b5997d249585faa69ebcf4b6930b8b8278e3fae5f46e479f39e"
+      },
+      "declaredOriginalNativeFaces": 636,
+      "originalComponents": 21,
+      "nativeCrew": 2,
+      "conversionCrew": 2,
+      "status": "Own complete original resource remains pending; no source/identity/mechanics/crew/calibration fallback"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/falcon-native-candidate-recipe.py",
+    "bytes": 10144,
+    "sha256": "921762d8047cbc25d213cdf2c942cf9add52531fd7f2d54c3f6b606db46a2fcd"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/falcon-native-candidate-tests.py",
+    "bytes": 8334,
+    "sha256": "af53428e24654268d00f79913c0a1bf228de54b6dfe31bdec9a6a6d6e38df0c1"
+  },
+  "baseline": {
+    "limit": 512,
+    "basis": "Each own pinned original creator ownership metadata; not recomputed",
+    "allInstalledResourcesUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 8,
+    "changedOriginalPartIndices": [
+      0,
+      7,
+      8,
+      12,
+      13,
+      15
+    ],
+    "unchangedFixedOriginalPartsPerMember": 15,
+    "status": "NEW angular approximation only; all actual output counts and full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Each own original5station primary body at(0,.24,.08),length*.66,width.27,height.24/endcaps",
+    "ALL four analytical body recessed wells plus BOTH original keel recessed wells",
+    "BOTH full vertical keel boxes and original thickened wing structural pieces",
+    "BOTH original explicit keel drive casings AND luminous recesses, no invented engine_pair supports",
+    "Complete cockpit glazing AND connected structural support",
+    "ALL four genuine military weapon-mount structural pieces, not installed guns/paid kit",
+    "Each exact original ice-blue material/emission/texture/license/source metadata; genuine serializer regenerates all face UVs",
+    "Exact original own mark dimensions from base length3.1/beam1.95 and actual family136..139"
+  ],
+  "coordinates": "Each own original source axes/coordinates/origin/units and per-ID calibration remain, no recenter/rescale/evaluation.",
+  "coupledRuntime": "Four own R3 contracts/name/mechanics/fits/native and conversion crews1/1/2/2 remain distinct declarations. No actual people/quarters/hardware/power/paid kit/source/actor/acquisition/current-save or mission grant; all existing guards unchanged.",
+  "stopRules": [
+    "Only four actual IDs136..139 accepted; no names/family/prefix/unknown variants",
+    "Each own source/resource hash and canonical identity/name must match own member",
+    "Pinned genuine creator/primitive/family/military-source role required before geometry",
+    "All21 positive original parts/material sets remain per member, including every well/wing/keel/mount/drive recess",
+    "Complete own output<=512 and genuine closure/winding required, no omission/waiver/count claim",
+    "Independent tests require each own15fixedparts exact original vertices/localfaces/material sequence/UVs",
+    "Cross-member source/resource inputs and malformed actual inputs refuse before geometry",
+    "Full curved-source/profile/void/material/UV fidelity/native/occupied/installed physical qualification remains G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Per-member actual output/source-fidelity/native evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed inputs",
+    "next": "G1 generate each once and run own21parts/exact15fixed/wings-wells-mounts/UV/wrong-member/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

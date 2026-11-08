@@ -1,0 +1,15 @@
+{
+  "status": "FROZEN_FINAL_RECEIPT_PUBLICATION_FAILURE_STDOUT_CORRECTION_BEFORE_SOURCE_MUTATION",
+  "beforeCommit": "4022a79d607585bf0fa5e7286be57c352e83aa96",
+  "source": {
+    "path": "docs/fleet-physical/author-current-025-native512.py",
+    "bytes": 38314,
+    "sha256": "4da8b14e2cb9a88abefce484bdeb65430870e3e7c5d08bf98fe1d36cd723d4e4"
+  },
+  "parentPacketSHA256": "04aa84904f46312cb8dd04edd5ef7dff416f81a8752048b0d8d60f1f474e9bf3",
+  "rootFinding": "G2 exact source review OPEN: absent/unknown final receipt publication currently drops actual OPS/caps/input/source/authority/last output attempt from terminalstdout. Fullreportpin pending Root handoff.",
+  "exactBefore": "        print(json.dumps({'status':'RESULT_PUBLICATION_FAILURE','actualResultArtifact':artifact_status(result_path),\n                          'error':str(error)[:512], 'candidate':artifact_status(candidate_path),\n                          'provenance':artifact_status(provenance_path)}))\n",
+  "exactAfter": "        print(json.dumps({'status':'RESULT_PUBLICATION_FAILURE', 'originalAuthoringOutcome':receipt['status'],\n                          'receipt':receipt, 'used':dict(OPS), 'caps':dict(CAPS),\n                          'inputSHA256':INPUT_SHA256,\n                          'authoringSourceSHA256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),\n                          'rootAuthorityPath':arguments.authority_first,\n                          'lastOutputAttempt':{'file':str(result_path.relative_to(ROOT)),\n                                               'outputDocumentsAttempt':OPS['outputDocuments']},\n                          'actualResultArtifact':artifact_status(result_path),\n                          'error':type(error).__name__ + ': ' + str(error)[:512],\n                          'candidate':artifact_status(candidate_path), 'provenance':artifact_status(provenance_path)}))\n",
+  "unchanged": "All algorithm/topology/UV/coordinate/geometry/precision/tolerance/caps/input/gate/receipt construction and publicationattempt count unchanged. Only terminal publicationfailure includes full existing receipt, live OPS/caps/provenance/lastattempt and original authoring outcome, artifactstates and exit1.",
+  "executionCount": 0
+}

@@ -1,0 +1,23 @@
+{
+  "status": "SELECTED_SOURCE_PROVENANCE_GAP_NO_GEOMETRY_OR_NUMERIC_SEARCH",
+  "id": "SH123",
+  "acceptedSource": {
+    "path": "branding-proposal/selected-ship.toml",
+    "sha256": "2179227760376ed17b276153cb7cb20894f4f1bad5bf48e339b7dc874f70fe69"
+  },
+  "acceptedImmutableDisplayResource": {
+    "path": "Sources/L337Core/Resources/OriginalFleetShowroomModels/SH123.json",
+    "bytes": 3757858,
+    "sha256": "f6648d12e2a476092088c7a79c8e1220b272f6370fddfde779f97db7d216f163"
+  },
+  "externalCurrentFile": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/branding-proposal/selected-ship.toml",
+    "bytes": 3758071,
+    "sha256": "7919bb8fa2b4862d42023ecaf98f2c60125b08ca822cb588e7b11f3ef7cb741b",
+    "matchesAccepted": false,
+    "headerSourceFileSHA256": "a430c5e8946db1d2f27d5030ae3f245f0838e52f2dadf1409323a16fc1c67499"
+  },
+  "disposition": "Do not substitute external mutable7919 or historical replacement hull. Preserve accepted immutable model. Exact accepted source/creator correspondence remains unissued; no ownership, frame, scale or hardware transfers.",
+  "sourceInspection": "Bytes/hash and pre-design proposal header only; no coordinate parse, area/tensor/native query, source creator import/execution or source edit.",
+  "independentNext": "Current human original resource replacements with exact source blocks, preserving fullfleet branch and all native gates."
+}

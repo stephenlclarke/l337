@@ -73,6 +73,7 @@ private func actualWreckHit(_ game: inout Game, id: Int, damage: Double) throws 
 struct SalvageWorldRuntimeTests {
   @Test func noOpPosePersistenceDockingAndSavingKeepTheAbsentLedgerAbsent() async throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     try NativeSaveTestFixture.prepareCurrentPolicy(&game)
     game.screen = .status
     let before = game.commander

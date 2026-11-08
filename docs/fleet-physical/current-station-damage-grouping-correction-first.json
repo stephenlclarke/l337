@@ -1,0 +1,17 @@
+{
+  "status": "FIRST_SAME_G2_B3D8_P2_HELPER_GROUPING_CORRECTION_BEFORE_MUTATION",
+  "beforeCommit": "5a571f56816b94258bad8c5bd8c8b7c80e58e060",
+  "findingReview": {
+    "path": "/tmp/elite-g2-b3d8-station-current-target-source-review/review.json",
+    "bytes": 6567,
+    "sha256": "ad54a198c0a4b5932237daf4cc17adc920aa7c8aa424e0f91f16afe6503689e5"
+  },
+  "targetBefore": {
+    "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+    "bytes": 162414,
+    "sha256": "784b1404e472e90def1c8586afe9a2ab261cdb57c07eefa847aefb88bb3260c3"
+  },
+  "before": "  return before.energy + old.frontShield + old.rearShield\n    - after.energy - new.frontShield - new.rearShield\n",
+  "after": "  let beforeTotal = (before.energy + old.frontShield) + old.rearShield\n  let afterTotal = (after.energy + new.frontShield) + new.rearShield\n  return beforeTotal - afterTotal\n",
+  "scope": "Only stationAutoCurrentDamage final expression; equally parenthesized additions followed by total subtraction. All strict damage>0/no-hit/heat/law/range/conservation oracles and current observation/braking source/tests exact. No numeric example evaluation/runtime failure or source readiness claimed."
+}

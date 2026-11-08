@@ -1,0 +1,24 @@
+# Original Quiet Choir commission; no collector, culture or field evidence is issued here.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.quiet-choir"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2"]
+priority = 630
+source = "Original Quiet Choir from Meridian c70110b292077588a0855fb48127adfb1b611c9d; quiet-choir.json SHA256 41c9d24ae171e09f4b0bb43c5bbbdae602544d6b80bf86ec3e9da0c7ab2f0e60. Commission only; later actual calibration, collector recovery, analysis, culture receiving, listening, emitter shutdown, protocol, payment and clue remain native stages."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "quiet-choir"
+title = "A Choir Beneath the Static"
+briefing = "Captain Tamsin Holt: No one has proved these pulses are an attack. Calibrate your receiver at Lobagom before approaching the source. Agent Mara Vale will compare what you find with the mining relays.\n\nMining navigation receivers in Quiet Current are being drowned by repeating Larvaal phase pulses. The pulses contain synchronized gaps, not firing orders. A damaged Larvaal Probe has been trying to locate its dispersed companions while human smugglers imitate the signal to conceal their own traffic. The commander reconstructs the pulses, repairs the probe, exposes the imitation and negotiates a narrow-band rendezvous that lets both fleets navigate safely.\n\nAfter identifying a Larvaal vessel and visiting four systems, speak to Holt at Omdogan in Galaxy 4. This campaign is independent of The Glass Meridian."
+destination = "Omdogan / Lobagom / Lodogom / Balmabol / Balgodan / Dalonom / Fobolan / Galaxy 4"
+reward = "6,400 CR and the silent-voice clue only after actual calibration, collector recovery and analysis, probe repair, listening, counterfeit-emitter silence, and agreed protocol. Optional compatible resonance-filter fitting may wait without delaying the once-only clue."
+milestones = ["Accept Holt's signal investigation at Omdogan.", "Scan three reference emitters at Lobagom to separate receiver drift from outside interference.", "Recover a one-tonne phase collector from the damaged mining relay at Lodogom.", "Dock at Balmabol and let Mara Vale reconstruct the signal.", "Deliver the loaned repair culture to the stranded Larvaal Probe at Balgodan.", "Listen at three safe positions around the Larvaal gathering at Dalonom.", "Locate and silence the counterfeit emitter at Fobolan.", "Transmit the corrected reply at Omdogan and choose a rendezvous protocol.", "Dock at Omdogan and confirm the completed signal accord."]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"

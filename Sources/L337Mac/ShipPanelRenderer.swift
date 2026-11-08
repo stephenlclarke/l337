@@ -83,7 +83,7 @@ final class ShipPanelRenderer {
   }
 
   static func eligible(_ panel: ShipPanel) -> Bool {
-    guard panel.vertices.count == 3,
+    guard !panel.isOpticalPane, panel.opticalAperture == nil, panel.vertices.count == 3,
       panel.vertices.allSatisfy({ $0.x.isFinite && $0.y.isFinite })
     else { return false }
     let a = panel.vertices[0]

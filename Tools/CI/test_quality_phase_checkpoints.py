@@ -291,6 +291,94 @@ class QualityPhaseTests(unittest.TestCase):
 
 
 
+class LocalNativePhaseTests(unittest.TestCase):
+    setUp = QualityPhaseTests.setUp
+    context = QualityPhaseTests.context
+    output = QualityPhaseTests.output
+    fake_run = QualityPhaseTests.fake_run
+
+    def test_explicit_backend_binds_all_swift_commands_and_preserves_full_gates(self):
+        self.fail_leaks = False
+        for phase in ('normal', 'leaks'):
+            self.calls = []
+            queries = []
+
+            def query(command, *args):
+                queries.append(command)
+                return self.output(command, *args)
+
+            cache = self.root / ('native-' + phase)
+            with self.context(), patch.object(runner, 'output', side_effect=query):
+                runner.run_phase(phase, cache, build_system='native')
+            result = json.loads(next(cache.glob('phases/*/*/result.json')).read_text())
+            self.assertEqual(result['status'], 'passed')
+            flags = ['--build-system', 'native']
+            flags += ['--enable-code-coverage'] if phase == 'normal' else []
+            build = ['/toolchain/swift', 'build']
+            build += ['--build-tests'] if phase == 'normal' else []
+            build += flags + runner.LOCAL_NATIVE_BUILD_FLAGS
+            self.assertEqual(self.calls[0], build)
+            self.assertEqual(result['identity']['local_build_argv'], build)
+            self.assertEqual(result['identity']['flags'], flags)
+            self.assertIn('build.log', result['outputs'])
+            swift_queries = [c for c in queries if c[:1] == ['/toolchain/swift'] and c[1] != '--version']
+            self.assertTrue(swift_queries)
+            self.assertTrue(all(c[2:4] == ['--build-system', 'native'] for c in swift_queries))
+            if phase == 'normal':
+                test = next(c for c in self.calls if c[1] == 'test')
+                self.assertEqual(test[:6], ['/toolchain/swift', 'test', *flags, '--skip-build'])
+                self.assertNotIn('--filter', test)
+                self.assertNotIn('--no-parallel', test)
+                self.assertEqual(result['identity']['inventory'], self.methods)
+                self.assertEqual(result['validation']['percent'], 100)
+            else:
+                self.assertEqual(result['validation'], {'zero_leaks': True})
+
+    def test_local_default_selection_ignores_environment_and_hosted_commands_remain_exact(self):
+        for phase in ('normal', 'leaks'):
+            with patch.object(runner.sys, 'argv', ['phase.py', phase]), \
+                    patch.dict(os.environ, {'ELITE_SWIFT_BUILD_SYSTEM': 'swiftbuild'}, clear=True), \
+                    patch.object(runner, 'run_phase') as execute:
+                runner.main()
+                self.assertEqual(execute.call_args.args[-1], 'native')
+            with patch.object(runner.sys, 'argv', ['phase.py', phase]), \
+                    patch.dict(os.environ, {'GITHUB_ACTIONS': 'true', 'GITHUB_JOB': 'native_checks'}, clear=True), \
+                    patch.object(runner, 'run_hosted_phase') as hosted, \
+                    patch.object(runner, 'run_phase') as execute:
+                runner.main()
+                hosted.assert_called_once_with(phase)
+                execute.assert_not_called()
+
+    def test_backend_refuses_invalid_selection_and_installed_profile_override(self):
+        for value in ('swiftbuild', '', ['native']):
+            with self.context(), self.assertRaises(ValueError):
+                runner.run_phase('normal', self.root / 'cache', build_system=value)
+        with self.context(), patch.object(runner, 'reviewed_build_profile', return_value={'flags': []}), \
+                self.assertRaisesRegex(ValueError, 'cannot override'):
+            runner.run_phase('normal', self.root / 'cache', '/bound/policy', 'f' * 64, 'native')
+        self.assertFalse(self.calls)
+        for args in (['normal', '--build-system', 'swiftbuild'],
+                     ['normal', '--build-system', 'native']):
+            with patch.object(runner.sys, 'argv', ['phase.py', *args]), \
+                    patch.dict(os.environ, {'GITHUB_ACTIONS': 'true', 'GITHUB_JOB': 'native_checks'}, clear=True), \
+                    patch.object(runner, 'run_phase') as execute, \
+                    patch.object(runner, 'run_hosted_phase') as hosted:
+                with self.assertRaises((SystemExit, ValueError)):
+                    runner.main()
+                execute.assert_not_called()
+                hosted.assert_not_called()
+
+    def test_default_and_native_phase_results_cannot_share_a_cache_identity(self):
+        cache = self.root / 'cache'
+        with self.context():
+            runner.run_phase('normal', cache)
+            runner.run_phase('normal', cache, build_system='native')
+        receipts = [json.loads(p.read_text()) for p in cache.glob('phases/*/*/result.json')]
+        self.assertEqual(len(receipts), 2)
+        self.assertEqual(sum(c[1] == 'test' for c in self.calls), 2)
+        self.assertNotEqual(receipts[0]['identity']['flags'], receipts[1]['identity']['flags'])
+
+
 class OwnedPhaseBuildTests(unittest.TestCase):
     setUp = QualityPhaseTests.setUp
     context = QualityPhaseTests.context

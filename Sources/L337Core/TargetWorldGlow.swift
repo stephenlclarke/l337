@@ -25,15 +25,23 @@ extension Display {
     else { return }
     let center = game.viewPosition(body.position)
     guard center.z > 1, frame.flightClip.contains(projection.point(center)) else { return }
-    let mesh = game.gameplayMesh(for: body)
-    let vertices = mesh.vertices.map {
-      game.viewPosition(body.modelVector($0) + body.position)
+    let meshes: [Mesh]
+    if body.physical?.currentNewtKitStock != nil || body.physical?.currentNewtKitReceipt != nil {
+      guard let components = try? game.currentNewtGeometryComponents(for: body) else { return }
+      let model = game.modelPose(of: body)
+      meshes = components.compactMap { $0.collisionMesh(relativeTo: model) }
+    } else {
+      meshes = [game.gameplayMesh(for: body)]
+    }
+    let vertices = meshes.flatMap { mesh in
+      mesh.vertices.map { game.viewPosition(body.modelVector($0) + body.position) }
     }
     guard !vertices.isEmpty, vertices.allSatisfy({ $0.finite && $0.z > 1 }) else { return }
     func visibleHit(toward point: Vector3) -> GameplayHit? {
       guard point.finite,
         let hit = GameplayRaycast.nearest(
           origin: .init(0, 0, 0), direction: point,
+          // The shared scene retains every qualified Newt component separately.
           maxDistance: point.length + 1, scene: scene), hit.target == .body(body.id)
       else { return nil }
       return hit
@@ -42,12 +50,19 @@ extension Display {
     if visible == nil {
       // Hollow/asymmetric meshes need not contain their body origin. Sample actual face surfaces,
       // keeping the same nearest real mesh/celestial hit proof and a fixed per-object ray budget.
-      let samples = min(32, mesh.faces.count)
+      var faceCount = 0
+      let ranges = meshes.map { mesh -> (mesh: Mesh, firstFace: Int) in
+        let first = faceCount
+        faceCount += mesh.faces.count
+        return (mesh, first)
+      }
+      let samples = min(32, faceCount)
       for sample in 0..<samples {
-        let face = mesh.faces[sample * mesh.faces.count / samples]
-        guard face.count >= 3, face.allSatisfy(mesh.vertices.indices.contains) else { continue }
-        let local =
-          face.reduce(Vector3(0, 0, 0)) { $0 + mesh.vertices[$1] }
+        let ordinal = sample * faceCount / samples
+        guard let part = ranges.last(where: { $0.firstFace <= ordinal }) else { continue }
+        let face = part.mesh.faces[ordinal - part.firstFace]
+        guard face.count >= 3, face.allSatisfy(part.mesh.vertices.indices.contains) else { continue }
+        let local = face.reduce(Vector3(0, 0, 0)) { $0 + part.mesh.vertices[$1] }
           * (1 / Double(face.count))
         if let hit = visibleHit(toward: body.modelVector(local) + body.position) {
           visible = hit

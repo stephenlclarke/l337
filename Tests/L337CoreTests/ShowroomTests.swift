@@ -55,8 +55,9 @@ private func showroomGame(ownedShip: String? = nil) -> Game {
   }
 }
 
-@Test func showroomEntryIsDockedOnlyAndBackRestoresStationSelectionAndCommander() {
+@Test func showroomEntryIsDockedOnlyAndBackRestoresStationSelectionAndCommander() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let commander = game.commander
   game.key("showroom-open")
@@ -384,7 +385,8 @@ private func showroomGame(ownedShip: String? = nil) -> Game {
   #expect(courier.modelSource?.contains("Oolite rendition") == true)
   #expect(ShipCatalogue.ship("SH158")?.previewMesh?.vertices.count == 78)
   #expect(ShipCatalogue.ship("SH159")?.previewMesh?.vertices.count == 98)
-  #expect(ShipCatalogue.ship("SH156")?.previewMesh?.vertices.count == 358)
+  #expect(ShipCatalogue.ship("SH156")?.previewMesh?.vertices.count == 2496)
+  #expect(ShipCatalogue.ship("SH156")?.modelSource == "Original L337")
   #expect(ShipCatalogue.ship("SH155")?.previewMesh?.faces.count == 680)
   let unresolved = ["SH017", "SH036"]
   #expect(unresolved.allSatisfy { ShipCatalogue.ship($0)?.previewMesh != nil })

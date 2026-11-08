@@ -1,0 +1,73 @@
+{
+  "status": "CONDITIONAL_FIXED_SOURCE_PROFILE_BOUND516_EXCEEDS_CAP512_NO_GEOMETRY_RECIPE_ISSUED",
+  "first": {
+    "path": "/tmp/elite-g4-current025-profile-feature-inventory/FIRST.json",
+    "bytes": 5772,
+    "sha256": "eaa9e7d0dbd49f47ed72fb76b939bb7dfd66c9a37d911f96e31100372c4c70ff"
+  },
+  "featureGroups": [
+    {
+      "partIndices": [
+        0,
+        5,
+        13,
+        19
+      ],
+      "feature": "Every original pressure/glazing pod keeps all5authored longitudinal stations and each cardinal X/Y source profile point",
+      "minimumVerticesPerPart": 20,
+      "minimumTrianglesPerClosedPart": 36
+    },
+    {
+      "partIndices": [
+        22,
+        23,
+        25,
+        26
+      ],
+      "feature": "Both stations and four cardinal radial profile extrema of both drive casings and luminous recesses",
+      "minimumVerticesPerPart": 8,
+      "minimumTrianglesPerClosedPart": 12
+    },
+    {
+      "partIndices": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        9,
+        14,
+        15,
+        16,
+        17
+      ],
+      "feature": "Each closed rectangular service well keeps4outer rim corners,4inner recess-floor corners and4back corners; three distinct noncoincident depth/profile rows",
+      "minimumVerticesPerPart": 12,
+      "minimumTrianglesPerClosedPart": 20
+    },
+    {
+      "partIndices": [
+        10,
+        11,
+        12,
+        18,
+        20,
+        21,
+        24
+      ],
+      "feature": "Each closed support/stock box retains all8source corners",
+      "minimumVerticesPerPart": 8,
+      "minimumTrianglesPerClosedPart": 12
+    }
+  ],
+  "minimumLocalComponentVertices": 312,
+  "separateClosedComponents": 27,
+  "minimumTriangles": 516,
+  "nativeCapUnchanged": 512,
+  "integerMetadataOnly": true,
+  "geometryCoordinatesNormalsAreasVolumesOrCreatorEvaluations": 0,
+  "old512method": "HOLD_UNEXECUTED; globalbounds are insufficient to prove retained longitudinal profiles",
+  "notClaimed": "No global impossibility, source model/native qualification, cap increase, compliant native or actual gameplay result."
+}

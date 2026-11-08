@@ -1,0 +1,15 @@
+{
+  "status": "SOURCE_ONLY_FIRST_PASS_NO_GEOMETRY_OR_PHYSICS_EXECUTION",
+  "records": 76,
+  "stops": [],
+  "operations": {
+    "designParses": 76,
+    "partRecords": 11444,
+    "faceIndexChecks": 1039704,
+    "faceMaterialChecks": 346568
+  },
+  "coordinateConversions": 0,
+  "areaMassTensorEvaluations": 0,
+  "geometryWrites": 0,
+  "nativeExecutions": 0
+}

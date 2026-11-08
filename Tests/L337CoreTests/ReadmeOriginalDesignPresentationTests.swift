@@ -34,20 +34,20 @@ struct ReadmeOriginalDesignPresentationTests {
       mesh: model.displayMesh.showroomNormalised, screen: .title)
     #expect(frame.graphics == expected.graphics)
     #expect(frame.worldGraphics == expected.worldGraphics)
-    var legacy = expected
-    legacy.graphics = []
-    legacy.worldGraphics = []
+    var branding = expected
+    branding.graphics = []
+    branding.worldGraphics = []
     Display.draw(
-      body, game: game, into: &legacy, projection: projection,
-      mesh: Mesh.hull(.cobra), screen: .title)
-    #expect(frame.graphics != legacy.graphics || frame.worldGraphics != legacy.worldGraphics)
+      body, game: game, into: &branding, projection: projection,
+      mesh: L337Branding.titleMesh, screen: .title)
+    #expect(frame.graphics != branding.graphics || frame.worldGraphics != branding.worldGraphics)
     let rotated = try Display.originalDesignPresentation(
       game, shipID: id, time: 2.5, width: 1024, height: 768)
     #expect(frame.graphics != rotated.graphics || frame.worldGraphics != rotated.worldGraphics)
   }
 
   @Test(arguments: ["", "SH999"])
-  func unavailableDesignRefusesInsteadOfSubstitutingALegacyHull(id: String) {
+  func unavailableDesignRefusesInsteadOfSubstitutingAnotherSource(id: String) {
     #expect(throws: OriginalFleetShowroomModels.Failure.unknownID) {
       try Display.originalDesignPresentation(
         Game(executive: false), shipID: id, time: 0, width: 1024, height: 768)

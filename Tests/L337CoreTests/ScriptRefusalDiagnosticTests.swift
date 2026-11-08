@@ -47,7 +47,7 @@ private func refusalChecks(_ detail: String, boundary: ScriptRefusalBoundary) ->
   var game = Game(executive: false)
   game.screen = .status
   game.ensureScriptCalendar(origin: .newCommander)
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
   let initiallyValid =
     game.commander.valid && game.scriptWorldSave.valid
     && ScriptFreightVersionedSave.validateClaims(game.commander)
@@ -101,7 +101,7 @@ private func refusalChecks(_ detail: String, boundary: ScriptRefusalBoundary) ->
   var game = Game(executive: false)
   game.screen = .status
   game.ensureScriptCalendar(origin: .newCommander)
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
   let baseline = game.scriptWorldSave
   let baselineValid =
     game.commander.valid && baseline.valid

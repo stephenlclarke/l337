@@ -1,0 +1,535 @@
+{
+  "status": "EXACT_INPUT_AND_OWNED_HUNK_SCOPE_FROZEN_BEFORE_SOURCE_COPY_AUTHORING",
+  "backlogSHA256": "c12deb920b4a04250238cffbdea5920f089f47fcdf454ca4844c74612e66fc2d",
+  "maximumRows": 15,
+  "maximumUniqueSourceParses": 15,
+  "maximumOutputParses": 15,
+  "maximumResourceWrites": 15,
+  "maximumSourceBytes": 39528156,
+  "coordinateTransformationsAreaMassTensorOrNativeEvaluations": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "stationProviderPortEdits": 0,
+  "retriesAllowed": 0,
+  "ownedSourceBeforePins": [
+    {
+      "path": "Sources/L337Core/OriginalDetailedHullStage.swift",
+      "bytes": 6778,
+      "sha256": "965e22ba238b7e297369d190f3d466aec53991ce017390630faa640d7892dbe7"
+    },
+    {
+      "path": "Sources/L337Core/ShipCatalogueMetadata.swift",
+      "bytes": 12937,
+      "sha256": "6a4217d48126e194461ad9ca093279f9a7c2d1c8d204a2b92a938b39a860ba89"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalFleetResourceReplacementUnitTests.swift",
+      "bytes": 8588,
+      "sha256": "1f7224b973e25cfbf17c46f453aa2f5782f1e15b3f1ad1892cb0651557af292a"
+    },
+    {
+      "path": "Tests/L337CoreTests/ShipCatalogueMetadataTests.swift",
+      "bytes": 12361,
+      "sha256": "83bce4fd2a81f113a5cd8f15e3f6e40e1c348c613540b9332e80ae76a0c8a8ff"
+    },
+    {
+      "path": "Tests/L337CoreTests/ShipCatalogueBlueprintMetadataTests.swift",
+      "bytes": 7408,
+      "sha256": "bd0d8f4a8a8c54c02410a5badecb9634b3b399af7481b934666d9e5904bdb38a"
+    },
+    {
+      "path": "Tests/L337CoreTests/ShipCapitalHierarchyTests.swift",
+      "bytes": 4290,
+      "sha256": "1f1a3071cbf7a6801d5a82cf8ed39c999f5124a3538139601b42c1617354bcfb"
+    },
+    {
+      "path": "Tests/L337CoreTests/ShipAccommodationTests.swift",
+      "bytes": 7374,
+      "sha256": "60e05101e260e4f581382715c9ff6d435a04bab159d9fc3be5308db7871015a4"
+    },
+    {
+      "path": "Tests/L337CoreTests/ShipTradeTests.swift",
+      "bytes": 18694,
+      "sha256": "5eb22aec88cd0f136225cdbc8c0587271117a819e9055680b8d7af115ea9342d"
+    }
+  ],
+  "hunkScope": [
+    "Shared pending authentication distinguishes exact native source with unissued engineering, accepted display-only with unissued native, and complete source estimates; no activation.",
+    "Allow explicit unissued pending Larvaal role without inventing human military population.",
+    "SH171 current R3 quest intent remains source-only; replace executable XYZZY assumption with pending unpriced-for-purchase status, no Q01 issuer/join.",
+    "Current source/projection and refusal tests; preserve genuine positive gameplay acceptance obligations rather than claim completion."
+  ],
+  "records": [
+    {
+      "id": "SH112",
+      "contractSHA256": "cbcdc5e45436d78d490b00f76b8e3f430e963fb5204cd6162f51fc802ad8674b",
+      "oldResourceSHA256": "14f67e3514c13033308ac8c200876554545eb5168dd3b6e90750ea4136cda5d4",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-design.toml",
+          "bytes": 880289,
+          "sha256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-design.toml",
+          "bytes": 880289,
+          "sha256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1",
+      "nativeSourceSHA256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 3652228,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH113",
+      "contractSHA256": "1a86eadf7eae395da5bf6f1329cc56d4bf24e14f97bfa34a39b598ed6ff3062f",
+      "oldResourceSHA256": "590fc814d3c804bc824f47d0bf4b01b1ab0f7271b3e5ae5872b510b3470b8720",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-design.toml",
+          "bytes": 808399,
+          "sha256": "5e9d7670be4b1997ad270d55f1cbecb1009eafc697ab4ddd2df1b34cc7a9e007",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-design.toml",
+          "bytes": 808399,
+          "sha256": "5e9d7670be4b1997ad270d55f1cbecb1009eafc697ab4ddd2df1b34cc7a9e007",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "5e9d7670be4b1997ad270d55f1cbecb1009eafc697ab4ddd2df1b34cc7a9e007",
+      "nativeSourceSHA256": "5e9d7670be4b1997ad270d55f1cbecb1009eafc697ab4ddd2df1b34cc7a9e007",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 3364668,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH114",
+      "contractSHA256": "52fa731ac2d363006a35c0dd4a7318b5e94cf51892f0e6abae6f70bb01c94143",
+      "oldResourceSHA256": "a2fc9161a3f8b1360f4687b245736a8b549e171399d915a5dd6936328c6cbd91",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-design.toml",
+          "bytes": 1135060,
+          "sha256": "d999e2f3324a8a593191765c20fcd48c03ed17fefa102d4ed1156710685d51f0",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-design.toml",
+          "bytes": 1135060,
+          "sha256": "d999e2f3324a8a593191765c20fcd48c03ed17fefa102d4ed1156710685d51f0",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "d999e2f3324a8a593191765c20fcd48c03ed17fefa102d4ed1156710685d51f0",
+      "nativeSourceSHA256": "d999e2f3324a8a593191765c20fcd48c03ed17fefa102d4ed1156710685d51f0",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 4671312,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH115",
+      "contractSHA256": "6ed36170e9691f0f12aaf19b49eb0eeee314135c1931af965806c823dac7bf45",
+      "oldResourceSHA256": "155aa919a63489853db28e2251569184c0803e9b4a7497a9a76141892786c8cc",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-design.toml",
+          "bytes": 811798,
+          "sha256": "9b38f9641e6503b8aa2a7430f81d91c6f6870bc28f0c9dc13baee16397b01ab2",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-design.toml",
+          "bytes": 811798,
+          "sha256": "9b38f9641e6503b8aa2a7430f81d91c6f6870bc28f0c9dc13baee16397b01ab2",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "9b38f9641e6503b8aa2a7430f81d91c6f6870bc28f0c9dc13baee16397b01ab2",
+      "nativeSourceSHA256": "9b38f9641e6503b8aa2a7430f81d91c6f6870bc28f0c9dc13baee16397b01ab2",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 3378264,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH116",
+      "contractSHA256": "0ac287f26c28101ac8999e38dc9a7b26a145370ccdaa248ba6d7eed04afe1fb2",
+      "oldResourceSHA256": "862ad1919f190309074fc27743c58a737ea56426aed7da79ceae84ea6b2a48c8",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-design.toml",
+          "bytes": 921446,
+          "sha256": "62153467e98fbf3e98a095a50bfc536227d322345d74a6a048e720b65c9fed73",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-design.toml",
+          "bytes": 921446,
+          "sha256": "62153467e98fbf3e98a095a50bfc536227d322345d74a6a048e720b65c9fed73",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "62153467e98fbf3e98a095a50bfc536227d322345d74a6a048e720b65c9fed73",
+      "nativeSourceSHA256": "62153467e98fbf3e98a095a50bfc536227d322345d74a6a048e720b65c9fed73",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 3816856,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH117",
+      "contractSHA256": "d3bd98bd547c59cf62b6c1891f1fe3554754a140796f1dbb2060b89369ac6442",
+      "oldResourceSHA256": "2b9a701093a6c86b8b85ece85ffa37aecd0432928f2f133e5d8b312bd1177864",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-design.toml",
+          "bytes": 973424,
+          "sha256": "9a48f2e812240a38f2b90ea0333eda83f8032b0472dcba9fcb694931cc0a902e",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-design.toml",
+          "bytes": 973424,
+          "sha256": "9a48f2e812240a38f2b90ea0333eda83f8032b0472dcba9fcb694931cc0a902e",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "9a48f2e812240a38f2b90ea0333eda83f8032b0472dcba9fcb694931cc0a902e",
+      "nativeSourceSHA256": "9a48f2e812240a38f2b90ea0333eda83f8032b0472dcba9fcb694931cc0a902e",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 4024768,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH118",
+      "contractSHA256": "960a541ea826d2cb8634794e52772874570d4d9e7dc5dc949527ec1db41d80f7",
+      "oldResourceSHA256": "b676786df0cfd1003b056bc5f2d9e705ecd31bc12a87a71d4787c89d98729804",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-design.toml",
+          "bytes": 1999661,
+          "sha256": "65a9c46ec8547b76bc94aa261668b05f6a651bd39ee735c671d90f338be6f0e6",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-design.toml",
+          "bytes": 1999661,
+          "sha256": "65a9c46ec8547b76bc94aa261668b05f6a651bd39ee735c671d90f338be6f0e6",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "65a9c46ec8547b76bc94aa261668b05f6a651bd39ee735c671d90f338be6f0e6",
+      "nativeSourceSHA256": "65a9c46ec8547b76bc94aa261668b05f6a651bd39ee735c671d90f338be6f0e6",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 8129716,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH119",
+      "contractSHA256": "f44ea27d0015ea2fdc28491277d4d5fc2625f66a597670db8351c68211dd91f3",
+      "oldResourceSHA256": "0f2ce4bbf661d98bf6a56eeab192e103d1e1967c6335450fa59faa9165b9131d",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-design.toml",
+          "bytes": 1077700,
+          "sha256": "3d7d4b77a9f9c44ff9b15c3cf379bf68b4ca0106628a59eaae978e59394fa7d1",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-design.toml",
+          "bytes": 1077700,
+          "sha256": "3d7d4b77a9f9c44ff9b15c3cf379bf68b4ca0106628a59eaae978e59394fa7d1",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "3d7d4b77a9f9c44ff9b15c3cf379bf68b4ca0106628a59eaae978e59394fa7d1",
+      "nativeSourceSHA256": "3d7d4b77a9f9c44ff9b15c3cf379bf68b4ca0106628a59eaae978e59394fa7d1",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 4441872,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH120",
+      "contractSHA256": "b510e195c30517d6ad5cd4a04277612fdb4800198dffc8f01c695a95573f2eaf",
+      "oldResourceSHA256": "2c95fdeb9a30a6d0b70054ba46de8beccb0c1bf1f78b316d2e1a44f335e5bae5",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-design.toml",
+          "bytes": 872098,
+          "sha256": "4968b8ce9ac6fc316fe67b58dd04e7fb2297ab8d40aa20e8322a26540437fedc",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-design.toml",
+          "bytes": 872098,
+          "sha256": "4968b8ce9ac6fc316fe67b58dd04e7fb2297ab8d40aa20e8322a26540437fedc",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "4968b8ce9ac6fc316fe67b58dd04e7fb2297ab8d40aa20e8322a26540437fedc",
+      "nativeSourceSHA256": "4968b8ce9ac6fc316fe67b58dd04e7fb2297ab8d40aa20e8322a26540437fedc",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 3619464,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH121",
+      "contractSHA256": "48146ed3f79c033f8b3b6342c9642cfaaf62c949ec6a479e28a22e0a88a6d270",
+      "oldResourceSHA256": "cbcc8de99182a38f87a8adf10c1ec2d7dd1507607bf9297a45235db8d708a472",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-design.toml",
+          "bytes": 1113768,
+          "sha256": "f205cf86f74b26cc75542f65a940aa92f287d24c58d53d4e250ba6e24a05218b",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-design.toml",
+          "bytes": 1113768,
+          "sha256": "f205cf86f74b26cc75542f65a940aa92f287d24c58d53d4e250ba6e24a05218b",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "f205cf86f74b26cc75542f65a940aa92f287d24c58d53d4e250ba6e24a05218b",
+      "nativeSourceSHA256": "f205cf86f74b26cc75542f65a940aa92f287d24c58d53d4e250ba6e24a05218b",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 4586144,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH122",
+      "contractSHA256": "65f2ecb53a56251a6b3e38f5d459f636732bfdb017ae341a32aef0361d32d6f3",
+      "oldResourceSHA256": "5594125d71650f40a0890f30d65b02b2f78fb3b4b757ea0d9eb3e8704959fa4a",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-design.toml",
+          "bytes": 1588487,
+          "sha256": "c0392366f0a900584961def6feed02002cced6a9760fa0178518f2f020600556",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-design.toml",
+          "bytes": 1588487,
+          "sha256": "c0392366f0a900584961def6feed02002cced6a9760fa0178518f2f020600556",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "c0392366f0a900584961def6feed02002cced6a9760fa0178518f2f020600556",
+      "nativeSourceSHA256": "c0392366f0a900584961def6feed02002cced6a9760fa0178518f2f020600556",
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "1",
+      "physicalStatus": "UNISSUED_PROPULSION_ORGAN_ENGINEERING_ROLE_MAP",
+      "maximumOutputBytes": 6485020,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH123",
+      "contractSHA256": "113645d823bf6ad3e81a10fad4e854a0e64363cc6454fc23332cded47a203d6a",
+      "oldResourceSHA256": "7de5d1c56330703ca811b38dacf74378cf430c4a6449a762220e501401b47642",
+      "sourceFiles": [
+        {
+          "kind": "accepted-display-json",
+          "path": "Sources/L337Core/Resources/OriginalFleetShowroomModels/SH123.json",
+          "bytes": 3757858,
+          "sha256": "f6648d12e2a476092088c7a79c8e1220b272f6370fddfde779f97db7d216f163",
+          "block": "nativeDesign",
+          "role": "detailed-display-only"
+        }
+      ],
+      "detailedSourceSHA256": "2179227760376ed17b276153cb7cb20894f4f1bad5bf48e339b7dc874f70fe69",
+      "nativeSourceSHA256": null,
+      "physicalRecordSHA256": null,
+      "metresPerSourceUnitExact": "unissued",
+      "physicalStatus": "UNISSUED_SELECTED_SOURCE_CREATOR_CALIBRATION_AND_NATIVE",
+      "maximumOutputBytes": 7646788,
+      "plannedPurchasePolicy": "never",
+      "runtimePolicy": "never",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH124",
+      "contractSHA256": "851502c15a6922797e9c650e8a126fd73ce7ccc76f5e1419a870625c72abe21e",
+      "oldResourceSHA256": "6984664dcef7f819de0e3eae25fea3d24ec7a46ab3fe03ca7274cc6b9413c8a2",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH124-design.toml",
+          "bytes": 583091,
+          "sha256": "1715f8fc7da8e0a7e3c0c17534087477b443508c174a0a4da4eb158829438732",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH124-design.toml",
+          "bytes": 583091,
+          "sha256": "1715f8fc7da8e0a7e3c0c17534087477b443508c174a0a4da4eb158829438732",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "1715f8fc7da8e0a7e3c0c17534087477b443508c174a0a4da4eb158829438732",
+      "nativeSourceSHA256": "1715f8fc7da8e0a7e3c0c17534087477b443508c174a0a4da4eb158829438732",
+      "physicalRecordSHA256": "1e842cb7392dc8e9f6cbba555545de12eb8fc0eb9cf06df1bf32af1690b7067d",
+      "metresPerSourceUnitExact": "760/69",
+      "physicalStatus": "AUTHORED_ENGINEERING_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "maximumOutputBytes": 2463436,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH125",
+      "contractSHA256": "66671c43983362d99fa0ecbc361fe224db0a7ac50799fd7d35cedb4d3fa4506e",
+      "oldResourceSHA256": "159f8ee5b643b32e3baf39a2e97ff0f2d93624d6bce64912d5502872bb34f569",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH125-design.toml",
+          "bytes": 809842,
+          "sha256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH125-design.toml",
+          "bytes": 809842,
+          "sha256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1",
+      "nativeSourceSHA256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1",
+      "physicalRecordSHA256": "52f994685dd828bc8b77ec73ad1ee92189a129c1e3eb3db9523c6c129120e182",
+      "metresPerSourceUnitExact": "19000000/996381",
+      "physicalStatus": "AUTHORED_ENGINEERING_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "maximumOutputBytes": 3370440,
+      "plannedPurchasePolicy": "blueprintFabrication",
+      "runtimePolicy": "pendingFabrication",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    },
+    {
+      "id": "SH171",
+      "contractSHA256": "f1e1365586a3723bed5a87f1041d086ab7a7dd3c4ce9d665c6fedce1b39eb48f",
+      "oldResourceSHA256": "2b17092a264d51a073d378377b9d0133e6800b97def7d78e36101e91a5b0e1f5",
+      "sourceFiles": [
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH171-design.toml",
+          "bytes": 22195235,
+          "sha256": "d093d9fb10c2319b93f807cf2b02977fa6df91c37e6735df5da33df886216e5b",
+          "block": "design",
+          "role": "detailed"
+        },
+        {
+          "kind": "original-toml",
+          "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH171-design.toml",
+          "bytes": 22195235,
+          "sha256": "d093d9fb10c2319b93f807cf2b02977fa6df91c37e6735df5da33df886216e5b",
+          "block": "nativeDesign",
+          "role": "native"
+        }
+      ],
+      "detailedSourceSHA256": "d093d9fb10c2319b93f807cf2b02977fa6df91c37e6735df5da33df886216e5b",
+      "nativeSourceSHA256": "d093d9fb10c2319b93f807cf2b02977fa6df91c37e6735df5da33df886216e5b",
+      "physicalRecordSHA256": "3a251b2433d907425bf0ad1d2cff150095195b185669a8addfb6fa7443f7ac38",
+      "metresPerSourceUnitExact": "5/41",
+      "physicalStatus": "AUTHORED_ENGINEERING_ESTIMATE_NOT_NATIVE_QUALIFICATION",
+      "maximumOutputBytes": 88912012,
+      "plannedPurchasePolicy": "plughQuestFabrication",
+      "runtimePolicy": "never",
+      "actualNativePopulationOrQuestAuthority": "UNISSUED; no human defaults, automaton/zero people inference or quest alias"
+    }
+  ]
+}

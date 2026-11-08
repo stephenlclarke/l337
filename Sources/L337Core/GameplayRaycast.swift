@@ -89,7 +89,12 @@ public enum GameplayRaycast {
   // Native collision bounds are immutable and share the authoritative rendered hulls.
   private static let nativeMeshes: [Hull: PreparedMesh] = Dictionary(
     uniqueKeysWithValues: Hull.allCases.compactMap { hull in
-      PreparedMesh(.hull(hull)).map { (hull, $0) }
+      switch hull {
+      case .station, .asteroid, .cargo, .missile: break
+      default:
+        guard ShipCatalogue.nativeMesh(hull) != nil else { return nil }
+      }
+      return PreparedMesh(.hull(hull)).map { (hull, $0) }
     })
 
   private enum Geometry: Sendable {
@@ -107,13 +112,26 @@ public enum GameplayRaycast {
   public static func nearest(
     origin: Vector3, direction: Vector3, maxDistance: Double,
     bodies: [SpaceBody], ignoring: Set<Int> = [], playerMesh: Mesh? = nil,
-    celestials: [CelestialBody] = [], meshOverrides: [Int: Mesh] = [:]
+    celestials: [CelestialBody] = [], meshOverrides: [Int: Mesh] = [:],
+    compoundMeshOverrides: [Int: [Mesh]] = [:]
   ) -> GameplayHit? {
     guard let ray = Ray(origin: origin, direction: direction, limit: maxDistance) else {
       return nil
     }
     var candidates: [Candidate] = []
     for body in bodies where !ignoring.contains(body.id) && finite(body.position) {
+      if let parts = compoundMeshOverrides[body.id] {
+        let geometries = parts.compactMap(PreparedMesh.init)
+        guard !parts.isEmpty, geometries.count == parts.count,
+          let local = localRay(ray, body: body)
+        else { continue }
+        for geometry in geometries {
+          guard let entry = meshEntry(local, mesh: geometry) else { continue }
+          candidates.append(.init(target: .body(body.id), ray: local,
+            entry: entry, geometry: .mesh(geometry)))
+        }
+        continue
+      }
       let geometry =
         meshOverrides[body.id].flatMap(PreparedMesh.init)
         ?? (meshOverrides[body.id] == nil ? nativeMeshes[body.hull] : nil)
@@ -169,7 +187,7 @@ public enum GameplayRaycast {
   struct OcclusionScene {
     fileprivate let bodies: [SpaceBody]
     fileprivate let celestials: [CelestialBody]
-    fileprivate let meshes: [Int: PreparedMesh]
+    fileprivate let meshes: [Int: [PreparedMesh]]
     let glowOccluders: [GlowOccluder]
   }
   // Immutable catalogue/native geometry is prepared once and reused across frames and halo rays.
@@ -180,16 +198,36 @@ public enum GameplayRaycast {
   static func prepareOcclusionScene(_ game: Game, projection: FlightProjection = .legacy)
     -> OcclusionScene
   {
-    var meshes: [Int: PreparedMesh] = [:]
+    var meshes: [Int: [PreparedMesh]] = [:]
+    var invalidNewt: [Int] = []
     for body in game.bodies {
-      if let id = body.physical?.catalogueShipID, body.nativeStationIdentity == nil,
+      if body.physical?.currentNewtKitStock != nil || body.physical?.currentNewtKitReceipt != nil {
+        guard let components = try? game.currentNewtGeometryComponents(for: body) else {
+          invalidNewt.append(body.id)
+          continue
+        }
+        let models = components.compactMap { $0.collisionMesh(relativeTo: game.modelPose(of: body)) }
+        let prepared = models.compactMap(PreparedMesh.init)
+        guard !models.isEmpty, prepared.count == models.count else {
+          invalidNewt.append(body.id)
+          continue
+        }
+        meshes[body.id] = prepared
+      } else if let id = body.physical?.catalogueShipID, body.nativeStationIdentity == nil,
         body.scriptNPC == nil,
         body.physical?.rock == nil, body.physical?.payload == nil,
         let cached = catalogueOccluders[id]
       {
-        meshes[body.id] = cached
+        meshes[body.id] = [cached]
+      } else if let scripted = game.scriptNPCMesh(body) {
+        meshes[body.id] = PreparedMesh(scripted).map { [$0] }
+      } else if let fit = body.scriptNPC?.fit,
+        OriginalCryostasisCapsule.isReferenced(by: fit)
+          || OriginalScopedScriptedHull.referenced(by: fit.definition) != nil
+      {
+        continue
       } else {
-        meshes[body.id] = PreparedMesh(game.scriptNPCMesh(body) ?? game.gameplayMesh(for: body))
+        meshes[body.id] = PreparedMesh(game.gameplayMesh(for: body)).map { [$0] }
       }
     }
     var envelopes: [GlowOccluder] = []
@@ -213,11 +251,13 @@ public enum GameplayRaycast {
             height: projected.map(\.y).max()! - y)))
     }
     for body in game.bodies {
-      guard let mesh = meshes[body.id] else { continue }
-      append(
-        mesh.vertices.map { game.viewPosition(body.modelVector($0) + body.position) },
-        bodyID: body.id)
+      for mesh in meshes[body.id] ?? [] {
+        append(mesh.vertices.map { game.viewPosition(body.modelVector($0) + body.position) },
+          bodyID: body.id)
+      }
     }
+    // A claimed invalid assembly has no bare geometry fallback and cannot reveal a halo through it.
+    for id in invalidNewt { envelopes.append(.init(bodyID: id, nearDepth: 0, bounds: nil)) }
     for celestial in game.celestials where celestial.radius.isFinite && celestial.radius > 0 {
       let center = game.viewPosition(celestial.position)
       let r = celestial.radius
@@ -241,12 +281,12 @@ public enum GameplayRaycast {
     }
     var candidates: [Candidate] = []
     for body in scene.bodies where !ignoring.contains(body.id) && finite(body.position) {
-      let geometry = scene.meshes[body.id]
-      guard let geometry, let local = localRay(ray, body: body),
-        let entry = meshEntry(local, mesh: geometry)
-      else { continue }
-      candidates.append(
-        .init(target: .body(body.id), ray: local, entry: entry, geometry: .mesh(geometry)))
+      guard let local = localRay(ray, body: body) else { continue }
+      for geometry in scene.meshes[body.id] ?? [] {
+        guard let entry = meshEntry(local, mesh: geometry) else { continue }
+        candidates.append(.init(target: .body(body.id), ray: local,
+          entry: entry, geometry: .mesh(geometry)))
+      }
     }
     for celestial in scene.celestials {
       guard let entry = sphereEntry(ray, center: celestial.position, radius: celestial.radius)

@@ -85,12 +85,45 @@ struct InventoryCommandTests {
   @Test func loadAndScreenReturnRejectOldCommandsEvenWhenPersistentIdentitiesAndRevisionsMatch()
     async throws
   {
-    let runtime = GameRuntime(game: try inventoryCommandGame())
+    var game = try inventoryCommandGame()
+    let scoop = try #require(Equipment.all.first { $0.name == "Fuel Scoops" })
+    game.commander.system = try #require(game.systems.first {
+      $0.technology >= scoop.technology && !$0.isPlugh
+    }?.id)
+    game.selectedSystem = game.commander.system
+    game.market = MarketItem.at(game.currentSystem)
+    game.commander.credits = 1_000_000
+    game.screen = .equipment
+    try #require(game.commander.shipID == "SH025" && !game.commander.unlimitedCash)
+    try #require(game.equipmentAvailable(scoop))
+    let purchaseBefore = game.commander
+    let purchase = try game.quoteEquipmentPurchase(scoop)
+    try #require(game.commander == purchaseBefore && purchase.purchase.requiredDebit > 0)
+    try #require(purchase.purchase.requiredDebit == game.shopPrice(scoop))
+    let purchaseApplied = try game.applyEquipmentPurchase(purchase)
+    try #require(purchaseApplied)
+    let paidInventory = try #require(game.commander.equipmentInventory)
+    let paidItem = try #require(paidInventory.items.first { $0.id == purchase.request.newItem })
+    try #require(paidItem.location?.slot == .utility(.fuelScoops))
+    try #require(paidItem.provenance == .paid(
+      owner: paidInventory.owner, transaction: purchase.request.transaction))
+    try #require(game.commander.credits == purchaseBefore.credits - purchase.purchase.requiredDebit)
+    try #require(game.commander.equipmentPurchaseHistory!.paid.count
+      == purchaseBefore.equipmentPurchaseHistory!.paid.count + 1)
+    let paidReceipt = try #require(game.commander.equipmentPurchaseHistory?.paid.first {
+      $0.transaction == purchase.request.transaction
+    })
+    try #require(paidReceipt.owner == paidInventory.owner && paidReceipt.node == paidItem.node)
+    try #require(paidReceipt.price == purchase.purchase.requiredDebit)
+    try #require(paidReceipt.binding.request == purchase.request)
+    game.screen = .inventory
+    let storage = try NativeStationTestStorage()
+    defer { storage.clean() }
+    let url = storage.url
+    let runtime = GameRuntime(game: game, saveURL: url)
     let shown = await runtime.snapshot()
-    let item = try #require(shown.commander.fittedEquipment(at: .targetingCore))
+    let item = try #require(shown.commander.equipmentInventory?.items.first { $0.id == paidItem.id })
     let command = try #require(shown.inventoryActionPreview(for: .equipment(item)).command)
-    let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-    defer { try? FileManager.default.removeItem(at: url) }
     try await runtime.save(to: url)
     try await runtime.load(from: url, persistMigrations: false)
     await runtime.key("9")
@@ -109,6 +142,72 @@ struct InventoryCommandTests {
     let staleReturn = await runtime.inventoryCommand(current)
     #expect(!staleReturn && returned.inventoryContextEpoch != current.context)
     #expect(await runtime.snapshot().commander == returned.commander)
+
+    // Both directions keep the same paid source; a failed writer preserves the command for retry.
+    for storing in [true, false] {
+      let before = await runtime.snapshot()
+      let currentItem = try #require(before.commander.equipmentInventory?.items.first {
+        $0.id == paidItem.id
+      })
+      let currentCommand = try #require(before.inventoryActionPreview(for: .equipment(currentItem)).command)
+      try #require((currentItem.location != nil) == storing)
+      let files = try ScriptFinanceTestFixture.files(storage.directory)
+      if !storing {
+        // Refreshing the header cannot make the original installed payload current after Store.
+        let oldPayload = InventoryCommand(
+          owner: currentCommand.owner, hull: currentCommand.hull, context: currentCommand.context,
+          shipID: currentCommand.shipID, ownedRevision: currentCommand.ownedRevision,
+          sourceRevision: currentCommand.sourceRevision, action: .fit(item, .utility(.fuelScoops)))
+        let refused = await runtime.equipmentTransaction(.inventory(oldPayload))
+        #expect(!refused.applied)
+        let unchanged = await runtime.snapshot()
+        #expect(unchanged.commander == before.commander)
+        #expect(unchanged.inventoryContextEpoch == before.inventoryContextEpoch)
+        #expect(try ScriptFinanceTestFixture.files(storage.directory) == files)
+      }
+      try storage.blockWriter()
+      let failed = await runtime.equipmentTransaction(.inventory(currentCommand))
+      #expect(failed == .refused(.invalidState))
+      let rolledBack = await runtime.snapshot()
+      #expect(rolledBack.commander == before.commander && rolledBack.bodies == before.bodies)
+      #expect(rolledBack.inventoryContextEpoch == before.inventoryContextEpoch)
+      #expect(rolledBack.energy == before.energy && rolledBack.frontShield == before.frontShield)
+      #expect(rolledBack.rearShield == before.rearShield)
+      #expect(try ScriptFinanceTestFixture.files(storage.backup) == files)
+      #expect(try Data(contentsOf: storage.directory) == Data("blocked save directory".utf8))
+      try storage.restoreWriter()
+      #expect(try ScriptFinanceTestFixture.files(storage.directory) == files)
+      let retried = await runtime.equipmentTransaction(.inventory(currentCommand))
+      try #require(retried.applied)
+      let after = await runtime.snapshot()
+      let inventory = try #require(after.commander.equipmentInventory)
+      let actual = try #require(inventory.items.first { $0.id == paidItem.id })
+      #expect(actual == paidItem.moved(to: storing ? nil : paidItem.location))
+      #expect(inventory.owner == paidInventory.owner && inventory.activeHull == paidInventory.activeHull)
+      #expect(Set(inventory.items.map(\.id)) == Set(paidInventory.items.map(\.id)))
+      #expect(inventory.items.filter { $0.id != paidItem.id }
+        == paidInventory.items.filter { $0.id != paidItem.id })
+      #expect(inventory.revision == currentCommand.ownedRevision + 1)
+      #expect(after.inventoryContextEpoch != currentCommand.context)
+      #expect(after.commander.equipmentPurchaseHistory == shown.commander.equipmentPurchaseHistory)
+      #expect(after.commander.credits == shown.commander.credits)
+      #expect(after.commander.fuel == shown.commander.fuel && after.commander.cargo == shown.commander.cargo)
+      #expect(try NativeSaveTestFixture.readVersionedCommander(from: url) == after.commander)
+      let committedFiles = try ScriptFinanceTestFixture.files(storage.directory)
+      let replay = await runtime.equipmentTransaction(.inventory(currentCommand))
+      #expect(replay == .refused(.staleContext))
+      let afterReplay = await runtime.snapshot()
+      #expect(afterReplay.commander == after.commander)
+      #expect(afterReplay.inventoryContextEpoch == after.inventoryContextEpoch)
+      #expect(try ScriptFinanceTestFixture.files(storage.directory) == committedFiles)
+    }
+    let final = await runtime.snapshot()
+    let cold = GameRuntime()
+    try await cold.load(from: url, persistMigrations: false)
+    let loaded = await cold.snapshot()
+    #expect(loaded.commander == final.commander)
+    #expect(loaded.commander.equipmentInventory?.items.first { $0.id == paidItem.id } == paidItem)
+    #expect(loaded.commander.equipmentPurchaseHistory == shown.commander.equipmentPurchaseHistory)
   }
 
   @Test func aDifferentActorCannotUseTheSameCommandersOldInteractionContext() async throws {

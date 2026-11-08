@@ -3,6 +3,11 @@ import Foundation
 extension Game {
   func packGallery(_ entry: LoadedMissionPack) -> GalleryMission {
     let pack = entry.pack
+    let naval = pack.mission.binding == "naval"
+    func present(_ text: String) -> String {
+      guard naval else { return text }
+      return AegisPrototype.presentation(text)
+    }
     let state = progress(for: entry)
     let stage = pack.stage(state.stage) ?? pack.stages[0]
     let available: Bool
@@ -35,14 +40,14 @@ extension Game {
       } else {
         label = status == .locked ? "Locked" : "Upcoming"
       }
-      return MissionMilestone(title: name, state: label)
+      return MissionMilestone(title: present(name), state: label)
     }
     return GalleryMission(
-      name: pack.mission.title, status: status,
+      name: present(pack.mission.title), status: status,
       objective: compatible
-        ? stage.objective : "Suspended: restore the saved pack version/content.",
-      briefing: pack.mission.briefing, destination: pack.mission.destination,
-      reward: pack.mission.reward, prerequisites: pack.mission.prerequisites.map(packText),
+        ? present(stage.objective) : "Suspended: restore the saved pack version/content.",
+      briefing: present(pack.mission.briefing), destination: pack.mission.destination,
+      reward: pack.mission.reward, prerequisites: pack.mission.prerequisites.map { packText(present($0)) },
       completed: stage.completed, milestones: milestones)
   }
   var missingPackGallery: [GalleryMission] {

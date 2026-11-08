@@ -184,18 +184,19 @@ import os
   let journal = game.commander.scriptState.savedClueJournal
   let owner = game.commander.equipmentOwnerID
   game.commander.credits = 10_000_000
-  let destinationFuel = try #require(ShipCatalogue.ship("SH013")?.game?.fuel)
-  game.commander.fuel = destinationFuel
+  let destinationFuel = try #require(ShipCatalogue.ship("SH029")?.game?.fuel)
+  // The completed mission's actual fuel remains unchanged.
+  try #require(game.commander.fuel <= destinationFuel)
   try #require(game.commander.valid)
   game.commander.navigationPlan = nil
   game.key("6")
-  game.showroom.selection = "SH013"
+  game.showroom.selection = "SH029"
   let quote = try #require(game.shipTradeQuote)
   try #require(quote.allowed)
   game.key("showroom-trade")
   game.key("right")
   game.key("return")
-  #expect(game.commander.shipID == "SH013" && game.commander.credits == quote.balance)
+  #expect(game.commander.shipID == "SH029" && game.commander.credits == quote.balance)
   #expect(game.commander.equipmentOwnerID == owner)
   #expect(game.commander.scriptState.savedClueJournal == journal && game.commander.valid)
 }

@@ -22,6 +22,9 @@ from sanitizer_checkpoints import (ERRORS, atomic_json, copy_report, digest, ens
                                    output, owned_directory, runtime_identity, selected_opt_in_skips)
 
 ROOT = Path(__file__).resolve().parents[2]
+LOCAL_NATIVE_BUILD_FLAGS = ['--jobs', '1', '-Xswiftc', '-disable-batch-mode', '-Xlinker', '-O0',
+                            '-Xswiftc', '-driver-batch-size-limit', '-Xswiftc', '1', '--disable-index-store']
+
 NORMAL_OUTPUTS = {'phase.log', 'tests-swift-testing.xml', 'coverage.xml', 'coverage.lcov', 'default.profdata'}
 
 
@@ -144,9 +147,13 @@ def reviewed_build_profile(path, checksum, phase, environment):
             'flags': ['--jobs', '1', '-Xswiftc', '-disable-batch-mode']}
 
 
-def run_phase(phase, cache, profile_policy=None, profile_sha256=None):
+def run_phase(phase, cache, profile_policy=None, profile_sha256=None, build_system=None):
     root = ROOT
     build_profile = reviewed_build_profile(profile_policy, profile_sha256, phase, os.environ)
+    if build_system not in (None, 'native'):
+        raise ValueError('Unsupported local Swift build system')
+    if build_system is not None and build_profile is not None:
+        raise ValueError('An explicit local backend cannot override an installed phase profile')
     capture = None
     if os.environ.get('GITHUB_ACTIONS') == 'true' and os.environ.get('GITHUB_JOB') == 'native_checks':
         from hosted_quality_evidence import current_capture
@@ -169,8 +176,10 @@ def run_phase(phase, cache, profile_policy=None, profile_sha256=None):
             raise ValueError('Quality checkpoints require a clean committed checkout')
         report = root / 'reports/quality-phases' / phase / str(uuid.uuid4())
         report.mkdir(parents=True)
-        flags = ['--enable-code-coverage'] if phase == 'normal' else []
-        build_flags = build_profile['flags'] if build_profile is not None else []
+        flags = ['--build-system', build_system] if build_system is not None else []
+        flags += ['--enable-code-coverage'] if phase == 'normal' else []
+        build_flags = (build_profile['flags'] if build_profile is not None
+                       else LOCAL_NATIVE_BUILD_FLAGS if build_system is not None else [])
         build_command = [swift, 'build', *(['--build-tests'] if phase == 'normal' else []), *flags, *build_flags]
         before = executable_inputs(root, '.build')
         started = time.monotonic()
@@ -213,6 +222,8 @@ def run_phase(phase, cache, profile_policy=None, profile_sha256=None):
                     'image_sha256': digest(image),
                     'image_uuid': output(['xcrun', 'dwarfdump', '--uuid', str(image)], root, environment, lock),
                     'opt_in_policy': opt_in_policy(root, environment) if phase == 'normal' else {}}
+        if build_system is not None:
+            identity['local_build_argv'] = build_command
         if build_profile is not None:
             identity['build_profile'] = {**build_profile, 'argv': build_command}
             identity['phase_image'] = str(image.resolve())
@@ -224,7 +235,7 @@ def run_phase(phase, cache, profile_policy=None, profile_sha256=None):
         reused = next(((attempt, result) for attempt in sorted(storage.iterdir())
                        if attempt.is_dir() and (result := successful_phase(attempt, identity))), None)
         from m01_normal_attestation import qualify
-        attested = qualify(root, head, identity, environment, cache, successful_phase) if phase == 'normal' and build_profile is None else None
+        attested = qualify(root, head, identity, environment, cache, successful_phase) if phase == 'normal' and build_profile is None and build_system is None else None
         if attested:
             attempt, result, attestation = attested
         elif reused:
@@ -232,7 +243,7 @@ def run_phase(phase, cache, profile_policy=None, profile_sha256=None):
         else:
             attempt = storage / str(uuid.uuid4())
             owned_directory(attempt)
-            if build_profile is not None:
+            if build_profile is not None or build_system is not None:
                 shutil.copyfile(report / 'build.log', attempt / 'build.log')
             command = ([swift, 'test', *flags, '--skip-build', '--xunit-output', str(attempt / 'tests.xml')]
                        if phase == 'normal' else ['/usr/bin/leaks', '--atExit', '--', str(image), '--diagnostics'])
@@ -392,6 +403,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('phase', choices=['normal', 'leaks'])
     parser.add_argument('--cache', type=Path, default=Path.home() / 'Library/EliteNativeCI/sanitizer-checkpoints')
+    parser.add_argument('--build-system', choices=['native'], help='Explicit local Swift backend')
     parser.add_argument('--profile-policy', type=Path)
     parser.add_argument('--profile-policy-sha256')
     parser.add_argument('--monitor-parent', type=int, help=argparse.SUPPRESS)
@@ -409,7 +421,11 @@ def main():
             raise ValueError('Hosted phase wrapper requires its exact workflow invocation')
         run_hosted_phase(args.phase)
         return
-    run_phase(args.phase, args.cache, args.profile_policy, args.profile_policy_sha256)
+    build_system = args.build_system
+    # Versioned local driver choice. Installed profiles retain their reviewed commands.
+    if not hosted and args.profile_policy is None and build_system is None:
+        build_system = 'native'
+    run_phase(args.phase, args.cache, args.profile_policy, args.profile_policy_sha256, build_system)
 
 
 if __name__ == '__main__':

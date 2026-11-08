@@ -1,0 +1,73 @@
+{
+  "status": "FROZEN_SOURCE_METHOD_PUBLICATION_SUCCESSOR_REVIEW_PENDING_NO_EXECUTION_AUTHORITY",
+  "method": "decimal80-original-origin-moments-v1",
+  "beforeCommit": "371ed228dd1b6c9d9da306972307780c4c19ce18",
+  "source": {
+    "path": "docs/fleet-physical/decimal80-061-122-authoring.py",
+    "bytes": 22729,
+    "sha256": "d0d3efd97dbf7b8446b0eec977d0fb43acd14c9882f0437867598d1c2fbac21e"
+  },
+  "input": {
+    "path": "docs/fleet-physical/decimal80-061-122-method-input-first.json",
+    "bytes": 114824,
+    "sha256": "3116ad99f94910fbc0c111fbfb539af0cec9998388f0527e0bff4f45bc8d1583"
+  },
+  "semantics": {
+    "path": "docs/fleet-physical/DECIMAL80-061-122-METHOD.md",
+    "bytes": 6663,
+    "sha256": "387c9bd7897ef92ab10c9993565c8e0f5f8b144b3e45e23d60cbd11d3e952c19"
+  },
+  "scopeIDs": [
+    "SH061",
+    "SH122"
+  ],
+  "precisionDigits": 80,
+  "rounding": "ROUND_HALF_EVEN",
+  "sourceInputSemantics": "TOMLparse_float=str; each detailed token directlyDecimal/int->Decimal exactlyonce; no Float64 roundtrip. Fixedsource61scale20/source122metre1/originalaxes+origin; exactparentrole/material/component/hardware semantic equality.",
+  "numericInvariants": "Independent analytic and explicit3barycentricpoint polynomial integration; original-origin mass/3first/9second comparisons withunchanged1e-9*max(1,abs(a),abs(b)); full9parallelaxis/symmetry/SPD; oneDecimalceiling reserveatCOM; no area/source/geometry truthcertificate.",
+  "errorSemantics": "Fixed80 HALF_EVEN noadaptiveprecision. Invalid/div0/overflow/underflow/subnormal/clamp/floatmix trap STOP. Inexact/rounded flagsnormal+recorded. Anyunownedmaterial/index/nonfinite/nonpositivearea orcomponent/identity/tensor/outputboundary failureSTOP, noomit/clamp/adjust.",
+  "outputBridge": "FinalDecimal->Float64 only, allconversionscounted; refuseceiling/reserve/integer-representability/scalar/symmetry/parallelaxis/SPD failure ratherthanaltervalues.",
+  "operationCaps": {
+    "sourceParses": 2,
+    "coordinateConversions": 27840,
+    "scaledCoordinateEvaluations": 27840,
+    "faceIndexChecks": 53616,
+    "faceMaterialChecks": 17872,
+    "triangleAreaEvaluations": 17872,
+    "squareRoots": 17872,
+    "analyticMomentEvaluations": 17872,
+    "quadratureMomentEvaluations": 53616,
+    "momentConsistencyChecks": 2275,
+    "hardwareAllocations": 15,
+    "decimalTensorChecks": 2,
+    "outputFloatConversions": 5374,
+    "floatBridgeChecks": 2,
+    "resultRecords": 2
+  },
+  "maximumRecordBytes": 1048576,
+  "outputDirectory": "calculated-decimal80-061-122-records",
+  "resultFile": "decimal80-061-122-results.json",
+  "executionGuard": "Requires futureauthorityFIRST thatpins reviewedmethod/sourceinput/Rootdisposition beforegeometryread. Noauthorityfile exists for thismethod. Processintegrityguardnotcryptographiccapability.",
+  "executedImportsParsersCompilersTestsSourceGeometryOrNumericalEvaluations": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "nativeOrLoadedMassQualification": false,
+  "oldSuccessfulRecordsAndStoppedResultsUnchanged": true,
+  "reviewRequest": "ONE bounded source-method assessment beforeRootmayauthorizenewexactscope; no evaluation/precisionescalation/unchangedretry whilewaiting. Entirefleet independentcodingcontinues.",
+  "supersedesForFutureReviewOnly": {
+    "path": "docs/fleet-physical/decimal80-061-122-source-method-first.json",
+    "bytes": 3201,
+    "sha256": "8bd1d38a4e9edbd61a50dc9136a0b46f96eedc52daa2104bf19ab25ba573806e"
+  },
+  "publicationCorrectionFirst": {
+    "path": "docs/fleet-physical/decimal80-061-122-publication-correction-first.json",
+    "bytes": 1508,
+    "sha256": "e9468b7f1d35552f3f70584498f9feb8da0c264444e4a10c32bdb6c7b2ae50fa"
+  },
+  "publication": "Exclusive same-directory owned temporary inode; full write+flush+fsync+exact byte readback; atomic hard-link final publication with no overwrite; own inode identity checked before temporary deletion; directory fsync. Never delete final or foreign/preexisting entries. Failure after publication or cleanup uncertainty reports PUBLICATION_FAILED plus final PRESENT/ABSENT/UNKNOWN, never false no-record. Calculation STOPPED_NO_MASS_RECORD requires actual final absence. Summary receipt uses same publisher.",
+  "numericSourceProof": {
+    "bytes": 14632,
+    "sha256": "5eb7e91d1d2d0f9e6ab29b7db8fc4bbdd9318c196c5944b27291e210d747a3a5",
+    "oldAndNewExact": true,
+    "executionGateExact": true
+  }
+}

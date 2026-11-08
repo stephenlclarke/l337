@@ -43,7 +43,7 @@ struct NativeInductionCrewLogSource: Sendable {
   static let hull = "SH029"
   static let model = "asset:induction-original-burro"
   static let recorderModel = "catalogue:SH058"
-  static let recorderGeometry = "5362f0948c8a6f1b2acc770b100f746ff3f55799db7c0c53261f02943c6a680e"
+  static let recorderGeometry = OriginalScriptedMuskox.geometrySHA256
   static let recorderScale = 0.2
   let manifest: NativeInductionCrewLogManifest
   let physical: OriginalHullPhysicalContract
@@ -56,7 +56,7 @@ struct NativeInductionCrewLogSource: Sendable {
       performance.valid
     else { throw SaveError.invalidCommander }
     return shipProfile(
-      physical: try OriginalHullPhysicalContract.burro.get(), performance: performance)
+      physical: try OriginalHullPhysicalContract.okapi.get(), performance: performance)
   }
 
   init(parent: NativeWayfarerInductionState) throws {
@@ -65,7 +65,7 @@ struct NativeInductionCrewLogSource: Sendable {
       performance.valid,
       let recorderDesign = try? Self.authenticatedRecorder.get()
     else { throw SaveError.invalidCommander }
-    let physical = try OriginalHullPhysicalContract.burro.get()
+    let physical = try OriginalHullPhysicalContract.okapi.get()
     manifest = .init(permission: parent.permission)
     self.physical = physical
     ship = Self.shipProfile(physical: physical, performance: performance)
@@ -84,7 +84,7 @@ struct NativeInductionCrewLogSource: Sendable {
     physical: OriginalHullPhysicalContract, performance: ShipPerformance
   ) -> ScriptNPCDefinition {
     .init(
-      id: "induction-cevilis-burro", name: "Cevilis custodian service Burro",
+      id: "induction-cevilis-burro", name: "Cevilis custodian service Okapi",
       source: "Original SH029 specifications " + physical.specificationSHA256,
       basis: physical.unitBasis
         + " Existing native conversion: speed/acceleration x18, fuel x0.1 LY. Distinct tender and marked two-person launch identities. Tender propulsion/weapons are mechanically unavailable; no hull or equipment ownership transfers.",
@@ -121,9 +121,7 @@ struct NativeInductionCrewLogSource: Sendable {
   }
 
   private static let authenticatedRecorder: Result<ShipDesign, any Error> = Result {
-    guard let design = ShipCatalogue.ship("SH058")?.design,
-      ScriptPackLibrary.hash(try ScriptPackLibrary.canonicalGeometry(design)) == recorderGeometry
-    else { throw SaveError.invalidCommander }
+    guard let design = OriginalScriptedMuskox.design else { throw SaveError.invalidCommander }
     return design
   }
 
@@ -139,7 +137,7 @@ struct NativeInductionCrewLogSource: Sendable {
     [
       model: ScriptPackLibrary.hash(
         try ScriptPackLibrary.canonicalGeometry(
-          OriginalHullPhysicalContract.burro.get().model.nativeDesign)),
+          OriginalHullPhysicalContract.okapi.get().model.nativeDesign)),
       recorderModel: recorderGeometry,
     ]
   }

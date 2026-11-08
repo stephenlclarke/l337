@@ -34,8 +34,9 @@ public struct ShowroomLayout: Sendable {
     }
     trade = .init(x: left, y: 132, width: available * 0.68 - 8, height: 32)
     pane = .init(x: trade.maxX + 16, y: 132, width: available - trade.width - 16, height: 32)
+    // Narrow browsing shares the quote column; leave all three quote rows above its heading.
     list = .init(
-      x: 16, y: 222, width: wide ? 240 : width - 32,
+      x: 16, y: wide ? 222 : 238, width: wide ? 240 : width - 32,
       height: wide ? height - 282 : min(160, height * 0.25))
     let modelTop = wide || detail ? 222 : list.maxY + 14
     let modelHeight = wide || detail ? min(240, height * 0.24) : max(80, height - modelTop - 60)
@@ -160,9 +161,7 @@ extension Display {
     if game.showroom.searching { focus = "Search: type / arrows / Return" }
     frame.label(focus, 16, height - 42, scale: font, ink: .yellow)
     if layout.listVisible {
-      frame.label(
-        game.showroom.detail ? "Ships" : "> Ships", layout.list.x, layout.list.y - 18,
-        scale: font, ink: .cyan)
+      showroomListHeading(game, layout: layout, into: &frame)
       showroomList(game, layout: layout, into: &frame)
     }
     if layout.wide || game.showroom.detail {
@@ -208,7 +207,7 @@ extension Display {
     return frame
   }
 
-  private static func showroomTradeAction(
+  static func showroomTradeAction(
     _ game: Game, layout: ShowroomLayout, into frame: inout Frame
   ) {
     let owned = game.showroomShip?.id == game.commander.shipID
@@ -218,6 +217,10 @@ extension Display {
       title = "Currently flying"
     } else if quote != nil {
       title = "Switch ship - review trade"
+    } else if let ship = game.showroomShip, ship.game != nil,
+      OriginalDetailedHullStage.blocksRuntime(ship.id)
+    {
+      title = "Original qualification pending"
     } else {
       title = game.showroomShip == nil ? "Select a ship" : "Display only - cannot fly"
     }
@@ -250,6 +253,17 @@ extension Display {
         String(row.prefix(columns)), bounds.x, bounds.maxY + 8 + Double(index) * 14,
         scale: GameTypography.scale, ink: index == 2 ? ink : .white)
     }
+  }
+
+  static func showroomListHeading(
+    _ game: Game, layout: ShowroomLayout, into frame: inout Frame
+  ) {
+    frame.label(
+      game.showroom.detail ? "Ships" : "> Ships", layout.list.x, layout.list.y - 18,
+      scale: GameTypography.scale, ink: .cyan)
+    frame.label(
+      NativeFleetDiscoveryProgress(commander: game.commander).label,
+      layout.list.x + 64, layout.list.y - 18, scale: GameTypography.scale, ink: .white)
   }
 
   private static func showroomList(_ game: Game, layout: ShowroomLayout, into frame: inout Frame) {
@@ -384,7 +398,10 @@ extension Display {
     let discovery: [String] =
       game.commander.scriptState.savedFleetDiscovery?.readout(for: ship.id)
       ?? ["Collection: unknown; no native encounter recorded"]
-    rows += discovery.flatMap { ShowroomText.wrap($0, width: columns) }.map {
+    let blueprint = game.commander.fleetBlueprintAcquisition(for: ship.id) == nil
+      ? ["Blueprint: requires paid EMP, authorized empty-section cut and recovered sample"]
+      : ["Blueprint: physical sample recovered"]
+    rows += (discovery + (ship.catalogue.purchasePolicy == .blueprintFabrication ? blueprint : [])).flatMap { ShowroomText.wrap($0, width: columns) }.map {
       [ShowroomTextLine(text: $0, x: 0, ink: .cyan)]
     }
     if game.showroom.compare {

@@ -1,0 +1,40 @@
+{
+  "status": "FIRST_FROZEN_SOURCE_ONLY_CURRENT_CATALOGUE_KNOWN_FUEL_BEFORE_MUTATION",
+  "beforeCommit": "9356e021d19f7b2e3f0b3ce0f9a2268344a68c3c",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 35851,
+      "sha256": "02cbaec8f19d756d726caed979ee80921fcfe783d8b85ca243a355f1d6d4e13e"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 33165,
+      "sha256": "13203164926ded1724e00b5e14091607e917e02f6a718946a9f9cefbaee0ecfb"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Sources/L337Core/NativeWayfarerInductionArkCondition.swift",
+      "bytes": 1912,
+      "sha256": "e707cb9c89f9f97b5390ef0a4bca7fd41d2b65f127c41cda5e715f13fcb548ff"
+    },
+    {
+      "path": "Sources/L337Core/NativeWayfarerInductionCrewLogCondition.swift",
+      "bytes": 2813,
+      "sha256": "6698bb70d3425c13ac95987b2b99435665129b318f5579782e73dba418141f8d"
+    },
+    {
+      "path": "Sources/L337Core/NativeWayfarerInductionUtilityPack.swift",
+      "bytes": 4002,
+      "sha256": "4d6efff80c0e44d4ab494019ae172c7a2c7164bb5543df6752e6eebe47e053db"
+    }
+  ],
+  "productionScope": "Only currentCatalogueSourceIsValid: add actual.fuel != nil alongside exact expected fuelCapacity match. Current stock always records performance.fuel; spending/scooping preserve optional value. Do not substitute or refill missing fuel. Existing actual.valid bounds keep zero and all valid spent values. Distinct uncatalogued owners unchanged.",
+  "missionBoundary": "Actual Ark/CrewLog/Utility nil reservoirs belong to role mission and distinct script-owned tank/condition owners. NPCPersistenceSnapshot already refuses role mission. Do not edit those resources, generic NPCResources.valid, stock or mission sources.",
+  "testScope": "One independent method with strict current031 stock/body and actual full/zero fuel positives; missing fuel invalid while generic resource valid, refused snapshot/body capture/ledger update without mutation, and zero spent fuel retained through cold ledger/request/receipt/rebind. Preserve all existing tests/helpers byte-exact; no blocked025 helper or new global fixture.",
+  "boundaries": "No geometry/source readiness/engineering, no provider/station/EMP/MC1/Game shared hunks. UNCOMPILED UNRUN, G1 only executor."
+}

@@ -9,6 +9,16 @@ extension Display {
     let extraFooter = Double(layout.detailLineCount - 3) * layout.row
     let right = layout.left + layout.contentWidth
     frame.label("EQUIP SHIP", layout.left, 12, scale: layout.font, ink: .yellow)
+    let crew = layout.crewBounds
+    let crewInk: Ink = game.equipmentCrewSelected ? .cyan : .blue
+    frame.stroke(crew.x, crew.y, crew.maxX, crew.y, crewInk)
+    frame.stroke(crew.maxX, crew.y, crew.maxX, crew.maxY, crewInk)
+    frame.stroke(crew.maxX, crew.maxY, crew.x, crew.maxY, crewInk)
+    frame.stroke(crew.x, crew.maxY, crew.x, crew.y, crewInk)
+    let required = NativeCrewService.adoptedAccommodation(game.commander.shipID)?.operatingCrew
+    let crewLabel = "CREW \(game.commander.assignedNativeCrew.count + 1)/"
+      + (required.map(String.init) ?? (game.commander.shipID == "SH025" ? "1" : "?"))
+    frame.label(crewLabel, crew.x + 6, crew.y + 5, scale: layout.font, ink: .cyan)
     func rightLabel(_ text: String, y: Double, ink: Ink) -> BitmapLabel {
       .init(
         text: text, x: right - Double(text.count) * 6 * layout.font, y: y, scale: layout.font,
@@ -27,7 +37,8 @@ extension Display {
       return requirement
     }
     for cell in layout.mounts {
-      let selected = !game.equipmentWorkTool && cell.mount == game.equipmentMount
+      let selected = !game.equipmentCrewSelected && !game.equipmentWorkTool
+        && cell.mount == game.equipmentMount
       let bounds = cell.bounds
       let ink: Ink = selected ? .cyan : .blue
       frame.stroke(bounds.x, bounds.y, bounds.maxX, bounds.y, ink)
@@ -43,7 +54,7 @@ extension Display {
         ink: selected ? .cyan : .white)
     }
     if let bounds = layout.workToolBounds {
-      let ink: Ink = game.equipmentWorkTool ? .cyan : .blue
+      let ink: Ink = game.equipmentWorkTool && !game.equipmentCrewSelected ? .cyan : .blue
       frame.stroke(bounds.x, bounds.y, bounds.maxX, bounds.y, ink)
       frame.stroke(bounds.maxX, bounds.y, bounds.maxX, bounds.maxY, ink)
       frame.stroke(bounds.maxX, bounds.maxY, bounds.x, bounds.maxY, ink)
@@ -53,7 +64,8 @@ extension Display {
         game.commander.fittedMiningWorkTool == nil ? "Empty" : "Mining Laser",
         bounds.x + 8, bounds.y + 24, scale: layout.font, ink: .white)
     }
-    let buyingFor = game.equipmentWorkTool ? "Mining work tool" : game.equipmentMount.label
+    let buyingFor = game.equipmentCrewSelected ? "Crew service"
+      : game.equipmentWorkTool ? "Mining work tool" : game.equipmentMount.label
     func ownership(_ item: Equipment) -> (fitted: Bool, held: Bool) {
       if let grade = PassengerCabinGrade.equipment(item.name) {
         return (
@@ -109,7 +121,7 @@ extension Display {
         let requirement = game.equipmentPurchaseRequirement(item)
         let available = requirement == nil
         frame.label(
-          index == game.selection ? ">" : "", layout.left + 14, y, scale: layout.font, ink: .cyan)
+          !game.equipmentCrewSelected && index == game.selection ? ">" : "", layout.left + 14, y, scale: layout.font, ink: .cyan)
         frame.label(
           equipmentName(item), layout.left + 32, y, scale: layout.font,
           ink: available || fitted ? .white : .red)
@@ -144,7 +156,16 @@ extension Display {
         game.message, layout.left, cockpit.dashboardTop - 82 - extraFooter, scale: layout.font,
         ink: .orange)
     }
-    if Equipment.all.indices.contains(game.selection) {
+    if game.equipmentCrewSelected {
+      let description = game.nativeCrewDetailSummary.joined(separator: " ")
+        + " Return: review Crew. Down: equipment."
+      let lines = MissionNotice.wrap(description, width: Int(layout.contentWidth / (6 * layout.font)))
+      for (index, line) in lines.prefix(layout.detailLineCount).enumerated() {
+        frame.label(
+          line, layout.left, cockpit.dashboardTop - 62 - extraFooter + Double(index) * layout.row,
+          scale: layout.font, ink: .cyan)
+      }
+    } else if Equipment.all.indices.contains(game.selection) {
       let item = Equipment.all[game.selection]
       var description = equipmentName(item) + ": "
       let owned = ownership(item)
@@ -193,13 +214,18 @@ extension Display {
         }
         moduleLines = EquipmentModuleReadout.lines(node: node, fitted: fitted)
       }
+      if let manage = game.empModuleManagementBounds(width: width, height: height) {
+        frame.label("Manage EMP", manage.x, manage.y, scale: layout.font, ink: .yellow)
+      }
+      let detailOffset = game.empModuleManagementAvailable ? 1 : 0
       let lines =
         moduleLines.flatMap {
           MissionNotice.wrap($0, width: Int(layout.contentWidth / (6 * layout.font)))
         } + MissionNotice.wrap(description, width: Int(layout.contentWidth / (6 * layout.font)))
-      for (index, line) in lines.prefix(layout.detailLineCount).enumerated() {
+      for (index, line) in lines.prefix(max(0, layout.detailLineCount - detailOffset)).enumerated() {
         frame.label(
-          line, layout.left, cockpit.dashboardTop - 62 - extraFooter + Double(index) * layout.row,
+          line, layout.left, cockpit.dashboardTop - 62 - extraFooter
+            + Double(index + detailOffset) * layout.row,
           scale: layout.font,
           ink: .cyan)
       }
@@ -213,6 +239,7 @@ public struct EquipmentLayout: Sendable {
   public let left: Double
   public let listTop: Double
   public let buyingTop: Double
+  public let crewBounds: CanvasRect
   public let workToolBounds: CanvasRect?
   public let mounts: [(mount: LaserMount, bounds: CanvasRect)]
   public let font: Double
@@ -237,6 +264,7 @@ public struct EquipmentLayout: Sendable {
       )
     }
     let combatBottom = mounts.last!.bounds.maxY
+    crewBounds = CanvasRect(x: left + contentWidth - 180, y: 6, width: 180, height: 25)
     workToolBounds =
       game.commander.nativePerformance.workTools?.contains(.miningLaser) == true
       ? CanvasRect(x: left, y: combatBottom + 8, width: contentWidth - 8, height: 44) : nil
@@ -276,12 +304,18 @@ extension Game {
     guard screen == .equipment else { return }
     let layout = EquipmentLayout(game: self, width: viewportWidth, height: viewportHeight)
     if let x {
+      if layout.crewBounds.contains(.init(x, y)) {
+        equipmentCrewSelected = true
+        return
+      }
       if let cell = layout.mounts.first(where: { $0.bounds.contains(.init(x, y)) }) {
+        equipmentCrewSelected = false
         equipmentMount = cell.mount
         equipmentWorkTool = false
         return
       }
       if layout.workToolBounds?.contains(.init(x, y)) == true {
+        equipmentCrewSelected = false
         equipmentWorkTool = true
         return
       }
@@ -293,6 +327,7 @@ extension Game {
     if row < layout.count, EquipmentGroups.rows.indices.contains(visual),
       case .item(let index) = EquipmentGroups.rows[visual]
     {
+      equipmentCrewSelected = false
       selection = index
     }
   }

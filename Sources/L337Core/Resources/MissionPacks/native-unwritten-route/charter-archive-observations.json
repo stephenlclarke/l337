@@ -1,0 +1,410 @@
+{
+  "contentScope": "fictional-public-model-only",
+  "publication": "published-source",
+  "schema": "l337.c01.charter-archive-content/2",
+  "sourceGroups": {
+    "l337.glass-meridian": {
+      "challengeArchiveRoles": [
+        {
+          "challengeOrdinal": 0,
+          "contentRevision": "c01-archive-role-correspondence-v1",
+          "modelInput": {
+            "jsonPointer": "/profiles/l337.glass-meridian/continuityCalibration/parameters/phaseOffsetsDegrees/0",
+            "offsetDegrees": 0,
+            "profileSchema": "l337.c01.continuity-calibration-content/1",
+            "resourcePath": "Sources/L337Core/Resources/MissionPacks/native-unwritten-route/recovery-policy.json",
+            "resourceSHA256": "35fe099defefccbd7d5c917e156e36de95240079536325c88c4f56468c98ea04"
+          },
+          "origin": {
+            "domain": "traffic-publication",
+            "identity": "proposed-avenor-lane-notice-custodian"
+          },
+          "originalFactIDs": [
+            "lane-report"
+          ],
+          "recordID": "l337.glass-meridian/archive/traffic-notice",
+          "recordPayloadSHA256": "65e420e62faecda10489da8dfb293742b60a317847b381eef21456d9af4062bc",
+          "replicaID": "charter-replica-traffic",
+          "sourceID": "l337.glass-meridian",
+          "sourceSetBinding": {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "path": "docs/meridian/missions/definitions/unwritten-route.json",
+            "selector": "requiredSources/requiredClueIDs; existing exact64Core mapping",
+            "sha256": "462d3446973aa45a7b31cf414931a3fed99a969f03f4919f4715e669e0b8176d"
+          }
+        },
+        {
+          "challengeOrdinal": 1,
+          "contentRevision": "c01-archive-role-correspondence-v1",
+          "modelInput": {
+            "jsonPointer": "/profiles/l337.glass-meridian/continuityCalibration/parameters/phaseOffsetsDegrees/1",
+            "offsetDegrees": 45,
+            "profileSchema": "l337.c01.continuity-calibration-content/1",
+            "resourcePath": "Sources/L337Core/Resources/MissionPacks/native-unwritten-route/recovery-policy.json",
+            "resourceSHA256": "35fe099defefccbd7d5c917e156e36de95240079536325c88c4f56468c98ea04"
+          },
+          "origin": {
+            "domain": "clock-certification",
+            "identity": "proposed-certified-lane-clock-custodian"
+          },
+          "originalFactIDs": [
+            "clock-disagreement"
+          ],
+          "recordID": "l337.glass-meridian/archive/clock-notice",
+          "recordPayloadSHA256": "c104ba048e4534998b3a41dcba2e1a31e9dd4ba39a57f54200eac9524b7bc8e0",
+          "replicaID": "charter-replica-certification",
+          "sourceID": "l337.glass-meridian",
+          "sourceSetBinding": {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "path": "docs/meridian/missions/definitions/unwritten-route.json",
+            "selector": "requiredSources/requiredClueIDs; existing exact64Core mapping",
+            "sha256": "462d3446973aa45a7b31cf414931a3fed99a969f03f4919f4715e669e0b8176d"
+          }
+        },
+        {
+          "challengeOrdinal": 2,
+          "contentRevision": "c01-archive-role-correspondence-v1",
+          "modelInput": {
+            "jsonPointer": "/profiles/l337.glass-meridian/continuityCalibration/parameters/phaseOffsetsDegrees/2",
+            "offsetDegrees": 90,
+            "profileSchema": "l337.c01.continuity-calibration-content/1",
+            "resourcePath": "Sources/L337Core/Resources/MissionPacks/native-unwritten-route/recovery-policy.json",
+            "resourceSHA256": "35fe099defefccbd7d5c917e156e36de95240079536325c88c4f56468c98ea04"
+          },
+          "origin": {
+            "domain": "independent-reference",
+            "identity": "proposed-independent-meridian-reference-custodian"
+          },
+          "originalFactIDs": [
+            "hidden-trace"
+          ],
+          "recordID": "l337.glass-meridian/archive/trace-reference",
+          "recordPayloadSHA256": "138dbdc2e2c7aa35996fba42d11942a0f69ac13970f94863352bf3cddabf2b9f",
+          "replicaID": "charter-replica-reference",
+          "sourceID": "l337.glass-meridian",
+          "sourceSetBinding": {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "path": "docs/meridian/missions/definitions/unwritten-route.json",
+            "selector": "requiredSources/requiredClueIDs; existing exact64Core mapping",
+            "sha256": "462d3446973aa45a7b31cf414931a3fed99a969f03f4919f4715e669e0b8176d"
+          }
+        }
+      ],
+      "declarations": [
+        {
+          "authoringClass": "PROSPECTIVE_NEW_FICTIONAL_SOURCE_DECLARATION",
+          "hiddenTraceReference": {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "contentSHA256": "4112a5d32e27361859fc2f1bfec418b9a197397af3cfc8363767207f01365f8b",
+            "fileSHA256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572",
+            "jsonPointer": "/completionClue/journalText",
+            "path": "docs/meridian/missions/definitions/glass-meridian.json",
+            "visibleBeforeActualClueReceipt": false
+          },
+          "inputBasis": "A public lane-safety reporting origin, independent of the clock certificate and reference trace. This independence/consent is NEW proposed source authorship, not proved by a different ID.",
+          "nonPrivateScope": "non-private source trace and calibration use only; no crew/recorder/personal case data",
+          "origin": {
+            "domain": "traffic-publication",
+            "identity": "proposed-avenor-lane-notice-custodian"
+          },
+          "originalFacts": [
+            {
+              "characterSpanHalfOpen": [
+                0,
+                89
+              ],
+              "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+              "factID": "lane-report",
+              "fileSHA256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572",
+              "fragment": "Avenor has recorded three near-collisions on a supposedly certified medical freight lane.",
+              "fragmentUTF8SHA256": "9f90fe9d1aedbd0c325cb14d9f8835b0e482aefb71c370510f0f83fbdeab8a9d",
+              "jsonPointer": "/story",
+              "path": "docs/meridian/missions/definitions/glass-meridian.json",
+              "supports": "Original narrative/content fact only; not an existing independently signed archive observation."
+            }
+          ],
+          "proposedStatement": "PROPOSED new source history: an Avenor charter traffic custodian preserved a non-private lane-safety notice describing the three certified-lane near-collisions before the base investigation offer.",
+          "recordID": "l337.glass-meridian/archive/traffic-notice",
+          "relativeChronology": {
+            "kind": "source-relative-narrative-order",
+            "order": 1,
+            "originStatus": "NEW_PROPOSED_CHRONOLOGY_NOT_PHYSICAL_TIME",
+            "relation": "BEFORE_FIRST_SOURCE_OFFER"
+          },
+          "replicaID": "charter-replica-traffic",
+          "subjectWorld": {
+            "galaxy": 0,
+            "locationKey": "G01-S007",
+            "originalStageSelector": "/stages[id=accept]",
+            "system": 7
+          }
+        },
+        {
+          "authoringClass": "PROSPECTIVE_NEW_FICTIONAL_SOURCE_DECLARATION",
+          "hiddenTraceReference": {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "contentSHA256": "4112a5d32e27361859fc2f1bfec418b9a197397af3cfc8363767207f01365f8b",
+            "fileSHA256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572",
+            "jsonPointer": "/completionClue/journalText",
+            "path": "docs/meridian/missions/definitions/glass-meridian.json",
+            "visibleBeforeActualClueReceipt": false
+          },
+          "inputBasis": "A separately attested certification origin, not a copy of the traffic notice or a native player clock reading. Source author must actually approve the independent authority and consent.",
+          "nonPrivateScope": "non-private source trace and calibration use only; no crew/recorder/personal case data",
+          "origin": {
+            "domain": "clock-certification",
+            "identity": "proposed-certified-lane-clock-custodian"
+          },
+          "originalFacts": [
+            {
+              "characterSpanHalfOpen": [
+                90,
+                156
+              ],
+              "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+              "factID": "clock-disagreement",
+              "fileSHA256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572",
+              "fragment": "Its navigation buoys agree about position but disagree about time.",
+              "fragmentUTF8SHA256": "1e4a81f17ab56a0eda35f4dc164cd265973e44d83d40aafc67c8f83f08c3447d",
+              "jsonPointer": "/story",
+              "path": "docs/meridian/missions/definitions/glass-meridian.json",
+              "supports": "Original narrative/content fact only; not an existing independently signed archive observation."
+            }
+          ],
+          "proposedStatement": "PROPOSED new source history: a separate clock-certification custodian preserved a non-private notice that the lane buoys agree on position and disagree on time; it includes no player scan or private recorder contents.",
+          "recordID": "l337.glass-meridian/archive/clock-notice",
+          "relativeChronology": {
+            "kind": "source-relative-narrative-order",
+            "order": 2,
+            "originStatus": "NEW_PROPOSED_CHRONOLOGY_NOT_PHYSICAL_TIME",
+            "relation": "BEFORE_FIRST_SOURCE_OFFER"
+          },
+          "replicaID": "charter-replica-certification",
+          "subjectWorld": {
+            "galaxy": 0,
+            "locationKey": "G01-S185",
+            "originalStageSelector": "/stages[id=compare-clocks]",
+            "system": 185
+          }
+        },
+        {
+          "authoringClass": "PROSPECTIVE_NEW_FICTIONAL_SOURCE_DECLARATION",
+          "hiddenTraceReference": {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "contentSHA256": "4112a5d32e27361859fc2f1bfec418b9a197397af3cfc8363767207f01365f8b",
+            "fileSHA256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572",
+            "jsonPointer": "/completionClue/journalText",
+            "path": "docs/meridian/missions/definitions/glass-meridian.json",
+            "visibleBeforeActualClueReceipt": false
+          },
+          "inputBasis": "A NEW independent reference observation is required; the completion clue proves the underlying authored trace, not an existing historical measurement by this proposed archive. Root/source owner must approve this added corroboration before publication.",
+          "nonPrivateScope": "non-private source trace and calibration use only; no crew/recorder/personal case data",
+          "origin": {
+            "domain": "independent-reference",
+            "identity": "proposed-independent-meridian-reference-custodian"
+          },
+          "originalFacts": [
+            {
+              "characterSpanHalfOpen": [
+                0,
+                147
+              ],
+              "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+              "factID": "hidden-trace",
+              "fileSHA256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572",
+              "fragment": "The recovered timing standard contains an interval that none of the lane clocks measured. Inside that interval, a curved trace repeats eight times.",
+              "fragmentUTF8SHA256": "4112a5d32e27361859fc2f1bfec418b9a197397af3cfc8363767207f01365f8b",
+              "jsonPointer": "/completionClue/journalText",
+              "path": "docs/meridian/missions/definitions/glass-meridian.json",
+              "supports": "Original narrative/content fact only; not an existing independently signed archive observation."
+            }
+          ],
+          "proposedStatement": "PROPOSED new source history: an independent charter reference custodian preserved a non-private qualitative corroboration of the missing interval and its eightfold curved trace before the offer. This does not claim that the lost recorder was recovered or that any player measured the reference.",
+          "recordID": "l337.glass-meridian/archive/trace-reference",
+          "relativeChronology": {
+            "kind": "source-relative-narrative-order",
+            "order": 3,
+            "originStatus": "NEW_PROPOSED_CHRONOLOGY_NOT_PHYSICAL_TIME",
+            "relation": "BEFORE_FIRST_SOURCE_OFFER"
+          },
+          "replicaID": "charter-replica-reference",
+          "subjectWorld": {
+            "galaxy": 0,
+            "locationKey": "G01-S162",
+            "originalStageSelector": "/stages[id=recover-standard]",
+            "system": 162
+          }
+        }
+      ],
+      "institutionalServiceSource": {
+        "activationLaw": "root-confirmed-first-request-two-subjects-two-duties-first-case-one-root-same-writer-v1",
+        "availabilityLifecycleRule": "actual-operational-host-and-committed-available-subject-standing-assignment-no-rebirth-v1",
+        "challengeArchiveRolesReference": {
+          "identity": "l337.glass-meridian/challenge-archive-roles",
+          "revision": "c01-archive-role-correspondence-v1",
+          "sha256": "84592c54fa604c2fca68dd5b51ead0ceeac223751ce47e8a0a8c1428df6c237c"
+        },
+        "definitionID": "l337.glass-meridian/institutional-charter-service",
+        "definitionRevision": "c01-institutional-service-v1",
+        "definitionSHA256": "4b68fef89c5568ee634bf66080fbe001adfae1f49489e46d4cd824bb3e8b50a0",
+        "hostPolicy": "every-operational-main-station",
+        "initialDutyMapping": [
+          {
+            "roleKey": "intake",
+            "subjectDefinitionKey": "l337.glass-meridian/charter-subject/0"
+          },
+          {
+            "roleKey": "independent-review",
+            "subjectDefinitionKey": "l337.glass-meridian/charter-subject/1"
+          }
+        ],
+        "provenance": [
+          {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "fileSHA256": "d9c50d192297e824dcd01796ba17c2c6f33b887ec9c2c9e52585e104c5d65e5b",
+            "fragmentBytes": 772,
+            "fragmentSHA256": "c9ef801c80c3a37cfcc0070eb9ffb62756b7e2b26c4b05bcce4b60cad287e55a",
+            "jsonPointer": "/continuityInquiry/service",
+            "path": "docs/meridian/missions/gameplay/recovery-policy.json"
+          },
+          {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "fileSHA256": "d9c50d192297e824dcd01796ba17c2c6f33b887ec9c2c9e52585e104c5d65e5b",
+            "fragmentBytes": 386,
+            "fragmentSHA256": "0908761f3aa64f58bcfa2ee967807cf5dc9d3363e2e1d3fd99a2c2f4a865227d",
+            "jsonPointer": "/continuityInquiry/costPolicy",
+            "path": "docs/meridian/missions/gameplay/recovery-policy.json"
+          },
+          {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "fileSHA256": "d9c50d192297e824dcd01796ba17c2c6f33b887ec9c2c9e52585e104c5d65e5b",
+            "fragmentBytes": 334,
+            "fragmentSHA256": "5f94a39866758929ca78fcd179d6f392f3272946df6eb25f5dfe7bab6bc99d95",
+            "jsonPointer": "/continuityInquiry/entry",
+            "path": "docs/meridian/missions/gameplay/recovery-policy.json"
+          },
+          {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "fileSHA256": "d9c50d192297e824dcd01796ba17c2c6f33b887ec9c2c9e52585e104c5d65e5b",
+            "fragmentBytes": 842,
+            "fragmentSHA256": "bf125f8e755d745d03d692a698cd7d41ec1916a31927609fe018290314aab717",
+            "jsonPointer": "/continuityInquiry/stages/0",
+            "path": "docs/meridian/missions/gameplay/recovery-policy.json"
+          },
+          {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "fileSHA256": "d9c50d192297e824dcd01796ba17c2c6f33b887ec9c2c9e52585e104c5d65e5b",
+            "fragmentBytes": 957,
+            "fragmentSHA256": "d57a5b745aee2a3603dc8cb7cc1cad0aa8a88a46b5eb0757c62638b13630f6ea",
+            "jsonPointer": "/continuityInquiry/stages/3",
+            "path": "docs/meridian/missions/gameplay/recovery-policy.json"
+          }
+        ],
+        "scopeRule": "standing-public-duty-zero-commander-resources-no-original-success-sh141-and-tender-separate-v1",
+        "sourceBinding": {
+          "clueID": "meridian-offset",
+          "clueReceipt": "l337.unwritten-route/clue/meridian-offset",
+          "originalDefinition": {
+            "bytes": 32509,
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "path": "docs/meridian/missions/definitions/glass-meridian.json",
+            "sha256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572"
+          },
+          "recoveryProfileSelector": {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "jsonPointer": "/profiles/l337.glass-meridian",
+            "path": "docs/meridian/missions/gameplay/recovery-policy.json",
+            "sha256": "d9c50d192297e824dcd01796ba17c2c6f33b887ec9c2c9e52585e104c5d65e5b"
+          },
+          "sourceID": "l337.glass-meridian",
+          "sourceSetBinding": {
+            "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+            "path": "docs/meridian/missions/definitions/unwritten-route.json",
+            "selector": "requiredSources/requiredClueIDs; existing exact64Core mapping",
+            "sha256": "462d3446973aa45a7b31cf414931a3fed99a969f03f4919f4715e669e0b8176d"
+          }
+        },
+        "staffingPolicyReference": {
+          "identity": "l337.glass-meridian/service-staffing",
+          "revision": "c01-charter-staffing-v1",
+          "sha256": "712d73b41c7075050bcb39d785894fb384544943704058b03844098745789db6"
+        },
+        "subjectDefinitions": [
+          {
+            "definitionKey": "l337.glass-meridian/charter-subject/0",
+            "ordinal": 0
+          },
+          {
+            "definitionKey": "l337.glass-meridian/charter-subject/1",
+            "ordinal": 1
+          }
+        ]
+      },
+      "serviceStaffingPolicy": {
+        "institutionalDefinitionID": "l337.glass-meridian/institutional-charter-service",
+        "institutionalDefinitionRevision": "c01-institutional-service-v1",
+        "policyID": "l337.glass-meridian/service-staffing",
+        "policyRevision": "c01-charter-staffing-v1",
+        "policySHA256": "712d73b41c7075050bcb39d785894fb384544943704058b03844098745789db6",
+        "requiredAssignmentProof": "Actual operator subject reference and native service assignment activation/lifecycle proof for each role; two distinct actual subjects, not just role/assignment UUIDs. Content policy is not such a proof.",
+        "reviewInputBasis": "Independent native access to approved archive origins/model-channel correspondence plus all actual measured/bench outputs; no acceptance from intake summary alone.",
+        "roles": [
+          {
+            "allowedInputs": [
+              "approved C01 source/profile/content/corpus pins",
+              "actual current living station arrival and available native staffing assignment",
+              "canonical case request and original outcome reference"
+            ],
+            "function": "Actual service opens this C01 inquiry/mandate and binds three case challenges.",
+            "outputBasis": "Administrative mandate/challenge bindings only; no measurement/bench/audit verdict or clue.",
+            "prohibitedBasis": [
+              "claimed original mission success or private staff consent",
+              "stored or caller-supplied passed flag",
+              "approval of its own final audit"
+            ],
+            "roleKey": "intake"
+          },
+          {
+            "allowedInputs": [
+              "its own current source-approved native staffing assignment and real arrival/receiving action",
+              "all three actual case measurement receipts and actual passing bench output observations",
+              "direct approved archive-origin/model-channel references for at least two independently corroborated origins",
+              "actual original outcome/loss references as reference facts"
+            ],
+            "function": "A different actual authorized operator receives and independently checks the measured C01 case.",
+            "outputBasis": "Native verified audit receipt with exact case/assignment/measurement/bench/archive correspondence, never a restatement of intake approval.",
+            "prohibitedBasis": [
+              "intake mandate or control settings alone",
+              "renamed copy of an intake result",
+              "roleID/UUID inequality treated as independent input or a real receiving action"
+            ],
+            "roleKey": "independent-review"
+          }
+        ]
+      },
+      "sourceBinding": {
+        "clueID": "meridian-offset",
+        "clueReceipt": "l337.unwritten-route/clue/meridian-offset",
+        "originalDefinition": {
+          "bytes": 32509,
+          "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+          "path": "docs/meridian/missions/definitions/glass-meridian.json",
+          "sha256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572"
+        },
+        "recoveryProfileSelector": {
+          "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+          "jsonPointer": "/profiles/l337.glass-meridian",
+          "path": "docs/meridian/missions/gameplay/recovery-policy.json",
+          "sha256": "d9c50d192297e824dcd01796ba17c2c6f33b887ec9c2c9e52585e104c5d65e5b"
+        },
+        "sourceID": "l337.glass-meridian",
+        "sourceSetBinding": {
+          "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+          "path": "docs/meridian/missions/definitions/unwritten-route.json",
+          "selector": "requiredSources/requiredClueIDs; existing exact64Core mapping",
+          "sha256": "462d3446973aa45a7b31cf414931a3fed99a969f03f4919f4715e669e0b8176d"
+        }
+      }
+    }
+  }
+}

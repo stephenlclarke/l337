@@ -1,0 +1,115 @@
+{
+  "status": "FROZEN_ACTUAL_PAID_EMP_SETUP_SOURCE_PLAN_AWAITING_ROOT_NARROW_BOUNDARY_RESERVATION_NO_EDITS",
+  "beforeCommit": "b725c3dfe1e94a58bc6d49c4ca4c2225e8102220",
+  "sourcePins": [
+    {
+      "path": "Sources/L337Core/NativePeopleGallery.swift",
+      "bytes": 8764,
+      "sha256": "0caf6a6e5eb47ce2df83b3944bfeb6fcf278f75e0cb839a4adb435e16fd38f01"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeopleGalleryTests.swift",
+      "bytes": 14008,
+      "sha256": "c2199a869ea0773fbf475873adb7f0bbbf329c1fafc18c84981818d5dd85aedd"
+    },
+    {
+      "path": "Sources/L337Core/EMPModulePurchases.swift",
+      "bytes": 7139,
+      "sha256": "0b486d4a382cd834e322a472be6a5df9cde2bc44108760b0f8b1bace21ca9ea5"
+    },
+    {
+      "path": "Sources/L337Core/EMPModuleGrades.swift",
+      "bytes": 8620,
+      "sha256": "11e19ac590798228b0aaaa2a841861ad3b4303ae95db9addbc019f4d483f51fc"
+    },
+    {
+      "path": "Sources/L337Core/EMPPulseProfile.swift",
+      "bytes": 2922,
+      "sha256": "a311398486e968b1289a611ea5951d44b9452fb9843f8771224b5be4b92b36a2"
+    },
+    {
+      "path": "Sources/L337Core/EquipmentTransactions.swift",
+      "bytes": 15828,
+      "sha256": "9faeac3f76d897ae94dfaf2fd2b61d073b5386bcddaf8d48c68b9df53de41c18"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationServices.swift",
+      "bytes": 10858,
+      "sha256": "e74815c9dca25f05da4a8d9f5664c3492760b365c8f8b51cb6408a77acbe3559"
+    },
+    {
+      "path": "Sources/L337Core/Plugh.swift",
+      "bytes": 4508,
+      "sha256": "2c43ae0738fa93375eb51a4859e11bc33e7bf9e7496ff432f140e813baa6b8eb"
+    },
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 179800,
+      "sha256": "1645bba55a4069c4e899d73215246011aef59cf4913bd66b0d1b5e428783cdf5"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalBisonAcquisitionRuntimeTests.swift",
+      "bytes": 43470,
+      "sha256": "06fd66bf1c1dff956afb12ca02af080ac5cb0ff00c464a183bd957d4fb1f311e"
+    },
+    {
+      "path": "Sources/L337Core/Resources/OriginalWorlds/catalogue.json",
+      "bytes": 1660913,
+      "sha256": "120543eedc02a705cce0e37d026125bf926ec22651cff9337ca5d943f2ffd99d"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+      "bytes": 283481,
+      "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+    }
+  ],
+  "proposedEditablePaths": [
+    "Sources/L337Core/NativePeopleGallery.swift",
+    "Tests/L337CoreTests/NativePeopleGalleryTests.swift",
+    "Sources/L337Core/EMPModulePurchases.swift"
+  ],
+  "actualFundsAndShopPrerequisites": {
+    "unchangedExistingTrialCredits": 100000,
+    "selectedOriginalAnarchy": {
+      "key": "G01-S010",
+      "name": "Avmar",
+      "system": 10,
+      "galaxy": 0,
+      "governmentID": 0,
+      "technology": 12
+    },
+    "offers": [
+      {
+        "name": "EMP Pirate Blaster",
+        "cataloguePrice": 30000,
+        "requiredTechnology": 9
+      },
+      {
+        "axis": "power",
+        "next": 1,
+        "cataloguePrice": 30000,
+        "requiredTechnology": 10
+      },
+      {
+        "axis": "recharge",
+        "next": 1,
+        "cataloguePrice": 15000,
+        "requiredTechnology": 10
+      }
+    ],
+    "affordability": "30000+30000+15000 <= unchanged100000. No discount, paid equipment/cash grant, raw grade edit or fake receipt. Actual service/provider/current-state availability must be checked by existing APIs and refuse if absent; source metadata is not a shop execution proof."
+  },
+  "hardwareRelation": "Energy grade3 remains existing actual controlled Elite Energy Unit. Power paidgrade1 uses existing powerMultipliers[1]=2: 32*(1+0.5*3)*2 > (6.4+2*1.7)*(ceil(10/0.1)*0.1+ceil(1.5/0.1)*0.1+4*0.1). Existing positive-depletion guard retained, not weakened. Paid rechargegrade1 uses existing0.8 versus base0.4 to replenish actual8-unit pulse bank during warmup/cooldown; capacity staysgrade0/8. This is literal source algebra, no numeric experiment/run or claim full timing acceptance.",
+  "exactIntendedDelta": {
+    "Gallery": "Remove only EMP entry from controlled grant list, preserve other grants/credits/fuel/seed. After existing mirror, before launch/source birth, call one narrowly scoped actual-paid setup hook. Existing current025/005/outbound and five positions unchanged.",
+    "EMPModulePurchases": "Add one internal synchronous Game helper in same file as existing fileprivate applyEMPModulePurchase. Guard isolated NativePeopleGallery digest/current025/docked/prelaunch physicalTime0/station service/current validity/no existing EMP. Work on local Game candidate only, preserving activeowner/hull. Through existing quoteEquipmentPurchase/applyEquipmentPurchase buy actual base with real invoice/debit; then exact axes[power,recharge], nextgrade1 only, existing empModulePurchaseContext plus same fileprivate applyEMPModulePurchase. No visibility change to general mutation, no rawgrade/history/bank assignment. Commit candidate back only after all successful guards, restore prior screen/selection. No live actor/files mutate during factory candidate construction; final namespace/durability remains existing Gallery owner.",
+    "Test": "Replace only obsolete power80 assertion with actual paidgrade1 profile power160 plus matching real base-paid history and two grade1 paid receipts/owner/module/debit. Assert capacity0 and recharge1; all original module energygrade3, full source stock, seed0/capture5/EMP-derived budget/cutter/livefile/restart oracles unchanged. Add no timing/cap increase or seed search."
+  },
+  "transactionBoundary": "Earned005 fixture uses GameRuntime.purchaseEMPModuleUpgrade durability; factory is synchronous unpublished isolated Game. Proposed narrow helper reuses exact same existing context and mutation code, without exposing that fileprivate mutation or fabricating actor persistence. Root must reserve this single new helper in EMPModulePurchases.swift before editing that third path.",
+  "preserve": "Existing starting funds and other controlled grants, current source/player/people, stock regen/health/law, capture5,30s recovery, EMPBudget/cutter loops and source criteria; any actual prerequisite failure remains refusal not workaround. All source/test authored UNCOMPILEDUNRUN; no actual paid UI/earned journey/game acceptance claim.",
+  "executions": {
+    "nativeCompilerTests": 0,
+    "numericExperiment": 0,
+    "geometryQueries": 0
+  }
+}
