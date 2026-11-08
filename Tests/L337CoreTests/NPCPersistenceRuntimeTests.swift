@@ -5,6 +5,7 @@ import Testing
 
 private func persistedNPCGame() throws -> Game {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   try NativeSaveTestFixture.prepareCurrentPolicy(&game)
   game.docked = false
   game.screen = .front

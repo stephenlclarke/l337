@@ -10,7 +10,7 @@ public indirect enum OriginalFleetValue: Sendable, Equatable {
   case object([String: OriginalFleetValue])
 }
 
-/// Staged definition input for later single-catalogue integration, not a live ship resolver.
+/// Current R3 source definition; source presence is not a native qualification or purchase grant.
 public struct OriginalFleetDefinition: Sendable {
   public let id: String
   public let name: String
@@ -25,7 +25,8 @@ public struct OriginalFleetDefinition: Sendable {
   public let approvedMeshAvailable: Bool
   public let integrationBlockers: [String]
   public var runtimeReady: Bool {
-    OriginalBesraActivation.supports(self)
+    if id == "SH007" { return false }
+    return OriginalBesraActivation.supports(self)
       || OriginalRedtailMkIIIActivation.supports(self)
       || OriginalStagLinerActivation.supports(self)
       || OriginalPantherFamilyActivation.supports(self)
@@ -33,20 +34,13 @@ public struct OriginalFleetDefinition: Sendable {
       || OriginalSparrowhawkActivation.supports(self)
       || OriginalIbexActivation.supports(self)
       || OriginalGazelleExplorerActivation.supports(self)
-      || OriginalDonkeyActivation.supports(self)
+      || OriginalOnagerActivation.supports(self)
       || OriginalSableLinerActivation.supports(self)
       || OriginalImpalaVoyagerActivation.supports(self)
       || OriginalGyrfalconFamilyActivation.supports(self)
       || OriginalGyrfalconAssaultActivation.supports(self)
-      || OriginalBurroActivation.supports(self) || OriginalHaflingerActivation.supports(self)
+      || OriginalOkapiActivation.supports(self) || OriginalSaigaActivation.supports(self)
   }
-}
-
-extension OriginalFleetDefinitionData {
-  private static let byID = Dictionary(uniqueKeysWithValues: staged.map { ($0.id, $0) })
-
-  /// Exact authored identities only; no predecessor-name or loosely formatted ID fallback.
-  public static func definition(for id: String) -> OriginalFleetDefinition? { byID[id] }
 }
 
 extension OriginalFleetValue {
@@ -111,7 +105,7 @@ extension OriginalFleetDefinition {
       id: id + "/original-authored", title: "Original source: " + name,
       group: Self.sourceProfileGroup,
       context:
-        "Authored source values; current game fittings and hull activation are separate. Staged blockers are historical input metadata.",
+        "Authored source values; current game fittings and hull activation are separate. Runtime and actual-game blockers remain explicit source scope.",
       fields: fields)
   }
 }

@@ -28,7 +28,9 @@ struct NativeGlassMeridianUnitTests {
     let types = ShipCatalogue.all.filter {
       $0.originalDefinition != nil && $0.catalogue.discoveryEligible
         && $0.catalogue.objectKind == .ship
+        && !OriginalDetailedHullStage.blocksRuntime($0.id)
     }.prefix(2)
+    try #require(types.count == 2)
     let identified: [FleetDiscoveryEvidence] = types.enumerated().map { index, ship in
       .init(
         owner: owner, ship: ship.id, kind: .identification,

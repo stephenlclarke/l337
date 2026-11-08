@@ -18,6 +18,7 @@ extension Commander {
   var equipmentStateValid: Bool { (try? validateEquipmentState()) != nil }
 
   func validateEquipmentState() throws {
+    try OriginalDetailedHullStage.requireRuntime(shipID)
     try validateEffectiveEquipmentStatistics()
     if let legacyOwnedEquipment {
       guard savedEquipmentInventory == nil, savedEquipmentPurchaseHistory == nil,
@@ -73,6 +74,10 @@ extension Commander {
     try inventory.validate(
       context: EquipmentRuntimeCatalog.context(
         owner: inventory.owner, hull: inventory.activeHull, performance: performance))
+    try OriginalFleetR3Fitting.validateUtilities(
+      inventory, ship: ship, allowsXYZzyMaximumOutfit: allowsXYZzyMaximumOutfit)
+    try EMPModuleGrades.validate(
+      inventory: inventory, history: history, at: flightSimulation.physicalTime)
     try RecoveredFeatureDevices.validateRecoveredFeatures(
       inventory: inventory, ledger: salvageLedger)
     try validateAlienMissileResearch()
@@ -144,7 +149,6 @@ extension Commander {
       HyperspaceDriveTier.allCases.reversed().first { equipment.contains($0.label) }
       ?? (xyzzyGrant ? .advanced : .basic)
     try append(drive.label, at: .drive, standard: drive == .basic)
-    if let core = targetingTier { try append(core.equipmentName, at: .targetingCore) }
     for mount in LaserMount.allCases {
       if let laser = laser(on: mount) {
         try append(

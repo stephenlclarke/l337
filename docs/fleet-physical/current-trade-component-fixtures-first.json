@@ -1,0 +1,31 @@
+{
+  "status": "BEFORE_EXACT_CURRENT_QUALIFIED_QUOTE_COMPONENT_HUNKS",
+  "path": "Tests/L337CoreTests/ShipTradeTests.swift",
+  "bytes": 16502,
+  "sha256": "baf92a0df4210ac10d046b4d9bcd806601dd1876203dee0e4d696a7676410abe",
+  "methods": [
+    "exchangesBlockFundsCargoPaidFitFuelAndRouteConflictsWithoutAnyLoss",
+    "fuelAndRouteConstraintsFollowActualHullTanksAndDoNotDiscardFuel"
+  ],
+  "scope": "Current owned025, legal current031target for cargo/rear mount/missile limits with genuine paidmilitarylaser/cargobay/7missiles; independent current019\u2192025 tank/route vectors. Preserve current actual owned transfer and flight/save plus Bisonpaid/nativeCrew writer/exchange acceptance. Do not claim unearned quoteallowed, fake blueprint, legacy nil-inventory cargo-bay policy or pending001/023 target.",
+  "sourceLiterals": {
+    "SH025": {
+      "fuelLY": 13,
+      "missiles": 9,
+      "facings": 15,
+      "equipmentUnits": 24
+    },
+    "SH031": {
+      "cargoTonnes": 10,
+      "cargoExpansionTonnes": 5,
+      "missiles": 6,
+      "facings": 1
+    },
+    "SH019": {
+      "fuelLY": 16,
+      "jumpLY": 14
+    }
+  },
+  "bounds": "7 actual missile purchases, one rearMilitaryLaser and oneCargoBay. Existing finite current-system destination lookup only; no native run/controller/seed/model search.",
+  "nativeCompilerTests": "UNRUN"
+}

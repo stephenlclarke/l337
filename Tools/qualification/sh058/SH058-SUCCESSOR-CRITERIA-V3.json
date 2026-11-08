@@ -1,0 +1,3124 @@
+{
+  "schema": "SH058_SUCCESSOR_PHASED_FORMAL_V3",
+  "status": "SOURCE_SUCCESSOR_QUALIFICATION_PROPOSAL_NO_START",
+  "numericalWorkAuthorized": false,
+  "sourceID": "SH058",
+  "currentName": "Muskox",
+  "originalName": "Brabant",
+  "scope": "NONACTOR_DECLARED_SUPPORT_TRIM_SUCCESSOR_NOT_HISTORICAL_IDENTITY",
+  "authority": {
+    "R3": "fd5f2d8a64762ab74e1849985e6cf3bf25184968e5cf6f7d6d15213eadd3b11c",
+    "originalNative": "13ef038a1ab17ffb777bd43f6a63b0a973bbea8bfd6076248cc14f8f1d49b2b8",
+    "originalDetailed": "1b743ac0d3fcc1bd5f0d94626cd942d3cbfa3066d28254cdd7e8435621ae0103",
+    "currentResource": "98fb0d98dbafc289ed4b8426800fab17b626f9ac159c93afeba021fe803a3aa3",
+    "currentModel": "c718c41abd235678e9e2770554ed2f6b2f3b1983656ac4524a15e3c3c8c147b0",
+    "successorSource": "a97a3b6b59004dc532388babd8792855c3cdce7c815622e4ae4267bed9e58c1b",
+    "physicalStatus": "UNISSUED_SOURCE_MOMENT_CONSISTENCY_STOP"
+  },
+  "sourceRequirements": {
+    "namedStructure": "Preserve all five separately named transverse short freight drums, broad freight base, high forward command beam, both bounded closed drive casings and pressure canopy in selected own native source. Exact full source parts, not bbox/count replacement.",
+    "glazingSupport": "Source-derived opaque deck and four base connections, lower canopy pressure foundation and two trim housing base posts must satisfy independent source reconstruction and real fixed-view review. Source equations/contact occupancy alone do not establish visibility/R3 acceptance.",
+    "gaps": "Preserve actual original-source openings/empty corridors; do not infer a gap merely because components are separately named. Native bounded closed drive casing is not a promised hollow throat. Global gap/support ray outcomes remain unissued.",
+    "detailedContext": "Full detailed source supplies original cockpit brace/service pipe/inset/emitter intent. Preserve its exact source data; it does not issue a new continuous/nativeLOD tolerance or require invented native topology.",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "appearance": "Exact original palette sand-maroon, material RGBA/emissive values, MIT/source fields, textures/repeat/faceUV/material assignment. Source exactness includes all appearance fields; no lost glazing, filled source opening or new arbitrary texture-coordinate patch.",
+    "textures": [
+      "l337-patrol-diffuse",
+      "l337-strike-diffuse",
+      "l337-service-details"
+    ],
+    "topology": "Exact original native component/vertex/face order and connectivity; finite/index/nondegenerate/oriented closure per authored component; preserve intentional independently closed/overlapping components, no forced single welded hull. Model/physical JSON remain opaque during this authoring step.",
+    "sourceDeviationAllowance": "Only declared new opaque deck/four base posts/two housing posts and exact detailed brace/two housing transplants, plus lower canopy material/UV replacement. Original native vertices/faces and every unaffected field remain exact. New source-derived coordinates allow <=1e-10 metre serialization/IEEE arithmetic discrepancy, not a shape/clearance/physics deviation. All topology/material/UV/source metadata exact. No historical support claim or physical authority."
+  },
+  "literalFeatureFaceSelectors": [
+    {
+      "featureID": "BASE",
+      "nativeComponentOrdinal": 0,
+      "nativeComponentName": "broad freight base",
+      "literalSourceFaceIndex": 0,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "DRUM_1",
+      "nativeComponentOrdinal": 1,
+      "nativeComponentName": "transverse short freight drum",
+      "literalSourceFaceIndex": 12,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "DRUM_2",
+      "nativeComponentOrdinal": 2,
+      "nativeComponentName": "transverse short freight drum",
+      "literalSourceFaceIndex": 44,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "DRUM_3",
+      "nativeComponentOrdinal": 3,
+      "nativeComponentName": "transverse short freight drum",
+      "literalSourceFaceIndex": 76,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "DRUM_4",
+      "nativeComponentOrdinal": 4,
+      "nativeComponentName": "transverse short freight drum",
+      "literalSourceFaceIndex": 108,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "DRUM_5",
+      "nativeComponentOrdinal": 5,
+      "nativeComponentName": "transverse short freight drum",
+      "literalSourceFaceIndex": 140,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "COMMAND_BEAM",
+      "nativeComponentOrdinal": 6,
+      "nativeComponentName": "high forward command beam",
+      "literalSourceFaceIndex": 172,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "DRIVE_NEG_X",
+      "nativeComponentOrdinal": 7,
+      "nativeComponentName": "bulk load drive bounded closed casing",
+      "literalSourceFaceIndex": 204,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "DRIVE_POS_X",
+      "nativeComponentOrdinal": 8,
+      "nativeComponentName": "bulk load drive bounded closed casing",
+      "literalSourceFaceIndex": 220,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    },
+    {
+      "featureID": "GLAZING_CANOPY",
+      "nativeComponentOrdinal": 9,
+      "nativeComponentName": "raised command beam bridge pressure canopy",
+      "literalSourceFaceIndex": 236,
+      "faceIndexAuthority": "literal faceStart in immutable original native component map; not a geometric inference",
+      "topology": "retain complete source component and exact local index/winding/material/UV mapping; per-component closed/oriented checks, no forced global weld"
+    }
+  ],
+  "products": [
+    {
+      "id": "ORIGINAL_NATIVE",
+      "source": "own original13ef nativeDesign; independent frozen source loader, separate from expectation-reference record",
+      "scale": "1"
+    },
+    {
+      "id": "CURRENT_NATIVE",
+      "source": "Bound R3 support successor a97a3b6b59004dc532388babd8792855c3cdce7c815622e4ae4267bed9e58c1b, packaged resource98fb0d98dbafc289ed4b8426800fab17b626f9ac159c93afeba021fe803a3aa3 and selected modelc718c41abd235678e9e2770554ed2f6b2f3b1983656ac4524a15e3c3c8c147b0; declared support/trim changes, exact retained/copied source, no old-original identity or physical authority.",
+      "scale": "1"
+    },
+    {
+      "id": "CURRENT_NATIVE_0_2",
+      "source": "same current native geometry with source-declared G09/W05 uniform0.2 coordinate transform only",
+      "scale": "0.2"
+    }
+  ],
+  "views": [
+    {
+      "id": "FRONT_POS_Z",
+      "eyeAxis": [
+        0,
+        0,
+        1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "REAR_NEG_Z",
+      "eyeAxis": [
+        0,
+        0,
+        -1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "PORT_NEG_X",
+      "eyeAxis": [
+        -1,
+        0,
+        0
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "STARBOARD_POS_X",
+      "eyeAxis": [
+        1,
+        0,
+        0
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "DORSAL_POS_Y",
+      "eyeAxis": [
+        0,
+        1,
+        0
+      ],
+      "up": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "VENTRAL_NEG_Y",
+      "eyeAxis": [
+        0,
+        -1,
+        0
+      ],
+      "up": [
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "cameraRule": {
+    "id": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+    "testDesignStatus": "NEW proposed deterministic formaltest construction for review, not recovered source-owner camera approval",
+    "canvas": {
+      "width": 1024,
+      "height": 1024,
+      "paddingPixels": 64,
+      "background": "opaque black",
+      "captions": "metadata filenames only; no body-image captions/masks"
+    },
+    "basis": "look toward authored origin from frozen eyeAxis; up vector as listed; no camera roll or orbit",
+    "frameReference": "use ONLY literal original-native header fullDetailPhysicalBounds min[-16.5,-6.248,-28.09],max[16.5,14.04,21.0], as framing metadata, not a measured collision/clearance result",
+    "construction": "G1 later constructs six view bases from fixed axis/up. With focal=1024px, usableHalf=448px and nearMargin=1 source metre, set D=max over declared-header box corners of (dot(corner,eyeAxis)+focal*max(abs(dot(corner,right)),abs(dot(corner,up)))/usableHalf)+nearMargin. No value evaluated here. Eye=D*eyeAxis; center=(512,512); positive forward depth is D-dot(point,eyeAxis). Far=D+max(abs(dot(headercorner,eyeAxis)))+nearMargin.",
+    "freeze": "Derive six cameras ONCE from literal original header in independent reference stage, freeze them with expected table before SUT. Identical cameras for original/current rendering. Scale0.2 renders DEFERRED to separate real-role phase, no normalisation/reframe/extra camera calls."
+  },
+  "renderSchedule": [
+    {
+      "callID": "ORIGINAL_NATIVE__FRONT_POS_Z__whiteWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "FRONT_POS_Z",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__FRONT_POS_Z__whiteWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__FRONT_POS_Z__colourWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "FRONT_POS_Z",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__FRONT_POS_Z__colourWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__FRONT_POS_Z__shadedPanels",
+      "product": "ORIGINAL_NATIVE",
+      "view": "FRONT_POS_Z",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__FRONT_POS_Z__shadedPanels.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__REAR_NEG_Z__whiteWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "REAR_NEG_Z",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__REAR_NEG_Z__whiteWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__REAR_NEG_Z__colourWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "REAR_NEG_Z",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__REAR_NEG_Z__colourWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__REAR_NEG_Z__shadedPanels",
+      "product": "ORIGINAL_NATIVE",
+      "view": "REAR_NEG_Z",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__REAR_NEG_Z__shadedPanels.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__PORT_NEG_X__whiteWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "PORT_NEG_X",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__PORT_NEG_X__whiteWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__PORT_NEG_X__colourWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "PORT_NEG_X",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__PORT_NEG_X__colourWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__PORT_NEG_X__shadedPanels",
+      "product": "ORIGINAL_NATIVE",
+      "view": "PORT_NEG_X",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__PORT_NEG_X__shadedPanels.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__STARBOARD_POS_X__whiteWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "STARBOARD_POS_X",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__STARBOARD_POS_X__whiteWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__STARBOARD_POS_X__colourWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "STARBOARD_POS_X",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__STARBOARD_POS_X__colourWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__STARBOARD_POS_X__shadedPanels",
+      "product": "ORIGINAL_NATIVE",
+      "view": "STARBOARD_POS_X",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__STARBOARD_POS_X__shadedPanels.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DORSAL_POS_Y__whiteWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "DORSAL_POS_Y",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__DORSAL_POS_Y__whiteWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DORSAL_POS_Y__colourWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "DORSAL_POS_Y",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__DORSAL_POS_Y__colourWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DORSAL_POS_Y__shadedPanels",
+      "product": "ORIGINAL_NATIVE",
+      "view": "DORSAL_POS_Y",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__DORSAL_POS_Y__shadedPanels.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__VENTRAL_NEG_Y__whiteWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "VENTRAL_NEG_Y",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__VENTRAL_NEG_Y__whiteWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__VENTRAL_NEG_Y__colourWireframe",
+      "product": "ORIGINAL_NATIVE",
+      "view": "VENTRAL_NEG_Y",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__VENTRAL_NEG_Y__colourWireframe.png"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__VENTRAL_NEG_Y__shadedPanels",
+      "product": "ORIGINAL_NATIVE",
+      "view": "VENTRAL_NEG_Y",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "ORIGINAL_NATIVE__VENTRAL_NEG_Y__shadedPanels.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__FRONT_POS_Z__whiteWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "FRONT_POS_Z",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__FRONT_POS_Z__whiteWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__FRONT_POS_Z__colourWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "FRONT_POS_Z",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__FRONT_POS_Z__colourWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__FRONT_POS_Z__shadedPanels",
+      "product": "CURRENT_NATIVE",
+      "view": "FRONT_POS_Z",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__FRONT_POS_Z__shadedPanels.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__REAR_NEG_Z__whiteWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "REAR_NEG_Z",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__REAR_NEG_Z__whiteWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__REAR_NEG_Z__colourWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "REAR_NEG_Z",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__REAR_NEG_Z__colourWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__REAR_NEG_Z__shadedPanels",
+      "product": "CURRENT_NATIVE",
+      "view": "REAR_NEG_Z",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__REAR_NEG_Z__shadedPanels.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__PORT_NEG_X__whiteWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "PORT_NEG_X",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__PORT_NEG_X__whiteWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__PORT_NEG_X__colourWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "PORT_NEG_X",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__PORT_NEG_X__colourWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__PORT_NEG_X__shadedPanels",
+      "product": "CURRENT_NATIVE",
+      "view": "PORT_NEG_X",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__PORT_NEG_X__shadedPanels.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__STARBOARD_POS_X__whiteWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "STARBOARD_POS_X",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__STARBOARD_POS_X__whiteWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__STARBOARD_POS_X__colourWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "STARBOARD_POS_X",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__STARBOARD_POS_X__colourWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__STARBOARD_POS_X__shadedPanels",
+      "product": "CURRENT_NATIVE",
+      "view": "STARBOARD_POS_X",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__STARBOARD_POS_X__shadedPanels.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DORSAL_POS_Y__whiteWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "DORSAL_POS_Y",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__DORSAL_POS_Y__whiteWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DORSAL_POS_Y__colourWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "DORSAL_POS_Y",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__DORSAL_POS_Y__colourWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DORSAL_POS_Y__shadedPanels",
+      "product": "CURRENT_NATIVE",
+      "view": "DORSAL_POS_Y",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__DORSAL_POS_Y__shadedPanels.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__VENTRAL_NEG_Y__whiteWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "VENTRAL_NEG_Y",
+      "style": "whiteWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__VENTRAL_NEG_Y__whiteWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__VENTRAL_NEG_Y__colourWireframe",
+      "product": "CURRENT_NATIVE",
+      "view": "VENTRAL_NEG_Y",
+      "style": "colourWireframe",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__VENTRAL_NEG_Y__colourWireframe.png"
+    },
+    {
+      "callID": "CURRENT_NATIVE__VENTRAL_NEG_Y__shadedPanels",
+      "product": "CURRENT_NATIVE",
+      "view": "VENTRAL_NEG_Y",
+      "style": "shadedPanels",
+      "camera": "SOURCE_DECLARED_ENVELOPE_FIXED_CAMERA",
+      "output": "CURRENT_NATIVE__VENTRAL_NEG_Y__shadedPanels.png"
+    }
+  ],
+  "renderComparison": {
+    "originalVsCurrent": "Require canonical source/native/material/UV exactness before draw and deterministic same-view/same-style production render comparison; exact pixel/line equality is proposed for unchanged original/current source only, no post-run threshold tuning.",
+    "scaledProduct": "No scale0.2 render in this phase; full original/current6views x3styles=36 restored. Scale0.2 collision remains nonactor source check; actual role render/admission separateblocked.",
+    "visualReview": "All named source structure/glazing/opaque support/gaps/materials remain owner review obligations at fixed views. Unresolvable/occluded evidence is a failed/incomplete criterion, not permission to move camera or invent visibility. No extra detailed preview/frame/warmup outside36slots."
+  },
+  "localTriangleControlBasis": {
+    "authority": "Independent analytic closed-triangle point and finite-radius edge/corner controls, original-reference geometry only; no production-kernel-derived expected results.",
+    "reference": "G1 later authenticates13ef reference independently and builds reference Face(a,b,c) records, distinct from original/current queried product objects. Construct points/normals ONLY from reference, never queried candidate or collision outcome.",
+    "formula": "Original face q uses frozen barycentric tuple, n=unit((b-a)cross(c-a)); origin=q+n, direction=-n, range=2. Interior/outside have radius0. Edge/corner radius=min(1/8,minimum-altitude/16) source metres; scale points/origin/range/radius by0.2 for scaled product. Formula inputs from independent original only, never candidate/contact. Quantize frozen ray toIEEE doubles FIRST; reference predicate uses exact binary values.",
+    "expected": "Interior/edge/corner HIT, outside MISS on isolated triangle. Expected distances and whole-hull nearest ties computed only by independent original-reference phase and frozen before production. Finite-radius edge/corner first contact is separately checked with dimensionless closed-form analytic controls. No global gap/opacity/admission claim.",
+    "constructionCases": [
+      {
+        "case": "SURFACE_INTERIOR",
+        "barycentric": [
+          "1/3",
+          "1/3",
+          "1/3"
+        ],
+        "expected": "HIT"
+      },
+      {
+        "case": "EDGE_AB",
+        "barycentric": [
+          "1/2",
+          "1/2",
+          "0"
+        ],
+        "expected": "HIT"
+      },
+      {
+        "case": "CORNER_A",
+        "barycentric": [
+          "1",
+          "0",
+          "0"
+        ],
+        "expected": "HIT"
+      },
+      {
+        "case": "OUTSIDE_OPPOSITE_A",
+        "barycentric": [
+          "-1",
+          "1",
+          "1"
+        ],
+        "expected": "MISS"
+      }
+    ],
+    "proposedNumericalTestTolerance": "NEW ENGINEERING: comparison distance/tie tolerance=1e-8 metres +1e-10*ray.range, frozen for all products; not source-deviation or clearance allowance. Decimal80 reference,128+128 fixed convex-root iterations; ambiguous tangency at1e-32*max(1,radius^2,range^2) squared-distance fails. Point coplanarity/containment thresholds1e-40/1e-30 fixed in reference code. No tuning from SUT."
+  },
+  "collisionSchedule": [
+    {
+      "callID": "ORIGINAL_NATIVE__BASE__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__BASE__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__BASE__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__BASE__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_1__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_1__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_1__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_1__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_2__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_2__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_2__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_2__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_3__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_3__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_3__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_3__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_4__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_4__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_4__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_4__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_5__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_5__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_5__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRUM_5__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__COMMAND_BEAM__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__COMMAND_BEAM__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__COMMAND_BEAM__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__COMMAND_BEAM__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRIVE_NEG_X__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRIVE_NEG_X__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRIVE_NEG_X__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRIVE_NEG_X__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRIVE_POS_X__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRIVE_POS_X__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRIVE_POS_X__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__DRIVE_POS_X__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__GLAZING_CANOPY__SURFACE_INTERIOR",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__GLAZING_CANOPY__EDGE_AB",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__GLAZING_CANOPY__CORNER_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__GLAZING_CANOPY__OUTSIDE_OPPOSITE_A",
+      "product": "ORIGINAL_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__BASE__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__BASE__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__BASE__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__BASE__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_1__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_1__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_1__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_1__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_2__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_2__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_2__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_2__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_3__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_3__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_3__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_3__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_4__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_4__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_4__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_4__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_5__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_5__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_5__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRUM_5__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__COMMAND_BEAM__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__COMMAND_BEAM__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__COMMAND_BEAM__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__COMMAND_BEAM__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRIVE_NEG_X__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRIVE_NEG_X__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRIVE_NEG_X__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRIVE_NEG_X__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRIVE_POS_X__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRIVE_POS_X__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRIVE_POS_X__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__DRIVE_POS_X__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__GLAZING_CANOPY__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__GLAZING_CANOPY__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__GLAZING_CANOPY__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE__GLAZING_CANOPY__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__BASE__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__BASE__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__BASE__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__BASE__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "BASE",
+      "literalSourceFaceIndex": 0,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_1__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_1__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_1__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_1__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_1",
+      "literalSourceFaceIndex": 12,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_2__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_2__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_2__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_2__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_2",
+      "literalSourceFaceIndex": 44,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_3__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_3__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_3__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_3__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_3",
+      "literalSourceFaceIndex": 76,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_4__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_4__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_4__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_4__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_4",
+      "literalSourceFaceIndex": 108,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_5__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_5__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_5__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRUM_5__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRUM_5",
+      "literalSourceFaceIndex": 140,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__COMMAND_BEAM__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__COMMAND_BEAM__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__COMMAND_BEAM__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__COMMAND_BEAM__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "COMMAND_BEAM",
+      "literalSourceFaceIndex": 172,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRIVE_NEG_X__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRIVE_NEG_X__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRIVE_NEG_X__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRIVE_NEG_X__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_NEG_X",
+      "literalSourceFaceIndex": 204,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRIVE_POS_X__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRIVE_POS_X__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRIVE_POS_X__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__DRIVE_POS_X__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "DRIVE_POS_X",
+      "literalSourceFaceIndex": 220,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__GLAZING_CANOPY__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__GLAZING_CANOPY__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__GLAZING_CANOPY__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__GLAZING_CANOPY__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_ORIGINAL_FACE_CONTROL",
+      "feature": "GLAZING_CANOPY",
+      "literalSourceFaceIndex": 236,
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "oracle": "Independent original analytic point/finite-radius triangle reference, never production kernel. Literal HIT/MISS preserved.",
+      "target": "only corresponding source triangle, not a whole-hull exposed/nearest-contact claim"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__AXIS__FRONT_POS_Z",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "FRONT_POS_Z",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__AXIS__REAR_NEG_Z",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "REAR_NEG_Z",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__AXIS__PORT_NEG_X",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "PORT_NEG_X",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__AXIS__STARBOARD_POS_X",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "STARBOARD_POS_X",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__AXIS__DORSAL_POS_Y",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "DORSAL_POS_Y",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__AXIS__VENTRAL_NEG_Y",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "VENTRAL_NEG_Y",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE__AXIS__FRONT_POS_Z",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "FRONT_POS_Z",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE__AXIS__REAR_NEG_Z",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "REAR_NEG_Z",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE__AXIS__PORT_NEG_X",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "PORT_NEG_X",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE__AXIS__STARBOARD_POS_X",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "STARBOARD_POS_X",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE__AXIS__DORSAL_POS_Y",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "DORSAL_POS_Y",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE__AXIS__VENTRAL_NEG_Y",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "VENTRAL_NEG_Y",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__AXIS__FRONT_POS_Z",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "FRONT_POS_Z",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__AXIS__REAR_NEG_Z",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "REAR_NEG_Z",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__AXIS__PORT_NEG_X",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "PORT_NEG_X",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__AXIS__STARBOARD_POS_X",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "STARBOARD_POS_X",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__AXIS__DORSAL_POS_Y",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "DORSAL_POS_Y",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__AXIS__VENTRAL_NEG_Y",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_AXIS",
+      "viewAxis": "VENTRAL_NEG_Y",
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "AXIS_THROUGH_DECLARED_ENVELOPE_CENTRE"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__RELATION__DRUM_1_TO_2",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_1_TO_2",
+      "featureAnchors": [
+        "DRUM_1",
+        "DRUM_2"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__RELATION__DRUM_2_TO_3",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_2_TO_3",
+      "featureAnchors": [
+        "DRUM_2",
+        "DRUM_3"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__RELATION__DRUM_3_TO_4",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_3_TO_4",
+      "featureAnchors": [
+        "DRUM_3",
+        "DRUM_4"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__RELATION__DRUM_4_TO_5",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_4_TO_5",
+      "featureAnchors": [
+        "DRUM_4",
+        "DRUM_5"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__RELATION__GLAZING_OPAQUE_SUPPORT",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "GLAZING_OPAQUE_SUPPORT",
+      "featureAnchors": [
+        "GLAZING_CANOPY",
+        "COMMAND_BEAM"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__RELATION__DRIVE_NEG_X_BASE_INTERFACE",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRIVE_NEG_X_BASE_INTERFACE",
+      "featureAnchors": [
+        "DRIVE_NEG_X",
+        "BASE"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "ORIGINAL_NATIVE__RELATION__DRIVE_POS_X_BASE_INTERFACE",
+      "product": "ORIGINAL_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRIVE_POS_X_BASE_INTERFACE",
+      "featureAnchors": [
+        "DRIVE_POS_X",
+        "BASE"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE__RELATION__DRUM_1_TO_2",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_1_TO_2",
+      "featureAnchors": [
+        "DRUM_1",
+        "DRUM_2"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE__RELATION__DRUM_2_TO_3",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_2_TO_3",
+      "featureAnchors": [
+        "DRUM_2",
+        "DRUM_3"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE__RELATION__DRUM_3_TO_4",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_3_TO_4",
+      "featureAnchors": [
+        "DRUM_3",
+        "DRUM_4"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE__RELATION__DRUM_4_TO_5",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_4_TO_5",
+      "featureAnchors": [
+        "DRUM_4",
+        "DRUM_5"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE__RELATION__GLAZING_OPAQUE_SUPPORT",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "GLAZING_OPAQUE_SUPPORT",
+      "featureAnchors": [
+        "GLAZING_CANOPY",
+        "COMMAND_BEAM"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE__RELATION__DRIVE_NEG_X_BASE_INTERFACE",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRIVE_NEG_X_BASE_INTERFACE",
+      "featureAnchors": [
+        "DRIVE_NEG_X",
+        "BASE"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE__RELATION__DRIVE_POS_X_BASE_INTERFACE",
+      "product": "CURRENT_NATIVE",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRIVE_POS_X_BASE_INTERFACE",
+      "featureAnchors": [
+        "DRIVE_POS_X",
+        "BASE"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__RELATION__DRUM_1_TO_2",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_1_TO_2",
+      "featureAnchors": [
+        "DRUM_1",
+        "DRUM_2"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__RELATION__DRUM_2_TO_3",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_2_TO_3",
+      "featureAnchors": [
+        "DRUM_2",
+        "DRUM_3"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__RELATION__DRUM_3_TO_4",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_3_TO_4",
+      "featureAnchors": [
+        "DRUM_3",
+        "DRUM_4"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__RELATION__DRUM_4_TO_5",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRUM_4_TO_5",
+      "featureAnchors": [
+        "DRUM_4",
+        "DRUM_5"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__RELATION__GLAZING_OPAQUE_SUPPORT",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "GLAZING_OPAQUE_SUPPORT",
+      "featureAnchors": [
+        "GLAZING_CANOPY",
+        "COMMAND_BEAM"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__RELATION__DRIVE_NEG_X_BASE_INTERFACE",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRIVE_NEG_X_BASE_INTERFACE",
+      "featureAnchors": [
+        "DRIVE_NEG_X",
+        "BASE"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "CURRENT_NATIVE_0_2__RELATION__DRIVE_POS_X_BASE_INTERFACE",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "WHOLE_HULL_GAP_OR_SUPPORT",
+      "relation": "DRIVE_POS_X_BASE_INTERFACE",
+      "featureAnchors": [
+        "DRIVE_POS_X",
+        "BASE"
+      ],
+      "expectedClass": "DERIVE_FROM_INDEPENDENT_ORIGINAL",
+      "oracle": "Independent original13ef plane/barycentric / convex projection reference; freeze expected class/nearest/ties before SUT. Geometry occupancy only, not authorintent.",
+      "construction": "NAMED_ORIGINAL_FACE_CENTROID_MIDPOINT_FIXED_AXIS"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__DECK__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "DECK",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__DECK__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "DECK",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__DECK__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "DECK",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__DECK__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "DECK",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_NEG_X_NEG_Z__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_NEG_Z",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_NEG_X_NEG_Z__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_NEG_Z",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_NEG_X_NEG_Z__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_NEG_Z",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_NEG_X_NEG_Z__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_NEG_Z",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_NEG_X_POS_Z__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_POS_Z",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_NEG_X_POS_Z__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_POS_Z",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_NEG_X_POS_Z__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_POS_Z",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_NEG_X_POS_Z__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_POS_Z",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_POS_X_NEG_Z__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_NEG_Z",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_POS_X_NEG_Z__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_NEG_Z",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_POS_X_NEG_Z__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_NEG_Z",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_POS_X_NEG_Z__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_NEG_Z",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_POS_X_POS_Z__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_POS_Z",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_POS_X_POS_Z__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_POS_Z",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_POS_X_POS_Z__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_POS_Z",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__POST_POS_X_POS_Z__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_POS_Z",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__ROOF_BRACE__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "ROOF_BRACE",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__ROOF_BRACE__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "ROOF_BRACE",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__ROOF_BRACE__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "ROOF_BRACE",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__ROOF_BRACE__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "ROOF_BRACE",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_0__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_0",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_0__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_0",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_0__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_0",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_0__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_0",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_1__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_1",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_1__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_1",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_1__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_1",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_1__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_1",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_POST_0__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_0",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_POST_0__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_0",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_POST_0__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_0",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_POST_0__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_0",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_POST_1__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_1",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_POST_1__EDGE_AB",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_1",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_POST_1__CORNER_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_1",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE__HOUSING_POST_1__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_1",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__DECK__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "DECK",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__DECK__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "DECK",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__DECK__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "DECK",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__DECK__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "DECK",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_NEG_X_NEG_Z__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_NEG_Z",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_NEG_X_NEG_Z__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_NEG_Z",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_NEG_X_NEG_Z__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_NEG_Z",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_NEG_X_NEG_Z__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_NEG_Z",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_NEG_X_POS_Z__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_POS_Z",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_NEG_X_POS_Z__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_POS_Z",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_NEG_X_POS_Z__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_POS_Z",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_NEG_X_POS_Z__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_NEG_X_POS_Z",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_POS_X_NEG_Z__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_NEG_Z",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_POS_X_NEG_Z__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_NEG_Z",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_POS_X_NEG_Z__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_NEG_Z",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_POS_X_NEG_Z__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_NEG_Z",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_POS_X_POS_Z__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_POS_Z",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_POS_X_POS_Z__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_POS_Z",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_POS_X_POS_Z__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_POS_Z",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__POST_POS_X_POS_Z__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "POST_POS_X_POS_Z",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__ROOF_BRACE__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "ROOF_BRACE",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__ROOF_BRACE__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "ROOF_BRACE",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__ROOF_BRACE__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "ROOF_BRACE",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__ROOF_BRACE__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "ROOF_BRACE",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_0__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_0",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_0__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_0",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_0__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_0",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_0__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_0",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_1__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_1",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_1__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_1",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_1__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_1",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_1__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_1",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_POST_0__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_0",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_POST_0__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_0",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_POST_0__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_0",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_POST_0__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_0",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_POST_1__SURFACE_INTERIOR",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_1",
+      "construction": "SURFACE_INTERIOR",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_POST_1__EDGE_AB",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_1",
+      "construction": "EDGE_AB",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_POST_1__CORNER_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_1",
+      "construction": "CORNER_A",
+      "expectedClass": "HIT",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    },
+    {
+      "callID": "SUCCESSOR__CURRENT_NATIVE_0_2__HOUSING_POST_1__OUTSIDE_OPPOSITE_A",
+      "product": "CURRENT_NATIVE_0_2",
+      "class": "ISOLATED_SUCCESSOR_FEATURE_CONTROL",
+      "feature": "HOUSING_POST_1",
+      "construction": "OUTSIDE_OPPOSITE_A",
+      "expectedClass": "MISS",
+      "target": "One source-reconstructed first triangle of this declared added/restored part; no whole-hull or exposed visibility claim"
+    }
+  ],
+  "globalCallAccounting": {
+    "maxRenderCalls": 36,
+    "maxRayQueries": 494,
+    "maxTrianglePrimitiveCalls": 120536,
+    "declaredNativeTriangleMetadata": 244,
+    "maximumNativeFanTriangles": 512,
+    "maximumInspectionVertices": 1536,
+    "allocatedRendererIDs": "Exact36 original/current sixviews x3styles only; scale0.2rendersdeferred",
+    "allocatedCollisionIDs": "159sourcequeries each reference+SUT, plus12analyticreferencequeries; all330/19285 preallocated under494/120536",
+    "budgetSemantics": "One shared counter set across source-reference/original/current/scale0.2, all styles, controls and any cross-product checks. Each actual Display.draw+image request consumes its ONE declared renderID; each geometric ray query consumes its ONE collisionID; every actual ScriptSweptCollision.triangle invocation consumes shared primitive credit, including original/control/negative calls. No per-product/role/face multiplier, hidden warmup, extra preview, witness-search or collision oracle call.",
+    "stopRule": "Reject unknown/reused slot IDs; preflight entire schedule before any model decode/numeric work. Any UNISSUED global expected basis blocks ALL numerical work. Abort before call that would exceed any total; log exact counters/slot/product. Unallocated remainder is not permission for extra work. Topology that adds triangle-contact queries must charge them too.",
+    "productReuse": "Allthreeproducts get scheduled nonactorcollision. Only original/currentrender thisphase. Reference derives every allocatedquery from pinnedoriginal; no free secondpass or SUTselforacle."
+  },
+  "missingIndependentInputs": [],
+  "admissionBoundary": "Current pending/rawMesh/runtimeCatalogueNPC/currentNPCdesign/makeScriptNPC refusal and no world/geometryregistry/commander/actor/identity/save mutation mandatory. No standalone criteria boolean/schema produces native approval or receipt. G09/W05real roles/SH141/currentwriter remain separately blocked.",
+  "executionState": "SOURCE_AUTHORING_ONLY. Reference derivation and production comparison each require whole reviewed executable binding and separate Root START. No artifact is a source/admission/save permission.",
+  "semanticReviewRequired": [
+    {
+      "id": "R3_OPAQUE_GLAZING_SUPPORT",
+      "requirement": "Original R3 requires opaque connected structural support beneath all glazing in every view. Native builder explicitly removes centre-brace primitives; this is a source caveat, not proof of floating glazing or a waiver. Owner must identify actual opaque support surfaces/interfaces independently.",
+      "resolution": "Review actual exact-source topology/native renderer/feature evidence; numerical occupancy cannot waive original support obligation. If source defect is found, qualify no actor; fix genuine source under source-owner direction."
+    },
+    {
+      "id": "ORIGINAL_OPENINGS_INTENT",
+      "requirement": "Whole-source ray contacts classify original geometry only. Named relations do not promise empty gaps. No source-deviation allowance or historical-intent approval inferred."
+    }
+  ],
+  "engineering": {
+    "status": "NEW_FIXED_TEST_ENGINEERING_PROPOSAL_NOT_HISTORICAL_SOURCE_APPROVAL",
+    "referenceMethod": "Independent original TOML parse_float=Decimal loader and ownvector math only. Point rays: plane plus affine barycentric interval clipping. Swept sphere: convex point-to-triangle projection via feasible plane QP/threeclampedsegments; monotone squared-distance derivative bisection then first-radius-crossing bisection. This is fixed root solving for predetermined witnesses, not exploratory ray search. Production kernel/renderer/candidate cannot generate expectations.",
+    "framingBounds": {
+      "min": [
+        -16.5,
+        -6.248,
+        -28.09
+      ],
+      "max": [
+        16.5,
+        14.04,
+        21.0
+      ],
+      "authority": "Literal original native header, already frozen G4 cameraRule; framing only, not measured collision extent."
+    },
+    "axisWitnessConstruction": "Centre=(headerMin+headerMax)/2; diagonal=norm(headerMax-headerMin); origin=centre+axis*2diagonal; dir=-axis; range4diagonal; radius0. Six fixed source axes, no search.",
+    "relationWitnessConstruction": "Midpoint of two frozen original selector face centroids; +X axis for DRIVE_* relations, +Y otherwise; origin=midpoint+axis*2diagonal; dir=-axis; range4diagonal; radius=diagonal/10000. Scale all lengths/points for0.2 product. No promise of hit/miss/emptygap from relationname.",
+    "tiePolicy": "Reference wholequery collects all faceIDs whose contact lies within fixed1e-8+range1e-10 of minimum; SUT must match full tieIDs and nearest distance. No arbitrary firstface, unsupported/tangent cases fail rather than skip.",
+    "analyticControls": "12 independent dimensionless mathematical controls before source queries: pointinterior/miss, finiteface/edge/corner/startinside/miss, coplanaredge/parallel/rangebound, edge-only1-sqrt(3)/8, corner-only1-sqrt(2)/8, duplicatefacetie. Lastcontrol2triangles, allothers1 =>13reference predicates. Not ship/metre/actor data.",
+    "totalReferenceQueries": 251,
+    "totalSUTQueries": 239,
+    "totalReferenceTrianglePredicates": 12849,
+    "totalSUTTriangleCalls": 12836,
+    "totalQueries": 490,
+    "totalTriangleCalls": 25685,
+    "projectionEvaluationLimit": 3366438,
+    "arithmeticProof": "Perphase200isolated +13originalwhole*244 +26successorwhole*364=12836;239queries. Reference adds12analyticqueries/13predicates =>251/12849. Shared490/25685 within494/120536.36renders total. No free construction-validation ray, alternate witness/camera or reference rerun.",
+    "phases": [
+      "Independent immutable-original reconstruction/reference derivation and12analyticcontrols, write expected239witnesses +independent successor design +6cameras; zero candidate geometry/production kernel/renderer",
+      "Freeze/audit literal expected and current source before separately released one compiled14method successor resource/refusal+formal run",
+      "SUT239queries/12836calls/36images/18declared-difference pairs/fullstate conservation; independent source/visual/R3/physics/roles remain required"
+    ],
+    "serializedToleranceCheck": "Frozen tolerance is1e-8+range*1e-10; SUT permits atmost1e-20 absolute serialization/IEEE evaluation discrepancy. This is fixed before reference/SUT; no output tuning."
+  },
+  "successorRules": {
+    "originalDetailedSHA256": "1b743ac0d3fcc1bd5f0d94626cd942d3cbfa3066d28254cdd7e8435621ae0103",
+    "detailedPartsSHA256": "91a25bfd582d642824269b490635e2747daac7c1cd9e50e0d576172f355e5c78",
+    "nativePartsSHA256": "456c3cb2083e38c7c713d299e83a93086ed0df9c923b6cb14b85eb32126cf908",
+    "construction": "Independent Decimal80 implementation from immutable original detailed/native/component sources, never imports authoring constructor or reads candidate geometry. Seven declared boxes use source brace width/depth and original base/canopy extents; exact original brace/two housings copied by independent source extraction. Source-declared closed box winding is literal topology, not kernel code.",
+    "newCoordinateArithmeticToleranceMetres": 1e-10,
+    "appearancePolicy": "Exact source material and UV assignments; lower canopy/deck/posts use original armour and source 0.16 repeats/metre rounded to7decimal UVs; retained upper glazing/old unaffected UVs exact.",
+    "imagePolicy": "18 original/successor fixed view/style pairs recorded without equality claim; deliberate source changes require independent visual review of all36 images. No raster output generates numerical expectations."
+  }
+}

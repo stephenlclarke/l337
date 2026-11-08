@@ -115,6 +115,13 @@ struct ScriptClueTrustCatalog: Sendable {
   private let pins: [ScriptClueExecutionPin]
   static let production = ScriptClueTrustCatalog(approvedPins: [
     .init(
+      sourceID: NativeIsolationWorkParent.stateID, definition: NativeIsolationWorkParent.stateID,
+      version: NativeIsolationWorkParent.version, digest: NativeIsolationWorkParent.digest,
+      terminalEvents: ["mission.receipted"]),
+    .init(sourceID: NativeC01Completion.sourceID, definition: NativeGlassMeridian.stateID,
+      version: NativeGlassMeridian.version, digest: NativeGlassMeridian.digest,
+      terminalEvents: ["mission.receipted"]),
+    .init(
       sourceID: NativeDefensiveFlight.stateID, definition: NativeDefensiveFlight.stateID,
       version: NativeDefensiveFlight.version, digest: NativeDefensiveFlight.digest,
       terminalEvents: ["mission.receipted"]),
@@ -188,7 +195,7 @@ struct ScriptClueTrustCatalog: Sendable {
     .init(
       sourceID: "l337.contract/sealed-dispatch", definition: "l337.contract/sealed-dispatch",
       version: "1.0.0",
-      digest: "93289d5daf873d0cf878b37fa55178e4ab91cf6fa1947f379a54c3bc04267ae7",
+      digest: "8cd3f7b667d3842cbe2c0f4a6acb9d304fc4bede2fce66573169569e2ed4fcb3",
       terminalEvents: ["dialogue.confirmed"]),
     .init(
       sourceID: "l337.wayfarer-service/seed-transfer",

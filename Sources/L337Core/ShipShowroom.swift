@@ -307,6 +307,10 @@ extension Game {
       notify("THIS OBJECT IS NOT A FLYABLE HULL")
       return
     }
+    guard !OriginalDetailedHullStage.blocksRuntime(ship.id) else {
+      notify("ORIGINAL HULL QUALIFICATION PENDING")
+      return
+    }
     guard ship.id != commander.shipID else {
       notify("CURRENTLY FLYING " + commander.ship.name.uppercased())
       return

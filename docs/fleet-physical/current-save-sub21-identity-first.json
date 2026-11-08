@@ -1,0 +1,594 @@
+{
+  "status": "FIRST_COHERENT_P1_SUCCESSOR_NO_REPO_EDITS",
+  "beforeCommit": "a1319f4090dda8e0fecf2ef5705a69ff207585cd",
+  "pins": [
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "bytes": 63103,
+      "sha256": "5354d9006d9373d107fafebac939d6f3b3c968cda22465d1b6100e0f71379461"
+    },
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 178083,
+      "sha256": "4fefd280600f2bfed47d23d67a4752e8012d3c9a6f4d46cb8dc374e799e1582e"
+    },
+    {
+      "path": "Sources/L337Core/ScriptMissionState.swift",
+      "bytes": 118482,
+      "sha256": "788f0eea78aa28483f9d42139416e2e7d58f5e3acead82602ff87b6668d9fafa"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "bytes": 84013,
+      "sha256": "41ff96c7431b836c5ef32416b063f77528d6c6f032ef58f424ebf24c58c79c10"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptCourierPersistenceTests.swift",
+      "bytes": 24055,
+      "sha256": "ec4f095cbda032563a5f0d6682bcae7786a56097c3c33d581b01ce1cf5527d42"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptTransactionTests.swift",
+      "bytes": 35226,
+      "sha256": "bd0e8d1c1ac19ba059dd53fa8e696431860531d6d8dcfc010de3c0fa6ba25fca"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptResourcePersistenceTests.swift",
+      "bytes": 7016,
+      "sha256": "f3ac272b3257eac3e10ec58d2208966b9c4711ddd6de78519123edd0c3512f2e"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptIdentityTests.swift",
+      "bytes": 22235,
+      "sha256": "9d3d796558fb331c66ac36b2bcd0351ab1e70c421453cd793cec9b141bb0c89d"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptPledgeTests.swift",
+      "bytes": 49543,
+      "sha256": "59fa382dee9d9dd82079267627cd8a1a6059672f8eab1dfd6698c574a1dcbc40"
+    },
+    {
+      "path": "Sources/L337Core/LegacyMissionEncounterProvenance.swift",
+      "bytes": 6858,
+      "sha256": "8544a31b9a788724fdd026c0e790918d03531cbab48bc9eed989d0ad0c3019a5"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptLegacyGearPersistenceTests.swift",
+      "bytes": 7966,
+      "sha256": "ab1ae6ef8006e474c00adc975005b1ebb71ba2789abb592728ab06d9808def88"
+    },
+    {
+      "path": "Sources/L337Core/ScriptSaveJSONPreflight.swift",
+      "bytes": 12373,
+      "sha256": "461f82f79c8729a6b817aad731040fc479ef9cfd26da599126a5d0dadeb4efb2"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 6985,
+      "sha256": "d829716c2742e9a3d748a6e04bdd40225be602468ec776b79b131f77b8795dee"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18479,
+      "sha256": "c87b7f9b86462215891def7f2a0ab46f009946ec5305c533616b5d21c7403959"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPCurrentCatalogueReleaseTests.swift",
+      "bytes": 17079,
+      "sha256": "3124b53b09e84993f2342db79645d1e21d05475a2651313653964693027449c8"
+    },
+    {
+      "path": "Tests/L337CoreTests/EquipmentRuntimeTransactionTests.swift",
+      "bytes": 17879,
+      "sha256": "1474e16681573f782ca5da69c06282bdee21917d0730adefe41399eb13a1e004"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptEquipmentTests.swift",
+      "bytes": 22142,
+      "sha256": "0c87f999da1d81cf7d2dd97705c4c406adc722a1d8d7d615429a2d55369a794e"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptEquipmentReceiptTests.swift",
+      "bytes": 8000,
+      "sha256": "00b0cdc90453da58f1b14200677e9930d5ced82325300ed6674b46a5998d111d"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptEquipmentSeamTests.swift",
+      "bytes": 11905,
+      "sha256": "00ba20f71652f1e17fb7be50e99d51443037c83808667b6833fad4e207315fc9"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptEquipmentRefitTests.swift",
+      "bytes": 6706,
+      "sha256": "cf6cd006351f39bb9ff013274bcb810af11f88bf8eefe880aa846cf650e5177c"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeSaveTestFixture.swift",
+      "bytes": 625,
+      "sha256": "78314ebc44b90f614f94afc17945d02140a4427d1e1bc946519e6f05e365ea9c"
+    },
+    {
+      "path": "Sources/L337Core/NativeC01ReservationAuditSave.swift",
+      "bytes": 10051,
+      "sha256": "11efb0c17694d847c7d1db0d0fcea5ff43d1d9d244d7ca4034f0e3aa2cc35bc4"
+    },
+    {
+      "path": "Sources/L337Core/NativeC01SurveyorSave.swift",
+      "bytes": 8874,
+      "sha256": "c5dcbcb624a74f03d17d44a843d55253e38ed72f7f9c674e97ff296093ff7169"
+    },
+    {
+      "path": "Sources/L337Core/NativeFirstCommoditySaleSave.swift",
+      "bytes": 2213,
+      "sha256": "e474865fe129d3695716f0f3adbaea50359b4f85bbcd94a70f9acfe50d41dfd6"
+    },
+    {
+      "path": "Sources/L337Core/NativeFleetDiscoverySave.swift",
+      "bytes": 3318,
+      "sha256": "d46fd7780ea9823bb416d9e5a8458e95be47c4e8e67fe14a3031544219b57d65"
+    },
+    {
+      "path": "Sources/L337Core/NativeFlightReceptionSave.swift",
+      "bytes": 11760,
+      "sha256": "b1e5855a1b6abddad26de2166169921cea332c943c78c4c3590aa8ea85012397"
+    },
+    {
+      "path": "Sources/L337Core/NativeGlassMeridianSave.swift",
+      "bytes": 9666,
+      "sha256": "341375d7ad145a9195028b38791846b4041ee471fb4a17df788758a09309beb5"
+    },
+    {
+      "path": "Sources/L337Core/NativeIdentifiedSalvageSave.swift",
+      "bytes": 25691,
+      "sha256": "c81d5479060763f926cfcf62d0381a373623875c1aefa23c6ae7a99d3d92bc47"
+    },
+    {
+      "path": "Sources/L337Core/NativeWayfarerInductionArkSave.swift",
+      "bytes": 11386,
+      "sha256": "5f63834e629192d5305a5db78841e42e62ce2a4307f2231cbbc312b7f4848918"
+    },
+    {
+      "path": "Sources/L337Core/NativeWayfarerInductionCrewLogSave.swift",
+      "bytes": 12818,
+      "sha256": "85cd022aabed1630907e32624f846676fd088b06d86f3bbdd5650fc5c7cdea41"
+    },
+    {
+      "path": "Sources/L337Core/NativeMeasuredExtractionSave.swift",
+      "bytes": 30906,
+      "sha256": "c8bf546ee1dd00937883c9dfe91957d298234d39ffac41060ab2fb6f1c2e21c7"
+    },
+    {
+      "path": "Sources/L337Core/NativeOrbitalOutlookJourneySave.swift",
+      "bytes": 25092,
+      "sha256": "654a810ff3d9c6f6a75223d24b490de6e3f47f03b2b2b34ed957434f75c28e62"
+    },
+    {
+      "path": "Sources/L337Core/NativeOriginalEvacuationSave.swift",
+      "bytes": 22368,
+      "sha256": "8770dd893886f8d463bf1d9f472819ec160f3983834cab3d53b7e9b6b37ee083"
+    },
+    {
+      "path": "Sources/L337Core/NativeOriginalRescueJourneySave.swift",
+      "bytes": 37765,
+      "sha256": "7e1362e115cea01672d9d4c6cc001aae46229a66c140183491a8927d90d92d58"
+    },
+    {
+      "path": "Sources/L337Core/NativeOriginalSurveySave.swift",
+      "bytes": 9494,
+      "sha256": "276b7e607931bc74de551b58f0ecab2e16362e28aa6d12f7757a16dc7e36d542"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationPassengerJourneySave.swift",
+      "bytes": 22340,
+      "sha256": "052e4ec38a78fe6bf7d53b2027ce0ed7c2f45314372b0994bd527e6fbc4050a2"
+    },
+    {
+      "path": "Sources/L337Core/NativeWayfarerInductionSave.swift",
+      "bytes": 10337,
+      "sha256": "1990caa1274f6aa56a0975cfdb15d9645019eb28c17546f2d68962a7a86433c9"
+    },
+    {
+      "path": "Sources/L337Core/OriginalConsentedFreightSupplySave.swift",
+      "bytes": 5033,
+      "sha256": "7b0d10e6d93fff095d434b5dc761317ecd0b7f968c34905160b2b854b94bf0bf"
+    },
+    {
+      "path": "Sources/L337Core/ScriptClueVersionedSave.swift",
+      "bytes": 3635,
+      "sha256": "d511fdb325a00d85f3ce449f4802265ec4e5b4296315ccf992d2c8eca0097ee6"
+    },
+    {
+      "path": "Sources/L337Core/ScriptFreightVersionedSave.swift",
+      "bytes": 8702,
+      "sha256": "fa2b5ba9a13197e90420522d2b67da3ce9343c72092e955032eb1d6aa1337a68"
+    },
+    {
+      "path": "Sources/L337Core/ScriptNavigationTradeSave.swift",
+      "bytes": 4918,
+      "sha256": "25f6ad3ba35e40aa5e09268745f4e38fafb07cb71c60b6755426f3dad598d6e9"
+    },
+    {
+      "path": "Sources/L337Core/WayfarerColdChainSave.swift",
+      "bytes": 30840,
+      "sha256": "2dc14be29dc2f94d3b7f4d51fd85f8681758d0e7d86eab1d977707343f6bf87d"
+    },
+    {
+      "path": "Sources/L337Core/WayfarerFieldReliefSave.swift",
+      "bytes": 15111,
+      "sha256": "6863ac3bcbf9bba22ee9a3d37351ae31434430f5855c8a36d2139a977b5133dd"
+    },
+    {
+      "path": "Sources/L337Core/WayfarerRecordRecoverySave.swift",
+      "bytes": 32562,
+      "sha256": "9c38c87a9e11cf513f5cb8387c271460fce76aac3b13da33f602964b0a254c60"
+    },
+    {
+      "path": "Sources/L337Core/WayfarerRepairLoopSave.swift",
+      "bytes": 25403,
+      "sha256": "9036944f613f6a7bcf12250dfbc7174306d288143da3b74e1895e55efb9fd39d"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeIdentifiedSalvageSaveTests.swift",
+      "bytes": 15603,
+      "sha256": "46a14e43a6e93bd9279de5c5d5c46845a35ba3f52e8634a68deb4284d2df4389"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeMeasuredExtractionSaveTests.swift",
+      "bytes": 23025,
+      "sha256": "eb8d5f835741d6d26f3d2de907340aa7fc1dcb4872455ec743d6cfe540ac3320"
+    }
+  ],
+  "sourceEdits": [
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    var names: Set<String> =\n      pointer.schemaVersion >= 8\n      ? [\"commander.json\", \"missions.json\", \"world.json\", \"contracts.json\"]\n      : [\"commander.json\", \"missions.json\", \"world.json\"]",
+      "new": "    var names: Set<String> = [\"commander.json\", \"missions.json\", \"world.json\", \"contracts.json\"]"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "      (2...27).contains(pointer.schemaVersion) || freight || clues || navigation || coldChain",
+      "new": "      pointer.schemaVersion >= 21,\n      pointer.schemaVersion <= 27 || freight || clues || navigation || coldChain"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "      pointer.schemaVersion < 6 || [\"commander\", \"gallery\"].contains(pointer.scope ?? \"\")",
+      "new": "      [\"commander\", \"gallery\"].contains(pointer.scope ?? \"\")"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    guard\n      pointer.schemaVersion >= 13\n        ? pointer.valueCodec == ScriptValueStorage.codec : pointer.valueCodec == nil\n    else {\n      throw SaveError.invalidCommander\n    }\n    let typed = pointer.schemaVersion >= 13\n    let storedLimit = typed ? 134_217_728 : 33_554_432",
+      "new": "    guard pointer.valueCodec == ScriptValueStorage.codec else { throw SaveError.invalidCommander }\n    let storedLimit = 134_217_728"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    if pointer.schemaVersion >= 8 { limits.append((\"contracts.json\", storedLimit)) }",
+      "new": "    limits.append((\"contracts.json\", storedLimit))"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "      if pointer.schemaVersion < 21 || name == \"commander.json\" {\n        let location: ScriptSaveJSONPreflight.CourierLocation? =\n          name == \"missions.json\"\n          ? .missions\n          : name == \"contracts.json\"\n            ? .contracts\n            : name == \"commander.json\"\n              ? (pointer.schemaVersion >= 21 ? .currentCommanderHeader : .rawCommander) : nil\n        if let location {\n          try ScriptSaveJSONPreflight.rejectCourierFields(data, location: location)\n        }\n      }\n",
+      "new": "      if name == \"commander.json\" {\n        try ScriptSaveJSONPreflight.rejectCourierFields(data, location: .currentCommanderHeader)\n      }\n"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    var commander = try ScriptValueStorage.decoder(typed: typed).decode(",
+      "new": "    var commander = try ScriptValueStorage.decoder(typed: true).decode("
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    let missionsDecoder = ScriptValueStorage.decoder(typed: typed)",
+      "new": "    let missionsDecoder = ScriptValueStorage.decoder(typed: true)"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    let world = try ScriptValueStorage.decoder(typed: typed).decode(",
+      "new": "    let world = try ScriptValueStorage.decoder(typed: true).decode("
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    if pointer.schemaVersion <= 4 { commander.migrateLegacyPassengerMarker() }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    missionsDecoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    guard\n      pointer.schemaVersion >= 21\n        || commander.scriptState.instances.values.allSatisfy({\n          $0.ownedEncounters.values.allSatisfy { $0.legacyProvenance == nil }\n        })\n    else { throw SaveError.invalidCommander }\n    guard\n      pointer.schemaVersion >= 20\n        || (commander.scriptState.pledgeLedger == nil\n          && commander.scriptState.instances.values.allSatisfy({ $0.pledgeReceiptID == nil }))\n    else {\n      throw SaveError.invalidCommander\n    }\n    guard\n      pointer.schemaVersion >= 19\n        || commander.scriptState.instances.values.allSatisfy({\n          $0.campaignParent == nil && $0.savedCampaignChildren == nil\n            && $0.savedCampaignReceiptScopes == nil\n        })\n    else { throw SaveError.invalidCommander }\n    if let bytes = chunks[\"contracts.json\"] {\n      commander.contracts = try ScriptValueStorage.decoder(typed: typed).decode(\n        ScriptContractState.self, from: bytes)\n    } else if !commander.contracts.boards.isEmpty\n      || commander.scriptState.instances.values.contains(where: { $0.contract != nil })\n    {\n      throw SaveError.invalidCommander\n    }\n",
+      "new": "    commander.contracts = try ScriptValueStorage.decoder(typed: true).decode(\n      ScriptContractState.self, from: chunks[\"contracts.json\"]!)\n"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    // Versioned mission provenance cannot be validated against the header alone.\n    // Migrate only after all state/contract/physical/world chunks have been joined.\n    let hadMissingCalendar = commander.scriptState.calendarLedger == nil\n    guard pointer.schemaVersion < 10 || !hadMissingCalendar else {\n      throw SaveError.invalidCommander\n    }\n    try commander.prepareEquipment()\n    if hadMissingCalendar {\n      if commander.scriptState.calendarLedger == nil {\n        commander.scriptState.calendarLedger = .init(origin: .inactiveLegacyMigration)\n      }\n      if world.jumpCountdown != nil {\n        commander.scriptState.calendarLedger?.legacyUntrackedJourney = true\n      }\n    }\n",
+      "new": "    guard commander.scriptState.calendarLedger != nil else { throw SaveError.invalidCommander }\n    try commander.prepareEquipment()\n"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "      pointer.schemaVersion < 10 || commander.scriptState.calendarLedger != nil,\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "    if pointer.schemaVersion <= 11 {\n      for id in commander.scriptState.instances.keys {\n        guard var owner = commander.scriptState.instances[id] else {\n          throw SaveError.invalidCommander\n        }\n        for encounterID in owner.ownedEncounters.keys {\n          guard var encounter = owner.ownedEncounters[encounterID] else {\n            throw SaveError.invalidCommander\n          }\n          encounter.legacyProvenance = try .importValidated(\n            schema: pointer.schemaVersion, owner: owner, encounter: encounter)\n          owner.ownedEncounters[encounterID] = encounter\n        }\n        commander.scriptState.instances[id] = owner\n      }\n      // Frozen pending condition counts against the existing semantic cap before any publication.\n      guard commander.valid, world.consistent(with: commander),\n        try semantic.encode(commander.scriptState).count <= 33_554_432\n      else { throw SaveError.invalidCommander }\n    }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "old": "      if pointer.schemaVersion >= 6 {\n        guard (pointer.scope == \"gallery\") == (galleryNamespace != nil) else {\n          throw MissionPackError(\n            \"Trial saves open only in Gallery trials; commander saves open in the live game.\")\n        }\n      }",
+      "new": "      guard (pointer.scope == \"gallery\") == (galleryNamespace != nil) else {\n        throw MissionPackError(\n          \"Trial saves open only in Gallery trials; commander saves open in the live game.\")\n      }"
+    },
+    {
+      "path": "Sources/L337Core/ScriptMissionState.swift",
+      "old": "    if let provenance = encounter.legacyProvenance {\n      guard provenance.matches(owner: owner, encounter: encounter) else { return false }\n    }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "  var legacyProvenance: LegacyMissionEncounterProvenance? = nil\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "      updated.legacyProvenance = updated.legacyProvenance?.afterAdmission()\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "    try Self.validateMissionActorAdmissionLegacy(\n      state: state, encounter: encounter, installedEncounter: installedEncounter,\n      legacy: encounter.legacyProvenance)\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "    let legacy = encounter.legacyProvenance\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "        spec, encounter: encounter, instanceID: state.id, packDigest: pack.digest, legacy: legacy,",
+      "new": "        spec, encounter: encounter, instanceID: state.id, packDigest: pack.digest,"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "        legacy: legacy?.actors[spec.id],\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "          actor, spec: spec, template: template, legacy: legacy,",
+      "new": "          actor, spec: spec, template: template,"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "  /// Finish full legacy comparison before any per-actor construction frame starts.\n  @inline(never)\n  private static func validateMissionActorAdmissionLegacy(\n    state: borrowing ScriptInstance, encounter: borrowing ScriptOwnedEncounter,\n    installedEncounter: ScriptOwnedEncounter?, legacy: borrowing LegacyMissionEncounterProvenance?\n  ) throws {\n    if let legacy = copy legacy {\n      guard legacy.matches(owner: state, encounter: encounter),\n        installedEncounter == copy encounter\n      else {\n        throw MissionPackError(\"Historical actor provenance differs from its installed owner.\")\n      }\n    }\n  }\n\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "    packDigest: String, legacy: LegacyMissionEncounterProvenance?,",
+      "new": "    packDigest: String,"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "      legacy?.actors[spec.id]?.identity == actor.identity\n        || actor.identity\n          == ScriptIdentity.uuid(",
+      "new": "      actor.identity == ScriptIdentity.uuid("
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "    template: MissionActorAdmissionTemplate, legacy: LegacyMissionEncounterProvenance?,",
+      "new": "    template: MissionActorAdmissionTemplate,"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "    if legacy != nil {\n      try validatePreparedMissionActorLegacy(actor, spec: spec, legacy: legacy)\n    } else {\n      try validatePreparedMissionActorEnergy(\n        actor, template: template, mechanicallyDisabled: mechanicallyDisabled)\n      if let resources = preparedMissionActorNPCResources(actor) {\n        try validatePreparedMissionActorNPCResources(resources)\n      } else {\n        try validatePreparedMissionActorClassicResources(actor)\n      }\n    }",
+      "new": "    try validatePreparedMissionActorEnergy(\n      actor, template: template, mechanicallyDisabled: mechanicallyDisabled)\n    if let resources = preparedMissionActorNPCResources(actor) {\n      try validatePreparedMissionActorNPCResources(resources)\n    } else {\n      try validatePreparedMissionActorClassicResources(actor)\n    }"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "  @inline(never)\n  private static func validatePreparedMissionActorLegacy(\n    _ actor: borrowing ScriptOwnedActor, spec: ScriptActorDefinition,\n    legacy: LegacyMissionEncounterProvenance?\n  ) throws {\n    guard legacy?.actors[spec.id]?.prepared == (copy actor) else {\n      throw MissionPackError(\n        \"Prepared historical condition differs from its imported snapshot.\")\n    }\n  }\n\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "      installedModels: pack.models, geometry: withReadOnlyScriptState { $0.geometry },\n      legacy: nil)",
+      "new": "      installedModels: pack.models, geometry: withReadOnlyScriptState { $0.geometry })"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "      geometry: commander.scriptState.geometry, legacy: nil)\n    return .init(\n      mode: .retained, authority: .inductionArkBerth(id),",
+      "new": "      geometry: commander.scriptState.geometry)\n    return .init(\n      mode: .retained, authority: .inductionArkBerth(id),"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "      geometry: commander.scriptState.geometry, legacy: nil)\n    return .init(\n      mode: .retained, authority: .inductionRescueBerth(id),",
+      "new": "      geometry: commander.scriptState.geometry)\n    return .init(\n      mode: .retained, authority: .inductionRescueBerth(id),"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "    npcDefinitions: [ScriptNPCDefinition], installedModels: [String: ShipDesign],\n    geometry: [String: ShipDesign], legacy: LegacyMissionActorProvenance?,",
+      "new": "    npcDefinitions: [ScriptNPCDefinition], installedModels: [String: ShipDesign],\n    geometry: [String: ShipDesign],"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "    fit: MissionActorAdmissionFit, installedModels: [String: ShipDesign],\n    geometry: [String: ShipDesign], legacy: LegacyMissionActorProvenance?,",
+      "new": "    fit: MissionActorAdmissionFit, installedModels: [String: ShipDesign],\n    geometry: [String: ShipDesign],"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "      geometry: geometry, legacy: legacy, initialNativeCondition: initialNativeCondition)",
+      "new": "      geometry: geometry, initialNativeCondition: initialNativeCondition)"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "      actor, fit: fit, installedModels: installedModels, geometry: geometry, legacy: legacy)",
+      "new": "      actor, fit: fit, installedModels: installedModels, geometry: geometry)"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "    installedModels: [String: ShipDesign], geometry: [String: ShipDesign],\n    legacy: LegacyMissionActorProvenance?",
+      "new": "    installedModels: [String: ShipDesign], geometry: [String: ShipDesign]"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "old": "          legacy?.components[spec.id] == state.identity\n            || state.identity\n              == ScriptIdentity.uuid(\"script-component-v2:\\(actor.identity):\\(spec.id)\")",
+      "new": "          state.identity == ScriptIdentity.uuid(\"script-component-v2:\\(actor.identity):\\(spec.id)\")"
+    }
+  ],
+  "testEdits": [
+    {
+      "path": "Tests/L337CoreTests/ScriptCourierPersistenceTests.swift",
+      "old": "@Test func courierLegacyKeywordsAndOrdinaryPayloadNamesRemainValidFormat20AndRaw() async throws {\n  let fixture = try CourierFixture()\n  defer { fixture.clean() }\n  var game = Game(executive: false)\n  game.screen = .status\n  game.ensureScriptCalendar(origin: .newCommander)\n  let id = UUID()\n  var old = ScriptInstance(\n    id: id, definition: \"old.words/story\", version: \"1.0.0\",\n    digest: String(repeating: \"0\", count: 64))\n  old.data = .object([\n    \"courier\": .string(\"missionCalendar\"),\n    \"nested\": .object([\"deadlinePolicy\": .string(\"courier\")]),\n  ])\n  old.payloads[ScriptCourierCustody.payloadKey] = 1\n  game.commander.scriptState.instances[id] = old\n  #expect(game.commander.valid)\n  let original = game.commander\n  try #require(original.equipmentInventory == nil && original.savedEquipmentVersion == nil)\n  try #require(!original.usesModularDriveSaveVersion && !original.usesRingMiningSaveVersion)\n  try #require(!original.usesEconomyMiningSaveVersion && !original.usesEMPSaveVersion)\n  try #require(old.courier == nil && old.contract == nil && old.timers.isEmpty)\n  var header = original\n  header.scriptState = ScriptEngineState()\n  header.contracts = ScriptContractState()\n  let generation = UUID().uuidString\n  let directory = fixture.save.appendingPathExtension(\"missions\").appendingPathComponent(generation)\n  try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)\n  let encoder = ScriptValueStorage.encoder()\n  let chunks = [\n    \"commander.json\": try encoder.encode(header),\n    \"missions.json\": try encoder.encode(original.scriptState),\n    \"contracts.json\": try encoder.encode(original.contracts),\n    \"world.json\": try encoder.encode(game.scriptWorldSave),\n  ]\n  for (name, chunk) in chunks { try chunk.write(to: directory.appendingPathComponent(name)) }\n  let format20 = ScriptSavePointer(\n    format: \"elite-script-save\", schemaVersion: 20, generation: generation,\n    hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: \"commander\",\n    valueCodec: ScriptValueStorage.codec)\n  let bytes = try encoder.encode(format20)\n  try bytes.write(to: fixture.save)\n  #expect(\n    Set(try FileManager.default.contentsOfDirectory(atPath: directory.path)) == Set(chunks.keys))\n  let (loaded, world) = try ScriptSaveStore.read(bytes, from: fixture.save)\n  #expect(loaded.scriptState.instances[id]?.data == old.data)\n  #expect(loaded.scriptState.instances[id]?.payloads[ScriptCourierCustody.payloadKey] == 1)\n  #expect(loaded.scriptState.instances[id] == old && world.valid && world.consistent(with: loaded))\n  let versioned = GameRuntime()\n  try await versioned.load(from: fixture.save, persistMigrations: false)\n  let admitted = try #require(await versioned.snapshot().commander.scriptState.instances[id])\n  #expect(admitted.id == old.id && admitted.definition == old.definition)\n  #expect(admitted.version == old.version && admitted.digest == old.digest)\n  #expect(admitted.data == old.data && admitted.payloads == old.payloads)\n  let raw = fixture.root.appendingPathComponent(\"legacy.json\")\n  let rawBytes = try JSONEncoder().encode(original)\n  try rawBytes.write(to: raw)\n  let runtime = GameRuntime()\n  try await runtime.load(from: raw, persistMigrations: false)\n  #expect(await runtime.snapshot().commander.scriptState.instances[id]?.data == old.data)\n  let rawInstance = try #require(await runtime.snapshot().commander.scriptState.instances[id])\n  #expect(rawInstance.id == old.id && rawInstance.definition == old.definition)\n  #expect(rawInstance.version == old.version && rawInstance.digest == old.digest)\n  #expect(rawInstance.payloads == old.payloads)\n  #expect(try Data(contentsOf: raw) == rawBytes)\n  #expect(try Data(contentsOf: fixture.save) == bytes)\n  for (name, chunk) in chunks {\n    #expect(try Data(contentsOf: directory.appendingPathComponent(name)) == chunk)\n  }\n}\n\n",
+      "new": "@Test func courierKeywordsAndOrdinaryPayloadLabelsRoundTripThroughCurrentNativeEnvelope() async throws {\n  let fixture = try CourierFixture()\n  defer { fixture.clean() }\n  var game = Game(executive: false)\n  game.screen = .status\n  game.ensureScriptCalendar(origin: .newCommander)\n  let coldSeed = game\n  let id = UUID()\n  // Inert narrative data and an ordinary label confer no native courier or material authority.\n  var instance = ScriptInstance(id: id, definition: \"words/story\", version: \"1.0.0\",\n    digest: String(repeating: \"0\", count: 64))\n  instance.data = .object([\n    \"courier\": .string(\"missionCalendar\"),\n    \"nested\": .object([\"deadlinePolicy\": .string(\"courier\")]),\n  ])\n  instance.payloads[ScriptCourierCustody.payloadKey] = 1\n  game.commander.scriptState.instances[id] = instance\n  try #require(game.commander.valid && instance.courier == nil && instance.contract == nil)\n  try GameRuntime.writeCommander(&game, to: fixture.save)\n  let bytes = try Data(contentsOf: fixture.save)\n  let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)\n  let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: fixture.save)\n  let files = try ScriptFinanceTestFixture.files(fixture.root)\n  let (loaded, world) = try ScriptSaveStore.read(bytes, from: fixture.save)\n  #expect(loaded.scriptState.instances[id] == instance)\n  #expect(world.valid && world.consistent(with: loaded))\n  #expect(Set(try FileManager.default.contentsOfDirectory(atPath: directory.path))\n    == Set(pointer.hashes.keys))\n  try #require(coldSeed.commander.scriptState.instances[id] == nil)\n  let runtime = GameRuntime(game: coldSeed)\n  try await runtime.load(from: fixture.save, persistMigrations: false)\n  let admitted = try #require(await runtime.snapshot().commander.scriptState.instances[id])\n  #expect(admitted.id == instance.id && admitted.definition == instance.definition)\n  #expect(admitted.version == instance.version && admitted.digest == instance.digest)\n  #expect(admitted.data == instance.data && admitted.payloads == instance.payloads)\n  #expect(admitted.courier == nil && admitted.contract == nil)\n  #expect(try Data(contentsOf: fixture.save) == bytes)\n  #expect(try ScriptFinanceTestFixture.files(fixture.root) == files)\n}\n\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptTransactionTests.swift",
+      "old": "@Test func legacyVirtualPassengerFlagMigratesWithoutInventingOrDroppingOwnedCabins() async throws {\n  let fixture = try DurableFixture()\n  defer { fixture.clean() }\n  var game = try fixture.game(accepted: false, destination: false)\n  game.commander.credits = 1_000_000\n  try game.confirmPassengerBerth(game.passengerBerthQuote)\n  let owned = game.commander.accommodation\n  var legacy = game.commander\n  legacy.equipment.insert(PassengerCabin.equipmentName)\n  try #require(legacy.equipmentInventory == nil && legacy.savedEquipmentVersion == nil)\n  try #require(!legacy.usesModularDriveSaveVersion && !legacy.usesRingMiningSaveVersion)\n  try #require(!legacy.usesEconomyMiningSaveVersion && !legacy.usesEMPSaveVersion)\n  let originalWorld = game.scriptWorldSave\n  let file = fixture.root.appendingPathComponent(\"legacy.json\")\n  let bytes = try JSONEncoder().encode(legacy)\n  try bytes.write(to: file)\n  let runtime = GameRuntime()\n  try await runtime.load(from: file, persistMigrations: false)\n  let restored = await runtime.snapshot()\n  #expect(restored.commander.valid && restored.commander.accommodation == owned)\n  #expect(!restored.commander.equipment.contains(PassengerCabin.equipmentName))\n  #expect(try Data(contentsOf: file) == bytes)\n  // Construct the prototype's three complete untyped chunks from the untouched original.\n  let oldGeneration = UUID().uuidString\n  let oldDirectory = fixture.url.appendingPathExtension(\"missions\").appendingPathComponent(\n    oldGeneration)\n  try FileManager.default.createDirectory(at: oldDirectory, withIntermediateDirectories: true)\n  var header = legacy\n  header.scriptState = ScriptEngineState()\n  try #require(legacy.contracts.boards.isEmpty)\n  let encoder = JSONEncoder()\n  let chunks = [\n    \"commander.json\": try encoder.encode(header),\n    \"missions.json\": try encoder.encode(legacy.scriptState),\n    \"world.json\": try encoder.encode(originalWorld),\n  ]\n  for (name, chunk) in chunks { try chunk.write(to: oldDirectory.appendingPathComponent(name)) }\n  let old = ScriptSavePointer(\n    format: \"elite-script-save\", schemaVersion: 4, generation: oldGeneration,\n    hashes: chunks.mapValues(ScriptPackLibrary.hash))\n  let pointerBytes = try encoder.encode(old)\n  try pointerBytes.write(to: fixture.url)\n  #expect(\n    Set(try FileManager.default.contentsOfDirectory(atPath: oldDirectory.path)) == Set(chunks.keys))\n  let (oldCommander, oldWorld) = try ScriptSaveStore.read(pointerBytes, from: fixture.url)\n  #expect(oldCommander.accommodation == owned && oldCommander.valid)\n  #expect(!oldCommander.equipment.contains(PassengerCabin.equipmentName))\n  #expect(oldWorld.valid && oldWorld.consistent(with: oldCommander))\n  try await runtime.load(from: fixture.url, persistMigrations: false)\n  #expect(await runtime.snapshot().commander.accommodation == owned)\n  #expect(await runtime.snapshot().commander.valid)\n  #expect(!(await runtime.snapshot().commander.equipment.contains(PassengerCabin.equipmentName)))\n  #expect(try Data(contentsOf: fixture.url) == pointerBytes)\n  #expect(try Data(contentsOf: file) == bytes)\n  for (name, chunk) in chunks {\n    #expect(try Data(contentsOf: oldDirectory.appendingPathComponent(name)) == chunk)\n  }\n}\n\n",
+      "new": "@Test func currentOwnedCabinsRoundTripWithoutInventingOrDroppingAccommodation() async throws {\n  let fixture = try DurableFixture()\n  defer { fixture.clean() }\n  var game = try fixture.game(accepted: false, destination: false)\n  game.ensureScriptCalendar(origin: .newCommander)\n  game.commander.credits = 1_000_000\n  let coldSeed = game\n  try game.confirmPassengerBerth(game.passengerBerthQuote)\n  let owned = game.commander.accommodation\n  try #require(owned != coldSeed.commander.accommodation)\n  try GameRuntime.writeCommander(&game, to: fixture.url)\n  let saved = game.commander\n  let bytes = try Data(contentsOf: fixture.url)\n  let files = try ScriptFinanceTestFixture.files(fixture.root)\n  let (stored, world) = try ScriptSaveStore.read(bytes, from: fixture.url)\n  #expect(stored.accommodation == owned && stored.valid)\n  #expect(world.valid && world.consistent(with: stored))\n  let runtime = GameRuntime(game: coldSeed)\n  try await runtime.load(from: fixture.url, persistMigrations: false)\n  let loaded = await runtime.snapshot()\n  #expect(loaded.commander.valid && loaded.commander.accommodation == owned)\n  #expect(loaded.commander.equipmentInventory == saved.equipmentInventory)\n  #expect(loaded.commander.equipment == saved.equipment)\n  #expect(loaded.commander.credits == saved.credits)\n  #expect(try Data(contentsOf: fixture.url) == bytes)\n  #expect(try ScriptFinanceTestFixture.files(fixture.root) == files)\n}\n\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptResourcePersistenceTests.swift",
+      "old": "import Foundation\nimport Testing\n\n@testable import L337Core\n\nprivate func grandfatheredMissionResources() throws -> Commander {\n  var commander = try PreDriveCommanderSaveFixture.commander()\n  let inventory = try #require(commander.equipmentInventory)\n  var items = inventory.items\n  for slot in [ComponentFittingSlot.energy, .shield] {\n    let original = try #require(commander.fittedEquipment(at: slot))\n    let component = try #require(original.component)\n    var statistics = component.statistics\n    if slot == .energy {\n      statistics[.energyCapacity] = 1e100\n    } else {\n      statistics[.frontShieldCapacity] = 1e95\n      statistics[.rearShieldCapacity] = 1e90\n    }\n    // Retain actual native hardware identity and acquisition history in an admitted old save.\n    let changed = ComponentInstance(\n      id: component.id, origin: component.origin, statistics: statistics,\n      grade: component.grade, features: component.features, receipts: component.receipts)\n    let replacement = OwnedEquipmentItem(\n      id: original.id, node: original.node, provenance: original.provenance,\n      component: changed, location: original.location, boundHull: original.boundHull)\n    items = items.map { $0.id == original.id ? replacement : $0 }\n  }\n  commander.savedEquipmentInventory = try .init(\n    owner: inventory.owner, activeHull: inventory.activeHull, revision: inventory.revision,\n    items: items)\n  commander.mirrorFittedEquipment()\n  try #require(commander.valid)\n  return commander\n}\n\nstruct ScriptResourcePersistenceTests {\n  @Test func admittedHighNativeResourcesStartAMissionAndRoundTripThroughCurrentFormat() async throws\n  {\n    let fixture = try GearScriptFixture(requiredReturn: false, accepted: \"\")\n    defer { fixture.clean() }\n    let commander = try grandfatheredMissionResources()\n    let raw = fixture.root.appendingPathComponent(\"grandfathered.json\")\n    let originalRawBytes = try JSONEncoder().encode(commander)\n    try originalRawBytes.write(to: raw)\n    var host = Game(executive: false)\n    host.scriptPacks = [fixture.pack]\n    let runtime = GameRuntime(game: host)\n    try await runtime.load(from: raw, persistMigrations: false)\n    var admitted = await runtime.snapshot()\n    let inventory = try #require(admitted.commander.equipmentInventory)\n    let originalInventory = try #require(commander.equipmentInventory)\n    #expect(\n      inventory.owner == originalInventory.owner\n        && inventory.activeHull == originalInventory.activeHull)\n    #expect(admitted.commander.equipmentPurchaseHistory == commander.equipmentPurchaseHistory)\n    for item in originalInventory.items {\n      #expect(inventory.items.first { $0.id == item.id } == item)\n    }\n    let originalIDs = Set(originalInventory.items.map(\\.id))\n    let additions = inventory.items.filter { !originalIDs.contains($0.id) }\n    try #require(additions.count == 1)\n    let drive = try #require(additions.first)\n    try #require(drive.isReservedStockDrive && drive.location?.slot == .drive)\n    let retainedRawBytes = try Data(contentsOf: raw)\n    let rawObject = try JSONSerialization.jsonObject(with: retainedRawBytes) as? [String: Any]\n    #expect(rawObject?[\"savedEquipmentVersion\"] as? Int == 2)\n    let decodedRaw = try JSONDecoder().decode(Commander.self, from: retainedRawBytes)\n    #expect(decodedRaw == commander && retainedRawBytes == originalRawBytes)\n    #expect(\n      admitted.commander.credits == commander.credits && admitted.commander.cargo == commander.cargo\n    )\n    #expect(\n      admitted.commander.name == commander.name && admitted.commander.shipID == commander.shipID)\n    #expect(\n      admitted.commander.fuel == commander.fuel && admitted.commander.missiles == commander.missiles\n    )\n    #expect(admitted.energy == commander.performance.energy && admitted.energy > 1e12)\n    #expect(admitted.frontShield == commander.shieldCapacity && admitted.frontShield > 1e12)\n    #expect(admitted.rearShield == commander.rearShieldCapacity && admitted.rearShield > 1e12)\n    admitted.screen = .status\n    let id = try admitted.acceptScriptMission(fixture.pack)\n    try #require(admitted.commander.scriptState.instances[id]?.suspension == nil)\n    try #require(admitted.commander.scriptState.instances[id]?.outcome == .active)\n    #expect(admitted.commander.equipmentInventory == inventory)\n    let save = fixture.root.appendingPathComponent(\"mission.json\")\n    try GameRuntime.writeCommander(&admitted, to: save)\n    let bytes = try Data(contentsOf: save)\n    let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)\n    #expect(pointer.schemaVersion == 26)\n    let (saved, world) = try ScriptSaveStore.read(bytes, from: save)\n    #expect(saved.valid && world.valid && world.consistent(with: saved))\n    #expect(saved.equipmentInventory == inventory)\n    #expect(world.energy == admitted.energy && world.frontShield == admitted.frontShield)\n    #expect(world.rearShield == admitted.rearShield)\n    let restored = GameRuntime(game: host)\n    try await restored.load(from: save)\n    let loaded = await restored.snapshot()\n    #expect(loaded.energy == admitted.energy && loaded.frontShield == admitted.frontShield)\n    #expect(loaded.rearShield == admitted.rearShield)\n    #expect(loaded.commander.equipmentInventory == inventory)\n    #expect(\n      loaded.commander.scriptState.instances[id] == admitted.commander.scriptState.instances[id])\n    try await restored.save(to: save)\n    let (resaved, resavedWorld) = try ScriptSaveStore.read(Data(contentsOf: save), from: save)\n    #expect(resaved.equipmentInventory == inventory && resavedWorld.energy == loaded.energy)\n    #expect(\n      resavedWorld.frontShield == loaded.frontShield && resavedWorld.rearShield == loaded.rearShield\n    )\n  }\n\n  @Test(arguments: [\"energy\", \"front\", \"rear\"])\n  func resourceJoinPreservesLegacyEnvelopeButRefusesBeyondItsOwnNativeCapacity(field: String) throws\n  {\n    let commander = try grandfatheredMissionResources()\n    var game = Game(executive: false)\n    game.commander = commander\n    var world = game.scriptWorldSave\n    let capacity: Double\n    switch field {\n    case \"energy\": capacity = commander.performance.energy\n    case \"front\": capacity = commander.shieldCapacity\n    default: capacity = commander.rearShieldCapacity\n    }\n    func set(_ value: Double, in world: inout ScriptWorldSave) {\n      switch field {\n      case \"energy\": world.energy = value\n      case \"front\": world.frontShield = value\n      default: world.rearShield = value\n      }\n    }\n    set(capacity, in: &world)\n    #expect(world.valid && world.consistent(with: commander))\n    set(capacity.nextUp, in: &world)\n    #expect(world.valid && !world.consistent(with: commander))\n    let ordinary = Commander()\n    set(1e12, in: &world)\n    #expect(world.valid && world.consistent(with: ordinary))\n    set(1e12.nextUp, in: &world)\n    #expect(world.valid && !world.consistent(with: ordinary))\n    for invalid in [-1.0, Double.infinity, Double.nan] {\n      set(invalid, in: &world)\n      #expect(!world.valid)\n    }\n  }\n}\n",
+      "new": "import Foundation\nimport Testing\n\n@testable import L337Core\n\nprivate func currentMissionResourceGame() throws -> Game {\n  var game = Game(executive: false)\n  game.commander.name = \"CURRENT RESOURCE OWNER\"\n  try game.commander.prepareEquipment(legacy: false)\n  game.ensureScriptCalendar(origin: .newCommander)\n  try NativeSaveTestFixture.prepareCurrentPolicy(&game)\n  try #require(game.commander.valid && game.scriptWorldSave.valid)\n  try #require(game.scriptWorldSave.consistent(with: game.commander))\n  return game\n}\n\nstruct ScriptResourcePersistenceTests {\n  @Test func currentOwnedResourcesStartAMissionAndRoundTripThroughNativeEnvelope() async throws {\n    let fixture = try GearScriptFixture(requiredReturn: false, accepted: \"\")\n    defer { fixture.clean() }\n    var current = try currentMissionResourceGame()\n    current.scriptPacks = [fixture.pack]\n    var seed = Game(executive: false)\n    seed.scriptPacks = [fixture.pack]\n    let file = fixture.root.appendingPathComponent(\"current-resources.json\")\n    try GameRuntime.writeCommander(&current, to: file)\n    let before = current.commander\n    let inventory = try #require(before.equipmentInventory)\n    let bytes = try Data(contentsOf: file)\n    let originalFiles = try ScriptFinanceTestFixture.files(fixture.root)\n    try #require(seed.commander.name != before.name)\n    let runtime = GameRuntime(game: seed)\n    try await runtime.load(from: file, persistMigrations: false)\n    var admitted = await runtime.snapshot()\n    #expect(admitted.commander.equipmentInventory == inventory)\n    #expect(admitted.commander.equipmentPurchaseHistory == before.equipmentPurchaseHistory)\n    #expect(admitted.commander.credits == before.credits && admitted.commander.cargo == before.cargo)\n    #expect(admitted.commander.name == before.name && admitted.commander.shipID == before.shipID)\n    #expect(admitted.commander.fuel == before.fuel && admitted.commander.missiles == before.missiles)\n    #expect(admitted.energy == current.energy && admitted.frontShield == current.frontShield)\n    #expect(admitted.rearShield == current.rearShield)\n    #expect(try Data(contentsOf: file) == bytes)\n    #expect(try ScriptFinanceTestFixture.files(fixture.root) == originalFiles)\n    admitted.screen = .status\n    let id = try admitted.acceptScriptMission(fixture.pack)\n    try #require(admitted.commander.scriptState.instances[id]?.suspension == nil)\n    try #require(admitted.commander.scriptState.instances[id]?.outcome == .active)\n    #expect(admitted.commander.equipmentInventory == inventory)\n    let save = fixture.root.appendingPathComponent(\"mission.json\")\n    try GameRuntime.writeCommander(&admitted, to: save)\n    let saved = admitted\n    let pointer = try Data(contentsOf: save)\n    let envelope = try JSONDecoder().decode(ScriptSavePointer.self, from: pointer)\n    #expect(envelope.schemaVersion == 26)\n    let (header, world) = try ScriptSaveStore.read(pointer, from: save)\n    #expect(header.valid && world.valid && world.consistent(with: header))\n    #expect(header.equipmentInventory == inventory)\n    #expect(world.energy == saved.energy && world.frontShield == saved.frontShield)\n    #expect(world.rearShield == saved.rearShield)\n    let files = try ScriptFinanceTestFixture.files(fixture.root)\n    let cold = GameRuntime(game: seed)\n    try await cold.load(from: save, persistMigrations: false)\n    let loaded = await cold.snapshot()\n    #expect(loaded.commander.scriptState.instances[id] == saved.commander.scriptState.instances[id])\n    #expect(loaded.commander.equipmentInventory == saved.commander.equipmentInventory)\n    #expect(loaded.commander.equipmentPurchaseHistory == saved.commander.equipmentPurchaseHistory)\n    #expect(loaded.energy == saved.energy && loaded.frontShield == saved.frontShield)\n    #expect(loaded.rearShield == saved.rearShield)\n    #expect(try Data(contentsOf: save) == pointer)\n    #expect(try ScriptFinanceTestFixture.files(fixture.root) == files)\n    try await cold.save(to: save)\n    let (resaved, resavedWorld) = try ScriptSaveStore.read(Data(contentsOf: save), from: save)\n    #expect(resaved.equipmentInventory == inventory && resavedWorld.energy == loaded.energy)\n    #expect(resavedWorld.frontShield == loaded.frontShield && resavedWorld.rearShield == loaded.rearShield)\n  }\n\n  @Test(arguments: [\"energy\", \"front\", \"rear\"])\n  func resourceJoinUsesActualCurrentCapacityAndRejectsExcessOrInvalidValues(field: String) throws {\n    let game = try currentMissionResourceGame()\n    let commander = game.commander\n    var world = game.scriptWorldSave\n    let capacity: Double\n    switch field {\n    case \"energy\": capacity = commander.performance.energy\n    case \"front\": capacity = commander.shieldCapacity\n    default: capacity = commander.rearShieldCapacity\n    }\n    func set(_ value: Double, in world: inout ScriptWorldSave) {\n      switch field {\n      case \"energy\": world.energy = value\n      case \"front\": world.frontShield = value\n      default: world.rearShield = value\n      }\n    }\n    set(capacity, in: &world)\n    #expect(world.valid && world.consistent(with: commander))\n    set(capacity.nextUp, in: &world)\n    #expect(world.valid && !world.consistent(with: commander))\n    for invalid in [-1.0, Double.infinity, Double.nan] {\n      set(invalid, in: &world)\n      #expect(!world.valid)\n    }\n  }\n}\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptIdentityTests.swift",
+      "old": "@Test func anOlderPreparedPlanKeepsItsOriginalRandomIdentitiesAndConditionWhenEventuallyAdmitted()\n  async throws\n{\n  let pack = try identityPack()\n  let folder = FileManager.default.temporaryDirectory.appendingPathComponent(\n    \"old-plan-\" + UUID().uuidString)\n  defer { try? FileManager.default.removeItem(at: folder) }\n  let save = folder.appendingPathComponent(\"commander.json\")\n  let origin = UUID()\n  var game = try identityGame(pack, origin: origin)\n  // Schema 11 predates the native station namespace. This historical scene has no RRS custody.\n  let stations = try #require(game.commander.nativeStations)\n  try #require(stations.ledger.currentDock == nil && stations.currentMainDock == nil)\n  try #require(game.commander.scriptState.missionCalendar == nil)\n  game.commander.nativeStations = nil\n  game.bodies = [try #require(game.bodies.first { $0.id == 0 })]\n  for id in 1..<128 {\n    game.bodies.append(\n      SpaceBody(id: id, hull: .cargo, position: .init(Double(id) * 30, 10000, 10000)))\n  }\n  game.nextBodyID = 128\n  game.ensurePhysicalActors()\n  try #require(game.bodies.count == 128 && game.bodies.allSatisfy { $0.physical != nil })\n  var state = try #require(game.commander.scriptState.instances[origin])\n  let pending = try game.ensureScriptEncounter(\"opponents\", pack: pack, state: &state)\n  #expect(pending.0 == \"encounter.pending\")\n  var cohort = try #require(state.ownedEncounters[\"opponents\"])\n  for alias in cohort.actors.keys {\n    let old = try #require(cohort.actors[alias])\n    let identity = UUID()\n    var body = old.body\n    body.missionActorID = identity\n    body.energy = 41\n    if var npc = body.scriptNPC {\n      for component in npc.components.keys {\n        let value = try #require(npc.components[component])\n        npc.components[component] = .init(identity: UUID(), energy: 16, guns: value.guns)\n      }\n      body.scriptNPC = npc\n    }\n    cohort.actors[alias] = .init(identity: identity, alias: alias, body: body, presence: .prepared)\n  }\n  state.ownedEncounters[\"opponents\"] = cohort\n  state.acknowledgedThrough = nil\n  state.acknowledgedEvents = [1]\n  game.commander.scriptState.instances[origin] = state\n  #expect(game.commander.valid)\n  let identities = physicalIDs(state)\n  let authoringCommander = game.commander\n  let authoringInventory = try #require(authoringCommander.equipmentInventory)\n  let historicalWorld = game.scriptWorldSave\n  try #require(authoringCommander.nativeStations == nil)\n  try #require(historicalWorld.bodies.count == 128 && historicalWorld.nextBodyID == 128)\n  try #require(historicalWorld.bodies.allSatisfy { $0.nativeStationIdentity == nil })\n  try #require(historicalWorld.bodies.allSatisfy { $0.physical?.npc?.resources?.electrical == nil })\n  // The prepared mission owns its original random identities; it does not require modern player gear.\n  var historical = Commander()\n  try #require(historical.shipID == authoringCommander.shipID)\n  try #require(\n    historical.galaxy == authoringCommander.galaxy && historical.system == authoringCommander.system\n  )\n  try #require(authoringCommander.contracts == ScriptContractState())\n  historical.scriptState = authoringCommander.scriptState\n  historical.flightSimulation = authoringCommander.flightSimulation\n  try #require(historical.equipmentInventory == nil && historical.savedEquipmentVersion == nil)\n  try #require(!historical.usesModularDriveSaveVersion && !historical.usesEconomyMiningSaveVersion)\n  try #require(\n    historical.valid && historicalWorld.valid && historicalWorld.consistent(with: historical))\n  let rawEncoder = JSONEncoder()\n  var header = historical\n  header.scriptState = ScriptEngineState()\n  header.contracts = ScriptContractState()\n  let chunks = [\n    \"commander.json\": try rawEncoder.encode(header),\n    \"missions.json\": try rawEncoder.encode(historical.scriptState),\n    \"world.json\": try rawEncoder.encode(historicalWorld),\n    \"contracts.json\": try rawEncoder.encode(historical.contracts),\n  ]\n  let headerBytes = try #require(chunks[\"commander.json\"])\n  let worldBytes = try #require(chunks[\"world.json\"])\n  try EconomyMiningVersionedSave.rejectFields(headerBytes)\n  try RingMiningVersionedSave.rejectFields(headerBytes)\n  try HyperspaceDriveVersionedSave.rejectFields(headerBytes)\n  try ElectricalVersionedSave.rejectFields(headerBytes)\n  try ElectricalVersionedSave.rejectFields(worldBytes)\n  try AlienStorageVersionedSave.rejectFields(headerBytes)\n  try NativePeopleVersionedSave.rejectFields(headerBytes)\n  try EMPVersionedSave.rejectFields(headerBytes, part: .commander)\n  try EMPVersionedSave.rejectFields(worldBytes, part: .world)\n  try ScriptFinanceVersionedSave.rejectFields(headerBytes, part: .commander)\n  let missionsBytes = try #require(chunks[\"missions.json\"])\n  let contractsBytes = try #require(chunks[\"contracts.json\"])\n  try ScriptFinanceVersionedSave.rejectFields(missionsBytes, part: .missions)\n  try ScriptSaveJSONPreflight.rejectCourierFields(headerBytes, location: .rawCommander)\n  try ScriptSaveJSONPreflight.rejectCourierFields(missionsBytes, location: .missions)\n  try ScriptSaveJSONPreflight.rejectCourierFields(contractsBytes, location: .contracts)\n  // Obtain a checked generation from an independently eligible historical store, never Runtime.save.\n  try ScriptSaveStore.write(commander: historical, world: historicalWorld, to: save)\n  let checkedBytes = try Data(contentsOf: save)\n  let checked = try JSONDecoder().decode(ScriptSavePointer.self, from: checkedBytes)\n  try #require(checked.schemaVersion == 21 && checked.scope == \"commander\")\n  let directory = try ScriptSaveStore.generationDirectory(checked.generation, from: save)\n  for (name, bytes) in chunks {\n    try ScriptSaveJSONPreflight.validate(bytes)\n    try bytes.write(to: directory.appendingPathComponent(name), options: .atomic)\n  }\n  let pointer = ScriptSavePointer(\n    format: checked.format, schemaVersion: 11, generation: checked.generation,\n    hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: checked.scope, valueCodec: nil)\n  let historicalPointerBytes = try rawEncoder.encode(pointer)\n  try historicalPointerBytes.write(to: save, options: .atomic)\n  #expect(game.commander == authoringCommander)\n  #expect(game.commander.equipmentInventory == authoringInventory)\n  #expect(game.bodies == historicalWorld.bodies && game.nextBodyID == historicalWorld.nextBodyID)\n  #expect(historical.scriptState == authoringCommander.scriptState)\n  let loaded = GameRuntime(game: game)\n  try await loaded.load(from: save)\n  let imported = await loaded.snapshot().commander.scriptState.instances[origin]?\n    .ownedEncounters[\"opponents\"]?.legacyProvenance\n  try #require(imported?.sourceSchema == 11)\n  // The capacity-pending plan must keep its original condition through a modern resave too.\n  try await loaded.save(to: save)\n  let modernBytes = try Data(contentsOf: save)\n  let modern = try JSONDecoder().decode(ScriptSavePointer.self, from: modernBytes)\n  #expect(modern.schemaVersion == 26)\n  let (strictSaved, strictWorld) = try ScriptSaveStore.read(modernBytes, from: save)\n  #expect(strictSaved.valid && strictWorld.consistent(with: strictSaved))\n  let reloaded = GameRuntime(game: game)\n  try await reloaded.load(from: save)\n  var restored = await reloaded.snapshot()\n  #expect(restored.commander.scriptState.instances[origin]?.data == state.data)\n  #expect(\n    restored.commander.scriptState.instances[origin]?.ownedEncounters[\"opponents\"]?.actors\n      == cohort.actors)\n  #expect(\n    restored.commander.scriptState.instances[origin]?.ownedEncounters[\"opponents\"]?.legacyProvenance\n      == imported)\n  try assertHistoricalIdentityForgeryRollback(\n    commander: restored.commander, world: restored.scriptWorldSave, owner: origin, save: save)\n  restored.bodies.removeAll { $0.hull == .cargo }\n  var original = try #require(restored.commander.scriptState.instances[origin])\n  let admitted = try restored.ensureScriptEncounter(\"opponents\", pack: pack, state: &original)\n  restored.commander.scriptState.instances[origin] = original\n  #expect(admitted.0 == \"encounter.admitted\" && physicalIDs(original) == identities)\n  #expect(\n    original.ownedEncounters[\"opponents\"]?.actors.values.allSatisfy { $0.body.energy == 41 } == true\n  )\n  #expect(restored.bodies.filter { $0.missionActorID != nil }.count == 2)\n  #expect(restored.commander.valid)\n  #expect(\n    original.ownedEncounters[\"opponents\"]?.actors.values.allSatisfy {\n      $0.body.scriptNPC?.components.values.allSatisfy { $0.energy == 16 } == true\n    } == true)\n  #expect(\n    original.ownedEncounters[\"opponents\"]?.legacyProvenance?.actors.values.allSatisfy {\n      $0.prepared == nil\n    } == true)\n  // A genuine player laser changes the admitted condition without changing historical lineage.\n  let lead = try #require(\n    restored.bodies.first { $0.missionActorID == cohort.actors[\"lead\"]?.identity })\n  try #require(lead.position.z > 0 && lead.energy == 41)\n  restored.fireLaser()\n  let damaged = try #require(restored.bodies.first { $0.missionActorID == lead.missionActorID })\n  try #require(damaged.energy > 0 && damaged.energy < lead.energy)\n  let admittedRuntime = GameRuntime(game: restored)\n  try await admittedRuntime.save(to: save)\n  let finalRuntime = GameRuntime(game: restored)\n  try await finalRuntime.load(from: save)\n  let final = await finalRuntime.snapshot()\n  let finalState = try #require(final.commander.scriptState.instances[origin])\n  #expect(physicalIDs(finalState) == identities)\n  #expect(finalState.ownedEncounters[\"opponents\"]?.actors[\"lead\"]?.body.energy == damaged.energy)\n  #expect(final.bodies.first { $0.missionActorID == lead.missionActorID }?.energy == damaged.energy)\n  #expect(finalState.data == state.data && final.commander.valid)\n}\n\nprivate func identitySaveFiles(_ root: URL) throws -> [String: Data] {\n  var files: [String: Data] = [:]\n  for name in try FileManager.default.subpathsOfDirectory(atPath: root.path) {\n    let url = root.appendingPathComponent(name)\n    if try url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true {\n      files[name] = try Data(contentsOf: url)\n    }\n  }\n  return files\n}\n\nprivate func assertHistoricalIdentityForgeryRollback(\n  commander: Commander, world: ScriptWorldSave, owner: UUID, save: URL\n) throws {\n  let receipt = try #require(\n    commander.scriptState.instances[owner]?.ownedEncounters[\"opponents\"]?.legacyProvenance)\n  let bytes = try JSONEncoder().encode(receipt)\n  let root = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])\n  let actors = try #require(root[\"actors\"] as? [String: Any])\n  let lead = try #require(actors[\"lead\"] as? [String: Any])\n  let files = try identitySaveFiles(save.deletingLastPathComponent())\n  for change in 0..<8 {\n    var forged = root\n    var changedActors = actors\n    var changedLead = lead\n    switch change {\n    case 0: forged[\"instanceID\"] = UUID().uuidString\n    case 1: forged[\"digest\"] = String(repeating: \"b\", count: 64)\n    case 2: forged[\"version\"] = \"9.9.9\"\n    case 3: forged[\"encounterID\"] = \"other\"\n    case 4:\n      changedActors[\"other\"] = changedActors.removeValue(forKey: \"lead\")\n      forged[\"actors\"] = changedActors\n    case 5:\n      changedLead[\"identity\"] = UUID().uuidString\n      changedActors[\"lead\"] = changedLead\n      forged[\"actors\"] = changedActors\n    case 6:\n      var components = try #require(changedLead[\"components\"] as? [String: Any])\n      let component = try #require(components.keys.first)\n      components[component] = UUID().uuidString\n      changedLead[\"components\"] = components\n      changedActors[\"lead\"] = changedLead\n      forged[\"actors\"] = changedActors\n    default:\n      var snapshot = try #require(changedLead[\"prepared\"] as? [String: Any])\n      var body = try #require(snapshot[\"body\"] as? [String: Any])\n      body[\"energy\"] = 40\n      snapshot[\"body\"] = body\n      changedLead[\"prepared\"] = snapshot\n      changedActors[\"lead\"] = changedLead\n      forged[\"actors\"] = changedActors\n    }\n    let decoder = JSONDecoder()\n    decoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true\n    let decoded = try decoder.decode(\n      LegacyMissionEncounterProvenance.self, from: JSONSerialization.data(withJSONObject: forged))\n    var candidate = commander\n    candidate.scriptState.instances[owner]?.ownedEncounters[\"opponents\"]?.legacyProvenance = decoded\n    #expect(!candidate.valid)\n    #expect(throws: SaveError.self) {\n      try ScriptSaveStore.write(commander: candidate, world: world, to: save)\n    }\n    #expect(\n      candidate.scriptState.instances[owner]?.ownedEncounters[\"opponents\"]?.legacyProvenance\n        == decoded)\n    #expect(try identitySaveFiles(save.deletingLastPathComponent()) == files)\n  }\n  #expect(throws: SaveError.self) {\n    _ = try JSONDecoder().decode(LegacyMissionEncounterProvenance.self, from: bytes)\n  }\n  for change in 0..<4 {\n    var oversized = root\n    var changedLead = lead\n    switch change {\n    case 0: oversized[\"sourceSchema\"] = 12\n    case 1:\n      oversized[\"actors\"] = Dictionary(\n        uniqueKeysWithValues: (0..<129).map { (\"actor\\($0)\", NSNull()) })\n    case 2:\n      changedLead[\"components\"] = Dictionary(\n        uniqueKeysWithValues: (0..<33).map { (\"part\\($0)\", NSNull()) })\n      oversized[\"actors\"] = [\"lead\": changedLead]\n    default:\n      var snapshot = try #require(changedLead[\"prepared\"] as? [String: Any])\n      var body = try #require(snapshot[\"body\"] as? [String: Any])\n      var npc = try #require(body[\"scriptNPC\"] as? [String: Any])\n      npc[\"components\"] = Dictionary(uniqueKeysWithValues: (0..<33).map { (\"part\\($0)\", NSNull()) })\n      body[\"scriptNPC\"] = npc\n      snapshot[\"body\"] = body\n      changedLead[\"prepared\"] = snapshot\n      oversized[\"actors\"] = [\"lead\": changedLead]\n    }\n    let decoder = JSONDecoder()\n    decoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true\n    let data = try JSONSerialization.data(withJSONObject: oversized)\n    #expect(throws: SaveError.self) {\n      _ = try decoder.decode(LegacyMissionEncounterProvenance.self, from: data)\n    }\n    #expect(try identitySaveFiles(save.deletingLastPathComponent()) == files)\n  }\n  #expect(commander.valid)\n}\n\n",
+      "new": "@Test func currentPreparedPlansKeepCanonicalIdentitiesAndActualDamagedConditionThroughNativeSaves()\n  async throws\n{\n  let pack = try identityPack()\n  let folder = FileManager.default.temporaryDirectory.appendingPathComponent(\"current-plan-\" + UUID().uuidString)\n  defer { try? FileManager.default.removeItem(at: folder) }\n  let save = folder.appendingPathComponent(\"commander.json\")\n  let origin = UUID()\n  var game = try identityGame(pack, origin: origin)\n  // Controlled actor-slot pressure only; these placeholders confer no cargo or material authority.\n  game.bodies = [try #require(game.bodies.first { $0.id == 0 })]\n  for id in 1..<128 {\n    game.bodies.append(.init(id: id, hull: .cargo, position: .init(Double(id) * 30, 10000, 10000)))\n  }\n  game.nextBodyID = 128\n  game.ensurePhysicalActors()\n  let coldSeed = game\n  var state = try #require(game.commander.scriptState.instances[origin])\n  let pending = try game.ensureScriptEncounter(\"opponents\", pack: pack, state: &state)\n  try #require(pending.0 == \"encounter.pending\")\n  let prepared = try #require(state.ownedEncounters[\"opponents\"])\n  let identities = physicalIDs(state)\n  try #require(identities.count == 4 && !prepared.admitted)\n  game.commander.scriptState.instances[origin] = state\n  let random = game.scriptSimulationSave.randomState\n  try GameRuntime.writeCommander(&game, to: save)\n  let bytes = try Data(contentsOf: save)\n  let files = try ScriptFinanceTestFixture.files(folder)\n  let (stored, world) = try ScriptSaveStore.read(bytes, from: save)\n  #expect(stored.valid && world.valid && world.consistent(with: stored))\n  #expect(stored.scriptState.instances[origin]?.ownedEncounters[\"opponents\"] == prepared)\n  try #require(coldSeed.commander.scriptState.instances[origin]?.ownedEncounters[\"opponents\"] == nil)\n  let cold = GameRuntime(game: coldSeed)\n  try await cold.load(from: save, persistMigrations: false)\n  var restored = await cold.snapshot()\n  #expect(restored.commander.scriptState.instances[origin]?.data == state.data)\n  #expect(restored.commander.scriptState.instances[origin]?.ownedEncounters[\"opponents\"] == prepared)\n  #expect(restored.scriptSimulationSave.randomState == random)\n  #expect(try Data(contentsOf: save) == bytes)\n  #expect(try ScriptFinanceTestFixture.files(folder) == files)\n  restored.bodies.removeAll { $0.hull == .cargo }\n  var admittedState = try #require(restored.commander.scriptState.instances[origin])\n  let admitted = try restored.ensureScriptEncounter(\"opponents\", pack: pack, state: &admittedState)\n  restored.commander.scriptState.instances[origin] = admittedState\n  try #require(admitted.0 == \"encounter.admitted\")\n  #expect(physicalIDs(admittedState) == identities && restored.commander.valid)\n  #expect(restored.scriptSimulationSave.randomState == random)\n  #expect(restored.bodies.filter { $0.missionActorID != nil }.count == 2)\n  for (alias, original) in prepared.actors {\n    let actual = try #require(admittedState.ownedEncounters[\"opponents\"]?.actors[alias])\n    #expect(actual.identity == original.identity && actual.body.energy == original.body.energy)\n    #expect(actual.body.scriptNPC?.components == original.body.scriptNPC?.components)\n  }\n  // Actual player damage must persist; no random identity or spent snapshot is injected.\n  let lead = try #require(restored.bodies.first { $0.missionActorID == prepared.actors[\"lead\"]?.identity })\n  try #require(lead.position.z > 0 && lead.energy > 0)\n  let undamagedSeed = restored\n  restored.fireLaser()\n  let damaged = try #require(restored.bodies.first { $0.missionActorID == lead.missionActorID })\n  try #require(damaged.energy > 0 && damaged.energy < lead.energy)\n  let damagedRuntime = GameRuntime(game: restored)\n  try await damagedRuntime.save(to: save)\n  let finalRuntime = GameRuntime(game: undamagedSeed)\n  try await finalRuntime.load(from: save, persistMigrations: false)\n  let final = await finalRuntime.snapshot()\n  let finalState = try #require(final.commander.scriptState.instances[origin])\n  #expect(physicalIDs(finalState) == identities && final.commander.valid)\n  #expect(finalState.ownedEncounters[\"opponents\"]?.actors[\"lead\"]?.body.energy == damaged.energy)\n  #expect(final.bodies.first { $0.missionActorID == lead.missionActorID }?.energy == damaged.energy)\n  #expect(finalState.data == state.data)\n}\n\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptIdentityTests.swift",
+      "old": "  try #require(encounter.legacyProvenance == nil)\n",
+      "new": ""
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptIdentityTests.swift",
+      "old": "@Test func anOversizedLegacySnapshotMigrationPreservesTheActualCommanderAndEverySavedFile()\n  async throws\n{\n  let pack = try identityPack()\n  let origin = UUID()\n  var game = try identityGame(pack, origin: origin)\n  game.bodies = [try #require(game.bodies.first { $0.id == 0 })]\n  for id in 1..<128 {\n    game.bodies.append(.init(id: id, hull: .cargo, position: .init(Double(id) * 30, 10000, 10000)))\n  }\n  game.nextBodyID = 128\n  game.ensurePhysicalActors()\n  var state = try #require(game.commander.scriptState.instances[origin])\n  let pending = try game.ensureScriptEncounter(\"opponents\", pack: pack, state: &state)\n  try #require(pending.0 == \"encounter.pending\")\n  game.commander.scriptState.instances[origin] = state\n  let folder = FileManager.default.temporaryDirectory.appendingPathComponent(\n    \"legacy-size-\" + UUID().uuidString)\n  defer { try? FileManager.default.removeItem(at: folder) }\n  let save = folder.appendingPathComponent(\"commander.json\")\n  let runtime = GameRuntime(game: game)\n  try await runtime.save(to: save)\n  let before = await runtime.snapshot()\n  var padded = before.commander\n  for _ in 0..<6 {\n    var padding = ScriptInstance(\n      id: UUID(), definition: state.definition, version: state.version, digest: state.digest)\n    padding.journal = [String](repeating: String(repeating: \"x\", count: 12000), count: 450)\n    padded.scriptState.instances[padding.id] = padding\n  }\n  var tail = ScriptInstance(\n    id: UUID(), definition: state.definition, version: state.version, digest: state.digest)\n  padded.scriptState.instances[tail.id] = tail\n  let encoder = JSONEncoder()\n  let maximum = 33_554_432\n  var remaining = maximum - 64 - (try encoder.encode(padded.scriptState).count)\n  try #require(remaining > 0)\n  while remaining > 3 {\n    let overhead = tail.journal.isEmpty ? 2 : 3\n    let count = min(12000, remaining - overhead)\n    tail.journal.append(String(repeating: \"x\", count: count))\n    remaining -= count + overhead\n  }\n  padded.scriptState.instances[tail.id] = tail\n  try #require(padded.valid && tail.journal.count <= 512)\n  let legacyBytes = try encoder.encode(padded.scriptState)\n  try #require(legacyBytes.count <= maximum && legacyBytes.count >= maximum - 67)\n  let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: Data(contentsOf: save))\n  let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: save)\n  try legacyBytes.write(to: directory.appendingPathComponent(\"missions.json\"), options: .atomic)\n  var hashes = pointer.hashes\n  hashes[\"missions.json\"] = ScriptPackLibrary.hash(legacyBytes)\n  let old = ScriptSavePointer(\n    format: pointer.format, schemaVersion: 11, generation: pointer.generation,\n    hashes: hashes, scope: pointer.scope)\n  try encoder.encode(old).write(to: save, options: .atomic)\n  let files = try identitySaveFiles(folder)\n  await #expect(throws: SaveError.self) { try await runtime.load(from: save) }\n  let after = await runtime.snapshot()\n  #expect(after.commander == before.commander && after.bodies == before.bodies)\n  #expect(after.time == before.time && after.screen == before.screen && after.speed == before.speed)\n  #expect(\n    after.energy == before.energy && after.frontShield == before.frontShield\n      && after.rearShield == before.rearShield)\n  #expect(after.nextBodyID == before.nextBodyID && after.jumpCountdown == before.jumpCountdown)\n  #expect(try identitySaveFiles(folder) == files)\n}\n",
+      "new": ""
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptPledgeTests.swift",
+      "old": "@Test func pledgeOlderPointersCannotConcealRehashedNewLedgerAndOldSavesInventNothing() throws {\n  let fixture = try PledgeFixture()\n  defer { fixture.clean() }\n  var plain = fixture.game()\n  plain.ensureScriptCalendar(origin: .newCommander)\n  // Preserve a genuine pre-owned-equipment header, separately from canonical publication.\n  _ = try plain.ensureContractBoard(fixture.pack)\n  let legacy = plain\n  #expect(legacy.commander.equipmentInventory == nil)\n  #expect(legacy.commander.savedEquipmentVersion == nil)\n  #expect(!legacy.commander.usesEconomyMiningSaveVersion)\n  func oldEnvelope(version: Int, missions: ScriptEngineState, contracts: ScriptContractState)\n    throws -> ScriptSavePointer\n  {\n    let encoder = version >= 13 ? ScriptValueStorage.encoder() : JSONEncoder()\n    var header = legacy.commander\n    header.scriptState = ScriptEngineState()\n    header.contracts = ScriptContractState()\n    var chunks = [\n      \"commander.json\": try encoder.encode(header),\n      \"missions.json\": try encoder.encode(missions),\n      \"world.json\": try encoder.encode(legacy.scriptWorldSave),\n    ]\n    if version >= 8 { chunks[\"contracts.json\"] = try encoder.encode(contracts) }\n    let generation = UUID().uuidString\n    let directory = fixture.save.appendingPathExtension(\"missions\").appendingPathComponent(\n      generation)\n    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)\n    for (name, bytes) in chunks { try bytes.write(to: directory.appendingPathComponent(name)) }\n    return ScriptSavePointer(\n      format: \"elite-script-save\", schemaVersion: version,\n      generation: generation, hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: \"commander\",\n      valueCodec: version >= 13 ? ScriptValueStorage.codec : nil)\n  }\n  var compatibleHeaderHash: String?\n  for version in 2...19 {\n    let old = try oldEnvelope(\n      version: version, missions: legacy.commander.scriptState,\n      contracts: legacy.commander.contracts)\n    let pointerBytes = try JSONEncoder().encode(old)\n    let (loaded, _) = try ScriptSaveStore.read(pointerBytes, from: fixture.save)\n    #expect(loaded.scriptState.pledgeLedger == nil)\n    #expect(loaded.credits == legacy.commander.credits && loaded.cargo == legacy.commander.cargo)\n    #expect(loaded.name == legacy.commander.name && loaded.shipID == legacy.commander.shipID)\n    #expect(loaded.scriptState == legacy.commander.scriptState)\n    #expect(loaded.contracts == (version >= 8 ? legacy.commander.contracts : ScriptContractState()))\n    if version == 19 { compatibleHeaderHash = old.hashes[\"commander.json\"] }\n  }\n  let acceptedHeaderHash = try #require(compatibleHeaderHash)\n  try GameRuntime.writeCommander(&plain, to: fixture.save)\n  let (key, offer) = try fixture.offer(&plain)\n  _ = try plain.confirmContract(plain.contractAcceptanceQuote(board: key, offer: offer.id))\n  try GameRuntime.writeCommander(&plain, to: fixture.save)\n  let donatedBytes = try Data(contentsOf: fixture.save)\n  let donated = try JSONDecoder().decode(ScriptSavePointer.self, from: donatedBytes)\n  #expect(donated.schemaVersion == 26 && donated.scope == \"commander\")\n  let (stored, _) = try ScriptSaveStore.read(donatedBytes, from: fixture.save)\n  #expect(stored == plain.commander)\n  let ledger = try #require(stored.scriptState.pledgeLedger)\n  try #require(!ledger.receipts.isEmpty)\n  // Modern native fields remain forbidden under an older claimed format.\n  let hidden = ScriptSavePointer(\n    format: donated.format, schemaVersion: 19,\n    generation: donated.generation, hashes: donated.hashes, scope: donated.scope,\n    valueCodec: donated.valueCodec)\n  let hiddenBytes = try JSONEncoder().encode(hidden)\n  #expect(throws: SaveError.self) { try ScriptSaveStore.read(hiddenBytes, from: fixture.save) }\n  // The exact accepted legacy header cannot conceal the actual newer pledge ledger either.\n  let concealed = try oldEnvelope(\n    version: 19, missions: stored.scriptState, contracts: stored.contracts)\n  #expect(concealed.hashes[\"commander.json\"] == acceptedHeaderHash)\n  #expect(concealed.hashes[\"missions.json\"] == donated.hashes[\"missions.json\"])\n  #expect(concealed.hashes[\"contracts.json\"] == donated.hashes[\"contracts.json\"])\n  let concealedBytes = try JSONEncoder().encode(concealed)\n  #expect(throws: SaveError.self) { try ScriptSaveStore.read(concealedBytes, from: fixture.save) }\n  let unchanged = try Data(contentsOf: fixture.save)\n  #expect(unchanged == donatedBytes)\n}\n\n",
+      "new": "@Test func currentPledgeContainersPreserveCustodyAndRejectInvalidEnvelopeClaims() throws {\n  let fixture = try PledgeFixture()\n  defer { fixture.clean() }\n  var plain = fixture.game()\n  plain.ensureScriptCalendar(origin: .newCommander)\n  _ = try plain.ensureContractBoard(fixture.pack)\n  try GameRuntime.writeCommander(&plain, to: fixture.save)\n  let initial = plain.commander\n  let initialBytes = try Data(contentsOf: fixture.save)\n  let initialPointer = try JSONDecoder().decode(ScriptSavePointer.self, from: initialBytes)\n  let (initialStored, initialWorld) = try ScriptSaveStore.read(initialBytes, from: fixture.save)\n  #expect(initialStored.valid && initialWorld.valid && initialWorld.consistent(with: initialStored))\n  #expect(initialStored.scriptState.pledgeLedger == nil)\n  #expect(initialStored.credits == initial.credits && initialStored.cargo == initial.cargo)\n  #expect(initialStored.name == initial.name && initialStored.shipID == initial.shipID)\n  #expect(initialStored.scriptState == initial.scriptState && initialStored.contracts == initial.contracts)\n  let (key, offer) = try fixture.offer(&plain)\n  _ = try plain.confirmContract(plain.contractAcceptanceQuote(board: key, offer: offer.id))\n  try GameRuntime.writeCommander(&plain, to: fixture.save)\n  let donatedBytes = try Data(contentsOf: fixture.save)\n  let donated = try JSONDecoder().decode(ScriptSavePointer.self, from: donatedBytes)\n  #expect(donated.schemaVersion == 26 && donated.scope == \"commander\")\n  let (stored, world) = try ScriptSaveStore.read(donatedBytes, from: fixture.save)\n  #expect(stored == plain.commander && world.valid && world.consistent(with: stored))\n  let ledger = try #require(stored.scriptState.pledgeLedger)\n  try #require(!ledger.receipts.isEmpty)\n  try #require(initialPointer.hashes[\"missions.json\"] != donated.hashes[\"missions.json\"])\n  let files = try ScriptFinanceTestFixture.files(fixture.directory)\n  for condition in [\"unsupported-format\", \"wrong-codec\", \"missing-contracts\", \"wrong-mission-hash\"] {\n    var version = donated.schemaVersion\n    var codec = donated.valueCodec\n    var hashes = donated.hashes\n    switch condition {\n    case \"unsupported-format\": version = 0\n    case \"wrong-codec\": codec = \"unsupported-current-codec\"\n    case \"missing-contracts\": hashes.removeValue(forKey: \"contracts.json\")\n    default: hashes[\"missions.json\"] = initialPointer.hashes[\"missions.json\"]\n    }\n    let invalid = ScriptSavePointer(format: donated.format, schemaVersion: version,\n      generation: donated.generation, hashes: hashes, scope: donated.scope, valueCodec: codec)\n    #expect(throws: SaveError.self) {\n      _ = try ScriptSaveStore.read(JSONEncoder().encode(invalid), from: fixture.save)\n    }\n    #expect(try Data(contentsOf: fixture.save) == donatedBytes)\n    #expect(try ScriptFinanceTestFixture.files(fixture.directory) == files)\n  }\n}\n\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeIdentifiedSalvageSaveTests.swift",
+      "old": "    decoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true\n",
+      "new": ""
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeMeasuredExtractionSaveTests.swift",
+      "old": "  decoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true\n",
+      "new": ""
+    }
+  ],
+  "appends": [
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "text": "\n\nextension ScriptOwnedEncounter {\n  private enum CodingKeys: String, CodingKey, CaseIterable { case id, galaxy, system, admitted, actors }\n\n  public init(from decoder: any Decoder) throws {\n    let fields = try decoder.container(keyedBy: EncounterRecordKey.self)\n    guard Set(fields.allKeys.map(\\.stringValue)).isSubset(of: Set(CodingKeys.allCases.map(\\.rawValue)))\n    else { throw SaveError.invalidCommander }\n    let values = try decoder.container(keyedBy: CodingKeys.self)\n    let actors = try values.nestedContainer(keyedBy: EncounterRecordKey.self, forKey: .actors)\n    guard (1...128).contains(actors.allKeys.count) else { throw SaveError.invalidCommander }\n    self.init(\n      id: try values.decode(String.self, forKey: .id),\n      galaxy: try values.decode(Int.self, forKey: .galaxy),\n      system: try values.decode(Int.self, forKey: .system),\n      admitted: try values.decode(Bool.self, forKey: .admitted),\n      actors: try values.decode([String: ScriptOwnedActor].self, forKey: .actors))\n  }\n\n  private struct EncounterRecordKey: CodingKey {\n    let stringValue: String\n    var intValue: Int? { nil }\n    init?(stringValue: String) { self.stringValue = stringValue }\n    init?(intValue: Int) { return nil }\n  }\n}\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptIdentityTests.swift",
+      "text": "\n@Test(arguments: [\"unknown\", \"null-unknown\", \"oversized-actors\", \"missing-id\"])\nfunc currentEncounterDecoderRejectsUnrecognizedFieldsAndBoundsActorsBeforeChildren(condition: String) throws {\n  let pack = try identityPack()\n  let origin = UUID()\n  var game = try identityGame(pack, origin: origin)\n  var state = try #require(game.commander.scriptState.instances[origin])\n  let admission = try game.ensureScriptEncounter(\"opponents\", pack: pack, state: &state)\n  try #require(admission.0 == \"encounter.admitted\")\n  let encounter = try #require(state.ownedEncounters[\"opponents\"])\n  let bytes = try JSONEncoder().encode(encounter)\n  try #require(try JSONDecoder().decode(ScriptOwnedEncounter.self, from: bytes) == encounter)\n  var object = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])\n  switch condition {\n  case \"unknown\": object[\"unrecognizedAdmissionReceipt\"] = 1\n  case \"null-unknown\": object[\"unrecognizedAdmissionReceipt\"] = NSNull()\n  case \"oversized-actors\":\n    object[\"actors\"] = Dictionary(uniqueKeysWithValues: (0..<129).map { (\"actor\\($0)\", NSNull()) })\n  case \"missing-id\": object.removeValue(forKey: \"id\")\n  default:\n    Issue.record(\"Unknown current encounter schema condition\")\n    return\n  }\n  let malformed = try JSONSerialization.data(withJSONObject: object)\n  if condition == \"oversized-actors\" {\n    #expect(throws: SaveError.invalidCommander) {\n      _ = try JSONDecoder().decode(ScriptOwnedEncounter.self, from: malformed)\n    }\n  } else {\n    #expect(throws: (any Error).self) {\n      _ = try JSONDecoder().decode(ScriptOwnedEncounter.self, from: malformed)\n    }\n  }\n  #expect(try JSONDecoder().decode(ScriptOwnedEncounter.self, from: bytes) == encounter)\n}\n"
+    }
+  ],
+  "deletes": [
+    "Sources/L337Core/LegacyMissionEncounterProvenance.swift",
+    "Tests/L337CoreTests/ScriptLegacyGearPersistenceTests.swift"
+  ],
+  "proposedFiles": [
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/ScriptPersistence.swift",
+      "bytes": 59684,
+      "sha256": "32e1bae8dd1905b5025fb608f227945f41e92a599e5801f9f01392f71609004c"
+    },
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/Game.swift",
+      "bytes": 178029,
+      "sha256": "12acd800a4755256d4272d7e8c1778029337b6fa85a3bae5cd40f007f48a4ebb"
+    },
+    {
+      "path": "Sources/L337Core/ScriptMissionState.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/ScriptMissionState.swift",
+      "bytes": 118334,
+      "sha256": "9ff49042d9f1e21159cf77777024c5457a9b0bb8585e443472add76c17ec6cac"
+    },
+    {
+      "path": "Sources/L337Core/ScriptEncounters.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/ScriptEncounters.swift",
+      "bytes": 83232,
+      "sha256": "74833d319992762ab06a9cc9227296bfc2b61404d1002e86cb607b9da0cb0bcb"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptCourierPersistenceTests.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/ScriptCourierPersistenceTests.swift",
+      "bytes": 22475,
+      "sha256": "64add2856f0a4fa73b3fe1aea0d6775436caf9d9a2796044a41f021c5de67b03"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptTransactionTests.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/ScriptTransactionTests.swift",
+      "bytes": 33461,
+      "sha256": "d78c28940174424c6b000ac54d8a6f501b7d4c129f76c8bb9c9a8a467441673c"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptResourcePersistenceTests.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/ScriptResourcePersistenceTests.swift",
+      "bytes": 5302,
+      "sha256": "5622687f6256e57cc621c51f215deb2fc3a3811fc0c3c1c5fb343bffc478c382"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptIdentityTests.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/ScriptIdentityTests.swift",
+      "bytes": 10639,
+      "sha256": "05338dba3a23668f7cf789d2dbddbc912a8bfe6731b946ae2119d4f71f7db1e1"
+    },
+    {
+      "path": "Tests/L337CoreTests/ScriptPledgeTests.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/ScriptPledgeTests.swift",
+      "bytes": 47941,
+      "sha256": "f924fe3fc7d5bbdb232c44055b1c5d15b86d3997edc3187f324be395601ab514"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeIdentifiedSalvageSaveTests.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/NativeIdentifiedSalvageSaveTests.swift",
+      "bytes": 15530,
+      "sha256": "0633e9a92b1e3816dc98c843e0d49844f1b29b6fddda8477f41d4b9de7304c79"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeMeasuredExtractionSaveTests.swift",
+      "draftPath": "/tmp/elite-g4-current-save-sub21-coherent-successor-FIRST/NativeMeasuredExtractionSaveTests.swift",
+      "bytes": 22954,
+      "sha256": "a8efd84e8b9a3eb4f9872e7520be58877ef9ae8d30031d26313ed8749a36d3c2"
+    }
+  ],
+  "writerEvidence": {
+    "path": "/tmp/elite-g4-current-save-sub21-and-identity-draft/writer-version-evidence.json",
+    "bytes": 8065,
+    "sha256": "2b59fa5093b500768f33b39602cf6ae06d1584ba55bbbd6a6f31b593bbcf738c"
+  },
+  "sourceScope": "Current writer ordinary minimum21 and all named current tags21+ evidenced in immutable source. Require floor21 and preserve entire current feature/mode union; typed codec/4chunks/contracts/current scope/calendar required, retire only unreachable sub21 untyped/optional-contract/passenger-calendar/old-field guards/importer. Preserve current21..25 feature predicates, current prepareEquipment call, sizes/hash/symlink/namespace/current refunds and every mode/state guard. Remove postimport legacy identity type/field/authority across ScriptEncounters+ScriptMissionState, retain actual canonical root/component IDs and NativeGlassMeridian replacement, all disabled/prepared/native-source/geometry/current actor authority predicates. Local strict5field bounded encounter decoder rejects unrecognized claims before typed children; no aliases/defaults or new origin/witness framework.",
+  "testScope": "Replace historical projections with five current functional cases: courier inert data/ordinary labels current writer/coldread; actual purchased accommodation current writer/distinct pre-purchase cold seed; current owned normal resources mission acceptance/direct native read/coldread/resave/capacity+nextUp/nonfinite checks; genuine canonical pending plan current save/coldread/admission/actual laser damage/coldread from undamaged seed; actual pledge publication plus invalid current format/codec/requiredchunk/hash refusal and whole files. Current four prepared tamper/refusal cases preserved except deleted schema flag; add four current encounter decoder cases including actor bound before poisoned children. Retire old schema11 arbitrary-ID/spent snapshot acceptance, its historical forgery/expansion helpers, raw/4/20 projectors, grandfathered1e100 injected statistics/default-drive migration positives, and legacy-only gear artifact. Current issue/refit/receipt/failed return/native return tests pinned readonly; no private receipt/people/equipment or new data terms.",
+  "assertionMapping": "All meaningful current data, contract, cabin, inventory/property, pool, state, root/component identity, real damage, RNG, native admission, file conservation, refusal/rollback and actual pledge invariants have explicit current counterparts. Retired only unsupported historical field/version/migration/quota-source machinery; no assertion relaxation to accept current failure. Full exact edit records/afterimages permit independent assessment. Legacy prepared arbitrary IDs/HP41/component16 replaced with genuine canonical originals and actual laser-earned damage, not a minted source snapshot.",
+  "unfinished": "Current21..25 formats/current branch equipment/policy migrations/rejector APIs and their historical-only tests remain explicitly required separate cleanup; no permanent compatibility waiver or all-reader closure. Do not replace current feature contracts with highest-version-only. Source permission/readiness/rooms/hardware/people/native geometry/loaded physics and actual game acceptance remain open. README text must be reconciled after complete reader policy; no notices/media change.",
+  "limits": "All SOURCE ONLY UNCOMPILED UNRUN; actual factory/actor-slot/geometry/current writer/calendar/cabins/gear/laser/cold read/no-rewrite/pledge prerequisites may fail honestly. No parser/compiler/tests/native/model/geometry/creator/numeric-engineering execution; only stdlib text/hash/Git dryrun. Shared Game/ScriptPersistence/ScriptEncounters/ScriptMissionState requires Root+G1 exact reservation after assessment. No source/profile/cost/physics/readiness waiver.",
+  "parentUnappliedFIRST": {
+    "path": "/tmp/elite-g4-current-save-sub21-and-identity-draft/FIRST.json",
+    "bytes": 87991,
+    "sha256": "77a347df67923ad8c7d1636eb3f3591ae69f61a1fa0507a8286cc2017b4c0bf8"
+  },
+  "interimFinding": "Complete parent review identifies only the two unresolved type references in retained current helpers. Exact successor removes only their obsolete userInfo settings and adds their pins/afterimages. All original39 source substitutions,7 test substitutions,2 appends and2 deletions unchanged. SAME G2 finding disposition and Root exact shared reservation still required; no repository mutation.",
+  "parentReview": {
+    "path": "/tmp/elite-g2-77a347-coupled-sub21-identity-first-review.json",
+    "bytes": 7898,
+    "sha256": "72ddc6edac24f7cf8f5b15049f964ec98ebe4299e2361f9664ae9ebaf881424f"
+  },
+  "supersedesInterimDraft": {
+    "path": "/tmp/elite-g4-current-save-sub21-decoder-reference-successor/FIRST.json",
+    "bytes": 90053,
+    "sha256": "f163d016b35a27d184563179e954c61e5920881b0fb2152e28b0a6ea066da3d4"
+  },
+  "proof": "All original edits/deletions/appends unchanged; only2 exact current-helper obsolete userInfo lines deleted. All11 full inverses and47 current pins exact; git apply --check passes without mutation."
+}

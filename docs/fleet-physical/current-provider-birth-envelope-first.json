@@ -1,0 +1,65 @@
+{
+  "status": "FIRST_CURRENT_PROVIDER_BIRTH_ENVELOPE_SOURCE_MISMATCH_PROPOSAL_BEFORE_ROOT_SHARED_RESERVATION_NO_EDITS",
+  "beforeCommit": "a663bfdd8da2fd5fa1a409e6a10741e369ac3f33",
+  "sourceChanges": [
+    {
+      "path": "Sources/L337Core/NativeCrimboRuntime.swift",
+      "before": "      guard let ship = ShipCatalogue.ship(catalogue), let performance = ship.game,\n        let radius = ship.design.rawMesh.vertices.map(\\.length).max(), radius.isFinite, radius > 0\n      else { throw NativeCrimboError.unavailable }\n      // Ordinary admission still uses its native hull proxy; satisfy that and the actual model.\n      let proxy = Mesh.hull(slot == 6 ? .cobra : .viper).vertices.map(\\.length).max() ?? .infinity\n      guard proxy.isFinite, proxy > 0 else { throw NativeCrimboError.unavailable }\n      radii.append(max(radius, proxy))\n",
+      "after": "      guard let source = OriginalFleetRuntimeHullSource.source(for: catalogue),\n        source.ship.id == catalogue, source.contract.id == catalogue\n      else { throw NativeCrimboError.unavailable }\n      let performance = source.performance\n      let radius = source.envelope.clearanceRadius\n      guard radius.isFinite, radius > 0 else { throw NativeCrimboError.unavailable }\n      radii.append(radius)\n"
+    }
+  ],
+  "testChanges": [
+    {
+      "path": "Tests/L337CoreTests/NativeCrimboRegistryTests.swift",
+      "method": "derivedWholeCircleClearsActualSpheresAndWeakestCatalogueLimits",
+      "before": "  @Test func derivedWholeCircleClearsActualSpheresAndWeakestCatalogueLimits() throws {\n    let registry = try CrimboFixture.registry()\n    let santa = try #require(ShipCatalogue.ship(\"SH150\"))\n    let rudolf = try #require(ShipCatalogue.ship(\"SH151\"))\n    let radii = try (0..<7).map { slot in\n      try #require((slot == 6 ? santa : rudolf).design.rawMesh.vertices.map(\\.length).max())\n    }\n    let limits = try (0..<7).map { slot -> OrbitFormationLimits in\n      let p = try #require((slot == 6 ? santa : rudolf).game)\n      return .init(\n        speed: p.speed * 18, acceleration: p.acceleration * 18, turnRate: min(p.pitch, p.yaw))\n    }\n    let center = registry.orbit.anchor.center\n    let sun = SphereAnchor(position: center + .init(0, 0, 12000), radius: 1100)\n    let obstacle = SphereAnchor(position: center + .init(1700, 0, 0), radius: 600)\n    let environment = NativeCrimboOrbitEnvironment(\n      planet: .init(position: center, radius: registry.orbit.anchor.planetRadius), sun: sun,\n      playerPosition: center + .init(0, 6000, 0), reference: Basis3(),\n      hullRadii: radii, limits: limits, obstacles: [obstacle])\n    let orbit = try NativeCrimboOrbitPolicy.derive(\n      environment: environment, incarnation: UUID(), anchorIdentity: UUID())\n    #expect(\n      NativeCrimboOrbitPolicy.circleDistance(\n        obstacle, center: center, basis: orbit.anchor.basis, radius: orbit.anchor.orbitRadius)\n        > obstacle.radius + (radii.max() ?? 0))\n    #expect(\n      orbit.configuration.angularSpeed * orbit.anchor.orbitRadius <= 0.75\n        * (limits.map(\\.speed).min() ?? 0))\n    #expect(\n      pow(orbit.configuration.angularSpeed, 2) * orbit.anchor.orbitRadius <= 0.5\n        * (limits.map(\\.acceleration).min() ?? 0))\n    #expect(orbit.configuration.angularSpeed <= 0.75 * (limits.map(\\.turnRate).min() ?? 0))\n    #expect(7 * orbit.configuration.slotSpacing < 2 * .pi)\n    #expect(orbit.anchor.center == environment.planet.position)\n    #expect(orbit.configuration.captureTimeout == 2 * .pi / orbit.configuration.angularSpeed)\n  }\n",
+      "after": "  @Test func derivedWholeCircleClearsActualSpheresAndWeakestCatalogueLimits() throws {\n    let registry = try CrimboFixture.registry()\n    let santa = try #require(OriginalFleetRuntimeHullSource.source(for: \"SH150\"))\n    let rudolf = try #require(OriginalFleetRuntimeHullSource.source(for: \"SH151\"))\n    let radii = (0..<7).map { slot in\n      (slot == 6 ? santa : rudolf).envelope.clearanceRadius\n    }\n    let limits = (0..<7).map { slot -> OrbitFormationLimits in\n      let p = (slot == 6 ? santa : rudolf).performance\n      return .init(\n        speed: p.speed * 18, acceleration: p.acceleration * 18, turnRate: min(p.pitch, p.yaw))\n    }\n    let center = registry.orbit.anchor.center\n    let sun = SphereAnchor(position: center + .init(0, 0, 12000), radius: 1100)\n    let obstacle = SphereAnchor(position: center + .init(1700, 0, 0), radius: 600)\n    let environment = NativeCrimboOrbitEnvironment(\n      planet: .init(position: center, radius: registry.orbit.anchor.planetRadius), sun: sun,\n      playerPosition: center + .init(0, 6000, 0), reference: Basis3(),\n      hullRadii: radii, limits: limits, obstacles: [obstacle])\n    let orbit = try NativeCrimboOrbitPolicy.derive(\n      environment: environment, incarnation: UUID(), anchorIdentity: UUID())\n    #expect(\n      NativeCrimboOrbitPolicy.circleDistance(\n        obstacle, center: center, basis: orbit.anchor.basis, radius: orbit.anchor.orbitRadius)\n        > obstacle.radius + (radii.max() ?? 0))\n    #expect(\n      orbit.configuration.angularSpeed * orbit.anchor.orbitRadius <= 0.75\n        * (limits.map(\\.speed).min() ?? 0))\n    #expect(\n      pow(orbit.configuration.angularSpeed, 2) * orbit.anchor.orbitRadius <= 0.5\n        * (limits.map(\\.acceleration).min() ?? 0))\n    #expect(orbit.configuration.angularSpeed <= 0.75 * (limits.map(\\.turnRate).min() ?? 0))\n    #expect(7 * orbit.configuration.slotSpacing < 2 * .pi)\n    #expect(orbit.anchor.center == environment.planet.position)\n    #expect(orbit.configuration.captureTimeout == 2 * .pi / orbit.configuration.angularSpeed)\n  }\n"
+    }
+  ],
+  "pins": [
+    {
+      "path": "Sources/L337Core/NativeCrimboRuntime.swift",
+      "bytes": 33073,
+      "sha256": "5b6e7a7c1e6bb2207bb4b496d9f1423bc678712018404ff90ef8e94e6d416f92"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeCrimboRegistryTests.swift",
+      "bytes": 19498,
+      "sha256": "ed757a4f3b6f1881db0287cc02ff69b7de83f579571b28ddef68661e1c2bf2c4"
+    },
+    {
+      "path": "Sources/L337Core/NativeCrimboRegistry.swift",
+      "bytes": 13907,
+      "sha256": "f066e653512d185e00dcfe35f7d4b6bf8fd8ec617924fb5061859672521a97ef"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 29275,
+      "sha256": "947c6e8b4970ced06d1dde17448139a8ffa2e2637553fb0a06b5c125e59c3774"
+    },
+    {
+      "path": "Sources/L337Core/GameplayWeapons.swift",
+      "bytes": 14593,
+      "sha256": "bf5872f8822f1548e03697d6e807745879801d59465c848a804af2ea9176e731"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/ShipRawMeshCache.swift",
+      "bytes": 1626,
+      "sha256": "13879bfe6a2dd5871c5a26532e82231f25087401966931e6cce99ea8ac8ce23b"
+    },
+    {
+      "path": "Sources/L337Core/OriginalDetailedHullStage.swift",
+      "bytes": 8185,
+      "sha256": "f5ac5559653860ba7fb67d1abc8468739fde65a768f9fc425c7a0451c74c381f"
+    }
+  ],
+  "reason": "Actual ordinary admission for explicit current ship IDs uses OriginalFleetRuntimeHullSource.envelope.clearanceRadius; current provider formation uses uncalibrated design.rawMesh plus unrelated nativeHull proxy. Proxy.viper now resolves31 police, not151 escort, while.cobra lacks binding. Formation must join exact same current per-ID physical/native source and units as birth/render/collision, no generic proxy geometry.",
+  "invariants": "Only one provider environment radius/performance lookup and one existing geometry method source input block. All existing circle/sun/obstacle/speed/acceleration/turnrate/slot/capture/clock assertions retained; numerical constants/algorithm/actualsevenoriginals/ownership/sequence/pendingretry/readiness/crew/equipment/ECM/missiles/orbit budget unchanged. No station/inertia/mission/enum/MC1 edits, no enabled readiness gate or new native source authority. Source missing=>existing unavailable branch before birth sequence allocation, not fallback or cache promotion.",
+  "blockers": "Current150/151 native/source readiness remains independently required; this code does not issue geometry, mass/tensor, actual crew or source registration. Existing all-positive method now requires actual qualified current per-ID source, never skips or accepts absence. Still UNCOMPILED UNRUN; G1sole source/model/native/test executor.",
+  "reviewStage": "Authored proposal only; Root provider shared reservation required before source/test mutation; no constructor/model/numeric eval or source creator execution."
+}

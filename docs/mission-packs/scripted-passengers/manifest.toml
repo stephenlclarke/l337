@@ -42,7 +42,7 @@ id = "delivery"
 text = "Ari is ready to disembark. Confirm to transfer your passenger to the station and collect 100 credits."
 
 [trial]
-ship = "SH023"
+ship = "SH025"
 galaxy = 0
 system = 7
 credits = 100000

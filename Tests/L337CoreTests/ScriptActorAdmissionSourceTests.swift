@@ -9,7 +9,7 @@ private struct ActorAdmissionFixture {
 
   init(
     worldJob: Bool = false, failingPulse: Bool = false, laterOutside: Bool = false,
-    invalidSecondEncounter: Bool = false
+    invalidSecondEncounter: Bool = false, unavailableClassicHull: Hull? = nil
   ) throws {
     directory = FileManager.default.temporaryDirectory.appendingPathComponent(
       "actor-admission-source-" + UUID().uuidString)
@@ -19,14 +19,25 @@ private struct ActorAdmissionFixture {
     try FileManager.default.copyItem(at: original, to: directory)
     let manifest = directory.appendingPathComponent("manifest.toml")
     var text = try String(contentsOf: manifest, encoding: .utf8)
+    let profile: String
+    let craft: String
+    if let hull = unavailableClassicHull {
+      text = text.replacingOccurrences(
+        of: "capabilities = [", with: "capabilities = [\"classic-encounters-v2\", ")
+      profile = "classic-local-freeze-v1"
+      craft = "hull='\(hull.rawValue)'"
+    } else {
+      profile = "profiled-local-freeze-v1"
+      craft = "npc='training-craft'"
+    }
     text += """
 
       [[encounters]]
       id='z-later'
       galaxy=0
       system=7
-      profile='profiled-local-freeze-v1'
-      actors=[{id='later',npc='training-craft',x=\(laterOutside ? "100000.0" : "10000.0"),y=0.0,z=10000.0,hostile=true}]
+      profile='\(profile)'
+      actors=[{id='later',\(craft),x=\(laterOutside ? "100000.0" : "10000.0"),y=0.0,z=10000.0,hostile=true}]
       """
     if worldJob {
       text = text.replacingOccurrences(
@@ -95,6 +106,15 @@ private struct ActorAdmissionFixture {
 }
 
 struct ScriptActorAdmissionSourceTests {
+  @Test(arguments: [Hull.sidewinder, .constrictor, .thargoid, .thargon])
+  func unavailableClassicHullRefusesBeforePublishingAnyCohort(hull: Hull) throws {
+    let fixture = try ActorAdmissionFixture(unavailableClassicHull: hull)
+    defer { fixture.clean() }
+    var (game, instance) = try fixture.game(dispatchUndocked: false)
+    try verifyLaterInvalidActorCommandRollback(
+      &game, instance: instance, reasonContains: "has no exact mission geometry")
+  }
+
   @Test func aLaterInvalidCommandCannotPublishTheFirstActualNativeCohort() throws {
     let fixture = try ActorAdmissionFixture(invalidSecondEncounter: true)
     defer { fixture.clean() }
@@ -424,7 +444,9 @@ struct ScriptActorAdmissionSourceTests {
   }
 }
 
-private func verifyLaterInvalidActorCommandRollback(_ game: inout Game, instance: UUID) throws {
+private func verifyLaterInvalidActorCommandRollback(
+  _ game: inout Game, instance: UUID, reasonContains: String = "exact encounter definition"
+) throws {
   game.emitScriptEvent("station.undocked", only: instance, drain: false)
   let before = game.commander
   let bodies = game.bodies
@@ -433,7 +455,7 @@ private func verifyLaterInvalidActorCommandRollback(_ game: inout Game, instance
   game.drainScriptEvents()
   let owner = try #require(game.commander.scriptState.instances[instance])
   let reason = try #require(owner.suspension)
-  #expect(reason.contains("exact encounter definition"))
+  #expect(reason.contains(reasonContains))
   var expected = before
   expected.scriptState.instances[instance]?.suspension = reason
   #expect(game.commander == expected)

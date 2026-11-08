@@ -13,30 +13,30 @@ enum MainDestinationChange: CaseIterable, Sendable {
 }
 
 struct NativeStationServiceTests {
-  @Test(arguments: NativeStationGeometry.Kind.allCases)
-  func actualEntryProvidesOnlySourceBoundBoardFacts(kind: NativeStationGeometry.Kind) async throws {
+  @Test(arguments: OriginalStationSite.allCases)
+  func actualEntryProvidesOnlySourceBoundBoardFacts(site: OriginalStationSite) async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try stationServiceApproach(kind)
-    try await verifyStationBoardFacts(&game, kind: kind, storage: storage)
+    var game = try stationServiceApproach(site)
+    try await verifyStationBoardFacts(&game, site: site, storage: storage)
   }
 
   @Test(arguments: StationBoardChange.allCases)
   func capturedBoardContextCannotSurviveChangedAuthority(change: StationBoardChange) async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try stationServiceApproach(.headquarters)
+    var game = try stationServiceApproach(.dhole)
     try await verifyChangedStationBoard(&game, change: change, storage: storage)
   }
 
-  @Test(arguments: NativeStationGeometry.Kind.allCases)
-  func validatedLoadKeepsReceiptAndPropertyButReplacesBoardEpoch(kind: NativeStationGeometry.Kind)
+  @Test(arguments: OriginalStationSite.allCases)
+  func validatedLoadKeepsReceiptAndPropertyButReplacesBoardEpoch(site: OriginalStationSite)
     async throws
   {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try stationServiceApproach(kind)
-    try await verifyStationBoardLoad(&game, storage: storage)
+    var game = try stationServiceApproach(site)
+    try await verifyStationBoardLoad(&game, site: site, storage: storage)
   }
 
   @Test func rawDockLedgerCannotProvideLiveBoardFactsOrAServiceContext() throws {
@@ -44,23 +44,23 @@ struct NativeStationServiceTests {
     try verifyRawStationBoardRefusal(&game)
   }
 
-  @Test(arguments: NativeStationGeometry.Kind.allCases)
+  @Test(arguments: OriginalStationSite.allCases)
   func boardOnlyStationsRefusePaidShopsTradingAndRefuellingWithoutPropertyLoss(
-    kind: NativeStationGeometry.Kind
+    site: OriginalStationSite
   ) async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try stationServiceApproach(kind)
+    var game = try stationServiceApproach(site)
     try await verifyStationShopRefusals(&game, storage: storage)
   }
 
-  @Test(arguments: NativeStationGeometry.Kind.allCases)
+  @Test(arguments: OriginalStationSite.allCases)
   func boardOnlyDockStillAllowsValidOwnedEquipmentStorageAndRefitting(
-    kind: NativeStationGeometry.Kind
+    site: OriginalStationSite
   ) async throws {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    var game = try stationServiceApproach(kind)
+    var game = try stationServiceApproach(site)
     try await verifyStationOwnedFitting(&game, storage: storage)
   }
 
@@ -88,13 +88,19 @@ struct NativeStationServiceTests {
   }
 }
 
-private func stationServiceApproach(_ kind: NativeStationGeometry.Kind) throws -> Game {
-  var game = try NativeStationTestFixture.approach(kind: kind)
+private func stationServiceApproach(_ site: OriginalStationSite) throws -> Game {
+  var game = try NativeStationTestFixture.approach(site: site)
   game.commander.credits = 1_000_000
   game.commander.fuel = 10
   game.commander.cargo[0] = 1
-  // G04-S149 Food retains its authenticated quotes; only live stock is mutable.
-  try #require(game.market[0].price == 215 && game.market[0].bidPrice == 197)
+  // Authenticated original seed prices are independent of the mutable live stock.
+  let catalogue = try OriginalMarketCatalogue.loadBundled()
+  let original = try catalogue.initialQuote(
+    galaxy: game.commander.galaxy, system: game.commander.system, commodityIndex: 0)
+  try #require(game.market[0].price == original.askTenthsCR && game.market[0].bidPrice == original.bidTenthsCR)
+  if site.system == .init(galaxy: 0, system: 7) {
+    #expect(original.askTenthsCR == 226 && original.bidTenthsCR == 208)
+  }
   game.market[0].quantity = 10
   try #require(game.commander.originalMarkets.valid)
   try #require(game.commander.valid && game.commander.fuel < game.commander.fuelCapacity)
@@ -117,33 +123,40 @@ private func stationServiceFiles(_ directory: URL) throws -> [String: Data] {
 }
 
 private func verifyStationBoardFacts(
-  _ game: inout Game, kind: NativeStationGeometry.Kind, storage: NativeStationTestStorage
+  _ game: inout Game, site: OriginalStationSite, storage: NativeStationTestStorage
 ) async throws {
   let runtime = GameRuntime(game: game, saveURL: storage.url)
   game = await runtime.advance(delta: 0.1)
-  try #require(game.docked && !game.dockedAtMainStation)
+  try #require(game.docked && !game.dockedAtMainStation && game.nativeStationDockEvidenceIsCurrent)
   let before = game.commander
   let files = try stationServiceFiles(storage.directory)
-  let context = try #require(await runtime.nativeStationBoardContext())
   let receipt = try #require(before.nativeStations?.ledger.currentDock)
-  #expect(context.service.receipt == receipt)
-  #expect(context.service.capability == .rrsContractBoard)
-  #expect(context.station.world == before.equipmentOwnerID)
-  #expect(context.station.system == game.systemIdentity)
-  #expect(context.station.definition == kind.sourceDefinition)
-  #expect(context.hour == Int64(floor(before.scriptState.calendarSeconds / 3600)))
-  #expect(context.legal == before.legal)
-  #expect(context.profileRevision == NativeStationSource.boardRevision)
-  #expect(context.adapterRevision == NativeStationSource.adapterRevision)
-  #expect(context.geometryRevision == NativeStationGeometry.adapterRevision)
-  #expect(await runtime.acceptsNativeStationBoardContext(context))
+  let owner = try #require(before.equipmentOwnerID)
+  #expect(receipt.station == site.identity(world: owner))
+  if site == .remoteUtility {
+    #expect(await runtime.nativeStationBoardContext() == nil)
+    let record = try #require(before.nativeStations?.ledger.records.first { $0.identity == receipt.station })
+    #expect(record.descriptor.capabilities.isEmpty && record.utilitySourceBirth != nil)
+    #expect(site.sealedDispatchDefinition == nil)
+  } else {
+    let context = try #require(await runtime.nativeStationBoardContext())
+    #expect(context.service.receipt == receipt && context.service.capability == .sealedDispatchBoard)
+    #expect(context.station.world == before.equipmentOwnerID)
+    #expect(context.station.system == game.systemIdentity && context.station.definition == receipt.station.definition)
+    #expect(context.hour == Int64(floor(before.scriptState.calendarSeconds / 3600)))
+    #expect(context.legal == before.legal)
+    #expect(context.profileRevision == NativeStationSource.boardRevision)
+    #expect(context.adapterRevision == NativeStationSource.adapterRevision)
+    #expect(context.geometryRevision == NativeStationGeometry.adapterRevision)
+    #expect(await runtime.acceptsNativeStationBoardContext(context))
+  }
   let facts = game.nativeStationFacts
-  #expect(facts["board_origin"]?.string == (kind == .waystation ? "source" : "project_extension"))
+  #expect(facts["board_origin"]?.string == "authored")
   #expect(facts["station_id"]?.string == receipt.station.key)
   #expect(facts["docking_sequence"]?.integer == Int64(receipt.sequence))
   #expect(facts["lifecycle_revision"]?.integer == Int64(receipt.lifecycleRevision))
-  #expect(facts["market_available"] == .bool(false))
-  #expect(facts["equipment_available"] == .bool(false))
+  #expect(facts["capabilities"] == .array(site == .remoteUtility ? [] : [.string("sealedDispatchBoard")]))
+  #expect(facts["market_available"] == .bool(false) && facts["equipment_available"] == .bool(false))
   #expect(facts["runtime_epoch"] == nil && facts["service_token"] == nil)
   #expect(game.nativeStationEventFacts?.value["board_origin"] == facts["board_origin"])
   #expect(!game.stationAllowsMarketServices && !game.stationAllowsEquipmentServices)
@@ -203,12 +216,16 @@ private func verifyChangedStationBoard(
 }
 
 private func verifyStationBoardLoad(
-  _ game: inout Game, storage: NativeStationTestStorage
+  _ game: inout Game, site: OriginalStationSite, storage: NativeStationTestStorage
 ) async throws {
   let runtime = GameRuntime(game: game, saveURL: storage.url)
   game = await runtime.advance(delta: 0.1)
-  let prior = try #require(game.nativeStationBoardContext)
+  try #require(game.nativeStationDockEvidenceIsCurrent)
+  let receipt = try #require(game.commander.nativeStations?.ledger.currentDock)
+  let prior = game.nativeStationBoardContext
   let priorFacts = game.nativeStationFacts
+  if site == .remoteUtility { #expect(prior == nil) }
+  else { try #require(prior != nil) }
   try await runtime.save(to: storage.url)
   game = await runtime.snapshot()
   let before = game.commander
@@ -216,17 +233,22 @@ private func verifyStationBoardLoad(
   let reloaded = GameRuntime()
   try await reloaded.load(from: storage.url, persistMigrations: false)
   game = await reloaded.snapshot()
-  let fresh = try #require(await reloaded.nativeStationBoardContext())
-  #expect(fresh.service.receipt == prior.service.receipt)
-  #expect(fresh.service.runtimeEpoch != prior.service.runtimeEpoch)
-  #expect(fresh.hour == prior.hour && fresh.legal == prior.legal)
-  #expect(!game.acceptsNativeStationBoardContext(prior))
-  #expect(await reloaded.acceptsNativeStationBoardContext(fresh))
-  // The same Lua-visible facts survive; they do not carry the fresh native authority.
-  #expect(game.nativeStationFacts == priorFacts)
-  #expect(game.commander == before)
-  #expect(
-    game.commander.nativeStations?.ledger.nextDockSequence == prior.service.receipt.sequence + 1)
+  #expect(game.nativeStationDockEvidenceIsCurrent)
+  if site == .remoteUtility {
+    #expect(await reloaded.nativeStationBoardContext() == nil)
+  } else {
+    let original = try #require(prior)
+    let fresh = try #require(await reloaded.nativeStationBoardContext())
+    #expect(fresh.service.receipt == original.service.receipt)
+    #expect(fresh.service.runtimeEpoch != original.service.runtimeEpoch)
+    #expect(fresh.hour == original.hour && fresh.legal == original.legal)
+    #expect(!game.acceptsNativeStationBoardContext(original))
+    #expect(await reloaded.acceptsNativeStationBoardContext(fresh))
+  }
+  // Stored facts are history. A validated load may issue fresh authority, never accept the old epoch.
+  #expect(game.nativeStationFacts == priorFacts && game.commander == before)
+  #expect(game.commander.nativeStations?.ledger.currentDock == receipt)
+  #expect(game.commander.nativeStations?.ledger.nextDockSequence == receipt.sequence + 1)
   #expect(try stationServiceFiles(storage.directory) == files)
 }
 
@@ -252,7 +274,10 @@ private func verifyStationShopRefusals(
 ) async throws {
   let runtime = GameRuntime(game: game, saveURL: storage.url)
   game = await runtime.advance(delta: 0.1)
-  try #require(game.nativeStationBoardContext != nil)
+  try #require(game.nativeStationDockEvidenceIsCurrent)
+  let receipt = try #require(game.commander.nativeStations?.ledger.currentDock)
+  let source = try #require(NativeStationSource.binding(for: receipt.station))
+  #expect((game.nativeStationBoardContext != nil) == (source.site != .remoteUtility))
   let before = game.commander
   let market = game.market
   let files = try stationServiceFiles(storage.directory)
@@ -322,7 +347,9 @@ private func verifyStationOwnedFitting(
     items: inventory.items)
   #expect(game.commander == expected)
   #expect(game.commander.nativeStations?.ledger.currentDock == receipt)
-  #expect(game.nativeStationBoardContext != nil && !game.stationAllowsEquipmentServices)
+  let source = try #require(NativeStationSource.binding(for: receipt.station))
+  #expect((game.nativeStationBoardContext != nil) == (source.site != .remoteUtility))
+  #expect(!game.stationAllowsEquipmentServices && game.nativeStationDockEvidenceIsCurrent)
   let (saved, _) = try ScriptSaveStore.read(Data(contentsOf: storage.url), from: storage.url)
   #expect(saved == game.commander)
   let cabin = game.commander.accommodation.addCabin(.stateroomSingle, fitted: false)

@@ -1,0 +1,127 @@
+{
+  "status": "FIRST_ROOT_RESERVED_REVIEWED3HUNKS_PLUS_EXACT_OPTIONAL_BOOL_CORRECTION_BEFORE_MUTATION",
+  "beforeCommit": "0a7153a4a4e213312db60bbba9ae8f840b8d3de2",
+  "childManifest": {
+    "path": "/tmp/elite-mc1-original-emp-target-explicit-source-child/manifest.json",
+    "bytes": 1708,
+    "sha256": "203e16ced2b28d1641ec97c04950c93a2b0aef7df93a2cec549b1ed7472aaf13"
+  },
+  "review": {
+    "path": "/tmp/elite-g2-203e-emp-target-explicit-source-review/review.json",
+    "bytes": 3659,
+    "sha256": "cd6b49cf5f1eb74daa83cef317595c24790a9141e96ed80528bfccc81e7e8427"
+  },
+  "target": {
+    "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+    "before": {
+      "bytes": 28518,
+      "sha256": "5f7a08c3db6ba77639b85211f20e05ced849cc752de59b0db8c1d194d65f1356"
+    },
+    "originalReviewedAfter": {
+      "bytes": 30885,
+      "sha256": "019cc6bd0e60cb51214ac54ef16d85271b2b23b0493146ba55f0ad435a323495"
+    }
+  },
+  "finding": {
+    "status": "SOURCE_FINDING_REVIEWED203E_OPTIONAL_BOOL_IN_CONJUNCTION_NOT_APPLIED",
+    "childSHA256": "203e16ced2b28d1641ec97c04950c93a2b0aef7df93a2cec549b1ed7472aaf13",
+    "afterArtifact": {
+      "path": "/tmp/elite-mc1-original-emp-target-explicit-source-child/EMPReleaseBoundaryFixture.after.swift",
+      "bytes": 30885,
+      "sha256": "019cc6bd0e60cb51214ac54ef16d85271b2b23b0493146ba55f0ad435a323495"
+    },
+    "typedDeclaration": {
+      "path": "Sources/L337Core/FlightSimulationState.swift",
+      "bytes": 5051,
+      "sha256": "c11a0ba32437c9e4e1a949e4d714c78ae2cfcd8f6b659856f63d92fd05ba3927",
+      "declaration": "public var canonicalSpin: Bool?"
+    },
+    "before": "  try #require(physical.angularVelocity == .init(0, 0.1, 0.2) && physical.canonicalSpin)",
+    "after": "  try #require(physical.angularVelocity == .init(0, 0.1, 0.2) && physical.canonicalSpin == true)",
+    "reason": "&& requires Bool operands; canonicalSpin is Bool? and needs explicit == true. This retains exact canonical=true postjoin already set by helper, no nil acceptance or semantic weakening. No custom && overload found. Static source finding, no actual compiler/test run.",
+    "scope": "One expression in newly added203e postjoin. Correct tiny child/source review then compose exact revised patch; no Root/G1/oldcaller/stock/condition changes."
+  },
+  "17Immutable223DependenciesExact": true,
+  "currentFutureTrafficSourceDeltas": [
+    {
+      "path": "Sources/L337Core/GameplayScene.swift",
+      "bytes": 20641,
+      "sha256": "23e99db96a86e68e0afb39e72e826fcf936c0ee0dcef19531c08a2e985507c31",
+      "reason": "Exact separately authored0a freshtraffic source; caller interaction UNRUN"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 29275,
+      "sha256": "947c6e8b4970ced06d1dde17448139a8ffa2e2637553fb0a06b5c125e59c3774",
+      "reason": "Exact separately authored0a freshtraffic source; caller interaction UNRUN"
+    }
+  ],
+  "protectedCurrent0aBatch": [
+    {
+      "path": "Sources/L337Core/AmbientEncounterPolicy.swift",
+      "bytes": 4498,
+      "sha256": "cbb6bbc7786e01fae19c4618b5baa0af283ae8e773f8b985a5bf65699a8145ae"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 29275,
+      "sha256": "947c6e8b4970ced06d1dde17448139a8ffa2e2637553fb0a06b5c125e59c3774"
+    },
+    {
+      "path": "Sources/L337Core/GameplayScene.swift",
+      "bytes": 20641,
+      "sha256": "23e99db96a86e68e0afb39e72e826fcf936c0ee0dcef19531c08a2e985507c31"
+    },
+    {
+      "path": "Sources/L337Core/NativeFleetLaunchSource.swift",
+      "bytes": 1375,
+      "sha256": "548e2e3f14e22217b78afa20dfefd5eea6bdedd6a5b0382c8af0283bb55481b3"
+    },
+    {
+      "path": "Tests/L337CoreTests/AmbientEncounterPolicyTests.swift",
+      "bytes": 18414,
+      "sha256": "fc40d784fa5bb9c800eab6310e3b61f04b09dc9689fadccbb3add6b45bc88b46"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeFleetLaunchSourceTests.swift",
+      "bytes": 2962,
+      "sha256": "9ca376a0702831d896bd818d6ad486a5843fa5bcd1c601d6e0e74e3c61f78c29"
+    },
+    {
+      "path": "docs/COMPLETION-LEDGER.md",
+      "bytes": 2219000,
+      "sha256": "5271a7a658c7b0e0fc65391b0872cb770c75bb39cc822f0007ba4b82f83deeac"
+    },
+    {
+      "path": "docs/fleet-physical/current-fresh-native-traffic-first.json",
+      "bytes": 16692,
+      "sha256": "c84e49f6a4f0f74d87d11bbb8457a00c9526245d00a240259267dd24271d8cbc"
+    },
+    {
+      "path": "docs/fleet-physical/current-fresh-native-traffic-literal-hunks.json",
+      "bytes": 9670,
+      "sha256": "ddd723ca41824882157d1f440590c64ee827f569d9b64c1b983c0f6feb28bac2"
+    },
+    {
+      "path": "docs/fleet-physical/current-fresh-native-traffic-optimizer-refinement-first.json",
+      "bytes": 651,
+      "sha256": "e8b12dfe69efc7b72119612ccb826b0886ec93f1e9307d1d6fe81c8fbcf99b80"
+    },
+    {
+      "path": "docs/fleet-physical/current-fresh-native-traffic-test-refinement-first.json",
+      "bytes": 1315,
+      "sha256": "a76a5cb816fd4cd31f3df5c8c1c2b7362dbbad0165365df05ecef3187b98bd03"
+    },
+    {
+      "path": "docs/fleet-physical/current-fresh-native-traffic-tests-first.json",
+      "bytes": 11050,
+      "sha256": "c84cb07eb900a639398f6b2aac8838e92380cdd952bd5e96a11abe473506bd01"
+    },
+    {
+      "path": "docs/fleet-physical/current-fresh-native-traffic-word-layout-first.json",
+      "bytes": 775,
+      "sha256": "af92762b4a694efdeb3ef0c9f84b93c3ea570041497dba3f07a246e1fe32db4b"
+    }
+  ],
+  "scope": "Only original reviewed forward.patch3hunks in one helper +Root-reserved sole optional canonicalSpin conjunction ==true. No stale wholefile replacement; no other helper/caller/default/source/stock/conditions or G1 overlay. Current source finding OPEN pending G2 corrected successor review, all Swift UNRUN."
+}

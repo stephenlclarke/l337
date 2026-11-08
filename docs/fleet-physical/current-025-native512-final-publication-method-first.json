@@ -1,0 +1,38 @@
+{
+  "status": "FROZEN_SOURCE_METHOD_FINAL_RECEIPT_PUBLICATION_SUCCESSOR_REVIEW_PENDING_NOT_EXECUTED",
+  "beforeCommit": "4022a79d607585bf0fa5e7286be57c352e83aa96",
+  "method": "current025-fixed-component-native512-v1",
+  "source": {
+    "path": "docs/fleet-physical/author-current-025-native512.py",
+    "bytes": 38920,
+    "sha256": "7410e13b59b31ea6035feb3bd27cb035f56a22ed9d49015b5b161ac0bf1ce79f"
+  },
+  "input": {
+    "path": "docs/fleet-physical/current-025-native512-method-input-first.json",
+    "bytes": 10653,
+    "sha256": "0fb59f2f331fd08ae9535633de930ee5005fc5ed6bdf64198687652b13f232e7"
+  },
+  "ownCounterAndOperationGroupsAndCheckSourceExact": true,
+  "publicationHelpersExactReviewedCopy": true,
+  "authorityRequiredBeforeGeometry": "Future Root decision/sourceMethodReview/methodFirst exactpins, executionAuthorizedtrue/scopeSH025/method, plus own source/input/currentresource/originalsource/caller/creator pins. Process integrity only; not a cryptographic capability. No authority exists yet.",
+  "numericalBoundary": "Own fixed native authoring code; no import/syntax test/numerical or geometry evaluation performed. No original creator/repohelper/native/compiler/renderer/tests. Fixed all27components/310copiedvertices/512newtriangles; no search or adaptive rings/caps/tolerance.",
+  "sourceOrNativeQualification": false,
+  "limitations": "Source review needed for fixed ring topology/UV/provenance/output bounds and all retained parts; actual allview/nativeclearance/physical/gameplay qualified acceptance remains separate G1 work. Output TOML serialization is unparsed/unrun; decoder tests required later.",
+  "initialMethodFirst": {
+    "path": "docs/fleet-physical/current-025-native512-source-method-first.json",
+    "bytes": 1618,
+    "sha256": "17bc280cebf86cf495eac292cc2fa7aced3a0157e0cd409393abb66411545be3"
+  },
+  "counterFailureCorrectionFIRST": {
+    "path": "/tmp/elite-g4-current-025-native512-source-method/counter-failure-receipt-correction-FIRST.json",
+    "bytes": 884,
+    "sha256": "a1ad35ca51df884f6b9b96e98bc71cfdf4d00ff6f9c79c1f3e6725386b752a68"
+  },
+  "publicationCorrectionFIRST": {
+    "path": "docs/fleet-physical/current-025-native512-final-publication-correction-first.json",
+    "bytes": 2245,
+    "sha256": "328f99725f2fb3ffe1cacdd76bcd3d5d4cf68989c642cff8d549f86772dc3ba3"
+  },
+  "sourceArithmeticExactByInverse": true,
+  "terminalFailureSemantics": "Full already-built receipt plus current OPS/caps/input/source/authority/last outputDocuments attempt/original authoring status retained even if final receipt absent/unknown; exact artifact statuses and exit1; no false absence or runtime qualification."
+}

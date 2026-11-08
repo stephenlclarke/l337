@@ -49,6 +49,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
   defer { try? FileManager.default.removeItem(at: folder) }
   #expect(unsupported.missingCapabilities == ["world-actors-v1"])
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [unsupported]
   #expect(game.scriptGallery.first?.status == .locked)
   #expect(throws: MissionPackError.self) { try game.acceptScriptMission(unsupported) }
@@ -79,6 +80,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
 @Test func scriptedCourierUsesAtomicCustodyConfirmAndNeverReplaysReward() throws {
   let pack = try ScriptPackLibrary.read(scriptedCourier)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.credits = 1000
   game.screen = .status
   game.scriptPacks = [pack]
@@ -123,6 +125,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
     )
     defer { try? FileManager.default.removeItem(at: folder) }
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.commander.credits = 1000
     game.scriptPacks = [bad]
     #expect(throws: MissionPackError.self) { try game.acceptScriptMission(bad) }
@@ -130,27 +133,33 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
   }
 }
 
-@Test func scriptsKeepOldSavesAndMissingPackCargoIntact() throws {
+@Test func currentSavedMissingPackKeepsMissionCargo() async throws {
   let pack = try ScriptPackLibrary.read(scriptedCourier)
+  let storage = try NativeStationTestStorage()
+  defer { storage.clean() }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   _ = try game.acceptScriptMission(pack)
-  let bytes = try JSONEncoder().encode(game.commander)
-  let restored = try JSONDecoder().decode(Commander.self, from: bytes)
-  #expect(restored == game.commander && restored.valid)
-  var missing = Game(executive: false)
-  #expect({ missing.load(restored) }())
+  let writer = GameRuntime(game: game)
+  try await writer.save(to: storage.url)
+  let saved = await writer.snapshot().commander
+  let bytes = try Data(contentsOf: storage.url)
+  let reader = GameRuntime(game: Game(executive: false))
+  try await reader.load(from: storage.url, persistMigrations: false)
+  var missing = await reader.snapshot()
+  #expect(missing.commander.equipmentInventory == saved.equipmentInventory)
+  #expect(missing.commander.equipmentPurchaseHistory == saved.equipmentPurchaseHistory)
   missing.emitScriptEvent("contact.requested")
   #expect(missing.commander.cargoTonnes == 1)
   #expect(missing.scriptGallery.first?.status == .locked)
-  #expect(
-    try JSONDecoder().decode(Commander.self, from: JSONEncoder().encode(Commander())).scriptState
-      .instances.isEmpty)
+  #expect(try Data(contentsOf: storage.url) == bytes)
 }
 
 @Test func scriptGalleryTrialAndMenuAcceptAreIndependent() async throws {
   let pack = try ScriptPackLibrary.read(scriptedCourier)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   let runtime = GameRuntime(game: game)
@@ -182,6 +191,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
     ], source: source)
   defer { try? FileManager.default.removeItem(at: directory) }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   let id = try game.acceptScriptMission(pack)
   game.advanceScriptClocks(delta: 0.1, flight: false, local: true)
@@ -200,6 +210,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
 @Test func staleDialogueAndUndeclaredCapabilitiesCannotTransferProperty() throws {
   let pack = try ScriptPackLibrary.read(scriptedCourier)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.credits = 1000
   game.scriptPacks = [pack]
   game.screen = .status
@@ -222,6 +233,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
 @Test func scriptGenerationSavesRestoreOwnedStateAndRejectCorruptionAtomically() async throws {
   let pack = try ScriptPackLibrary.read(scriptedCourier)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .front
   game.docked = false
   game.scriptPacks = [pack]
@@ -257,6 +269,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
 @Test func scriptSaveWriteFailureKeepsPreviousGenerationAndRuntime() async throws {
   let pack = try ScriptPackLibrary.read(scriptedCourier)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   _ = try game.acceptScriptMission(pack)
@@ -318,6 +331,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
   let (pack, folder) = try scriptPack(source: source)
   defer { try? FileManager.default.removeItem(at: folder) }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   // Fixed rollback budget for this transaction fixture, independent of starter cash.
   game.commander.credits = 1000
   game.screen = .sell
@@ -328,7 +342,12 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
   #expect(game.commander.scriptState.instances[id]?.suspension != nil)
   #expect(game.commander.credits == 1000)
   // The player genuinely sells one tonne through the existing trade action before retrying.
-  let runtime = GameRuntime(game: game)
+  let saveFolder = FileManager.default.temporaryDirectory.appendingPathComponent(
+    "script-resume-" + UUID().uuidString, isDirectory: true)
+  defer { try? FileManager.default.removeItem(at: saveFolder) }
+  let save = saveFolder.appendingPathComponent("commander.json")
+  let runtime = GameRuntime(game: game, saveURL: save)
+  try await runtime.save(to: save)
   await runtime.key("return")
   let balance = await runtime.snapshot().commander.credits
   try await runtime.resumeScriptMission(id)
@@ -345,6 +364,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
 @Test func scriptedHandoffRendersNativeTextAndBackAtDifferentWindowSizes() async throws {
   let pack = try ScriptPackLibrary.read(scriptedCourier)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   let runtime = GameRuntime(game: game)
@@ -364,6 +384,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
 @Test func scriptContactShortcutRespectsTextInputPauseAndNestedScreens() async throws {
   let pack = try ScriptPackLibrary.read(scriptedCourier)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   game.screen = .chart
   game.mapSearch.active = true
@@ -397,6 +418,7 @@ private func scriptPack(_ edits: [(String, String)] = [], source: String? = nil)
     ], source: source)
   defer { try? FileManager.default.removeItem(at: folder) }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [pack]
   let id = try game.acceptScriptMission(pack)
   let unchanged = game.commander.scriptState

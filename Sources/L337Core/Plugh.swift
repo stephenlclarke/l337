@@ -93,13 +93,14 @@ extension Game {
     screen = .rumour
   }
   public var stationRumour: String {
+    let outcome = c01RegionalOutcomeRumour.map { $0 + "\n\n" } ?? ""
     let anchor = Universe.galaxy(number: commander.galaxy)[Plugh.rumourStation]
     if !commander.hasDiscoveredPlugh(in: commander.galaxy) {
       return
-        "A dockside trader mentions a hidden discount port. Ask for station rumours at \(anchor.name)'s main station in Galaxy \(commander.galaxy + 1). The location is not on public charts."
+        outcome + "A dockside trader mentions a hidden discount port. Ask for station rumours at \(anchor.name)'s main station in Galaxy \(commander.galaxy + 1). The location is not on public charts."
     }
     let secret = Plugh.system(galaxy: commander.galaxy)
     return
-      "PLUGH is now marked on your Galaxy \(commander.galaxy + 1) chart at \(secret.x),\(secret.y), near \(anchor.name). All commodities are stocked. All supported equipment, including Naval and Capital rewards, can be bought here at secret-shop prices. Purchases cost money and normal fitting limits apply. Default discount: 25%, rounded to 0.1 CR. Fuel is discounted once on the full refill transaction. Discovery is saved for this galaxy."
+      outcome + "PLUGH is now marked on your Galaxy \(commander.galaxy + 1) chart at \(secret.x),\(secret.y), near \(anchor.name). All commodities are stocked. All supported equipment, including Naval and Capital rewards, can be bought here at secret-shop prices. Purchases cost money and normal fitting limits apply. Default discount: 25%, rounded to 0.1 CR. Fuel is discounted once on the full refill transaction. Discovery is saved for this galaxy."
   }
 }

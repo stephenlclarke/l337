@@ -61,135 +61,44 @@ public enum SalvageCatalogue {
   private static let entries: [Entry] = [
     .init(
       id: "SH005", role: .bulkFreighter,
-      basis: "Anaconda: source bulk-cargo profiles; abandoned trader variant."),
+      basis: "Bison: original container-hauler hull; abandoned bulk-freighter variant."),
     .init(
       id: "SH006", role: .bulkFreighter,
       basis:
-        "Anaconda Mk II: project Anaconda-family wreck designation; estimated refit is not historical capital-size evidence."
+        "Bison Mk II: original heavy container-hauler hull; abandoned bulk-freighter variant."
     ),
     .init(
       id: "SH012", role: .largeLiner,
-      basis: "Beluga Liner: named liner and project large-liner geometry."),
-    .init(id: "SH013", role: .bulkFreighter, basis: "Boa: source 125-tonne bulk trader."),
+      basis: "Sable Liner: current original liner geometry; existing separately abandoned variant only."),
+    .init(id: "SH013", role: .bulkFreighter, basis: "Buffalo: original cargo-drum freighter; abandoned bulk-freighter variant."),
     .init(
       id: "SH014", role: .bulkFreighter,
-      basis: "Boa Mk II: 175-tonne project cargo refit and sourced Boa-family model."),
+      basis: "Buffalo Mk II: original enlarged cargo-drum freighter; abandoned bulk-freighter variant."),
     .init(
       id: "SH019", role: .largeExplorer,
-      basis: "Caspian Explorer: named exploration hull and project large-explorer geometry."),
+      basis: "Gazelle Explorer: current original explorer geometry; existing separately abandoned variant only."),
     .init(
       id: "SH028", role: .abandonedInfrastructure,
-      basis: "Coriolis: separately abandoned site variant only; active main station excluded."),
+      basis: "Lion Citadel: existing separately abandoned site variant only; active main station excluded."),
     .init(
       id: "SH034", role: .abandonedInfrastructure,
-      basis: "Dodo: separately abandoned site variant only; active main station excluded."),
-    .init(
-      id: "SH043", role: .capitalWarship,
-      basis: "Farragut-class Battle Cruiser: explicit Capital ship catalogue class."),
-    .init(
-      id: "SH045", role: .largeCombatShip,
-      basis: "Federal Corvette: named corvette and project large combat hull."),
-    .init(
-      id: "SH062", role: .largeTransport,
-      basis: "Imperial Clipper: project large transport/liner wreck designation."),
-    .init(
-      id: "SH064", role: .largeCombatShip,
-      basis: "Imperial Cutter: project large armed transport; abandonment still required."),
-    .init(
-      id: "SH066", role: .largeExplorer,
-      basis:
-        "Imperial Explorer: project large exploration refit; source NPC cargo is not used as physical scale."
-    ),
-    .init(
-      id: "SH067", role: .bulkFreighter,
-      basis: "Imperial Trader: sourced trader model and 125-tonne source cargo."),
-    .init(
-      id: "SH077", role: .bulkFreighter,
-      basis: "Lion: project 750-tonne bulk-trader refit, explicitly estimated."),
-    .init(
-      id: "SH078", role: .deepSpaceCruiser,
-      basis: "Long Range Cruiser: named cruiser and project 3000-tonne refit."),
-    .init(
-      id: "SH079", role: .carrier,
-      basis: "Lynx Bulk Carrier: named carrier and project large carrier geometry."),
-    .init(
-      id: "SH080", role: .largeLiner,
-      basis:
-        "Lynx Highliner: project highliner-family designation; generic refit does not establish physical capacity."
-    ),
-    .init(
-      id: "SH081", role: .capitalWarship,
-      basis: "Majestic-class Interdictor: explicit Capital ship catalogue class."),
-    .init(
-      id: "SH093", role: .largeLiner, basis: "Orca: project passenger-liner wreck designation."),
-    .init(
-      id: "SH096", role: .bulkFreighter,
-      basis: "Panther Clipper: sourced model with source 1000-tonne cargo profile."),
-    .init(
-      id: "SH097", role: .bulkFreighter,
-      basis: "Panther Clipper Mk II: project large freighter geometry and 192-tonne refit."),
-    .init(
-      id: "SH098", role: .bulkFreighter,
-      basis: "Puma Clipper: sourced model with source 500-tonne cargo profile."),
-    .init(
-      id: "SH099", role: .bulkFreighter,
-      basis: "Python: source 100-tonne bulk trader; project salvage classification."),
+      basis: "Frog Station: existing separately abandoned site variant only; active main station excluded."),
     .init(
       id: "SH102", role: .abandonedInfrastructure,
-      basis: "Rock hermit: abandoned installation only, never an occupied station."),
-    .init(
-      id: "SH123", role: .alienCapital,
-      basis:
-        "Thargoid Titan: explicit named alien capital-scale project hull; not other Thargoid craft."
-    ),
-    .init(
-      id: "SH127", role: .bulkFreighter,
-      basis: "Tiger Trader: sourced model with source 400-tonne cargo profile."),
-    .init(
-      id: "SH129", role: .largeCombatShip,
-      basis: "Type-10 Defender: project large armed freighter and 220-tonne refit."),
-    .init(
-      id: "SH132", role: .bulkFreighter,
-      basis: "Type-7 Transporter: project large freighter and 128-tonne refit."),
-    .init(
-      id: "SH133", role: .bulkFreighter,
-      basis: "Type-8 Transporter: project large freighter and 176-tonne refit."),
-    .init(
-      id: "SH134", role: .bulkFreighter,
-      basis: "Type-9 Heavy: named heavy transport and 348-tonne project refit."),
+      basis: "Dhole Haven: existing separately abandoned rock-hermit installation only; occupied station excluded."),
     .init(
       id: "SH141", role: .abandonedInfrastructure,
       basis:
-        "Wheel station: abandoned site variant only; bounds derive from vertices despite absent dimensions metadata."
+        "Salamander Station: current original geometry; existing separately abandoned site variant only; active station excluded."
     ),
-    .init(
-      id: "SH155", role: .largeEncounterShip,
-      basis:
-        "Ionics Funnelweb: explicitly reviewed large encounter hull using its sourced assembly, not its generic player refit."
-    ),
-    .init(
-      id: "SH156", role: .abandonedInfrastructure,
-      basis: "CR150 weapons platform: explicit Combat platform; abandoned variant only."),
-    .init(
-      id: "SH161", role: .carrier,
-      basis:
-        "Military Fiasco Leviathan: explicit Carrier/station catalogue class, using its complete sourced hull."
-    ),
-    .init(
-      id: "SH164", role: .abandonedInfrastructure,
-      basis:
-        "Deposed medical drug factory: explicit Station/factory encounter object; abandoned variant only."
-    ),
-    .init(
-      id: "SH171", role: .deepSpaceCruiser,
-      basis: "Liberator DSV2: explicit Deep-space cruiser class and authored full-size model."),
   ]
 
   public static let all: [SalvageProfile] = entries.compactMap(makeProfile)
 
   private static let disabledProfiles: [String: SalvageProfile] = Dictionary(
     uniqueKeysWithValues: ShipCatalogue.all.compactMap { ship in
-      guard ship.game != nil, !all.contains(where: { $0.catalogueShipID == ship.id }),
+      guard !OriginalDetailedHullStage.blocksRuntime(ship.id), ship.game != nil,
+        !all.contains(where: { $0.catalogueShipID == ship.id }),
         let profile = makeProfile(
           .init(
             id: ship.id, role: .disabledOrdinaryShip,
@@ -203,7 +112,8 @@ public enum SalvageCatalogue {
     all.first { $0.catalogueShipID == catalogueShipID }
   }
   static func empProfile(catalogueShipID: String) -> SalvageProfile? {
-    profile(catalogueShipID: catalogueShipID) ?? disabledProfiles[catalogueShipID]
+    guard !OriginalDetailedHullStage.blocksRuntime(catalogueShipID) else { return nil }
+    return profile(catalogueShipID: catalogueShipID) ?? disabledProfiles[catalogueShipID]
   }
 
   public static func eligibility(
@@ -229,10 +139,22 @@ public enum SalvageCatalogue {
   }
 
   private static func makeProfile(_ entry: Entry) -> SalvageProfile? {
-    guard let ship = ShipCatalogue.all.first(where: { $0.id == entry.id }) else { return nil }
+    guard !OriginalDetailedHullStage.blocksRuntime(entry.id),
+      let ship = ShipCatalogue.all.first(where: { $0.id == entry.id }) else { return nil }
     // previewMesh is showroom-normalised; native wreck geometry must use authoritative raw vertices.
     let mesh: Mesh
-    if entry.role == .disabledOrdinaryShip, entry.id != "SH061",
+    if OriginalPlayerHullActivation.resourceSHA256[entry.id] != nil
+      || OriginalFleetPhysicalData.registrations[entry.id] != nil
+    {
+      guard let physical = ship.physicalSourceContract else { return nil }
+      mesh = physical.physicalMesh
+    } else if entry.id == "SH005" || entry.id == "SH006"
+      || entry.id == "SH013" || entry.id == "SH014" || entry.id == "SH026"
+    {
+      // Read the owned design directly: the raw cache also consumes salvage profiles.
+      guard let native = ship.nativeDesign else { return nil }
+      mesh = native.rawMesh
+    } else if entry.role == .disabledOrdinaryShip, entry.id != "SH061",
       let retained = ShipCatalogue.rawMesh(entry.id)
     {
       mesh = retained
@@ -295,14 +217,10 @@ public enum SalvageCatalogue {
   }
 
   private static func sourceRoles(_ entry: Entry) -> Set<SalvageSourceRole> {
-    // Specific sourced installations override generic project hull classifications.
-    switch entry.id {
-    case "SH102": return [.rockHermit, .station]
-    case "SH156": return [.weaponsPlatform]
-    case "SH164": return [.drugFactory]
-    case "SH161": return [.militaryCapital]
-    default: break
-    }
+    // This existing rock-hermit site retains its separately owned source role.
+    // New environment resources need their own actual salvage producer/ownership;
+    // their catalogue IDs cannot inherit a predecessor's installation role.
+    if entry.id == "SH102" { return [.rockHermit, .station] }
     switch entry.role {
     case .capitalWarship: return [.militaryCapital]
     case .alienCapital: return [.thargoid]

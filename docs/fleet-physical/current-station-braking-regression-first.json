@@ -1,0 +1,35 @@
+{
+  "status": "FIRST_DIRECT_CURRENT_SOURCE_BRAKING_BOUND_REGRESSION_PROPOSAL_NO_EDITS",
+  "beforeCommit": "29d5169c7207ad2e0e34c882308be8b05953c651",
+  "pins": [
+    {
+      "path": "Sources/L337Core/StationAutoDefence.swift",
+      "bytes": 40744,
+      "sha256": "8a26657f1fd9328db694cd2f12f29077ccf5dc1b31e8995c8182b778973386d7"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 159571,
+      "sha256": "657b158848fde653fe3155055d8daf57bb85ce78586dd7c68ffa453d2f7d9828"
+    },
+    {
+      "path": "Sources/L337Core/GameplayEncounters.swift",
+      "bytes": 19957,
+      "sha256": "e01d4b1971b46c6ee1de1548edd2eb7eb3d7df74f3f31f5ac0fea999cf058c3d"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    }
+  ],
+  "sourceScope": "Factor only already-reserved private spawned-body lookup into production-used internal static overload stationAutoNPCMotionAllowance(catalogueShipID:String?,horizon:Double)->Double?. Same exact current source guard else nil and call existing acceleration-labelled bound with max(1,source.performance.acceleration*18). Private method delegates actual physical.catalogueShipID; canonicalSpin guard and unspawned branch remain literal exact. Existing acceleration-labelled bound formula/visibility unchanged. No test-only hook/private access expansion.",
+  "testScope": "Add one meaningful actual movement regression in existing station suite using Game(executive:false) actual launch and controlled stationAutoAddNativeAttacker at (0,0,3000), sequence941. Same mandatory actual current025 source/full stock, no substitute/skip. Set controlled initial velocity0, current system-coordinate navigate destination and actual source maximum speed, neutral hostile flag; measure initial and final system positions around two real0.1 tick updates. Require current explicitID source matches; test production-used catalogueID-labelled bound for horizon0.2 covers observed displacement. Require displacement exceeds old fallback2 acceleration bound to demonstrate old lookup underbound for this exact current source; no source/rate/resource edits or cap tuning. Nil/unknown ID must return nil, and original actor IDs/profile/capacities/fuel/cargo/missiles retained. This is controlled unit motion, not ordinary earned encounter or native/game acceptance.",
+  "proofPlan": "Both whole-file literal inverses to29d5169c; all3readonly source pins exact; original resource extraction/current observation/known-target/braking formulas/all old tests exact. No runtime execution byG4. If test reveals underlying source/steering blocker under G1, retain actual failure rather than tune.",
+  "limits": "Proposal only and no aftercode. Root reservation needed for new helper/test delta. All existing current025/native geometry964, actual people/loaded physics/journey/runtime review gates remain OPEN. G1 sole executor, no numeric/model/native execution."
+}

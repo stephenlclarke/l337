@@ -61,9 +61,10 @@ struct NativeSalvageOfferTests {
   }
 
   @Test func actualNativeOfferRequiresExactCurrentContextSourceAndWholeRequest() async throws {
-    let released = try await NativeSalvageAdmissionTestFixture.released()
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
     let (original, pending, request) = try NativeSalvageAdmissionTestFixture.offered(released)
-    let context = try #require(original.gameplayContext())
+    let ownedPreparationRequired1 = original.gameplayContext()
+    let context = try #require(ownedPreparationRequired1)
     #expect(original.nativeOfferedSalvageLot(for: request, context: context) == pending.lot)
     let savedWorld = try #require(original.commander.alienStorageState?.current.snapshot)
     let originalLedger = original.commander.salvageLedger
@@ -125,9 +126,10 @@ struct NativeSalvageOfferTests {
   @Test func nativeOfferStagingRejectsStaleSourceAndUnallocatedNamespaceWithoutMutation()
     async throws
   {
-    let released = try await NativeSalvageAdmissionTestFixture.released()
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
     var (original, pending) = try NativeSalvageAdmissionTestFixture.parked(released)
-    let context = try #require(original.gameplayContext())
+    let ownedPreparationRequired2 = original.gameplayContext()
+    let context = try #require(ownedPreparationRequired2)
     let allocated = original.commander.salvageLedger.reserveNativeSpawnIdentity(
       system: context.system, visit: context.visit)
     let spawn = try #require(allocated)

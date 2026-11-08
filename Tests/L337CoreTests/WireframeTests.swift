@@ -52,9 +52,11 @@ private func covered(_ a: Point2, _ b: Point2, by lines: [WireLine]) -> Bool {
   return false
 }
 
-private func hasCompleteOutline(_ body: SpaceBody, in frame: Frame) -> Bool {
-  if body.hull == .cobra { return hasCompleteSourceBoundary(body, in: frame) }
-  let points = Mesh.hull(body.hull).vertices.map { vertex -> Point2 in
+private func hasCompleteOutline(
+  _ body: SpaceBody, mesh: Mesh, oracle: SourceBoundaryOracle?, in frame: Frame
+) -> Bool {
+  if let oracle { return hasCompleteSourceBoundary(body, oracle: oracle, in: frame) }
+  let points = mesh.vertices.map { vertex -> Point2 in
     let p =
       body.orientation.apply(
         vertex.rotated(pitch: body.hull == .station ? 0 : body.rotation * 0.4, roll: body.rotation))
@@ -73,8 +75,8 @@ private struct SourceBoundaryOracle: Sendable {
   let mesh: Mesh
   let faces: [(normal: Vector3, center: Vector3)]
   let edges: [(a: Int, b: Int, adjacent: [Int])]
-  init() {
-    mesh = Mesh.hull(.cobra)
+  init(mesh: Mesh) {
+    self.mesh = mesh
     let tokens = mesh.vertices.map { p in
       "\(Int((p.x * 1e6).rounded()))/\(Int((p.y * 1e6).rounded()))/\(Int((p.z * 1e6).rounded()))"
     }
@@ -104,10 +106,9 @@ private struct SourceBoundaryOracle: Sendable {
     edges = Array(edgeData.values)
   }
 }
-private let cobraBoundaryOracle = SourceBoundaryOracle()
-
-private func hasCompleteSourceBoundary(_ body: SpaceBody, in frame: Frame) -> Bool {
-  let oracle = cobraBoundaryOracle
+private func hasCompleteSourceBoundary(
+  _ body: SpaceBody, oracle: SourceBoundaryOracle, in frame: Frame
+) -> Bool {
   let vertices = oracle.mesh.vertices.map { body.modelVector($0) + body.position }
   let facing = oracle.faces.map {
     body.modelVector($0.normal).dot(body.modelVector($0.center) + body.position) < 0
@@ -127,21 +128,24 @@ private func hasCompleteSourceBoundary(_ body: SpaceBody, in frame: Frame) -> Bo
     }
 }
 
-@Test func rotatingHullsKeepEverySilhouetteSegment() {
-  var game = Game(executive: false)
+@Test func rotatingHullsKeepEverySilhouetteSegment() throws {
+  var game = try currentRendererSourceGame()
   game.commander.shipDisplayStyle = .whiteWireframe
-  game.screen = .front
-  for hull in Hull.allCases {
+  for source in try currentRendererMeshSources() {
+    let hull = source.hull
+    let oracle = source.catalogueShipID == "SH025" ? SourceBoundaryOracle(mesh: source.mesh) : nil
+    let original = try currentRendererSourceBody(
+      source, game: &game, minimumDistance: 800, rotation: 0)
     // Five rolls and two pitch turns cover the complete combined rotation.
     for step in stride(from: 0, to: 720, by: hull == .cobra ? 5 : 1) {
       let rotation = Double(step) * .pi / 72
-      var body = SpaceBody(id: 0, hull: hull, position: .init(0, 0, 800))
+      var body = original
       body.rotation = rotation
       game.bodies = [body]
       let frame = Display.render(game, rasterizeGraphics: false)
       #expect(
-        hasCompleteOutline(body, in: frame),
-        "Missing silhouette for \(hull) at rotation step \(step)")
+        hasCompleteOutline(body, mesh: source.mesh, oracle: oracle, in: frame),
+        "Missing silhouette for \(source.catalogueShipID ?? hull.rawValue) at rotation step \(step)")
     }
   }
 }
@@ -149,6 +153,7 @@ private func hasCompleteSourceBoundary(_ body: SpaceBody, in frame: Frame) -> Bo
 @Test func titleShipStaysCompleteBetweenTextRows() {
   var game = Game(executive: false)
   game.screen = .title
+  let oracle = SourceBoundaryOracle(mesh: L337Branding.titleMesh)
   for step in stride(from: 0, to: 720, by: 5) {
     let rotation = Double(step) * .pi / 72
     game.time = rotation / 0.6
@@ -167,6 +172,7 @@ private func hasCompleteSourceBoundary(_ body: SpaceBody, in frame: Frame) -> Bo
     }
     var body = SpaceBody(id: 0, hull: .cobra, position: .init(0, 0, 280))
     body.rotation = rotation
-    #expect(hasCompleteOutline(body, in: edges), "Missing shaded title outline at \(step)")
+    #expect(hasCompleteSourceBoundary(body, oracle: oracle, in: edges),
+      "Missing shaded title outline at \(step)")
   }
 }

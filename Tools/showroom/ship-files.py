@@ -9,9 +9,9 @@ import tomllib
 from pathlib import Path
 
 SHIP_FOLDER = Path('Sources/L337Core/Resources/Ships')
-_balance_spec = importlib.util.spec_from_file_location('catalogue_balance', Path(__file__).with_name('catalogue-balance.py'))
-catalogue_balance = importlib.util.module_from_spec(_balance_spec)
-_balance_spec.loader.exec_module(catalogue_balance)
+_contract_spec = importlib.util.spec_from_file_location('fleet_source_contract', Path(__file__).with_name('fleet-source-contract.py'))
+fleet_source_contract = importlib.util.module_from_spec(_contract_spec)
+_contract_spec.loader.exec_module(fleet_source_contract)
 
 
 def value(item):
@@ -25,7 +25,7 @@ def value(item):
 
 def write_ship(path, ship):
     """Keep editable game specs and actual geometry in one self-contained file."""
-    ship = catalogue_balance.apply_balance(ship, catalogue_balance.load_balances())
+    fleet_source_contract.require_current_ship(ship)
     lines = ['# Authoritative ship definition. See docs/SHIP-FILES.md.']
     for key,item in ship.items():
         if key not in {'catalogue','game','design','nativeDesign','nativeCombat','profiles'} and item is not None:

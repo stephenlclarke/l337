@@ -51,6 +51,7 @@ class PackagedResourceTests(unittest.TestCase):
             "OriginalWorlds/PROVENANCE.json": b"world provenance",
             "OriginalShipTextures/texture.png": b"original ship texture",
             "OriginalFleetShowroomModels/SH084.json": b"original showroom model",
+            "OriginalFleetPhysical/SH036.json": b"original physical source budget",
             "OriginalMarkets/catalogue.json": b"original market catalogue",
             "Legal/NOTICE.txt": b"legal notice",
             "ModelLicenses/model.txt": b"model licence",
@@ -61,6 +62,10 @@ class PackagedResourceTests(unittest.TestCase):
         self.root_patch = patch.object(package_macos, "ROOT", self.root)
         self.root_patch.start()
         self.addCleanup(self.root_patch.stop)
+        # These fixtures isolate byte/path equality; real provenance has its own tests.
+        provenance = patch("retired_hull_resources.verify_resource_tree", return_value={})
+        provenance.start()
+        self.addCleanup(provenance.stop)
 
     @staticmethod
     def write(path, contents):
@@ -120,6 +125,7 @@ class PackagedResourceTests(unittest.TestCase):
                 "OriginalWorlds/catalogue.json",
                 "OriginalShipTextures/texture.png",
                 "OriginalFleetShowroomModels/SH084.json",
+                "OriginalFleetPhysical/SH036.json",
                 "OriginalMarkets/catalogue.json",
             ):
                 with self.subTest(nested=nested, relative=relative):

@@ -1,0 +1,85 @@
+{
+  "status": "FIRST_FROZEN_BEFORE_SAME_OWNER_EARNED_SH025_JOURNEY_EDITS",
+  "beforeCommit": "be076ae8",
+  "beforePins": [
+    {
+      "path": "Tests/L337CoreTests/OriginalBisonAcquisitionRuntimeTests.swift",
+      "bytes": 33447,
+      "sha256": "76c1c5cf8d00a04e1f572d29e5f6118fd6a68d093369ae1512e045d27feafc1e"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeCrewServiceUnitTests.swift",
+      "bytes": 13432,
+      "sha256": "bc0569f2adb4ce00c6dd9bd69a41f74aa9db1d0809a7003c3fea63874954764e"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeCrewReadinessUnitTests.swift",
+      "bytes": 12044,
+      "sha256": "72c98c7c4c45eee69488828e052228c7e6867b55a0c0e6ba68f8f531688f50b1"
+    },
+    {
+      "path": "Tests/L337CoreTests/MedusaCurrentSourceTests.swift",
+      "bytes": 4447,
+      "sha256": "4fde449671c85ea9e2aad55012efefe3071b40c331d3580de2d5e37a4407fcd3"
+    }
+  ],
+  "newHelper": "NativeEarnedPeregrineFixture.runtime(storage:) appended in OriginalBisonAcquisitionRuntimeTests.swift; same-file access to existing real bounded flight/EMP/work/scoop helpers, never relabel Bison source",
+  "initialInput": {
+    "hull": "SH013 Buffalo controlled initial ownership ONLY",
+    "system": 7,
+    "galaxy": 0,
+    "creditsTenths": 20000000,
+    "sameRuntimeAndOwnerThroughReturn": true,
+    "noPostStartHullFundsFuelGift": true,
+    "crew": 5
+  },
+  "source": "Current exact SH025 OriginalFleetRuntimeHullSource/current R3 stock; controlled one hostile native admission, not natural sampling. Existing Bison methods and arguments unchanged. No manual actor/body mint.",
+  "paidShop": "At actual attained Verasel69: basic/advanced/docking targeting, pulse shield, extra energy, military laser/shield, EMP, cutter, scoops, salvage targeting, Navigation Basic/Advanced/Military; actual quote/apply in actor scriptCommand verifies debit/item/owner/history; nine actual EMP upgrades axis grades1..3",
+  "journey": {
+    "outbound": [
+      7,
+      185,
+      0,
+      69
+    ],
+    "return": [
+      69,
+      0,
+      185,
+      7
+    ],
+    "fuelBoundaryRoundtrip": [
+      7,
+      185,
+      7
+    ],
+    "actualFuelPurchases": "ordinary procurementRefuel only; no fuel assignments",
+    "crew": "real five hires before outbound; real five disembarks at return; rehire same five only for fixed fuel-consuming roundtrip, disembark same five; then original three-hire exchange test",
+    "checkpoint": "same actual GameRuntime returned docked at7 on initial Buffalo13, paid genuine SH025 collection >=50kg and original owner/hull retained"
+  },
+  "caps": {
+    "travelLegs": 8,
+    "departureFramesPerLeg": 300,
+    "jumpFramesPerLeg": 500,
+    "dockFramesPerLeg": 3000,
+    "recoveryDockFrames": 3000,
+    "bankFrames": 256,
+    "departureToAllowedRegion": 300,
+    "disableFrames": 1200,
+    "crewDepartureFrames": 600,
+    "cutFrames": 1200,
+    "cutFlushFrames": 1,
+    "scoopFrames": 1200,
+    "targetSelectionTabsPerPhase": 128,
+    "toolSelectionKeys": 4,
+    "bodies": 256,
+    "navigationDestinationCandidates": 256,
+    "admittedHostiles": 1,
+    "fixedSpawnSequence": 9001,
+    "retryOrCapRaise": 0
+  },
+  "fuelRoutePositive": "Same earned checkpoint first actual full-tank overcapacity quote refusal, ordinary fixed two-leg journey consumes fuel, actual navigation producer chooses first ordinary known direct destination with distance > target9 and <= source10; existing route keys set/clear plan, exact route issue then genuine eventual allowed quote. No projection grants eligibility.",
+  "existingMethodPreservation": "Original crew contract/place compaction/people/cash/showroom/writer rollback/retry assertions preserved; add earned proof and cold save/load assertions. Domain synchronous fuel/route component stays explicitly separate.",
+  "additionalMedusaScope": "Assert both current name and ID search and exact original face materials/UV in retained current positive; actual Q01 Medusa acquisition remains unfinished.",
+  "validation": "SOURCE ONLY. All Swift UNCOMPILED UNRUN; sole G1 executor. No original creator imports/execution, geometry/model queries, numerical engineering pass or station/provider edits."
+}

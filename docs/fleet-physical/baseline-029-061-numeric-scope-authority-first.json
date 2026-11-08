@@ -1,0 +1,22 @@
+{
+  "status": "ROOT_EXACT_NEW_TWO_ROW_SCOPE_AUTHORITY_FROZEN_BEFORE_ONE_PASS",
+  "rootDecision": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a134a1-be40-77d0-9e11-64a775729232/fleet-completion-batch/BASELINE-029-061-ENGINEERING-DISPOSITION.json",
+    "bytes": 1888,
+    "sha256": "4dbb6a8455d1d862b382ccffc36d96d52a66229ddb8061c0e7821d5816c5bec6"
+  },
+  "codeInputOutputFIRST": {
+    "path": "docs/fleet-physical/baseline-029-061-area-moment-authoring-first.json",
+    "bytes": 4100,
+    "sha256": "ea78658aa84ce2057b2d4ea6369c6737b03f746fb04ef8e16c4ad547bc063085"
+  },
+  "scopeIDs": [
+    "SH029",
+    "SH061"
+  ],
+  "authorizedExactlyOneOwnStdlibPass": true,
+  "noFurtherAcknowledgementGate": true,
+  "noRetryOrCapToleranceChange": true,
+  "previousSH122STOPUntouched": true,
+  "nativeOrGeometryQualificationGranted": false
+}

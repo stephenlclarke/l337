@@ -8,6 +8,7 @@ import Testing
 struct NativePresentationTests {
   @MainActor @Test func directPresentationPreservesFullRenderedFrame() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.commander.shipDisplayStyle = .shadedPanels
     game.celestials = [

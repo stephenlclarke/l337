@@ -1,0 +1,96 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH151-complete29part-native-candidate-v1",
+  "ship": "SH151",
+  "name": "Lynx Escort",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "60b92ff51c768bb94a5ab22a8014c5fe7cac85ad7e2f7c78617da403d3697927",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH151-design.toml",
+    "bytes": 531330,
+    "sha256": "a568ebe3e5acd9833c743c5c325581ddfaa436a6e4be491887779b22b814681e"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH151.toml",
+    "bytes": 555443,
+    "sha256": "c77846c3a61193e094e8c5dcb2b0286ad0f56b8355fb0992a60517adcf44ffe1"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH151.json",
+    "bytes": 111363,
+    "sha256": "109e3ac78e1a9119f4c3e1ff793408e22eaf3e137902d924028ed082af153b16"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH151-native-candidate-recipe.py",
+    "bytes": 8795,
+    "sha256": "14023f9df6f9c54c1f0d6b5e769a9122abe1173a8ef20592ffc1eb45525f9495"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH151-native-candidate-tests.py",
+    "bytes": 10516,
+    "sha256": "c4e80f410c3149795b75e9e687af28bfd5dc08686723dcad28f2013a3de8055d"
+  },
+  "baseline": {
+    "declaredNativeFaces": 988,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "sidePodLoftSides": 3,
+    "centralBodyAndCockpitSides": 4,
+    "driveLoftSides": 3,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      7,
+      12,
+      17,
+      20,
+      21,
+      23,
+      24
+    ],
+    "unchangedFixedOriginalParts": 21,
+    "status": "NEW coarse triangular sidepod/drive angular proposals; actual output count/full source-profile/void/material/UV fidelity UNKNOWN and may fail qualification"
+  },
+  "retained": [
+    "Full5station centralbody/endcaps with original own width/height/length",
+    "BOTH full5station sidepods/endcaps at original own offsets/length, ALL TWELVE analytical wells with actual own skins0vs1/inset3",
+    "BOTH complete original wings with own actual sweep and ALL FOUR original military mount structures",
+    "Full cockpit/support and BOTH complete connected drive supports/casings/luminous recesses at xbeam*.42/radius.20",
+    "Exact original rust-ivory palette/emission/material/texture/license/source and full regenerated face UVs"
+  ],
+  "coordinates": "Own original length2.7/beam2.45, bodywidth0.39, wingsweep-0.2, sidepodZ-.05/lengthfraction0.63. Source axes/coordinates/origin/units retained, no recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Lynx Escort R3/name/game remain pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "Wing/sidepod/mount labels grant no installed guns/attackorigins/hardware/power/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed own source/creator/primitive/resource hashes before geometry; other entry cannot substitute source/resource",
+    "Both actual packaged original geometry tables remain exact",
+    "All29 original parts/material sets remain, especially ALL12wells/BOTHwings/ALL4mounts/full pods/cockpit/drives",
+    "All FIVE original pod stations and TWO per drive/radii remain; sampler restores4 before cockpit then explicitly3 fordrives",
+    "Complete actual output must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "All21 fixed parts exact own original vertices/localfaces/materialsequence/UVs, ownpod profiles/offset/radii and drive rings/radii required",
+    "Full coarse sidepod/drive continuous source-profile/void/material/UV/native fidelity requires actual G1 evidence and may reject; no automatic acceptance"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run29part/exact21fixed/ALL12wells/BOTHwings/ALL4mounts/ownpodprofiles/drive rings-radii/crossentry/UV/input checks then assess full coarse-source/native fidelity. Reject unfaithful proposal without waiver. G4 continues independent originals."
+  }
+}

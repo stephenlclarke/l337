@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct InitialMainStationDockingTests {
   private func preparedGame() throws -> Game {
@@ -155,31 +156,38 @@ struct InitialMainStationDockingTests {
 
   /// Pure geometry/control inputs, not a flown journey or docking authority. The
   /// endpoint follows the ordinary native constant-world-velocity/Euler-rate step.
-  private func geometricStep(lateral: Double = 0) throws -> (Game, ShipPose) {
+  private func geometricStep(lateral: Double = 3) throws -> (Game, ShipPose) {
     var game = try preparedGame()
     game.launch()
     try #require(!game.docked && !game.paused)
     for _ in 0..<32 where game.autoTargetBody?.id != 0 { game.key("tab") }
     try #require(game.autoTargetBody?.id == 0 && game.dockingComputer)
+    let station = try #require(game.bodies.first { $0.id == 0 })
+    let model = game.modelPose(of: station)
+    let port = MainStationGeometry.docking
     var before = ShipPose()
-    before.position = .init(lateral, 0, -96)
+    before.position = model.systemPoint(
+      port.center + port.outward * 6 + port.up.cross(port.outward) * lateral)
+    before.orientation.z = model.orientation.apply(port.outward) * -1
+    before.orientation.y = model.orientation.apply(port.up)
+    before.orientation.x = before.orientation.y.cross(before.orientation.z)
     NativeStationTestFixture.reframe(&game, to: before)
     game.speed = 0
     game.pitch = 0
     game.yaw = 0
-    game.roll = -0.3
+    game.roll = station.rotationRate
     game.autoPilot.setApproachVelocity(.init(0, 0, 48))
     var after = before
-    after.advanceView(pitch: 0, roll: -0.03, yaw: 0, translation: .init(0, 0, 4.8))
+    after.advanceView(pitch: 0, roll: game.roll * 0.1, yaw: 0, translation: .init(0, 0, 4.8))
     NativeStationTestFixture.reframe(&game, to: after)
     game.commander.flightSimulation.advancePhysicalTime(0.1)
     let index = try #require(game.bodies.firstIndex { $0.id == 0 })
     try #require(game.bodies[index].rotationRate == 0.3)
-    game.bodies[index].rotation = 0.03
+    game.bodies[index].rotation = station.rotation + station.rotationRate * 0.1
     return (game, before)
   }
 
-  @Test func matchedSpinSH025StepRefinesWholeHullProofWithoutChangingTheAperture() throws {
+  @Test func matchedSpinSH025StepUsesOriginalPortAndAttainedWholeHullProof() throws {
     let (game, before) = try geometricStep()
     let station = try #require(game.bodies.first { $0.id == 0 })
     let player = game.commander.playerMesh
@@ -187,9 +195,14 @@ struct InitialMainStationDockingTests {
     let radius = try #require(player.vertices.map(\.length).max())
     let stationRadius = try #require(MainStationGeometry.mesh.vertices.map(\.length).max())
     let coarse = (radius + stationRadius) * (abs(game.roll) + abs(station.rotationRate)) * 0.1
-    #expect(port.aperture.map(\.y).max() == 32)
-    #expect(try #require(player.vertices.map(\.y).max()) + coarse > 32)
-    #expect(port.fits(player) && !port.fits(player, margin: coarse))
+    let halfWidth = try #require(port.aperture.map(\.x).max())
+    let support = try #require(player.vertices.map { abs($0.x) }.max())
+    #expect(port.center == Vector3(0, 0, 136.32) && port.outward == Vector3(0, 0, 1))
+    #expect(halfWidth == 62.32 && port.aperture.map(\.y).max() == 50.8)
+    #expect(port.tunnelDepth == 53.52 && port.fits(player))
+    // The real three-metre lateral offset defeats the coarse whole-step margin.
+    // The attained-step solver must still prove the actual oriented mesh and structure.
+    #expect(halfWidth - support - 3 > 0 && halfWidth - support - 3 < coarse)
     #expect(
       game.nativeMainStationHullCourseIsClear(
         station, from: before, to: game.commander.flightSimulation.pose, delta: 0.1))
@@ -197,8 +210,43 @@ struct InitialMainStationDockingTests {
     #expect(!game.nativeMainStationDockEvidenceIsCurrent)
   }
 
+  @Test func matchedManualRollProvesClearanceWithoutGrantingDockingAuthority() throws {
+    var (game, before) = try geometricStep()
+    let station = try #require(game.bodies.first { $0.id == 0 })
+    let end = game.commander.flightSimulation.pose
+    game.dockingComputer = false
+    game.autoPilot.disengage()
+    #expect(!game.stationAutoDockingActive)
+    #expect(
+      !game.nativeMainStationHullCourseIsClear(
+        station, from: before, to: end, delta: 0.1, requireAperture: false))
+    game.speed = 48 / 18.0
+    #expect(
+      game.nativeMainStationHullCourseIsClear(
+        station, from: before, to: end, delta: 0.1, requireAperture: false))
+    #expect(
+      game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
+    #expect(!game.nativeMainStationDockEvidenceIsCurrent)
+    game.speed = 49 / 18.0
+    #expect(
+      !game.nativeMainStationHullCourseIsClear(
+        station, from: before, to: end, delta: 0.1, requireAperture: false))
+
+    let wallOffset = try #require(MainStationGeometry.docking.aperture.map(\.x).max())
+    var (wall, wallStart) = try geometricStep(lateral: wallOffset)
+    let wallStation = try #require(wall.bodies.first { $0.id == 0 })
+    wall.dockingComputer = false
+    wall.autoPilot.disengage()
+    wall.speed = 48 / 18.0
+    #expect(
+      !wall.nativeMainStationHullCourseIsClear(
+        wallStation, from: wallStart, to: wall.commander.flightSimulation.pose,
+        delta: 0.1, requireAperture: false))
+  }
+
   @Test func wallContactsAndUnsupportedNativeMotionStillRefuseTheWholeStep() throws {
-    let (wall, wallStart) = try geometricStep(lateral: 50)
+    let wallOffset = try #require(MainStationGeometry.docking.aperture.map(\.x).max())
+    let (wall, wallStart) = try geometricStep(lateral: wallOffset)
     let wallStation = try #require(wall.bodies.first { $0.id == 0 })
     #expect(
       !wall.nativeMainStationHullCourseIsClear(
@@ -210,6 +258,7 @@ struct InitialMainStationDockingTests {
     var (game, before) = try geometricStep()
     let station = try #require(game.bodies.first { $0.id == 0 })
     let end = game.commander.flightSimulation.pose
+    try #require(game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
     game.dockingComputer = false
     #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
     game.dockingComputer = true
@@ -219,9 +268,9 @@ struct InitialMainStationDockingTests {
     game.autoPilot.setApproachVelocity(.init(0, 0, 24))
     #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
     game.autoPilot.setApproachVelocity(.init(0, 0, 48))
-    game.roll = 0.3
-    #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
     game.roll = -0.3
+    #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
+    game.roll = 0.3
     for delta in [-0.1, 0.10001, Double.nan] {
       #expect(
         !game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: delta))

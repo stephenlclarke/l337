@@ -4,7 +4,7 @@ import Foundation
 enum OriginalSparrowhawkActivation {
   static let id = "SH030"
   static let specificationSHA256 =
-    "f069a8d048fe7eb978673a2229d420a79eba020505157a7bd941d8beb8007fb1"
+    "774d49d514d03dba198d09762d04d30e74d3ea07dad7f1c34167f0978defb36d"
 
   enum Failure: Error { case unsupportedDefinition }
 

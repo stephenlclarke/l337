@@ -160,7 +160,9 @@ struct EffectiveEquipmentValidationTests {
     defer { try? FileManager.default.removeItem(at: directory) }
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     let url = directory.appendingPathComponent("commander.json")
-    let writer = GameRuntime(game: Game(executive: false))
+    var baseline = Game(executive: false)
+    try baseline.commander.prepareEquipment(legacy: false)
+    let writer = GameRuntime(game: baseline)
     try await writer.save(to: url)
     let bytes = try Data(contentsOf: url)
     let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)

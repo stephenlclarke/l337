@@ -1,20 +1,14 @@
-/// Runtime adaptation of the original main station's 180-unit cube.
-/// The archival SH028 nativeDesign remains unchanged. This opening is designed,
-/// not a recovered historical dimension; see PR-station-auto-moving-entry.md.
+/// The same original SH028 record supplies native rendering, collision and its real port.
 enum MainStationGeometry {
-  static let docking = NativeStationGeometry.Port(
-    center: .init(0, 0, -90), outward: .init(0, 0, -1), up: .init(0, 1, 0),
-    tunnelDepth: 25,
-    aperture: [.init(-80, -32, 0), .init(80, -32, 0), .init(80, 32, 0), .init(-80, 32, 0)])
+  private static let original: CatalogueShip = {
+    guard let ship = ShipCatalogue.ship("SH028"), ship.name == "Lion Citadel",
+      ship.catalogue.family == "lion-citadel", ship.nativeHull == .station,
+      let native = ship.nativeDesign, native.valid,
+      let port = ship.nativeDocking, port.valid
+    else { preconditionFailure("Original SH028 station geometry and docking port are required.") }
+    return ship
+  }()
 
-  /// Four front rim panels surround a real opening; all other cube walls remain solid.
-  static let mesh = Mesh(
-    vertices: [
-      .init(-90, -90, -90), .init(90, -90, -90), .init(90, 90, -90), .init(-90, 90, -90),
-      .init(-90, -90, 90), .init(90, -90, 90), .init(90, 90, 90), .init(-90, 90, 90),
-    ] + docking.aperture.map { docking.center + $0 },
-    faces: [
-      [0, 3, 11, 8], [3, 2, 10, 11], [1, 9, 10, 2], [0, 8, 9, 1],
-      [4, 5, 6, 7], [0, 1, 5, 4], [3, 7, 6, 2], [0, 4, 7, 3], [1, 2, 6, 5],
-    ])
+  static let docking = original.nativeDocking!
+  static let mesh = original.nativeDesign!.rawMesh
 }

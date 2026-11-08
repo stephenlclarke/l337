@@ -65,7 +65,7 @@ extension Game {
       parent.acknowledge(sequence)
       parent.revision += 1
       parent.journal.append(
-        "Cevilis's custodian source is registered once: one empty mechanically disabled Burro tender, a separate marked Burro launch holding its two original crew, and their original one-tonne custody recorder. Recover only the recorder; no hull, equipment or player cabin transfer is authorized. Its original rescue launch has a separate finite1000CR custodian fuel escrow; one uncrewed Burro reserve and a separate future1000CR allocation are planned, with no replacement people."
+        "Cevilis's custodian source is registered once: one empty mechanically disabled Okapi tender, a separate marked Okapi launch holding its two original crew, and their original one-tonne custody recorder. Recover only the recorder; no hull, equipment or player cabin transfer is authorized. Its original rescue launch has a separate finite1000CR custodian fuel escrow; one uncrewed Okapi reserve and a separate future1000CR allocation are planned, with no replacement people."
       )
       commander.scriptState.nextEvent = sequence
       commander.scriptState.instances[parent.id] = parent

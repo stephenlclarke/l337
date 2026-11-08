@@ -7,8 +7,8 @@ private func workRuntimeGame(module: WorkTargetSpecialty = .salvage, scoops: Boo
   -> Game
 {
   var game = Game(executive: false)
-  // The fixed scoop approach and clearance coordinates below use this conventional hull.
-  game.commander.shipID = "SH023"
+  // Exercise the fixed approach and clearance against the real current starting hull.
+  try OriginalDetailedHullStage.requireRuntime(game.commander.shipID)
   game.commander.fuel = game.commander.fuelCapacity
   game.commander.system = try #require(
     game.knownSystems.first { system in
@@ -1094,7 +1094,7 @@ extension FlightWorkGuidanceRuntimeTests {
   func nativeProtectedParentPermitsHoldButEveryCutterGuardRemains(ownership: SalvageOwnership)
     throws
   {
-    var (game, _) = try NativePagedSalvageFixture.game()
+    var (game, _) = try NativePagedSalvageFixture.empGame()
     let index = try #require(game.bodies.firstIndex { $0.physical?.salvage?.wreck != nil })
     let old = try #require(game.bodies[index].physical?.salvage)
     let claimant = ownership == .claimed ? game.commander.flightSimulation.player : nil
@@ -1236,7 +1236,8 @@ private func nativeTwentyReleaseGame() throws -> (Game, MiningRock) {
 }
 
 private func fillNativeOreAdmissionCapacity(_ game: inout Game) throws {
-  let context = try #require(game.gameplayContext())
+  let ownedPreparationRequired1 = game.gameplayContext()
+  let context = try #require(ownedPreparationRequired1)
   let sequence = (game.bodies.compactMap { $0.physical?.spawnIdentity?.sequence }.max() ?? 0) + 1
   let existing = game.bodies.filter { $0.physical?.population == .cargo }.count
   let remaining = max(0, PopulationClass.cargo.maximum - existing)

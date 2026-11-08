@@ -1,0 +1,224 @@
+{
+  "status": "ORIGINAL_ENVIRONMENT_RESOURCES_AUTHORED_UNCOMPILED_UNRUN_NOT_NATIVE_QUALIFICATION",
+  "sourceAuthoring": {
+    "sourceDocuments": 4,
+    "arrayLiteralParses": 0,
+    "TOMLParses": 0,
+    "geometryTransformations": 0,
+    "coordinateCalculations": 0,
+    "creatorExecutions": 0,
+    "nativeExecutions": 0
+  },
+  "records": [
+    {
+      "id": "SH156",
+      "name": "Lion Bastion",
+      "kind": "platform",
+      "origin": "human",
+      "capital": true,
+      "purpose": "weapons-platform",
+      "source": {
+        "id": "SH156",
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH156-design.toml",
+        "bytes": 593603,
+        "sha256": "9a1147d23fa4a9e514afad7f5d9264746ff135f12729de23878750f4d7f1870d",
+        "r3SHA256": "9f023a5547867793485716c3a19a2ee73edc08988d6666ec6dadbdb8568b1bfc",
+        "declaredModels": {
+          "design": {
+            "vertices": 2496,
+            "faces": 4072
+          },
+          "nativeDesign": {
+            "vertices": 512,
+            "faces": 904
+          }
+        }
+      },
+      "resource": {
+        "path": "Sources/L337Core/Resources/Ships/SH156.toml",
+        "bytes": 597760,
+        "sha256": "e464bb2d70ac42037fcc898cd2f59cf1243b1e4f7d9517df2da71b2fd5fe8505"
+      },
+      "verbatimTables": [
+        {
+          "name": "design",
+          "bytes": 489867,
+          "sha256": "982198080a45921c5c88577bb5d4c59c10ab71c720089187b59ad65f50f3d327"
+        },
+        {
+          "name": "nativeDesign",
+          "bytes": 103188,
+          "sha256": "3ef5cadb7f258e72f1b92b33f221aad345821af8bd78a4776f68e1c680f7f987"
+        }
+      ],
+      "physical": {
+        "path": "Sources/L337Core/Resources/OriginalFleetPhysical/SH156.json",
+        "sha256": "b07c553bb8b41ca866bfc4da2ea41928faedde61e1c589cd8e6432e2b6120273",
+        "exactScale": "90000/1699",
+        "status": "Existing empty source estimate, not installed/occupied hardware"
+      },
+      "remaining": [
+        "Native source 904 declared triangles exceeds512; no cap or fidelity waiver.",
+        "Actual installed power/hardware/occupied population, station provider/port/route or mission/gallery owner receipt remains unissued."
+      ]
+    },
+    {
+      "id": "SH161",
+      "name": "Wolf Citadel",
+      "kind": "station",
+      "origin": "human",
+      "capital": true,
+      "purpose": "station-services",
+      "source": {
+        "id": "SH161",
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH161-design.toml",
+        "bytes": 330651,
+        "sha256": "0335361ca8aac1cc868e380b3312e2ffb222318803329f5a10c70a21cdf89621",
+        "r3SHA256": "354edb2f79b3b82e39dda176b9b68a6407172467547381e0a873665cb9d5e53b",
+        "declaredModels": {
+          "design": {
+            "vertices": 1216,
+            "faces": 2052
+          },
+          "nativeDesign": {
+            "vertices": 456,
+            "faces": 788
+          }
+        }
+      },
+      "resource": {
+        "path": "Sources/L337Core/Resources/Ships/SH161.toml",
+        "bytes": 334768,
+        "sha256": "7bf1de5fb1589f47a9ef65433f854e0645c97433f0e7cbe025d96851db813821"
+      },
+      "verbatimTables": [
+        {
+          "name": "design",
+          "bytes": 240450,
+          "sha256": "fae5584a0dd5973978647609dea1b8e2daf9d22b7d929b2d0768fd27be274782"
+        },
+        {
+          "name": "nativeDesign",
+          "bytes": 89673,
+          "sha256": "1d6f09c6de0ba11c08e44b8e45dc7403f2c44ea4c88e4f0e02e7d99345c274eb"
+        }
+      ],
+      "physical": {
+        "path": "Sources/L337Core/Resources/OriginalFleetPhysical/SH161.json",
+        "sha256": "0fb430800bed13bcbefe00e37ea0d1b4d94b5178bb8a6749d0f226ffca61a870",
+        "exactScale": "1000000/22443",
+        "status": "Existing empty source estimate, not installed/occupied hardware"
+      },
+      "remaining": [
+        "Native source 788 declared triangles exceeds512; no cap or fidelity waiver.",
+        "Actual installed power/hardware/occupied population, station provider/port/route or mission/gallery owner receipt remains unissued."
+      ]
+    },
+    {
+      "id": "SH162",
+      "name": "Larvaal Probe",
+      "kind": "other",
+      "origin": "larvaal",
+      "capital": false,
+      "purpose": "mission-probe",
+      "source": {
+        "id": "SH162",
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH162-design.toml",
+        "bytes": 237719,
+        "sha256": "14d4e261029ca1fcf61a2688c43c192e17c7e523a268ffb9c9b726b087b14151",
+        "r3SHA256": "243c15f460f4c990a2e4d9573ab6ea4ae24168477c68d7345139e1fe6dc28e59",
+        "declaredModels": {
+          "design": {
+            "vertices": 768,
+            "faces": 1524
+          },
+          "nativeDesign": {
+            "vertices": 304,
+            "faces": 596
+          }
+        }
+      },
+      "resource": {
+        "path": "Sources/L337Core/Resources/Ships/SH162.toml",
+        "bytes": 241879,
+        "sha256": "7f154b524fe32215311e1dc75a5ccb9deed133ed78f0dad8073becd0c8890ad6"
+      },
+      "verbatimTables": [
+        {
+          "name": "design",
+          "bytes": 171226,
+          "sha256": "af3e31203926cf3c00712dd251a8ab53beb0cf7a86d3418f74686e579d1c30d7"
+        },
+        {
+          "name": "nativeDesign",
+          "bytes": 65973,
+          "sha256": "09375ee32a1314659c940718bcfeff1bbcd9c6d4c02df146b527e15b6180cc75"
+        }
+      ],
+      "physical": {
+        "path": "Sources/L337Core/Resources/OriginalFleetPhysical/SH162.json",
+        "sha256": "74c75edfec6fb3243bd2a6d4497ffebfe6f8d5353d1dd7e388d8eee7b7df8d67",
+        "exactScale": "12000000/2058667",
+        "status": "Existing empty source estimate, not installed/occupied hardware"
+      },
+      "remaining": [
+        "Native source 596 declared triangles exceeds512; no cap or fidelity waiver.",
+        "Actual installed power/hardware/occupied population, station provider/port/route or mission/gallery owner receipt remains unissued."
+      ]
+    },
+    {
+      "id": "SH164",
+      "name": "Toad Drug Factory",
+      "kind": "station",
+      "origin": "human",
+      "capital": true,
+      "purpose": "station-services",
+      "source": {
+        "id": "SH164",
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH164-design.toml",
+        "bytes": 590732,
+        "sha256": "b1563bbc135d0c6ec1ea44ccceabf8f3677363030bbf5af816a7a78d0c51c4e4",
+        "r3SHA256": "29b8cae2acf68eee7f05547c5c0487dceb866c4ba6d3280da5d20b68e55fa4cf",
+        "declaredModels": {
+          "design": {
+            "vertices": 2520,
+            "faces": 4108
+          },
+          "nativeDesign": {
+            "vertices": 536,
+            "faces": 940
+          }
+        }
+      },
+      "resource": {
+        "path": "Sources/L337Core/Resources/Ships/SH164.toml",
+        "bytes": 594842,
+        "sha256": "5f80b4cff859e78e72b8619d6cfb5cf894796600688dd4afa09b61704cc7610a"
+      },
+      "verbatimTables": [
+        {
+          "name": "design",
+          "bytes": 484133,
+          "sha256": "a3ab765373d20f67059860d2f5fe2406ea08f56e6a02e555fad727516b18fd14"
+        },
+        {
+          "name": "nativeDesign",
+          "bytes": 106037,
+          "sha256": "77b363683a10c5697aade4a53f09d8f6d91a46b375f0ab7f82b95cb9b6d78985"
+        }
+      ],
+      "physical": {
+        "path": "Sources/L337Core/Resources/OriginalFleetPhysical/SH164.json",
+        "sha256": "1af229dd864b6d385ca2098448a0d9dd8139bbd2c1e29424fe93ec9e6faac8dc",
+        "exactScale": "60000000/887723",
+        "status": "Existing empty source estimate, not installed/occupied hardware"
+      },
+      "remaining": [
+        "Native source 940 declared triangles exceeds512; no cap or fidelity waiver.",
+        "Actual installed power/hardware/occupied population, station provider/port/route or mission/gallery owner receipt remains unissued."
+      ]
+    }
+  ],
+  "semantics": "Current nonship environment purposes remain separate from ship fitting/native crew and actual installed hardware. Capital Lion Bastion is a platform, never a station/port. Wolf/Toad docking declarations remain pending; no new site/provider/route/port or dock receipt exists. Probe gallery/mission owner remains unissued. Existing empty estimates grant no occupied mass/COM/tensor/power proof.",
+  "next": "G2 full resource/source review and G1 focused load/source tests; genuine native within512 and installed/occupied physical inputs/receipts required before actual game integration. Existing4station routes/main028 unchanged."
+}

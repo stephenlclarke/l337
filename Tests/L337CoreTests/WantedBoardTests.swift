@@ -7,9 +7,10 @@ import Testing
 
 private func wantedGame(count: Int = 12, spacing: Double = 120) throws -> Game {
   var game = Game(executive: false)
-  // This ownership/exchange fixture uses a conventional transferable 70-unit tank.
-  game.commander.shipID = "SH023"
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
+  let stock = try #require(NPCResources.stock(source.performance))
   game.commander.fuel = game.commander.fuelCapacity
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   try #require(!game.docked)
   let station = try #require(game.commander.flightSimulation.anchors?.station)
@@ -23,12 +24,14 @@ private func wantedGame(count: Int = 12, spacing: Double = 120) throws -> Game {
     let actor = try #require(allocatedActor)
     var npc = NPCState(role: .pirate, origin: game.systemIdentity, destination: game.systemIdentity)
     npc.legal = .init(value: 16, bountyTenths: (index + 1) * 10)
-    npc.resources = .legacyEnergyOnly(maximumEnergy: 100)
+    npc.resources = stock
     npc.intention = .engage(try #require(game.commander.flightSimulation.player))
     var body = SpaceBody(
       id: 100 + index, hull: .cobra, position: .init(Double(index) * spacing, 0, 1000),
       hostile: true)
-    body.physical = .init(identity: actor, population: .pirate, npc: npc, catalogueShipID: "SH023")
+    body.energy = stock.energyCapacity
+    body.physical = .init(
+      identity: actor, population: .pirate, npc: npc, catalogueShipID: source.ship.id)
     game.bodies.append(body)
   }
   game.nextBodyID = 200
@@ -56,7 +59,7 @@ struct WantedBoardTests {
     #expect(game.wantedBoard.count == 2)
   }
 
-  @Test func nativeCareersRankTenActualRewardsAndPlayerAmnestyPreservesUnknownHistory() throws {
+  @Test func nativeCareersKeepHistoryAcrossBlockedFabricationAndOwnedHullTransfer() throws {
     var game = try wantedGame()
     let original = game.commander
     #expect(game.wantedBoard.count == 10)
@@ -79,25 +82,31 @@ struct WantedBoardTests {
     let amnestiedHasPlayer = game.wantedBoard.contains { $0.isPlayer }
     #expect(!amnestiedHasPlayer)
     #expect(game.commander.wantedCareers == history)
-    // The exchange adapter runs at its ordinary docked unit boundary; this is
-    // not a claim of a completed flight or physical docking journey.
+    // The ordinary quote must refuse fabrication without earned authority.
     game.docked = true
     game.screen = .showroom
     game.commander.credits = 10_000_000
-    game.showroom.selection = "SH013"
+    game.showroom.selection = "SH029"
     game.showroom.trading = true
+    let beforeQuote = game.commander
     let quote = try #require(game.shipTradeQuote)
-    try #require(quote.allowed)
+    #expect(!quote.allowed && quote.issues.contains { $0.hasPrefix("Earn this hull's blueprint") })
+    #expect(quote.issues.contains { $0.hasPrefix("Choose a commander save") })
     game.confirmShipTrade()
-    #expect(game.commander.shipID == "SH013")
+    #expect(game.commander == beforeQuote)
+
+    // Exercise the owned equipment boundary independently of fabrication.
+    try game.commander.transferEquipment(to: "SH029", hullID: UUID())
+    #expect(game.commander.shipID == "SH029" && game.commander.valid)
     #expect(game.commander.wantedCareers == history)
   }
 
   @Test func tiedCareersKeepIdentityAcrossCullRebindAndCrossSystemParking() throws {
     // Initial geometry must satisfy ordinary re-admission, not just direct unit adoption.
-    // Native Cobra envelopes have radius69, requiring separation greater than146.
     var game = try wantedGame(count: 2, spacing: 200)
-    let radius = try #require(Mesh.hull(.cobra).vertices.map(\.length).max())
+    let catalogueID = try #require(game.bodies.first?.physical?.catalogueShipID)
+    let mesh = try #require(ShipCatalogue.rawMesh(catalogueID))
+    let radius = try #require(mesh.vertices.map(\.length).max())
     try #require((game.bodies[1].position - game.bodies[0].position).length > 2 * radius + 8)
     let first = try #require(game.bodies.first?.physical?.identity)
     let logical = try #require(game.commander.npcPersistence.logicalIdentity(for: first))
@@ -160,7 +169,9 @@ struct WantedBoardTests {
     try #require(hit.selectedTargetBody?.id == victim.id)
     let cash = game.commander.credits
     let reward = try #require(victim.physical?.npc?.legal.bountyTenths)
-    let incident = game.applyCombatHit(hit.hit, origin: origin, kind: .laser, damage: 100)
+    let resources = try #require(victim.physical?.npc?.resources)
+    let lethalDamage = victim.energy + resources.frontShield + resources.rearShield
+    let incident = game.applyCombatHit(hit.hit, origin: origin, kind: .laser, damage: lethalDamage)
     try #require(incident != nil)
     #expect(game.commander.credits == cash + reward)
     #expect(game.commander.wantedCareers.playerRecordedKills == 1)
@@ -313,15 +324,18 @@ struct WantedBoardTests {
     }
     let allocatedRefusedActor = game.commander.flightSimulation.allocateActor()
     let refusedActor = try #require(allocatedRefusedActor)
+    let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
+    let stock = try #require(NPCResources.stock(source.performance))
     var npc = NPCState(role: .pirate, origin: game.systemIdentity, destination: game.systemIdentity)
     npc.legal = .init(value: 16, bountyTenths: 50)
-    npc.resources = .legacyEnergyOnly(maximumEnergy: 100)
+    npc.resources = stock
     npc.intention = .engage(try #require(game.commander.flightSimulation.player))
     var refusedBody = SpaceBody(
       id: game.nextBodyID, hull: .cobra, position: .init(0, 0, 2000), hostile: true)
     game.nextBodyID += 1
+    refusedBody.energy = stock.energyCapacity
     refusedBody.physical = .init(
-      identity: refusedActor, population: .pirate, npc: npc, catalogueShipID: "SH023")
+      identity: refusedActor, population: .pirate, npc: npc, catalogueShipID: source.ship.id)
     game.bodies.append(refusedBody)
     let refusedSnapshot = try #require(
       NPCPersistenceSnapshot.capture(
@@ -340,8 +354,10 @@ struct WantedBoardTests {
         from: refusedBody.position, direction: direction, range: 1200, radius: 0,
         excludingBodyIDs: [refusedBody.id], includePlayer: false))
     try #require(contact.selectedTargetBody?.id == victim.id)
+    let resources = try #require(victim.physical?.npc?.resources)
+    let lethalDamage = victim.energy + resources.frontShield + resources.rearShield
     let hit = game.applyCombatHit(
-      contact.hit, origin: origin, kind: .laser, damage: 100,
+      contact.hit, origin: origin, kind: .laser, damage: lethalDamage,
       emissionPosition: game.commander.flightSimulation.pose.systemPoint(refusedBody.position))
     try #require(hit != nil && game.bodies.first(where: { $0.id == victim.id })?.energy == 0)
     #expect(game.commander.wantedCareers.careers[refusedActor] == nil)

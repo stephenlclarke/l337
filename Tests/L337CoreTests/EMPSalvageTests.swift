@@ -136,7 +136,7 @@ struct EMPSalvageTests {
   func lethalAttackRetainsExactDeceasedOrdinalsAndPreviouslyEjectedPeople(partial: Bool)
     async throws
   {
-    var game = try empFixture(catalogue: "SH001")
+    var game = try empFixture(catalogue: EMPUnitTargetCatalogue.twoPerson)
     let empResult = try releaseDamagedEMPBoundary(&game)
     try #require(empResult)
     let source = try #require(game.commander.savedEMPState?.records.keys.first)

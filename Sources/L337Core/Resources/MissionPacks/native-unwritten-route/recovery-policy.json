@@ -1,0 +1,57 @@
+{
+  "contentScope": "fictional-public-model-only",
+  "profiles": {
+    "l337.glass-meridian": {
+      "continuityCalibration": {
+        "adaptation": "An orbital evidence reconstruction, not completion of the original source skill or its original reward-bearing job.",
+        "aimDegrees": 2,
+        "benchAcceptance": "Apply the three signed archive challenge inputs to the actual calibrated non-consumable bench channels and verify its measured outputs against sourceModelRequirement. Living people, stock, cargo, casualties and actual arrivals are reference inputs only, explicitly labelled model data, never claimed as new physical mission facts. Only apparatus readings become inquiry evidence.",
+        "dwellSeconds": 12,
+        "independence": "The archived inward trace must be joined to its own original source; a measurement or clue from another source cannot be substituted.",
+        "mechanic": "independent source-trace navigation and evidence reconstruction",
+        "observations": 3,
+        "parameterStatus": "new project estimate",
+        "parameters": {
+          "phaseOffsetsDegrees": [
+            0,
+            45,
+            90
+          ],
+          "sampleCycles": 3,
+          "toleranceDegrees": 2
+        },
+        "referenceFrame": "Same safe persisted station-relative fixture placement and calibrated physical envelopes as GAMEPLAY-SPECIFICATION.md, with the three actual case-linked beacons.",
+        "sourceModelRequirement": "Measure each of three actual reference pulses, set each repeater to the signed case offset, then verify three full pulse cycles in the required order with each measured offset within2degrees. The source-specific signed archive digest must match before the comparison trace is accepted.",
+        "surfaceRangeNativeUnits": [
+          250,
+          1500
+        ]
+      }
+    }
+  },
+  "publication": "published-source",
+  "schema": "l337.c01.continuity-calibration-content/1",
+  "sourcePins": {
+    "clueID": "meridian-offset",
+    "clueReceipt": "l337.unwritten-route/clue/meridian-offset",
+    "originalDefinition": {
+      "bytes": 32509,
+      "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+      "path": "docs/meridian/missions/definitions/glass-meridian.json",
+      "sha256": "14e29571b5c6335ecca5068516448224944e6881462aa329f14bb6a1cb2ea572"
+    },
+    "recoveryProfileSelector": {
+      "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+      "jsonPointer": "/profiles/l337.glass-meridian",
+      "path": "docs/meridian/missions/gameplay/recovery-policy.json",
+      "sha256": "d9c50d192297e824dcd01796ba17c2c6f33b887ec9c2c9e52585e104c5d65e5b"
+    },
+    "sourceID": "l337.glass-meridian",
+    "sourceSetBinding": {
+      "commit": "c70110b292077588a0855fb48127adfb1b611c9d",
+      "path": "docs/meridian/missions/definitions/unwritten-route.json",
+      "selector": "requiredSources/requiredClueIDs; existing exact64Core mapping",
+      "sha256": "462d3446973aa45a7b31cf414931a3fed99a969f03f4919f4715e669e0b8176d"
+    }
+  }
+}

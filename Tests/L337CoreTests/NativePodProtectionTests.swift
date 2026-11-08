@@ -12,9 +12,8 @@ private func originalProtectedActors(_ game: Game) -> Set<ActorIdentity> {
 }
 
 struct NativePodProtectionTests {
-  @Test(arguments: [false, true])
-  func actualProtectedPodAllowsNativeRescueButCannotBecomeOrdinaryCargo(legacy: Bool) throws {
-    var game = try NativePeopleTestFixture.podApproach(legacy: legacy)
+  @Test func actualProtectedPodAllowsNativeRescueButCannotBecomeOrdinaryCargo() throws {
+    var game = try NativePeopleTestFixture.podApproach()
     let index = try #require(game.bodies.firstIndex { $0.physical?.empCrewPod != nil })
     // Move the original emitted pod into the real scoop aperture, retaining its producer and binding.
     game.bodies[index].position = .init(0, -45, 55)

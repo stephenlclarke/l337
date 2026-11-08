@@ -1,0 +1,93 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH163-complete21part-native-candidate-v1",
+  "ship": "SH163",
+  "name": "Lammergeier",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "305f10a91b6567072c62194bb67e4dafbc43b4d5bd6604696c05f2e43d278ba6",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH163-design.toml",
+    "bytes": 254855,
+    "sha256": "35c56db12a269759f3c87d95be388022146d95bfa4f8b8e4e09a4214cc84c9cc"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH163.toml",
+    "bytes": 278961,
+    "sha256": "eefd1e476efca3ece00b5d2ba418eeb40798a6420f785a5a19b05b60fdfeb479"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH163.json",
+    "bytes": 49436,
+    "sha256": "330ae598330573af4a103b054d55d8c3a0206c2a532f4c1fa399ecebf980865e"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH163-native-candidate-recipe.py",
+    "bytes": 7792,
+    "sha256": "8349be275e5b3aff0b72dd96b6bb0e4d6f24d208a5423b66edb8f422ea1353f0"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH163-native-candidate-tests.py",
+    "bytes": 6628,
+    "sha256": "23e0ca7bc737cdd05571b7fd4e880a859d2f74fd74865f5212d3e3c21f7247df"
+  },
+  "baseline": {
+    "declaredNativeFaces": 620,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 8,
+    "changedOriginalPartIndices": [
+      0,
+      13,
+      16,
+      17,
+      19,
+      20
+    ],
+    "unchangedFixedOriginalParts": 15,
+    "status": "NEW angular approximation only; actual output count/full curved-profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Complete five-station body at origin,width.34,height.26,lengthlength/all endcaps",
+    "ALL four analytical recessed body wells with source shadow/rim materials",
+    "ALL EIGHT sawback blades: original count4 PER side, original np.linspace(-length*.32,length*.28,4)",
+    "Original complete wing polygons at y-.05/thickness.13/material1, no shortened blade list",
+    "Full cockpit glazing/support at y.32,zlength*.28,width.22,length.50",
+    "Both original connected drives/full casings/luminous recesses with radius.22",
+    "Original source pirate role produces NO military mounts, none invented or substituted",
+    "Exact original rust-ivory palette/material/emission/textures/license/source; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Original length4.3/beam2.00/source axes/coordinates/origin/units retained; no recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Lammergeier R3/name/game remain pending and unchanged",
+    "nativeCrew": 3,
+    "conversionCrew": 3,
+    "authority": "No source/actor/actual people/quarters/installed hardware/power/paid kit/acquisition/current-save or mission grant; all existing guards unchanged"
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All21 original positive parts/material sets stay, including all8blades/all4wells/full drives/support",
+    "Never replace original eight blades with four, or invent military structures from a different source role",
+    "Complete candidate must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require15 fixed components exact original vertices/localfaces/material sequence/UVs",
+    "Full actual curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run21part/exact15fixed/all8blades/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

@@ -5,7 +5,7 @@ extension Game {
   /// This cheap observer keeps continuous damage/power/clearance loss out of the receipt path.
   mutating func observeNativeTransitSpool(_ body: SpaceBody) {
     guard let actor = body.missionActorID,
-      let entry = commander.scriptState.wormholeTransit?.legs.first(where: {
+      let entry = nativeTransitStoredLedger()?.legs.first(where: {
         $0.value.actor == actor && $0.value.phase == .spooling
       }), let drive = entry.value.driveTerms, drive.valid,
       (0...128).contains(entry.value.attempts)
@@ -36,7 +36,7 @@ extension Game {
     guard let refusal else { return }
     leg.phase = .requested
     leg.attempts = min(128, leg.attempts + 1)
-    leg.nextAttemptAt = min(1e12, commander.scriptState.calendarSeconds + 2)
+    leg.nextAttemptAt = min(1e12, nativeTransitStoredCalendarSeconds() + 2)
     leg.spooledAt = nil
     leg.spoolActor = nil
     leg.spoolPhysicalTime = nil
@@ -47,11 +47,11 @@ extension Game {
   }
   func nativeTransitSteeringGoal(_ body: SpaceBody, intent: ScriptNPCIntent? = nil) -> Vector3? {
     guard let actor = body.missionActorID,
-      let leg = commander.scriptState.wormholeTransit?.legs.values.first(where: {
+      let leg = nativeTransitStoredLedger()?.legs.values.first(where: {
         $0.actor == actor && $0.phase == .open
       }), let hole = leg.opening, let request = intent ?? body.scriptNPC?.intent,
       request.mode == .approach, request.request == leg.request,
-      commander.scriptState.calendarSeconds <= hole.expiresAt,
+      nativeTransitStoredCalendarSeconds() <= hole.expiresAt,
       hole.route.origin.location == systemIdentity, let anchor = scriptAnchor
     else { return nil }
     return anchor.position + anchor.orientation.apply(request.offset)
@@ -61,11 +61,11 @@ extension Game {
   /// The actual intent waypoint supplies hysteresis; no vanished actor/GPS or old sweep is reused.
   func nativeTransitSteeringIntent(_ body: SpaceBody, intent: ScriptNPCIntent) -> ScriptNPCIntent {
     guard let goal = nativeTransitSteeringGoal(body, intent: intent),
-      let leg = commander.scriptState.wormholeTransit?.legs.values.first(where: {
+      let leg = nativeTransitStoredLedger()?.legs.values.first(where: {
         $0.actor == body.missionActorID && $0.phase == .open
       }), let hole = leg.opening, let anchor = scriptAnchor
     else { return intent }
-    let pose = commander.flightSimulation.pose
+    let pose = storedFlightSimulation().pose
     let position = pose.systemPoint(body.position)
     let currentSide = hole.entrance.orientation.inverse(position - hole.entrance.position).z
     let goalSide = hole.entrance.orientation.inverse(
@@ -90,7 +90,7 @@ extension Game {
   /// Transit steering proposes ordinary bounded motion. Native continuous clearance admits
   /// the whole controlled cohort before positions can become departure evidence.
   mutating func resolveNativeTransitMotion(before: [SpaceBody], delta: Double) {
-    guard let ledger = commander.scriptState.wormholeTransit else { return }
+    guard let ledger = nativeTransitStoredLedger() else { return }
     let controlled = Set(
       ledger.legs.values.filter {
         $0.phase == .open || $0.phase == .arrived
@@ -132,8 +132,8 @@ extension Game {
     }
   }
   var hasNativeWormholeMotionObservers: Bool {
-    guard let ledger = commander.scriptState.wormholeTransit else { return false }
-    let now = commander.scriptState.calendarSeconds
+    guard let ledger = nativeTransitStoredLedger() else { return false }
+    let now = nativeTransitStoredCalendarSeconds()
     return ledger.legs.values.contains { leg in
       guard let hole = leg.opening, hole.route.origin.location == systemIdentity,
         hole.openedAt <= now && now <= hole.expiresAt
@@ -145,13 +145,13 @@ extension Game {
   /// This fixed aperture point is not a moving actor/GPS target or an escort reception.
   func nativeTransitExitClearanceGoal(_ body: SpaceBody) -> Vector3? {
     guard let actor = body.missionActorID,
-      let leg = commander.scriptState.wormholeTransit?.legs.values.first(where: {
+      let leg = nativeTransitStoredLedger()?.legs.values.first(where: {
         $0.actor == actor && $0.phase == .arrived
           && $0.route?.destination.location == systemIdentity
       }), let route = leg.route, let mesh = scriptNPCMesh(body),
       let radius = mesh.vertices.map(\.length).max(), radius.isFinite, radius > 0
     else { return nil }
-    let pose = commander.flightSimulation.pose
+    let pose = storedFlightSimulation().pose
     guard (pose.systemPoint(body.position) - route.exit.position).length < radius * 4 else {
       return nil
     }

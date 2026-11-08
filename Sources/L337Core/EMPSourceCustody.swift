@@ -50,37 +50,58 @@ extension Commander {
           && state.records[source]?.activeTrafficTransfer == snapshot
       })
     else { return false }
-    return state.records.values.allSatisfy { record in
-      let incident = record.disableIncident
-      guard record.weaponOwner == equipmentOwnerID,
-        record.crewEpisodeTimelineValid(flight: flightSimulation),
-        salvageLedger.empSourceIsConsistent(record),
-        nativeEMPSourceIsConsistent(record),
-        record.source.entity < flightSimulation.nextActor,
-        record.source.visit <= flightSimulation.visit,
-        incident.id < flightSimulation.nextIncident,
-        incident.origin.emissionID < flightSimulation.nextEmission,
-        incident.physicalTime <= flightSimulation.physicalTime,
-        ([record.hull] + record.pods).allSatisfy({ object in
-          guard let actor = object.body.physical?.identity else { return false }
-          return actor.system == record.source.system && actor.visit > 0
-            && actor.visit <= flightSimulation.visit && actor.entity > 1
-            && actor.entity < flightSimulation.nextActor
-            && object.physicalTime <= flightSimulation.physicalTime
-        })
-      else { return false }
-      if record.isRecovered {
-        guard record.savedRecoveredAt.map({ $0 <= flightSimulation.physicalTime }) == true,
-          npcPersistence.terminalReason(for: record.source) != .empTransferred
-        else { return false }
-      } else if let traffic = record.activeTrafficTransfer,
-        let retained = npcPersistence.snapshot(for: record.source)
-      {
-        return retained == traffic
-          && npcPersistence.terminalReason(for: record.source) == .empTransferred
-      }
-      return true
+    for record in state.records.values {
+      guard empCustodyRecordLinksAreValid(record) else { return false }
     }
+    return true
+  }
+
+  /// Read one actual stored record and its existing owner links. Collection-wide
+  /// validity remains with the full current publication/load predicate above.
+  func nativeEMPCustodyRecord(for source: ActorIdentity) -> EMPHullRecord? {
+    guard let state = savedEMPState, let record = state.records[source],
+      record.source == source, record.sequence < state.nextSequence, record.valid,
+      empCustodyRecordLinksAreValid(record)
+    else { return nil }
+    return record
+  }
+
+  private func empCustodyRecordLinksAreValid(_ record: borrowing EMPHullRecord) -> Bool {
+    let sourceSystem = record.source.system
+    let nextActor = flightSimulation.nextActor
+    let visit = flightSimulation.visit
+    let nextIncident = flightSimulation.nextIncident
+    let nextEmission = flightSimulation.nextEmission
+    let physicalTime = flightSimulation.physicalTime
+    let incident = record.disableIncident
+    guard record.weaponOwner == equipmentOwnerID,
+      record.crewEpisodeTimelineValid(flight: flightSimulation),
+      salvageLedger.empSourceIsConsistent(record),
+      nativeEMPSourceIsConsistent(record),
+      record.source.entity < nextActor,
+      record.source.visit <= visit,
+      incident.id < nextIncident,
+      incident.origin.emissionID < nextEmission,
+      incident.physicalTime <= physicalTime,
+      ([record.hull] + record.pods).allSatisfy({ object in
+        guard let actor = object.body.physical?.identity else { return false }
+        return actor.system == sourceSystem && actor.visit > 0
+          && actor.visit <= visit && actor.entity > 1
+          && actor.entity < nextActor
+          && object.physicalTime <= physicalTime
+      })
+    else { return false }
+    if record.isRecovered {
+      guard record.savedRecoveredAt.map({ $0 <= physicalTime }) == true,
+        npcPersistence.terminalReason(for: record.source) != .empTransferred
+      else { return false }
+    } else if let traffic = record.activeTrafficTransfer,
+      let retained = npcPersistence.snapshot(for: record.source)
+    {
+      guard retained == traffic else { return false }
+      return npcPersistence.terminalReason(for: record.source) == .empTransferred
+    }
+    return true
   }
 }
 
@@ -102,5 +123,22 @@ extension Commander {
         && source.stolenProvenance == (record.salvageLegal.value == 0)
         && source.manifestSection == 1 && !source.manifestAlreadySettled
     }
+  }
+}
+
+extension EMPSourceCustody {
+  private enum CodingKeys: String, CodingKey {
+    case kind, logical, original, traffic, assignment
+  }
+  @inline(never)
+  func encode(to encoder: any Encoder) throws {
+    var values = encoder.container(keyedBy: CodingKeys.self)
+    try values.encode(kind, forKey: .kind)
+    try values.encode(logical, forKey: .logical)
+    try values.encode(NativeSaveEncodingValue<EMPStoredObject>.prepare(original), forKey: .original)
+    if let value = NativeSaveEncodingValue<NPCPersistenceSnapshot>.prepareIfPresent(traffic) {
+      try values.encode(value, forKey: .traffic)
+    }
+    try values.encodeIfPresent(assignment, forKey: .assignment)
   }
 }

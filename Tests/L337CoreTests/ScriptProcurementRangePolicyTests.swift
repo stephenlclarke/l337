@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 private func rangePolicyGame() throws -> Game {
   // Controlled unit boundary with the same paid preparation; travel is exercised by the journey.

@@ -1,0 +1,204 @@
+{
+  "actorAdmission": false,
+  "actualCompletionRequired": "Offsets are the source controlled-motion profile. Native actuator completion and actual observed elapsed time must agree; clocks alone do not create movement.",
+  "actualLoads": "Add every actual sealed inventory component to installed/retained references, never the pod. Actual original person0/profile is already in the occupied pod reference.",
+  "afterUnlock": "Independent native pod/person/custody and retained mechanism continue even on placement/writer refusal. No reattachment/refund/rollback-to-aboard. Coast completion validates real native motion only.",
+  "compiler": false,
+  "electricalAccounting": "Source120000J startup includes20J latch unlock; do not add20J again. Actual continuous42W/oxygen/CO2 clocks continue from real observation.",
+  "exactBoundary": "existing source unlock BEFORE powered stroke",
+  "id": "SH029-unlock-physical-reference-v1",
+  "independentRigidSplitChecks": [
+    {
+      "angularMomentumErrorKgM2PerSecond": 2.9999541770795335e-11,
+      "kineticEnergyErrorJ": 2.3283064365386963e-10,
+      "linearMomentumErrorNs": 4.1159031748919956e-11
+    },
+    {
+      "angularMomentumErrorKgM2PerSecond": 2.9999541770795335e-11,
+      "kineticEnergyErrorJ": 1.1641532182693481e-10,
+      "linearMomentumErrorNs": 4.1159031748919956e-11
+    },
+    {
+      "angularMomentumErrorKgM2PerSecond": 3.334262652028585e-11,
+      "kineticEnergyErrorJ": 2.3283064365386963e-10,
+      "linearMomentumErrorNs": 8.731149137020111e-11
+    },
+    {
+      "angularMomentumErrorKgM2PerSecond": 6.66852530405717e-11,
+      "kineticEnergyErrorJ": 2.3283064365386963e-10,
+      "linearMomentumErrorNs": 0.0
+    },
+    {
+      "angularMomentumErrorKgM2PerSecond": 7.312246904709093e-11,
+      "kineticEnergyErrorJ": 0.0,
+      "linearMomentumErrorNs": 2.9103830456733704e-11
+    },
+    {
+      "angularMomentumErrorKgM2PerSecond": 9.761721496032797e-11,
+      "kineticEnergyErrorJ": 1.1641532182693481e-10,
+      "linearMomentumErrorNs": 4.1159031748919956e-11
+    }
+  ],
+  "inheritedVelocityRule": "Split actual whole-body COM velocity into V+omega cross(componentCOM-wholeCOM); preserve actual world poses/orientations/spins and P/L/kinetic energy. No new ejection impulse or3m/s assignment at unlock.",
+  "inputSHA256": "7ba94c62149a2f0b7b882367c946a41516f49c6c58861d5e85eec255ba9d4b4a",
+  "mechanicalAtPoweredStrokeComplete": {
+    "ejectionStoredJ": 600,
+    "guideStoredJ": 1000,
+    "spentEjectionJ": 2400,
+    "totalRemainingJ": 1600
+  },
+  "mechanicalAtUnlock": {
+    "ejectionStoredJ": 3000,
+    "ejectionWorkReservedJ": 2400,
+    "guideStoredJ": 1000,
+    "spentEjectionJ": 0,
+    "spentGuideJ": 2000,
+    "storeOwner": "actual retained carrier/kitID"
+  },
+  "native": false,
+  "offsetsSeconds": {
+    "coastValidationAfterStart": 0.7450115701345215,
+    "poweredStrokeCompleteAfterStart": 0.6450115701345215,
+    "unlockAfterStart": 0.2821027929916644
+  },
+  "podBodyLocal": {
+    "centreMetres": [
+      -0.0016439134615244969,
+      -0.02932513483470055,
+      -0.011281493911556948
+    ],
+    "id": "released-occupied-cell",
+    "inertiaAboutCentreOfMassKgM2": [
+      189.56367019592184,
+      -0.0012526950389259305,
+      0.006593095282574485,
+      -0.0012526950389259305,
+      191.2642833301962,
+      -0.4316687962967723,
+      0.006593095282574485,
+      -0.43166879629677274,
+      48.58352498778836
+    ],
+    "massKg": 352.5
+  },
+  "podSourceOriginInCarrierMetres": [
+    12.5,
+    -3.0,
+    -1.0
+  ],
+  "referenceMasses": {
+    "carrierAtUnlock": {
+      "centreMetres": [
+        0.09578588930819847,
+        -1.4457515135577765,
+        -2.149459091201536
+      ],
+      "id": "reference-carrier-at-unlock",
+      "inertiaAboutCentreOfMassKgM2": [
+        4174177.356742373,
+        9997.320385338608,
+        -5052.3881507634915,
+        9997.320385338608,
+        5442957.092723802,
+        -148410.64636419347,
+        -5052.3881507634915,
+        -148410.64636419347,
+        1735795.9740112629
+      ],
+      "massKg": 45925.26639396747
+    },
+    "installedAtUnlock": {
+      "centreMetres": [
+        0.1902568704118494,
+        -1.457813670939099,
+        -2.1407895370223393
+      ],
+      "id": "reference-installed-at-unlock",
+      "inertiaAboutCentreOfMassKgM2": [
+        4175697.3205723306,
+        16867.81952211142,
+        -9990.484542206941,
+        16867.81952211142,
+        5497411.376965904,
+        -147780.57568540293,
+        -9990.484542206941,
+        -147780.57568540293,
+        1790531.6432255919
+      ],
+      "massKg": 46277.76639396747
+    },
+    "podAtUnlock": {
+      "centreMetres": [
+        12.498356086538475,
+        -3.0293251348347003,
+        -1.0112814939115569
+      ],
+      "id": "released-occupied-cell",
+      "inertiaAboutCentreOfMassKgM2": [
+        189.56367019592184,
+        -0.0012526950389259305,
+        0.006593095282574485,
+        -0.0012526950389259305,
+        191.2642833301962,
+        -0.4316687962967723,
+        0.006593095282574485,
+        -0.43166879629677274,
+        48.58352498778836
+      ],
+      "massKg": 352.5
+    },
+    "retainedAtUnlock": {
+      "centreMetres": [
+        10.854570101895163,
+        -3.6957247292512667,
+        -1.0009464658276694
+      ],
+      "id": "retained-kit-at-unlock",
+      "inertiaAboutCentreOfMassKgM2": [
+        258.9327718202702,
+        74.1836176787841,
+        -0.08974481231600605,
+        74.1836176787841,
+        617.1230989288636,
+        0.26238031722746813,
+        -0.08974481231600605,
+        0.26238031722746813,
+        490.76222540485327
+      ],
+      "massKg": 405.266393967464
+    }
+  },
+  "referenceMassesFrame": "Carrier source coordinates, including podAtUnlock COM; pod body-local properties are separate below.",
+  "refusalBeforeUnlock": "Existing latch staysclosed; actual lowered/spent state stays. No free restoration to stowed or recharging.",
+  "rodShoeContacts": [
+    {
+      "initialRelativeAxialVelocity": 0,
+      "minimumFootprintMarginMetres": 0.010325134834700656,
+      "normalCarrier": [
+        1,
+        0,
+        0
+      ],
+      "physics": "Ordinary unilateral contact. Paid rod acceleration initially pushes; actual pod is independent from unlock. No general collision exemption.",
+      "rod": "moving-rod--1.7612814939115569",
+      "shoe": "portable-thrust-shoe--0.75",
+      "signedFaceGapMetres": 0.0
+    },
+    {
+      "initialRelativeAxialVelocity": 0,
+      "minimumFootprintMarginMetres": 0.010325134834700656,
+      "normalCarrier": [
+        1,
+        0,
+        0
+      ],
+      "physics": "Ordinary unilateral contact. Paid rod acceleration initially pushes; actual pod is independent from unlock. No general collision exemption.",
+      "rod": "moving-rod--0.26128149391155686",
+      "shoe": "portable-thrust-shoe-0.75",
+      "signedFaceGapMetres": 0.0
+    }
+  ],
+  "sampledDelayMeansMechanismStart": true,
+  "schema": 1,
+  "status": "SOURCE_REFERENCE_ONLY_NATIVE_CONTACT_CUSTODY_EXECUTION_PENDING"
+}

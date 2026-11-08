@@ -1,0 +1,131 @@
+{
+  "schema": "l337.closed-family-native-tessellation-proposal/1",
+  "id": "tapir-two-actual-members-complete14part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH105",
+      "name": "Tapir Shuttle",
+      "r3ContractSHA256": "c3e044e23e9f4c87d9d9f06318d5bda37e2a5d79d2c69a4e727a99039701c489",
+      "originalRecipeMark": 0,
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH105-design.toml",
+        "bytes": 413986,
+        "sha256": "daf3fa9551a9f488edbcfd5ee164507616cf120b43f912c07171a3ddead2d96e"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH105.toml",
+        "bytes": 438876,
+        "sha256": "86315197347263bc0e94b7ad76792cfef8144f3ae4a3f02df35b63a9d7664063"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH105.json",
+        "bytes": 43155,
+        "sha256": "cf07abbc396a3d65644a1f231d467278057b97256ab114e41f4f1c652da85dcb"
+      },
+      "declaredOriginalNativeFaces": 908,
+      "originalComponents": 14,
+      "nativeCrew": 5,
+      "conversionCrew": 5,
+      "status": "Own complete original resource remains pending; no source/identity/crew/calibration fallback"
+    },
+    {
+      "id": "SH106",
+      "name": "Tapir Mk II",
+      "r3ContractSHA256": "3afaae56e461c018053ee63f4629b4ec9412fa0fa34d80e954d8dd315a5a3ff3",
+      "originalRecipeMark": 1,
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH106-design.toml",
+        "bytes": 417286,
+        "sha256": "20131f3bbc888dc52c51e0e950a50a7b2ee72ce62c47cf42dae0151d5db8fc65"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH106.toml",
+        "bytes": 442187,
+        "sha256": "280c0ad039985f509ccb4c4f3778c3c2f4ca2e81ae9db60af69c623e4f9ac16c"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH106.json",
+        "bytes": 43155,
+        "sha256": "3720ad2f6ffc46ff1673f5649f0980101a33054dc87a8e3b271d5d0a1efc753a"
+      },
+      "declaredOriginalNativeFaces": 908,
+      "originalComponents": 14,
+      "nativeCrew": 7,
+      "conversionCrew": 7,
+      "status": "Own complete original resource remains pending; no source/identity/crew/calibration fallback"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/tapir-native-candidate-recipe.py",
+    "bytes": 9611,
+    "sha256": "30e1c76433ec85c2a9d9387f355d90801929f130e42bddef000bcd8965dba87e"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/tapir-native-candidate-tests.py",
+    "bytes": 10573,
+    "sha256": "ba9d019cd921348c92145044310c18772310ad0e3fadad4f7e3bc6798f11e9e8"
+  },
+  "baseline": {
+    "limit": 512,
+    "basis": "Each own pinned original creator ownership metadata; not recomputed",
+    "allInstalledResourcesUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 8,
+    "loopSegments": 16,
+    "loopMinorSamples": 4,
+    "changedOriginalPartIndices": [
+      0,
+      1,
+      6,
+      9,
+      10,
+      12,
+      13
+    ],
+    "unchangedFixedOriginalPartsPerMember": 7,
+    "status": "NEW angular approximations only; all actual output counts and full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Each FULL original axisZ closed shuttle loop and central opening, not an axisY loop",
+    "Original loop centre(0,.16,0),rxbeam*.48,ry.90,tube.14, fullTAU with wrap join",
+    "Exact original family mark formula from base length2.7/beam1.80, no cross-member source identity",
+    "Complete own five-station body at(0,-.18,0),length*.86,width.38,height.30 and all endcaps",
+    "ALL four own analytical recessed service wells with original shadow/rim materials",
+    "Full cockpit glazing/structural support and both complete connected drives/casings/luminous recesses",
+    "Each exact own ivory-teal material/emission/texture/license/source fields; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Each own original source axes/coordinates/origin/units and mark dimensions retained. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": "Own R3 mechanics/fits/native and conversion crews5vs7 remain separate declarations. No actual people, quarters, installed hardware/power, paid kit, source/actor/acquisition/current-save or mission permission. All existing gates unchanged.",
+  "stopRules": [
+    "Only actual IDs105/106 accepted; no names/family/prefix/unknown variant lookup",
+    "Each own source/resource digest, canonical identity/name and original recipe/frame must match",
+    "Pinned actual family105/106/transporter source role and creator/primitive bytes required before geometry",
+    "Every actual member retains all14 positive original parts and exact material sets",
+    "Complete own candidate<=512 and genuine closure/winding required without omissions/waivers/count claims",
+    "Independent tests require each own7fixedparts exact original vertices/localfaces/material sequences/UVs",
+    "Actual axisZ loop orientation, connected genus-one topology, wrap join and own mark extrema required; not full continuous void fidelity",
+    "Actual source/native/occupied/installed physical qualification remains G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Per-member actual source-fidelity/native evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed inputs",
+    "next": "G1 generate each once and run own14parts/exact7fixed/axisZ-loop/wrap/extrema/UV/wrong-member/input checks before full native/source qualification. G4 continues independent entries."
+  }
+}

@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 @Test(arguments: [
   "unit", "owner", "issuer", "schema", "duplicate", "missing", "missing-custody", "mirror",

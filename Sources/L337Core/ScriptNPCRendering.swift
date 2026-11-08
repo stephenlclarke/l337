@@ -1,6 +1,21 @@
 import Foundation
 
 extension Game {
+  func scriptNPCDisplayMesh(_ body: SpaceBody) -> Mesh? {
+    guard let fit = body.scriptNPC?.fit, fit.definition.model == OriginalCryostasisCapsule.reference,
+      (fit.definition.components ?? []).isEmpty, let source = OriginalCryostasisCapsule.source,
+      fit.models[fit.definition.model] == source.collisionSHA256,
+      commander.scriptState.geometry[source.collisionSHA256] == source.collisionDesign
+    else { return scriptNPCMesh(body) }
+    let mesh = source.displayMesh
+    var scaled = Mesh(
+      vertices: mesh.vertices.map { $0 * fit.definition.scale }, faces: mesh.faces,
+      details: mesh.details, materials: mesh.materials, faceMaterials: mesh.faceMaterials,
+      faceTextures: mesh.faceTextures, preserveWinding: true)
+    scaled.opticalEnclosure = mesh.opticalEnclosure
+    return scaled
+  }
+
   /// Assemble in source coordinates so one depth sort handles overlapping solid components.
   func scriptNPCMesh(_ body: SpaceBody) -> Mesh? {
     if let shot = body.scriptShot {
@@ -18,8 +33,15 @@ extension Game {
         faceMaterials: Array(repeating: 0, count: 8))
     }
     guard let npc = body.scriptNPC,
+      OriginalScopedScriptedHull.referenced(by: npc.fit.definition)?.permits(npc.fit) != false,
       let root = scriptModel(npc.fit.definition.model, fit: npc.fit)
     else { return nil }
+    if npc.fit.definition.model != OriginalCryostasisCapsule.reference,
+      OriginalCryostasisCapsule.isReferenced(by: npc.fit),
+      scriptModel(OriginalCryostasisCapsule.reference, fit: npc.fit) == nil
+    {
+      return nil
+    }
     var vertices: [Vector3] = []
     var faces: [[Int]] = []
     var details: [MeshDetail] = []

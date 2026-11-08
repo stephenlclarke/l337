@@ -198,7 +198,18 @@ private func drawGraphic(_ graphic: Graphic, context: CGContext, lineWidth: Doub
       in: CGRect(x: center.x - radius, y: center.y - radius, width: radius * 2, height: radius * 2))
   case .panel(let panel):
     guard let first = panel.vertices.first else { return }
-    let panelColour = colour(panel.colour)
+    let hasAperture = panel.opticalAperture?.first != nil
+    if hasAperture { context.saveGState() }
+    defer { if hasAperture { context.restoreGState() } }
+    if let aperture = panel.opticalAperture, let corner = aperture.first {
+      context.beginPath()
+      context.move(to: CGPoint(x: corner.x, y: corner.y))
+      for point in aperture.dropFirst() { context.addLine(to: CGPoint(x: point.x, y: point.y)) }
+      context.closePath()
+      context.clip()
+    }
+    let opacity = panel.isOpticalPane ? Double(panel.colour & 255) / 255 : 1
+    let panelColour = colour(panel.colour, opacity: opacity)
     context.setFillColor(panelColour)
     context.setStrokeColor(panelColour)
     // A small overlap prevents antialiasing cracks between adjoining faces.
@@ -207,7 +218,8 @@ private func drawGraphic(_ graphic: Graphic, context: CGContext, lineWidth: Doub
     context.move(to: CGPoint(x: first.x, y: first.y))
     for point in panel.vertices.dropFirst() { context.addLine(to: CGPoint(x: point.x, y: point.y)) }
     context.closePath()
-    context.drawPath(using: .fillStroke)
+    // A pane is blended once, without an extra translucent stroke along its seams.
+    context.drawPath(using: panel.isOpticalPane ? .fill : .fillStroke)
   }
 }
 

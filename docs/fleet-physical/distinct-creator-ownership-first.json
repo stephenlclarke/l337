@@ -1,0 +1,122 @@
+{
+  "status": "FROZEN_SIX_DISTINCT_CREATOR_DOMAINS_BEFORE_INTEGER_OWNERSHIP_AUTHORING",
+  "sourceRoot": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859",
+  "maximumSourceParses": 6,
+  "maximumPartRecords": 10000,
+  "maximumVerticesPerDesign": 100000,
+  "maximumFacesPerDesign": 200000,
+  "maximumFaceIndexChecks": 7200000,
+  "maximumFaceMaterialChecks": 2400000,
+  "coordinateConversions": 0,
+  "spanAreaMassTensorEvaluations": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "geometryWrites": 0,
+  "nativeCompilerRendererTests": 0,
+  "creators": [
+    {
+      "path": "replacement-hulls/generate.py",
+      "bytes": 32122,
+      "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+    },
+    {
+      "path": "replacement-hulls/sovereign_design.py",
+      "bytes": 10965,
+      "sha256": "e2bf771ad39f0306147a0fc7c48988630e15453c2dd954580b03514efc63b560"
+    },
+    {
+      "path": "replacement-hulls/selected-medusa.json",
+      "bytes": 2389,
+      "sha256": "04d628d945ea65da94741c35d3161dbc1b8438e10023be2be42f974531d32ba0"
+    },
+    {
+      "path": "replacement-hulls/approved/medusa-organic-selected/generate.py",
+      "bytes": 25772,
+      "sha256": "89573a275f0402959eb82c11815ce6ada604dc6e25ead8389a5184182654c4a7"
+    },
+    {
+      "path": "replacement-hulls/approved/medusa-organic-selected/organic-prototype.toml",
+      "bytes": 9062166,
+      "sha256": "fccc586cd57178d3b78dccc5946afe248e4c9ad10026c859333923d15ccd8a21"
+    }
+  ],
+  "rows": [
+    {
+      "id": "SH037",
+      "name": "Vulture Mk I",
+      "objectKind": "ship",
+      "contractSHA256": "1205c491e12819aaed94eff59ab4c8e22bc52cea61abbdbdb77834fa03301099",
+      "geometryPath": "replacement-hulls/SH037-design.toml",
+      "geometrySHA256": "c00f8163a07a5c90c2867334d03e275311afb3060ea5434841b6ab6005553f23",
+      "geometryBytes": 385298,
+      "headerSHA256": "cdd614f0022fa1b4919f2b2c458aac790d58c26d4edbfe265428222842be3b59",
+      "componentPath": null,
+      "componentSHA256": null,
+      "r3TargetLengthMetres": 30.0
+    },
+    {
+      "id": "SH038",
+      "name": "Vulture Mk II",
+      "objectKind": "ship",
+      "contractSHA256": "55d9bb7a617e090e120ae639b19a6eb1f8fa91d220928bf58a498193c425ffd6",
+      "geometryPath": "replacement-hulls/SH038-design.toml",
+      "geometrySHA256": "41e9704f9c177717f42dabc4290bbe67b6792b9916a837dfaf9ef63d820191d4",
+      "geometryBytes": 387027,
+      "headerSHA256": "9b5742a0f2f80460c7d052cd1b1b60b7bee74e035da3bdd77583a391f4d159be",
+      "componentPath": null,
+      "componentSHA256": null,
+      "r3TargetLengthMetres": 30.0
+    },
+    {
+      "id": "SH039",
+      "name": "Vulture Mk III",
+      "objectKind": "ship",
+      "contractSHA256": "a64233f42e9882bba36eaba7cb1d997bee73881dff3eb06e72cffc70d3ebba9e",
+      "geometryPath": "replacement-hulls/SH039-design.toml",
+      "geometrySHA256": "2b69475d2bc724889e10506f88e72df522dd054328c486d5cc67a36d209438c2",
+      "geometryBytes": 385642,
+      "headerSHA256": "c3cffe3439698092c57d36c3dc3c5a20aca287afe8bdb42759cbe2b0340afbf1",
+      "componentPath": null,
+      "componentSHA256": null,
+      "r3TargetLengthMetres": 30.0
+    },
+    {
+      "id": "SH123",
+      "name": "Larvaal Sovereign",
+      "objectKind": "ship",
+      "contractSHA256": "113645d823bf6ad3e81a10fad4e854a0e64363cc6454fc23332cded47a203d6a",
+      "geometryPath": "replacement-hulls/SH123-design.toml",
+      "geometrySHA256": "a430c5e8946db1d2f27d5030ae3f245f0838e52f2dadf1409323a16fc1c67499",
+      "geometryBytes": 4267005,
+      "headerSHA256": "8a1ee08f101ed7552fdab8435368324d4e1cbf8ae68c2afc35cbfd34ca356b17",
+      "componentPath": null,
+      "componentSHA256": null,
+      "r3TargetLengthMetres": 180.0
+    },
+    {
+      "id": "SH125",
+      "name": "Larvaal Drone",
+      "objectKind": "ship",
+      "contractSHA256": "66671c43983362d99fa0ecbc361fe224db0a7ac50799fd7d35cedb4d3fa4506e",
+      "geometryPath": "replacement-hulls/SH125-design.toml",
+      "geometrySHA256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1",
+      "geometryBytes": 809842,
+      "headerSHA256": "6861485c1682ef01829857f7372c47f427cd8fe903c0c316707f57aa8acc8fc6",
+      "componentPath": null,
+      "componentSHA256": null,
+      "r3TargetLengthMetres": 38.0
+    },
+    {
+      "id": "SH171",
+      "name": "Medusa",
+      "objectKind": "ship",
+      "contractSHA256": "f1e1365586a3723bed5a87f1041d086ab7a7dd3c4ce9d665c6fedce1b39eb48f",
+      "geometryPath": "replacement-hulls/SH171-design.toml",
+      "geometrySHA256": "d093d9fb10c2319b93f807cf2b02977fa6df91c37e6735df5da33df886216e5b",
+      "geometryBytes": 22195235,
+      "headerSHA256": "f584cb162016972f50e55145edf9f429c3df0d02e4b8f47a7aeabd2c9d4a521f",
+      "componentPath": null,
+      "componentSHA256": null,
+      "r3TargetLengthMetres": 38.0
+    }
+  ]
+}

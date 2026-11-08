@@ -9,6 +9,7 @@ import Testing
   let fixture = try CourierFixture()
   defer { fixture.clean() }
   var game = fixture.game()
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.name = "LIVE"
   game.commander.cargo[0] = 3
   game.commander.credits = 32100
@@ -99,7 +100,12 @@ func courierContactRendererUsesTypedActionsAndKeepsCompactWideBounds(variant: Sc
     initial.energy = initial.commander.performance.energy
     initial.frontShield = initial.commander.shieldCapacity
     initial.rearShield = initial.commander.rearShieldCapacity
-    if physicalDocking { initial.commander.installTargetingComputer(.docking) }
+    try initial.commander.prepareEquipment(legacy: false)
+    if physicalDocking {
+      try initial.commander.grantEquipment(
+        TargetingTier.docking.equipmentName, at: .targetingCore,
+        provenance: .grant("current targeting unit fixture"))
+    }
     initial.ensureScriptCalendar(origin: .newCommander)
     initial.viewportWidth = 512
     initial.viewportHeight = 518
@@ -611,6 +617,7 @@ extension NativeViewTests {
   })
   defer { fixture.clean() }
   var game = fixture.game()
+  try game.commander.prepareEquipment(legacy: false)
   game.openGallery()
   let runtime = GameRuntime(game: game, saveURL: fixture.save)
   var controls = Controls()
@@ -708,7 +715,7 @@ extension NativeViewTests {
     of: entry, with: entry + "\n  error('Standalone trial rejected')"
   ).write(to: module, atomically: true, encoding: .utf8)
   let rejected = try ScriptPackLibrary.read(folder)
-  var game = fixture.game()
+  var game = try fixture.game()
   game.scriptPacks = [fixture.child, rejected]
   game.commander.name = "KEEP TRIAL SETUP"
   game.commander.credits = 12345

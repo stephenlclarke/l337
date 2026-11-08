@@ -3,7 +3,7 @@ import Foundation
 enum NativeInductionCrewLogPack {
   static let stateID = "l337.induction-crew-log/original-crew-log"
   static let version = "1.0.0"
-  static let digest = "29f26ad4f1382ea23c3cced3b7cc609c00e6617ef7d07a52e669f7d067d2602b"
+  static let digest = "c77bb821f3f3027bc419ea05d9bc9b9174fe68f0e21108e546aaebaf746b7fff"
   static let encounter = "cevilis-source"
   static let timer = "native-deploy"
   static func instance(recorder: UUID) -> UUID {
@@ -22,7 +22,7 @@ enum NativeInductionCrewLogPack {
     else { throw SaveError.invalidCommander }
     return [
       NativeInductionCrewLogSource.shipProfile(
-        physical: try OriginalHullPhysicalContract.burro.get(), performance: p),
+        physical: try OriginalHullPhysicalContract.okapi.get(), performance: p),
       NativeInductionCrewLogSource.recorderProfile(),
     ]
   }

@@ -1,0 +1,1733 @@
+[
+  {
+    "id": "SH036",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "broad engineering shoulder",
+    "driveCasingParts": [
+      {
+        "index": 4,
+        "name": "shoulder drive casing"
+      },
+      {
+        "index": 9,
+        "name": "shoulder drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 0,
+        "name": "broad engineering shoulder"
+      }
+    ]
+  },
+  {
+    "id": "SH041",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "compact control hull",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "rail drive casing"
+      },
+      {
+        "index": 8,
+        "name": "rail drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH042",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "long forward barrel",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "triad recessed engine casing"
+      },
+      {
+        "index": 8,
+        "name": "triad recessed engine casing"
+      },
+      {
+        "index": 13,
+        "name": "triad recessed engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH043",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "capital command backbone",
+    "driveCasingParts": [
+      {
+        "index": 5,
+        "name": "capital main drive casing"
+      },
+      {
+        "index": 12,
+        "name": "capital main drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH044",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "central armoured roof",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "shoulder drive casing"
+      },
+      {
+        "index": 8,
+        "name": "shoulder drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH045",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "corvette conning hull",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "keel engine casing"
+      },
+      {
+        "index": 8,
+        "name": "keel engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH046",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "central armoured roof",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "shoulder drive casing"
+      },
+      {
+        "index": 8,
+        "name": "shoulder drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH047",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "central armoured roof",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "shoulder drive casing"
+      },
+      {
+        "index": 8,
+        "name": "shoulder drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH054",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "compact forward cell",
+    "driveCasingParts": [
+      {
+        "index": 2,
+        "name": "four cell engine casing"
+      },
+      {
+        "index": 5,
+        "name": "four cell engine casing"
+      },
+      {
+        "index": 8,
+        "name": "four cell engine casing"
+      },
+      {
+        "index": 11,
+        "name": "four cell engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH055",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "heavy salvage crosshead",
+    "driveCasingParts": [
+      {
+        "index": 4,
+        "name": "salvage drive casing"
+      },
+      {
+        "index": 9,
+        "name": "salvage drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 3,
+        "name": "crosshead engine shoe"
+      },
+      {
+        "index": 8,
+        "name": "crosshead engine shoe"
+      }
+    ]
+  },
+  {
+    "id": "SH056",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "slender chase rail",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "slim axial split drive casing"
+      },
+      {
+        "index": 8,
+        "name": "slim axial split drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH057",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "stub pressure cabin",
+    "driveCasingParts": [
+      {
+        "index": 4,
+        "name": "high stern drive casing"
+      },
+      {
+        "index": 10,
+        "name": "high stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH058",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "broad freight base",
+    "driveCasingParts": [
+      {
+        "index": 7,
+        "name": "bulk load drive casing"
+      },
+      {
+        "index": 10,
+        "name": "bulk load drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH059",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "armoured control shroud",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "shrouded drive casing"
+      },
+      {
+        "index": 7,
+        "name": "shrouded drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH062",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "deep clipper cargo pressure hull",
+    "driveCasingParts": [
+      {
+        "index": 4,
+        "name": "clipper drive casing"
+      },
+      {
+        "index": 9,
+        "name": "clipper drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH064",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "low barge load floor",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "barge main drive casing"
+      },
+      {
+        "index": 8,
+        "name": "barge main drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH065",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "Vulture primary pressure hull",
+    "driveCasingParts": [
+      {
+        "index": 5,
+        "name": "Vulture side drive casing"
+      },
+      {
+        "index": 12,
+        "name": "Vulture side drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 4,
+        "name": "separate Vulture aft drive pod"
+      },
+      {
+        "index": 11,
+        "name": "separate Vulture aft drive pod"
+      }
+    ]
+  },
+  {
+    "id": "SH068",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "low armoured mining cabin",
+    "driveCasingParts": [
+      {
+        "index": 5,
+        "name": "shielded mining drive casing"
+      },
+      {
+        "index": 11,
+        "name": "shielded mining drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH069",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "short broad control hull",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "low shoulder drive casing"
+      },
+      {
+        "index": 8,
+        "name": "low shoulder drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "sloping aft engine support"
+      },
+      {
+        "index": 7,
+        "name": "sloping aft engine support"
+      }
+    ]
+  },
+  {
+    "id": "SH070",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "short broad control hull",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "low shoulder drive casing"
+      },
+      {
+        "index": 9,
+        "name": "low shoulder drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "sloping aft engine support"
+      },
+      {
+        "index": 8,
+        "name": "sloping aft engine support"
+      }
+    ]
+  },
+  {
+    "id": "SH074",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "suspended bulk pressure tank",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "bulk tank engine casing"
+      },
+      {
+        "index": 9,
+        "name": "bulk tank engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH075",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "suspended bulk pressure tank",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "bulk tank engine casing"
+      },
+      {
+        "index": 9,
+        "name": "bulk tank engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH077",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "deep rectangular main load box",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 4,
+        "name": "rear shoe propulsion casing"
+      },
+      {
+        "index": 5,
+        "name": "rear shoe propulsion throat"
+      },
+      {
+        "index": 6,
+        "name": "rear shoe propulsion luminous recess"
+      },
+      {
+        "index": 10,
+        "name": "rear shoe propulsion casing"
+      },
+      {
+        "index": 11,
+        "name": "rear shoe propulsion throat"
+      },
+      {
+        "index": 12,
+        "name": "rear shoe propulsion luminous recess"
+      }
+    ]
+  },
+  {
+    "id": "SH078",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "slender internal cruise hull",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "rim drive casing"
+      },
+      {
+        "index": 8,
+        "name": "rim drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "rear rim service engine"
+      },
+      {
+        "index": 7,
+        "name": "rear rim service engine"
+      }
+    ]
+  },
+  {
+    "id": "SH079",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "long lower structural spine",
+    "driveCasingParts": [
+      {
+        "index": 6,
+        "name": "outer carrier drive casing"
+      },
+      {
+        "index": 14,
+        "name": "outer carrier drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH080",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "long lower structural spine",
+    "driveCasingParts": [
+      {
+        "index": 6,
+        "name": "outer carrier drive casing"
+      },
+      {
+        "index": 14,
+        "name": "outer carrier drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH081",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "capital primary pressure backbone",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "offset capital drive block"
+      },
+      {
+        "index": 3,
+        "name": "capital corner propulsion casing"
+      },
+      {
+        "index": 4,
+        "name": "capital corner propulsion throat"
+      },
+      {
+        "index": 5,
+        "name": "capital corner propulsion luminous recess"
+      },
+      {
+        "index": 7,
+        "name": "offset capital drive block"
+      },
+      {
+        "index": 8,
+        "name": "capital corner propulsion casing"
+      },
+      {
+        "index": 9,
+        "name": "capital corner propulsion throat"
+      },
+      {
+        "index": 10,
+        "name": "capital corner propulsion luminous recess"
+      },
+      {
+        "index": 14,
+        "name": "offset capital drive block"
+      },
+      {
+        "index": 15,
+        "name": "capital corner propulsion casing"
+      },
+      {
+        "index": 16,
+        "name": "capital corner propulsion throat"
+      },
+      {
+        "index": 17,
+        "name": "capital corner propulsion luminous recess"
+      },
+      {
+        "index": 19,
+        "name": "offset capital drive block"
+      },
+      {
+        "index": 20,
+        "name": "capital corner propulsion casing"
+      },
+      {
+        "index": 21,
+        "name": "capital corner propulsion throat"
+      },
+      {
+        "index": 22,
+        "name": "capital corner propulsion luminous recess"
+      }
+    ]
+  },
+  {
+    "id": "SH083",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "small expedition pod",
+    "driveCasingParts": [
+      {
+        "index": 4,
+        "name": "expedition stern drive casing"
+      },
+      {
+        "index": 10,
+        "name": "expedition stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH084",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "low long cargo sled",
+    "driveCasingParts": [
+      {
+        "index": 2,
+        "name": "sled stern engine casing"
+      },
+      {
+        "index": 7,
+        "name": "sled stern engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH085",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "short armoured chase head",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "yoke drive casing"
+      },
+      {
+        "index": 9,
+        "name": "yoke drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "stern yoke drive shoe"
+      },
+      {
+        "index": 8,
+        "name": "stern yoke drive shoe"
+      }
+    ]
+  },
+  {
+    "id": "SH091",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "small excavation pressure cell",
+    "driveCasingParts": [
+      {
+        "index": 5,
+        "name": "excavator engine casing"
+      },
+      {
+        "index": 9,
+        "name": "excavator engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH093",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "deep passenger lower salon",
+    "driveCasingParts": [
+      {
+        "index": 4,
+        "name": "liner engine casing"
+      },
+      {
+        "index": 10,
+        "name": "liner engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH101",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "thin racing pressure spindle",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "short inset racing thruster"
+      },
+      {
+        "index": 2,
+        "name": "racing engine web"
+      },
+      {
+        "index": 6,
+        "name": "short inset racing thruster"
+      },
+      {
+        "index": 7,
+        "name": "racing engine web"
+      }
+    ]
+  },
+  {
+    "id": "SH109",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "wide blunt pressure freight hull",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "broad hull stern drive casing"
+      },
+      {
+        "index": 7,
+        "name": "broad hull stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "short rear drive fairing"
+      },
+      {
+        "index": 6,
+        "name": "short rear drive fairing"
+      }
+    ]
+  },
+  {
+    "id": "SH110",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "low armoured fighting deck",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "protected stern drive casing"
+      },
+      {
+        "index": 7,
+        "name": "protected stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH111",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "high pressure command spine",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "low boom drive casing"
+      },
+      {
+        "index": 8,
+        "name": "low boom drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "low diagonal propulsion boom"
+      },
+      {
+        "index": 2,
+        "name": "low aft drive claw"
+      },
+      {
+        "index": 6,
+        "name": "low diagonal propulsion boom"
+      },
+      {
+        "index": 7,
+        "name": "low aft drive claw"
+      }
+    ]
+  },
+  {
+    "id": "SH112",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "broad closed protective mantle",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 3,
+        "name": "small inner organ"
+      },
+      {
+        "index": 5,
+        "name": "small inner organ"
+      }
+    ]
+  },
+  {
+    "id": "SH113",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "swept dorsal carapace",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 5,
+        "name": "stern gold organ"
+      }
+    ]
+  },
+  {
+    "id": "SH114",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "upright sagittal guard",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH115",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "single smooth tapered lance",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "small rear green organ"
+      },
+      {
+        "index": 4,
+        "name": "small rear green organ"
+      }
+    ]
+  },
+  {
+    "id": "SH116",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "broad smooth dorsal hood",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 3,
+        "name": "recessed lower tendril organ"
+      },
+      {
+        "index": 5,
+        "name": "recessed lower tendril organ"
+      }
+    ]
+  },
+  {
+    "id": "SH117",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "opposed open crescent",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "inner crescent organ"
+      },
+      {
+        "index": 3,
+        "name": "inner crescent organ"
+      }
+    ]
+  },
+  {
+    "id": "SH118",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "thin central jade blade",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 13,
+        "name": "long gold central organ"
+      }
+    ]
+  },
+  {
+    "id": "SH119",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "thin laminar jade mantle",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "exposed gold underwing organ"
+      },
+      {
+        "index": 3,
+        "name": "aft lower green organ"
+      },
+      {
+        "index": 4,
+        "name": "exposed gold underwing organ"
+      },
+      {
+        "index": 6,
+        "name": "aft lower green organ"
+      }
+    ]
+  },
+  {
+    "id": "SH120",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "tall forward sensing vault",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH121",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "forward open repair cradle",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "forward gold repair organ"
+      },
+      {
+        "index": 4,
+        "name": "forward gold repair organ"
+      }
+    ]
+  },
+  {
+    "id": "SH122",
+    "materials": [
+      "jade-skin",
+      "deep-jade",
+      "gold-core",
+      "recess-shadow",
+      "soft-jade",
+      "gold-green-organ",
+      "luminous-organ",
+      "jade-inlay"
+    ],
+    "primaryComponent": "open circular collection mouth",
+    "driveCasingParts": [],
+    "otherDriveNamedParts": [
+      {
+        "index": 3,
+        "name": "inward luminous intake organ"
+      },
+      {
+        "index": 5,
+        "name": "inward luminous intake organ"
+      },
+      {
+        "index": 7,
+        "name": "inward luminous intake organ"
+      }
+    ]
+  },
+  {
+    "id": "SH126",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "rounded forward cargo bow",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "cargo bow drive casing"
+      },
+      {
+        "index": 7,
+        "name": "cargo bow drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH129",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "broad main pressure freight block",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "fender stern drive casing"
+      },
+      {
+        "index": 8,
+        "name": "fender stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "heavy forward drive fender"
+      },
+      {
+        "index": 6,
+        "name": "heavy forward drive fender"
+      }
+    ]
+  },
+  {
+    "id": "SH130",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "deep ore hopper keel",
+    "driveCasingParts": [
+      {
+        "index": 12,
+        "name": "industrial hopper engine casing"
+      },
+      {
+        "index": 16,
+        "name": "industrial hopper engine casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "short aft engineering body"
+      }
+    ]
+  },
+  {
+    "id": "SH131",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "broad main pressure freight block",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "fender stern drive casing"
+      },
+      {
+        "index": 8,
+        "name": "fender stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "heavy forward drive fender"
+      },
+      {
+        "index": 6,
+        "name": "heavy forward drive fender"
+      }
+    ]
+  },
+  {
+    "id": "SH132",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "broad main pressure freight block",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "fender stern drive casing"
+      },
+      {
+        "index": 8,
+        "name": "fender stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "heavy forward drive fender"
+      },
+      {
+        "index": 6,
+        "name": "heavy forward drive fender"
+      }
+    ]
+  },
+  {
+    "id": "SH133",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "broad main pressure freight block",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "fender stern drive casing"
+      },
+      {
+        "index": 8,
+        "name": "fender stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "heavy forward drive fender"
+      },
+      {
+        "index": 6,
+        "name": "heavy forward drive fender"
+      }
+    ]
+  },
+  {
+    "id": "SH134",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "broad main pressure freight block",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "fender stern drive casing"
+      },
+      {
+        "index": 8,
+        "name": "fender stern drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 1,
+        "name": "heavy forward drive fender"
+      },
+      {
+        "index": 6,
+        "name": "heavy forward drive fender"
+      }
+    ]
+  },
+  {
+    "id": "SH135",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "three bay shallow load floor",
+    "driveCasingParts": [
+      {
+        "index": 5,
+        "name": "separate load engine casing"
+      },
+      {
+        "index": 8,
+        "name": "separate load engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH140",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "thin forward arrest core",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "outer pursuit drive casing"
+      },
+      {
+        "index": 8,
+        "name": "outer pursuit drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "outer arrest engine"
+      },
+      {
+        "index": 7,
+        "name": "outer arrest engine"
+      }
+    ]
+  },
+  {
+    "id": "SH144",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "long lower freight hull",
+    "driveCasingParts": [
+      {
+        "index": 4,
+        "name": "ridge freighter drive casing"
+      },
+      {
+        "index": 9,
+        "name": "ridge freighter drive casing"
+      }
+    ],
+    "otherDriveNamedParts": [
+      {
+        "index": 2,
+        "name": "low short engine outrigger"
+      },
+      {
+        "index": 7,
+        "name": "low short engine outrigger"
+      }
+    ]
+  },
+  {
+    "id": "SH145",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "compact high wing control hull",
+    "driveCasingParts": [
+      {
+        "index": 2,
+        "name": "close stern engine casing"
+      },
+      {
+        "index": 6,
+        "name": "close stern engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH146",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "short tall command cell",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "side cell engine casing"
+      },
+      {
+        "index": 8,
+        "name": "side cell engine casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  },
+  {
+    "id": "SH147",
+    "materials": [
+      "skin",
+      "armour",
+      "trim",
+      "recess",
+      "service",
+      "glazing",
+      "emitter",
+      "inlay"
+    ],
+    "primaryComponent": "long high pressure core",
+    "driveCasingParts": [
+      {
+        "index": 3,
+        "name": "collar drive casing"
+      },
+      {
+        "index": 7,
+        "name": "collar drive casing"
+      }
+    ],
+    "otherDriveNamedParts": []
+  }
+]

@@ -116,6 +116,10 @@ public struct PhysicalActorState: Equatable, Codable, Sendable {
   /// A missing ordinary target suspends live AI, while its original intent remains in custody.
   public var empSource: ActorIdentity?
   public var empCrewPod: EMPCrewIdentity?
+  /// Selected at actual ordinary NPC birth; restored unchanged by its custody owner.
+  public var currentNewtKitStock: CurrentNewtKitStock?
+  /// The original hardware/person transfer remains attached to this occupied pod.
+  public var currentNewtKitReceipt: CurrentNewtKitReceipt?
   public var suspendedNPCIntention: NPCAction?
 }
 

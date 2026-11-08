@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "id": "SH116",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "0ac287f26c28101ac8999e38dc9a7b26a145370ccdaa248ba6d7eed04afe1fb2",
+  "detailedSourceSHA256": "62153467e98fbf3e98a095a50bfc536227d322345d74a6a048e720b65c9fed73",
+  "componentSourceSHA256": "efe5e0d62c7da1368080cabc2d03946d7a455ed265ffbde6eca04703cd3edc6a",
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "coordinateUnits": "metres",
+  "metresPerSourceUnit": 1,
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 4785.398171383822,
+  "stockMassKg": 66995.57439937345,
+  "intrinsicHardwareMassKg": 3720.0,
+  "unroundedMassKg": 70715.57439937345,
+  "roundingReserveKg": 0.4256006265495671,
+  "dryMassKilograms": 70716,
+  "centreOfMassMetres": [
+    -0.08362880934812357,
+    1.063061845752723,
+    1.3719815013218464
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    9102804.61695097,
+    -24028.32037934538,
+    19646.34514613415,
+    -24028.32037934538,
+    11891848.117636682,
+    1064993.9058913563,
+    19646.34514613414,
+    1064993.9058913563,
+    7224163.242665603
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    9315830.598356957,
+    -17741.52220764642,
+    27760.05069259519,
+    -17741.52220764642,
+    12025452.962923173,
+    961855.156681022,
+    27760.050692595178,
+    961855.156681022,
+    7304573.516807147
+  ],
+  "reserveLocationMetres": [
+    -0.08362880934812357,
+    1.063061845752723,
+    1.3719815013218464
+  ],
+  "positiveLeadingPrincipalMinors": [
+    9102804.61695097,
+    108248592589122.64,
+    7.716753977414236e+20
+  ],
+  "zeroAreaSourceFaces": 0,
+  "stockComponents": [
+    {
+      "name": "broad smooth dorsal hood",
+      "areaSquareMetres": 2550.870584372637,
+      "stockMassKg": 35712.18818121687,
+      "areaCentroidMetres": [
+        -1.440621187927909e-17,
+        4.999999999999989,
+        -1.9999999999999907
+      ],
+      "massFirst": [
+        -4.983569112937403e-12,
+        178560.9409060843,
+        -71424.37636243398
+      ],
+      "massSecond": [
+        2931537.185154172,
+        6.330935775622493e-12,
+        -2.509636942704674e-11,
+        6.330935775622493e-12,
+        1447622.4427285043,
+        -357121.88181216794,
+        -2.509636942704674e-11,
+        -357121.88181216794,
+        4084864.3251019544
+      ],
+      "verificationSecond": [
+        2931537.185154179,
+        -2.6258106800014502e-11,
+        -5.1038284709647996e-11,
+        -2.7402080604588264e-11,
+        1447622.4427285022,
+        -357121.8818121692,
+        -1.4367174117069226e-11,
+        -357121.88181216916,
+        4084864.325101972
+      ]
+    },
+    {
+      "name": "visible ventral golden brood sac",
+      "areaSquareMetres": 1322.3401402056859,
+      "stockMassKg": 18512.761962879587,
+      "areaCentroidMetres": [
+        6.04504509411455e-18,
+        -3.000000000000006,
+        1.000000000000003
+      ],
+      "massFirst": [
+        -7.238654120556021e-14,
+        -55538.285888638944,
+        18512.761962879606
+      ],
+      "massSecond": [
+        701417.8197056178,
+        -7.595701845275471e-12,
+        -5.7696070143720135e-12,
+        -7.595701845275471e-12,
+        511653.1384124113,
+        -55538.28588863906,
+        -5.7696070143720135e-12,
+        -55538.28588863906,
+        951229.533078344
+      ],
+      "verificationSecond": [
+        701417.8197056195,
+        -4.704681089151563e-12,
+        -2.582822844487964e-12,
+        -2.772893026303791e-12,
+        511653.13841240975,
+        -55538.28588863946,
+        2.9771740628348198e-12,
+        -55538.28588863948,
+        951229.5330783486
+      ]
+    },
+    {
+      "name": "open lower protective growth",
+      "areaSquareMetres": 397.7387840516525,
+      "stockMassKg": 5568.342976723138,
+      "areaCentroidMetres": [
+        -9.531025056655936,
+        -2.9999999999847007,
+        12.265981405304684
+      ],
+      "massFirst": [
+        -53072.01643520238,
+        -16705.02893008422,
+        68301.19141084496
+      ],
+      "massSecond": [
+        655115.7270702287,
+        159216.02147458107,
+        -628590.7480439023,
+        159216.02147458107,
+        60429.72646742913,
+        -204903.57420807012,
+        -628590.7480439023,
+        -204903.57420807012,
+        941872.3035665968
+      ],
+      "verificationSecond": [
+        655115.7270702281,
+        159216.02147458104,
+        -628590.748043903,
+        159216.02147458104,
+        60429.72646742906,
+        -204903.57420807006,
+        -628590.748043903,
+        -204903.57420807006,
+        941872.3035665944
+      ]
+    },
+    {
+      "name": "recessed lower tendril organ",
+      "areaSquareMetres": 58.35493935109712,
+      "stockMassKg": 816.9691509153582,
+      "areaCentroidMetres": [
+        -6.9999999999999885,
+        -6.999999999999985,
+        4.999999999999985
+      ],
+      "massFirst": [
+        -5718.784056407501,
+        -5718.784056407493,
+        4084.8457545767947
+      ],
+      "massSecond": [
+        41080.47444771083,
+        40031.4883948526,
+        -28593.920282037532,
+        40031.4883948526,
+        40570.27102234618,
+        -28593.920282037514,
+        -28593.920282037532,
+        -28593.920282037514,
+        22918.27846149965
+      ],
+      "verificationSecond": [
+        41080.47444771096,
+        40031.48839485241,
+        -28593.92028203759,
+        40031.4883948524,
+        40570.271022346205,
+        -28593.920282037518,
+        -28593.92028203759,
+        -28593.920282037518,
+        22918.27846149952
+      ]
+    },
+    {
+      "name": "open lower protective growth",
+      "areaSquareMetres": 397.7387840516526,
+      "stockMassKg": 5568.342976723137,
+      "areaCentroidMetres": [
+        8.468974943344064,
+        -2.9999999999847,
+        12.26598140530468
+      ],
+      "massFirst": [
+        47158.157145814126,
+        -16705.028930084216,
+        68301.19141084496
+      ],
+      "massSecond": [
+        548666.2598612421,
+        -141474.4992669346,
+        600830.6973513071,
+        -141474.4992669346,
+        60429.726467429144,
+        -204903.57420807012,
+        600830.6973513071,
+        -204903.57420807012,
+        941872.303566597
+      ],
+      "verificationSecond": [
+        548666.2598612416,
+        -141474.49926693455,
+        600830.6973513064,
+        -141474.49926693455,
+        60429.72646742908,
+        -204903.57420807006,
+        600830.6973513064,
+        -204903.57420807003,
+        941872.3035665944
+      ]
+    },
+    {
+      "name": "recessed lower tendril organ",
+      "areaSquareMetres": 58.35493935109711,
+      "stockMassKg": 816.9691509153582,
+      "areaCentroidMetres": [
+        6.999999999999994,
+        -6.999999999999986,
+        4.999999999999987
+      ],
+      "massFirst": [
+        5718.784056407503,
+        -5718.784056407491,
+        4084.845754576794
+      ],
+      "massSecond": [
+        41080.47444771081,
+        -40031.4883948526,
+        28593.920282037536,
+        -40031.4883948526,
+        40570.27102234618,
+        -28593.92028203751,
+        28593.920282037536,
+        -28593.92028203751,
+        22918.27846149964
+      ],
+      "verificationSecond": [
+        41080.47444771094,
+        -40031.488394852466,
+        28593.92028203761,
+        -40031.48839485246,
+        40570.27102234619,
+        -28593.920282037514,
+        28593.92028203761,
+        -28593.920282037514,
+        22918.27846149952
+      ]
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 3,
+      "anchorName": "recessed lower tendril organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -6.9999999999999885,
+        -6.999999999999985,
+        4.999999999999985
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 5,
+      "anchorName": "recessed lower tendril organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        6.999999999999994,
+        -6.999999999999986,
+        4.999999999999987
+      ]
+    },
+    {
+      "name": "Empty intrinsic power system",
+      "count": 1,
+      "eachKg": 750,
+      "anchorComponent": 0,
+      "anchorName": "broad smooth dorsal hood",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 750,
+      "anchorMetres": [
+        -1.440621187927909e-17,
+        4.999999999999989,
+        -1.9999999999999907
+      ]
+    },
+    {
+      "name": "Empty fuel-containment and transfer system",
+      "count": 1,
+      "eachKg": 180,
+      "anchorComponent": 0,
+      "anchorName": "broad smooth dorsal hood",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 180,
+      "anchorMetres": [
+        -1.440621187927909e-17,
+        4.999999999999989,
+        -1.9999999999999907
+      ]
+    },
+    {
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+      "count": 5,
+      "eachKg": 120,
+      "anchorComponent": 0,
+      "anchorName": "broad smooth dorsal hood",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 600,
+      "anchorMetres": [
+        -1.440621187927909e-17,
+        4.999999999999989,
+        -1.9999999999999907
+      ]
+    },
+    {
+      "name": "Control and sensing system",
+      "count": 1,
+      "eachKg": 90,
+      "anchorComponent": 0,
+      "anchorName": "broad smooth dorsal hood",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 90,
+      "anchorMetres": [
+        -1.440621187927909e-17,
+        4.999999999999989,
+        -1.9999999999999907
+      ]
+    },
+    {
+      "name": "Empty carried-equipment interfaces",
+      "count": 1,
+      "eachKg": 140,
+      "anchorComponent": 0,
+      "anchorName": "broad smooth dorsal hood",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 140,
+      "anchorMetres": [
+        -1.440621187927909e-17,
+        4.999999999999989,
+        -1.9999999999999907
+      ]
+    },
+    {
+      "name": "Empty launcher system, no ammunition",
+      "count": 1,
+      "eachKg": 160,
+      "anchorComponent": 0,
+      "anchorName": "broad smooth dorsal hood",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 160,
+      "anchorMetres": [
+        -1.440621187927909e-17,
+        4.999999999999989,
+        -1.9999999999999907
+      ]
+    }
+  ],
+  "operations": {
+    "coordinateConversions": 10608,
+    "faceIndexChecks": 21144,
+    "triangleAreaEvaluations": 7048,
+    "analyticMomentEvaluations": 7048,
+    "quadratureMomentEvaluations": 21144,
+    "hardwareAllocations": 8,
+    "sourceParses": 1,
+    "resultRecords": 1
+  },
+  "sourceGeometryNotEdited": true,
+  "nativeQualification": "UNRUN; source budget never activates a hull"
+}

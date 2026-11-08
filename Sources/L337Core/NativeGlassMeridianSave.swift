@@ -37,8 +37,9 @@ enum NativeGlassMeridianSave {
   private static func valid(_ mission: ScriptInstance, commander: borrowing Commander) -> Bool {
     guard mission.definition == NativeGlassMeridian.stateID,
       mission.digest == NativeGlassMeridian.digest,
-      mission.version == NativeGlassMeridian.version, mission.outcome == .active,
-      mission.contract == nil, mission.completionReceipt == nil, mission.dialogue == nil,
+      mission.version == NativeGlassMeridian.version,
+      NativeC01CompletionSave.valid(mission, commander: commander),
+      mission.contract == nil, mission.dialogue == nil,
       mission.payloads.isEmpty, mission.gearIssues.isEmpty, mission.timers.isEmpty,
       let state = mission.savedGlassMeridian, let owner = commander.equipmentOwnerID,
       let world = commander.nativeStations,
@@ -48,6 +49,24 @@ enum NativeGlassMeridianSave {
       NativeC01SurveyorSave.valid(mission, commander: commander),
       NativeC01ReservationAuditSave.valid(mission, commander: commander)
     else { return false }
+    if let standard = state.timingStandard {
+      guard NativeC01TimingStandardSave.valid(standard, mission: mission, commander: commander)
+      else { return false }
+    } else {
+      guard mission.ownedEncounters[NativeC01TimingStandard.encounter] == nil else { return false }
+    }
+    if let repair = state.laneRepair {
+      guard NativeC01LaneRepairSave.valid(repair, mission: mission, commander: commander)
+      else { return false }
+    } else {
+      guard mission.ownedEncounters[NativeC01LaneRepair.encounter] == nil else { return false }
+    }
+    if let clinic = state.clinicEscort {
+      guard NativeC01ClinicEscortSave.valid(clinic, mission: mission, commander: commander)
+      else { return false }
+    } else {
+      guard mission.ownedEncounters[NativeC01ClinicEscort.sourceEncounter] == nil else { return false }
+    }
     let p = state.permission
     guard p.mission == mission.id,
       mission.id == ScriptIdentity.uuid("glass-meridian-commission-v1:\(owner)"),
@@ -72,15 +91,14 @@ enum NativeGlassMeridianSave {
         discovery.entries[$0.ship]?.identification == $0
           && $0.physicalTime <= p.physicalTime && $0.actor.visit <= p.dock.actor.visit
       }),
-      mission.milestones
-        == (state.reservationCase?.audit != nil
-          ? Set([0, 1, 2, 3])
-          : state.surveyor?.capture != nil
-            ? Set([0, 1, 2]) : state.readings.count == 2 ? Set([0, 1]) : Set([0])),
+      mission.milestones == NativeC01Completion.milestones(state),
       Set(mission.ownedEncounters.keys).isSubset(
         of: Set(
           NativeGlassMeridian.encounters
-            + (state.surveyor == nil ? [] : [NativeC01Surveyor.encounter])))
+            + (state.surveyor == nil ? [] : [NativeC01Surveyor.encounter])
+            + (state.timingStandard == nil ? [] : [NativeC01TimingStandard.encounter])
+            + (state.laneRepair == nil ? [] : [NativeC01LaneRepair.encounter])
+            + (state.clinicEscort == nil ? [] : [NativeC01ClinicEscort.sourceEncounter])))
     else { return false }
     for sealed in state.readings {
       let r = sealed.reading

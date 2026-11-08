@@ -1,0 +1,78 @@
+# Add source-bound continuous native point contact
+
+## Change
+
+`HullSweepSafety.firstCurrentNewtSphereCurveContact` specializes the existing bounded native curve-query pattern for a point or finite-radius sphere against an actual prepared target. It uses the target's real BVH, outward support lower bounds, conditioned native full-solid parity and native triangle feature certificates. Earlier intervals need a relative speed/separation proof; a midpoint witness alone cannot clear an earlier crossing. The original geometry/query implementation remains byte-preserved before the appended extension.
+
+The query returns clear, actual native contact or refusal together with real work counts. The witness retains the exact prepared geometry identity, actual source centre/radius, target pose and first-contact bracket. It has no external constructor, persistence, actor role, damage permission or native continuation frontier. Strict face/vertex or closed-solid observations can return a genuine zero-time witness. Numerical uncertainty and unresolved tangencies refuse; no positive-time frontier is manufactured.
+
+`Game.firstCurrentNewtOrdnanceContact(in:actor:budget:)` binds only the actual qualified scene/frame entry, current body/origin/state/epoch and one genuine guidance leg. It reads every qualified target component curve, preserves the original T0 muzzle rule, uses one common translating frame per target and accumulates work against the passed existing budget. The returned work report lets G1 enforce aggregate outer limits. Earliest selection uses the existing bracket chronology; overlapping brackets remain ambiguous.
+
+The actual G1 source qualifications, component identities and physical-scene split are preserved. Clock metadata now follows each real provider callback. Interception targets use its existing native missile mesh and real trajectory. Actor-free celestial boxes remain conservative enclosures: they may prove clearance, but their possible contact refuses instead of creating a fictitious sphere hit. The actual celestial narrow phase remains with G1's existing owner.
+
+## Callables for G1
+
+- `GameplayOrdnanceOpening.matchesCurrentState(_:at:)` shares the existing expected-path comparison, including its muzzle/ECM flag rule. G1 still checks actual actor, origin, epoch and clock.
+- `GameplayOrdnanceOpening.guidanceLeg(at:)` exposes the selected private step's actual end and velocity. The query requires its interval to stop by that genuine end; G1 owns the joint guidance/mechanical/contact endpoint selection.
+- `Game.preparedOrdnanceMuzzleCleared(_:context:)` reads the original private T0 muzzle rule without moving a future Game.
+- `Game.firstCurrentNewtOrdnanceContact(in:actor:budget:)` returns clear, a closed `CurrentNewtOrdnanceCurveContact`, or refusal plus consumed work. The contact retains actual scene/opening/target component and its native geometry witness, with physical lower/upper times. Proved initial overlaps keep both times at the actual opening clock.
+
+## Composition and remaining effect work
+
+The ordnance accessor preimage is the corrected immutable 44e8aad5 successor to 4ddaa905. Apply that review correction first. The native contact preimage is G1's actual authored provider including its retained `ordnanceFrame`; apply only this child's appended query, preserving subsequent provider work.
+
+The typed retainer below joins the returned actual contact to the real impact owners, preflights actual mission event capacity and retains zero-time effects at the real source clock. G1 must compose it with the actual positive clock/mover leg. The old static-ray proof or positive-only retainer is not authority for a new continuous/zero-time contact. No caller-created contact DTO, completed future Game, synthetic emission, forced cursor or relaxed guard substitutes for that join. G1 also debits returned work and candidate counts across the whole outer frame. This packet supplies source/query work and criteria, not a claim of completed native gameplay integration.
+
+## Temporal-conditioning successor and actual typed retainer
+
+This successor corrects G2's single temporal-conditioning finding against the frozen d87da30b query. The existing native BVH, support, solid/feature proof, source qualification and work accounting are reused. Every actual absolute-clock provider now reports its real subtraction origins and cached endpoint durations. The dense drive reports its own accepted normalization durations. Full-ULP addition/subtraction bounds, accumulated endpoint-alias jumps and normalized-division error form a time envelope. Absolute all-point speeds convert it to source/target position error. The broad phase and every earlier-clear narrow-phase proof account for twice their sum, while physical travel keeps the existing relative-speed bound. Genuine local rigid/player/static callbacks carry zero absolute-clock error. Impact continuation colliders also carry their actual coast origin.
+
+`NativeCurveClockWindow` binds observations to the real physical window. A positive nominal time that rounds to the opening refuses positive credit. Both callbacks are sampled again at the actual representable frontier; the witness stores that elapsed sample and the scene stores its true physical lower/upper clocks. TwoSum determines the outward lower physical bound. Geometry uncertainty and clock uncertainty cannot manufacture a native hit.
+
+The actual caller is `Game.retainCurrentNewtNativeOrdnance(_:activeECM:admittedAtBoundary:) throws -> GameplayOrdnanceRetention?`, consuming G1's private-owner `CurrentNewtNativeOrdnanceLeg.attainedEnd`. Original source query clocks remain attached to the observation even when G1 retains a shorter physical prefix. The retainer checks actual source, frame reference, epoch, original origin, stored cursor, live actor census, fitting and component poses before calling the existing private ordnance owner. It shares original muzzle/ECM/practice/termination policy. Ordinary effects call G1's actual `applyNativeOrdnanceCurveHit`; mission effects call the existing atomic mission owner with a distinct typed curve proof, revalidated by `bindNativeOrdnanceCurveContact`. Static rays retain their original validation branch. The genuine zero-time branch uses a zero-length motion only after an actual zero/zero solid observation; it never runs a static collision query.
+
+`retainCurrentNewtNativeOrdnanceBoundary(_:activeECM:)` settles only an actual current-clock target loss, active ECM or already reached finite bound through the shared private termination code. A future proposed expiry supplies no current authority. It does not move the clock or invent a guidance leg.
+
+All effects are staged in the same-clock candidate. Actual accepted allocations must replay to its closing flight state before publication. Late rejection publishes neither projectile motion nor damage, law, mission events, notices or feedback. G1's outer candidate remains responsible for publishing the matching physical clock/mover/effect transition atomically, preserving root drive/coast flows at cuts and actual release/birth ownership. A source packet or same-clock retainer alone is not a playable interval.
+
+Composition must preserve G1's actual newer collider `victimPart`/`componentUUID`, split `solidColliders`, private scene/leg factories, `attainedEnd` subset producer, closed binder and ordinary effect wrapper. The internal visibility of `ordnanceImpactDamage` is G1's actual prior change and is retained. Do not overwrite these newer owners with the older frozen provider prefix. Root alone updates the completion ledger.
+
+New owning tests use the real launcher, actual equipped Newt producer, actual mission bridge and genuine current-clock ECM allocator. The actual career tests use real clock advance before missile admission, rather than editing an emission timestamp. The geometric thin-solid test remains explicitly an analytic oracle around the real producer callbacks, not a source admission claim. Original prefix/refusal/event methods remain present. All new and changed tests are authored UNRUN.
+
+## Validation
+
+All geometry and owning tests are authored and unrun. Literal source checks, exact text replay and Markdownlint are recorded separately. Existing native query/solver policy and G1 source qualification are preserved; the provider carries derived clock metadata. No compiler, geometry, probe, renderer, native, standalone test or project helper execution occurred. The full same-whole review, actual G1 compilation/owning tests and final project gates remain pending.
+
+## Compatibility
+
+Current-format source only. No migration, historical reader, actor/source grant or compatibility path is added. Only isolated successor files are changed. The maintained checkout, human workspace, ledger and Game/tick caller are untouched; G1 owns their reviewed composition.
+
+## Genuine end-release composition
+
+The retainer accepts only G1's actual `CurrentNewtEndBirths` cohort from the real mechanical owner. It checks the cohort against the current game, the original parent issue, exact release clock and actual born collision components. A former attached component may rejoin its actual newly released pod only when the original scene already contained that exact component mesh and endpoint pose. This is a clear-scene custody/geometry join, not a contact alias or preceding independent lifetime. Fresh unqualified actors refuse. The actual native binder still decides contact ownership at release and refuses an unsupported parent/pod target transition. G1 must refresh the private cohort only with genuine accepted effect certificates when an earlier effect changes its bodies.
+
+The clear-prefix regression consumes the actual source-owner subset producer and original root-flow scene prefix. It verifies that the shorter real retained clock cannot earn the rest of the queried window. No replacement integrated drive/coast is substituted for the original sampled flow. Genuine release-with-projectile coverage must use the actual Game-private mechanical retention producer; no cohort test factory or manually supplied actor set is permitted.
+
+## Owning-fixture T0 capture correction
+
+`OrdnanceClockFixture.nativeLeg` now receives the actual `Game` through `inout`, matching the real mutating outer-motion preparation API. Its eight callers pass their existing game in place. The helper evaluates preparation before the Swift Testing requirement macro and checks that the full opening flight state and body array are unchanged. This retains real T0 control preparation without installing a copied or predicted game. The scene duration, guidance source, all mission/impact/release/rollback assertions and production code remain unchanged. This three-path test-and-criteria successor requires actual G1 compilation and owning execution; all affected tests remain UNRUN.
+
+## Complete solid temporal correction
+
+The solid path now consumes the same kind of derived clock uncertainty as the point/sphere path. `CurrentNewtNativeCollider.samplingPositionError` combines its actual producer seconds with only the add/subtract error of the real shared-clock adapter and converts that sum using its absolute all-point speed. Exact local producer metadata remains zero. The actual broad phase calls `currentNewtCurvePairClearanceProven`, which includes the outward two-endpoint envelope for both colliders. `firstCurrentNewtCurveContact` accepts the same source/target errors and subtracts their two-endpoint allowance from each earlier-clear proof. Relative physical travel, geometry predicates and original resource limits remain unchanged.
+
+`CurrentNewtNativeCollider.pose(at:in:rootClock:)` maps a nominal suffix sample to one physical clock and then the original root elapsed time, with an exact round-trip guard. This handles a suffix after an earlier impact without relying on a rounded offset sum. Its actual arithmetic supplies the adapter error; an arbitrary fixed margin is not substituted.
+
+The solid native observation carries optional clock-window and actual source/target world poses. Default rigid-query contacts retain their existing defaults. A curve witness maps to a representable physical frontier, re-evaluates both real world callbacks there and calls the unchanged native intersection witness on those exact poses. It no longer inverse-translates a nominal conditioned witness into a claimed world hit. The resolver verifies exact pose equality at the shared frontier, selects using physical lower/upper brackets and reuses the existing force interruption, impulse, consequence, continuation and retained-endpoint owners. The original continuation frontier is not minted by this curve observation.
+
+The private witness routines accept the exact sampled poses separately from the existing opening-to-current entry-side/normal hints. Ordinary motion callers retain their original default pose calculation. Literal normalization checks preserve the original signed-side, velocity, ray, triangle and containment predicates and thresholds; only exact pose plumbing changes. A constant zero-motion hint would lose the real entry normal, so the original opening-side logic remains. The positive solid witness test includes real nonprincipal rotation and requires both stored poses to equal the actual continuation/static callbacks at the retained physical time.
+
+Five added owning methods cover real full-tensor coast callbacks at 86400/604800 seconds, both solid broad/narrow error roles, actual adjacent-clock jumps and a missing-bound false-clear control, genuine representable solid witness poses, unchanged budget refusal, post-impact offset alias and exact local metadata with a successful co-moving three-centimetre clearance. They use original component masses from the existing actual kit producer and the actual continuation class in a declared mechanics unit frame; analytic query meshes do not claim natural source admission. All original relative-query tests and all original mission assertions remain intact. All new/changed tests are UNRUN.
+
+The already source-cleared `87857d95` actual in-place T0 fixture capture is retained byte-exact in this successor's current baseline. Its frozen child is reused; no guidance-duration rewrite is added. G1's later shared-clock/fatal implementation and tests remain disjoint and are review dependencies rather than replacement payloads. Source text preservation, exact delta replay, whitespace and Markdownlint are the only author-side checks. Actual compilation, complete owning outcomes and the final project gates remain pending under the existing executor lease.
+
+## Retain the real mechanical owner once
+
+Contact preparation no longer calls `preflightCurrentNewtNativeRetention`; the unused helper is removed from `CurrentNewtNativeMotion.swift`. It ran the actual mover/effects on a discarded advanced candidate and added no validation absent from real retention. Preparation retains the actual native query, source/epoch/opening binding and pure mechanical-result validation.
+
+The existing real `Game.retainCurrentNewtNativeMechanics` checks input/end time, movement admission, exact accepted duration, epoch and closing clock before publishing its actual result/effects/birth cohort. G1's enclosing atomic clock and receipt/allocation replay guards are unchanged. Source checks compare the removed helper's duration/clock checks with that actual owner and confirm no remaining production references. No replacement preview, execution gate, physics change or mirror-only test is added. G1's actual whole-interval, consequence and late-refusal owning cases remain execution dependencies; all tests are UNRUN.

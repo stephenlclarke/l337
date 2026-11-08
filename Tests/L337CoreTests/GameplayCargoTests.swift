@@ -5,6 +5,7 @@ import Testing
 
 private func cargoRuntimeGame(manifest: [CommodityAmount] = []) throws -> Game {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   game.bodies.removeAll { $0.id != 0 }

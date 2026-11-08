@@ -1,0 +1,5 @@
+# Skip Assembly's full archive decode when its claims are absent
+
+G1's current mission composition found that `NativeAssemblyOfOrbitsSave.validateFields` unconditionally calls Foundation's whole-archive JSON decoder before checking whether the optional Assembly feature is present. This repeats the demonstrated Under Tow absence-cost pattern. Feature-free saves should retain bounded lexical validation without constructing that decoded object graph.
+
+Add one absence-first guard to the owned Assembly validator. Extend only the existing bounded presence query through Root-reserved Q01-Q08 in NativeC01InquirySave.swift, with a closed Under Tow/Assembly selection. Reuse its escape decoding, duplicate checks, object/collection limits and opaque user-data behavior. Preserve the original Assembly field/name/digest/leaf/placement checks and G1's single raw/versioned call boundaries. No substring detector, new parser, caller, schema or duplicate opening integration. [Correction](PR-assembly-save-absence.md).

@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 @Test func procurementNativeRowsRetainTermsAndSeparateWrappingDraws() throws {
   let fixture = try ScriptProcurementFixture()
@@ -252,7 +253,15 @@ func procurementV2FiltersOverDeadlineRoutesFromPaidExtendedReachBeforeDrawing(ro
   let fixture = try ScriptProcurementFixture()
   defer { fixture.clean() }
   // Controlled fresh shop initialization, not a travelled route or awarded fit.
-  var game = try ScriptProcurementFixture.freshG03FlightGame()
+  let origin = try Universe.originalWorlds.world(key: "G01-S007")
+  var game = Game(executive: false)
+  game.screen = .status
+  game.commander.galaxy = origin.galaxy
+  game.commander.system = origin.system
+  game.systems = Universe.systemsIncludingPlugh(number: origin.galaxy)
+  game.selectedSystem = origin.system
+  game.market = MarketItem.at(game.currentSystem)
+  game.commander.credits = 164875
   // This controlled unit fixture exercises the stock Cobra, independently of the fresh starter.
   game.commander.shipID = "SH023"
   game.commander.fuel = game.commander.fuelCapacity

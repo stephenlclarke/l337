@@ -87,6 +87,7 @@ private struct ScriptGalleryEntryValues {
   let journalLast: String?
   let milestones: Set<Int>
   let hasCampaignParent: Bool
+  let savedGlassMeridian: NativeGlassMeridianState?
 
   init(_ state: borrowing ScriptInstance) {
     id = state.id
@@ -96,6 +97,7 @@ private struct ScriptGalleryEntryValues {
     journalLast = state.journal.last
     milestones = state.milestones
     hasCampaignParent = state.campaignParent != nil
+    savedGlassMeridian = state.savedGlassMeridian
   }
 }
 
@@ -156,6 +158,24 @@ extension Game {
   func scriptUnavailable(
     _ pack: borrowing ScriptPack, navigationBinding: ScriptNavigationTradeBinding? = nil
   ) -> String? {
+    if NativeSignedPassageOpening.applies(pack) {
+      if let reason = signedPassageOpeningUnavailable(pack) { return reason }
+    }
+    if NativeMemoryAtlasDefinition.applies(pack) {
+      if let reason = memoryAtlasUnavailable(pack) { return reason }
+    }
+    if NativeQuietChoirDefinition.applies(pack) {
+      if let reason = quietChoirUnavailable(pack) { return reason }
+    }
+    if NativeBorrowedVoiceDefinition.applies(pack) {
+      if let reason = borrowedVoiceUnavailable(pack) { return reason }
+    }
+    if NativeUnderTowDefinition.applies(pack) {
+      if let reason = underTowUnavailable(pack) { return reason }
+    }
+    if NativeAssemblyOfOrbitsDefinition.applies(pack) {
+      if let reason = assemblyOfOrbitsUnavailable(pack) { return reason }
+    }
     if Self.scriptInductionSeedApplies(pack) {
       if let reason = scriptInductionSeedUnavailable(copy pack) { return reason }
     }
@@ -167,6 +187,9 @@ extension Game {
     }
     if Self.scriptInductionUtilityApplies(pack) {
       if let reason = scriptInductionUtilityUnavailable(copy pack) { return reason }
+    }
+    if NativeIsolationAdmission.applies(pack) {
+      if let reason = isolationContentUnavailable(pack) { return reason }
     }
     if Self.scriptInductionCrewLogApplies(pack) {
       if let reason = scriptInductionCrewLogUnavailable(copy pack) { return reason }
@@ -520,6 +543,12 @@ extension Game {
   private func appendScopedScriptCourier(
     _ fields: inout [String: ScriptValue], instance: ScriptInstance
   ) {
+    if let pack = scriptPack(for: instance),
+      instance.definition == OriginalSealedDispatch.stateID,
+      let origin = nativeOriginalSealedDispatchOrigin(for: pack)
+    {
+      fields["sealed_dispatch_origin"] = .string(origin.station.key)
+    }
     if let terms = instance.contract?.offer.courier {
       fields["courier"] = .object([
         "item": instance.courier.map { .string($0.item.uuidString) } ?? .null,
@@ -590,6 +619,24 @@ extension Game {
     drainAccepted: Bool = true, freightAdmission: ScriptFreightIssueAdmission? = nil,
     navigationBinding: ScriptNavigationTradeBinding? = nil
   ) throws -> UUID {
+    guard !NativeSignedPassageOpening.applies(pack) else {
+      throw MissionPackError("Review Senn's actual Signed Passage commission at Neron; collect the original separately.")
+    }
+    guard !NativeMemoryAtlasDefinition.applies(pack) else {
+      throw MissionPackError("Review Vale's actual The Memory Atlas commission at Reris; collect the original separately.")
+    }
+    guard !NativeQuietChoirDefinition.applies(pack) else {
+      throw MissionPackError("Review Holt's actual Quiet Choir investigation at Omdogan; verify four distinct systems and a real Larvaal identification first.")
+    }
+    guard !NativeBorrowedVoiceDefinition.applies(pack) else {
+      throw MissionPackError("Review Dain's actual Borrowed Voice investigation at Taledea; verify the original visit history first.")
+    }
+    guard !NativeUnderTowDefinition.applies(pack) else {
+      throw MissionPackError("Review Penn's actual Under Tow commission at Luera; collect the original separately.")
+    }
+    guard !NativeAssemblyOfOrbitsDefinition.applies(pack) else {
+      throw MissionPackError("Review Voss's actual Assembly commission at Irkenan; collect the original separately.")
+    }
     let instance = try prepareScriptMissionAcceptance(
       pack, instanceID: instanceID, randomSeed: randomSeed,
       contract: contract, campaignParent: campaignParent, freightAdmission: freightAdmission,
@@ -663,6 +710,10 @@ extension Game {
     guard pack.manifest.stateID != NativeInductionUtilityPack.stateID,
       pack.digest != NativeInductionUtilityPack.digest
     else { throw MissionPackError("Use the actual utility authorization at Enron.") }
+    guard !NativeIsolationAdmission.applies(pack) else {
+      throw MissionPackError(
+        "Use Lerr's actual isolation review and original programmer; generic acceptance is refused.")
+    }
     guard pack.manifest.stateID != NativeInductionCrewLogPack.stateID,
       pack.digest != NativeInductionCrewLogPack.digest
     else { throw MissionPackError("Continue the actual Exchange induction at Cevilis.") }
@@ -1434,6 +1485,18 @@ extension Game {
     else {
       return false
     }
+    projectScriptClockValues(
+      delta: delta, scripted: scripted, flight: flight, local: local,
+      calendar: calendar, missionCalendar: missionCalendar)
+    return true
+  }
+
+  /// Pure clock projection shared by ordinary preparation and an attained native
+  /// interval. It fires no timer or event and performs no publication.
+  mutating func projectScriptClockValues(
+    delta: Double, scripted: Bool, flight: Bool, local: Bool, calendar: Bool,
+    missionCalendar: Bool
+  ) {
     let dt = min(delta, 0.1)
     if scripted && local {
       commander.scriptState.localSeconds = min(1e12, commander.scriptState.localSeconds + dt)
@@ -1452,7 +1515,6 @@ extension Game {
       clock.seconds = min(1e12 - reserved, clock.seconds + dt)
       commander.scriptState.missionCalendar = clock
     }
-    return true
   }
   mutating func fireDueScriptTimers(
     flight: Bool, local: Bool, calendar: Bool, transit: Bool = false,
@@ -1514,13 +1576,14 @@ extension Game {
     drainScriptEvents(publish: publish)
   }
   mutating func showScriptDialogue(only: UUID? = nil) -> Bool {
-    guard docked, dockedAtMainStation, scriptOffer == nil else { return false }
+    guard docked, scriptOffer == nil else { return false }
     for id in orderedScriptInstances where only == nil || only == id {
       guard let state = commander.scriptState.instances[id], state.outcome == .active,
         state.suspension == nil,
         let dialogue = state.dialogue, dialogue.galaxy == commander.galaxy,
         dialogue.system == commander.system,
         let pack = scriptPack(for: state),
+        scriptDialogueStationIsCurrent(pack: pack, state: state, contact: dialogue.id),
         pack.manifest.dialogs?.contains(where: { $0.id == dialogue.id }) == true
       else { continue }
       scriptOffer = id
@@ -1546,7 +1609,8 @@ extension Game {
     guard let id = scriptOffer, let state = commander.scriptState.instances[id],
       let dialogue = state.dialogue,
       dialogue == scriptPresentedDialogue,
-      docked, dockedAtMainStation, dialogue.galaxy == commander.galaxy,
+      docked, courierOrMainDialogueStationIsCurrent(state, contact: dialogue.id),
+      dialogue.galaxy == commander.galaxy,
       dialogue.system == commander.system,
       dialogue.revision == state.revision, state.suspension == nil,
       collectionQuoteFresh(dialogue, state: state)
@@ -1651,9 +1715,16 @@ extension Game {
     }
   }
   private func scriptGalleryEntry(_ pack: ScriptPack, stateID: UUID?) -> GalleryMission {
+    if let entry = signedPassageOpeningGalleryEntry(pack) { return entry }
+    if let entry = memoryAtlasGalleryEntry(pack) { return entry }
+    if let entry = quietChoirGalleryEntry(pack) { return entry }
+    if let entry = borrowedVoiceGalleryEntry(pack) { return entry }
+    if let entry = underTowGalleryEntry(pack) { return entry }
+    if let entry = assemblyOfOrbitsGalleryEntry(pack) { return entry }
     if pack.manifest.providerContract != nil {
       return providerScriptGalleryEntry(pack, stateID: stateID)
     }
+    if let native = isolationParentGalleryEntry(pack) { return native }
     let state = scriptGalleryEntryValues(stateID)
     let reason = scriptGalleryEntryReason(pack, stateID: stateID)
     let openingIssue: String?
@@ -1664,7 +1735,11 @@ extension Game {
     } else if pack.manifest.stateID == NativeGlassMeridian.stateID,
       state?.milestones.contains(1) == true
     {
-      openingIssue = NativeGlassMeridian.laterStages
+      openingIssue =
+        state?.savedGlassMeridian.flatMap { opening in
+          opening.reservationCase?.audit == nil
+            ? nil : c01TimingStandardBriefing(opening).joined(separator: " ")
+        } ?? NativeGlassMeridian.laterStages
     } else {
       openingIssue = nil
     }
@@ -1811,6 +1886,12 @@ extension Game {
     guard let state = commander.scriptState.instances[id], scriptPack(for: state) == nil else {
       return nil
     }
+    if let entry = signedPassageOpeningMissingGalleryEntry(state) { return entry }
+    if let entry = memoryAtlasMissingGalleryEntry(state) { return entry }
+    if let entry = quietChoirMissingGalleryEntry(state) { return entry }
+    if let entry = borrowedVoiceMissingGalleryEntry(state) { return entry }
+    if let entry = underTowMissingGalleryEntry(state) { return entry }
+    if let entry = assemblyOfOrbitsMissingGalleryEntry(state) { return entry }
     let pledged = commander.scriptState.pledgeLedger?.receipt(instance: state.id) != nil
     let courierTerminal = state.courier?.terminal
     return GalleryMission(

@@ -286,11 +286,22 @@ extension AmbientEncounterPolicyTests {
   ) throws {
     var game = Game(executive: false)
     game.commander.system = try #require(game.systems.first { $0.government == government }?.id)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     try #require(!game.docked && game.screen == .front)
-    let body = try #require(game.bodies.first { $0.id == 1 && $0.hull == .cobra })
+    let body = try #require(game.bodies.first { $0.id == 1 })
     let physical = try #require(body.physical)
     let npc = try #require(physical.npc)
+    let catalogue = try #require(physical.catalogueShipID)
+    let source = try #require(OriginalFleetRuntimeHullSource.source(for: catalogue))
+    let stock = try #require(NPCResources.stock(source.performance))
+    #expect(body.hull == (source.ship.nativeHull ?? .cobra))
+    #expect(npc.role == .trader && npc.cargoProvenance == .generated)
+    #expect(npc.resources?.profile == stock.profile
+      && npc.resources?.energyCapacity == stock.energyCapacity)
+    #expect(body.missiles <= source.performance.missiles && !body.ecmEnabled)
+    #expect(catalogue == "SH025" && npc.resources == stock)
+    #expect(body.energy == stock.energyCapacity)
     let policy = try #require(
       AmbientEncounterPolicy.nativeLaunch(
         actor: physical.identity, seed: game.gameplaySeed, government: government, role: .trader))
@@ -342,9 +353,18 @@ extension AmbientEncounterPolicyTests {
     for _ in 0..<12 where game.jumpCountdown != nil { game.tick(delta: 0.1) }
     try #require(game.commander.system == destination.id && game.jumpCountdown == nil)
     #expect(game.commander.fuel < fuel && !game.commander.unlimitedFuel)
-    let body = try #require(game.bodies.first { $0.id == 1 && $0.hull == .sidewinder })
+    let body = try #require(game.bodies.first { $0.id == 1 })
     let physical = try #require(body.physical)
     let npc = try #require(physical.npc)
+    let catalogue = try #require(physical.catalogueShipID)
+    let source = try #require(OriginalFleetRuntimeHullSource.source(for: catalogue))
+    let stock = try #require(NPCResources.stock(source.performance))
+    #expect(body.hull == (source.ship.nativeHull ?? .sidewinder))
+    #expect(npc.role == .pirate && npc.cargoProvenance == .generated)
+    #expect(npc.resources?.profile == stock.profile
+      && npc.resources?.energyCapacity == stock.energyCapacity)
+    #expect(body.missiles <= source.performance.missiles && !body.ecmEnabled)
+    #expect(source.ship.catalogue.encounterWeight(for: .pirate) > 0)
     let disposition = try #require(
       AmbientEncounterPolicy.nativeLaunch(
         actor: physical.identity, seed: game.gameplaySeed, government: government, role: npc.role))

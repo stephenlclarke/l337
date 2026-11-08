@@ -1,0 +1,50 @@
+{
+  "status": "FIRST_P1_PUBLICATION_SUCCESSOR_NO_EDITS",
+  "beforeCommit": "93c99e0fdea2ad43ff578bb956a18a2fda38960a",
+  "pins": [
+    {
+      "path": "Tests/L337CoreTests/EMPCurrentCatalogueReleaseTests.swift",
+      "bytes": 12552,
+      "sha256": "50045343d5e12c57f863af9d56ebcf7686356f0699c563f01c531edb7f2453a7"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    },
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 28711,
+      "sha256": "228462e782a2e60ba1b064c0a2c0d471b7ad1b70f91d4cce402ca1e93bdd6cb3"
+    },
+    {
+      "path": "Sources/L337Core/EMPPlayerElectricalPosting.swift",
+      "bytes": 10211,
+      "sha256": "e551671cefdf4f08b8e3c48c9611048ea0477c860ddac04d403f9d715f268470"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18744,
+      "sha256": "c66d53a177cd709582bdea8ba16df4f2d2894f3e648e752995b5c1c9e1074cf4"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 12543,
+      "sha256": "510f626c11e7a262b580ea1a5bd4c6ae3c52358d162167c0ad30e8fa4ae304e0"
+    },
+    {
+      "path": "Sources/L337Core/StationPoliceSource.swift",
+      "bytes": 4601,
+      "sha256": "0e890d988147065f1bb3f58158cb6f82d32f210c43eb5b34d3450ec64d2acd4d"
+    }
+  ],
+  "sourceReview": {
+    "path": "/tmp/elite-g2-93c99-current-catalogue-release-tests-source-review.json",
+    "bytes": 3058,
+    "sha256": "9a864a48cf3560665dce84f0e6141eb751af243b2ebbf65cea0d8f97d204c345"
+  },
+  "scope": "Only existing current catalogue release test file. Correct BOTH positive/refusal helpers through existing withEMPUnitWriter/openEMPUnitHeader/empUnitFrame and actual serializer. Advance charge through real frames so the posted player interval remains current. Count actual pulse publisher attempts/success on isolated real writer files; require result, actual primary effect law, cost, audio and persisted discharge, never phase alone. No production/shared fixture change.",
+  "positive": "Keep four scenarios. Partial mesh/pose comparisons use a same-frame nil-publisher reference copy to account for real normal motion; actual tested branch MUST invoke real writer exactly once and validate effect/cost/result. Use existing releaseDamagedEMPBoundary for subsequent controlled zero and its genuine pre-hit custody checks, not invented record. Current spent save uses valid controlled spent reserve/zero shields, exact strict file/cold reserve check and real publication to zero.",
+  "negative": "First demonstrate a genuine positive final-frame kernel publication on a separate uncorrupted copy. Corrupt tested copy only after existing charge preparation; final frame uses REAL publisher and must not invoke it, must equal an otherwise identical nil-publisher reference frame for entire commander/bodies/time/revision/audio/cost, must keep real pointer+all files unchanged and no result. Nil reference is only expected normal-frame state, never evidence of selected refusal. Late unrelated malformed actor plus target spent condition introduced after preparation, no frame normalizes it away. Same-target real-publisher retry retained.",
+  "limits": "UNCOMPILED UNRUN; exact live source/shield/recharge/aim/writer prerequisites remain unverified, no altered source terms or fabricated receipts. Controlled fixture equipment grants are not earned hardware/people/native/loaded/journey acceptance. G1 sole executor. Broader legacy schema cleanup resumes after correcting P1."
+}

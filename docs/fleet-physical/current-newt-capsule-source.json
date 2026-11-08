@@ -1,0 +1,56 @@
+{
+  "status": "EXACT_ORIGINAL_CAPSULE_RESOURCE_DRAFT_UNAPPLIED_UNCOMPILED_UNRUN_NOT_NATIVE_QUALIFICATION",
+  "id": "SH040",
+  "name": "Newt Escape Pod",
+  "source": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH040-design.toml",
+    "bytes": 486709,
+    "sha256": "94125f9da5db004437ac784ba47be3267271fe2401cf506f9a3715f2b2e3ae3a"
+  },
+  "r3": {
+    "path": "docs/fleet-design-v2/ships/SH040.toml",
+    "sha256": "f0a2f7b763aa35cc65022cf5485eb5c91f742147782d34125ff6c24bf9b72e1c"
+  },
+  "resource": {
+    "path": "Sources/L337Core/Resources/Ships/SH040.toml",
+    "bytes": 493095,
+    "sha256": "6f4cec0e21142b9ed9d35393def302ca277090bedae7c4ccfdb56d3d218b2b45"
+  },
+  "verbatimTables": [
+    {
+      "name": "design",
+      "bytes": 354624,
+      "sha256": "fb3538d36614313000277f7f031563c8875a6b07409f61e5d0ad49ab46caa57e"
+    },
+    {
+      "name": "nativeDesign",
+      "bytes": 131580,
+      "sha256": "789ee79a3e21d387bd51aabb98ebaaec60c6bbd203a87eeea0d2a0d41e4e18eb"
+    }
+  ],
+  "sourceTopology": {
+    "detailedVertices": 1592,
+    "detailedFaces": 3156,
+    "nativeVertices": 608,
+    "nativeFaces": 1188,
+    "basis": "Pinned creator ownership correspondence metadata; not recomputed or evaluated"
+  },
+  "physical": {
+    "path": "Sources/L337Core/Resources/OriginalFleetPhysical/SH040.json",
+    "sha256": "302ab01436523f9a9026d150f9eeb2134113cd19d386cf050e01ef29371bcffc",
+    "status": "Existing empty engineering source estimate only, no occupied hardware"
+  },
+  "sourceAuthoring": {
+    "arrayLiteralParses": 0,
+    "coordinateCalculations": 0,
+    "geometryTransformations": 0,
+    "creatorExecutions": 0,
+    "nativeExecutions": 0
+  },
+  "remaining": [
+    "Native1188 triangles exceeds512: actual new native capsule qualification absent",
+    "Occupied cabin/door/life-support/power/people/escape source absent",
+    "No current capsule actor, EMP pod or escape journey is made available by this import"
+  ],
+  "next": "G2 complete source/resource review; G1 Swift/current-source unit execution and later real native/hardware/occupied qualification. Preserve every original material/table byte; no proxy or cap waiver."
+}

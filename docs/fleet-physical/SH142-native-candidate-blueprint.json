@@ -1,0 +1,96 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH142-complete19part-native-candidate-v1",
+  "ship": "SH142",
+  "name": "Buzzard Mk II",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "bd417e5a856c7bd473e401bb8a72df3e07a4dfe49d8086efa1093644186a6fd1",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH142-design.toml",
+    "bytes": 604051,
+    "sha256": "8c2947c09d24d7990ff0cbe901220def8e5b52b1bd5b1f1990076167be9bd053"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH142.toml",
+    "bytes": 628211,
+    "sha256": "600fe8e74bc2cbe3d627ca29228eef1ad11a05d5fee68f26813dc38b6fb23d8f"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH142.json",
+    "bytes": 48214,
+    "sha256": "428f3dcd6fd770ba6f59e08a18edb69c7c62901f967078a839f0dab0a7662cd1"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH142-native-candidate-recipe.py",
+    "bytes": 8957,
+    "sha256": "cac55c869cbe5960a9d17728c2e568ee03923700b90511ad981f01fbce5209ba"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH142-native-candidate-tests.py",
+    "bytes": 8748,
+    "sha256": "4d47a90fd89c058ab319123ec1bc624729bc16ec5d4dfb660ecd54bc07e1f4b8"
+  },
+  "baseline": {
+    "declaredNativeFaces": 1340,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 6,
+    "hoopSegments": 8,
+    "hoopMinorSamples": 4,
+    "changedOriginalPartIndices": [
+      0,
+      1,
+      2,
+      7,
+      10,
+      11,
+      13,
+      14
+    ],
+    "unchangedFixedOriginalParts": 11,
+    "status": "NEW angular approximations only; actual output count/full curved-profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "BOTH original full closed structural hoops/tubes/central openings, no omitted hoop/sector",
+    "Original unequal radii beam*.48 and beam*.33, ry=.72rx,tube.13,axisZ, centresZ=-length*.20 and length*.20",
+    "Full five-station body at(0,-.25,0),length*.92,width.22,height.20/endcaps",
+    "ALL four actual analytical recessed body wells and shadow/rim materials",
+    "Complete cockpit glazing/support, both connected complete drives/casings/luminous recesses",
+    "ALL four actual original bountyHunter/military mount structures, not installed guns/paid kit",
+    "Exact original plum-gold palette/material/emission/textures/license/source; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Original length3.3/beam2.15/source axes/coordinates/origin/units retained; no recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Buzzard Mk II R3/name/game remain pending and unchanged",
+    "nativeCrew": 3,
+    "conversionCrew": 3,
+    "authority": "No source/actor/actual people/quarters/installed hardware/power/paidkit/acquisition/current-save or mission grant; all existing guards unchanged"
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All19 original positive components/material sets stay, including BOTH full unequal hoops/tubes/holes",
+    "Complete candidate must satisfy512 and genuine closure/winding without omissions/waivers/count claims",
+    "Independent tests require11fixed components exact original vertices/localfaces/material sequence/UVs",
+    "BOTH hoops require connected genus-one topology, actual wrap joins and own unequal radii/offset/extrema",
+    "Full actual curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run19part/exact11fixed/BOTH unequal-hoop topology-wrap-extrema/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

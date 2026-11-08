@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 private func requireUnpublishedG03Preparation(_ game: borrowing Game, before: borrowing Game) {
   let sameCommander = game.commander == before.commander
@@ -61,6 +62,35 @@ struct ScriptG03FlightPreparationTests {
     #expect(game.market == before.market && game.bodies == before.bodies)
     #expect(game.docked && game.commander.scriptState.instances.isEmpty)
     #expect(game.commander.contracts == before.commander.contracts)
+  }
+
+  @Test(arguments: ["absent", "missing-history", "unsupported"])
+  func paidPreparationCannotCreateOrRepairOwnership(state: String) throws {
+    let storage = try NativeStationTestStorage()
+    defer { storage.clean() }
+    var game = try ScriptProcurementFixture.freshG03FlightGame()
+    try GameRuntime.writeCommander(&game, to: storage.url)
+    let pointer = try Data(contentsOf: storage.url)
+    let envelope = try JSONDecoder().decode(ScriptSavePointer.self, from: pointer)
+    try #require(envelope.format == "elite-script-save" && envelope.scope == "commander")
+    let paths = Set(try FileManager.default.subpathsOfDirectory(atPath: storage.directory.path))
+    let files = try ScriptFinanceTestFixture.files(storage.directory)
+    if state == "absent" {
+      game.commander.savedEquipmentInventory = nil
+      game.commander.savedEquipmentPurchaseHistory = nil
+      game.commander.savedEquipmentVersion = nil
+    } else if state == "missing-history" {
+      game.commander.savedEquipmentPurchaseHistory = nil
+    } else {
+      game.commander.savedEquipmentVersion = 2
+    }
+    let before = game
+    #expect(throws: CommanderEquipmentError.incompleteState) { try game.prepareG03FlightEquipment() }
+    requireUnpublishedG03Preparation(game, before: before)
+    #expect(game.commander.equipmentPurchaseHistory == before.commander.equipmentPurchaseHistory)
+    #expect(try Data(contentsOf: storage.url) == pointer)
+    #expect(Set(try FileManager.default.subpathsOfDirectory(atPath: storage.directory.path)) == paths)
+    #expect(try ScriptFinanceTestFixture.files(storage.directory) == files)
   }
 
   @Test func lowerTechnologyShopRefusesWithoutPublishingTheFourEarlierPurchases() throws {

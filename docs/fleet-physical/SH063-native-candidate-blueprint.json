@@ -1,0 +1,93 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH063-complete20part-native-candidate-v1",
+  "ship": "SH063",
+  "name": "Seriema Courier",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "234fb257ba59abe14540cb18f87c9fbf62332f0d6172b91487b67bc355a81faa",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH063-design.toml",
+    "bytes": 250577,
+    "sha256": "557e9ad9e2a496ee0f29ae34b5db40a05ceddd7e8f8ed5ddf9a7ee0b78edc722"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH063.toml",
+    "bytes": 274685,
+    "sha256": "296b86cff9f25fbe83e60f6efaddb2b3f59474d7d9ff53df83eb054bc1ea0efa"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH063.json",
+    "bytes": 48986,
+    "sha256": "c97ff5f6027e5df2d70d450da5c2aafc2b1b7b0ad7935231ec65eba81598dfee"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH063-native-candidate-recipe.py",
+    "bytes": 8144,
+    "sha256": "8efd00e4fdc2b9378b421c7cf99a3ecb9c6234f69dc0d797c541e7bccb957ca2"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH063-native-candidate-tests.py",
+    "bytes": 6614,
+    "sha256": "d051d4b86e65931b8a1e7ec5448501a449de7fd0743c3d473fdd435285066fe5"
+  },
+  "baseline": {
+    "declaredNativeFaces": 608,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 8,
+    "changedOriginalPartIndices": [
+      0,
+      6,
+      9,
+      10,
+      12,
+      13
+    ],
+    "unchangedFixedOriginalParts": 14,
+    "status": "NEW angular approximation only; actual output count/full curved-profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Complete original five-station body at origin,lengthlength,width.25,height.25 and all endcaps",
+    "ALL four original analytical native recessed wells and shadow/rim materials",
+    "FULL vertical blade rail at(0,-.48,-.08),extent(.16,.75,length*.65)",
+    "Complete long cockpit glazing at(0,.30,length*.22),length.80,width.22 plus connected structural crossmember",
+    "BOTH complete connected drives/casings/luminous recesses using actual x=sidebeam*.40 and radius.18",
+    "BOTH original blade-rail transverse braces at original z=-length*.29",
+    "ALL four genuine military mount structures, not installed guns/paid equipment",
+    "Exact original cobalt-cream palette/material/emission/textures/license/source; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Original length4.4/beam1.20/source axes/coordinates/origin/units retained. No recenter/rescale; original calibration75/11 uncomputed.",
+  "coupledRuntime": {
+    "domain": "Own actual Seriema Courier R3/name/game remain pending and unchanged",
+    "nativeCrew": 1,
+    "conversionCrew": 1,
+    "authority": "No source/actor/actual people/quarters/installed hardware/power/paid kit/acquisition/current-save or mission grant; all existing gates unchanged"
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables stay exact",
+    "All20 original positive parts/material sets remain, including fullblade/braces/wells/mounts/drives",
+    "Actual non-default original engine spacing/radius must remain; no generic engine_pair substitution",
+    "Complete candidate must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require14 fixed components exact original vertices/localfaces/material sequence/UVs",
+    "Full actual curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run20part/exact14fixed/blade-braces-mounts/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

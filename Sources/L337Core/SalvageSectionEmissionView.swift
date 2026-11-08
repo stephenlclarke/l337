@@ -13,7 +13,7 @@ struct SalvageSectionEmissionView: Sendable {
     guard (0..<8).contains(section.wreck.system.galaxy),
       (0...256).contains(section.wreck.system.system), section.section < 64,
       (0...255).contains(source.legalValue), (0...7).contains(source.economy),
-      (0...14).contains(source.technology), source.manifestSection < 64,
+      (0...Universe.originalWorlds.authoring.technologyMaximum).contains(source.technology), source.manifestSection < 64,
       (source.manifest?.count ?? 0) <= CommodityIdentity.allCases.count,
       SalvageLootProfiles.plan(section: section, seed: seed, source: source) == plan
     else { throw AlienStorageError.invalidJoin }

@@ -10,12 +10,12 @@ func missionGearFolder() throws -> URL {
   return folder
 }
 
-// Physical inventory unit fixtures use a stock Cobra independently of fresh-start defaults.
-func missionGearGame(missiles: Int? = nil) throws -> Game {
+// Physical inventory fixtures use the admitted Redtail Mk III for its four laser mounts.
+func missionGearGame(missiles: Int = 3, shipID: String = "SH103") throws -> Game {
   var commander = Commander()
-  commander.shipID = "SH023"
+  commander.shipID = shipID
   commander.fuel = commander.fuelCapacity
-  if let missiles { commander.missiles = missiles }
+  commander.missiles = missiles
   try commander.prepareEquipment(legacy: false)
   var game = Game(executive: false)
   // This is a freshly constructed current typed fixture, not a legacy file load.

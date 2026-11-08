@@ -6,18 +6,20 @@ import Testing
 private func navigationGame(tier: NavigationTier? = .military) throws -> Game {
   var game = Game(executive: false)
   try #require(game.commander.equipmentInventory == nil && game.commander.nativeStations == nil)
-  // These fixed seven-LY route and fuel witnesses use the actual stock SH023 fit.
-  game.commander.shipID = "SH023"
+  // Use the admitted stock Okapi for the route and fuel witnesses.
+  game.commander.shipID = "SH029"
   game.commander.fuel = game.commander.fuelCapacity
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
   game.rearShield = game.commander.rearShieldCapacity
   try #require(
-    game.commander.nativePerformance.jump == 7 && game.commander.fuel == 70
-      && game.commander.fuelCapacity == 70 && game.commander.maximumJumpDistance == 7
+    game.commander.nativePerformance.jump == 10 && game.commander.fuel == 130
+      && game.commander.fuelCapacity == 130 && game.commander.maximumJumpDistance == 10
       && game.commander.valid)
   game.screen = .chart
   if let tier { game.commander.installNavigationComputer(tier) }
+  try game.commander.prepareEquipment(legacy: false)
+  try game.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
   game.commander.credits = 500_000
   return game
 }
@@ -53,11 +55,11 @@ private func longRoute(_ game: Game) -> [Int] {
     game.commander == standard && game.commander.equipmentPurchaseHistory?.paid.isEmpty == true)
   #expect(game.message == "STANDARD OR ACQUISITION HARDWARE - NOT FOR SALE")
   game.commander.fuel = 20
-  #expect(game.navigationPlanningRadius == 14 && game.commander.maximumJumpDistance == 2)
+  #expect(game.navigationPlanningRadius == 20 && game.commander.maximumJumpDistance == 2)
   #expect(game.commander.fittedComponent(at: .navigation)?.statistics[.jumpReach] == 7)
   #expect(
     game.systems.filter { game.canPlan(to: $0) }.allSatisfy {
-      game.currentSystem.distance(to: $0) <= 14
+      game.currentSystem.distance(to: $0) <= 20
     })
   for (tier, reach) in [(NavigationTier.advanced, 14.0), (.military, 21.0)] {
     game.selection = try #require(Equipment.all.firstIndex { $0.name == tier.equipmentName })
@@ -83,7 +85,7 @@ private func longRoute(_ game: Game) -> [Int] {
     #expect(game.commander.fittedComponent(at: .navigation)?.statistics[.jumpReach] == reach)
     #expect(game.commander.equipmentPurchaseHistory?.paid.last?.node.key == tier.equipmentName)
     #expect(game.commander.fuel == 20)
-    if tier == .advanced { #expect(game.navigationPlanningRadius == 21) }
+    if tier == .advanced { #expect(game.navigationPlanningRadius == 27) }
   }
   #expect(game.navigationPlanningRadius == nil && game.knownSystems.allSatisfy(game.canPlan))
   #expect(NavigationTier.allCases.map(\.price) == [10000, 30000, 90000])
@@ -106,7 +108,7 @@ private func longRoute(_ game: Game) -> [Int] {
         && route.plan.destination == path.last!)
     #expect(
       zip(route.plan.path, route.plan.path.dropFirst()).allSatisfy {
-        game.systems[$0].distance(to: game.systems[$1]) <= 7
+        game.systems[$0].distance(to: game.systems[$1]) <= game.commander.fullTankJumpDistance
       })
     #expect(
       route.distance > 0 && route.fuelUnits > 0 && route.cargoSale >= 0 && route.tradeEstimate >= 0)
@@ -120,7 +122,8 @@ private func longRoute(_ game: Game) -> [Int] {
   var game = try navigationGame()
   let path = longRoute(game)
   #expect(path.count > 3)
-  game.commander.navigationPlan = .init(galaxy: 0, path: path, tier: .military, originFuel: 70)
+  game.commander.navigationPlan = .init(
+    galaxy: 0, path: path, tier: .military, originFuel: 130, originCapacity: 130)
   game.commander.autoTrade = true
   for stop in 0..<(path.count - 1) {
     game.launch()
@@ -130,7 +133,7 @@ private func longRoute(_ game: Game) -> [Int] {
     game.arrive()
     #expect(game.commander.navigationPlan?.stopIndex == stop)
     game.dock()
-    #expect(game.commander.navigationPlan?.stopIndex == stop + 1 && game.commander.fuel == 70)
+    #expect(game.commander.navigationPlan?.stopIndex == stop + 1 && game.commander.fuel == 130)
   }
   #expect(game.commander.navigationPlan?.complete == true)
   game.launch()
@@ -139,31 +142,33 @@ private func longRoute(_ game: Game) -> [Int] {
 @Test func autoTradePaysForFullFuelBeforeExportsAndLeavesNavigationRouteIntact() throws {
   var game = try navigationGame()
   let path = longRoute(game)
-  game.commander.navigationPlan = .init(galaxy: 0, path: path, tier: .military, originFuel: 70)
+  game.commander.navigationPlan = .init(
+    galaxy: 0, path: path, tier: .military, originFuel: 130, originCapacity: 130)
   game.commander.fuel = 0
-  game.commander.credits = 140
+  game.commander.credits = 260
   game.autoTrade()
   #expect(
-    game.commander.fuel == 70 && game.commander.credits == 0
+    game.commander.fuel == 130 && game.commander.credits == 0
       && game.commander.cargo.allSatisfy { $0 == 0 })
   #expect(game.commander.navigationPlan?.path == path)
   game.commander.fuel = 0
-  game.commander.credits = 139
+  game.commander.credits = 259
   game.autoTrade()
   #expect(
-    game.commander.fuel == 0 && game.commander.credits == 139
+    game.commander.fuel == 0 && game.commander.credits == 259
       && game.message == "INSUFFICIENT FUNDS FOR FULL FUEL")
   game.commander.unlimitedCash = true
   game.autoTrade()
-  #expect(game.commander.fuel == 70 && game.commander.credits == 139)
+  #expect(game.commander.fuel == 130 && game.commander.credits == 259)
   game.commander.fuel = 0
   game.commander.unlimitedFuel = true
   game.commander.unlimitedCash = false
   game.commander.credits = 0
   game.commander.cargo = Array(repeating: 0, count: 17)
   game.autoTrade()
-  #expect(game.commander.fuel == 70 && game.commander.credits == 0)
+  #expect(game.commander.fuel == 130 && game.commander.credits == 0)
   game.launch()
+  try #require(!game.docked, "Native launch refused: \(game.message)")
   game.commander.fuel = 10
   game.autoTrade()
   #expect(game.commander.fuel == 10)
@@ -172,7 +177,8 @@ private func longRoute(_ game: Game) -> [Int] {
 {
   var game = try navigationGame()
   let path = longRoute(game)
-  game.commander.navigationPlan = .init(galaxy: 0, path: path, tier: .military, originFuel: 70)
+  game.commander.navigationPlan = .init(
+    galaxy: 0, path: path, tier: .military, originFuel: 130, originCapacity: 130)
   let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
   defer { try? FileManager.default.removeItem(at: url) }
   let runtime = GameRuntime(game: game)
@@ -183,14 +189,18 @@ private func longRoute(_ game: Game) -> [Int] {
   #expect(await runtime.snapshot().selectedSystem == path[1])
   game.manuallySelectSystem(129)
   #expect(game.commander.navigationPlan == nil && game.selectedSystem == 129)
-  game.commander.navigationPlan = .init(galaxy: 0, path: path, tier: .military, originFuel: 70)
-  game.commander.equipment.insert("Galactic Hyperdrive")
+  game.commander.navigationPlan = .init(
+    galaxy: 0, path: path, tier: .military, originFuel: 130, originCapacity: 130)
+  try game.commander.grantEquipment(
+    "Galactic Hyperdrive", at: .utility(.galacticHyperdrive),
+    provenance: .grant("navigation route fixture"))
   game.launch()
   #expect(game.commander.fittedEquipment(at: .utility(.galacticHyperdrive)) != nil)
   game.selectedSystem = (path[1] + 1) % 256
   game.arrive()
   #expect(game.commander.navigationPlan == nil)
-  game.commander.navigationPlan = .init(galaxy: 0, path: path, tier: .military, originFuel: 70)
+  game.commander.navigationPlan = .init(
+    galaxy: 0, path: path, tier: .military, originFuel: 130, originCapacity: 130)
   game.galacticJump()
   #expect(game.commander.navigationPlan == nil)
 }
@@ -226,7 +236,8 @@ private func longRoute(_ game: Game) -> [Int] {
 @Test func activeRouteInspectionUsesFixedOriginScopeAfterHopsAndMapBrowsingPreservesIt() throws {
   var game = try navigationGame()
   let path = longRoute(game)
-  game.commander.navigationPlan = .init(galaxy: 0, path: path, tier: .basic, originFuel: 70)
+  game.commander.navigationPlan = .init(
+    galaxy: 0, path: path, tier: .basic, originFuel: 130, originCapacity: 130)
   game.launch()
   game.arrive()
   game.dock()
@@ -237,7 +248,7 @@ private func longRoute(_ game: Game) -> [Int] {
   game.key("n")
   #expect(game.screen == .navigation && game.navigationOptions.first?.plan.path == path)
   #expect(
-    game.navigationOptions.first?.plan.originFuel == 70
+    game.navigationOptions.first?.plan.originFuel == 130
       && game.navigationOptions.first?.plan.stopIndex == 1)
   game.key("escape")
   let layout = ChartLayout(
@@ -248,7 +259,12 @@ private func longRoute(_ game: Game) -> [Int] {
 }
 @Test func infeasibleGraphAndInvalidSavedLegNeverProduceInventedHops() throws {
   var game = try navigationGame()
-  let invalid = NavigationPlan(galaxy: 0, path: [7, 0], tier: .military, originFuel: 70)
+  let unreachable = try #require(game.knownSystems.first {
+    game.currentSystem.distance(to: $0) > game.commander.fullTankJumpDistance
+  })
+  let invalid = NavigationPlan(
+    galaxy: 0, path: [game.commander.system, unreachable.id], tier: .military,
+    originFuel: 130, originCapacity: 130)
   game.commander.navigationPlan = invalid
   game.navigationDocked()
   #expect(game.commander.navigationPlan == nil)

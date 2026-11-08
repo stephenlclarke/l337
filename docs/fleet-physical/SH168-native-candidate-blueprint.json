@@ -1,0 +1,102 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH168-complete21part-native-candidate-v1",
+  "ship": "SH168",
+  "name": "Armadillo Miner",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "22b33bde70014ed2ef02dd07cf436a5dfc4ffb0c98887e614aae060d725c6087",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH168-design.toml",
+    "bytes": 1697814,
+    "sha256": "6b938c4b4879fa1e41b29fc1f1c81c5a950733937e8ad8337b5439854dca237f"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH168.toml",
+    "bytes": 1721972,
+    "sha256": "3d15c8d9d5113ea73d1953bc846f537cb93ece173ef1ba8c00a75817e165a6e9"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH168.json",
+    "bytes": 54420,
+    "sha256": "cbf5207153b62975bd96aeafbafddb1ee03663f155c3fa4ce4241d6a7f29a81d"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH168-native-candidate-recipe.py",
+    "bytes": 9283,
+    "sha256": "0ca0eafd25220833ad3bd1cb3d6568b561fbc9dcfb976b987d235fb25781dc2c"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH168-native-candidate-tests.py",
+    "bytes": 9676,
+    "sha256": "d52b11bbfd88de72cb2affba52d39212f1cd053bfa0effd40a8934bf190b7a55"
+  },
+  "baseline": {
+    "declaredNativeFaces": 1452,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "bodyLoftSides": 6,
+    "cockpitOnlySides": 4,
+    "driveLoftSides": 4,
+    "halfArchSegments": 4,
+    "halfArchMinorSamples": 4,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "originalToolHeadLiteralSidesRetained": 8,
+    "originalToolHeadStationsRetained": 3,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      6,
+      7,
+      8,
+      13,
+      16,
+      17,
+      19,
+      20
+    ],
+    "unchangedFixedOriginalParts": 11,
+    "status": "NEW component-specific angular approximations only; actual output count/full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Complete original5station body/endcaps and ALL FOUR analytical recessed wells",
+    "ALL FOUR original capped half arches, default axisZ/range0..pi, actual offsets/radii/tube and BOTH endcaps per arch",
+    "BOTH complete boring-head supports and literal8-sided THREE-station tool heads, exact original surfaces/materials/UVs",
+    "Full5station cockpit/support and BOTH complete connected drive supports/casings/luminous recesses at xbeam*.38/radius.24",
+    "Exact original slate-orange palette/material/emission/textures/license/source; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Original length3.5/beam2.20/source axes/coordinates/origin/units retained. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Armadillo Miner R3/name/game remain pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "Tool/hopper/envelope names grant no installed operating mining hardware/power/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All21 original positive components/material sets stay, including ALL4 capped arches/4wells/both8-sided3station tools/supports/full cockpit/drives",
+    "All FIVE stations per pod and TWO per drive remain; explicit component angular policies cannot change literal8 tool lofts",
+    "Complete actual output must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require11 fixed components exact original vertices/localfaces/material sequence/UVs and all4 arc caps/gaps/axes/extrema",
+    "Full actual curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run21part/exact11fixed/both8sided3stationtools/all4archcaps-gaps-axis-offsets/UV/input checks then full source/native qualification. G4 continues independent original entries."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "status": "FIRST_TINY_REFINEMENT_BEFORE_SHARED_SOURCE_APPLICATION_ROOT_RESERVED_HELPER_ONLY",
+  "parentFIRSTSHA256": "91f1ed8288d7c8f7dd4120700a7c459fd9dd6829deb774b2ce929f5186815d99",
+  "pins": [
+    {
+      "path": "/tmp/elite-g4-current-station-police-source-child/StationPoliceSource.swift.proposed",
+      "bytes": 4584,
+      "sha256": "d6d4534296bec2dacabe62b2580649a5d5e78013ae721aa75ef8f61cfabba4c7"
+    },
+    {
+      "path": "/tmp/elite-g4-current-station-police-source-child/StationPoliceSourceTests.swift.proposed",
+      "bytes": 9502,
+      "sha256": "393fd37f4a429d27ee6701e14d52eb84b70847b61415cf16fc6d880af33d2175"
+    }
+  ],
+  "changes": [
+    {
+      "path": "/tmp/elite-g4-current-station-police-source-child/StationPoliceSource.swift.proposed",
+      "before": "      guard let id = body.physical?.catalogueShipID,\n        OriginalFleetRuntimeHullSource.source(for: id) != nil\n",
+      "after": "      guard let id = body.physical?.catalogueShipID,\n        let current = OriginalFleetRuntimeHullSource.source(for: id),\n        current.ship.nativeHull == body.hull\n"
+    },
+    {
+      "path": "/tmp/elite-g4-current-station-police-source-child/StationPoliceSource.swift.proposed",
+      "before": "      record.custody.original.body.physical?.catalogueShipID == id,\n      OriginalFleetRuntimeHullSource.source(for: id) != nil\n",
+      "after": "      record.custody.original.body.physical?.catalogueShipID == id,\n      let current = OriginalFleetRuntimeHullSource.source(for: id),\n      current.ship.nativeHull == record.hull.body.hull\n"
+    },
+    {
+      "path": "/tmp/elite-g4-current-station-police-source-child/StationPoliceSourceTests.swift.proposed",
+      "before": "    body.physical?.catalogueShipID = \"SH067\"\n    #expect(StationPoliceSource.empCatalogueID(for: body) == nil)\n",
+      "after": "    let wrongBinding = try #require(OriginalFleetRuntimeHullSource.source(for: \"SH030\"))\n    try #require(wrongBinding.ship.nativeHull != body.hull)\n    body.physical?.catalogueShipID = wrongBinding.ship.id\n    #expect(StationPoliceSource.empCatalogueID(for: body) == nil)\n"
+    }
+  ],
+  "scope": "Require actual explicit resolved current source nativeHull == actual body hull for viper resolver and authenticated recovered condition. Existing condition.valid retains actual stock profile/capacity, spent fuel/energy/shield pools; no stock application or source.system/travel changes. New negative chooses an actually resolved current030 whose native binding differs, not unavailable/historical ID. All other proposed source byte-exact; original15hunks unchanged.",
+  "execution": "Only text preparation before mutation; Swift/geometry/native/compiler/tests remain UNRUN. Root exact shared reservation received, all other MC1/EMPTravel scopes held."
+}

@@ -11,6 +11,7 @@ private func identityPack() throws -> ScriptPack {
 }
 private func identityGame(_ pack: ScriptPack, origin: UUID) throws -> Game {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   _ = try game.acceptScriptMission(pack, instanceID: origin)
@@ -60,285 +61,76 @@ private func physicalIDs(_ state: ScriptInstance) -> Set<UUID> {
   #expect(physicalIDs(a).count == 4 && physicalIDs(b).count == 4)
 }
 
-@Test func anOlderPreparedPlanKeepsItsOriginalRandomIdentitiesAndConditionWhenEventuallyAdmitted()
+@Test func currentPreparedPlansKeepCanonicalIdentitiesAndActualDamagedConditionThroughNativeSaves()
   async throws
 {
   let pack = try identityPack()
-  let folder = FileManager.default.temporaryDirectory.appendingPathComponent(
-    "old-plan-" + UUID().uuidString)
+  let folder = FileManager.default.temporaryDirectory.appendingPathComponent("current-plan-" + UUID().uuidString)
   defer { try? FileManager.default.removeItem(at: folder) }
   let save = folder.appendingPathComponent("commander.json")
   let origin = UUID()
   var game = try identityGame(pack, origin: origin)
-  // Schema 11 predates the native station namespace. This historical scene has no RRS custody.
-  let stations = try #require(game.commander.nativeStations)
-  try #require(stations.ledger.currentDock == nil && stations.currentMainDock == nil)
-  try #require(game.commander.contracts.rrs == nil)
-  try #require(game.commander.scriptState.missionCalendar == nil)
-  game.commander.nativeStations = nil
+  // Controlled actor-slot pressure only; these placeholders confer no cargo or material authority.
   game.bodies = [try #require(game.bodies.first { $0.id == 0 })]
   for id in 1..<128 {
-    game.bodies.append(
-      SpaceBody(id: id, hull: .cargo, position: .init(Double(id) * 30, 10000, 10000)))
+    game.bodies.append(.init(id: id, hull: .cargo, position: .init(Double(id) * 30, 10000, 10000)))
   }
   game.nextBodyID = 128
   game.ensurePhysicalActors()
-  try #require(game.bodies.count == 128 && game.bodies.allSatisfy { $0.physical != nil })
+  let coldSeed = game
   var state = try #require(game.commander.scriptState.instances[origin])
   let pending = try game.ensureScriptEncounter("opponents", pack: pack, state: &state)
-  #expect(pending.0 == "encounter.pending")
-  var cohort = try #require(state.ownedEncounters["opponents"])
-  for alias in cohort.actors.keys {
-    let old = try #require(cohort.actors[alias])
-    let identity = UUID()
-    var body = old.body
-    body.missionActorID = identity
-    body.energy = 41
-    if var npc = body.scriptNPC {
-      for component in npc.components.keys {
-        let value = try #require(npc.components[component])
-        npc.components[component] = .init(identity: UUID(), energy: 16, guns: value.guns)
-      }
-      body.scriptNPC = npc
-    }
-    cohort.actors[alias] = .init(identity: identity, alias: alias, body: body, presence: .prepared)
-  }
-  state.ownedEncounters["opponents"] = cohort
-  state.acknowledgedThrough = nil
-  state.acknowledgedEvents = [1]
-  game.commander.scriptState.instances[origin] = state
-  #expect(game.commander.valid)
+  try #require(pending.0 == "encounter.pending")
+  let prepared = try #require(state.ownedEncounters["opponents"])
   let identities = physicalIDs(state)
-  let authoringCommander = game.commander
-  let authoringInventory = try #require(authoringCommander.equipmentInventory)
-  let historicalWorld = game.scriptWorldSave
-  try #require(authoringCommander.nativeStations == nil)
-  try #require(historicalWorld.bodies.count == 128 && historicalWorld.nextBodyID == 128)
-  try #require(historicalWorld.bodies.allSatisfy { $0.nativeStationIdentity == nil })
-  try #require(historicalWorld.bodies.allSatisfy { $0.physical?.npc?.resources?.electrical == nil })
-  // The prepared mission owns its original random identities; it does not require modern player gear.
-  var historical = Commander()
-  try #require(historical.shipID == authoringCommander.shipID)
-  try #require(
-    historical.galaxy == authoringCommander.galaxy && historical.system == authoringCommander.system
-  )
-  try #require(authoringCommander.contracts == ScriptContractState())
-  historical.scriptState = authoringCommander.scriptState
-  historical.flightSimulation = authoringCommander.flightSimulation
-  try #require(historical.equipmentInventory == nil && historical.savedEquipmentVersion == nil)
-  try #require(!historical.usesModularDriveSaveVersion && !historical.usesEconomyMiningSaveVersion)
-  try #require(
-    historical.valid && historicalWorld.valid && historicalWorld.consistent(with: historical))
-  let rawEncoder = JSONEncoder()
-  var header = historical
-  header.scriptState = ScriptEngineState()
-  header.contracts = ScriptContractState()
-  let chunks = [
-    "commander.json": try rawEncoder.encode(header),
-    "missions.json": try rawEncoder.encode(historical.scriptState),
-    "world.json": try rawEncoder.encode(historicalWorld),
-    "contracts.json": try rawEncoder.encode(historical.contracts),
-  ]
-  let headerBytes = try #require(chunks["commander.json"])
-  let worldBytes = try #require(chunks["world.json"])
-  try EconomyMiningVersionedSave.rejectFields(headerBytes)
-  try RingMiningVersionedSave.rejectFields(headerBytes)
-  try HyperspaceDriveVersionedSave.rejectFields(headerBytes)
-  try ElectricalVersionedSave.rejectFields(headerBytes)
-  try ElectricalVersionedSave.rejectFields(worldBytes)
-  try AlienStorageVersionedSave.rejectFields(headerBytes)
-  try NativePeopleVersionedSave.rejectFields(headerBytes)
-  try EMPVersionedSave.rejectFields(headerBytes, part: .commander)
-  try EMPVersionedSave.rejectFields(worldBytes, part: .world)
-  try ScriptFinanceVersionedSave.rejectFields(headerBytes, part: .commander)
-  let missionsBytes = try #require(chunks["missions.json"])
-  let contractsBytes = try #require(chunks["contracts.json"])
-  try ScriptFinanceVersionedSave.rejectFields(missionsBytes, part: .missions)
-  try ScriptSaveJSONPreflight.rejectCourierFields(headerBytes, location: .rawCommander)
-  try ScriptSaveJSONPreflight.rejectCourierFields(missionsBytes, location: .missions)
-  try ScriptSaveJSONPreflight.rejectCourierFields(contractsBytes, location: .contracts)
-  // Obtain a checked generation from an independently eligible historical store, never Runtime.save.
-  try ScriptSaveStore.write(commander: historical, world: historicalWorld, to: save)
-  let checkedBytes = try Data(contentsOf: save)
-  let checked = try JSONDecoder().decode(ScriptSavePointer.self, from: checkedBytes)
-  try #require(checked.schemaVersion == 21 && checked.scope == "commander")
-  let directory = try ScriptSaveStore.generationDirectory(checked.generation, from: save)
-  for (name, bytes) in chunks {
-    try ScriptSaveJSONPreflight.validate(bytes)
-    try bytes.write(to: directory.appendingPathComponent(name), options: .atomic)
-  }
-  let pointer = ScriptSavePointer(
-    format: checked.format, schemaVersion: 11, generation: checked.generation,
-    hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: checked.scope, valueCodec: nil)
-  let historicalPointerBytes = try rawEncoder.encode(pointer)
-  try historicalPointerBytes.write(to: save, options: .atomic)
-  #expect(game.commander == authoringCommander)
-  #expect(game.commander.equipmentInventory == authoringInventory)
-  #expect(game.bodies == historicalWorld.bodies && game.nextBodyID == historicalWorld.nextBodyID)
-  #expect(historical.scriptState == authoringCommander.scriptState)
-  let loaded = GameRuntime(game: game)
-  try await loaded.load(from: save)
-  let imported = await loaded.snapshot().commander.scriptState.instances[origin]?
-    .ownedEncounters["opponents"]?.legacyProvenance
-  try #require(imported?.sourceSchema == 11)
-  // The capacity-pending plan must keep its original condition through a modern resave too.
-  try await loaded.save(to: save)
-  let modernBytes = try Data(contentsOf: save)
-  let modern = try JSONDecoder().decode(ScriptSavePointer.self, from: modernBytes)
-  #expect(modern.schemaVersion == 26)
-  let (strictSaved, strictWorld) = try ScriptSaveStore.read(modernBytes, from: save)
-  #expect(strictSaved.valid && strictWorld.consistent(with: strictSaved))
-  let reloaded = GameRuntime(game: game)
-  try await reloaded.load(from: save)
-  var restored = await reloaded.snapshot()
+  try #require(identities.count == 4 && !prepared.admitted)
+  game.commander.scriptState.instances[origin] = state
+  let random = game.scriptSimulationSave.randomState
+  try GameRuntime.writeCommander(&game, to: save)
+  let bytes = try Data(contentsOf: save)
+  let files = try ScriptFinanceTestFixture.files(folder)
+  let (stored, world) = try ScriptSaveStore.read(bytes, from: save)
+  #expect(stored.valid && world.valid && world.consistent(with: stored))
+  #expect(stored.scriptState.instances[origin]?.ownedEncounters["opponents"] == prepared)
+  try #require(coldSeed.commander.scriptState.instances[origin]?.ownedEncounters["opponents"] == nil)
+  let cold = GameRuntime(game: coldSeed)
+  try await cold.load(from: save, persistMigrations: false)
+  var restored = await cold.snapshot()
   #expect(restored.commander.scriptState.instances[origin]?.data == state.data)
-  #expect(
-    restored.commander.scriptState.instances[origin]?.ownedEncounters["opponents"]?.actors
-      == cohort.actors)
-  #expect(
-    restored.commander.scriptState.instances[origin]?.ownedEncounters["opponents"]?.legacyProvenance
-      == imported)
-  try assertHistoricalIdentityForgeryRollback(
-    commander: restored.commander, world: restored.scriptWorldSave, owner: origin, save: save)
+  #expect(restored.commander.scriptState.instances[origin]?.ownedEncounters["opponents"] == prepared)
+  #expect(restored.scriptSimulationSave.randomState == random)
+  #expect(try Data(contentsOf: save) == bytes)
+  #expect(try ScriptFinanceTestFixture.files(folder) == files)
   restored.bodies.removeAll { $0.hull == .cargo }
-  var original = try #require(restored.commander.scriptState.instances[origin])
-  let admitted = try restored.ensureScriptEncounter("opponents", pack: pack, state: &original)
-  restored.commander.scriptState.instances[origin] = original
-  #expect(admitted.0 == "encounter.admitted" && physicalIDs(original) == identities)
-  #expect(
-    original.ownedEncounters["opponents"]?.actors.values.allSatisfy { $0.body.energy == 41 } == true
-  )
+  var admittedState = try #require(restored.commander.scriptState.instances[origin])
+  let admitted = try restored.ensureScriptEncounter("opponents", pack: pack, state: &admittedState)
+  restored.commander.scriptState.instances[origin] = admittedState
+  try #require(admitted.0 == "encounter.admitted")
+  #expect(physicalIDs(admittedState) == identities && restored.commander.valid)
+  #expect(restored.scriptSimulationSave.randomState == random)
   #expect(restored.bodies.filter { $0.missionActorID != nil }.count == 2)
-  #expect(restored.commander.valid)
-  #expect(
-    original.ownedEncounters["opponents"]?.actors.values.allSatisfy {
-      $0.body.scriptNPC?.components.values.allSatisfy { $0.energy == 16 } == true
-    } == true)
-  #expect(
-    original.ownedEncounters["opponents"]?.legacyProvenance?.actors.values.allSatisfy {
-      $0.prepared == nil
-    } == true)
-  // A genuine player laser changes the admitted condition without changing historical lineage.
-  let lead = try #require(
-    restored.bodies.first { $0.missionActorID == cohort.actors["lead"]?.identity })
-  try #require(lead.position.z > 0 && lead.energy == 41)
+  for (alias, original) in prepared.actors {
+    let actual = try #require(admittedState.ownedEncounters["opponents"]?.actors[alias])
+    #expect(actual.identity == original.identity && actual.body.energy == original.body.energy)
+    #expect(actual.body.scriptNPC?.components == original.body.scriptNPC?.components)
+  }
+  // Actual player damage must persist; no random identity or spent snapshot is injected.
+  let lead = try #require(restored.bodies.first { $0.missionActorID == prepared.actors["lead"]?.identity })
+  try #require(lead.position.z > 0 && lead.energy > 0)
+  let undamagedSeed = restored
   restored.fireLaser()
   let damaged = try #require(restored.bodies.first { $0.missionActorID == lead.missionActorID })
   try #require(damaged.energy > 0 && damaged.energy < lead.energy)
-  let admittedRuntime = GameRuntime(game: restored)
-  try await admittedRuntime.save(to: save)
-  let finalRuntime = GameRuntime(game: restored)
-  try await finalRuntime.load(from: save)
+  let damagedRuntime = GameRuntime(game: restored)
+  try await damagedRuntime.save(to: save)
+  let finalRuntime = GameRuntime(game: undamagedSeed)
+  try await finalRuntime.load(from: save, persistMigrations: false)
   let final = await finalRuntime.snapshot()
   let finalState = try #require(final.commander.scriptState.instances[origin])
-  #expect(physicalIDs(finalState) == identities)
+  #expect(physicalIDs(finalState) == identities && final.commander.valid)
   #expect(finalState.ownedEncounters["opponents"]?.actors["lead"]?.body.energy == damaged.energy)
   #expect(final.bodies.first { $0.missionActorID == lead.missionActorID }?.energy == damaged.energy)
-  #expect(finalState.data == state.data && final.commander.valid)
-}
-
-private func identitySaveFiles(_ root: URL) throws -> [String: Data] {
-  var files: [String: Data] = [:]
-  for name in try FileManager.default.subpathsOfDirectory(atPath: root.path) {
-    let url = root.appendingPathComponent(name)
-    if try url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true {
-      files[name] = try Data(contentsOf: url)
-    }
-  }
-  return files
-}
-
-private func assertHistoricalIdentityForgeryRollback(
-  commander: Commander, world: ScriptWorldSave, owner: UUID, save: URL
-) throws {
-  let receipt = try #require(
-    commander.scriptState.instances[owner]?.ownedEncounters["opponents"]?.legacyProvenance)
-  let bytes = try JSONEncoder().encode(receipt)
-  let root = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
-  let actors = try #require(root["actors"] as? [String: Any])
-  let lead = try #require(actors["lead"] as? [String: Any])
-  let files = try identitySaveFiles(save.deletingLastPathComponent())
-  for change in 0..<8 {
-    var forged = root
-    var changedActors = actors
-    var changedLead = lead
-    switch change {
-    case 0: forged["instanceID"] = UUID().uuidString
-    case 1: forged["digest"] = String(repeating: "b", count: 64)
-    case 2: forged["version"] = "9.9.9"
-    case 3: forged["encounterID"] = "other"
-    case 4:
-      changedActors["other"] = changedActors.removeValue(forKey: "lead")
-      forged["actors"] = changedActors
-    case 5:
-      changedLead["identity"] = UUID().uuidString
-      changedActors["lead"] = changedLead
-      forged["actors"] = changedActors
-    case 6:
-      var components = try #require(changedLead["components"] as? [String: Any])
-      let component = try #require(components.keys.first)
-      components[component] = UUID().uuidString
-      changedLead["components"] = components
-      changedActors["lead"] = changedLead
-      forged["actors"] = changedActors
-    default:
-      var snapshot = try #require(changedLead["prepared"] as? [String: Any])
-      var body = try #require(snapshot["body"] as? [String: Any])
-      body["energy"] = 40
-      snapshot["body"] = body
-      changedLead["prepared"] = snapshot
-      changedActors["lead"] = changedLead
-      forged["actors"] = changedActors
-    }
-    let decoder = JSONDecoder()
-    decoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true
-    let decoded = try decoder.decode(
-      LegacyMissionEncounterProvenance.self, from: JSONSerialization.data(withJSONObject: forged))
-    var candidate = commander
-    candidate.scriptState.instances[owner]?.ownedEncounters["opponents"]?.legacyProvenance = decoded
-    #expect(!candidate.valid)
-    #expect(throws: SaveError.self) {
-      try ScriptSaveStore.write(commander: candidate, world: world, to: save)
-    }
-    #expect(
-      candidate.scriptState.instances[owner]?.ownedEncounters["opponents"]?.legacyProvenance
-        == decoded)
-    #expect(try identitySaveFiles(save.deletingLastPathComponent()) == files)
-  }
-  #expect(throws: SaveError.self) {
-    _ = try JSONDecoder().decode(LegacyMissionEncounterProvenance.self, from: bytes)
-  }
-  for change in 0..<4 {
-    var oversized = root
-    var changedLead = lead
-    switch change {
-    case 0: oversized["sourceSchema"] = 12
-    case 1:
-      oversized["actors"] = Dictionary(
-        uniqueKeysWithValues: (0..<129).map { ("actor\($0)", NSNull()) })
-    case 2:
-      changedLead["components"] = Dictionary(
-        uniqueKeysWithValues: (0..<33).map { ("part\($0)", NSNull()) })
-      oversized["actors"] = ["lead": changedLead]
-    default:
-      var snapshot = try #require(changedLead["prepared"] as? [String: Any])
-      var body = try #require(snapshot["body"] as? [String: Any])
-      var npc = try #require(body["scriptNPC"] as? [String: Any])
-      npc["components"] = Dictionary(uniqueKeysWithValues: (0..<33).map { ("part\($0)", NSNull()) })
-      body["scriptNPC"] = npc
-      snapshot["body"] = body
-      changedLead["prepared"] = snapshot
-      oversized["actors"] = ["lead": changedLead]
-    }
-    let decoder = JSONDecoder()
-    decoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true
-    let data = try JSONSerialization.data(withJSONObject: oversized)
-    #expect(throws: SaveError.self) {
-      _ = try decoder.decode(LegacyMissionEncounterProvenance.self, from: data)
-    }
-    #expect(try identitySaveFiles(save.deletingLastPathComponent()) == files)
-  }
-  #expect(commander.valid)
+  #expect(finalState.data == state.data)
 }
 
 @Test(arguments: 0..<4)
@@ -358,7 +150,6 @@ func currentPreparedPlansStillRejectRandomIdentitiesAndSpentConditionWithoutMigr
   let pending = try game.ensureScriptEncounter("opponents", pack: pack, state: &state)
   try #require(pending.0 == "encounter.pending")
   var encounter = try #require(state.ownedEncounters["opponents"])
-  try #require(encounter.legacyProvenance == nil)
   var actor = try #require(encounter.actors["lead"])
   if change == 0 {
     let identity = UUID()
@@ -391,70 +182,38 @@ func currentPreparedPlansStillRejectRandomIdentitiesAndSpentConditionWithoutMigr
   #expect(game.nextBodyID == beforeNext && state == beforeState)
 }
 
-@Test func anOversizedLegacySnapshotMigrationPreservesTheActualCommanderAndEverySavedFile()
-  async throws
-{
+
+@Test(arguments: ["unknown", "null-unknown", "oversized-actors", "missing-id"])
+func currentEncounterDecoderRejectsUnrecognizedFieldsAndBoundsActorsBeforeChildren(condition: String) throws {
   let pack = try identityPack()
   let origin = UUID()
   var game = try identityGame(pack, origin: origin)
-  game.bodies = [try #require(game.bodies.first { $0.id == 0 })]
-  for id in 1..<128 {
-    game.bodies.append(.init(id: id, hull: .cargo, position: .init(Double(id) * 30, 10000, 10000)))
-  }
-  game.nextBodyID = 128
-  game.ensurePhysicalActors()
   var state = try #require(game.commander.scriptState.instances[origin])
-  let pending = try game.ensureScriptEncounter("opponents", pack: pack, state: &state)
-  try #require(pending.0 == "encounter.pending")
-  game.commander.scriptState.instances[origin] = state
-  let folder = FileManager.default.temporaryDirectory.appendingPathComponent(
-    "legacy-size-" + UUID().uuidString)
-  defer { try? FileManager.default.removeItem(at: folder) }
-  let save = folder.appendingPathComponent("commander.json")
-  let runtime = GameRuntime(game: game)
-  try await runtime.save(to: save)
-  let before = await runtime.snapshot()
-  var padded = before.commander
-  for _ in 0..<6 {
-    var padding = ScriptInstance(
-      id: UUID(), definition: state.definition, version: state.version, digest: state.digest)
-    padding.journal = [String](repeating: String(repeating: "x", count: 12000), count: 450)
-    padded.scriptState.instances[padding.id] = padding
+  let admission = try game.ensureScriptEncounter("opponents", pack: pack, state: &state)
+  try #require(admission.0 == "encounter.admitted")
+  let encounter = try #require(state.ownedEncounters["opponents"])
+  let bytes = try JSONEncoder().encode(encounter)
+  try #require(try JSONDecoder().decode(ScriptOwnedEncounter.self, from: bytes) == encounter)
+  var object = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
+  switch condition {
+  case "unknown": object["unrecognizedAdmissionReceipt"] = 1
+  case "null-unknown": object["unrecognizedAdmissionReceipt"] = NSNull()
+  case "oversized-actors":
+    object["actors"] = Dictionary(uniqueKeysWithValues: (0..<129).map { ("actor\($0)", NSNull()) })
+  case "missing-id": object.removeValue(forKey: "id")
+  default:
+    Issue.record("Unknown current encounter schema condition")
+    return
   }
-  var tail = ScriptInstance(
-    id: UUID(), definition: state.definition, version: state.version, digest: state.digest)
-  padded.scriptState.instances[tail.id] = tail
-  let encoder = JSONEncoder()
-  let maximum = 33_554_432
-  var remaining = maximum - 64 - (try encoder.encode(padded.scriptState).count)
-  try #require(remaining > 0)
-  while remaining > 3 {
-    let overhead = tail.journal.isEmpty ? 2 : 3
-    let count = min(12000, remaining - overhead)
-    tail.journal.append(String(repeating: "x", count: count))
-    remaining -= count + overhead
+  let malformed = try JSONSerialization.data(withJSONObject: object)
+  if condition == "oversized-actors" {
+    #expect(throws: SaveError.invalidCommander) {
+      _ = try JSONDecoder().decode(ScriptOwnedEncounter.self, from: malformed)
+    }
+  } else {
+    #expect(throws: (any Error).self) {
+      _ = try JSONDecoder().decode(ScriptOwnedEncounter.self, from: malformed)
+    }
   }
-  padded.scriptState.instances[tail.id] = tail
-  try #require(padded.valid && tail.journal.count <= 512)
-  let legacyBytes = try encoder.encode(padded.scriptState)
-  try #require(legacyBytes.count <= maximum && legacyBytes.count >= maximum - 67)
-  let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: Data(contentsOf: save))
-  let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: save)
-  try legacyBytes.write(to: directory.appendingPathComponent("missions.json"), options: .atomic)
-  var hashes = pointer.hashes
-  hashes["missions.json"] = ScriptPackLibrary.hash(legacyBytes)
-  let old = ScriptSavePointer(
-    format: pointer.format, schemaVersion: 11, generation: pointer.generation,
-    hashes: hashes, scope: pointer.scope)
-  try encoder.encode(old).write(to: save, options: .atomic)
-  let files = try identitySaveFiles(folder)
-  await #expect(throws: SaveError.self) { try await runtime.load(from: save) }
-  let after = await runtime.snapshot()
-  #expect(after.commander == before.commander && after.bodies == before.bodies)
-  #expect(after.time == before.time && after.screen == before.screen && after.speed == before.speed)
-  #expect(
-    after.energy == before.energy && after.frontShield == before.frontShield
-      && after.rearShield == before.rearShield)
-  #expect(after.nextBodyID == before.nextBodyID && after.jumpCountdown == before.jumpCountdown)
-  #expect(try identitySaveFiles(folder) == files)
+  #expect(try JSONDecoder().decode(ScriptOwnedEncounter.self, from: bytes) == encounter)
 }

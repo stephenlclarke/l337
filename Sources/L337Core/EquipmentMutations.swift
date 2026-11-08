@@ -225,18 +225,35 @@ extension Commander {
     }
     let context = EquipmentRuntimeCatalog.context(
       owner: inventory.owner, hull: inventory.activeHull, performance: candidate.performance)
+    let requiresSecretProvenance: Bool
+    switch slot {
+    case .utility, .fuelStorage:
+      requiresSecretProvenance = provenance == .xyzzy && candidate.allowsXYZzyMaximumOutfit
+    default:
+      requiresSecretProvenance = false
+    }
     let item: OwnedEquipmentItem
     if let held = inventory.items.first(where: { item in
       item.node == node && item.location == nil && (item.retainedLegacyState?.pristine ?? true)
+        && (!requiresSecretProvenance || item.provenance == .xyzzy)
         && !obligations.contains { $0.status == .issued && $0.items.contains(item.id) }
     }) {
       item = held
     } else {
       let id = UUID()
-      item = .init(
-        id: id, node: node, provenance: provenance,
-        component: EquipmentRuntimeCatalog.stockComponent(for: node, id: id),
-        boundHull: slot == .utility(.cargoExpansion) ? inventory.activeHull : nil)
+      if node == EMPModuleGradePolicy.node {
+        guard let bank = EMPBankState(
+          module: id, capacity: EMPModuleGradePolicy.capacities[0], remaining: 0,
+          at: candidate.flightSimulation.physicalTime)
+        else { throw EquipmentRuntimeError.incompatibleFit }
+        item = .init(
+          id: id, node: node, provenance: provenance, empBank: bank, empGrades: .base)
+      } else {
+        item = .init(
+          id: id, node: node, provenance: provenance,
+          component: EquipmentRuntimeCatalog.stockComponent(for: node, id: id),
+          boundHull: slot == .utility(.cargoExpansion) ? inventory.activeHull : nil)
+      }
       try inventory.admit(item, expectedRevision: inventory.revision, context: context)
     }
     let location = ComponentFittingLocation(hullInstanceID: inventory.activeHull, slot: slot)

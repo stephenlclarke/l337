@@ -11,6 +11,7 @@ private enum CrimboReadmissionFixture {
     game.systems = Universe.systemsIncludingPlugh(number: 7)
     // Actual native lifecycle boundary fixture; this is not supported-reader readiness evidence.
     game.nativeCrimboLifecycleAvailable = true
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let count = CrimboFixture.convoyBodies(game).count
     try #require(!game.docked && count == 7)
@@ -88,6 +89,7 @@ struct NativeCrimboReadmissionTests {
     game.bodies[index].physical?.npc?.resources?.frontShield = 7
     game.bodies[index].physical?.laserCooldown = 0.4
     game.dock()
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let after = try #require(game.commander.savedCrimboState)
     #expect(CrimboFixture.convoyBodies(game).count == 7)
@@ -116,6 +118,7 @@ struct NativeCrimboReadmissionTests {
     #expect(captured == .registered(actor))
     game.commander.npcPersistence.cull(actor: actor)
     game.dock()
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     #expect(CrimboFixture.convoyBodies(game).count == 7)
     #expect(game.commander.npcPersistence.binding(for: actor) == nil)

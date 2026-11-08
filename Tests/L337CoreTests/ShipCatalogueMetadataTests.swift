@@ -4,6 +4,61 @@ import Testing
 @testable import L337Core
 
 struct ShipCatalogueMetadataTests {
+  @Test func retiredCobraCannotSupplyCatalogueGeometry() throws {
+    #expect(ShipCatalogue.nativeShip(.cobra) == nil)
+    #expect(ShipCatalogue.nativeMesh(.cobra) == nil)
+    let source = ShipCatalogue.folder.appendingPathComponent("SH031.toml")
+    let original = try String(contentsOf: source, encoding: .utf8)
+    let rebound = original.replacingOccurrences(
+      of: #"nativeHull = "viper""#, with: #"nativeHull = "cobra""#)
+    try #require(rebound != original)
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    try rebound.write(
+      to: directory.appendingPathComponent("SH031.toml"), atomically: true, encoding: .utf8)
+    do {
+      _ = try ShipCatalogue.load(from: directory)
+      Issue.record("A retired Cobra native binding was accepted")
+    } catch ShipFileError.invalid(let reason) {
+      #expect(reason == "Retired native hull: cobra")
+    }
+  }
+
+  @Test(arguments: [BlackjackTarget.bolts, .witness])
+  func retiredCobraRetainsBlackjackSaveIdentity(role: BlackjackTarget) throws {
+    let saved = BlackjackEncounter(role: role, id: 7)
+    let wire = try JSONEncoder().encode(saved)
+    let record = try #require(JSONSerialization.jsonObject(with: wire) as? [String: Any])
+    let body = try #require(record["body"] as? [String: Any])
+    #expect(body["hull"] as? String == "cobra")
+    #expect(body["blackjackRole"] as? String == role.rawValue)
+    let restored = try JSONDecoder().decode(BlackjackEncounter.self, from: wire)
+    #expect(restored == saved && restored.valid)
+  }
+
+  @Test func oldWorldRestoreQuarantinesOnlyTheUnboundCobraBodies() throws {
+    var game = Game(executive: false)
+    game.commander.galaxy = 1
+    game.commander.system = BlackjackTarget.bolts.system
+    game.commander.flightSimulation.enter(game.systemIdentity, arriving: true)
+    game.commander.blackjack.stage = .huntBolts
+    let pending = BlackjackEncounter(role: .bolts, id: 8)
+    game.commander.blackjack.bolts = pending
+    var exact = SpaceBody(id: 10, hull: .cobra, position: .init(0, 0, 400))
+    let allocated = game.commander.flightSimulation.allocateActor()
+    let actor = try #require(allocated)
+    exact.physical = game.nativePhysicalActorState(for: exact, identity: actor)
+    exact.physical?.catalogueShipID = "SH025"
+    var world = game.scriptWorldSave
+    world.bodies = [
+      .init(id: 7, hull: .cobra, position: .init(0, 0, 800)), pending.body, exact,
+    ]
+    game.restoreScriptWorld(world)
+    #expect(game.bodies == [exact])
+    #expect(game.commander.blackjack.bolts == pending)
+  }
+
   @Test func sevenFunctionalRolesHaveOnlyTheirDeclaredCargoFloors() {
     #expect(ShipCatalogueRole.allCases.count == 7)
     #expect(ShipCatalogueRole.trader.minimumStandardCargoTonnes == 25)
@@ -38,7 +93,7 @@ struct ShipCatalogueMetadataTests {
     #expect(!premature.valid(shipID: "SH163", performance: nil, nativeCombat: nil))
   }
 
-  @Test func galaxyRegionRoleAndLiberatorRestrictionsFailClosed() throws {
+  @Test func galaxyRegionRoleAndUnissuedQuestRestrictionsFailClosed() throws {
     let performance = try #require(ShipCatalogue.ship("SH023")?.game)
     let valid = metadata()
     #expect(valid.valid(shipID: "SH023", performance: performance, nativeCombat: nil))
@@ -57,9 +112,9 @@ struct ShipCatalogueMetadataTests {
       !metadata(weights: [.init(role: .military, weight: 1), .init(role: .military, weight: 2)])
         .valid(shipID: "SH023", performance: performance, nativeCombat: nil))
     #expect(!valid.valid(shipID: "SH171", performance: performance, nativeCombat: nil))
-    let liberator = ShipCatalogueMetadata(
-      schemaVersion: 2, family: "Liberator", aliases: nil, objectKind: .ship,
-      origin: .human, primaryType: .alien, primaryRole: .military,
+    let forgedQuestAccess = ShipCatalogueMetadata(
+      schemaVersion: 2, family: "medusa", aliases: nil, objectKind: .ship,
+      origin: .alien, primaryType: .alien, primaryRole: .military,
       roleWeights: [.init(role: .military, weight: 1)],
       access: .xyzzyOnly, playerFlyable: true, normalPurchaseEligible: false,
       purchasePolicy: .xyzzyOnly, minimumBuildTechLevel: nil, isCapital: false, capitalSubtype: nil,
@@ -68,9 +123,9 @@ struct ShipCatalogueMetadataTests {
       encounterMode: .none, mechanicsStatus: .ready, placementStatus: .declared, rarity: .rare,
       galaxies: [], regions: [], authoredSystems: nil,
       basis: "Project fixture")
-    #expect(liberator.valid(shipID: "SH171", performance: performance, nativeCombat: nil))
-    #expect(!liberator.normallyDiscoverable && !liberator.readyForNaturalEncounters)
-    #expect(liberator.encounterWeight(for: .military) == 0)
+    #expect(!forgedQuestAccess.valid(shipID: "SH171", performance: performance, nativeCombat: nil))
+    #expect(!forgedQuestAccess.normallyDiscoverable && !forgedQuestAccess.readyForNaturalEncounters)
+    #expect(forgedQuestAccess.encounterWeight(for: .military) == 0)
   }
 
   @Test func actualTOMLLoaderRequiresAndValidatesCatalogueMetadata() throws {
@@ -135,7 +190,10 @@ struct ShipCatalogueMetadataTests {
       #expect(
         ship.catalogue.valid(
           shipID: ship.id, performance: ship.game, nativeCombat: ship.nativeCombat))
-      #expect(ship.catalogue.validEffectiveCargo(performance: ship.game, profiles: ship.profiles))
+      #expect(
+        ship.id == OriginalImpalaVoyagerActivation.id
+          ? OriginalImpalaVoyagerActivation.validEffectiveCargo(ship)
+          : ship.catalogue.validEffectiveCargo(performance: ship.game, profiles: ship.profiles))
       if let game = ship.game { #expect(game.cargo >= ship.catalogue.minimumStandardCargoTonnes) }
       if ship.catalogue.encounterMode == .authored {
         #expect(ship.catalogue.placementStatus == .pending)
@@ -147,7 +205,7 @@ struct ShipCatalogueMetadataTests {
     #expect(natural.allSatisfy { !$0.catalogue.galaxies.isEmpty && !$0.catalogue.regions.isEmpty })
     // These are declared placements only. Native admitted-provider coverage is integrator-owned.
     for (id, cargo) in [
-      ("SH005", 750), ("SH006", 800), ("SH099", 150), ("SH100", 175),
+      ("SH005", 1108), ("SH006", 1220), ("SH099", 150), ("SH100", 175),
       ("SH096", 750), ("SH097", 800), ("SH024", 40), ("SH025", 92),
     ] {
       #expect(ShipCatalogue.ship(id)?.game?.cargo == cargo)
@@ -166,7 +224,8 @@ struct ShipCatalogueMetadataTests {
     #expect(capsule.game != nil && capsule.catalogue.objectKind == .capsule)
     #expect(!capsule.catalogue.discoveryEligible && !capsule.catalogue.normalPurchaseEligible)
     let carrier = try #require(ShipCatalogue.ship("SH161"))
-    #expect(carrier.catalogue.objectKind == .station && carrier.catalogue.primaryRole == .military)
+    #expect(carrier.catalogue.objectKind == .station && carrier.catalogue.primaryRole == nil)
+    #expect(carrier.catalogue.roleWeights.isEmpty && carrier.catalogue.galaxies.isEmpty)
     #expect(
       carrier.catalogue.encounterMode == .authored && carrier.catalogue.placementStatus == .pending)
     for id in ["SH150", "SH151"] {

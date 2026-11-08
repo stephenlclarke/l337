@@ -47,8 +47,10 @@ public struct EncounterDirector: Equatable, Codable, Sendable {
     var budget = context.budget
     budget.missionReserve = max(budget.missionReserve, context.protection.reservedSlots)
     for request in pendingRequests {
-      budget.total += 1
+      let kit = request.currentNewtKitConfiguration != nil ? 1 : 0
+      budget.total += 1 + kit
       budget.active[request.population, default: 0] += 1
+      budget.active[.cargo, default: 0] += kit
     }
     var batches: [SpawnBatch] = []
     while nextDecisionTime <= context.physicalTime {
@@ -80,10 +82,15 @@ public struct EncounterDirector: Equatable, Codable, Sendable {
       guard let requests = spawn(role: role, count: count, draws: draws, context: context) else {
         continue
       }
+      let kits = requests.filter { $0.currentNewtKitConfiguration != nil }.count
+      guard budget.ordinaryRemaining >= count + kits,
+        budget.active[.cargo, default: 0] + kits <= PopulationClass.cargo.maximum
+      else { continue }
       batches.append(.init(requests: requests, atomic: pirate))
       pendingRequests.append(contentsOf: requests)
-      budget.total += count
+      budget.total += count + kits
       budget.active[population, default: 0] += count
+      budget.active[.cargo, default: 0] += kits
     }
     return .init(
       system: system, visit: visit, revision: context.revision,
@@ -161,7 +168,64 @@ public struct EncounterDirector: Equatable, Codable, Sendable {
     }
     guard positions.count == count else { return nil }
     let hull: Hull = pirate ? .sidewinder : .cobra
-    let catalogueShipID = ShipCatalogue.nativeShip(hull)?.id
+    var catalogueShipID: String?
+    var currentNewtKitConfiguration: String?
+    if role == .pirate || role == .miner {
+      let publishedRole: ShipCatalogueRole = role == .pirate ? .pirate : .miner
+      guard let current = OriginalFleetRuntimeHullSource.naturalSource(
+        role: publishedRole, context: context, positions: positions, draw: draws[7])
+      else { return nil }
+      catalogueShipID = current.ship.id
+    }
+    if role == .trader, count == 1 {
+      let region = EncounterGeography.region(at: context.player.position, anchors: context.anchors)
+      let sources = OriginalBisonActivation.naturalSources(
+        context: context, position: positions[0], decisionRegion: region)
+      var pool: [(id: String, weight: Int, newtKitConfiguration: String?)] = []
+      // The published current trader source supplies its own geometry, stock and habitat.
+      // The engine's control archetype does not select an obsolete catalogue hull.
+      if let baseline = OriginalFleetRuntimeHullSource.source(for: "SH025"),
+        baseline.permitsAmbientTrader(context: context, position: positions[0])
+      {
+        pool.append((baseline.ship.id, baseline.ship.catalogue.encounterWeight(for: .trader), nil))
+      }
+      pool += sources.map { ($0.ship.id, $0.ship.catalogue.encounterWeight(for: .transporter), nil) }
+      if let kit = CurrentNewtKitSource.current, kit.sourceQualifiedForBirth,
+        let equipped = OriginalFleetRuntimeHullSource.source(for: "SH029"),
+        equipped.permitsAmbientTrader(context: context, position: positions[0])
+      {
+        pool.append((equipped.ship.id, equipped.ship.catalogue.encounterWeight(for: .trader),
+          kit.configuration))
+      }
+      var total = 0
+      for entry in pool {
+        let (next, overflow) = total.addingReportingOverflow(entry.weight)
+        guard entry.weight > 0, !overflow else { return nil }
+        total = next
+      }
+      guard total > 0 else { return nil }
+      // Reuse the existing draw; suppressed/refused decisions keep their draw schedule.
+      var choice = draws[7] % UInt64(total)
+      for entry in pool {
+        if choice < UInt64(entry.weight) {
+          catalogueShipID = entry.id
+          currentNewtKitConfiguration = entry.newtKitConfiguration
+          break
+        }
+        choice -= UInt64(entry.weight)
+      }
+    }
+    if let id = catalogueShipID, OriginalBisonActivation.contains(id) {
+      guard let source = OriginalBisonActivation.source(for: id),
+        let stock = NPCResources.stock(source.game)
+      else { return nil }
+      npc.resources = stock
+    } else if let id = catalogueShipID {
+      guard let source = OriginalFleetRuntimeHullSource.source(for: id),
+        let stock = NPCResources.stock(source.performance)
+      else { return nil }
+      npc.resources = stock
+    }
     return positions.enumerated().map { member, position in
       let identity = SpawnIdentity(
         system: system, visit: visit, sequence: decisionCount, member: UInt16(member),
@@ -186,7 +250,8 @@ public struct EncounterDirector: Equatable, Codable, Sendable {
           identity: identity,
           population: pirate ? .pirate : .civilian, hull: hull,
           position: position, orientation: orientation, velocity: heading * 60, npc: memberNPC,
-          rock: nil, payload: nil, priority: .ordinary, catalogueShipID: catalogueShipID)
+          rock: nil, payload: nil, priority: .ordinary, catalogueShipID: catalogueShipID,
+          currentNewtKitConfiguration: currentNewtKitConfiguration)
     }
   }
 }

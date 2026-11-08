@@ -1,0 +1,9 @@
+# Consume calibration input context after Start and Stop
+
+Queued Start and Stop commands must not reset or cancel a later calibration run. Three runtime additions invalidate the existing input context after handled Start, including refusal, recheck Stop currentness and invalidate after cancellation. Dispatch remains synchronous within the existing GameRuntime actor turn.
+
+The exact reviewed two-method suffix is appended to the current test file. Every existing diagnostic, method and assertion remains byte-for-byte intact. The regressions use the real opening, original loan, paid targeting purchase and unrelated calibration station. Test funding and camera positioning are explicit fixture setup. They require actual partial exposure before stale input, refusal consumption, fresh input after stop and current load, and conserved equipment, mission state, funds, clue and held serial/issue identity.
+
+At source commit `232aef6e`, focused validation passed the two new regressions plus the existing target-loss Stop and current-load/failed-load controls. A fresh full test build, current test-image UUID verification, all 3,856 discovery identities and four complete XML cases passed. Independent review confirmed the frozen logs, assertions, inventory and source custody with no new findings. The separate known long-exposure failure was not selected and remains a full acceptance obligation. This is unit validation of the runtime correction; campaign, original-register, full CI and playable release acceptance remain open.
+
+This change adds no save format, migration, measurement, register permission, mission event, reward or clue. Native optical acquisition, physical source authority and shared runtime hooks remain unchanged. It does not establish C23 campaign completion or explain the earlier unrelated test-process crash. See [the issue](ISSUE-c23-calibration-input-lifetime.md).

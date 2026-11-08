@@ -1,0 +1,178 @@
+{
+  "status": "FIRST_EXACT_NPC_RESOURCE_CURRENT_BINDING_CORRECTED_NO_REPO_EDITS",
+  "beforeCommit": "626b8b137e74fa650d211ca4ee82c79e8bb08e99",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "bytes": 63387,
+      "sha256": "7c0d679cc60627251ac10cd0585d8cb796e7e00f7634e9fde592bb840c1b8f3c"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "bytes": 35014,
+      "sha256": "59d94d82c82fb730705a2f8a4f03e6aad7171ab4a9ceb99a447a77a65c397a5f"
+    },
+    {
+      "path": "Sources/L337Core/ElectricalReserve.swift",
+      "bytes": 7364,
+      "sha256": "21841d830488be4b8e4963abae134d866b4f85d15c574a2ae76a46a73d3fafc5"
+    },
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 28711,
+      "sha256": "228462e782a2e60ba1b064c0a2c0d471b7ad1b70f91d4cce402ca1e93bdd6cb3"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 12543,
+      "sha256": "510f626c11e7a262b580ea1a5bd4c6ae3c52358d162167c0ad30e8fa4ae304e0"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "bytes": 11971,
+      "sha256": "3421db7ea8a94aa57216a48b49b6a531b9dc23d8782e1819633b9b4fd1a514c4"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30868,
+      "sha256": "608d4b174d04e7bd0070d3a279fecd786b5dca3ba8fe74f3f5965567203acc86"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPCurrentCatalogueReleaseTests.swift",
+      "bytes": 17079,
+      "sha256": "3124b53b09e84993f2342db79645d1e21d05475a2651313653964693027449c8"
+    }
+  ],
+  "edits": [
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "old": "  /// Explicit catalogue-backed migration for legacy electrical recovery; hull recharge stays legacy.\n  var legacyElectricalRecharge: Double? = nil\n  var electricalRecharge: Double { legacyElectricalRecharge ?? energyRecharge }",
+      "new": "  var electricalRecharge: Double { energyRecharge }"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "old": "      && (legacyElectricalRecharge.map {\n        profile == .legacyEnergyOnly && $0.isFinite && $0 > 0 && $0 <= 100000\n      } ?? true)\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "old": "public enum NPCFactProvenance: String, Codable, Sendable { case generated, recorded, inferredLocal }",
+      "new": "extension NPCResources {\n  private enum CodingKeys: String, CodingKey, CaseIterable {\n    case profile, energyCapacity, energyRecharge, frontCapacity, rearCapacity, shieldRecharge\n    case frontShield, rearShield, laserHeat, heatCapacity, heatCooling, fuel, fuelCapacity\n    case scoopRemainder, electrical\n  }\n\n  public init(from decoder: any Decoder) throws {\n    let fields = try decoder.container(keyedBy: ResourceKey.self)\n    let allowed = Set(CodingKeys.allCases.map(\\.rawValue))\n    guard Set(fields.allKeys.map(\\.stringValue)).isSubset(of: allowed) else {\n      throw SaveError.invalidCommander\n    }\n    let values = try decoder.container(keyedBy: CodingKeys.self)\n    self.init(\n      profile: try values.decode(Profile.self, forKey: .profile),\n      energyCapacity: try values.decode(Double.self, forKey: .energyCapacity),\n      energyRecharge: try values.decode(Double.self, forKey: .energyRecharge),\n      frontCapacity: try values.decode(Double.self, forKey: .frontCapacity),\n      rearCapacity: try values.decode(Double.self, forKey: .rearCapacity),\n      shieldRecharge: try values.decode(Double.self, forKey: .shieldRecharge),\n      frontShield: try values.decode(Double.self, forKey: .frontShield),\n      rearShield: try values.decode(Double.self, forKey: .rearShield),\n      laserHeat: try values.decode(Double.self, forKey: .laserHeat),\n      heatCapacity: try values.decode(Double.self, forKey: .heatCapacity),\n      heatCooling: try values.decode(Double.self, forKey: .heatCooling),\n      fuel: try values.decodeIfPresent(Int.self, forKey: .fuel),\n      fuelCapacity: try values.decodeIfPresent(Int.self, forKey: .fuelCapacity),\n      scoopRemainder: try values.decode(Double.self, forKey: .scoopRemainder),\n      electrical: try values.decodeIfPresent(ElectricalReserve.self, forKey: .electrical))\n  }\n\n  private struct ResourceKey: CodingKey {\n    let stringValue: String\n    var intValue: Int? { nil }\n    init?(stringValue: String) { self.stringValue = stringValue }\n    init?(intValue: Int) { return nil }\n  }\n}\n\npublic enum NPCFactProvenance: String, Codable, Sendable { case generated, recorded, inferredLocal }"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "old": "    return actual.profile == expected.profile && actual.legacyElectricalRecharge == nil",
+      "new": "    return actual.profile == expected.profile"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "old": "      && (npc.resources?.legacyElectricalRecharge.map {\n        $0\n          == (catalogueShipID.flatMap { ShipCatalogue.ship($0)?.game?.recharge }\n            ?? ShipCatalogue.nativeShip(hull)?.game?.recharge)\n      } ?? true)\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "old": "          && (body.physical?.npc?.resources?.legacyElectricalRecharge.map {\n            $0\n              == (body.physical?.catalogueShipID.flatMap { ShipCatalogue.ship($0)?.game?.recharge }\n                ?? ShipCatalogue.nativeShip(body.hull)?.game?.recharge)\n          } ?? true)\n",
+      "new": ""
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "old": "    var game = try empNativeFlight()\n    let nativeIndex = try #require(game.bodies.firstIndex { $0.id == 1 && $0.hull == .cobra })\n    let fresh = game.bodies[nativeIndex]\n    try #require(fresh.physical?.catalogueShipID == nil)\n    let beforeCommander = game.commander\n    let beforeBodies = game.bodies\n    let beforeEnergy = game.energy\n    let beforeShields = (game.frontShield, game.rearShield)\n    let beforeBodyCursor = game.nextBodyID\n    let beforeRandom = game.scriptSimulationSave.randomState\n    let beforeTime = game.time\n    let catalogueID = try #require(\n      fresh.physical?.catalogueShipID ?? ShipCatalogue.nativeShip(fresh.hull)?.id)\n    try #require(catalogueID == \"SH023\")\n    let catalogue = try #require(ShipCatalogue.ship(catalogueID))\n    let native = try #require(catalogue.game)\n    try #require(native.valid && native.recharge == 2 && catalogue.nativeHull == fresh.hull)\n    // This persistence scenario starts with existing nonfatal power damage, before original capture.\n    var worn = try #require(fresh.physical?.npc?.resources)\n    try #require(worn.valid && worn.profile == .legacyEnergyOnly)\n    try #require(worn.frontShield == 0 && worn.rearShield == 0 && worn.electrical == nil)\n    try #require(\n      worn.legacyElectricalRecharge == nil || worn.legacyElectricalRecharge == native.recharge)\n",
+      "new": "    var game = try empNativeFlight()\n    let scenarioStart = game.commander.flightSimulation.physicalTime\n    try withEMPUnitWriter(&game) { scene, publish, file in\n      try earnEMPUnitBank(&scene, publish: publish, file: file)\n      try #require(scene.fireCooldown <= 0)\n    }\n    let nativeIndex = try #require(game.bodies.firstIndex {\n      $0.id == 1 && $0.physical?.npc?.role == .trader && $0.physical?.catalogueShipID == \"SH025\"\n    })\n    let fresh = game.bodies[nativeIndex]\n    let catalogueID = try #require(fresh.physical?.catalogueShipID)\n    let currentSource = try #require(OriginalFleetRuntimeHullSource.source(for: catalogueID))\n    let catalogue = currentSource.ship\n    let native = currentSource.performance\n    try #require(native.valid && (catalogue.nativeHull == nil || catalogue.nativeHull == fresh.hull))\n    var worn = try #require(fresh.physical?.npc?.resources)\n    try #require(worn == NPCResources.stock(native) && worn.profile == .nativeHull)\n    try #require(worn.electrical == nil)\n    // Controlled existing nonfatal condition, with current source terms and identity retained.\n    worn.frontShield = 0\n    worn.rearShield = 0\n    let beforeCommander = game.commander\n    let beforeBodies = game.bodies\n    let beforeEnergy = game.energy\n    let beforeShields = (game.frontShield, game.rearShield)\n    let beforeBodyCursor = game.nextBodyID\n    let beforeRandom = game.scriptSimulationSave.randomState\n    let beforeTime = game.time\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "old": "    worn.legacyElectricalRecharge = native.recharge\n",
+      "new": ""
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "old": "    try #require(original.physical?.catalogueShipID == nil)",
+      "new": "    try #require(original.physical?.catalogueShipID == catalogueID)"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "old": "    try #require(before.originalBodyID == 1 && before.originalSpawn == nil)",
+      "new": "    try #require(before.originalBodyID == fresh.id && before.originalSpawn == fresh.physical?.spawnIdentity)"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "old": "  @Test(\"Base000 earns two real80 pulses; the original full100 Cobra remains powered\")\n  func fullStockNativeCobraRequiresTwoRealPulsesAndCannotAttackAfterElectricalZero() async throws {\n    var game = try empNativeFlight()\n    let original = try #require(game.bodies.first { $0.id == 1 && $0.hull == .cobra })\n    let actor = try #require(original.physical?.identity)\n    let npc = try #require(original.physical?.npc)\n    let resources = try #require(npc.resources)\n    let player = try #require(game.commander.flightSimulation.player)\n    let catalogueID = try #require(original.physical?.catalogueShipID ?? ShipCatalogue.nativeShip(original.hull)?.id)\n    let catalogue = try #require(ShipCatalogue.ship(catalogueID))\n    let native = try #require(catalogue.game)\n    let crew = try ShipAccommodationProfile(ship: catalogue).operatingCrew\n    try #require(catalogueID == \"SH023\" && native.valid && native.recharge == 2)\n    try #require(resources.valid && resources.profile == .legacyEnergyOnly)\n    try #require(resources.energyCapacity == original.energy && resources.energyRecharge == 0)\n    try #require(resources.frontShield == 0 && resources.rearShield == 0)\n    try #require(resources.electrical == nil && resources.legacyElectricalRecharge == nil)\n    try #require(original.physical?.empSource == nil && game.commander.savedEMPState == nil)\n",
+      "new": "  @Test(\"Current stock retains its actual reserve after two earned real pulses\")\n  func fullStockCurrentSourceRemainsPoweredAfterTwoEarnedRealPulses() async throws {\n    var game = try empNativeFlight()\n    let original = try #require(game.bodies.first {\n      $0.id == 1 && $0.physical?.npc?.role == .trader && $0.physical?.catalogueShipID == \"SH025\"\n    })\n    let actor = try #require(original.physical?.identity)\n    let npc = try #require(original.physical?.npc)\n    let resources = try #require(npc.resources)\n    let player = try #require(game.commander.flightSimulation.player)\n    let catalogueID = try #require(original.physical?.catalogueShipID)\n    let source = try #require(OriginalFleetRuntimeHullSource.source(for: catalogueID))\n    let crew = try ShipAccommodationProfile(ship: source.ship).operatingCrew\n    try #require(resources == NPCResources.stock(source.performance) && resources.profile == .nativeHull)\n    try #require(original.energy == source.performance.energy && resources.electrical == nil)\n    try #require(original.physical?.empSource == nil && game.commander.savedEMPState == nil)\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "old": "    #expect((actual.physical?.catalogueShipID ?? ShipCatalogue.nativeShip(actual.hull)?.id) == catalogueID)",
+      "new": "    #expect(actual.physical?.catalogueShipID == catalogueID)"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "old": "    try #require(1 + native.recharge * 30 < pulse.power)",
+      "new": "    try #require(1 + (native.recharge + native.shieldRecharge) * (pulse.warmup + 0.5) < pulse.power)"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "old": "    try #require(1 + native.recharge * (firstRelease - now) < pulse.power)",
+      "new": "    try #require(1 + (native.recharge + native.shieldRecharge) * (firstRelease - now) < pulse.power)\n    try #require(game.commander.flightSimulation.physicalTime - scenarioStart <= 800 * 0.1 + 1e-8)"
+    }
+  ],
+  "newTestPath": "Tests/L337CoreTests/NPCCurrentResourceCodingTests.swift",
+  "scope": "Retire legacyElectricalRecharge stored field/fallback, retain legitimate current energy-only mission representation. Current electricalRecharge accessor equals actual energyRecharge. Remove obsolete field comparisons/reverse-recharge reader branches in current NPC snapshot and ScriptWorldSave.valid. Add strict current resource decoder using 15existing fields, reject unrecognized keys including null, no migration or old default. Optional current fuel/electrical fields remain optional; current tracked resources/pools retain exact values, generic valid policy unchanged. Only exact top ScriptWorldSave guard hunks, not shared serialization dispatch.",
+  "travelTests": "Update only two obsolete initial target setup blocks and related identity checks in existing EMPTravelAndSecurityTests to actual born explicit025/currentSource/stock. Controlled spent case zeros tracked shields/lowers actual reserve without altering source terms; preserve one actual pulse/readiness/time/native800budget, actual hyperspace/dock/current diskload/return/custody/crew/conservation assertions. Full stock two-pulse powered case keeps actual2pulses/last>first30s/actual law/retaliation/all inventory/legal/people assertions, current source stock shields/capacity terms instead of obsolete legacy zero shield/energyRecharge0. Original spawn must equal actual fresh spawn, not nil. Actual prerequisites UNRUN and fail honestly if unmet; no source/clock/cost/power waivers.",
+  "newTests": "Two methods/five variants: current actual source full/spent exact roundtrip, unknown/null unknown/missing required field refuses without changing known source decode. No historical-version acceptance, alias or private receipt.",
+  "excluded": "General version dispatch/Game.load oldraw/rejector helpers remain explicitly required next cleanup; ElectricalVersionedSave retired-key rejection remains until its general historical branch is removed, no continuing typed migration field. No G1 damage/mission/EMP/renderer hooks, changed crew schemas, material hooks or publication/readiness helper edits.",
+  "limits": "SOURCE ONLY UNCOMPILED UNRUN; actual current025/native-recharge/aim/travel/writer/largecrew prerequisites unverified. No hardware/people/loaded physics/native journey/gameplay qualification. All source terms untouched, G1 sole executor; Root shared reservation required before edits.",
+  "supersedesUnreservedDraft": {
+    "path": "/tmp/elite-g4-current-npc-resource-schema-FIRST/FIRST.json",
+    "bytes": 14731,
+    "sha256": "08ab1701bd8e379c0b8e554322549b41d23df6c321e02d5b7d85edf9b4d158db"
+  },
+  "travelReadiness": "First current wounded travel case earns real bank through existing writer/posted frames BEFORE arranging controlled nonfatal wound; source shield recharge must remain actual and included in first-shot feasibility. Record scenarioStart before this earning; total real simulation duration through zero must remain within original800*0.1 budget, no reset/extended budget or private bank grant. All original power80/warmup10/one real emission/native travel-save-return-custody assertions retained. Full stock other case remains two actual pulses and positive reserve, no engineered zero.",
+  "supersedesEarnedProposal": {
+    "path": "/tmp/elite-g4-current-npc-resource-schema-earned-FIRST/FIRST.json",
+    "bytes": 16459,
+    "sha256": "91347c18155d4f509000af7d5baf292c1a9f3328e2ca6b70d44e49a23851b262",
+    "finding": "G2 identified first travel method catalogue-source redeclaration of later actual custody source; source-only assessment, full report pending."
+  },
+  "newTest": {
+    "path": "Tests/L337CoreTests/NPCCurrentResourceCodingTests.swift",
+    "draftPath": "/tmp/elite-g4-current-npc-resource-schema-binding-corrected-FIRST/NPCCurrentResourceCodingTests.swift",
+    "bytes": 1980,
+    "sha256": "2d8f66f3f2ea53c292dfdfa3f467a00b17fbaaa9ae34c8b4460e995a06b9502d"
+  },
+  "proposedFiles": [
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "draftPath": "/tmp/elite-g4-current-npc-resource-schema-binding-corrected-FIRST/NPCResources.swift",
+      "bytes": 6985,
+      "sha256": "d829716c2742e9a3d748a6e04bdd40225be602468ec776b79b131f77b8795dee"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "draftPath": "/tmp/elite-g4-current-npc-resource-schema-binding-corrected-FIRST/NPCPersistenceLedger.swift",
+      "bytes": 36196,
+      "sha256": "83beb3b990eace38f91b30a37b8586e251ca143620616217a811fa7e49eecf7c"
+    },
+    {
+      "path": "Sources/L337Core/ScriptPersistence.swift",
+      "draftPath": "/tmp/elite-g4-current-npc-resource-schema-binding-corrected-FIRST/ScriptPersistence.swift",
+      "bytes": 63103,
+      "sha256": "5354d9006d9373d107fafebac939d6f3b3c968cda22465d1b6100e0f71379461"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "draftPath": "/tmp/elite-g4-current-npc-resource-schema-binding-corrected-FIRST/EMPTravelAndSecurityTests.swift",
+      "bytes": 35019,
+      "sha256": "b61c12629d14d8cc3886f7791fb3e71186a5bcd0e0e864ada6632f94ac11c2b2"
+    }
+  ]
+}

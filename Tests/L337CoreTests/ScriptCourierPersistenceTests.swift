@@ -3,75 +3,44 @@ import Testing
 
 @testable import L337Core
 
-@Test func courierLegacyKeywordsAndOrdinaryPayloadNamesRemainValidFormat20AndRaw() async throws {
+@Test func courierKeywordsAndOrdinaryPayloadLabelsRoundTripThroughCurrentNativeEnvelope() async throws {
   let fixture = try CourierFixture()
   defer { fixture.clean() }
   var game = Game(executive: false)
   game.screen = .status
   game.ensureScriptCalendar(origin: .newCommander)
+  let coldSeed = game
   let id = UUID()
-  var old = ScriptInstance(
-    id: id, definition: "old.words/story", version: "1.0.0",
+  // Inert narrative data and an ordinary label confer no native courier or material authority.
+  var instance = ScriptInstance(id: id, definition: "words/story", version: "1.0.0",
     digest: String(repeating: "0", count: 64))
-  old.data = .object([
+  instance.data = .object([
     "courier": .string("missionCalendar"),
     "nested": .object(["deadlinePolicy": .string("courier")]),
   ])
-  old.payloads[ScriptCourierCustody.payloadKey] = 1
-  game.commander.scriptState.instances[id] = old
-  #expect(game.commander.valid)
-  let original = game.commander
-  try #require(original.equipmentInventory == nil && original.savedEquipmentVersion == nil)
-  try #require(!original.usesModularDriveSaveVersion && !original.usesRingMiningSaveVersion)
-  try #require(!original.usesEconomyMiningSaveVersion && !original.usesEMPSaveVersion)
-  try #require(old.courier == nil && old.contract == nil && old.timers.isEmpty)
-  var header = original
-  header.scriptState = ScriptEngineState()
-  header.contracts = ScriptContractState()
-  let generation = UUID().uuidString
-  let directory = fixture.save.appendingPathExtension("missions").appendingPathComponent(generation)
-  try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-  let encoder = ScriptValueStorage.encoder()
-  let chunks = [
-    "commander.json": try encoder.encode(header),
-    "missions.json": try encoder.encode(original.scriptState),
-    "contracts.json": try encoder.encode(original.contracts),
-    "world.json": try encoder.encode(game.scriptWorldSave),
-  ]
-  for (name, chunk) in chunks { try chunk.write(to: directory.appendingPathComponent(name)) }
-  let format20 = ScriptSavePointer(
-    format: "elite-script-save", schemaVersion: 20, generation: generation,
-    hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: "commander",
-    valueCodec: ScriptValueStorage.codec)
-  let bytes = try encoder.encode(format20)
-  try bytes.write(to: fixture.save)
-  #expect(
-    Set(try FileManager.default.contentsOfDirectory(atPath: directory.path)) == Set(chunks.keys))
+  instance.payloads[ScriptCourierCustody.payloadKey] = 1
+  game.commander.scriptState.instances[id] = instance
+  try #require(game.commander.valid && instance.courier == nil && instance.contract == nil)
+  try GameRuntime.writeCommander(&game, to: fixture.save)
+  let bytes = try Data(contentsOf: fixture.save)
+  let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)
+  let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: fixture.save)
+  let files = try ScriptFinanceTestFixture.files(fixture.root)
   let (loaded, world) = try ScriptSaveStore.read(bytes, from: fixture.save)
-  #expect(loaded.scriptState.instances[id]?.data == old.data)
-  #expect(loaded.scriptState.instances[id]?.payloads[ScriptCourierCustody.payloadKey] == 1)
-  #expect(loaded.scriptState.instances[id] == old && world.valid && world.consistent(with: loaded))
-  let versioned = GameRuntime()
-  try await versioned.load(from: fixture.save, persistMigrations: false)
-  let admitted = try #require(await versioned.snapshot().commander.scriptState.instances[id])
-  #expect(admitted.id == old.id && admitted.definition == old.definition)
-  #expect(admitted.version == old.version && admitted.digest == old.digest)
-  #expect(admitted.data == old.data && admitted.payloads == old.payloads)
-  let raw = fixture.root.appendingPathComponent("legacy.json")
-  let rawBytes = try JSONEncoder().encode(original)
-  try rawBytes.write(to: raw)
-  let runtime = GameRuntime()
-  try await runtime.load(from: raw, persistMigrations: false)
-  #expect(await runtime.snapshot().commander.scriptState.instances[id]?.data == old.data)
-  let rawInstance = try #require(await runtime.snapshot().commander.scriptState.instances[id])
-  #expect(rawInstance.id == old.id && rawInstance.definition == old.definition)
-  #expect(rawInstance.version == old.version && rawInstance.digest == old.digest)
-  #expect(rawInstance.payloads == old.payloads)
-  #expect(try Data(contentsOf: raw) == rawBytes)
+  #expect(loaded.scriptState.instances[id] == instance)
+  #expect(world.valid && world.consistent(with: loaded))
+  #expect(Set(try FileManager.default.contentsOfDirectory(atPath: directory.path))
+    == Set(pointer.hashes.keys))
+  try #require(coldSeed.commander.scriptState.instances[id] == nil)
+  let runtime = GameRuntime(game: coldSeed)
+  try await runtime.load(from: fixture.save, persistMigrations: false)
+  let admitted = try #require(await runtime.snapshot().commander.scriptState.instances[id])
+  #expect(admitted.id == instance.id && admitted.definition == instance.definition)
+  #expect(admitted.version == instance.version && admitted.digest == instance.digest)
+  #expect(admitted.data == instance.data && admitted.payloads == instance.payloads)
+  #expect(admitted.courier == nil && admitted.contract == nil)
   #expect(try Data(contentsOf: fixture.save) == bytes)
-  for (name, chunk) in chunks {
-    #expect(try Data(contentsOf: directory.appendingPathComponent(name)) == chunk)
-  }
+  #expect(try ScriptFinanceTestFixture.files(fixture.root) == files)
 }
 
 @Test func courierPre21PresenceGuardsCheckNativePathsIncludingUUIDPairDictionaries() throws {
@@ -378,14 +347,14 @@ extension CourierFixture {
   #expect(game.commander == before && game.commander.scriptState.instances[id]?.courier == original)
   game.key("escape")
   game.commander.cargo[0] = 0
-  game.showroom.selection = "SH013"
+  game.showroom.selection = "SH029"
   let permitted = try #require(game.shipTradeQuote)
   #expect(permitted.allowed)
   let missiles = game.commander.missiles
   game.key("showroom-trade")
   game.key("right")
   game.key("return")
-  #expect(game.commander.shipID == "SH013" && game.commander.missiles <= missiles)
+  #expect(game.commander.shipID == "SH029" && game.commander.missiles <= missiles)
   #expect(game.commander.scriptState.instances[id]?.courier == original)
   #expect(game.commander.scriptState.instances[id]?.contract == frozen)
   #expect(game.commander.cargoTonnes == 1 && game.commander.valid)
@@ -470,7 +439,7 @@ extension CourierFixture {
 func courierScriptStateInoutRealChildAndEventAppendPreserveContextsAndSibling(nested: Bool) throws {
   let fixture = try CampaignGalleryFixture()
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let campaign = try fixture.startContractCampaign(&game, nested: nested)
   #expect(game.commander.scriptState.instances[campaign.child]?.campaignParent != nil)
   let ids = game.orderedScriptInstances.filter {

@@ -1,0 +1,71 @@
+{
+  "status": "FIRST_TEST_FIXTURE_ORACLE_SCOPE_BEFORE_RESERVATION_NO_TEST_EDITS",
+  "beforeCommit": "962055d3cc8bdbb4c6f0af2b5a8bdf0c0c55d0bc",
+  "pins": [
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 150579,
+      "sha256": "7f46d4e3fd7be24ee55791d08edff749d9dd0ce1ec2b3eff2200e8fb7281e473"
+    },
+    {
+      "path": "Sources/L337Core/StationAutoDefence.swift",
+      "bytes": 40575,
+      "sha256": "6df2a951613bdab340f72804a710d0d3a70e5f03aff9e43a1199f163b94a9966"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36134,
+      "sha256": "ea48568940ba3b1dd6e45c3777db50f163fd0e203d00a63610075ef0979b21df"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/GameplayScene.swift",
+      "bytes": 20641,
+      "sha256": "23e99db96a86e68e0afb39e72e826fcf936c0ee0dcef19531c08a2e985507c31"
+    },
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 179788,
+      "sha256": "4deeccae23639e71125f46fb3d13008aac7959bd4894eba3bb845563bc29cf09"
+    }
+  ],
+  "existingScope": {
+    "helpers": [
+      "stationAutoGame",
+      "stationAutoAddNativeAttacker"
+    ],
+    "inlineFixture": [
+      "stationAutoNeutralFrameReservesNativeECMCostInsteadOfStarvingItWithAnAlignedLaserShot"
+    ],
+    "hitOracles": [
+      "stationAutoNativeMountedHitPreservesViewToolStationAndWeaponLocks",
+      "stationAutoOpportunisticMountedFireKeepsFarAttackersOutOfSteeringPolicy",
+      "stationAutoMountedFireUsesActualMeshContactAtNativeBeamRangeBoundary",
+      "stationAutoAuthenticEntryAttackUsesMountedGunAndPhysicalEvasionWithOneBudget",
+      "stationAutoCombatTracePreservesNativeAdmissionCandidateIsolationAndLifecycle"
+    ],
+    "performanceSourceReads": [
+      "stationAutoUncoveredNativeBeamCannotHandOverToStationaryAlignment",
+      "stationAutoRealPoliceDepartureRetainsClearEntryAndRefusesUnsafeStop",
+      "paidNativeSH025SurvivesRepeatedHostilePressureAndDocksWithinOriginalBudget"
+    ]
+  },
+  "proposal": [
+    "Add one controlled fresh cobra attacker binding helper requiring actual current SH025 (same original Peregrine/player counterpart, not substitute hull), full NPCResources.stock/current source energy and known fuel. Preserve IDs/poses/orientations/spawn keys/intent/legal/cargo/provenance/ammunition and all paid player preparation. Assert original rounds fit actual source capacity; never clamp/refill. No new earned actors or live encounter policy. Missing/blocked025 MUST fail require, no skip/fallback.",
+    "Replace exactly3 nil/reverse-native.cobra ID assignments with controlled current-source helper. Before using helper on original fixture, ensure no current source already owned; each controlled fresh attacker bound once.",
+    "Five old hull-energy-only hit decreases become mandatory actual energy+front+rear pool decrease, retaining heat/cooldown/law/range/trace equivalence and every other original assertion. Add independent full-stock preconditions and conservation of untouched capacities/profile/fuel/cargo/ammo. No shield reset/zero or hit/weapon/timing changes.",
+    "Three cobra reverse-native performance reads become mandatory actual attacker physical catalogueID/currentSource.performance. Existing viper police31 performance read remains unchanged. All existing numeric/source stock inequalities, pursuit/docking original budgets remain unchanged.",
+    "New refusal parameterized method on actual stationAutoGame: missing/unknown source, invalid current profile, unknown fuel, missile overflow, EMP/Blackjack/naval/protected owner with whole commander/body/heat/cooldown/inventory/target conservation after real fireStationAutoLaser. Source mismatch validated via actual current capture, no new private test hook.",
+    "New current-stock positive and valid spent-stock positive invoke actual fireStationAutoLaser; require genuine source capture before, preserve consumed fuel/heat and shields/HP semantics. Assert real shot emission/damage/law and no source refill. No pure self-assertion or absence-pass."
+  ],
+  "limits": "Proposal only, no test edits or aftercode. Existing broad shared suite semantics require Root reservation and independent source review; all UNCOMPILED UNRUN. Current025 geometry964 still blocked, no shield/HP tuning/stock fiction/hull nomination/native execution; G1 only. Scope does not include police departure geometry, shield/player preparation numbers, fixed2/profile128/mining, source metadata or production."
+}

@@ -1,0 +1,23 @@
+{
+  "status": "FIRST_FROZEN_BEFORE_ACTUAL_SCRIPT_NPC_CATALOGUE_NATIVE_SOURCE_JOIN",
+  "beforeCommit": "e2f2bda1e1675d4a9de2c4a55da2a4bcb6342576",
+  "beforePins": [
+    {
+      "path": "Sources/L337Core/ScriptNPCAssets.swift",
+      "bytes": 4830,
+      "sha256": "816a4a341da1dcda186cbba42299b69bcbf0c113c96c5f60a545179b2bea9263"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalFleetRuntimeHullSourceUnitTests.swift",
+      "bytes": 3253,
+      "sha256": "e19161aec5139a7bdd95f3178aa9774b012ad53450e2ba73e52aa227b11f6cc6"
+    }
+  ],
+  "actualCaller": "ScriptPackLibrary.readNPCModels -> canonicalGeometry -> Game.makeScriptNPC -> content-addressed current geometry -> scriptModel/scriptNPCRadius",
+  "ownedScope": "Current objectKind.ship catalogue references must resolve actual admitted current RuntimeHullSource native physical mesh, not detailed/showroom design. Construct canonical ShipDesign with physical vertices and unchanged native faces/winding/details/palette/material assignments/textures/UV/license/provenance. No stage release or new body/population/mission/fit grants.",
+  "nonshipBoundary": "Capsule/station/platform/other keep existing distinct catalogue model owner path unchanged. This does not qualify SH040 or any station/provider.",
+  "caps": "Existing current source <=512 triangles, existing scriptGeometryValid limits unchanged; cache existing source, one design conversion per pack reference at load boundary, not per frame.",
+  "tests": "Add one actual model-loader boundary method on existing source unit suite:025 physicalgeometry/provenance/determinism; pending036/067 andunknownrefusal; nonship040/028 originalowner equality. All test source UNCOMPILED UNRUN.",
+  "nativeGeometryOrNumericQueriesByG4": 0,
+  "protected": "No station/provider/port/mission pack/resource edits. NativePeopleCensus reserved helper untouched. Prior source-review commit chain remains exact."
+}

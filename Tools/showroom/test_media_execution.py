@@ -156,8 +156,7 @@ class PublicationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             directory=Path(temp);manifest=directory/'manifest.json';manifest.write_text('{"old":"unchanged"}')
             with patch.object(media,'MEDIA',directory),patch.object(media.sys,'argv',['ship-reference.py']),\
-                 patch.object(media.ship_files,'read_ships',return_value=[{'id':'SH001'}]),\
-                 patch.object(media,'shared_hash',return_value='new'),patch.object(media,'needs_render',return_value=True),\
+                 patch.object(media,'isolated_media_plan',return_value={'SH001':'new'}),\
                  patch.object(media,'render_media',side_effect=RuntimeError('renderer failed')),patch.object(media,'references') as refs:
                 with self.assertRaisesRegex(RuntimeError,'renderer failed'):media.main()
             self.assertEqual(manifest.read_text(),'{"old":"unchanged"}');refs.assert_not_called()
@@ -200,8 +199,14 @@ class EntryPointTests(unittest.TestCase):
                  patch.object(media.subprocess,'check_output',return_value=b'page size of 16384 bytes\nPages free: 1000000.\nPages inactive: 1000000.\nPages speculative: 1000000.'),\
                  patch.object(media.shutil,'disk_usage',return_value=SimpleNamespace(free=200*1024**3)),\
                  patch.object(media,'run_renderer',return_value=0) as run:
-                media.render_media(['SH001'])
-            self.assertEqual(run.call_args.args[0],['swift','run','--jobs','1','-Xswiftc','-disable-batch-mode','L337','--ship-media','SH001'])
+                staged = media.render_media(['SH001'])
+            flags = ['--build-system', 'native', '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
+            self.assertEqual([call.args[0] for call in run.call_args_list], [
+                ['swift', 'build', *flags, '--product', 'L337'],
+                ['swift', 'run', *flags, '--skip-build', 'L337', '--ship-media-directory', str(staged),
+                 '--ship-media', 'SH001'],
+            ])
+            self.assertEqual(staged.parent.parent, root / '.build')
             self.assertEqual(len(list((root/'.build').glob('ship-media-*/render.log'))),1)
             self.assertEqual(list(root.rglob('policy.json')),[]);self.assertEqual(list(root.rglob('state.json')),[])
 

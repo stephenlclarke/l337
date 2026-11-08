@@ -1,0 +1,125 @@
+{
+  "status": "FIRST_FROZEN_FRESH_INITIAL_NATIVE_TRAFFIC_CURRENT_SOURCE_PROPOSAL_NO_SHARED_EDITS_PENDING_ROOT_RESERVATION",
+  "beforeCommit": "223eef270ea3c9167b4c6f04fa0d21b2f13af1a7",
+  "pins": [
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 179788,
+      "sha256": "4deeccae23639e71125f46fb3d13008aac7959bd4894eba3bb845563bc29cf09"
+    },
+    {
+      "path": "Sources/L337Core/GameplayScene.swift",
+      "bytes": 19299,
+      "sha256": "d77daeba9bf94d6d1796e75a1948fdeb7b05998e0871deda20b1c744263df362"
+    },
+    {
+      "path": "Sources/L337Core/AmbientEncounterPolicy.swift",
+      "bytes": 4270,
+      "sha256": "1f9cb4bd26eee8813a2edf95587dbeb1a4098288befeef7a1e197bdc2c46bc18"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 28173,
+      "sha256": "e677224ab5e046f332c06e077ea28c4dd6471d348339a1c24fab879edb6c3909"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/EncounterDirector.swift",
+      "bytes": 11010,
+      "sha256": "440ca4cd2dfad9f3133b39c60879a827e00d993e2ff5c696fced61a6bbd86448"
+    },
+    {
+      "path": "Sources/L337Core/ShipAccommodation.swift",
+      "bytes": 11494,
+      "sha256": "13bf2d7e2c2d2513372535bf255d67ed1b9244e7dbd110733f6ecd98db003c38"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36134,
+      "sha256": "ea48568940ba3b1dd6e45c3777db50f163fd0e203d00a63610075ef0979b21df"
+    },
+    {
+      "path": "Sources/L337Core/ShipRawMeshCache.swift",
+      "bytes": 1626,
+      "sha256": "13879bfe6a2dd5871c5a26532e82231f25087401966931e6cce99ea8ac8ce23b"
+    },
+    {
+      "path": "Sources/L337Core/OriginalHullPhysicalContract.swift",
+      "bytes": 20949,
+      "sha256": "4dfc05d6d886dc85ab48ea6071f735bf02f031c0874960518805afb542c51be2"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+      "bytes": 283481,
+      "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+    },
+    {
+      "path": "Sources/L337Core/EncounterGeography.swift",
+      "bytes": 2697,
+      "sha256": "0fee9c0d50e5f49279599d55f37f90d725b6271f993487cfbc1bced443ca3a9e"
+    },
+    {
+      "path": "Sources/L337Core/EMPSourceCustody.swift",
+      "bytes": 5355,
+      "sha256": "b711a926156a536a31f8c42e519fcb872d2aa2309d5c02dfefab47ff38973714"
+    },
+    {
+      "path": "Tests/L337CoreTests/AmbientEncounterPolicyTests.swift",
+      "bytes": 17202,
+      "sha256": "860326c0df9f54a82d61f9592bea6638f013c9588061d8418d492e09ec390ac6"
+    },
+    {
+      "path": "Tests/L337CoreTests/GameplayEncounterIntegrationTests.swift",
+      "bytes": 4916,
+      "sha256": "be0d833b72b34b39e363dc57968bdaa8baacf49ab48c9fb686590bb1961e814b"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 39278,
+      "sha256": "5aa65678ae56c28e88316b409d9fb7a98f67bd479dbf61f799fc23a1dd6bc76f"
+    }
+  ],
+  "literalHunks": [
+    {
+      "path": "Sources/L337Core/AmbientEncounterPolicy.swift",
+      "before": "\n    let source =\n      seed\n      ^ mix(UInt64(actor.system.galaxy) &* 257 &+ UInt64(actor.system.system))\n      ^ mix(actor.visit ^ 0x5649_5349_5430_3031)\n      ^ mix(actor.entity ^ 0x4c41_554e_4348_3031)",
+      "after": "\n    let source = nativeLaunchWord(actor: actor, seed: seed)"
+    },
+    {
+      "path": "Sources/L337Core/AmbientEncounterPolicy.swift",
+      "before": "\n  private static func resolve(source: UInt64, government: Int) -> AmbientEncounterDisposition {",
+      "after": "\n  /// Reuse the native producer's existing identity word without consuming another random draw.\n  static func nativeLaunchWord(actor: ActorIdentity, seed: UInt64) -> UInt64 {\n    return\n      seed\n      ^ mix(UInt64(actor.system.galaxy) &* 257 &+ UInt64(actor.system.system))\n      ^ mix(actor.visit ^ 0x5649_5349_5430_3031)\n      ^ mix(actor.entity ^ 0x4c41_554e_4348_3031)\n  }\n\n  private static func resolve(source: UInt64, government: Int) -> AmbientEncounterDisposition {"
+    },
+    {
+      "path": "Sources/L337Core/GameplayScene.swift",
+      "before": "\n  private mutating func initializeNativeLaunchDisposition(bodyID: Int) {\n    let flight = commander.flightSimulation\n    guard let index = bodies.firstIndex(where: { $0.id == bodyID }),\n      [.cobra, .sidewinder].contains(bodies[index].hull), !bodies[index].navalTarget,\n      bodies[index].missionInstanceID == nil, bodies[index].blackjackRole == nil,\n      let physical = bodies[index].physical, physical.spawnIdentity == nil,\n      physical.empSource == nil, physical.salvage == nil,\n      physical.identity.system == systemIdentity, physical.identity.visit == flight.visit,\n      var npc = physical.npc, npc.routeProvenance == .inferredLocal,\n      let player = flight.player, let station = flight.anchors?.station.identity,\n      let disposition = AmbientEncounterPolicy.nativeLaunch(\n        actor: physical.identity, seed: gameplaySeed,\n        government: currentSystem.government, role: npc.role)\n    else { return }\n    npc.legal = disposition.legalOverride ?? npc.legal\n    npc.legalProvenance = .generated\n    npc.routeProvenance = .generated\n    npc.intention = disposition.hostile ? .engage(player) : .dock(station)\n    bodies[index].hostile = disposition.hostile\n    bodies[index].physical?.npc = npc\n  }\n",
+      "after": "\n  private mutating func initializeNativeLaunchDisposition(bodyID: Int) {\n    let flight = commander.flightSimulation\n    guard let index = bodies.firstIndex(where: { $0.id == bodyID }),\n      [.cobra, .sidewinder].contains(bodies[index].hull), !bodies[index].navalTarget,\n      bodies[index].missionInstanceID == nil, bodies[index].blackjackRole == nil,\n      bodies[index].blackjackIdentity == nil,\n      var physical = bodies[index].physical, physical.spawnIdentity == nil,\n      physical.catalogueShipID == nil, physical.empSource == nil,\n      physical.empCrewPod == nil, physical.rock == nil, physical.payload == nil,\n      physical.ordnance == nil, physical.salvage == nil,\n      physical.identity.system == systemIdentity, physical.identity.visit == flight.visit,\n      var npc = physical.npc, npc.routeProvenance == .inferredLocal\n    else { return }\n    let position = flight.pose.systemPoint(bodies[index].position)\n    guard let player = flight.player, let station = flight.anchors?.station.identity,\n      let context = gameplayContext(),\n      let disposition = AmbientEncounterPolicy.nativeLaunch(\n        actor: physical.identity, seed: gameplaySeed,\n        government: currentSystem.government, role: npc.role),\n      let source = NativeFleetLaunchSource.resolve(\n        role: npc.role, actor: physical.identity, seed: gameplaySeed,\n        context: context, position: position),\n      let stock = NPCResources.stock(source.performance),\n      (try? ShipAccommodationProfile(ship: source.ship)) != nil,\n      bodies[index].missiles <= source.performance.missiles,\n      nativeLaunchGeometryIsSafe(\n        source: source, actor: physical.identity, position: position, context: context)\n    else {\n      bodies.remove(at: index)\n      return\n    }\n    npc.resources = stock\n    npc.legal = disposition.legalOverride ?? npc.legal\n    npc.legalProvenance = .generated\n    npc.cargoProvenance = .generated\n    npc.routeProvenance = .generated\n    npc.intention = disposition.hostile ? .engage(player) : .dock(station)\n    physical.catalogueShipID = source.ship.id\n    physical.npc = npc\n    var current = bodies[index]\n    current.hull = source.ship.nativeHull ?? current.hull\n    current.energy = stock.energyCapacity\n    current.hostile = disposition.hostile\n    current.physical = physical\n    guard NPCPersistenceSnapshot.capture(\n      body: current, pose: flight.pose, physicalTime: context.physicalTime,\n      protection: context.protection) != nil\n    else {\n      bodies.remove(at: index)\n      return\n    }\n    bodies[index] = current\n  }\n"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "before": "\n  private mutating func safeSpawn(_ request: SpawnRequest, context: EncounterContext) -> Bool {\n    guard spawnParametersSafe(request, context: context) else { return false }\n    let radius = spawnRadius(request)\n    // An emitted projectile starts at its owner's muzzle; its collision resolver\n    // excludes that owner. Other admissions must be separated from live hulls.\n    if request.population == .projectile { return true }\n    let playerRadius = commander.playerMesh.vertices.map(\\.length).max() ?? 80\n    guard (request.position - context.player.position).length > radius + playerRadius + 8 else {\n      return false\n    }\n    for actor in context.actors {\n      let otherRadius: Double\n      if let salvage = actor.salvage {\n        otherRadius = salvage.bounds.radius + salvage.bounds.center.length\n      } else if let id = actor.catalogueShipID, OriginalBisonActivation.contains(id) {\n        guard let radius = OriginalBisonActivation.collisionRadius(for: id) else { return false }\n        otherRadius = radius\n      } else if let id = actor.catalogueShipID, actor.hull != .station,\n        OriginalFleetR3Data.contract(for: id)?.objectKind == .ship\n      {\n        guard let source = OriginalFleetRuntimeHullSource.source(for: id) else { return false }\n        otherRadius = source.envelope.clearanceRadius\n      } else {\n        otherRadius = Mesh.hull(actor.hull).vertices.map(\\.length).max() ?? 80\n      }\n      if actor.energy > 0,\n        (request.position - actor.position).length < radius + otherRadius + 8,\n        !releasedFragmentClearsParent(request, parent: actor, context: context)\n      {\n        return false\n      }\n    }\n    return true\n  }\n",
+      "after": "\n  private mutating func safeSpawn(_ request: SpawnRequest, context: EncounterContext) -> Bool {\n    guard spawnParametersSafe(request, context: context) else { return false }\n    let radius = spawnRadius(request)\n    // An emitted projectile starts at its owner's muzzle; its collision resolver excludes it.\n    if request.population == .projectile { return true }\n    return spawnSeparationIsSafe(\n      position: request.position, radius: radius, context: context,\n      excludedActor: nil, fragmentRequest: request)\n  }\n\n  /// The native cohort already owns an actor; no fabricated SpawnIdentity is used for clearance.\n  mutating func nativeLaunchGeometryIsSafe(\n    source: OriginalFleetRuntimeHullSource.Source, actor: ActorIdentity,\n    position: Vector3, context: EncounterContext\n  ) -> Bool {\n    let radius = source.envelope.clearanceRadius\n    guard position.finite, radius.isFinite, radius > 0,\n      (position - context.anchors.planet.position).length > context.anchors.planet.radius + radius,\n      (position - context.anchors.sun.position).length > context.anchors.sun.radius * 4 + radius\n    else { return false }\n    return spawnSeparationIsSafe(\n      position: position, radius: radius, context: context,\n      excludedActor: actor, fragmentRequest: nil)\n  }\n\n  @inline(never)\n  private mutating func spawnSeparationIsSafe(\n    position: Vector3, radius: Double, context: EncounterContext,\n    excludedActor: ActorIdentity?, fragmentRequest: SpawnRequest?\n  ) -> Bool {\n    let playerRadius = commander.playerMesh.vertices.map(\\.length).max() ?? 80\n    guard (position - context.player.position).length > radius + playerRadius + 8 else {\n      return false\n    }\n    for actor in context.actors where actor.identity != excludedActor {\n      let otherRadius: Double\n      if let salvage = actor.salvage {\n        otherRadius = salvage.bounds.radius + salvage.bounds.center.length\n      } else if let id = actor.catalogueShipID, OriginalBisonActivation.contains(id) {\n        guard let radius = OriginalBisonActivation.collisionRadius(for: id) else { return false }\n        otherRadius = radius\n      } else if let id = actor.catalogueShipID, actor.hull != .station,\n        OriginalFleetR3Data.contract(for: id)?.objectKind == .ship\n      {\n        guard let source = OriginalFleetRuntimeHullSource.source(for: id) else { return false }\n        otherRadius = source.envelope.clearanceRadius\n      } else {\n        otherRadius = Mesh.hull(actor.hull).vertices.map(\\.length).max() ?? 80\n      }\n      if actor.energy > 0,\n        (position - actor.position).length < radius + otherRadius + 8,\n        !(fragmentRequest.map { releasedFragmentClearsParent($0, parent: actor, context: context) }\n          ?? false)\n      {\n        return false\n      }\n    }\n    return true\n  }\n"
+    }
+  ],
+  "newSource": {
+    "path": "/tmp/elite-g4-current-fresh-native-traffic-child/NativeFleetLaunchSource.swift.proposed",
+    "bytes": 1375,
+    "sha256": "548e2e3f14e22217b78afa20dfefd5eea6bdedd6a5b0382c8af0283bb55481b3"
+  },
+  "sourcePolicy": "Reuse already adopted baseline trader025 for actual initial native trader. This initial cohort is outside station protection while its player departs: enforce actual source declared role/galaxy/candidate region/no unsupported habitat, not the ambient decision-at-player condition. Arrival pirates reuse existing eligible current weighted role source and the exact native producer identity hash word. No inferred nativeHull catalogue ID/fallback, no additional RNG consumption or search/retry. Unavailable/invalid/unclear source removes only fresh unowned placeholder before ledger/publication; do not fail the player launch or retain generic body.",
+  "sourceIdentityAndStock": "Fresh-only actor with nil catalogue/spawn/source owners and inferred initial route; keep existing real actor/hullID where no explicit current native binding, position/orientation/motion/spin/missile count/ECM/actual role and exact deterministic legal/hostility/intent rules. Use actual native binding if provided, full actual source stock/hull energy, generated empty-cargo provenance, source accommodation and final current snapshot validity. No people/equipment/blueprint grant or loaded mass/tensor claim. Already owned/saved/mission/provider/EMP actors untouched; no cold resampling/refill.",
+  "geometry": "Reuse existing ordinary separation logic through one extracted private helper. Original ordinary callers use nil exclusion and same real fragment-parent predicate; all margins/radii/planet/sun and subtype paths preserved. New native cohort excludes only its actual candidate actor, validates current source native envelope/planet/sun and all live actor/player separation without fabricated SpawnIdentity. No geometry evaluation in authoring, G1 tests/native needed; inherited distinct station/mass qualifications not promoted.",
+  "invariants": "Game.swift source constructors remain read-only (whole reviewed9356 source unchanged), no controller key/SpawnIdentity fabricated, no RNG reset, pose/clock edit, source/gate waiver, amount clamp or phantom source record. Existing non-selected actors and independent fleet work continue. Original13 fixed-recharge/mining oracle dependencies remain open/untouched.",
+  "tests": "Existing two actual launch/arrival disposition methods keep all real launch/jump/fuel/law/seed/intent/snapshot/validity oracles, add mandatory selected current source/profile/stock-capacity/native binding assertions (source readiness remains explicit dependency; no conditional pass/skip). Other law sampling/distribution/preserveIntent methods unchanged. New bounded suite covers unsupported owner/epoch/role/source selection, current source stock/cold invariants, actual native envelope clearance/self-exclusion/planet-player-overlap refusal without RNG/source/ledger mutation; fresh missing-source refusal never leaves legacy body. Exact test hunks to freeze before their edits. No existing13 source numbers changed.",
+  "reservationRequested": "Only literal policy word factorization +fresh initializer method +ordinary separation factoring/new native geometry helper; new source file and exact owned disposition/new tests. No Game.swift/provider/station/EMP/MC1 edits.",
+  "execution": "Own source/text/hash preparation only. No compiler/tests/native/renderer/geometry/numeric profile evaluation/source creator execution; all Swift UNCOMPILED UNRUN. Existing model/source/crew/loaded physics/actual journeys/native025 readiness OPEN."
+}

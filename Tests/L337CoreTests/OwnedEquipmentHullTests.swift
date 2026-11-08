@@ -116,13 +116,8 @@ import Testing
   defer { try? FileManager.default.removeItem(at: folder) }
   let directory = folder.appendingPathComponent("save")
   let file = directory.appendingPathComponent("commander.json")
-  var legacyCommander = Commander()
-  legacyCommander.shipID = "SH023"
-  legacyCommander.fuel = legacyCommander.fuelCapacity
-  legacyCommander.missiles = 4
-  var game = Game(executive: false)
-  let loaded = game.load(legacyCommander)
-  try #require(loaded && game.commander.valid)
+  var game = try ownedHullTradeGame()
+  try #require(game.commander.valid)
   game.screen = .inventory
   let stored = try missionPrepareSmallHullExchange(&game)
   game.screen = .showroom
@@ -132,11 +127,11 @@ import Testing
   let quote = try #require(game.shipTradeQuote)
   try #require(quote.allowed)
   let runtime = GameRuntime(game: game, saveURL: file)
-  // This is a genuine older raw fixture, not output from the current app writer.
-  try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-  let legacyBytes = try JSONEncoder().encode(legacyCommander)
-  try HyperspaceDriveVersionedSave.rejectFields(legacyBytes)
-  try legacyBytes.write(to: file)
+  // Retain a genuine current save while the live pre-publication value stays independent.
+  var priorPublication = game
+  try GameRuntime.writeCommander(&priorPublication, to: file)
+  let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: Data(contentsOf: file))
+  try #require(pointer.format == "elite-script-save" && pointer.scope == "commander")
   let before = await runtime.snapshot().commander
   let bytes = try Data(contentsOf: file)
   let property = try ownedHullSaveFiles(at: directory)
@@ -272,36 +267,6 @@ private func ownedHullSaveFiles(at directory: URL) throws -> [String: Data] {
       of: Set(before.items.map(\.id))))
   let decoded = try JSONDecoder().decode(Commander.self, from: JSONEncoder().encode(game.commander))
   #expect(decoded == game.commander && decoded.valid)
-}
-
-@Test func legacyReadDTORejectsDuplicateSlotsAndPreservesStoredConditionThroughActualMigration()
-  throws
-{
-  var original = OwnedGear(kind: .module("E.C.M. System"), slot: .module("E.C.M. System"))
-  var legacy = LegacyOwnedEquipmentInventory()
-  legacy.items = [original, original]
-  #expect(!legacy.valid)
-  original.condition = 4000
-  legacy.items = [original]
-  #expect(!legacy.valid)
-  original.fittedSlot = nil
-  original.modifications = ["source-upgrade": 7]
-  legacy.items = [original]
-  #expect(legacy.valid)
-  var commander = Commander()
-  commander.equipment = []
-  commander.laserMounts = LaserMounts()
-  commander.missiles = 0
-  commander.fuel = 0
-  commander.legacyOwnedEquipment = legacy
-  let decoded = try JSONDecoder().decode(Commander.self, from: JSONEncoder().encode(commander))
-  var migrated = decoded
-  try migrated.prepareEquipment()
-  try migrated.transferEquipment(to: "SH013", hullID: UUID())
-  let preserved = try #require(migrated.equipmentInventory?.items.first { $0.id == original.id })
-  #expect(preserved.retainedLegacyState?.conditionBasisPoints == 4000)
-  #expect(preserved.retainedLegacyState?.modifications == ["source-upgrade": 7])
-  #expect(preserved.location == nil && migrated.valid)
 }
 
 private func ownedHullTradeGame() throws -> Game {

@@ -23,21 +23,32 @@ public struct ScriptNPCDefinition: Codable, Sendable, Equatable {
   public let lasers: [ScriptNPCWeapon]?
   public let components: [ScriptNPCComponent]?
   var valid: Bool {
-    PackValidation.localID(id) && (1...80).contains(name.utf8.count)
-      && (1...4096).contains(source.utf8.count) && (1...4096).contains(basis.utf8.count)
-      && ScriptNPCModel.referenceValid(model) && scale.isFinite && (0.001...1000).contains(scale)
-      && energy.isFinite && (0.001...1_000_000).contains(energy)
-      && [recharge, speed, acceleration, pitch, yaw, roll, fuel].allSatisfy {
+    guard (PackValidation.localID(id)) else { return false }
+    guard ((1...80).contains(name.utf8.count)) else { return false }
+    guard ((1...4096).contains(source.utf8.count)) else { return false }
+    guard ((1...4096).contains(basis.utf8.count)) else { return false }
+    guard ScriptNPCModel.referenceValid(model)
+      || OriginalScopedScriptedHull(reference: model)?.declaresRole(self) == true
+    else { return false }
+    guard (scale.isFinite) else { return false }
+    guard ((0.001...1000).contains(scale)) else { return false }
+    guard (energy.isFinite) else { return false }
+    guard ((0.001...1_000_000).contains(energy)) else { return false }
+    guard ([recharge, speed, acceleration, pitch, yaw, roll, fuel].allSatisfy {
         $0.isFinite && (0...100_000).contains($0)
-      }
-      && (0...32).contains(missiles) && (0...1_000_000).contains(bounty)
-      && (lasers?.count ?? 0) <= 16 && ScriptNPCWeapon.allValid(lasers ?? [])
-      && Set((lasers ?? []).map(\.id)).count == (lasers?.count ?? 0)
-      && (components?.count ?? 0) <= 32 && ScriptNPCComponent.allValid(components ?? [])
-      && Set((components ?? []).map(\.id)).count == (components?.count ?? 0)
-      && (drive.map { drive in
+      }) else { return false }
+    guard ((0...32).contains(missiles)) else { return false }
+    guard ((0...1_000_000).contains(bounty)) else { return false }
+    guard ((lasers?.count ?? 0) <= 16) else { return false }
+    guard (ScriptNPCWeapon.allValid(lasers ?? [])) else { return false }
+    guard (Set((lasers ?? []).map(\.id)).count == (lasers?.count ?? 0)) else { return false }
+    guard ((components?.count ?? 0) <= 32) else { return false }
+    guard (ScriptNPCComponent.allValid(components ?? [])) else { return false }
+    guard (Set((components ?? []).map(\.id)).count == (components?.count ?? 0)) else { return false }
+    guard ((drive.map { drive in
         drive.valid && (components ?? []).contains { $0.id == drive.component }
-      } ?? true)
+      } ?? true)) else { return false }
+    return true
   }
 }
 
@@ -137,7 +148,8 @@ public struct ScriptNPCModel: Codable, Sendable {
         (48...57).contains(first), (48...57).contains(second), (48...57).contains(third),
         bytes.next() == nil
       else { return false }
-      return ShipCatalogue.containsShip(id)
+      if id == OriginalCryostasisCapsule.id { return OriginalCryostasisCapsule.source != nil }
+      return !OriginalDetailedHullStage.blocksRuntime(id) && ShipCatalogue.containsShip(id)
     }
     return model.hasPrefix("asset:") && PackValidation.localID(String(model.dropFirst(6)))
   }

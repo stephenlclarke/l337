@@ -1,0 +1,6216 @@
+{
+  "id": "SH053",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "0894d36fe7de3b645594fa7665a7b7231722e1b2f23c4a904278e91d4099ada0",
+  "contractSHA256": "d460619fc51986f13b5c54d08654755341da670df9ece4b755ff2cb35753aba0",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "body primary pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 120,
+          "faceStart": 0,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "body primary pressure envelope/service-well-0-0",
+          "vertexStart": 120,
+          "vertexCount": 12,
+          "faceStart": 236,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 132,
+          "vertexCount": 8,
+          "faceStart": 256,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 140,
+          "vertexCount": 8,
+          "faceStart": 268,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 148,
+          "vertexCount": 8,
+          "faceStart": 280,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "body primary pressure envelope/service-well-0-1",
+          "vertexStart": 156,
+          "vertexCount": 12,
+          "faceStart": 292,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 168,
+          "vertexCount": 8,
+          "faceStart": 312,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 176,
+          "vertexCount": 8,
+          "faceStart": 324,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 184,
+          "vertexCount": 8,
+          "faceStart": 336,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "body primary pressure envelope/service-well-0-2",
+          "vertexStart": 192,
+          "vertexCount": 12,
+          "faceStart": 348,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 204,
+          "vertexCount": 8,
+          "faceStart": 368,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 212,
+          "vertexCount": 8,
+          "faceStart": 380,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 220,
+          "vertexCount": 8,
+          "faceStart": 392,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "body primary pressure envelope/service-well-1-0",
+          "vertexStart": 228,
+          "vertexCount": 12,
+          "faceStart": 404,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 240,
+          "vertexCount": 8,
+          "faceStart": 424,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 248,
+          "vertexCount": 8,
+          "faceStart": 436,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 256,
+          "vertexCount": 8,
+          "faceStart": 448,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "body primary pressure envelope/service-well-1-1",
+          "vertexStart": 264,
+          "vertexCount": 12,
+          "faceStart": 460,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 276,
+          "vertexCount": 8,
+          "faceStart": 480,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 284,
+          "vertexCount": 8,
+          "faceStart": 492,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 292,
+          "vertexCount": 8,
+          "faceStart": 504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "body primary pressure envelope/service-well-1-2",
+          "vertexStart": 300,
+          "vertexCount": 12,
+          "faceStart": 516,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 312,
+          "vertexCount": 8,
+          "faceStart": 536,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 320,
+          "vertexCount": 8,
+          "faceStart": 548,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 328,
+          "vertexCount": 8,
+          "faceStart": 560,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "body primary pressure envelope/service-well-2-0",
+          "vertexStart": 336,
+          "vertexCount": 12,
+          "faceStart": 572,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 348,
+          "vertexCount": 8,
+          "faceStart": 592,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 356,
+          "vertexCount": 8,
+          "faceStart": 604,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 364,
+          "vertexCount": 8,
+          "faceStart": 616,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "body primary pressure envelope/service-well-2-1",
+          "vertexStart": 372,
+          "vertexCount": 12,
+          "faceStart": 628,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 384,
+          "vertexCount": 8,
+          "faceStart": 648,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 392,
+          "vertexCount": 8,
+          "faceStart": 660,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 400,
+          "vertexCount": 8,
+          "faceStart": 672,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 33,
+          "name": "body primary pressure envelope/service-well-2-2",
+          "vertexStart": 408,
+          "vertexCount": 12,
+          "faceStart": 684,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 34,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 420,
+          "vertexCount": 8,
+          "faceStart": 704,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 35,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 428,
+          "vertexCount": 8,
+          "faceStart": 716,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 36,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 436,
+          "vertexCount": 8,
+          "faceStart": 728,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 37,
+          "name": "body primary pressure envelope/service-well-3-0",
+          "vertexStart": 444,
+          "vertexCount": 12,
+          "faceStart": 740,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 38,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 456,
+          "vertexCount": 8,
+          "faceStart": 760,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 39,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 464,
+          "vertexCount": 8,
+          "faceStart": 772,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 40,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 472,
+          "vertexCount": 8,
+          "faceStart": 784,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 41,
+          "name": "body primary pressure envelope/service-well-3-1",
+          "vertexStart": 480,
+          "vertexCount": 12,
+          "faceStart": 796,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 42,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 492,
+          "vertexCount": 8,
+          "faceStart": 816,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 43,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 500,
+          "vertexCount": 8,
+          "faceStart": 828,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 44,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 508,
+          "vertexCount": 8,
+          "faceStart": 840,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 45,
+          "name": "body primary pressure envelope/service-well-3-2",
+          "vertexStart": 516,
+          "vertexCount": 12,
+          "faceStart": 852,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 46,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 528,
+          "vertexCount": 8,
+          "faceStart": 872,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 47,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 536,
+          "vertexCount": 8,
+          "faceStart": 884,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 48,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 544,
+          "vertexCount": 8,
+          "faceStart": 896,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 49,
+          "name": "body primary pressure envelope/longitudinal-service-strut-0",
+          "vertexStart": 552,
+          "vertexCount": 8,
+          "faceStart": 908,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 50,
+          "name": "body primary pressure envelope/longitudinal-service-strut-1",
+          "vertexStart": 560,
+          "vertexCount": 8,
+          "faceStart": 920,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 51,
+          "name": "wing_pair member 0",
+          "vertexStart": 568,
+          "vertexCount": 8,
+          "faceStart": 932,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.wing / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 52,
+          "name": "wing_pair member 1",
+          "vertexStart": 576,
+          "vertexCount": 8,
+          "faceStart": 944,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.wing / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 53,
+          "name": "pods explicit member 0",
+          "vertexStart": 584,
+          "vertexCount": 120,
+          "faceStart": 956,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 54,
+          "name": "pods explicit member 0/service-well-0-0",
+          "vertexStart": 704,
+          "vertexCount": 12,
+          "faceStart": 1192,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 55,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 716,
+          "vertexCount": 8,
+          "faceStart": 1212,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 56,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 724,
+          "vertexCount": 8,
+          "faceStart": 1224,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 57,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 732,
+          "vertexCount": 8,
+          "faceStart": 1236,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 58,
+          "name": "pods explicit member 0/service-well-0-1",
+          "vertexStart": 740,
+          "vertexCount": 12,
+          "faceStart": 1248,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 59,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 752,
+          "vertexCount": 8,
+          "faceStart": 1268,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 60,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 760,
+          "vertexCount": 8,
+          "faceStart": 1280,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 61,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 768,
+          "vertexCount": 8,
+          "faceStart": 1292,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 62,
+          "name": "pods explicit member 0/service-well-0-2",
+          "vertexStart": 776,
+          "vertexCount": 12,
+          "faceStart": 1304,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 63,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 788,
+          "vertexCount": 8,
+          "faceStart": 1324,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 64,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 796,
+          "vertexCount": 8,
+          "faceStart": 1336,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 65,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 804,
+          "vertexCount": 8,
+          "faceStart": 1348,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 66,
+          "name": "pods explicit member 0/service-well-1-0",
+          "vertexStart": 812,
+          "vertexCount": 12,
+          "faceStart": 1360,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 67,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 824,
+          "vertexCount": 8,
+          "faceStart": 1380,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 68,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 832,
+          "vertexCount": 8,
+          "faceStart": 1392,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 69,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 840,
+          "vertexCount": 8,
+          "faceStart": 1404,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 70,
+          "name": "pods explicit member 0/service-well-1-1",
+          "vertexStart": 848,
+          "vertexCount": 12,
+          "faceStart": 1416,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 71,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 860,
+          "vertexCount": 8,
+          "faceStart": 1436,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 72,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 868,
+          "vertexCount": 8,
+          "faceStart": 1448,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 73,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 876,
+          "vertexCount": 8,
+          "faceStart": 1460,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 74,
+          "name": "pods explicit member 0/service-well-1-2",
+          "vertexStart": 884,
+          "vertexCount": 12,
+          "faceStart": 1472,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 75,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 896,
+          "vertexCount": 8,
+          "faceStart": 1492,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 76,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 904,
+          "vertexCount": 8,
+          "faceStart": 1504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 77,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 912,
+          "vertexCount": 8,
+          "faceStart": 1516,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 78,
+          "name": "pods explicit member 0/service-well-2-0",
+          "vertexStart": 920,
+          "vertexCount": 12,
+          "faceStart": 1528,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 79,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 932,
+          "vertexCount": 8,
+          "faceStart": 1548,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 80,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 940,
+          "vertexCount": 8,
+          "faceStart": 1560,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 81,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 948,
+          "vertexCount": 8,
+          "faceStart": 1572,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 82,
+          "name": "pods explicit member 0/service-well-2-1",
+          "vertexStart": 956,
+          "vertexCount": 12,
+          "faceStart": 1584,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 83,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 968,
+          "vertexCount": 8,
+          "faceStart": 1604,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 84,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 976,
+          "vertexCount": 8,
+          "faceStart": 1616,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 85,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 984,
+          "vertexCount": 8,
+          "faceStart": 1628,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 86,
+          "name": "pods explicit member 0/service-well-2-2",
+          "vertexStart": 992,
+          "vertexCount": 12,
+          "faceStart": 1640,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 87,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 1004,
+          "vertexCount": 8,
+          "faceStart": 1660,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 88,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 1012,
+          "vertexCount": 8,
+          "faceStart": 1672,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 89,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 1020,
+          "vertexCount": 8,
+          "faceStart": 1684,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 90,
+          "name": "pods explicit member 0/service-well-3-0",
+          "vertexStart": 1028,
+          "vertexCount": 12,
+          "faceStart": 1696,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 91,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 1040,
+          "vertexCount": 8,
+          "faceStart": 1716,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 92,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 1048,
+          "vertexCount": 8,
+          "faceStart": 1728,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 93,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 1056,
+          "vertexCount": 8,
+          "faceStart": 1740,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 94,
+          "name": "pods explicit member 0/service-well-3-1",
+          "vertexStart": 1064,
+          "vertexCount": 12,
+          "faceStart": 1752,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 95,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 1076,
+          "vertexCount": 8,
+          "faceStart": 1772,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 96,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 1084,
+          "vertexCount": 8,
+          "faceStart": 1784,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 97,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 1092,
+          "vertexCount": 8,
+          "faceStart": 1796,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 98,
+          "name": "pods explicit member 0/service-well-3-2",
+          "vertexStart": 1100,
+          "vertexCount": 12,
+          "faceStart": 1808,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 99,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 1112,
+          "vertexCount": 8,
+          "faceStart": 1828,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 100,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 1120,
+          "vertexCount": 8,
+          "faceStart": 1840,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 101,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 1128,
+          "vertexCount": 8,
+          "faceStart": 1852,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 102,
+          "name": "pods explicit member 0/longitudinal-service-strut-0",
+          "vertexStart": 1136,
+          "vertexCount": 8,
+          "faceStart": 1864,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 103,
+          "name": "pods explicit member 0/longitudinal-service-strut-1",
+          "vertexStart": 1144,
+          "vertexCount": 8,
+          "faceStart": 1876,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 104,
+          "name": "pods explicit member 1",
+          "vertexStart": 1152,
+          "vertexCount": 120,
+          "faceStart": 1888,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 105,
+          "name": "pods explicit member 1/service-well-0-0",
+          "vertexStart": 1272,
+          "vertexCount": 12,
+          "faceStart": 2124,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 106,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 1284,
+          "vertexCount": 8,
+          "faceStart": 2144,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 107,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 1292,
+          "vertexCount": 8,
+          "faceStart": 2156,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 108,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 1300,
+          "vertexCount": 8,
+          "faceStart": 2168,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 109,
+          "name": "pods explicit member 1/service-well-0-1",
+          "vertexStart": 1308,
+          "vertexCount": 12,
+          "faceStart": 2180,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 110,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 1320,
+          "vertexCount": 8,
+          "faceStart": 2200,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 111,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 1328,
+          "vertexCount": 8,
+          "faceStart": 2212,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 112,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 1336,
+          "vertexCount": 8,
+          "faceStart": 2224,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 113,
+          "name": "pods explicit member 1/service-well-0-2",
+          "vertexStart": 1344,
+          "vertexCount": 12,
+          "faceStart": 2236,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 114,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 1356,
+          "vertexCount": 8,
+          "faceStart": 2256,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 115,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 1364,
+          "vertexCount": 8,
+          "faceStart": 2268,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 116,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 1372,
+          "vertexCount": 8,
+          "faceStart": 2280,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 117,
+          "name": "pods explicit member 1/service-well-1-0",
+          "vertexStart": 1380,
+          "vertexCount": 12,
+          "faceStart": 2292,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 118,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 1392,
+          "vertexCount": 8,
+          "faceStart": 2312,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 119,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 1400,
+          "vertexCount": 8,
+          "faceStart": 2324,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 120,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 1408,
+          "vertexCount": 8,
+          "faceStart": 2336,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 121,
+          "name": "pods explicit member 1/service-well-1-1",
+          "vertexStart": 1416,
+          "vertexCount": 12,
+          "faceStart": 2348,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 122,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 1428,
+          "vertexCount": 8,
+          "faceStart": 2368,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 123,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 1436,
+          "vertexCount": 8,
+          "faceStart": 2380,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 124,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 1444,
+          "vertexCount": 8,
+          "faceStart": 2392,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 125,
+          "name": "pods explicit member 1/service-well-1-2",
+          "vertexStart": 1452,
+          "vertexCount": 12,
+          "faceStart": 2404,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 126,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 1464,
+          "vertexCount": 8,
+          "faceStart": 2424,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 127,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 1472,
+          "vertexCount": 8,
+          "faceStart": 2436,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 128,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 1480,
+          "vertexCount": 8,
+          "faceStart": 2448,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 129,
+          "name": "pods explicit member 1/service-well-2-0",
+          "vertexStart": 1488,
+          "vertexCount": 12,
+          "faceStart": 2460,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 130,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 1500,
+          "vertexCount": 8,
+          "faceStart": 2480,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 131,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 1508,
+          "vertexCount": 8,
+          "faceStart": 2492,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 132,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 1516,
+          "vertexCount": 8,
+          "faceStart": 2504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 133,
+          "name": "pods explicit member 1/service-well-2-1",
+          "vertexStart": 1524,
+          "vertexCount": 12,
+          "faceStart": 2516,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 134,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 1536,
+          "vertexCount": 8,
+          "faceStart": 2536,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 135,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 1544,
+          "vertexCount": 8,
+          "faceStart": 2548,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 136,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 1552,
+          "vertexCount": 8,
+          "faceStart": 2560,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 137,
+          "name": "pods explicit member 1/service-well-2-2",
+          "vertexStart": 1560,
+          "vertexCount": 12,
+          "faceStart": 2572,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 138,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 1572,
+          "vertexCount": 8,
+          "faceStart": 2592,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 139,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 1580,
+          "vertexCount": 8,
+          "faceStart": 2604,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 140,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 1588,
+          "vertexCount": 8,
+          "faceStart": 2616,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 141,
+          "name": "pods explicit member 1/service-well-3-0",
+          "vertexStart": 1596,
+          "vertexCount": 12,
+          "faceStart": 2628,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 142,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 1608,
+          "vertexCount": 8,
+          "faceStart": 2648,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 143,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 1616,
+          "vertexCount": 8,
+          "faceStart": 2660,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 144,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 1624,
+          "vertexCount": 8,
+          "faceStart": 2672,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 145,
+          "name": "pods explicit member 1/service-well-3-1",
+          "vertexStart": 1632,
+          "vertexCount": 12,
+          "faceStart": 2684,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 146,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 1644,
+          "vertexCount": 8,
+          "faceStart": 2704,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 147,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 1652,
+          "vertexCount": 8,
+          "faceStart": 2716,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 148,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 1660,
+          "vertexCount": 8,
+          "faceStart": 2728,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 149,
+          "name": "pods explicit member 1/service-well-3-2",
+          "vertexStart": 1668,
+          "vertexCount": 12,
+          "faceStart": 2740,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 150,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 1680,
+          "vertexCount": 8,
+          "faceStart": 2760,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 151,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 1688,
+          "vertexCount": 8,
+          "faceStart": 2772,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 152,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 1696,
+          "vertexCount": 8,
+          "faceStart": 2784,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 153,
+          "name": "pods explicit member 1/longitudinal-service-strut-0",
+          "vertexStart": 1704,
+          "vertexCount": 8,
+          "faceStart": 2796,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 154,
+          "name": "pods explicit member 1/longitudinal-service-strut-1",
+          "vertexStart": 1712,
+          "vertexCount": 8,
+          "faceStart": 2808,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 155,
+          "name": "pods explicit member 0",
+          "vertexStart": 1720,
+          "vertexCount": 120,
+          "faceStart": 2820,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 156,
+          "name": "pods explicit member 0/service-well-0-0",
+          "vertexStart": 1840,
+          "vertexCount": 12,
+          "faceStart": 3056,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 157,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 1852,
+          "vertexCount": 8,
+          "faceStart": 3076,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 158,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 1860,
+          "vertexCount": 8,
+          "faceStart": 3088,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 159,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 1868,
+          "vertexCount": 8,
+          "faceStart": 3100,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 160,
+          "name": "pods explicit member 0/service-well-0-1",
+          "vertexStart": 1876,
+          "vertexCount": 12,
+          "faceStart": 3112,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 161,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 1888,
+          "vertexCount": 8,
+          "faceStart": 3132,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 162,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 1896,
+          "vertexCount": 8,
+          "faceStart": 3144,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 163,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 1904,
+          "vertexCount": 8,
+          "faceStart": 3156,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 164,
+          "name": "pods explicit member 0/service-well-0-2",
+          "vertexStart": 1912,
+          "vertexCount": 12,
+          "faceStart": 3168,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 165,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 1924,
+          "vertexCount": 8,
+          "faceStart": 3188,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 166,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 1932,
+          "vertexCount": 8,
+          "faceStart": 3200,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 167,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 1940,
+          "vertexCount": 8,
+          "faceStart": 3212,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 168,
+          "name": "pods explicit member 0/service-well-1-0",
+          "vertexStart": 1948,
+          "vertexCount": 12,
+          "faceStart": 3224,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 169,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 1960,
+          "vertexCount": 8,
+          "faceStart": 3244,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 170,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 1968,
+          "vertexCount": 8,
+          "faceStart": 3256,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 171,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 1976,
+          "vertexCount": 8,
+          "faceStart": 3268,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 172,
+          "name": "pods explicit member 0/service-well-1-1",
+          "vertexStart": 1984,
+          "vertexCount": 12,
+          "faceStart": 3280,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 173,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 1996,
+          "vertexCount": 8,
+          "faceStart": 3300,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 174,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 2004,
+          "vertexCount": 8,
+          "faceStart": 3312,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 175,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 2012,
+          "vertexCount": 8,
+          "faceStart": 3324,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 176,
+          "name": "pods explicit member 0/service-well-1-2",
+          "vertexStart": 2020,
+          "vertexCount": 12,
+          "faceStart": 3336,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 177,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 2032,
+          "vertexCount": 8,
+          "faceStart": 3356,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 178,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 2040,
+          "vertexCount": 8,
+          "faceStart": 3368,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 179,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 2048,
+          "vertexCount": 8,
+          "faceStart": 3380,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 180,
+          "name": "pods explicit member 0/service-well-2-0",
+          "vertexStart": 2056,
+          "vertexCount": 12,
+          "faceStart": 3392,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 181,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 2068,
+          "vertexCount": 8,
+          "faceStart": 3412,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 182,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 2076,
+          "vertexCount": 8,
+          "faceStart": 3424,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 183,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 2084,
+          "vertexCount": 8,
+          "faceStart": 3436,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 184,
+          "name": "pods explicit member 0/service-well-2-1",
+          "vertexStart": 2092,
+          "vertexCount": 12,
+          "faceStart": 3448,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 185,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 2104,
+          "vertexCount": 8,
+          "faceStart": 3468,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 186,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 2112,
+          "vertexCount": 8,
+          "faceStart": 3480,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 187,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 2120,
+          "vertexCount": 8,
+          "faceStart": 3492,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 188,
+          "name": "pods explicit member 0/service-well-2-2",
+          "vertexStart": 2128,
+          "vertexCount": 12,
+          "faceStart": 3504,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 189,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 2140,
+          "vertexCount": 8,
+          "faceStart": 3524,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 190,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 2148,
+          "vertexCount": 8,
+          "faceStart": 3536,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 191,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 2156,
+          "vertexCount": 8,
+          "faceStart": 3548,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 192,
+          "name": "pods explicit member 0/service-well-3-0",
+          "vertexStart": 2164,
+          "vertexCount": 12,
+          "faceStart": 3560,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 193,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 2176,
+          "vertexCount": 8,
+          "faceStart": 3580,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 194,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 2184,
+          "vertexCount": 8,
+          "faceStart": 3592,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 195,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 2192,
+          "vertexCount": 8,
+          "faceStart": 3604,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 196,
+          "name": "pods explicit member 0/service-well-3-1",
+          "vertexStart": 2200,
+          "vertexCount": 12,
+          "faceStart": 3616,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 197,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 2212,
+          "vertexCount": 8,
+          "faceStart": 3636,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 198,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 2220,
+          "vertexCount": 8,
+          "faceStart": 3648,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 199,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 2228,
+          "vertexCount": 8,
+          "faceStart": 3660,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 200,
+          "name": "pods explicit member 0/service-well-3-2",
+          "vertexStart": 2236,
+          "vertexCount": 12,
+          "faceStart": 3672,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 201,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 2248,
+          "vertexCount": 8,
+          "faceStart": 3692,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 202,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 2256,
+          "vertexCount": 8,
+          "faceStart": 3704,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 203,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 2264,
+          "vertexCount": 8,
+          "faceStart": 3716,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 204,
+          "name": "pods explicit member 0/longitudinal-service-strut-0",
+          "vertexStart": 2272,
+          "vertexCount": 8,
+          "faceStart": 3728,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 205,
+          "name": "pods explicit member 0/longitudinal-service-strut-1",
+          "vertexStart": 2280,
+          "vertexCount": 8,
+          "faceStart": 3740,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 206,
+          "name": "pods explicit member 1",
+          "vertexStart": 2288,
+          "vertexCount": 120,
+          "faceStart": 3752,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 207,
+          "name": "pods explicit member 1/service-well-0-0",
+          "vertexStart": 2408,
+          "vertexCount": 12,
+          "faceStart": 3988,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 208,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 2420,
+          "vertexCount": 8,
+          "faceStart": 4008,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 209,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 2428,
+          "vertexCount": 8,
+          "faceStart": 4020,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 210,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 2436,
+          "vertexCount": 8,
+          "faceStart": 4032,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 211,
+          "name": "pods explicit member 1/service-well-0-1",
+          "vertexStart": 2444,
+          "vertexCount": 12,
+          "faceStart": 4044,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 212,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 2456,
+          "vertexCount": 8,
+          "faceStart": 4064,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 213,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 2464,
+          "vertexCount": 8,
+          "faceStart": 4076,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 214,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 2472,
+          "vertexCount": 8,
+          "faceStart": 4088,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 215,
+          "name": "pods explicit member 1/service-well-0-2",
+          "vertexStart": 2480,
+          "vertexCount": 12,
+          "faceStart": 4100,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 216,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 2492,
+          "vertexCount": 8,
+          "faceStart": 4120,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 217,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 2500,
+          "vertexCount": 8,
+          "faceStart": 4132,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 218,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 2508,
+          "vertexCount": 8,
+          "faceStart": 4144,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 219,
+          "name": "pods explicit member 1/service-well-1-0",
+          "vertexStart": 2516,
+          "vertexCount": 12,
+          "faceStart": 4156,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 220,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 2528,
+          "vertexCount": 8,
+          "faceStart": 4176,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 221,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 2536,
+          "vertexCount": 8,
+          "faceStart": 4188,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 222,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 2544,
+          "vertexCount": 8,
+          "faceStart": 4200,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 223,
+          "name": "pods explicit member 1/service-well-1-1",
+          "vertexStart": 2552,
+          "vertexCount": 12,
+          "faceStart": 4212,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 224,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 2564,
+          "vertexCount": 8,
+          "faceStart": 4232,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 225,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 2572,
+          "vertexCount": 8,
+          "faceStart": 4244,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 226,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 2580,
+          "vertexCount": 8,
+          "faceStart": 4256,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 227,
+          "name": "pods explicit member 1/service-well-1-2",
+          "vertexStart": 2588,
+          "vertexCount": 12,
+          "faceStart": 4268,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 228,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 2600,
+          "vertexCount": 8,
+          "faceStart": 4288,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 229,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 2608,
+          "vertexCount": 8,
+          "faceStart": 4300,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 230,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 2616,
+          "vertexCount": 8,
+          "faceStart": 4312,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 231,
+          "name": "pods explicit member 1/service-well-2-0",
+          "vertexStart": 2624,
+          "vertexCount": 12,
+          "faceStart": 4324,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 232,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 2636,
+          "vertexCount": 8,
+          "faceStart": 4344,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 233,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 2644,
+          "vertexCount": 8,
+          "faceStart": 4356,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 234,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 2652,
+          "vertexCount": 8,
+          "faceStart": 4368,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 235,
+          "name": "pods explicit member 1/service-well-2-1",
+          "vertexStart": 2660,
+          "vertexCount": 12,
+          "faceStart": 4380,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 236,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 2672,
+          "vertexCount": 8,
+          "faceStart": 4400,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 237,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 2680,
+          "vertexCount": 8,
+          "faceStart": 4412,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 238,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 2688,
+          "vertexCount": 8,
+          "faceStart": 4424,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 239,
+          "name": "pods explicit member 1/service-well-2-2",
+          "vertexStart": 2696,
+          "vertexCount": 12,
+          "faceStart": 4436,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 240,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 2708,
+          "vertexCount": 8,
+          "faceStart": 4456,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 241,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 2716,
+          "vertexCount": 8,
+          "faceStart": 4468,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 242,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 2724,
+          "vertexCount": 8,
+          "faceStart": 4480,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 243,
+          "name": "pods explicit member 1/service-well-3-0",
+          "vertexStart": 2732,
+          "vertexCount": 12,
+          "faceStart": 4492,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 244,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 2744,
+          "vertexCount": 8,
+          "faceStart": 4512,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 245,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 2752,
+          "vertexCount": 8,
+          "faceStart": 4524,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 246,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 2760,
+          "vertexCount": 8,
+          "faceStart": 4536,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 247,
+          "name": "pods explicit member 1/service-well-3-1",
+          "vertexStart": 2768,
+          "vertexCount": 12,
+          "faceStart": 4548,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 248,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 2780,
+          "vertexCount": 8,
+          "faceStart": 4568,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 249,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 2788,
+          "vertexCount": 8,
+          "faceStart": 4580,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 250,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 2796,
+          "vertexCount": 8,
+          "faceStart": 4592,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 251,
+          "name": "pods explicit member 1/service-well-3-2",
+          "vertexStart": 2804,
+          "vertexCount": 12,
+          "faceStart": 4604,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 252,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 2816,
+          "vertexCount": 8,
+          "faceStart": 4624,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 253,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 2824,
+          "vertexCount": 8,
+          "faceStart": 4636,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 254,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 2832,
+          "vertexCount": 8,
+          "faceStart": 4648,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 255,
+          "name": "pods explicit member 1/longitudinal-service-strut-0",
+          "vertexStart": 2840,
+          "vertexCount": 8,
+          "faceStart": 4660,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 256,
+          "name": "pods explicit member 1/longitudinal-service-strut-1",
+          "vertexStart": 2848,
+          "vertexCount": 8,
+          "faceStart": 4672,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 257,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 2856,
+          "vertexCount": 120,
+          "faceStart": 4684,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 258,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 2976,
+          "vertexCount": 8,
+          "faceStart": 4920,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 259,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 2984,
+          "vertexCount": 8,
+          "faceStart": 4932,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 260,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 2992,
+          "vertexCount": 48,
+          "faceStart": 4944,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 261,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 3040,
+          "vertexCount": 48,
+          "faceStart": 5036,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 262,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 3088,
+          "vertexCount": 8,
+          "faceStart": 5128,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 263,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 3096,
+          "vertexCount": 48,
+          "faceStart": 5140,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 264,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 3144,
+          "vertexCount": 48,
+          "faceStart": 5232,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 265,
+          "name": "explicit military mount upright",
+          "vertexStart": 3192,
+          "vertexCount": 8,
+          "faceStart": 5324,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 266,
+          "name": "explicit military mount longitudinal member",
+          "vertexStart": 3200,
+          "vertexCount": 8,
+          "faceStart": 5336,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 267,
+          "name": "explicit military mount upright",
+          "vertexStart": 3208,
+          "vertexCount": 8,
+          "faceStart": 5348,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 268,
+          "name": "explicit military mount longitudinal member",
+          "vertexStart": 3216,
+          "vertexCount": 8,
+          "faceStart": 5360,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        260,
+        263
+      ],
+      "vertices": 3224,
+      "faces": 5372
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "body primary pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 60,
+          "faceStart": 0,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "body primary pressure envelope/service-well-0-0",
+          "vertexStart": 60,
+          "vertexCount": 12,
+          "faceStart": 116,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "body primary pressure envelope/service-well-1-0",
+          "vertexStart": 72,
+          "vertexCount": 12,
+          "faceStart": 136,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "body primary pressure envelope/service-well-2-0",
+          "vertexStart": 84,
+          "vertexCount": 12,
+          "faceStart": 156,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "body primary pressure envelope/service-well-3-0",
+          "vertexStart": 96,
+          "vertexCount": 12,
+          "faceStart": 176,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "wing_pair member 0",
+          "vertexStart": 108,
+          "vertexCount": 8,
+          "faceStart": 196,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.wing / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "wing_pair member 1",
+          "vertexStart": 116,
+          "vertexCount": 8,
+          "faceStart": 208,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.wing / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "pods explicit member 0",
+          "vertexStart": 124,
+          "vertexCount": 60,
+          "faceStart": 220,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "pods explicit member 0/service-well-0-0",
+          "vertexStart": 184,
+          "vertexCount": 12,
+          "faceStart": 336,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "pods explicit member 0/service-well-1-0",
+          "vertexStart": 196,
+          "vertexCount": 12,
+          "faceStart": 356,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "pods explicit member 0/service-well-2-0",
+          "vertexStart": 208,
+          "vertexCount": 12,
+          "faceStart": 376,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "pods explicit member 0/service-well-3-0",
+          "vertexStart": 220,
+          "vertexCount": 12,
+          "faceStart": 396,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "pods explicit member 1",
+          "vertexStart": 232,
+          "vertexCount": 60,
+          "faceStart": 416,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "pods explicit member 1/service-well-0-0",
+          "vertexStart": 292,
+          "vertexCount": 12,
+          "faceStart": 532,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "pods explicit member 1/service-well-1-0",
+          "vertexStart": 304,
+          "vertexCount": 12,
+          "faceStart": 552,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "pods explicit member 1/service-well-2-0",
+          "vertexStart": 316,
+          "vertexCount": 12,
+          "faceStart": 572,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "pods explicit member 1/service-well-3-0",
+          "vertexStart": 328,
+          "vertexCount": 12,
+          "faceStart": 592,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "pods explicit member 0",
+          "vertexStart": 340,
+          "vertexCount": 60,
+          "faceStart": 612,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "pods explicit member 0/service-well-0-0",
+          "vertexStart": 400,
+          "vertexCount": 12,
+          "faceStart": 728,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "pods explicit member 0/service-well-1-0",
+          "vertexStart": 412,
+          "vertexCount": 12,
+          "faceStart": 748,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "pods explicit member 0/service-well-2-0",
+          "vertexStart": 424,
+          "vertexCount": 12,
+          "faceStart": 768,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "pods explicit member 0/service-well-3-0",
+          "vertexStart": 436,
+          "vertexCount": 12,
+          "faceStart": 788,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "pods explicit member 1",
+          "vertexStart": 448,
+          "vertexCount": 60,
+          "faceStart": 808,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "pods explicit member 1/service-well-0-0",
+          "vertexStart": 508,
+          "vertexCount": 12,
+          "faceStart": 924,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "pods explicit member 1/service-well-1-0",
+          "vertexStart": 520,
+          "vertexCount": 12,
+          "faceStart": 944,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "pods explicit member 1/service-well-2-0",
+          "vertexStart": 532,
+          "vertexCount": 12,
+          "faceStart": 964,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "pods explicit member 1/service-well-3-0",
+          "vertexStart": 544,
+          "vertexCount": 12,
+          "faceStart": 984,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 556,
+          "vertexCount": 60,
+          "faceStart": 1004,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 28,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 616,
+          "vertexCount": 8,
+          "faceStart": 1120,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 624,
+          "vertexCount": 8,
+          "faceStart": 1132,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 632,
+          "vertexCount": 24,
+          "faceStart": 1144,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 656,
+          "vertexCount": 24,
+          "faceStart": 1188,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 680,
+          "vertexCount": 8,
+          "faceStart": 1232,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 33,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 688,
+          "vertexCount": 24,
+          "faceStart": 1244,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 34,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 712,
+          "vertexCount": 24,
+          "faceStart": 1288,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "cantilever",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 35,
+          "name": "explicit military mount upright",
+          "vertexStart": 736,
+          "vertexCount": 8,
+          "faceStart": 1332,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 36,
+          "name": "explicit military mount longitudinal member",
+          "vertexStart": 744,
+          "vertexCount": 8,
+          "faceStart": 1344,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 37,
+          "name": "explicit military mount upright",
+          "vertexStart": 752,
+          "vertexCount": 8,
+          "faceStart": 1356,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 38,
+          "name": "explicit military mount longitudinal member",
+          "vertexStart": 760,
+          "vertexCount": 8,
+          "faceStart": 1368,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "cantilever",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        30,
+        33
+      ],
+      "vertices": 768,
+      "faces": 1380
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

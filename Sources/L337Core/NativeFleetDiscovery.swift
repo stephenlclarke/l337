@@ -17,7 +17,8 @@ struct FleetDiscoveryEvidence: Codable, Sendable, Equatable {
   let secondaryDock: NativeStationDockReceipt?
 
   var valid: Bool {
-    guard let metadata = ShipCatalogue.ship(ship)?.catalogue,
+    guard !OriginalDetailedHullStage.blocksRuntime(ship),
+      let metadata = ShipCatalogue.ship(ship)?.catalogue,
       OriginalFleetDefinitionData.definition(for: ship) != nil, metadata.discoveryEligible,
       actor.system == player.system, actor.visit == player.visit,
       actor.entity > 0, actor.entity < UInt64(Int64.max), player.entity == 0,
@@ -37,11 +38,12 @@ struct FleetDiscoveryEvidence: Codable, Sendable, Equatable {
       guard death == nil, metadata.objectKind == .station || metadata.capitalSubtype == .station
       else { return false }
       if let mainDock {
-        return secondaryDock == nil && mainDock.valid && mainDock.commanderOwner == owner
+        return ship == "SH028" && secondaryDock == nil && mainDock.valid && mainDock.commanderOwner == owner
           && mainDock.actor == actor && mainDock.station.world == owner
       }
       if let secondaryDock {
-        return secondaryDock.station.valid && secondaryDock.sequence > 0
+        return OriginalStationSite.site(for: secondaryDock.station, owner: owner)?.catalogueID == ship
+          && secondaryDock.station.valid && secondaryDock.sequence > 0
           && secondaryDock.sequence < UInt64(Int64.max)
           && secondaryDock.lifecycleRevision > 0
           && secondaryDock.dockingBinding.valid(for: secondaryDock.station)
@@ -78,19 +80,7 @@ struct FleetDiscoveryEntry: Codable, Sendable, Equatable {
     }
     return true
   }
-  var blueprintEarned: Bool {
-    guard valid, milestone?.kind == .playerDestruction,
-      let metadata = ShipCatalogue.ship(ship)?.catalogue
-    else { return false }
-    guard let original = OriginalFleetDefinitionData.definition(for: ship),
-      original.playerFlyable, original.purchasePolicy == "blueprintFabrication"
-    else { return false }
-    return metadata.collectionMilestone == .blueprintAndFabrication
-      && metadata.purchasePolicy == .blueprintFabrication && metadata.playerFlyable
-      && metadata.access == .normal
-  }
   var status: String {
-    if blueprintEarned { return "Blueprint earned" }
     if milestone != nil { return "Collection milestone recorded" }
     return identification == nil ? "Encountered" : "Identified"
   }
@@ -145,19 +135,69 @@ struct NativeFleetDiscovery: Codable, Sendable, Equatable {
 }
 
 extension Game {
-  /// Native catalogue identity is mandatory. A Lua profile that merely borrows its mesh is not it.
+  /// The original main actor has no catalogue tag; its current typed source supplies that identity.
+  @inline(never)
+  private func originalMainFleetShip(_ body: SpaceBody) -> String? {
+    guard body.id == 0, body.hull == .station, body.nativeStationIdentity == nil,
+      body.scriptNPC == nil, body.scriptShot == nil, body.energy > 0,
+      let physical = body.physical,
+      let ship = ShipCatalogue.nativeShip(.station), ship.id == "SH028",
+      physical.catalogueShipID == nil || physical.catalogueShipID == ship.id,
+      let owner = commander.equipmentOwnerID,
+      let player = commander.flightSimulation.player,
+      let anchor = commander.flightSimulation.anchors?.station.identity,
+      case .living(let destination) = nativeOriginalMainStationDestination,
+      destination.runtimeEpoch == nativeStationRuntimeEpoch,
+      destination.identity.world == owner, destination.identity.system == systemIdentity,
+      destination.observation.station == destination.identity,
+      destination.observation.actor == physical.identity, physical.identity == anchor,
+      physical.identity.system == player.system, physical.identity.visit == player.visit
+    else { return nil }
+    if !docked {
+      guard bodies.filter({ $0.id == 0 }).count == 1,
+        bodies.first(where: { $0.id == 0 }) == body
+      else { return nil }
+    }
+    return ship.id
+  }
+
+  /// Native identity comes from the physical catalogue tag or the authenticated original main source.
+  @inline(never)
   private func fleetShip(_ body: SpaceBody, context: EncounterContext) -> String? {
-    guard body.scriptNPC == nil, body.scriptShot == nil,
-      let physical = body.physical, let id = physical.catalogueShipID,
+    guard !OriginalDetailedHullStage.blocksRuntime(body), body.scriptNPC == nil, body.scriptShot == nil,
+      let physical = body.physical,
+      let id = (body.id == 0 ? originalMainFleetShip(body) : physical.catalogueShipID),
       let ship = ShipCatalogue.ship(id), ship.originalDefinition != nil,
-      ship.catalogue.discoveryEligible == true, ship.game != nil,
+      ship.catalogue.discoveryEligible == true,
       physical.identity.system == context.system, physical.identity.visit == context.visit,
       context.actors.contains(where: { $0.identity == physical.identity }),
       bodies.filter({ $0.physical?.identity == physical.identity }).count == 1
     else { return nil }
+    if OriginalBisonActivation.contains(id),
+      !OriginalBisonActivation.matchesNativeBody(body, context: context, commander: commander)
+    {
+      return nil
+    }
+    if !OriginalBisonActivation.contains(id), let npc = physical.npc {
+      guard npc.resources?.valid == true,
+        NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+          catalogueShipID: id, hull: body.hull, npc: npc, missiles: body.missiles)
+      else { return nil }
+    }
+    if ship.game == nil {
+      if id == "SH028" {
+        guard originalMainFleetShip(body) == id else { return nil }
+      } else {
+        guard let identity = body.nativeStationIdentity, body.energy > 0,
+          let site = OriginalStationSite.site(for: identity, owner: identity.world),
+          site.catalogueID == id, nativeStationBodyIsCurrent(body)
+        else { return nil }
+      }
+    }
     return id
   }
 
+  @inline(never)
   private mutating func recordFleetEvidence(_ proof: FleetDiscoveryEvidence) {
     var value = commander.scriptState.savedFleetDiscovery ?? .init(owner: proof.owner)
     do {
@@ -229,15 +269,27 @@ extension Game {
     body: SpaceBody, main: NativeMainStationDockReceipt? = nil,
     secondary: NativeStationDockReceipt? = nil
   ) {
-    guard let id = body.physical?.catalogueShipID, body.scriptNPC == nil,
-      body.energy > 0, let actor = body.physical?.identity,
-      let player = commander.flightSimulation.player,
-      let owner = commander.equipmentOwnerID,
-      (main != nil && main == commander.nativeStations?.currentMainDock
-        && nativeMainStationDockEvidenceIsCurrent)
-        || (secondary != nil && secondary == commander.nativeStations?.ledger.currentDock
-          && nativeStationDockEvidenceIsCurrent)
+    guard body.scriptNPC == nil, body.energy > 0, let actor = body.physical?.identity,
+      let player = commander.flightSimulation.player, let owner = commander.equipmentOwnerID
     else { return }
+    let id: String
+    if let main {
+      // Native entry forwards the authenticated pre-dock body after dock() clears the live scene.
+      guard secondary == nil, let mainID = originalMainFleetShip(body),
+        main == commander.nativeStations?.currentMainDock,
+        nativeMainStationDockEvidenceIsCurrent,
+        case .living(let destination) = nativeOriginalMainStationDestination,
+        main.station == destination.identity, main.actor == actor,
+        main.actor == destination.observation.actor, main.commanderOwner == owner
+      else { return }
+      id = mainID
+    } else {
+      guard let secondary, let catalogueID = body.physical?.catalogueShipID,
+        secondary == commander.nativeStations?.ledger.currentDock,
+        nativeStationDockEvidenceIsCurrent
+      else { return }
+      id = catalogueID
+    }
     recordFleetEvidence(
       .init(
         owner: owner, ship: id, kind: .stationDocking,

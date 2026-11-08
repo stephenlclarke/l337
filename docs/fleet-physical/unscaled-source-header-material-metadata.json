@@ -1,0 +1,2837 @@
+{
+  "status": "HEADER_MATERIAL_METADATA_ONLY_NO_NUMERICAL_GEOMETRY",
+  "headerParses": 82,
+  "materialDeclarationParses": 164,
+  "coordinateConversions": 0,
+  "areaMassTensorEvaluations": 0,
+  "records": [
+    {
+      "id": "SH001",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Long working spine with three pairs of detachable side panniers, a raised forward bridge and a ventral maintenance rail.",
+      "archetype": "panniers",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH010",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Open wishbone chassis with paired curved drive arms, an elevated glass crossbridge and an unobstructed central channel.",
+      "archetype": "wishbone",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH011",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Open wishbone chassis with paired curved drive arms, an elevated glass crossbridge and an unobstructed central channel.",
+      "archetype": "wishbone",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH015",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Broad transverse scavenger spar with plated salvage shoulders, a forward underslung cockpit and a short rear drive cradle.",
+      "archetype": "broken-spar",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH016",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Twin boring heads on a rectangular tool cradle, a low central ore hopper and protected recessed control bays.",
+      "archetype": "drill-cradle",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH017",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Twin boring heads on a rectangular tool cradle, a low central ore hopper and protected recessed control bays.",
+      "archetype": "drill-cradle",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH020",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Long separated forward arms tied to a compact aft power block, with flat inside-facing equipment walls.",
+      "archetype": "forward-fork",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH021",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two deep freight keels bridged by a small upper cabin, with a wide open centre trench and twin rear drives.",
+      "archetype": "twin-keel",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH022",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Rounded central command hull and two hooked forward shoulders around an open bow gap; stepped cargo deck below the bridge.",
+      "archetype": "split-prow",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH023",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Rounded central command hull and two hooked forward shoulders around an open bow gap; stepped cargo deck below the bridge.",
+      "archetype": "split-prow",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH024",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Rounded central command hull and two hooked forward shoulders around an open bow gap; stepped cargo deck below the bridge.",
+      "archetype": "split-prow",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH037",
+      "forwardAxis": null,
+      "upAxis": null,
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "russet-armour",
+          "warm-panels",
+          "bronze-trim",
+          "dark",
+          "glass",
+          "drive",
+          "service"
+        ],
+        "nativeDesign": [
+          "russet-armour",
+          "warm-panels",
+          "bronze-trim",
+          "dark",
+          "glass",
+          "drive",
+          "service"
+        ]
+      },
+      "declaredIntent": null,
+      "archetype": null,
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH038",
+      "forwardAxis": null,
+      "upAxis": null,
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "copper-armour",
+          "sand-panels",
+          "gold-trim",
+          "dark",
+          "glass",
+          "drive",
+          "service"
+        ],
+        "nativeDesign": [
+          "copper-armour",
+          "sand-panels",
+          "gold-trim",
+          "dark",
+          "glass",
+          "drive",
+          "service"
+        ]
+      },
+      "declaredIntent": null,
+      "archetype": null,
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH039",
+      "forwardAxis": null,
+      "upAxis": null,
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "dark-russet-armour",
+          "silver-panels",
+          "copper-trim",
+          "dark",
+          "glass",
+          "drive",
+          "service"
+        ],
+        "nativeDesign": [
+          "dark-russet-armour",
+          "silver-panels",
+          "copper-trim",
+          "dark",
+          "glass",
+          "drive",
+          "service"
+        ]
+      },
+      "declaredIntent": null,
+      "archetype": null,
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH040",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Compact faceted rescue seed with a broad glazed hatch, protective end bands and recessed attitude thrusters.",
+      "archetype": "seed",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH048",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "A deep open horseshoe bow curves around a slim central cockpit, with twin aft drive cylinders and inset weapon rails.",
+      "archetype": "bow-hook",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH049",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Short armoured jaw blocks ahead of a recessed command capsule, broad mechanical shoulders and a low split exhaust.",
+      "archetype": "shoulder-jaws",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH050",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Three stacked crosswise freight tanks around a slender upper bridge spine, with braced underside loading points.",
+      "archetype": "side-stack",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH051",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "A narrow spine and two independent sidecar drive pods carried on low angular outriggers, with a broad protected nose window.",
+      "archetype": "sidecar-raider",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH052",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four short cantilevered drive housings around a long load-bearing cabin, with a ventral cargo cradle and visible suspension beams.",
+      "archetype": "cantilever",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH053",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four short cantilevered drive housings around a long load-bearing cabin, with a ventral cargo cradle and visible suspension beams.",
+      "archetype": "cantilever",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH060",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Squat box ore cart with an open front tool scoop, wide stabiliser shoulders and a recessed rear crew compartment.",
+      "archetype": "ore-cart",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH063",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Tall ventral blade and narrow courier rail with compact lateral engines, a long canopy and recessed forward sensor slits.",
+      "archetype": "blade-rail",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH066",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Short oval passenger cabin framed by two shallow curved side runners, broad windows and a small recessed rear drive panel.",
+      "archetype": "oval-shuttle",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH067",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Low flat load deck with a broad forward ramp, a raised aft bridge and four block-like corner drive housings.",
+      "archetype": "low-loader",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH071",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Swept forward gate and two thick side shoulders frame an open bow, with a low central cockpit and compact clustered aft drives.",
+      "archetype": "gated-bow",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH072",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Swept forward gate and two thick side shoulders frame an open bow, with a low central cockpit and compact clustered aft drives.",
+      "archetype": "gated-bow",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH073",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Swept forward gate and two thick side shoulders frame an open bow, with a low central cockpit and compact clustered aft drives.",
+      "archetype": "gated-bow",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH076",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Tall three-level cargo tower with a short forward command cabin and a broad stabilised engine plinth beneath the load.",
+      "archetype": "vertical-stack",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH082",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Slim long-range chase needle with short rear outriggers, close-set engine housings and narrow forward weapon channels.",
+      "archetype": "needle-outrigger",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH086",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Thick oval load-bearing loop crossed by a short bridge and suspended cargo pod, with small drives integrated into the rear arc.",
+      "archetype": "closed-loop",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH087",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Deep rounded belly cargo hull beneath a high glass bridge, with widely separated aft engines on stout low supports.",
+      "archetype": "high-bridge",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH088",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Long elegant twin-deck cabin carried inside a shallow crescent frame, with a panoramic bow gallery and rear service pods.",
+      "archetype": "arc-liner",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH089",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Paired curved load runners enclose a suspended crew cabin; front and rear crossing beams leave the central deck visibly open.",
+      "archetype": "arc-runner",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH090",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Broad rounded forward shield over three short freight chambers, with a high central bridge and four recessed aft engines.",
+      "archetype": "shield-barge",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH092",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two stepped cargo capsules on a longitudinal truss, with one raised command pod and a distinctive double-level stern.",
+      "archetype": "staggered-capsules",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH094",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four diagonal spars join a compact command cylinder to squared outer drive shoes, forming an open cross rather than a delta wing.",
+      "archetype": "cross-spars",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH095",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four diagonal spars join a compact command cylinder to squared outer drive shoes, forming an open cross rather than a delta wing.",
+      "archetype": "cross-spars",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH096",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two deep freight bays separated by an exposed centre rail and bridged at the ends, with broad rear engine walls.",
+      "archetype": "double-bay",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH097",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two deep freight bays separated by an exposed centre rail and bridged at the ends, with broad rear engine walls.",
+      "archetype": "double-bay",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH098",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four long cylindrical freight silos surround an elevated narrow bridge, held by two heavy structural collars.",
+      "archetype": "rotary-silo",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH099",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two broad stacked freight decks with a visible service gap, small forward command cabin and independent corner thrusters.",
+      "archetype": "twin-deck",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH100",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two broad stacked freight decks with a visible service gap, small forward command cabin and independent corner thrusters.",
+      "archetype": "twin-deck",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH104",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Short wide tug shoulders wrap an open cargo throat, with a raised rear bridge, low tow jaws and four flat drive apertures.",
+      "archetype": "broad-tug",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH105",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "A tall oval protective hoop surrounds a compact passenger capsule, joined to a short horizontal equipment deck and rear drive.",
+      "archetype": "shuttle-loop",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH106",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "A tall oval protective hoop surrounds a compact passenger capsule, joined to a short horizontal equipment deck and rear drive.",
+      "archetype": "shuttle-loop",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH107",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Stepped armoured cabin with two vertical aft fins, squared shoulder engines and a wide inset bow window.",
+      "archetype": "stepped-fins",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH123",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "jade carapace",
+          "deep jade folds",
+          "muted gold rim",
+          "recessed seam",
+          "pale jade lip",
+          "gold living core"
+        ],
+        "nativeDesign": [
+          "jade carapace",
+          "deep jade folds",
+          "muted gold rim",
+          "recessed seam",
+          "pale jade lip",
+          "gold living core"
+        ]
+      },
+      "declaredIntent": "A large smooth jade vessel with paired elongated crescent shells, a raised living vault, recessed folds and a gold luminous core. Shares the Warship and Drone material language without a radial petal-disc outline.",
+      "archetype": "longitudinal-crescent-vault",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH124",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two complete smooth jade elliptical rings surround a narrow gold-lit central fissure. Matching jade nodules at both ends are mirrored fore and aft as well as port and starboard.",
+      "archetype": "alien-lobes",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH125",
+      "forwardAxis": null,
+      "upAxis": null,
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "fleet-jade-skin",
+          "recess-shadow",
+          "glowing-gold-core",
+          "jade-soft-light",
+          "jade-soft-shade"
+        ],
+        "nativeDesign": [
+          "fleet-jade-skin",
+          "recess-shadow",
+          "glowing-gold-core",
+          "jade-soft-light",
+          "jade-soft-shade"
+        ]
+      },
+      "declaredIntent": null,
+      "archetype": null,
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH127",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four long freight cartridges sit on a heavy exposed rail, with a small forward observation cabin and recessed stern power block.",
+      "archetype": "heavy-rail",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH128",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Three wide transverse loading bins form a low slab, backed by a narrow upper command gallery and separate corner drives.",
+      "archetype": "transverse-bins",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH136",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two deep forward keels split around a rounded canopy and upper bridge; compact rear engines and claw-position hardpoint rails complete the outline.",
+      "archetype": "split-keel",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH137",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two deep forward keels split around a rounded canopy and upper bridge; compact rear engines and claw-position hardpoint rails complete the outline.",
+      "archetype": "split-keel",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH138",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two deep forward keels split around a rounded canopy and upper bridge; compact rear engines and claw-position hardpoint rails complete the outline.",
+      "archetype": "split-keel",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH139",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two deep forward keels split around a rounded canopy and upper bridge; compact rear engines and claw-position hardpoint rails complete the outline.",
+      "archetype": "split-keel",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH142",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two unequal open hoops frame a compact pursuit cockpit, linked by a narrow keel with a sheltered aft drive bank.",
+      "archetype": "double-hoop",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH143",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Long protected boring boom ahead of a narrow crew pod, with twin ore stabilisers and broad drill-control wells.",
+      "archetype": "long-borer",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH148",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Wide clipped oval shield plate over a short ventral command capsule, with perpendicular aft fins and inset lateral engines.",
+      "archetype": "shield-fighter",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH149",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Tall split keel around a deep central slot, supported by a short glass crossbridge and paired low cylindrical engines.",
+      "archetype": "fork-keel",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH150",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Independent festive freight barge with six boxed cargo modules in a metal lattice, a high observation cabin and compact corner thrusters.",
+      "archetype": "gift-barge",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH151",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Compact escort pod between two paired scissor-like armatures, with a small scarlet nose marker and shielded aft drives.",
+      "archetype": "scissor",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH152",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two arched outer booms carry a narrow central cockpit and sheltered engine cores, leaving long open channels visible from above.",
+      "archetype": "arched-boom",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH153",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two arched outer booms carry a narrow central cockpit and sheltered engine cores, leaving long open channels visible from above.",
+      "archetype": "arched-boom",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH154",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two arched outer booms carry a narrow central cockpit and sheltered engine cores, leaving long open channels visible from above.",
+      "archetype": "arched-boom",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH155",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two arched outer booms carry a narrow central cockpit and sheltered engine cores, leaving long open channels visible from above.",
+      "archetype": "arched-boom",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH156",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four armoured pillars frame a large rectangular docking bay; peripheral batteries, radiator leaves and service pipes surround the open entrance.",
+      "archetype": "fortress-gate",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH157",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two parallel armoured spines joined by a low crossbridge and forward command pod, with square shoulder hardpoints and deep engine wells.",
+      "archetype": "twin-spine",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH158",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two parallel armoured spines joined by a low crossbridge and forward command pod, with square shoulder hardpoints and deep engine wells.",
+      "archetype": "twin-spine",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH159",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two parallel armoured spines joined by a low crossbridge and forward command pod, with square shoulder hardpoints and deep engine wells.",
+      "archetype": "twin-spine",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH160",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two parallel armoured spines joined by a low crossbridge and forward command pod, with square shoulder hardpoints and deep engine wells.",
+      "archetype": "twin-spine",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH161",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two parallel armoured spines joined by a low crossbridge and forward command pod, with square shoulder hardpoints and deep engine wells.",
+      "archetype": "twin-spine",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH162",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Smooth jade teardrop nested inside an offset curved antenna loop, with a thin gold-lit seam and no mechanical panel clutter.",
+      "archetype": "alien-probe",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH163",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "A long armoured salvage spine with four large swept radiator teeth, recessed forward cockpit and broad low stern engines.",
+      "archetype": "sawback",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH164",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four tall process stacks, open service gantries and a central rectangular cargo dock, with large external pipe runs and cylindrical storage vessels.",
+      "archetype": "process-factory",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH165",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Flat upper command hull with two deep suspended equipment keels, short side engines and broad recessed inspection windows.",
+      "archetype": "hanging-keel",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH166",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Open rescue cradle around an independently authored crew capsule, twin rear thrusters and broad forward recovery jaws.",
+      "archetype": "rescue-cradle",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH167",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Flat upper command hull with two deep suspended equipment keels, short side engines and broad recessed inspection windows.",
+      "archetype": "hanging-keel",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH168",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Four overlapping armoured saddles above split ore hoppers, a short forward boring head and a protected rear control pod.",
+      "archetype": "segmented-hopper",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH169",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two raised service collars flank a long narrow command hull, with short rectangular shoulder outriggers and broad lower equipment wells.",
+      "archetype": "raised-collar",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH170",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ],
+        "nativeDesign": [
+          "material-0",
+          "material-1",
+          "material-2",
+          "material-3",
+          "material-4",
+          "material-5",
+          "material-6",
+          "material-7",
+          "material-8",
+          "material-9"
+        ]
+      },
+      "declaredIntent": "Two raised service collars flank a long narrow command hull, with short rectangular shoulder outriggers and broad lower equipment wells.",
+      "archetype": "raised-collar",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    },
+    {
+      "id": "SH171",
+      "forwardAxis": "+Z",
+      "upAxis": "+Y",
+      "coordinateUnits": null,
+      "materialNamesByTable": {
+        "design": [
+          "pearl carapace",
+          "deep teal tissue",
+          "warm rib",
+          "fold shadow",
+          "pale cartilage",
+          "living membrane",
+          "bioluminescent gland"
+        ],
+        "nativeDesign": [
+          "pearl carapace",
+          "deep teal tissue",
+          "warm rib",
+          "fold shadow",
+          "pale cartilage",
+          "living membrane",
+          "bioluminescent gland"
+        ]
+      },
+      "declaredIntent": "Grown seed core, curved cartilage ribs, a uniform rounded elliptical living crown and eight backward-curving propulsion organs with bioluminescent glands. Pearl carapace, deep teal folds and warm tendons.",
+      "archetype": "organic-eight-pod-crown",
+      "componentOwnership": "No component map accompanies the authenticated source; unissued."
+    }
+  ]
+}

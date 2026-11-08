@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 /// Content mutation is confined to a temporary fixture, never the packaged legacy profile.
 private struct BondedFreightFixture {

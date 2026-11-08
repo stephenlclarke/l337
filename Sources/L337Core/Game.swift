@@ -1,5 +1,127 @@
 import Foundation
 
+/// Actual zero-lifetime cohort admitted by this tick's outer owners. Only
+/// Game's real before/after census can create it; stock issuance time is not
+/// actor admission time when an authenticated carrier or pod is readmitted.
+final class CurrentNewtEndBirths: Sendable {
+  let actors: Set<ActorIdentity>
+  let allActors: Set<ActorIdentity>
+  private let bodies: [ActorIdentity: SpaceBody]
+  private let flight: FlightSimulationState
+  private let epoch: UUID
+
+  fileprivate init(game: Game, previouslyPresent: Set<ActorIdentity>) {
+    var selected: [ActorIdentity: SpaceBody] = [:]
+    for body in game.bodies {
+      guard let physical = body.physical, !previouslyPresent.contains(physical.identity)
+      else { continue }
+      selected[physical.identity] = body
+    }
+    bodies = selected
+    allActors = Set(selected.keys)
+    actors = Set(
+      selected.compactMap { actor, body in
+        body.physical?.currentNewtKitStock != nil || body.physical?.currentNewtKitReceipt != nil
+          ? actor : nil
+      })
+    flight = game.storedFlightSimulation()
+    epoch = game.nativeStationRuntimeEpoch
+  }
+
+  func matches(_ game: Game) -> Bool { matches(game, newtOnly: false) }
+
+  func matchesNewtBirths(_ game: Game) -> Bool { matches(game, newtOnly: true) }
+
+  private func matchesClock(_ game: Game) -> Bool {
+    let current = game.storedFlightSimulation()
+    return current.physicalTime == flight.physicalTime && current.pose == flight.pose
+      && current.system == flight.system && current.visit == flight.visit
+      && current.player == flight.player && game.nativeStationRuntimeEpoch == epoch
+  }
+
+  private func matches(_ game: Game, newtOnly: Bool) -> Bool {
+    guard matchesClock(game) else { return false }
+    for (actor, original) in bodies where !newtOnly || actors.contains(actor) {
+      guard let body = game.bodies.first(where: { $0.physical?.identity == actor }),
+        body == original
+      else { return false }
+    }
+    return true
+  }
+  private init(copy original: CurrentNewtEndBirths, bodies: [ActorIdentity: SpaceBody]) {
+    actors = original.actors; allActors = original.allActors
+    flight = original.flight; epoch = original.epoch; self.bodies = bodies
+  }
+
+  func accepting(_ effect: NativeCombatHitClockEffect, in game: Game) -> CurrentNewtEndBirths? {
+    guard matchesClock(game),
+      let updated = effect.updatedBirthBodies(matching: bodies, in: game)
+    else { return nil }
+    return .init(copy: self, bodies: updated)
+  }
+
+  func accepting(_ effect: NativeMissionBeamClockEffect, in game: Game) -> CurrentNewtEndBirths? {
+    guard matchesClock(game),
+      let updated = effect.updatedBirthBodies(matching: bodies, in: game)
+    else { return nil }
+    return .init(copy: self, bodies: updated)
+  }
+
+  func modelPoses(in game: Game) -> [ActorIdentity: ShipPose]? {
+    guard matches(game) else { return nil }
+    return bodies.mapValues { Game.modelPose(of: $0, player: flight.pose) }
+  }
+
+  func components(in game: Game) -> [ActorIdentity: [CurrentNewtKitComponent]]? {
+    guard matches(game) else { return nil }
+    var result: [ActorIdentity: [CurrentNewtKitComponent]] = [:]
+    for actor in actors {
+      guard let body = game.bodies.first(where: { $0.physical?.identity == actor }),
+        let parts = try? game.currentNewtGeometryComponents(for: body)
+      else { return nil }
+      result[actor] = parts
+    }
+    return result
+  }
+
+}
+
+/// One real mechanical retention, including its actual release census. The
+/// cohort constructor remains in this file; callers cannot mint birth authority.
+struct CurrentNewtNativeMechanicalRetention {
+  let result: CurrentNewtMechanicalSegmentResult
+  let effects: [NativeDebrisImpactClockEffect]
+  let births: CurrentNewtEndBirths
+}
+
+extension Game {
+  mutating func retainCurrentNewtNativeMechanics(
+    _ prepared: CurrentNewtPreparedNativeContact
+  ) -> CurrentNewtNativeMechanicalRetention? {
+    let interval = prepared.motion.opening.interval
+    guard storedFlightSimulation().physicalTime == interval.end else { return nil }
+    var candidate = self
+    let present = Set(candidate.bodies.compactMap { $0.physical?.identity })
+    var effects: [NativeDebrisImpactClockEffect] = []
+    var moved = false
+    let result = candidate.advanceCurrentNewtMechanicalSegment(prepared.motion.mechanics) {
+      game, _ in
+      let retained = game.retainCurrentNewtNativeSegment(
+        prepared.motion, resolution: prepared.resolution, clockEffects: &effects)
+      moved = retained.admitted
+      return retained
+    }
+    guard moved, result.acceptedDuration == interval.end - interval.start,
+      candidate.storedFlightSimulation().physicalTime == interval.end,
+      candidate.nativeStationRuntimeEpoch
+        == prepared.motion.opening.before.nativeStationRuntimeEpoch
+    else { return nil }
+    let births = CurrentNewtEndBirths(game: candidate, previouslyPresent: present)
+    self = candidate
+    return .init(result: result, effects: effects, births: births)
+  }
+}
+
 /// Synchronous dock preparation owns its rollback values off the active call stack.
 private final class DockPersistenceSnapshot {
   private let commander: Commander
@@ -27,7 +149,7 @@ private final class DockPersistenceSnapshot {
 public enum Screen: String, Codable, Sendable, CaseIterable {
   case demo, title, front, rear, left, right, chart, shortChart, system, market, status, inventory,
     equipment, buy, sell, secret, help, mission, handoff, gallery, navigation, showroom, rumour,
-    gameOver, contracts, library
+    gameOver, contracts, library, journal
   public var isFlight: Bool { [.front, .rear, .left, .right].contains(self) }
 }
 
@@ -110,17 +232,32 @@ private struct CommanderNativePeopleCustodyStorage: Sendable, Equatable, Codable
   }
 }
 
+/// Immutable retained DATA only; decoding creates no quote, arrival or source-stock authority.
+private final class CommanderMemoryAtlasSourceStorage: Codable, Equatable, Sendable {
+  let value: NativeMemoryAtlasWatcherSourceRecord
+  init(_ value: NativeMemoryAtlasWatcherSourceRecord) { self.value = value }
+  init(from decoder: Decoder) throws {
+    value = try NativeMemoryAtlasWatcherSourceRecord(from: decoder)
+  }
+  func encode(to encoder: Encoder) throws { try value.encode(to: encoder) }
+
+  static func == (lhs: CommanderMemoryAtlasSourceStorage, rhs: CommanderMemoryAtlasSourceStorage) -> Bool {
+    lhs.value == rhs.value
+  }
+}
+
 public struct Commander: Sendable, Equatable, Codable {
+  private var savedMemoryAtlasWatcherSourceStorage: CommanderMemoryAtlasSourceStorage?
+  var savedMemoryAtlasWatcherSource: NativeMemoryAtlasWatcherSourceRecord? {
+    get { savedMemoryAtlasWatcherSourceStorage?.value }
+    set { savedMemoryAtlasWatcherSourceStorage = newValue.map(CommanderMemoryAtlasSourceStorage.init) }
+  }
   private var savedContracts: ScriptContractState?
   public var contracts: ScriptContractState {
     get { savedContracts ?? ScriptContractState() }
     set { savedContracts = newValue == ScriptContractState() ? nil : newValue }
   }
 
-  @inline(never)
-  static func activeRRSCourierJob(in commander: inout Commander) -> RRSCourierJob? {
-    commander.savedContracts?.rrs?.active
-  }
   var legacyOwnedEquipment: LegacyOwnedEquipmentInventory?
   private var savedAccommodation: ShipAccommodation?
   public var accommodation: ShipAccommodation {
@@ -171,6 +308,293 @@ public struct Commander: Sendable, Equatable, Codable {
     let empty = ScriptEngineState()
     return try read(empty)
   }
+  @inline(never)
+  fileprivate static func nativeQueryReadShipID(at commander: UnsafePointer<Commander>) -> String {
+    commander.pointer(to: \.ownedShipID)!.pointee
+  }
+
+  @inline(never)
+  fileprivate static func nativeQueryReadMiningLedger(at commander: UnsafePointer<Commander>) -> MiningLedger {
+    commander.pointer(to: \.savedMiningLedger)!.pointee ?? MiningLedger()
+  }
+
+  @inline(never)
+  fileprivate static func nativeQueryReadCrimeLedger(at commander: UnsafePointer<Commander>) -> CrimeLedger {
+    commander.pointer(to: \.savedCrimeLedger)!.pointee ?? CrimeLedger()
+  }
+
+  @inline(never)
+  fileprivate static func nativeQueryReadBlackjack(at commander: UnsafePointer<Commander>) -> BlackjackMission {
+    commander.pointer(to: \.blackjackMission)!.pointee ?? BlackjackMission()
+  }
+
+  @inline(never)
+  fileprivate static func nativeQueryReadMissionStage(at commander: UnsafePointer<Commander>) -> NavalMissionStage {
+    commander.pointer(to: \.navalMission)!.pointee ?? .notStarted
+  }
+
+  @inline(never)
+  fileprivate static func nativeMechanicalReadNPCPersistence(at commander: UnsafePointer<Commander>) -> NPCPersistenceLedger {
+    commander.pointer(to: \.savedNPCPersistence)!.pointee ?? NPCPersistenceLedger()
+  }
+
+  @inline(never)
+  fileprivate static func nativeStartupInventory(at commander: UnsafePointer<Commander>) -> OwnedEquipmentInventory? {
+    commander.pointer(to: \.savedEquipmentInventory)!.pointee
+  }
+
+  @inline(never)
+  fileprivate static func nativeStartupNativePerformance(at commander: UnsafePointer<Commander>) -> ShipPerformance {
+    let shipID = nativeQueryReadShipID(at: commander)
+    precondition(!OriginalDetailedHullStage.blocksRuntime(shipID), "Pending original hull has no physical performance")
+    return ShipCatalogue.ship(shipID)!.game!
+  }
+
+  @inline(never)
+  private static func nativeStartupAlienSummary(
+    _ kind: AlienModuleKind, at commander: UnsafePointer<Commander>
+  ) -> AlienAttachmentSummary {
+    guard let hull = nativeStartupInventory(at: commander)?.activeHull,
+      let current = commander.pointer(to: \.alienStorageState)!.pointee?.current,
+      current.owner == nativeStartupInventory(at: commander)?.owner
+    else { return .init(count: 0, bonusBasisPoints: 0) }
+    return current.summaries(for: hull)[kind] ?? .init(count: 0, bonusBasisPoints: 0)
+  }
+
+  @inline(never)
+  private static func nativeStartupAlienDrive(at commander: UnsafePointer<Commander>) -> HyperspaceDrivePolicy? {
+    guard let hull = nativeStartupInventory(at: commander)?.activeHull,
+      let storage = commander.pointer(to: \.alienStorageState)!.pointee?.current,
+      storage.owner == nativeStartupInventory(at: commander)?.owner,
+      (storage.summaries(for: hull)[.hyperspaceDrive]?.count ?? 0) > 0
+    else { return nil }
+    return .alienFoundation
+  }
+
+  @inline(never)
+  private static func nativeStartupDrive(at commander: UnsafePointer<Commander>) -> HyperspaceDrivePolicy? {
+    if let alien = nativeStartupAlienDrive(at: commander) { return alien }
+    let ratio = fittedComponent(in: nativeStartupInventory(at: commander), at: .navigation)?.statistics[.jumpSpool] ?? 1
+    return try? HyperspaceDrivePolicy.normal(
+      component: fittedComponent(in: nativeStartupInventory(at: commander), at: .drive),
+      navigationSpoolMultiplier: ratio)
+  }
+
+  @inline(never)
+  fileprivate static func nativeStartupPerformance(at commander: UnsafePointer<Commander>) -> ShipPerformance {
+    var result = nativeStartupNativePerformance(at: commander)
+    if let ratio = fittedComponent(in: nativeStartupInventory(at: commander), at: .energy)?.statistics[.energyCapacity] {
+      result.energy *= ratio
+    }
+    result.energy *= nativeStartupAlienSummary(.energyCapacity, at: commander).multiplier
+    if let policy = nativeStartupDrive(at: commander), case .timed(let seconds) = policy.activation {
+      result.spool = seconds
+    }
+    return result
+  }
+
+  @inline(never)
+  private static func nativeStartupShieldBooster(at commander: UnsafePointer<Commander>) -> ShieldBooster? {
+    if nativeStartupInventory(at: commander) != nil {
+      return fittedEquipment(in: nativeStartupInventory(at: commander), at: .shield).flatMap { ShieldBooster.from($0.node.key) }
+    }
+    return commander.pointer(to: \.equipment)!.pointee.compactMap(ShieldBooster.from).max()
+  }
+
+  @inline(never)
+  fileprivate static func nativeStartupShield(at commander: UnsafePointer<Commander>, front: Bool) -> Double {
+    nativeStartupNativePerformance(at: commander).shield
+      * (fittedComponent(in: nativeStartupInventory(at: commander), at: .shield)?.statistics[
+        front ? .frontShieldCapacity : .rearShieldCapacity]
+        ?? nativeStartupShieldBooster(at: commander)?.multiplier ?? 1)
+      * nativeStartupAlienSummary(.shieldCapacity, at: commander).multiplier
+  }
+
+  @inline(never)
+  fileprivate static func nativeStartupFuel(at commander: UnsafePointer<Commander>) -> Int {
+    let performance = nativeStartupPerformance(at: commander)
+    let units: Int
+    if let inventory = nativeStartupInventory(at: commander) {
+      units = inventory.items.filter {
+        if case .some(.fuelStorage) = $0.location?.slot { return true }
+        return false
+      }.count
+    } else {
+      units = commander.pointer(to: \.storageUnitCount)!.pointee ?? 0
+    }
+    return performance.fuel + FuelStorage.unitCapacity * units
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityWatcher(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee != nil
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityPeople(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.savedNativePeopleCustodyStorage)!.pointee?.withReadOnlyValue {
+      $0?.crewService != nil || $0?.clinicSource != nil || $0?.utilityEngineer != nil
+    } == true
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityUtility(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.nativeStations)!.pointee?.ledger.records.first(where: {
+      NativeUtilityState.isTarget($0.identity)
+    })?.utility?.consignments.isEmpty == false
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityEMP(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.savedEMPState)!.pointee != nil
+      || nativeStartupInventory(at: commander)?.items.contains {
+        $0.node.key == Equipment.empPirateBlaster
+      } == true
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityAlien(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.savedAlienStorageReference)!.pointee != nil
+      || commander.pointer(to: \.alienStorageState)!.pointee != nil
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityNewt(at commander: UnsafePointer<Commander>) -> Bool {
+    if CurrentNewtKitSave.hasEncounterClaims(commander.pointer(to: \.encounterDirector)!.pointee) {
+      return true
+    }
+    if nativeMechanicalReadNPCPersistence(at: commander).hasCurrentNewtKitClaims { return true }
+    return CurrentNewtKitSave.hasEMPClaims(commander.pointer(to: \.savedEMPState)!.pointee)
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityLegacy(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.legacyOwnedEquipment)!.pointee != nil
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityCalendar(at commander: UnsafePointer<Commander>) -> Bool {
+    nativeStationReadScriptState(at: commander) { state in
+      state.pointer(to: \.calendarLedger)!.pointee != nil
+    }
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityInstances(at commander: UnsafePointer<Commander>) -> Bool {
+    nativeStationReadScriptState(at: commander) { state in
+      !state.pointer(to: \.instances)!.pointee.isEmpty
+    }
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityContracts(at commander: UnsafePointer<Commander>) -> Bool {
+    !(commander.pointer(to: \.savedContracts)!.pointee ?? ScriptContractState()).boards.isEmpty
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityScript(at commander: UnsafePointer<Commander>) -> Bool {
+    nativeStationReadScriptState(at: commander) { state in
+      state.pointee != ScriptEngineState()
+    }
+  }
+
+  @inline(never)
+  fileprivate static func nativeDurabilityAccommodation(at commander: UnsafePointer<Commander>) -> Bool {
+    (commander.pointer(to: \.savedAccommodation)!.pointee ?? ShipAccommodation()) != ShipAccommodation()
+  }
+
+  @inline(never)
+  fileprivate static func nativeGeometryReadWorldOwnedPod(
+    _ person: EMPCrewIdentity, at commander: UnsafePointer<Commander>
+  ) -> Bool {
+    !(commander.pointer(to: \.savedNativePeopleCustodyStorage)!.pointee?.withReadOnlyValue {
+      $0?.admissions.contains { $0.person == .emp(person) } ?? false
+    } ?? false)
+  }
+
+  @inline(never)
+  static func nativeCapturedServiceEMP(at commander: UnsafePointer<Commander>) -> EMPState? {
+    commander.pointer(to: \.savedEMPState)!.pointee
+  }
+
+  @inline(never)
+  static func nativeCapturedServiceAdmissions(
+    _ person: EMPCrewIdentity, at commander: UnsafePointer<Commander>
+  ) -> [NativePeopleAdmission] {
+    commander.pointer(to: \.savedNativePeopleCustodyStorage)!.pointee?.withReadOnlyValue {
+      $0?.admissions.filter { $0.person == .emp(person) } ?? []
+    } ?? []
+  }
+
+  @inline(never)
+  static func nativeCapturedServicePhysicalTime(at commander: UnsafePointer<Commander>) -> Double {
+    nativeStationReadFlight(at: commander).physicalTime
+  }
+
+  @inline(never)
+  static func nativeCapturedServiceWorldOwnedPod(
+    _ person: EMPCrewIdentity, at commander: UnsafePointer<Commander>
+  ) -> Bool {
+    nativeGeometryReadWorldOwnedPod(person, at: commander)
+  }
+
+  @inline(never)
+  fileprivate static func nativeStationAutoReadXYZzyActive(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.xyzzyEnabled)!.pointee ?? false
+  }
+
+  @inline(never)
+  fileprivate static func nativeStationAutoReadTargetFlag(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.automaticTargeting)!.pointee ?? false
+  }
+
+  @inline(never)
+  fileprivate static func nativeStationAutoReadTier(at commander: UnsafePointer<Commander>) -> TargetingTier? {
+    fittedEquipment(in: nativeStartupInventory(at: commander), at: .targetingCore)
+      .flatMap { TargetingTier.from($0.node.key) }
+  }
+
+  @inline(never)
+  fileprivate static func nativeStationAutoReadLaserMounts(at commander: UnsafePointer<Commander>) -> LaserMounts {
+    guard nativeStartupInventory(at: commander) != nil else {
+      if let mounted = commander.pointer(to: \.mountedLasers)!.pointee { return mounted }
+      let equipment = commander.pointer(to: \.equipment)!.pointee
+      let legacy = [LaserKind.naval, .military, .beam, .mining, .pulse].first {
+        equipment.contains($0.equipmentName)
+      }
+      return LaserMounts(front: legacy)
+    }
+    var mounts = LaserMounts()
+    for mount in LaserMount.allCases {
+      mounts[mount] = fittedEquipment(in: nativeStartupInventory(at: commander), at: .laser(mount))
+        .flatMap { LaserKind.from($0.node.key) }
+    }
+    return mounts
+  }
+
+  @inline(never)
+  fileprivate static func nativeFrameReadEnergyRecharge(at commander: UnsafePointer<Commander>) -> Double {
+    if let multiplier = fittedComponent(in: nativeStartupInventory(at: commander), at: .energy)?.statistics[.energyRecharge] {
+      return multiplier * nativeStartupAlienSummary(.energyRecharge, at: commander).multiplier
+    }
+    let equipment = commander.pointer(to: \.equipment)!.pointee
+    let ordinary: Double
+    if equipment.contains(Equipment.eliteEnergyUnit) { ordinary = 4 }
+    else if equipment.contains(Equipment.navalEnergyUnit) { ordinary = 3 }
+    else { ordinary = equipment.contains("Extra Energy Unit") ? 2 : 1 }
+    return ordinary * nativeStartupAlienSummary(.energyRecharge, at: commander).multiplier
+  }
+
+  @inline(never)
+  fileprivate static func nativeFrameReadShieldRecharge(
+    at commander: UnsafePointer<Commander>, front: Bool
+  ) -> Double {
+    nativeStartupNativePerformance(at: commander).shieldRecharge
+      * (fittedComponent(in: nativeStartupInventory(at: commander), at: .shield)?.statistics[
+        front ? .frontShieldRecharge : .rearShieldRecharge] ?? 1)
+      * nativeStartupAlienSummary(.shieldRecharge, at: commander).multiplier
+  }
+
   // Read only child storage here: no Commander value crosses the pointer boundary.
   @inline(never)
   fileprivate static func nativeStationReadScriptState<Result>(
@@ -395,9 +819,9 @@ public struct Commander: Sendable, Equatable, Codable {
     get { wantedAmnesty ?? false }
     set { wantedAmnesty = newValue }
   }
-  private var ownedShipID: String?
+  private var ownedShipID: String
   public var shipID: String {
-    get { ownedShipID ?? "SH023" }
+    get { ownedShipID }
     set { ownedShipID = newValue }
   }
   public var originalMarkets = OriginalLiveMarkets()
@@ -512,6 +936,7 @@ public struct Commander: Sendable, Equatable, Codable {
     }
   }
   private enum CodingKeys: String, CodingKey {
+    case savedMemoryAtlasWatcherSourceStorage = "savedMemoryAtlasWatcherSource"
     case savedContracts
     case legacyOwnedEquipment = "ownedEquipment"
     case savedAccommodation
@@ -573,9 +998,12 @@ public struct Commander: Sendable, Equatable, Codable {
     case finiteXYZzyCash
   }
 
-  // Preserve complete stored-value equality while retiring each field's temporaries in turn.
+  // Preserve all stored-value comparisons in their original short-circuit order.
+  // Borrow the public operands and project each owned child from its actual field;
+  // no whole Commander is copied into a field helper or retained by its frame.
   @inline(never)
-  public static func == (_ lhs: Self, _ rhs: Self) -> Bool {
+  public static func == (_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
+    guard equalSavedMemoryAtlasWatcherSourceStorage(lhs, rhs) else { return false }
     guard equalSavedContracts(lhs, rhs) else { return false }
     guard equalLegacyOwnedEquipment(lhs, rhs) else { return false }
     guard equalSavedAccommodation(lhs, rhs) else { return false }
@@ -639,334 +1067,1297 @@ public struct Commander: Sendable, Equatable, Codable {
     return true
   }
 
+  // Both pointers are synchronous borrows of live storage. Only Bool returns.
   @inline(never)
-  private static func equalSavedContracts(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.savedContracts == rhs.savedContracts
+  fileprivate static func storedValuesEqual(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    guard equalSavedMemoryAtlasWatcherSourceStorage(lhs, rhs) else { return false }
+    guard equalSavedContracts(lhs, rhs) else { return false }
+    guard equalLegacyOwnedEquipment(lhs, rhs) else { return false }
+    guard equalSavedAccommodation(lhs, rhs) else { return false }
+    guard equalSavedScriptState(lhs, rhs) else { return false }
+    guard equalSavedEquipmentInventory(lhs, rhs) else { return false }
+    guard equalSavedEquipmentPurchaseHistory(lhs, rhs) else { return false }
+    guard equalSavedEMPState(lhs, rhs) else { return false }
+    guard equalSavedPlayerElectrical(lhs, rhs) else { return false }
+    guard equalSavedEMPCharge(lhs, rhs) else { return false }
+    guard equalSavedCrimboState(lhs, rhs) else { return false }
+    guard equalSavedNativePeopleCustodyStorage(lhs, rhs) else { return false }
+    guard equalSavedSalvageLedger(lhs, rhs) else { return false }
+    guard equalSavedAlienStorageReference(lhs, rhs) else { return false }
+    guard equalAlienStorageState(lhs, rhs) else { return false }
+    guard equalSavedEquipmentVersion(lhs, rhs) else { return false }
+    guard equalNativeStations(lhs, rhs) else { return false }
+    guard equalSavedFlightSimulation(lhs, rhs) else { return false }
+    guard equalSavedCrimeLedger(lhs, rhs) else { return false }
+    guard equalSavedStationSecurity(lhs, rhs) else { return false }
+    guard equalEncounterDirector(lhs, rhs) else { return false }
+    guard equalSavedWantedCareers(lhs, rhs) else { return false }
+    guard equalSavedNPCPersistence(lhs, rhs) else { return false }
+    guard equalSavedCargoDebrisLedger(lhs, rhs) else { return false }
+    guard equalSavedMiningLedger(lhs, rhs) else { return false }
+    guard equalSavedMissionProgress(lhs, rhs) else { return false }
+    guard equalWantedAmnesty(lhs, rhs) else { return false }
+    guard equalOwnedShipID(lhs, rhs) else { return false }
+    guard equalOriginalMarkets(lhs, rhs) else { return false }
+    guard equalName(lhs, rhs) else { return false }
+    guard equalCredits(lhs, rhs) else { return false }
+    guard equalFuel(lhs, rhs) else { return false }
+    guard equalGalaxy(lhs, rhs) else { return false }
+    guard equalSystem(lhs, rhs) else { return false }
+    guard equalCargo(lhs, rhs) else { return false }
+    guard equalEquipment(lhs, rhs) else { return false }
+    guard equalMissiles(lhs, rhs) else { return false }
+    guard equalKills(lhs, rhs) else { return false }
+    guard equalLegal(lhs, rhs) else { return false }
+    guard equalUnlimitedMissiles(lhs, rhs) else { return false }
+    guard equalUnlimitedCargo(lhs, rhs) else { return false }
+    guard equalUnlimitedCash(lhs, rhs) else { return false }
+    guard equalUnlimitedFuel(lhs, rhs) else { return false }
+    guard equalUnlimitedJumps(lhs, rhs) else { return false }
+    guard equalAutoTrade(lhs, rhs) else { return false }
+    guard equalSpeech(lhs, rhs) else { return false }
+    guard equalExecutive(lhs, rhs) else { return false }
+    guard equalDiscoveredSecretPorts(lhs, rhs) else { return false }
+    guard equalBlackjackMission(lhs, rhs) else { return false }
+    guard equalDisplayStyle(lhs, rhs) else { return false }
+    guard equalNavalMission(lhs, rhs) else { return false }
+    guard equalXyzzyEnabled(lhs, rhs) else { return false }
+    guard equalAutomaticProfitScan(lhs, rhs) else { return false }
+    guard equalAutomaticECM(lhs, rhs) else { return false }
+    guard equalAutomaticTargeting(lhs, rhs) else { return false }
+    guard equalReturnFireEnabled(lhs, rhs) else { return false }
+    guard equalCapitalReward(lhs, rhs) else { return false }
+    guard equalNavigationRoute(lhs, rhs) else { return false }
+    guard equalStorageUnitCount(lhs, rhs) else { return false }
+    guard equalMountedLasers(lhs, rhs) else { return false }
+    guard equalFiniteXYZzyCash(lhs, rhs) else { return false }
+    return true
+  }
+
+  // Public operands are borrowed values, not buffer pointers. Read one owned
+  // field from each operand in separate sibling scopes; neither closure captures
+  // the other borrowed Commander. Both pointers die before comparing the exact
+  // child values, and each field frame retires before the next ordered guard.
+  @inline(never)
+  private static func equalSavedMemoryAtlasWatcherSourceStorage(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalLegacyOwnedEquipment(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.legacyOwnedEquipment == rhs.legacyOwnedEquipment
+  private static func equalSavedContracts(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedContracts)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedContracts)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedAccommodation(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool
-  {
-    lhs.savedAccommodation == rhs.savedAccommodation
+  private static func equalLegacyOwnedEquipment(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.legacyOwnedEquipment)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.legacyOwnedEquipment)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedScriptState(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.savedScriptState == rhs.savedScriptState
+  private static func equalSavedAccommodation(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedAccommodation)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedAccommodation)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedEquipmentInventory(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.savedEquipmentInventory == rhs.savedEquipmentInventory
+  private static func equalSavedScriptState(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedScriptState)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedScriptState)!.pointee
+    }
+    return left == right
+  }
+
+  @inline(never)
+  private static func equalSavedEquipmentInventory(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedEquipmentInventory)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedEquipmentInventory)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
   private static func equalSavedEquipmentPurchaseHistory(
     _ lhs: borrowing Self, _ rhs: borrowing Self
   ) -> Bool {
-    lhs.savedEquipmentPurchaseHistory == rhs.savedEquipmentPurchaseHistory
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedEquipmentPurchaseHistory)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedEquipmentPurchaseHistory)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedEMPState(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.savedEMPState == rhs.savedEMPState
+  private static func equalSavedEMPState(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedEMPState)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedEMPState)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedPlayerElectrical(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.savedPlayerElectrical == rhs.savedPlayerElectrical
+  private static func equalSavedPlayerElectrical(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedPlayerElectrical)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedPlayerElectrical)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedEMPCharge(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.savedEMPCharge == rhs.savedEMPCharge
+  private static func equalSavedEMPCharge(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedEMPCharge)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedEMPCharge)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedCrimboState(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.savedCrimboState == rhs.savedCrimboState
+  private static func equalSavedCrimboState(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedCrimboState)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedCrimboState)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
   private static func equalSavedNativePeopleCustodyStorage(
     _ lhs: borrowing Self, _ rhs: borrowing Self
   ) -> Bool {
-    lhs.savedNativePeopleCustodyStorage == rhs.savedNativePeopleCustodyStorage
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedNativePeopleCustodyStorage)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedNativePeopleCustodyStorage)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedSalvageLedger(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool
-  {
-    lhs.savedSalvageLedger == rhs.savedSalvageLedger
+  private static func equalSavedSalvageLedger(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedSalvageLedger)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedSalvageLedger)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedAlienStorageReference(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.savedAlienStorageReference == rhs.savedAlienStorageReference
+  private static func equalSavedAlienStorageReference(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedAlienStorageReference)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedAlienStorageReference)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalAlienStorageState(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.alienStorageState == rhs.alienStorageState
+  private static func equalAlienStorageState(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.alienStorageState)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.alienStorageState)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedEquipmentVersion(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.savedEquipmentVersion == rhs.savedEquipmentVersion
+  private static func equalSavedEquipmentVersion(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedEquipmentVersion)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedEquipmentVersion)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalNativeStations(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.nativeStations == rhs.nativeStations
+  private static func equalNativeStations(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.nativeStations)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.nativeStations)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedFlightSimulation(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.savedFlightSimulation == rhs.savedFlightSimulation
+  private static func equalSavedFlightSimulation(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedFlightSimulation)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedFlightSimulation)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedCrimeLedger(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.savedCrimeLedger == rhs.savedCrimeLedger
+  private static func equalSavedCrimeLedger(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedCrimeLedger)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedCrimeLedger)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedStationSecurity(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.savedStationSecurity == rhs.savedStationSecurity
+  private static func equalSavedStationSecurity(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedStationSecurity)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedStationSecurity)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalEncounterDirector(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.encounterDirector == rhs.encounterDirector
+  private static func equalEncounterDirector(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.encounterDirector)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.encounterDirector)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedWantedCareers(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool
-  {
-    lhs.savedWantedCareers == rhs.savedWantedCareers
+  private static func equalSavedWantedCareers(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedWantedCareers)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedWantedCareers)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedNPCPersistence(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool
-  {
-    lhs.savedNPCPersistence == rhs.savedNPCPersistence
+  private static func equalSavedNPCPersistence(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedNPCPersistence)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedNPCPersistence)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedCargoDebrisLedger(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.savedCargoDebrisLedger == rhs.savedCargoDebrisLedger
+  private static func equalSavedCargoDebrisLedger(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedCargoDebrisLedger)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedCargoDebrisLedger)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedMiningLedger(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.savedMiningLedger == rhs.savedMiningLedger
+  private static func equalSavedMiningLedger(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedMiningLedger)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedMiningLedger)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSavedMissionProgress(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.savedMissionProgress == rhs.savedMissionProgress
+  private static func equalSavedMissionProgress(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedMissionProgress)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedMissionProgress)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalWantedAmnesty(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.wantedAmnesty == rhs.wantedAmnesty
+  private static func equalWantedAmnesty(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.wantedAmnesty)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.wantedAmnesty)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalOwnedShipID(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.ownedShipID == rhs.ownedShipID
+  private static func equalOwnedShipID(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.ownedShipID)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.ownedShipID)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalOriginalMarkets(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.originalMarkets == rhs.originalMarkets
+  private static func equalOriginalMarkets(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.originalMarkets)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.originalMarkets)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalName(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.name == rhs.name
+  private static func equalName(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.name)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.name)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalCredits(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.credits == rhs.credits
+  private static func equalCredits(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.credits)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.credits)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalFuel(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.fuel == rhs.fuel
+  private static func equalFuel(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.fuel)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.fuel)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalGalaxy(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.galaxy == rhs.galaxy
+  private static func equalGalaxy(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.galaxy)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.galaxy)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSystem(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.system == rhs.system
+  private static func equalSystem(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.system)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.system)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalCargo(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.cargo == rhs.cargo
+  private static func equalCargo(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.cargo)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.cargo)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalEquipment(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.equipment == rhs.equipment
+  private static func equalEquipment(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.equipment)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.equipment)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalMissiles(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.missiles == rhs.missiles
+  private static func equalMissiles(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.missiles)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.missiles)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalKills(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.kills == rhs.kills
+  private static func equalKills(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.kills)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.kills)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalLegal(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.legal == rhs.legal
+  private static func equalLegal(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.legal)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.legal)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalUnlimitedMissiles(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.unlimitedMissiles == rhs.unlimitedMissiles
+  private static func equalUnlimitedMissiles(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.unlimitedMissiles)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.unlimitedMissiles)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalUnlimitedCargo(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.unlimitedCargo == rhs.unlimitedCargo
+  private static func equalUnlimitedCargo(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.unlimitedCargo)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.unlimitedCargo)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalUnlimitedCash(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.unlimitedCash == rhs.unlimitedCash
+  private static func equalUnlimitedCash(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.unlimitedCash)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.unlimitedCash)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalUnlimitedFuel(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.unlimitedFuel == rhs.unlimitedFuel
+  private static func equalUnlimitedFuel(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.unlimitedFuel)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.unlimitedFuel)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalUnlimitedJumps(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.unlimitedJumps == rhs.unlimitedJumps
+  private static func equalUnlimitedJumps(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.unlimitedJumps)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.unlimitedJumps)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalAutoTrade(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.autoTrade == rhs.autoTrade
+  private static func equalAutoTrade(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.autoTrade)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.autoTrade)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalSpeech(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.speech == rhs.speech
+  private static func equalSpeech(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.speech)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.speech)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalExecutive(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.executive == rhs.executive
+  private static func equalExecutive(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.executive)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.executive)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalDiscoveredSecretPorts(_ lhs: borrowing Self, _ rhs: borrowing Self)
-    -> Bool
-  {
-    lhs.discoveredSecretPorts == rhs.discoveredSecretPorts
+  private static func equalDiscoveredSecretPorts(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.discoveredSecretPorts)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.discoveredSecretPorts)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalBlackjackMission(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.blackjackMission == rhs.blackjackMission
+  private static func equalBlackjackMission(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.blackjackMission)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.blackjackMission)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalDisplayStyle(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.displayStyle == rhs.displayStyle
+  private static func equalDisplayStyle(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.displayStyle)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.displayStyle)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalNavalMission(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.navalMission == rhs.navalMission
+  private static func equalNavalMission(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.navalMission)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.navalMission)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalXyzzyEnabled(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.xyzzyEnabled == rhs.xyzzyEnabled
+  private static func equalXyzzyEnabled(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.xyzzyEnabled)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.xyzzyEnabled)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalAutomaticProfitScan(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool
-  {
-    lhs.automaticProfitScan == rhs.automaticProfitScan
+  private static func equalAutomaticProfitScan(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.automaticProfitScan)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.automaticProfitScan)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalAutomaticECM(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.automaticECM == rhs.automaticECM
+  private static func equalAutomaticECM(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.automaticECM)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.automaticECM)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalAutomaticTargeting(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool
-  {
-    lhs.automaticTargeting == rhs.automaticTargeting
+  private static func equalAutomaticTargeting(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.automaticTargeting)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.automaticTargeting)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalReturnFireEnabled(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.returnFireEnabled == rhs.returnFireEnabled
+  private static func equalReturnFireEnabled(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.returnFireEnabled)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.returnFireEnabled)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalCapitalReward(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.capitalReward == rhs.capitalReward
+  private static func equalCapitalReward(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.capitalReward)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.capitalReward)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalNavigationRoute(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.navigationRoute == rhs.navigationRoute
+  private static func equalNavigationRoute(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.navigationRoute)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.navigationRoute)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalStorageUnitCount(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.storageUnitCount == rhs.storageUnitCount
+  private static func equalStorageUnitCount(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.storageUnitCount)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.storageUnitCount)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalMountedLasers(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.mountedLasers == rhs.mountedLasers
+  private static func equalMountedLasers(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.mountedLasers)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.mountedLasers)!.pointee
+    }
+    return left == right
   }
 
   @inline(never)
-  private static func equalFiniteXYZzyCash(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
-    lhs.finiteXYZzyCash == rhs.finiteXYZzyCash
+  private static func equalFiniteXYZzyCash(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.finiteXYZzyCash)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.finiteXYZzyCash)!.pointee
+    }
+    return left == right
+  }
+
+  @inline(never)
+  private static func equalSavedMemoryAtlasWatcherSourceStorage(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee == rhs.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedContracts(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedContracts)!.pointee == rhs.pointer(to: \.savedContracts)!.pointee
+  }
+
+  @inline(never)
+  private static func equalLegacyOwnedEquipment(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.legacyOwnedEquipment)!.pointee == rhs.pointer(to: \.legacyOwnedEquipment)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedAccommodation(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedAccommodation)!.pointee == rhs.pointer(to: \.savedAccommodation)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedScriptState(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedScriptState)!.pointee == rhs.pointer(to: \.savedScriptState)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedEquipmentInventory(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedEquipmentInventory)!.pointee == rhs.pointer(to: \.savedEquipmentInventory)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedEquipmentPurchaseHistory(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedEquipmentPurchaseHistory)!.pointee == rhs.pointer(to: \.savedEquipmentPurchaseHistory)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedEMPState(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedEMPState)!.pointee == rhs.pointer(to: \.savedEMPState)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedPlayerElectrical(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedPlayerElectrical)!.pointee == rhs.pointer(to: \.savedPlayerElectrical)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedEMPCharge(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedEMPCharge)!.pointee == rhs.pointer(to: \.savedEMPCharge)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedCrimboState(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedCrimboState)!.pointee == rhs.pointer(to: \.savedCrimboState)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedNativePeopleCustodyStorage(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedNativePeopleCustodyStorage)!.pointee == rhs.pointer(to: \.savedNativePeopleCustodyStorage)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedSalvageLedger(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedSalvageLedger)!.pointee == rhs.pointer(to: \.savedSalvageLedger)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedAlienStorageReference(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedAlienStorageReference)!.pointee == rhs.pointer(to: \.savedAlienStorageReference)!.pointee
+  }
+
+  @inline(never)
+  private static func equalAlienStorageState(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.alienStorageState)!.pointee == rhs.pointer(to: \.alienStorageState)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedEquipmentVersion(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedEquipmentVersion)!.pointee == rhs.pointer(to: \.savedEquipmentVersion)!.pointee
+  }
+
+  @inline(never)
+  private static func equalNativeStations(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.nativeStations)!.pointee == rhs.pointer(to: \.nativeStations)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedFlightSimulation(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedFlightSimulation)!.pointee == rhs.pointer(to: \.savedFlightSimulation)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedCrimeLedger(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedCrimeLedger)!.pointee == rhs.pointer(to: \.savedCrimeLedger)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedStationSecurity(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedStationSecurity)!.pointee == rhs.pointer(to: \.savedStationSecurity)!.pointee
+  }
+
+  @inline(never)
+  private static func equalEncounterDirector(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.encounterDirector)!.pointee == rhs.pointer(to: \.encounterDirector)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedWantedCareers(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedWantedCareers)!.pointee == rhs.pointer(to: \.savedWantedCareers)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedNPCPersistence(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedNPCPersistence)!.pointee == rhs.pointer(to: \.savedNPCPersistence)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedCargoDebrisLedger(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedCargoDebrisLedger)!.pointee == rhs.pointer(to: \.savedCargoDebrisLedger)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedMiningLedger(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedMiningLedger)!.pointee == rhs.pointer(to: \.savedMiningLedger)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSavedMissionProgress(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedMissionProgress)!.pointee == rhs.pointer(to: \.savedMissionProgress)!.pointee
+  }
+
+  @inline(never)
+  private static func equalWantedAmnesty(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.wantedAmnesty)!.pointee == rhs.pointer(to: \.wantedAmnesty)!.pointee
+  }
+
+  @inline(never)
+  private static func equalOwnedShipID(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.ownedShipID)!.pointee == rhs.pointer(to: \.ownedShipID)!.pointee
+  }
+
+  @inline(never)
+  private static func equalOriginalMarkets(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.originalMarkets)!.pointee == rhs.pointer(to: \.originalMarkets)!.pointee
+  }
+
+  @inline(never)
+  private static func equalName(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.name)!.pointee == rhs.pointer(to: \.name)!.pointee
+  }
+
+  @inline(never)
+  private static func equalCredits(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.credits)!.pointee == rhs.pointer(to: \.credits)!.pointee
+  }
+
+  @inline(never)
+  private static func equalFuel(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.fuel)!.pointee == rhs.pointer(to: \.fuel)!.pointee
+  }
+
+  @inline(never)
+  private static func equalGalaxy(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.galaxy)!.pointee == rhs.pointer(to: \.galaxy)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSystem(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.system)!.pointee == rhs.pointer(to: \.system)!.pointee
+  }
+
+  @inline(never)
+  private static func equalCargo(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.cargo)!.pointee == rhs.pointer(to: \.cargo)!.pointee
+  }
+
+  @inline(never)
+  private static func equalEquipment(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.equipment)!.pointee == rhs.pointer(to: \.equipment)!.pointee
+  }
+
+  @inline(never)
+  private static func equalMissiles(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.missiles)!.pointee == rhs.pointer(to: \.missiles)!.pointee
+  }
+
+  @inline(never)
+  private static func equalKills(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.kills)!.pointee == rhs.pointer(to: \.kills)!.pointee
+  }
+
+  @inline(never)
+  private static func equalLegal(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.legal)!.pointee == rhs.pointer(to: \.legal)!.pointee
+  }
+
+  @inline(never)
+  private static func equalUnlimitedMissiles(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.unlimitedMissiles)!.pointee == rhs.pointer(to: \.unlimitedMissiles)!.pointee
+  }
+
+  @inline(never)
+  private static func equalUnlimitedCargo(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.unlimitedCargo)!.pointee == rhs.pointer(to: \.unlimitedCargo)!.pointee
+  }
+
+  @inline(never)
+  private static func equalUnlimitedCash(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.unlimitedCash)!.pointee == rhs.pointer(to: \.unlimitedCash)!.pointee
+  }
+
+  @inline(never)
+  private static func equalUnlimitedFuel(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.unlimitedFuel)!.pointee == rhs.pointer(to: \.unlimitedFuel)!.pointee
+  }
+
+  @inline(never)
+  private static func equalUnlimitedJumps(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.unlimitedJumps)!.pointee == rhs.pointer(to: \.unlimitedJumps)!.pointee
+  }
+
+  @inline(never)
+  private static func equalAutoTrade(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.autoTrade)!.pointee == rhs.pointer(to: \.autoTrade)!.pointee
+  }
+
+  @inline(never)
+  private static func equalSpeech(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.speech)!.pointee == rhs.pointer(to: \.speech)!.pointee
+  }
+
+  @inline(never)
+  private static func equalExecutive(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.executive)!.pointee == rhs.pointer(to: \.executive)!.pointee
+  }
+
+  @inline(never)
+  private static func equalDiscoveredSecretPorts(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.discoveredSecretPorts)!.pointee == rhs.pointer(to: \.discoveredSecretPorts)!.pointee
+  }
+
+  @inline(never)
+  private static func equalBlackjackMission(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.blackjackMission)!.pointee == rhs.pointer(to: \.blackjackMission)!.pointee
+  }
+
+  @inline(never)
+  private static func equalDisplayStyle(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.displayStyle)!.pointee == rhs.pointer(to: \.displayStyle)!.pointee
+  }
+
+  @inline(never)
+  private static func equalNavalMission(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.navalMission)!.pointee == rhs.pointer(to: \.navalMission)!.pointee
+  }
+
+  @inline(never)
+  private static func equalXyzzyEnabled(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.xyzzyEnabled)!.pointee == rhs.pointer(to: \.xyzzyEnabled)!.pointee
+  }
+
+  @inline(never)
+  private static func equalAutomaticProfitScan(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.automaticProfitScan)!.pointee == rhs.pointer(to: \.automaticProfitScan)!.pointee
+  }
+
+  @inline(never)
+  private static func equalAutomaticECM(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.automaticECM)!.pointee == rhs.pointer(to: \.automaticECM)!.pointee
+  }
+
+  @inline(never)
+  private static func equalAutomaticTargeting(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.automaticTargeting)!.pointee == rhs.pointer(to: \.automaticTargeting)!.pointee
+  }
+
+  @inline(never)
+  private static func equalReturnFireEnabled(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.returnFireEnabled)!.pointee == rhs.pointer(to: \.returnFireEnabled)!.pointee
+  }
+
+  @inline(never)
+  private static func equalCapitalReward(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.capitalReward)!.pointee == rhs.pointer(to: \.capitalReward)!.pointee
+  }
+
+  @inline(never)
+  private static func equalNavigationRoute(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.navigationRoute)!.pointee == rhs.pointer(to: \.navigationRoute)!.pointee
+  }
+
+  @inline(never)
+  private static func equalStorageUnitCount(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.storageUnitCount)!.pointee == rhs.pointer(to: \.storageUnitCount)!.pointee
+  }
+
+  @inline(never)
+  private static func equalMountedLasers(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.mountedLasers)!.pointee == rhs.pointer(to: \.mountedLasers)!.pointee
+  }
+
+  @inline(never)
+  private static func equalFiniteXYZzyCash(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.finiteXYZzyCash)!.pointee == rhs.pointer(to: \.finiteXYZzyCash)!.pointee
   }
 
   public init() {
@@ -988,17 +2379,26 @@ public struct Commander: Sendable, Equatable, Codable {
     ][thresholds.filter { kills >= $0 }.count]
   }
   public var valid: Bool {
-    guard ShipCatalogue.ship(shipID)?.game != nil else { return false }
+    guard !OriginalDetailedHullStage.blocksRuntime(shipID),
+      ShipCatalogue.ship(shipID)?.game != nil else { return false }
     guard equipmentStateValid else { return false }
     return validAfterEquipment()
   }
 
   @inline(never)
   private func validAfterEquipment() -> Bool {
-    guard NativeInductionCrewLogSave.validateClaims(self),
+    guard NativeMemoryAtlasWatcherSourceSave.validateClaims(self),
+      NativeInductionCrewLogSave.validateClaims(self),
       NativeInductionArkSave.validateClaims(self),
       NativeWayfarerInductionSave.validateClaims(self),
       NativeFirstCommoditySaleSave.validateClaims(self),
+      NativeFirstCommodityTradeSave.validateClaims(self),
+      NativeUnderTowSave.validateClaims(self),
+      NativeBorrowedVoiceSave.validateClaims(self),
+      NativeQuietChoirSave.validateClaims(self),
+      NativeMemoryAtlasSave.validateClaims(self),
+      NativeSignedPassageOpeningSave.validateClaims(self),
+      NativeAssemblyOfOrbitsSave.validateClaims(self),
       NativeGlassMeridianSave.validateClaims(self),
       NativeFleetDiscoverySave.validateClaims(self),
       NativeFlightReceptionSave.validateClaims(self),
@@ -1007,35 +2407,52 @@ public struct Commander: Sendable, Equatable, Codable {
     guard NativeMeasuredExtractionSave.validateClaims(self) else { return false }
     guard WayfarerRecordRecoverySave.validateClaims(self) else { return false }
     guard NativeIdentifiedSalvageSave.validateClaims(self) else { return false }
-    return nativeStationStateValid && nativeUtilityStateValid
-      && empCustodyStateValid && electricalStateValid && alienStorageStateValid
-      && nativeSalvageOriginalSourcesValid && freightCargoValid && navigationTradeStateValid
-      && originalMarkets.valid
-      && cargo.count == 17
-      && cargo.allSatisfy { $0 >= 0 && $0 <= Int.max / 17 } && credits >= 0
-      && credits <= 4_294_967_295
-      && (0...256).contains(system) && (0..<8).contains(galaxy)
-      && (0...255).contains(plughDiscoveryMask)
-      && (system != Plugh.systemID || hasDiscoveredPlugh(in: galaxy))
-      && (!(navigationPlan?.path.contains(Plugh.systemID) ?? false)
-        || hasDiscoveredPlugh(in: galaxy))
-      && (0...FuelStorage.maximumCount).contains(fuelStorageUnits)
-      && (0...fuelCapacity).contains(fuel)
-      && (0...missileCapacity).contains(missiles) && (0...65535).contains(kills) && legal >= 0
-      && missionProgress.count <= 128 && missionProgress.values.allSatisfy(\.valid)
-      && scriptState.valid && financeStateValid && nativeWormholeHistoryValid
-      && nativePeopleStateValid && accommodationValid
-      && contractsValid
-      && (legacyOwnedEquipment != nil ? legacyIssueStateValid : issuedEquipmentValid)
-      && (checkedCargoTonnes.map { $0 <= capacity } ?? false)
-      && (navigationPlan?.valid ?? true) && blackjack.valid
-      && (savedFlightSimulation?.valid ?? true)
-      && (savedCargoDebrisLedger?.valid ?? true)
-      && (savedMiningLedger?.valid ?? true)
-      && (savedWantedCareers?.valid(in: flightSimulation) ?? true)
-      && (savedNPCPersistence?.valid ?? true)
-      && (!blackjack.carriesFirearm || cargo[10] >= 1)
-      && equipment.isSubset(of: Equipment.validNames) && !name.isEmpty && name.count <= 16
+    guard nativeStationStateValid else { return false }
+    guard nativeUtilityStateValid else { return false }
+    guard empCustodyStateValid else { return false }
+    guard electricalStateValid else { return false }
+    guard alienStorageStateValid else { return false }
+    guard nativeSalvageOriginalSourcesValid else { return false }
+    guard freightCargoValid else { return false }
+    guard navigationTradeStateValid else { return false }
+    guard originalMarkets.valid else { return false }
+    guard cargo.count == 17 else { return false }
+    guard (cargo.allSatisfy { $0 >= 0 && $0 <= Int.max / 17 }) else { return false }
+    guard credits >= 0 else { return false }
+    guard credits <= 4_294_967_295 else { return false }
+    guard (0...256).contains(system) else { return false }
+    guard (0..<8).contains(galaxy) else { return false }
+    guard (0...255).contains(plughDiscoveryMask) else { return false }
+    guard (system != Plugh.systemID || hasDiscoveredPlugh(in: galaxy)) else { return false }
+    guard (!(navigationPlan?.path.contains(Plugh.systemID) ?? false)
+        || hasDiscoveredPlugh(in: galaxy)) else { return false }
+    guard (0...FuelStorage.maximumCount).contains(fuelStorageUnits) else { return false }
+    guard (0...fuelCapacity).contains(fuel) else { return false }
+    guard (0...missileCapacity).contains(missiles) else { return false }
+    guard (0...65535).contains(kills) else { return false }
+    guard legal >= 0 else { return false }
+    guard missionProgress.count <= 128 else { return false }
+    guard missionProgress.values.allSatisfy(\.valid) else { return false }
+    guard scriptState.valid else { return false }
+    guard financeStateValid else { return false }
+    guard nativeWormholeHistoryValid else { return false }
+    guard nativePeopleStateValid else { return false }
+    guard accommodationValid else { return false }
+    guard contractsValid else { return false }
+    guard (legacyOwnedEquipment != nil ? legacyIssueStateValid : issuedEquipmentValid) else { return false }
+    guard (checkedCargoTonnes.map { $0 <= capacity } ?? false) else { return false }
+    guard (navigationPlan?.valid ?? true) else { return false }
+    guard blackjack.valid else { return false }
+    guard (savedFlightSimulation?.valid ?? true) else { return false }
+    guard (savedCargoDebrisLedger?.valid ?? true) else { return false }
+    guard (savedMiningLedger?.valid ?? true) else { return false }
+    guard (savedWantedCareers?.valid(in: flightSimulation) ?? true) else { return false }
+    guard (savedNPCPersistence?.valid ?? true) else { return false }
+    guard (!blackjack.carriesFirearm || cargo[10] >= 1) else { return false }
+    guard equipment.isSubset(of: Equipment.validNames) else { return false }
+    guard !name.isEmpty else { return false }
+    guard name.count <= 16 else { return false }
+    return true
   }
 }
 
@@ -1136,6 +2553,21 @@ public struct Controls: Sendable {
   public init() {}
 }
 
+/// Actual clock-owner transport only; no decoder or external initializer.
+struct NativeC01InquiryClockWitness: Sendable {
+  let opening: NativeC01InquiryClockOpening
+  let observedEnd: Double
+  let nativeMotion: CurrentNewtNativeClockEvidence?
+  fileprivate init(
+    opening: NativeC01InquiryClockOpening, observedEnd: Double,
+    nativeMotion: CurrentNewtNativeClockEvidence? = nil
+  ) {
+    self.opening = opening
+    self.observedEnd = observedEnd
+    self.nativeMotion = nativeMotion
+  }
+}
+
 public struct Game: Sendable {
   // Runtime snapshots are values. Array CoW copies the existing payload on first mutation;
   // cloning never reinitializes epochs, random state or universe defaults.
@@ -1156,11 +2588,19 @@ public struct Game: Sendable {
     var scriptReferenceFrame: ScriptReferenceFrame?
     var scriptDispatching = false
     var scriptEventsDeferred = false
+    var empPlayerElectricalInterval: EMPPlayerElectricalInterval?
+    var c01InquiryStepRuntime = NativeC01InquiryStepRuntimeState()
+    var empPulseBeforeResultStorage: EMPPulseBeforeResult?
     var scriptDurabilityAvailable = false
     var pendingNewSaveDestination: URL?
     var newCommanderSaveReceipt: CommanderFileReceipt?
     var nativeStationRuntimeEpoch = UUID()
+    var c01InquiryNativeRegistry = NativeC01InquiryNativeRegistry.empty()
+    var nativeOriginalStationPopulationPlan: NativeOriginalStationPopulationPlan?
+    var nativeOriginalUtilityFatalStart: NativeOriginalUtilityFatalStart?
+    var nativeOriginalUtilityFatalTransition: NativeOriginalUtilityFatalTransition?
     var nativeOrbitalOutlookRuntime = NativeOrbitalOutlookRuntime()
+    var nativeAssemblyCalibrationDisplay: NativeAssemblySurveyInstrumentControls.Readout?
     var nativeOriginalSurveyRuntime: NativeOriginalSurveyRuntime?
     var nativeGlassMeridianRuntime: NativeGlassMeridianRuntime?
     var nativeFlightReceptionPending: NativeFlightReceptionPending?
@@ -1168,6 +2608,9 @@ public struct Game: Sendable {
     var nativeRecordRecoveryPending: WayfarerRecordRecoveryPending?
     var nativeCrewLogPickupPending: NativeCrewLogPickupPending?
     var nativeC01SurveyorPending: NativeC01SurveyorPending?
+    var nativeC01TimingStandardPending: NativeC01TimingStandardPending?
+    var c01LaneRepairWorkRuntime = NativeC01LaneRepairWorkRuntime()
+    var c01ClinicEscortRuntime = NativeC01ClinicEscortRuntime()
     var nativeRecordRecoveryIdentificationPending: WayfarerRecordRecoveryIdentificationPending?
     var nativeIdentifiedSalvagePending: NativeIdentifiedSalvagePending?
     var nativeCrimboMotionSample: NativeCrimboMotionSample?
@@ -1176,11 +2619,15 @@ public struct Game: Sendable {
     var nativeSalvageMotion: [SalvageLotIdentity: NativeSalvageMotion] = [:]
     var nativeSalvageWreckMotion: [WreckIdentity: NativeSalvageWreckObservation] = [:]
     var nativeSalvageWork: NativeSalvageHotWork?
+    var nativeSalvageAdmissionDiagnostic: NativeSalvageAdmissionDiagnostic?
+    var nativeEncounterBirthDiagnostic: GameplayEncounterBirthDiagnostic?
     var pendingNativeSalvageCollections: [NativeSalvageCollectionObservation] = []
     var pendingNativeStationDock: NativeStationEntryProof?
+    var pendingMemoryAtlasMainDock: NativeMemoryAtlasMainEntryProof?
     var inductionArkDockPublicationPending = false
     var inductionRescueDockPublicationPending = false
     var inductionUtilityWorkRuntime = NativeInductionUtilityWorkRuntime()
+    var isolationWorkRuntime = NativeIsolationWorkRuntime()
     var nativeStationDockEvidence: NativeStationDockEvidence?
     var nativeMainStationDockEvidence: NativeMainStationDockEvidence?
     var scriptPacks: [ScriptPack] = []
@@ -1252,6 +2699,7 @@ public struct Game: Sendable {
     var rearShield = 255.0
     var laserHeat = 0.0
     var laserFlash = 0.0
+    var playerImpactFeedback: PlayerImpactFeedback?
     var dischargeAudio = DischargeAudioState()
     var gameplayCombatTrace: GameplayCombatTrace?
     var altitude = 1.0
@@ -1261,6 +2709,7 @@ public struct Game: Sendable {
     var cabinTemperature = 0.0
     var equipmentMount: LaserMount = .front
     var equipmentWorkTool = false
+    var equipmentCrewSelected = false
     var selectedFlightTool: FlightWorkTool = .combatLaser
     var inventoryContextEpoch = InventoryContextEpoch()
     var inventoryActionSelection = 0
@@ -1278,6 +2727,7 @@ public struct Game: Sendable {
     var helpPage = 0
     var gallery = MissionGalleryState()
     var library = ScriptLibraryState()
+    var c01InquiryJournal = NativeC01InquiryJournalState()
     var mapColour: MapColourMode = .economy
     var mapZoom: MapZoom = .jump
     var mapSearch = PlanetSearchState()
@@ -1308,7 +2758,12 @@ public struct Game: Sendable {
   // Exactly one value lives in checked copy-on-write storage. Game copies retain independent
   // nested commander mutations without reserving the whole commander in every Game temporary.
   private var commanderStorage: [Commander] {
-    _read { yield valueStorage[0].commanderStorage }
+    _read {
+      let stored: [Commander] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.commanderStorage)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].commanderStorage }
   }
   public var commander: Commander {
@@ -1338,9 +2793,332 @@ public struct Game: Sendable {
   }
 
   @inline(never)
+  func nativeQueryStoredShipID() -> String {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeQueryReadShipID(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeQueryStoredMiningLedger() -> MiningLedger {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeQueryReadMiningLedger(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeQueryStoredCrimeLedger() -> CrimeLedger {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeQueryReadCrimeLedger(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeQueryStoredBlackjack() -> BlackjackMission {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeQueryReadBlackjack(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeQueryStoredMissionStage() -> NavalMissionStage {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeQueryReadMissionStage(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeMechanicalStoredNPCPersistence() -> NPCPersistenceLedger {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeMechanicalReadNPCPersistence(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeMechanicalStoredEMPState() -> EMPState? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      storage.baseAddress!.pointer(to: \.savedEMPState)!.pointee
+    }
+  }
+
+  @inline(never)
+  func nativeStationAutoTargetingTier() -> TargetingTier? {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeStationAutoReadTier(at: storage.baseAddress!) }
+  }
+
+  @inline(never)
+  func nativeStationAutoLaserMounts() -> LaserMounts {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeStationAutoReadLaserMounts(at: storage.baseAddress!) }
+  }
+
+  @inline(never)
+  func nativeStationAutoHasECM() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.fittedEquipment(in: Commander.nativeStartupInventory(at: storage.baseAddress!), at: .utility(.ecm)) != nil }
+  }
+
+  @inline(never)
+  func nativeStationAutoMissiles() -> Int {
+    commanderStorage.withUnsafeBufferPointer { storage in storage.baseAddress!.pointer(to: \.missiles)!.pointee }
+  }
+
+  @inline(never)
+  func nativeStationAutoUnlimitedMissiles() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in storage.baseAddress!.pointer(to: \.unlimitedMissiles)!.pointee }
+  }
+
+  @inline(never)
+  func nativeStationAutoXYZzyActive() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeStationAutoReadXYZzyActive(at: storage.baseAddress!) }
+  }
+
+  @inline(never)
+  func nativeStationAutoTargetFlag() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeStationAutoReadTargetFlag(at: storage.baseAddress!) }
+  }
+
+  @inline(never)
+  func nativeStationAutoPurchaseHistory() -> EquipmentPurchaseHistory? {
+    commanderStorage.withUnsafeBufferPointer { storage in storage.baseAddress!.pointer(to: \.savedEquipmentPurchaseHistory)!.pointee }
+  }
+
+  @inline(never)
+  func nativeStationAutoHasDocking() -> Bool {
+    nativeStationAutoTargetingTier().map { $0 >= .docking } ?? false
+  }
+
+  @inline(never)
+  func nativeStationAutoLaser(on mount: LaserMount) -> LaserKind? {
+    nativeStationAutoLaserMounts()[mount]
+  }
+
+  @inline(never)
+  func nativeFramePerformance() -> ShipPerformance {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeStartupPerformance(at: storage.baseAddress!) }
+  }
+
+  @inline(never)
+  func nativeFrameEnergyRecharge() -> Double {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeFrameReadEnergyRecharge(at: storage.baseAddress!) }
+  }
+
+  @inline(never)
+  func nativeFrameFrontRecharge() -> Double {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeFrameReadShieldRecharge(at: storage.baseAddress!, front: true) }
+  }
+
+  @inline(never)
+  func nativeFrameRearRecharge() -> Double {
+    commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeFrameReadShieldRecharge(at: storage.baseAddress!, front: false) }
+  }
+
+  @inline(never)
+  func nativeGeometryWorldOwnedPod(_ person: EMPCrewIdentity) -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeGeometryReadWorldOwnedPod(person, at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityWatcher() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityWatcher(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityPeople() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityPeople(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityUtility() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityUtility(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityEMP() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityEMP(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityAlien() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityAlien(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityNewt() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityNewt(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityLegacy() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityLegacy(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityCalendar() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityCalendar(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityInstances() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityInstances(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityContracts() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityContracts(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityScript() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityScript(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeDurabilityAccommodation() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityAccommodation(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeStartupNativePerformance() -> ShipPerformance {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStartupNativePerformance(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  func nativeStartupEnergy() -> Double {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStartupPerformance(at: storage.baseAddress!).energy
+    }
+  }
+
+  @inline(never)
+  func nativeStartupFrontShield() -> Double {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStartupShield(at: storage.baseAddress!, front: true)
+    }
+  }
+
+  @inline(never)
+  func nativeStartupRearShield() -> Double {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStartupShield(at: storage.baseAddress!, front: false)
+    }
+  }
+
+  @inline(never)
+  func nativeStartupFuelCapacity() -> Int {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStartupFuel(at: storage.baseAddress!)
+    }
+  }
+
+  @inline(never)
+  private func nativeCurrentSystemIndex() -> Int {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      storage.baseAddress!.pointer(to: \.system)!.pointee
+    }
+  }
+
+  @inline(never)
   func storedFlightSimulation() -> FlightSimulationState {
     commanderStorage.withUnsafeBufferPointer { storage in
       Commander.nativeStationReadFlight(at: storage.baseAddress!)
+    }
+  }
+
+  // Only owned station children leave these synchronous storage reads.
+  func storedNativeStationWorld() -> NativeStationWorld? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      guard let world = storage.baseAddress!.pointer(to: \.nativeStations) else {
+        preconditionFailure("Station world reads require addressable stored world.")
+      }
+      return world.pointee
+    }
+  }
+
+  // Transit steering reads only the script child, never an owned Commander temporary.
+  // Both buffer borrows are synchronous; only an owned ledger or scalar leaves them.
+  @inline(never)
+  func nativeTransitStoredLedger() -> NativeWormholeTransitState? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStationReadScriptState(at: storage.baseAddress!) { state in
+        guard let ledger = state.pointer(to: \.wormholeTransit) else {
+          preconditionFailure("Transit steering requires addressable stored transit state.")
+        }
+        return ledger.pointee
+      }
+    }
+  }
+
+  @inline(never)
+  func nativeTransitStoredCalendarSeconds() -> Double {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStationReadScriptState(at: storage.baseAddress!) { state in
+        guard let calendar = state.pointer(to: \.calendarSeconds) else {
+          preconditionFailure("Transit steering requires addressable stored calendar time.")
+        }
+        return calendar.pointee
+      }
+    }
+  }
+
+  func storedNativeStationResource(for key: String) -> ScriptStationResource? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStationReadScriptState(at: storage.baseAddress!) { state in
+        guard let resources = state.pointer(to: \.savedStationResources) else {
+          preconditionFailure("Station resource reads require addressable stored resources.")
+        }
+        return resources.pointee?[key]
+      }
+    }
+  }
+
+  func storedNativeStationResourcesAreEmpty() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStationReadScriptState(at: storage.baseAddress!) { state in
+        guard let resources = state.pointer(to: \.savedStationResources) else {
+          preconditionFailure("Station resource reads require addressable stored resources.")
+        }
+        return resources.pointee?.isEmpty ?? true
+      }
+    }
+  }
+
+  // Complete checks run inside the stored borrow; only their Boolean results leave it.
+  func storedNativeUtilityStateIsValid() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      storage.baseAddress!.pointee.nativeUtilityStateValid
+    }
+  }
+
+  func storedNativePeopleStateIsValid() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      storage.baseAddress!.pointee.nativePeopleStateValid
     }
   }
 
@@ -1358,6 +3136,100 @@ public struct Game: Sendable {
         preconditionFailure("Reservation requires addressable stored equipment.")
       }
       return inventory.pointee?.owner
+    }
+  }
+
+  // Guidance leaves only selected owned children/scalars or typed read-only results.
+  // The storage borrow is synchronous; no Commander value or pointer escapes it.
+  @inline(never)
+  func nativeGuidanceStoredMission(definition: String) -> ScriptInstance? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStationReadScriptState(at: storage.baseAddress!) { state in
+        guard let instances = state.pointer(to: \.instances) else {
+          preconditionFailure("Guidance requires addressable stored mission instances.")
+        }
+        return instances.pointee.values.first { $0.definition == definition }
+      }
+    }
+  }
+
+  @inline(never)
+  func nativeGuidanceStoredMission(id: UUID) -> ScriptInstance? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStationReadScriptState(at: storage.baseAddress!) { state in
+        guard let instances = state.pointer(to: \.instances) else {
+          preconditionFailure("Guidance requires addressable stored mission instances.")
+        }
+        return instances.pointee[id]
+      }
+    }
+  }
+
+  @inline(never)
+  func c01ClinicStoredHistoryJoins(
+    _ state: borrowing NativeC01ClinicEscortState, mission: borrowing ScriptInstance
+  ) -> Bool {
+    // The closure owns only these child snapshots; the Commander stays borrowed in storage.
+    let ownedState = copy state
+    let ownedMission = copy mission
+    return commanderStorage.withUnsafeBufferPointer { storage in
+      NativeC01ClinicEscortSave.historyJoins(
+        ownedState, mission: ownedMission, commander: storage.baseAddress!.pointee)
+    }
+  }
+
+  @inline(never)
+  func c01ClinicStoredPilotFacts(ordinal: Int) -> NativeC01ClinicPilotFacts? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      storage.baseAddress!.pointee.c01ClinicStockPilotFacts(ordinal: ordinal)
+    }
+  }
+
+  @inline(never)
+  func nativeGuidanceStoredPlayerMesh() -> Mesh {
+    Commander.playerMesh(for: nativeQueryStoredShipID())
+  }
+
+  @inline(never)
+  func nativeGuidanceStoredEquipmentInventory() -> OwnedEquipmentInventory? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      guard let inventory = storage.baseAddress!.pointer(to: \.savedEquipmentInventory) else {
+        preconditionFailure("Guidance requires addressable stored equipment inventory.")
+      }
+      return inventory.pointee
+    }
+  }
+
+  // Complete Commander equality retires before nested native scene preparation.
+  // Only current storage pointers enter the operator; neither pointer escapes this call.
+  @inline(never)
+  func currentNewtNativeCommanderMatches(_ expected: Game) -> Bool {
+    commanderStorage.withUnsafeBufferPointer { live in
+      expected.commanderStorage.withUnsafeBufferPointer { saved in
+        Commander.storedValuesEqual(live.baseAddress!, saved.baseAddress!)
+      }
+    }
+  }
+
+  // Apply exactly the original clock mutation to an existing CoW Game copy.
+  // The expected Commander remains in its heap buffer, never a returned value
+  // held by the deep native retention/mechanical callback stack.
+  @inline(never)
+  func currentNewtNativeCommanderMatches(_ expected: Game, advancingClockBy delta: Double) -> Bool {
+    var advanced = expected
+    advanced.commander.flightSimulation.advancePhysicalTime(delta)
+    return currentNewtNativeCommanderMatches(advanced)
+  }
+
+  @inline(never)
+  func nativeQueryStoredDesign(_ hash: String) -> ShipDesign? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStationReadScriptState(at: storage.baseAddress!) { state in
+        guard let geometry = state.pointer(to: \.savedGeometry) else {
+          preconditionFailure("Native queries require addressable stored source geometry.")
+        }
+        return geometry.pointee?[hash]
+      }
     }
   }
 
@@ -1404,6 +3276,24 @@ public struct Game: Sendable {
     }
   }
 
+  /// The native lookup returns only its selected owned values, never enclosing state.
+  func storedActiveDefensiveFlight() -> (
+    instance: ScriptInstance, state: NativeDefensiveFlightState
+  )? {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeStationReadScriptState(at: storage.baseAddress!) { state in
+        guard let instances = state.pointer(to: \.instances) else {
+          preconditionFailure("Defensive flight requires addressable stored instances.")
+        }
+        for instance in instances.pointee.values
+        where instance.definition == NativeDefensiveFlight.stateID && instance.outcome == .active {
+          if let state = instance.savedDefensiveFlight { return (instance, state) }
+        }
+        return nil
+      }
+    }
+  }
+
   /// Synchronous read-only access; the storage borrow and pointer never escape this call.
   func withReadOnlyCommander<Result>(
     _ read: (borrowing Commander) throws -> Result
@@ -1431,46 +3321,57 @@ public struct Game: Sendable {
 
   @inline(never)
   func nativeStationStoredBodyIsCurrent(_ body: borrowing SpaceBody) -> Bool {
-    let ownedBody = copy body
+    let identity = body.nativeStationIdentity
+    let physicalIdentity = identity == nil ? nil : body.nativeStationPhysicalIdentity
+    let energy = body.energy
+    let bodyID = body.id
     return commanderStorage.withUnsafeBufferPointer { storage in
-      Self.nativeStationBodyIsCurrent(ownedBody, at: storage.baseAddress!)
+      Self.nativeStationBodyIsCurrent(
+        identity: identity, physicalIdentity: physicalIdentity, energy: energy, bodyID: bodyID,
+        at: storage.baseAddress!)
     }
   }
 
   @inline(never)
   mutating func nativeStationApproachStoredBodyIsCurrent(_ body: borrowing SpaceBody) -> Bool {
-    let ownedBody = copy body
+    let identity = body.nativeStationIdentity
+    let physicalIdentity = identity == nil ? nil : body.nativeStationPhysicalIdentity
+    let energy = body.energy
+    let bodyID = body.id
     return commanderStorage.withUnsafeBufferPointer { storage in
-      Self.nativeStationBodyIsCurrent(ownedBody, at: storage.baseAddress!)
+      Self.nativeStationBodyIsCurrent(
+        identity: identity, physicalIdentity: physicalIdentity, energy: energy, bodyID: bodyID,
+        at: storage.baseAddress!)
     }
   }
 
   @inline(never)
   private static func nativeStationBodyIsCurrent(
-    _ body: borrowing SpaceBody, at commander: UnsafePointer<Commander>
+    identity: NativeStationIdentity?, physicalIdentity: ActorIdentity?, energy: Double, bodyID: Int,
+    at commander: UnsafePointer<Commander>
   ) -> Bool {
-    guard let identity = body.nativeStationIdentity,
-      let physicalIdentity = body.nativeStationPhysicalIdentity,
+    guard let identity, let physicalIdentity,
       let worldStorage = commander.pointer(to: \.nativeStations)
     else { return false }
     guard let world = worldStorage.pointee, Commander.nativeStationStateIsValid(at: commander)
     else { return false }
     return nativeStationBindingIsCurrent(
-      body, identity: identity, physicalIdentity: physicalIdentity, world: world, at: commander)
+      energy: energy, bodyID: bodyID, identity: identity, physicalIdentity: physicalIdentity,
+      world: world, at: commander)
   }
 
   @inline(never)
   private static func nativeStationBindingIsCurrent(
-    _ body: borrowing SpaceBody, identity: NativeStationIdentity, physicalIdentity: ActorIdentity,
+    energy: Double, bodyID: Int, identity: NativeStationIdentity, physicalIdentity: ActorIdentity,
     world: borrowing NativeStationWorld, at commander: UnsafePointer<Commander>
   ) -> Bool {
     guard let record = world.ledger.records.first(where: { $0.identity == identity })
     else { return false }
     let currentSystem = Commander.nativeStationReadSystem(at: commander)
-    guard identity.system == currentSystem, record.tombstone == nil, body.energy > 0,
+    guard identity.system == currentSystem, record.tombstone == nil, energy > 0,
       physicalIdentity.system == currentSystem,
       physicalIdentity.visit == Commander.nativeStationReadFlight(at: commander).visit,
-      record.binding == .init(actor: physicalIdentity, bodyID: body.id)
+      record.binding == .init(actor: physicalIdentity, bodyID: bodyID)
     else { return false }
     return true
   }
@@ -1573,82 +3474,242 @@ public struct Game: Sendable {
     return eligible
   }
   public var systems: [StarSystem] {
-    _read { yield valueStorage[0].systems }
+    _read {
+      let stored: [StarSystem] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.systems)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].systems }
   }
   public var screen: Screen {
-    _read { yield valueStorage[0].screen }
+    _read {
+      let stored: Screen = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.screen)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].screen }
   }
   public var paused: Bool {
-    _read { yield valueStorage[0].paused }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.paused)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].paused }
   }
   public var isMissionTrial: Bool {
-    _read { yield valueStorage[0].isMissionTrial }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.isMissionTrial)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].isMissionTrial }
   }
   public var contractBoard: ContractBoardUI {
-    _read { yield valueStorage[0].contractBoard }
+    _read {
+      let stored: ContractBoardUI = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.contractBoard)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].contractBoard }
   }
   var scriptPledgeAdmission: ScriptPledgeAdmission? {
-    _read { yield valueStorage[0].scriptPledgeAdmission }
+    _read {
+      let stored: ScriptPledgeAdmission? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptPledgeAdmission)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptPledgeAdmission }
   }
   var scriptCourierAdmission: ScriptCourierAdmission? {
-    _read { yield valueStorage[0].scriptCourierAdmission }
+    _read {
+      let stored: ScriptCourierAdmission? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptCourierAdmission)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptCourierAdmission }
   }
   public var trialTitle: String? {
-    _read { yield valueStorage[0].trialTitle }
+    _read {
+      let stored: String? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.trialTitle)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].trialTitle }
   }
   var trialDigest: String? {
-    _read { yield valueStorage[0].trialDigest }
+    _read {
+      let stored: String? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.trialDigest)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].trialDigest }
   }
   var trialSeed: UInt64? {
-    _read { yield valueStorage[0].trialSeed }
+    _read {
+      let stored: UInt64? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.trialSeed)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].trialSeed }
   }
   public var docked: Bool {
-    _read { yield valueStorage[0].docked }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.docked)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].docked }
   }
   public var dockedAtMainStation: Bool {
-    _read { yield valueStorage[0].dockedAtMainStation }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.dockedAtMainStation)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].dockedAtMainStation }
   }
   var scriptReferenceFrame: ScriptReferenceFrame? {
-    _read { yield valueStorage[0].scriptReferenceFrame }
+    _read {
+      let stored: ScriptReferenceFrame? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptReferenceFrame)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptReferenceFrame }
   }
   var scriptDispatching: Bool {
-    _read { yield valueStorage[0].scriptDispatching }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptDispatching)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptDispatching }
   }
   var scriptEventsDeferred: Bool {
-    _read { yield valueStorage[0].scriptEventsDeferred }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptEventsDeferred)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptEventsDeferred }
   }
   var scriptDurabilityAvailable: Bool {
-    _read { yield valueStorage[0].scriptDurabilityAvailable }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptDurabilityAvailable)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptDurabilityAvailable }
+  }
+  var empPlayerElectricalInterval: EMPPlayerElectricalInterval? {
+    _read {
+      let stored: EMPPlayerElectricalInterval? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.empPlayerElectricalInterval)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].empPlayerElectricalInterval }
+  }
+  var c01InquiryStepRuntime: NativeC01InquiryStepRuntimeState {
+    _read {
+      let stored: NativeC01InquiryStepRuntimeState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.c01InquiryStepRuntime)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].c01InquiryStepRuntime }
+  }
+  var empPulseBeforeResultStorage: EMPPulseBeforeResult? {
+    _read {
+      let stored: EMPPulseBeforeResult? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.empPulseBeforeResultStorage)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].empPulseBeforeResultStorage }
   }
   // Runtime-only destination ownership and acknowledgment; never encoded in Commander saves.
   var pendingNewSaveDestination: URL? {
-    _read { yield valueStorage[0].pendingNewSaveDestination }
+    _read {
+      let stored: URL? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.pendingNewSaveDestination)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].pendingNewSaveDestination }
   }
   var newCommanderSaveReceipt: CommanderFileReceipt? {
-    _read { yield valueStorage[0].newCommanderSaveReceipt }
+    _read {
+      let stored: CommanderFileReceipt? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.newCommanderSaveReceipt)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].newCommanderSaveReceipt }
   }
+  var nativeOriginalUtilityFatalStart: NativeOriginalUtilityFatalStart? {
+    _read {
+      let stored: NativeOriginalUtilityFatalStart? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeOriginalUtilityFatalStart)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeOriginalUtilityFatalStart }
+  }
+  var nativeOriginalUtilityFatalTransition: NativeOriginalUtilityFatalTransition? {
+    _read {
+      let stored: NativeOriginalUtilityFatalTransition? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeOriginalUtilityFatalTransition)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeOriginalUtilityFatalTransition }
+  }
+  var nativeOriginalStationPopulationPlan: NativeOriginalStationPopulationPlan? {
+    _read {
+      let stored: NativeOriginalStationPopulationPlan? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeOriginalStationPopulationPlan)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeOriginalStationPopulationPlan }
+  }
+  var c01InquiryNativeRegistry: NativeC01InquiryNativeRegistry {
+    _read {
+      let stored: NativeC01InquiryNativeRegistry = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.c01InquiryNativeRegistry)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].c01InquiryNativeRegistry }
+  }
   var nativeStationRuntimeEpoch: UUID {
-    _read { yield valueStorage[0].nativeStationRuntimeEpoch }
+    _read {
+      let stored: UUID = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeStationRuntimeEpoch)!.pointee
+      }
+      yield stored
+    }
     set {
       valueStorage[0].nativeStationRuntimeEpoch = newValue
+      c01InquiryNativeRegistry = .empty()
+      c01InquiryStepRuntime.invalidateScene()
       nativeOrbitalOutlookRuntime = .init()
       nativeOriginalSurveyRuntime = nil
       nativeGlassMeridianRuntime = nil
@@ -1657,6 +3718,9 @@ public struct Game: Sendable {
       nativeRecordRecoveryPending = nil
       nativeCrewLogPickupPending = nil
       nativeC01SurveyorPending = nil
+      nativeC01TimingStandardPending = nil
+      c01LaneRepairWorkRuntime = NativeC01LaneRepairWorkRuntime()
+      c01ClinicEscortRuntime = NativeC01ClinicEscortRuntime()
       nativeRecordRecoveryIdentificationPending = nil
       nativeIdentifiedSalvagePending = nil
     }
@@ -1667,208 +3731,536 @@ public struct Game: Sendable {
     }
   }
   var nativeOrbitalOutlookRuntime: NativeOrbitalOutlookRuntime {
-    _read { yield valueStorage[0].nativeOrbitalOutlookRuntime }
+    _read {
+      let stored: NativeOrbitalOutlookRuntime = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeOrbitalOutlookRuntime)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeOrbitalOutlookRuntime }
   }
+  var nativeAssemblyCalibrationDisplay: NativeAssemblySurveyInstrumentControls.Readout? {
+    _read {
+      let stored: NativeAssemblySurveyInstrumentControls.Readout? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeAssemblyCalibrationDisplay)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeAssemblyCalibrationDisplay }
+  }
   var nativeOriginalSurveyRuntime: NativeOriginalSurveyRuntime? {
-    _read { yield valueStorage[0].nativeOriginalSurveyRuntime }
+    _read {
+      let stored: NativeOriginalSurveyRuntime? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeOriginalSurveyRuntime)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeOriginalSurveyRuntime }
   }
   var nativeGlassMeridianRuntime: NativeGlassMeridianRuntime? {
-    _read { yield valueStorage[0].nativeGlassMeridianRuntime }
+    _read {
+      let stored: NativeGlassMeridianRuntime? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeGlassMeridianRuntime)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeGlassMeridianRuntime }
   }
   var nativeFlightReceptionPending: NativeFlightReceptionPending? {
-    _read { yield valueStorage[0].nativeFlightReceptionPending }
+    _read {
+      let stored: NativeFlightReceptionPending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeFlightReceptionPending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeFlightReceptionPending }
   }
   var nativeMeasuredExtractionPending: NativeMeasuredExtractionPending? {
-    _read { yield valueStorage[0].nativeMeasuredExtractionPending }
+    _read {
+      let stored: NativeMeasuredExtractionPending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeMeasuredExtractionPending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeMeasuredExtractionPending }
   }
   var nativeRecordRecoveryPending: WayfarerRecordRecoveryPending? {
-    _read { yield valueStorage[0].nativeRecordRecoveryPending }
+    _read {
+      let stored: WayfarerRecordRecoveryPending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeRecordRecoveryPending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeRecordRecoveryPending }
   }
   var nativeCrewLogPickupPending: NativeCrewLogPickupPending? {
-    _read { yield valueStorage[0].nativeCrewLogPickupPending }
+    _read {
+      let stored: NativeCrewLogPickupPending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeCrewLogPickupPending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeCrewLogPickupPending }
   }
   var nativeC01SurveyorPending: NativeC01SurveyorPending? {
-    _read { yield valueStorage[0].nativeC01SurveyorPending }
+    _read {
+      let stored: NativeC01SurveyorPending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeC01SurveyorPending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeC01SurveyorPending }
   }
+  var nativeC01TimingStandardPending: NativeC01TimingStandardPending? {
+    _read {
+      let stored: NativeC01TimingStandardPending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeC01TimingStandardPending)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeC01TimingStandardPending }
+  }
+  var c01LaneRepairWorkRuntime: NativeC01LaneRepairWorkRuntime {
+    _read {
+      let stored: NativeC01LaneRepairWorkRuntime = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.c01LaneRepairWorkRuntime)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].c01LaneRepairWorkRuntime }
+  }
+  var c01ClinicEscortRuntime: NativeC01ClinicEscortRuntime {
+    _read {
+      let stored: NativeC01ClinicEscortRuntime = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.c01ClinicEscortRuntime)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].c01ClinicEscortRuntime }
+  }
   var nativeRecordRecoveryIdentificationPending: WayfarerRecordRecoveryIdentificationPending? {
-    _read { yield valueStorage[0].nativeRecordRecoveryIdentificationPending }
+    _read {
+      let stored: WayfarerRecordRecoveryIdentificationPending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeRecordRecoveryIdentificationPending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeRecordRecoveryIdentificationPending }
   }
   var nativeIdentifiedSalvagePending: NativeIdentifiedSalvagePending? {
-    _read { yield valueStorage[0].nativeIdentifiedSalvagePending }
+    _read {
+      let stored: NativeIdentifiedSalvagePending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeIdentifiedSalvagePending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeIdentifiedSalvagePending }
   }
   var nativeCrimboMotionSample: NativeCrimboMotionSample? {
-    _read { yield valueStorage[0].nativeCrimboMotionSample }
+    _read {
+      let stored: NativeCrimboMotionSample? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeCrimboMotionSample)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeCrimboMotionSample }
   }
   var nativeCrimboAttainedMotion: NativeCrimboAttainedMotion? {
-    _read { yield valueStorage[0].nativeCrimboAttainedMotion }
+    _read {
+      let stored: NativeCrimboAttainedMotion? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeCrimboAttainedMotion)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeCrimboAttainedMotion }
   }
   // Enabled only by G1 after supported native save/world/durability validation. Never saved.
   var nativeCrimboLifecycleAvailable: Bool {
-    _read { yield valueStorage[0].nativeCrimboLifecycleAvailable }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeCrimboLifecycleAvailable)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeCrimboLifecycleAvailable }
   }
   var nativeSalvageMotion: [SalvageLotIdentity: NativeSalvageMotion] {
-    _read { yield valueStorage[0].nativeSalvageMotion }
+    _read {
+      let stored: [SalvageLotIdentity: NativeSalvageMotion] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeSalvageMotion)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeSalvageMotion }
   }
   var nativeSalvageWreckMotion: [WreckIdentity: NativeSalvageWreckObservation] {
-    _read { yield valueStorage[0].nativeSalvageWreckMotion }
+    _read {
+      let stored: [WreckIdentity: NativeSalvageWreckObservation] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeSalvageWreckMotion)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeSalvageWreckMotion }
   }
   var nativeSalvageWork: NativeSalvageHotWork? {
-    _read { yield valueStorage[0].nativeSalvageWork }
+    _read {
+      let stored: NativeSalvageHotWork? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeSalvageWork)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeSalvageWork }
   }
+  var nativeSalvageAdmissionDiagnostic: NativeSalvageAdmissionDiagnostic? {
+    _read {
+      let stored: NativeSalvageAdmissionDiagnostic? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeSalvageAdmissionDiagnostic)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeSalvageAdmissionDiagnostic }
+  }
+  var nativeEncounterBirthDiagnostic: GameplayEncounterBirthDiagnostic? {
+    _read {
+      let stored: GameplayEncounterBirthDiagnostic? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeEncounterBirthDiagnostic)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeEncounterBirthDiagnostic }
+  }
   var pendingNativeSalvageCollections: [NativeSalvageCollectionObservation] {
-    _read { yield valueStorage[0].pendingNativeSalvageCollections }
+    _read {
+      let stored: [NativeSalvageCollectionObservation] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.pendingNativeSalvageCollections)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].pendingNativeSalvageCollections }
   }
+  var pendingMemoryAtlasMainDock: NativeMemoryAtlasMainEntryProof? {
+    _read {
+      let stored: NativeMemoryAtlasMainEntryProof? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.pendingMemoryAtlasMainDock)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].pendingMemoryAtlasMainDock }
+  }
+
   var pendingNativeStationDock: NativeStationEntryProof? {
-    _read { yield valueStorage[0].pendingNativeStationDock }
+    _read {
+      let stored: NativeStationEntryProof? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.pendingNativeStationDock)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].pendingNativeStationDock }
   }
   var inductionArkDockPublicationPending: Bool {
-    _read { yield valueStorage[0].inductionArkDockPublicationPending }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.inductionArkDockPublicationPending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].inductionArkDockPublicationPending }
   }
   var inductionRescueDockPublicationPending: Bool {
-    _read { yield valueStorage[0].inductionRescueDockPublicationPending }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.inductionRescueDockPublicationPending)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].inductionRescueDockPublicationPending }
   }
   var inductionUtilityWorkRuntime: NativeInductionUtilityWorkRuntime {
-    _read { yield valueStorage[0].inductionUtilityWorkRuntime }
+    _read {
+      let stored: NativeInductionUtilityWorkRuntime = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.inductionUtilityWorkRuntime)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].inductionUtilityWorkRuntime }
   }
+  var isolationWorkRuntime: NativeIsolationWorkRuntime {
+    _read {
+      let stored: NativeIsolationWorkRuntime = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.isolationWorkRuntime)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].isolationWorkRuntime }
+  }
   var nativeStationDockEvidence: NativeStationDockEvidence? {
-    _read { yield valueStorage[0].nativeStationDockEvidence }
+    _read {
+      let stored: NativeStationDockEvidence? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeStationDockEvidence)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeStationDockEvidence }
   }
   var nativeMainStationDockEvidence: NativeMainStationDockEvidence? {
-    _read { yield valueStorage[0].nativeMainStationDockEvidence }
+    _read {
+      let stored: NativeMainStationDockEvidence? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeMainStationDockEvidence)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nativeMainStationDockEvidence }
   }
   public var scriptPacks: [ScriptPack] {
-    _read { yield valueStorage[0].scriptPacks }
+    _read {
+      let stored: [ScriptPack] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptPacks)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptPacks }
   }
   public var scriptAvailablePackDigest: String? {
-    _read { yield valueStorage[0].scriptAvailablePackDigest }
+    _read {
+      let stored: String? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptAvailablePackDigest)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptAvailablePackDigest }
   }
   public var scriptOffer: UUID? {
-    _read { yield valueStorage[0].scriptOffer }
+    _read {
+      let stored: UUID? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptOffer)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptOffer }
   }
   public var scriptPresentedDialogue: ScriptDialogue? {
-    _read { yield valueStorage[0].scriptPresentedDialogue }
+    _read {
+      let stored: ScriptDialogue? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptPresentedDialogue)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptPresentedDialogue }
   }
   public var scriptConfirmSelected: Bool {
-    _read { yield valueStorage[0].scriptConfirmSelected }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptConfirmSelected)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptConfirmSelected }
   }
   public var scriptChoiceSelection: Int {
-    _read { yield valueStorage[0].scriptChoiceSelection }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptChoiceSelection)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptChoiceSelection }
   }
   public var missionPacks: MissionPackLibrary {
-    _read { yield valueStorage[0].missionPacks }
+    _read {
+      let stored: MissionPackLibrary = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missionPacks)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missionPacks }
   }
   public var packOffer: PackOffer? {
-    _read { yield valueStorage[0].packOffer }
+    _read {
+      let stored: PackOffer? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.packOffer)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].packOffer }
   }
   public var packOfferElapsed: Double {
-    _read { yield valueStorage[0].packOfferElapsed }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.packOfferElapsed)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].packOfferElapsed }
   }
   public var packDialogScroll: Int {
-    _read { yield valueStorage[0].packDialogScroll }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.packDialogScroll)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].packDialogScroll }
   }
   public var blackjackOffer: BlackjackOffer? {
-    _read { yield valueStorage[0].blackjackOffer }
+    _read {
+      let stored: BlackjackOffer? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.blackjackOffer)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].blackjackOffer }
   }
   public var showroom: ShowroomState {
-    _read { yield valueStorage[0].showroom }
+    _read {
+      let stored: ShowroomState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.showroom)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].showroom }
   }
   public var galacticBrowse: GalaxyBrowseState {
-    _read { yield valueStorage[0].galacticBrowse }
+    _read {
+      let stored: GalaxyBrowseState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.galacticBrowse)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].galacticBrowse }
   }
   public var systemInspection: SystemInspection? {
-    _read { yield valueStorage[0].systemInspection }
+    _read {
+      let stored: SystemInspection? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.systemInspection)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].systemInspection }
   }
   public var rumourReturn: Screen {
-    _read { yield valueStorage[0].rumourReturn }
+    _read {
+      let stored: Screen = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.rumourReturn)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].rumourReturn }
   }
   var wantedSelection: ActorIdentity? {
-    _read { yield valueStorage[0].wantedSelection }
+    _read {
+      let stored: ActorIdentity? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.wantedSelection)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].wantedSelection }
   }
   var wantedPlayerSelected: Bool {
-    _read { yield valueStorage[0].wantedPlayerSelected }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.wantedPlayerSelected)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].wantedPlayerSelected }
   }
   var wantedDetail: Bool {
-    _read { yield valueStorage[0].wantedDetail }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.wantedDetail)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].wantedDetail }
   }
   var wantedRumourDetail: Bool {
-    _read { yield valueStorage[0].wantedRumourDetail }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.wantedRumourDetail)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].wantedRumourDetail }
   }
   var wantedScroll: Int {
-    _read { yield valueStorage[0].wantedScroll }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.wantedScroll)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].wantedScroll }
   }
   var wantedReadContext: WantedReadContext? {
-    _read { yield valueStorage[0].wantedReadContext }
+    _read {
+      let stored: WantedReadContext? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.wantedReadContext)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].wantedReadContext }
   }
   public var blackjackReturn: Screen {
-    _read { yield valueStorage[0].blackjackReturn }
+    _read {
+      let stored: Screen = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.blackjackReturn)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].blackjackReturn }
   }
   var screenHistory: [Screen] {
-    _read { yield valueStorage[0].screenHistory }
+    _read {
+      let stored: [Screen] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.screenHistory)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].screenHistory }
   }
   var flightReturn: Screen {
-    _read { yield valueStorage[0].flightReturn }
+    _read {
+      let stored: Screen = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.flightReturn)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].flightReturn }
   }
   public var selectedSystem: Int {
-    _read { yield valueStorage[0].selectedSystem }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.selectedSystem)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].selectedSystem }
   }
   public var selection: Int {
-    _read { yield valueStorage[0].selection }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.selection)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].selection }
   }
   public var informationScroll: Int {
-    _read { yield valueStorage[0].informationScroll }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.informationScroll)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].informationScroll }
   }
   public var chartInformationScroll: Int {
-    _read { yield valueStorage[0].chartInformationScroll }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.chartInformationScroll)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].chartInformationScroll }
   }
   /// Mutable station stock is commander-owned and survives departure, save and reload.
@@ -1877,327 +4269,754 @@ public struct Game: Sendable {
     set { commander.originalMarkets.set(newValue, galaxy: commander.galaxy, system: currentSystem) }
   }
   public var bodies: [SpaceBody] {
-    _read { yield valueStorage[0].bodies }
+    _read {
+      let stored: [SpaceBody] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.bodies)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].bodies }
   }
   public var miningFields: [MiningField] {
-    _read { yield valueStorage[0].miningFields }
+    _read {
+      let stored: [MiningField] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.miningFields)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].miningFields }
   }
   public var salvageSites: [SalvageSite] {
-    _read { yield valueStorage[0].salvageSites }
+    _read {
+      let stored: [SalvageSite] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.salvageSites)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].salvageSites }
   }
   var gameplayRevision: UInt64 {
-    _read { yield valueStorage[0].gameplayRevision }
+    _read {
+      let stored: UInt64 = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.gameplayRevision)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].gameplayRevision }
   }
   /// Actual contact disqualifies this physical frame from attained-motion credit.
   var stationImpactRevision: UInt64? {
-    _read { yield valueStorage[0].stationImpactRevision }
+    _read {
+      let stored: UInt64? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.stationImpactRevision)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].stationImpactRevision }
   }
   // A laser capability is consumed synchronously in the same actor turn that emitted it.
   // Bounded and ephemeral: capabilities are never restored from a commander save.
   var consumedMissionLaserEmission: UInt64 {
-    _read { yield valueStorage[0].consumedMissionLaserEmission }
+    _read {
+      let stored: UInt64 = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.consumedMissionLaserEmission)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].consumedMissionLaserEmission }
   }
   var salvageAdmissionGeometry: [String: PreparedSalvageAdmissionHull] {
-    _read { yield valueStorage[0].salvageAdmissionGeometry }
+    _read {
+      let stored: [String: PreparedSalvageAdmissionHull] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.salvageAdmissionGeometry)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].salvageAdmissionGeometry }
   }
   public var starfield: Starfield {
-    _read { yield valueStorage[0].starfield }
+    _read {
+      let stored: Starfield = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.starfield)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].starfield }
   }
   public var speed: Double {
-    _read { yield valueStorage[0].speed }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.speed)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].speed }
   }
   public var pitch: Double {
-    _read { yield valueStorage[0].pitch }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.pitch)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].pitch }
   }
   public var roll: Double {
-    _read { yield valueStorage[0].roll }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.roll)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].roll }
   }
   public var yaw: Double {
-    _read { yield valueStorage[0].yaw }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.yaw)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].yaw }
   }
   public var spin: SpinControl {
-    _read { yield valueStorage[0].spin }
+    _read {
+      let stored: SpinControl = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.spin)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].spin }
   }
   public var autoPilot: AutoTargetControl {
-    _read { yield valueStorage[0].autoPilot }
+    _read {
+      let stored: AutoTargetControl = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.autoPilot)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].autoPilot }
   }
   var stationAutoDefence: StationAutoDefenceState? {
-    _read { yield valueStorage[0].stationAutoDefence }
+    _read {
+      let stored: StationAutoDefenceState? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.stationAutoDefence)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].stationAutoDefence }
   }
   public var workTargetFilter: WorkTargetFilter {
-    _read { yield valueStorage[0].workTargetFilter }
+    _read {
+      let stored: WorkTargetFilter = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.workTargetFilter)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].workTargetFilter }
   }
   var workGuidance: FlightWorkGuidance? {
-    _read { yield valueStorage[0].workGuidance }
+    _read {
+      let stored: FlightWorkGuidance? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.workGuidance)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].workGuidance }
   }
   var workBraking: FlightWorkBraking? {
-    _read { yield valueStorage[0].workBraking }
+    _read {
+      let stored: FlightWorkBraking? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.workBraking)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].workBraking }
   }
   var workRecoveryRock: RockIdentity? {
-    _read { yield valueStorage[0].workRecoveryRock }
+    _read {
+      let stored: RockIdentity? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.workRecoveryRock)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].workRecoveryRock }
   }
   var workRecoveryAdmissionDeadline: Double? {
-    _read { yield valueStorage[0].workRecoveryAdmissionDeadline }
+    _read {
+      let stored: Double? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.workRecoveryAdmissionDeadline)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].workRecoveryAdmissionDeadline }
   }
   var approvedWorkMotion: HullSceneMotion? {
-    _read { yield valueStorage[0].approvedWorkMotion }
+    _read {
+      let stored: HullSceneMotion? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.approvedWorkMotion)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].approvedWorkMotion }
   }
   var lastAppliedWorkMotion: HullSceneMotion? {
-    _read { yield valueStorage[0].lastAppliedWorkMotion }
+    _read {
+      let stored: HullSceneMotion? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.lastAppliedWorkMotion)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].lastAppliedWorkMotion }
   }
   var plannedLegacyWorkMotion: [Int: HullSweepObstacle] {
-    _read { yield valueStorage[0].plannedLegacyWorkMotion }
+    _read {
+      let stored: [Int: HullSweepObstacle] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.plannedLegacyWorkMotion)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].plannedLegacyWorkMotion }
   }
   var workScenePlanned: Bool {
-    _read { yield valueStorage[0].workScenePlanned }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.workScenePlanned)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].workScenePlanned }
   }
   var workFireSuspended: Bool {
-    _read { yield valueStorage[0].workFireSuspended }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.workFireSuspended)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].workFireSuspended }
   }
   var flightTrigger: FlightTriggerState {
-    _read { yield valueStorage[0].flightTrigger }
+    _read {
+      let stored: FlightTriggerState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.flightTrigger)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].flightTrigger }
   }
   var selectedToolActivity: FlightToolActivity? {
-    _read { yield valueStorage[0].selectedToolActivity }
+    _read {
+      let stored: FlightToolActivity? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.selectedToolActivity)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].selectedToolActivity }
   }
   /// Immutable presentation for the delivered runtime snapshot, prepared off the paint path.
   public internal(set) var flightWeaponDisplay: FlightWeaponDisplay {
-    _read { yield valueStorage[0].flightWeaponDisplay }
+    _read {
+      let stored: FlightWeaponDisplay = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.flightWeaponDisplay)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].flightWeaponDisplay }
   }
   var manualResidualFlight: Bool {
-    _read { yield valueStorage[0].manualResidualFlight }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.manualResidualFlight)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].manualResidualFlight }
   }
   public var viewportWidth: Double {
-    _read { yield valueStorage[0].viewportWidth }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.viewportWidth)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].viewportWidth }
   }
   public var viewportHeight: Double {
-    _read { yield valueStorage[0].viewportHeight }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.viewportHeight)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].viewportHeight }
   }
   public var targetPanelExpanded: Bool? {
-    _read { yield valueStorage[0].targetPanelExpanded }
+    _read {
+      let stored: Bool? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.targetPanelExpanded)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].targetPanelExpanded }
   }
   public var targetPanelScroll: Int {
-    _read { yield valueStorage[0].targetPanelScroll }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.targetPanelScroll)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].targetPanelScroll }
   }
   public var weaponsTargetID: Int? {
-    _read { yield valueStorage[0].weaponsTargetID }
+    _read {
+      let stored: Int? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.weaponsTargetID)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].weaponsTargetID }
   }
   public var secretScroll: Int {
-    _read { yield valueStorage[0].secretScroll }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.secretScroll)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].secretScroll }
   }
   public var energy: Double {
-    _read { yield valueStorage[0].energy }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.energy)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].energy }
   }
   public var frontShield: Double {
-    _read { yield valueStorage[0].frontShield }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.frontShield)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].frontShield }
   }
   public var rearShield: Double {
-    _read { yield valueStorage[0].rearShield }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.rearShield)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].rearShield }
   }
   public var laserHeat: Double {
-    _read { yield valueStorage[0].laserHeat }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.laserHeat)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].laserHeat }
   }
   public var laserFlash: Double {
-    _read { yield valueStorage[0].laserFlash }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.laserFlash)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].laserFlash }
   }
+  var playerImpactFeedback: PlayerImpactFeedback? {
+    _read {
+      let stored: PlayerImpactFeedback? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.playerImpactFeedback)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].playerImpactFeedback }
+  }
   public var dischargeAudio: DischargeAudioState {
-    _read { yield valueStorage[0].dischargeAudio }
+    _read {
+      let stored: DischargeAudioState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.dischargeAudio)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].dischargeAudio }
   }
   var gameplayCombatTrace: GameplayCombatTrace? {
-    _read { yield valueStorage[0].gameplayCombatTrace }
+    _read {
+      let stored: GameplayCombatTrace? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.gameplayCombatTrace)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].gameplayCombatTrace }
   }
   public var altitude: Double {
-    _read { yield valueStorage[0].altitude }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.altitude)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].altitude }
   }
   public var celestials: [CelestialBody] {
-    _read { yield valueStorage[0].celestials }
+    _read {
+      let stored: [CelestialBody] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.celestials)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].celestials }
   }
   public var solarScoopState: SolarScoopState {
-    _read { yield valueStorage[0].solarScoopState }
+    _read {
+      let stored: SolarScoopState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.solarScoopState)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].solarScoopState }
   }
   var solarFuelRemainder: Double {
-    _read { yield valueStorage[0].solarFuelRemainder }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.solarFuelRemainder)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].solarFuelRemainder }
   }
   public var cabinTemperature: Double {
-    _read { yield valueStorage[0].cabinTemperature }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.cabinTemperature)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].cabinTemperature }
   }
   public var equipmentMount: LaserMount {
-    _read { yield valueStorage[0].equipmentMount }
+    _read {
+      let stored: LaserMount = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.equipmentMount)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].equipmentMount }
   }
   public var equipmentWorkTool: Bool {
-    _read { yield valueStorage[0].equipmentWorkTool }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.equipmentWorkTool)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].equipmentWorkTool }
   }
+  public var equipmentCrewSelected: Bool {
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.equipmentCrewSelected)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].equipmentCrewSelected }
+  }
   public var selectedFlightTool: FlightWorkTool {
-    _read { yield valueStorage[0].selectedFlightTool }
+    _read {
+      let stored: FlightWorkTool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.selectedFlightTool)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].selectedFlightTool }
   }
   public internal(set) var inventoryContextEpoch: InventoryContextEpoch {
-    _read { yield valueStorage[0].inventoryContextEpoch }
+    _read {
+      let stored: InventoryContextEpoch = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.inventoryContextEpoch)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].inventoryContextEpoch }
   }
   public var inventoryActionSelection: Int {
-    _read { yield valueStorage[0].inventoryActionSelection }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.inventoryActionSelection)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].inventoryActionSelection }
   }
   public var inventoryUpgradeChoice: Int {
-    _read { yield valueStorage[0].inventoryUpgradeChoice }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.inventoryUpgradeChoice)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].inventoryUpgradeChoice }
   }
   public var dockingComputer: Bool {
-    _read { yield valueStorage[0].dockingComputer }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.dockingComputer)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].dockingComputer }
   }
   public var missileArmed: Bool {
-    _read { yield valueStorage[0].missileArmed }
+    _read {
+      let stored: Bool = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missileArmed)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missileArmed }
   }
   public var message: String {
-    _read { yield valueStorage[0].message }
+    _read {
+      let stored: String = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.message)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].message }
   }
   public var messageTime: Double {
-    _read { yield valueStorage[0].messageTime }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.messageTime)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].messageTime }
   }
   public var jumpCountdown: Double? {
-    _read { yield valueStorage[0].jumpCountdown }
+    _read {
+      let stored: Double? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.jumpCountdown)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].jumpCountdown }
   }
   public var time: Double {
-    _read { yield valueStorage[0].time }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.time)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].time }
   }
   var scriptStartupTime: Double? {
-    _read { yield valueStorage[0].scriptStartupTime }
+    _read {
+      let stored: Double? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.scriptStartupTime)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].scriptStartupTime }
   }
   public var secretBuffer: String {
-    _read { yield valueStorage[0].secretBuffer }
+    _read {
+      let stored: String = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.secretBuffer)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].secretBuffer }
   }
   public var secretReturn: Screen {
-    _read { yield valueStorage[0].secretReturn }
+    _read {
+      let stored: Screen = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.secretReturn)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].secretReturn }
   }
   public var helpReturn: Screen {
-    _read { yield valueStorage[0].helpReturn }
+    _read {
+      let stored: Screen = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.helpReturn)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].helpReturn }
   }
   public var helpPage: Int {
-    _read { yield valueStorage[0].helpPage }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.helpPage)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].helpPage }
   }
   public var gallery: MissionGalleryState {
-    _read { yield valueStorage[0].gallery }
+    _read {
+      let stored: MissionGalleryState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.gallery)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].gallery }
   }
+  var c01InquiryJournal: NativeC01InquiryJournalState {
+    _read {
+      let stored: NativeC01InquiryJournalState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.c01InquiryJournal)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].c01InquiryJournal }
+  }
   public var library: ScriptLibraryState {
-    _read { yield valueStorage[0].library }
+    _read {
+      let stored: ScriptLibraryState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.library)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].library }
   }
   public var mapColour: MapColourMode {
-    _read { yield valueStorage[0].mapColour }
+    _read {
+      let stored: MapColourMode = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.mapColour)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].mapColour }
   }
   public var mapZoom: MapZoom {
-    _read { yield valueStorage[0].mapZoom }
+    _read {
+      let stored: MapZoom = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.mapZoom)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].mapZoom }
   }
   public var mapSearch: PlanetSearchState {
-    _read { yield valueStorage[0].mapSearch }
+    _read {
+      let stored: PlanetSearchState = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.mapSearch)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].mapSearch }
   }
   public var navigationOptions: [RouteAlternative] {
-    _read { yield valueStorage[0].navigationOptions }
+    _read {
+      let stored: [RouteAlternative] = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.navigationOptions)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].navigationOptions }
   }
   public var navigationSelection: Int {
-    _read { yield valueStorage[0].navigationSelection }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.navigationSelection)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].navigationSelection }
   }
   public var navigationScroll: Int {
-    _read { yield valueStorage[0].navigationScroll }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.navigationScroll)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].navigationScroll }
   }
   public var navigationReturn: Screen {
-    _read { yield valueStorage[0].navigationReturn }
+    _read {
+      let stored: Screen = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.navigationReturn)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].navigationReturn }
   }
   public var missionNotice: MissionNotice? {
-    _read { yield valueStorage[0].missionNotice }
+    _read {
+      let stored: MissionNotice? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missionNotice)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missionNotice }
   }
   public var missionPage: Int {
-    _read { yield valueStorage[0].missionPage }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missionPage)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missionPage }
   }
   public var missionClue: String? {
-    _read { yield valueStorage[0].missionClue }
+    _read {
+      let stored: String? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missionClue)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missionClue }
   }
   public var missionElapsed: Double {
-    _read { yield valueStorage[0].missionElapsed }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missionElapsed)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missionElapsed }
   }
   var fireCooldown: Double {
-    _read { yield valueStorage[0].fireCooldown }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.fireCooldown)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].fireCooldown }
   }
   var missionLoopCounter: UInt8 {
-    _read { yield valueStorage[0].missionLoopCounter }
+    _read {
+      let stored: UInt8 = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missionLoopCounter)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missionLoopCounter }
   }
   var missionSpawnDelay: Int {
-    _read { yield valueStorage[0].missionSpawnDelay }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missionSpawnDelay)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missionSpawnDelay }
   }
   // Legacy callers share ECMControl's physical-time clock; there is no second countdown.
@@ -2206,47 +5025,100 @@ public struct Game: Sendable {
     set { ecmControl.setLegacyFrames(newValue) }
   }
   var enemyECMSource: Int? {
-    _read { yield valueStorage[0].enemyECMSource }
+    _read {
+      let stored: Int? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.enemyECMSource)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].enemyECMSource }
   }
   var activeECMActivation: ECMActivationIdentity? {
-    _read { yield valueStorage[0].activeECMActivation }
+    _read {
+      let stored: ECMActivationIdentity? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.activeECMActivation)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].activeECMActivation }
   }
   public var ecmControl: ECMControl {
-    _read { yield valueStorage[0].ecmControl }
+    _read {
+      let stored: ECMControl = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.ecmControl)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].ecmControl }
   }
   public var retaliation: RetaliationControl {
-    _read { yield valueStorage[0].retaliation }
+    _read {
+      let stored: RetaliationControl = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.retaliation)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].retaliation }
   }
   var missileCooldown: Double {
-    _read { yield valueStorage[0].missileCooldown }
+    _read {
+      let stored: Double = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.missileCooldown)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].missileCooldown }
   }
   var nextBodyID: Int {
-    _read { yield valueStorage[0].nextBodyID }
+    _read {
+      let stored: Int = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nextBodyID)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].nextBodyID }
   }
   private var legacySimulationSpawnClock: Double? {
-    _read { yield valueStorage[0].legacySimulationSpawnClock }
+    _read {
+      let stored: Double? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.legacySimulationSpawnClock)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].legacySimulationSpawnClock }
   }
   private var randomState: UInt64 {
-    _read { yield valueStorage[0].randomState }
+    _read {
+      let stored: UInt64 = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.randomState)!.pointee
+      }
+      yield stored
+    }
     _modify { yield &valueStorage[0].randomState }
   }
   public init(executive: Bool = true) {
-    energy = commander.performance.energy
-    frontShield = commander.shieldCapacity
-    rearShield = commander.rearShieldCapacity
+    energy = nativeStartupEnergy()
+    frontShield = nativeStartupFrontShield()
+    rearShield = nativeStartupRearShield()
     if executive {
       commander.executive = true
       screen = .demo
     }
   }
-  public var currentSystem: StarSystem { systems[commander.system] }
+  /// Creates the isolated fixture used by the native planet frame profiler.
+  package static func planetFrameProfileFixture(system: Int) throws -> Game {
+    var game = Game(executive: false)
+    guard game.systems.indices.contains(system) else { throw NativeStationRuntimeError.invalidState }
+    game.commander.system = system
+    game.selectedSystem = system
+    game.commander.shipDisplayStyle = .shadedPanels
+    game.screen = .status
+    try game.commander.prepareEquipment(legacy: false)
+    game.commander.mirrorFittedEquipment()
+    return game
+  }
+
+  public var currentSystem: StarSystem { systems[nativeCurrentSystemIndex()] }
   public var targetSystem: StarSystem { systems[selectedSystem] }
 
   public mutating func notify(_ text: String, voiced: Bool = true) {
@@ -2259,11 +5131,13 @@ public struct Game: Sendable {
     candidate.stationAutoDefence = nil
     candidate.gameplayCombatTrace = nil
     guard candidate.loadCommander(value) else { return false }
+    candidate.c01InquiryStepRuntime = .init()
     self = candidate
     return true
   }
   private mutating func loadCommander(_ value: Commander) -> Bool {
     guard value.valid, !value.usesAlienStorageSaveVersion,
+      !CurrentNewtKitSave.hasClaims(value),
       !value.usesEMPSaveVersion, !value.usesModularDriveSaveVersion,
       !value.usesEconomyMiningSaveVersion,
       !value.usesFreightNativeSaveVersion, !value.usesProviderContractSaveVersion,
@@ -2275,6 +5149,7 @@ public struct Game: Sendable {
       !NativeInductionArkSave.hasClaims(value),
       !NativeWayfarerInductionSave.hasClaims(value),
       value.scriptState.financeLedger == nil, value.scriptState.savedClueJournal == nil,
+      value.scriptState.savedC01Inquiry == nil,
       !value.scriptState.instances.values.contains(where: { $0.savedNavigationTrade != nil })
     else {
       return false
@@ -2308,6 +5183,7 @@ public struct Game: Sendable {
     migrateMissionProgress()
     gallery = MissionGalleryState()
     library = ScriptLibraryState()
+    c01InquiryJournal = NativeC01InquiryJournalState()
     showroom = ShowroomState()
     galacticBrowse = GalaxyBrowseState()
     systemInspection = nil
@@ -2355,6 +5231,7 @@ public struct Game: Sendable {
     inventoryUpgradeChoice = 0
     equipmentMount = .front
     equipmentWorkTool = false
+    equipmentCrewSelected = false
     return true
   }
   public mutating func key(_ raw: String) {
@@ -2367,7 +5244,10 @@ public struct Game: Sendable {
     let priorScreen = screen
     let priorPause = paused
     defer { if screen != priorScreen || paused != priorPause { interruptFlightTool() } }
+    if handleC01ClinicEscortKey(key) { return }
+    if handleC01LaneRepairWorkKey(key) { return }
     if handleInductionUtilityWorkKey(key) { return }
+    if handleIsolationWorkKey(key) { return }
     if interfaceKey(key) { return }
     keyAfterInterface(key)
   }
@@ -2516,7 +5396,7 @@ public struct Game: Sendable {
       notify("DOCKING TARGETING COMPUTER FITTED")
     case "2":
       fitMaximumHardware()
-    case "c": restoreXYZzyCobra()
+    case "c": restoreXYZzyStarter()
     case "3":
       commander.unlimitedMissiles.toggle()
       notify("MISSILE SUPPLY UPDATED")
@@ -2575,6 +5455,7 @@ public struct Game: Sendable {
   mutating func enableXYZzy() {
     var candidate = self
     candidate.commander.xyzzyActive = true
+    candidate.commander.name = "CLARKE"
     candidate.commander.profitScanEnabled = true
     candidate.commander.shipDisplayStyle = .shadedPanels
     candidate.commander.retaliationEnabled = true
@@ -2587,29 +5468,30 @@ public struct Game: Sendable {
     candidate.commander.speech = true
     candidate.commander.autoECM = true
     candidate.commander.autoTarget = true
-    do { try candidate.refitXYZzyCobra() } catch {
+    do { try candidate.refitXYZzyStarter() } catch {
       notify("MAXIMUM REFIT REFUSED")
       return
     }
     if candidate.docked { candidate.autoTrade() }
     self = candidate
   }
-  mutating func restoreXYZzyCobra() {
+  mutating func restoreXYZzyStarter(renamingCommander: Bool = false) {
     var candidate = self
-    do { try candidate.refitXYZzyCobra() } catch {
+    if renamingCommander { candidate.commander.name = "CLARKE" }
+    do { try candidate.refitXYZzyStarter() } catch {
       notify("MAXIMUM REFIT REFUSED")
       return
     }
     self = candidate
   }
-  private mutating func refitXYZzyCobra() throws {
+  private mutating func refitXYZzyStarter() throws {
     try commander.prepareEquipment()
-    if commander.shipID != "SH023" {
+    if commander.shipID != NewCommanderDefaults.shipID {
       // Hull exchange preserves every portable item and refuses incompatible fittings.
       // The explicit maximum-hardware grant fills only vacant compatible pylons.
       commander.fuel = 0
       commander.unlimitedCargo = true
-      try commander.transferEquipment(to: "SH023", hullID: UUID())
+      try commander.transferEquipment(to: NewCommanderDefaults.shipID, hullID: UUID())
     }
     try commander.grantMaximumHardware()
     refillMaximumHardware()
@@ -2619,7 +5501,7 @@ public struct Game: Sendable {
     showroom.baseline = commander.shipID
     showroom.baselineUsesCurrent = true
     clearShowroomSearch()
-    notify("COBRA MK III RESTORED - MAXIMUM HARDWARE")
+    notify("STARTER HULL REFITTED - MAXIMUM HARDWARE")
   }
   mutating func fitMaximumHardware() {
     var candidate = self
@@ -2725,6 +5607,10 @@ public struct Game: Sendable {
       commander.cargo[index] -= 1
       market[index].quantity += 1
     }
+    recordFirstNativeCommodityTrade(
+      buying: buy, index: index,
+      before: .init(stock: item.quantity, cargo: before.commander.cargo[index],
+        credits: before.commander.credits), unitPrice: buy ? item.price : item.bidPrice)
     if let practice {
       try recordNavigationTradeMarket(instance: practice, buying: buy, before: before, index: index)
     }
@@ -2738,6 +5624,10 @@ public struct Game: Sendable {
     }
   }
   public mutating func purchase() {
+    if screen == .equipment, equipmentCrewSelected {
+      openNativeCrewBoard()
+      return
+    }
     guard docked, Equipment.all.indices.contains(selection) else { return }
     _ = purchaseImmediately()
   }
@@ -2756,6 +5646,8 @@ public struct Game: Sendable {
     for index in commander.cargo.indices where commander.sellableCargo(index) > 0 {
       let beforeSale = NativeSaleBalance(
         stock: market[index].quantity, cargo: commander.cargo[index], credits: commander.credits)
+      let beforeTrade = NativeCommodityTradeBalance(
+        stock: market[index].quantity, cargo: commander.cargo[index], credits: commander.credits)
       let saleQuantity = min(commander.sellableCargo(index), Int.max / 17 - market[index].quantity)
       let (revenue, overflow) = saleQuantity.multipliedReportingOverflow(
         by: market[index].bidPrice)
@@ -2766,6 +5658,8 @@ public struct Game: Sendable {
       commander.cargo[index] -= saleQuantity
       recordFirstNativeCommoditySale(
         index: index, before: beforeSale, unitPrice: market[index].bidPrice)
+      recordFirstNativeCommodityTrade(
+        buying: false, index: index, before: beforeTrade, unitPrice: market[index].bidPrice)
     }
     let refuelCost = refillCost
     if commander.unlimitedFuel {
@@ -2798,9 +5692,13 @@ public struct Game: Sendable {
       let affordable =
         market[item.index].price > 0 ? commander.availableCredits / market[item.index].price : 63
       let count = max(0, min(room, min(affordable, market[item.index].quantity)))
+      let beforeTrade = NativeCommodityTradeBalance(stock: market[item.index].quantity,
+        cargo: commander.cargo[item.index], credits: commander.credits)
       if !commander.unlimitedCash { commander.credits -= count * market[item.index].price }
       commander.cargo[item.index] += count
       market[item.index].quantity -= count
+      recordFirstNativeCommodityTrade(
+        buying: true, index: item.index, before: beforeTrade, unitPrice: market[item.index].price)
     }
     selection = oldSelection
     notify("AUTO TRADE TO " + destination.name)
@@ -2820,20 +5718,15 @@ public struct Game: Sendable {
     let risk = destination.hostileFraction
     return gross / (1 + risk + currentSystem.distance(to: destination) * 0.05)
   }
+  @inline(never)
   public mutating func launch() {
-    guard
-      commander.nativeStations?.ledger.currentDock == nil
-        || nativeStationDockEvidenceIsCurrent
-    else {
-      notify("RRS DOCKING CUSTODY UNAVAILABLE - LAUNCH REFUSED")
-      return
-    }
+    guard nativeLaunchCrewIsReady(), nativeLaunchDockIsCurrent() else { return }
     var candidate = self
     do {
       try candidate.activateNativeStationWorld()
       try candidate.persistNativeStationConditions()
     } catch {
-      notify("RRS STATION STATE UNAVAILABLE - LAUNCH REFUSED")
+      notify("ORIGINAL STATION STATE UNAVAILABLE - LAUNCH REFUSED")
       return
     }
     if candidate.requiresScriptDurability, !candidate.recordCalendarLaunch(wasDocked: docked) {
@@ -2845,21 +5738,72 @@ public struct Game: Sendable {
       candidate.persistScriptActors(unloading: true)
       try candidate.performNativeLaunch()
     } catch is NativeStationRuntimeError {
-      notify("RRS EXIT UNAVAILABLE - LAUNCH REFUSED")
+      notify("STATION EXIT UNAVAILABLE - LAUNCH REFUSED")
       return
     } catch {
       paused = true
       notify("MISSION FLIGHT RESTORE REFUSED - PAUSED", voiced: false)
       return
     }
-    guard candidate.commander.valid else {
+    guard candidate.nativeLaunchCommanderIsValid() else {
       notify("LAUNCH REFUSED")
       return
     }
     self = candidate
   }
+
+  @inline(never)
+  private mutating func nativeLaunchCrewIsReady() -> Bool {
+    if docked, NativeCrewService.launchHullIDs.contains(commander.shipID) {
+      guard commander.nativePeopleStateValid, let missing = commander.nativeCrewMissing else {
+        notify("CREW LAYOUT OR CUSTODY UNAVAILABLE - LAUNCH REFUSED")
+        return false
+      }
+      guard missing == 0 else {
+        notify("CREW MISSING \(missing) - EQUIP SHIP > CREW")
+        return false
+      }
+    }
+    return true
+  }
+
+  @inline(never)
+  private mutating func nativeLaunchDockIsCurrent() -> Bool {
+    guard
+      commander.nativeStations?.ledger.currentDock == nil
+        || nativeStationDockEvidenceIsCurrent
+    else {
+      notify("STATION DOCKING CUSTODY UNAVAILABLE - LAUNCH REFUSED")
+      return false
+    }
+    return true
+  }
+
+  @inline(never)
+  private func nativeLaunchCommanderIsValid() -> Bool {
+    commander.valid
+  }
+
+  @inline(never)
   private mutating func performNativeLaunch() throws {
-    let stationReceipt = commander.nativeStations?.ledger.currentDock
+    let stationReceipt = storedNativeStationWorld()?.ledger.currentDock
+    let freshLaunchTrafficID = prepareNativeLaunchBodies()
+    guard beginGameplayVisit(arriving: false, freshLaunchTrafficID: freshLaunchTrafficID) else {
+      throw SaveError.invalidCommander
+    }
+    notifyNativeLaunch()
+    preloadNavigation()
+    retainPendingBlackjackEncounter()
+    applyScriptStationResources()
+    try registerOriginalNativeMainStation()
+    if stationReceipt == nil { try offsetMovingMainStationDeparture() }
+    try restoreScriptActors()
+    if let stationReceipt { try launchFromNativeStation(stationReceipt) }
+    commander.nativeStations?.currentMainDock = nil
+  }
+
+  @inline(never)
+  private mutating func prepareNativeLaunchBodies() -> Int? {
     persistBlackjackTargets()
     retaliation.clear()
     weaponsTargetID = nil
@@ -2877,29 +5821,19 @@ public struct Game: Sendable {
       SpaceBody(id: 0, hull: .station, position: .init(0, 0, -500)),
       SpaceBody(id: 2, hull: .asteroid, position: .init(-280, 100, 2200)),
     ]
+    // The new-visit traffic marker is resolved or removed before persistence.
     var freshLaunchTrafficID: Int?
     if commander.npcPersistence.count == 0,
       commander.savedEMPState?.records.values.contains(where: {
         $0.source.system == systemIdentity && $0.originalSpawn == nil && $0.originalBodyID == 1
       }) != true
     {
-      bodies.insert(.init(id: 1, hull: .cobra, position: .init(90, 20, 1400)), at: 1)
+      bodies.insert(.init(id: 1, hull: .sidewinder, position: .init(90, 20, 1400)), at: 1)
       freshLaunchTrafficID = 1
     }
     commander.legal |= commander.cargo[3] + 2 * commander.cargo[6] + commander.cargo[10]
     resetCelestialFlight()
-    guard beginGameplayVisit(arriving: false, freshLaunchTrafficID: freshLaunchTrafficID) else {
-      throw SaveError.invalidCommander
-    }
-    notifyNativeLaunch()
-    preloadNavigation()
-    restoreBlackjackEncounter()
-    applyScriptStationResources()
-    try registerOriginalNativeMainStation()
-    if stationReceipt == nil { try offsetMovingMainStationDeparture() }
-    try restoreScriptActors()
-    if let stationReceipt { try launchFromNativeStation(stationReceipt) }
-    commander.nativeStations?.currentMainDock = nil
+    return freshLaunchTrafficID
   }
 
   /// Retire the system-name snapshot before entering retained-actor restoration.
@@ -2909,9 +5843,15 @@ public struct Game: Sendable {
   }
 
   public mutating func dock(atMainStation: Bool = true) {
+    dock(atMainStation: atMainStation, deferringNativeOffers: false)
+  }
+
+  /// Deferral changes event ordering only. Neither Boolean supplies native arrival authority.
+  @inline(never)
+  mutating func dock(atMainStation: Bool, deferringNativeOffers: Bool) {
     stationAutoDefence = nil
     do { try persistNativeStationConditions() } catch {
-      notify("DOCKING DEFERRED: RRS STATE UNAVAILABLE")
+      notify("DOCKING DEFERRED: ORIGINAL STATION STATE UNAVAILABLE")
       return
     }
     resolveDestroyed()
@@ -2934,6 +5874,11 @@ public struct Game: Sendable {
       return
     }
     guard prepareDockPersistence() else { return }
+    completeNativeDock(atMainStation: atMainStation, deferringNativeOffers: deferringNativeOffers)
+  }
+
+  @inline(never)
+  private mutating func completeNativeDock(atMainStation: Bool, deferringNativeOffers: Bool) {
     persistScriptActors(unloading: true)
     persistBlackjackTargets()
     if commander.npcPersistence.count > 0 {
@@ -2951,20 +5896,24 @@ public struct Game: Sendable {
     clearManualResidualFlight()
     docked = true
     commander.savedEMPCharge = nil
-    commander.savedPlayerElectrical = nil
+    empPlayerElectricalInterval = nil
     screen = .status
     screenHistory.removeAll()
     speed = 0
     dockingComputer = false
     bodies = []
-    energy = commander.performance.energy
-    frontShield = commander.shieldCapacity
-    rearShield = commander.rearShieldCapacity
+    energy = nativeStartupEnergy()
+    frontShield = nativeStartupFrontShield()
+    rearShield = nativeStartupRearShield()
     laserHeat = 0
     jumpCountdown = nil
     if requiresScriptDurability { cancelCalendarJourney() }
     missileArmed = false
     clearCelestialFlight()
+    if !deferringNativeOffers { finishNativeDockOffers() }
+  }
+
+  mutating func finishNativeDockOffers() {
     notify("DOCKED")
     navigationDocked()
     if commander.autoTrade { autoTrade() }
@@ -2976,6 +5925,15 @@ public struct Game: Sendable {
   /// Scene snapshots commit together; settled physical deaths precede this boundary.
   @inline(never)
   private mutating func prepareDockPersistence() -> Bool {
+    if bodies.contains(where: { $0.physical?.currentNewtKitStock != nil }) {
+      guard prepareCurrentNewtForActorRemoval(Set(bodies.compactMap { $0.physical?.identity }))
+      else {
+        notify("DOCKING DEFERRED: MECHANISM STATE UNAVAILABLE", voiced: false)
+        return false
+      }
+    }
+    // The real brake precedes the persistence snapshot. A failed writer retains
+    // attained work and the stopped mechanism rather than restarting its rod.
     let snapshot = DockPersistenceSnapshot(self)
     var committed = false
     defer {
@@ -3152,7 +6110,7 @@ public struct Game: Sendable {
     }
     altitude = 1
     notify(currentSystem.name)
-    restoreBlackjackEncounter()
+    retainPendingBlackjackEncounter()
     applyScriptStationResources()
     try registerOriginalNativeMainStation()
     try restoreScriptActors()
@@ -3280,6 +6238,7 @@ public struct Game: Sendable {
       return
     }
     var candidate = self
+    let isolationPod = candidate.isolationProgrammerEscapePod()
     let measuredPod = candidate.measuredEscapePod()
     let recorderPod = candidate.recordRecoveryEscapePod()
     let originalPod = candidate.identifiedSalvageEscapePod()
@@ -3289,6 +6248,7 @@ public struct Game: Sendable {
     }
     do {
       guard try candidate.consumeNativeEquipment("Escape Pod") else { return }
+      try candidate.loseIsolationProgrammerOnEscape(pod: isolationPod)
     } catch {
       notify("ESCAPE POD REFUSED")
       return
@@ -3308,6 +6268,7 @@ public struct Game: Sendable {
       try candidate.closeUncollectedInductionSeedOnExit(.escapePod)
       try candidate.loseHeldInductionSeedOnExit(.escapePod)
       try candidate.loseC01SurveyorOnEscape(surveyorPod)
+      try candidate.loseC01TimingStandardOnEscape(surveyorPod)
     } catch {
       notify("CLINIC RESERVATION LOSS NOT SAVED - ESCAPE NOT COMMITTED")
       return
@@ -3341,6 +6302,7 @@ public struct Game: Sendable {
       return
     }
     let leftPeople = !(candidate.commander.nativePeople?.held.isEmpty ?? true)
+      || !candidate.commander.assignedNativeCrew.isEmpty
     do {
       try candidate.abandonNativePeopleOnEscape()
     } catch {
@@ -3378,7 +6340,20 @@ public struct Game: Sendable {
     tick(delta: delta, controls: controls, nativeSalvagePublish: nil)
   }
 
-  mutating func tick(delta: Double, controls: Controls, nativeSalvagePublish: ScriptPublisher?) {
+  var hasCurrentNewtNativeScene: Bool {
+    bodies.contains {
+      $0.physical?.currentNewtKitStock != nil || $0.physical?.currentNewtKitReceipt != nil
+    }
+  }
+
+  @inline(never)
+  mutating func tick(
+    delta: Double, controls: Controls, nativeSalvagePublish: ScriptPublisher?,
+    nativeClockProjection: CurrentNewtScriptClockProjection? = nil
+  ) {
+    // A failed Reris arrival publication retries its actual attained witness before more motion.
+    guard pendingMemoryAtlasMainDock == nil else { return }
+    guard admitC01InquiryGeometryAdvance() else { return }
     guard admitFlightWorkAdvance(controls: controls) else { return }
     pendingNativeSalvageCollections.removeAll(keepingCapacity: true)
     guard delta.isFinite, delta > 0 else { return }
@@ -3392,13 +6367,17 @@ public struct Game: Sendable {
       if !paused { packOfferElapsed += dt }
       return
     }
-    if paused || screen == .help || screen == .gallery || screen == .library
+    if paused || screen == .help || screen == .gallery || screen == .library || screen == .journal
       || screen == .navigation
       || screen == .handoff || screen == .rumour
     {
       return
     }
-    time += dt
+    let nativeIntervals =
+      !docked && screen != .mission
+      && ![Screen.gameOver, .secret, .help, .title, .demo].contains(screen)
+      && hasCurrentNewtNativeScene
+    if !nativeIntervals { time += dt }
     if screen == .mission {
       missionElapsed += dt
       return
@@ -3408,8 +6387,10 @@ public struct Game: Sendable {
       time = 0
     }
     if commander.unlimitedFuel { commander.fuel = commander.fuelCapacity }
-    messageTime = max(0, messageTime - dt)
-    laserFlash = max(0, laserFlash - dt)
+    if !nativeIntervals {
+      messageTime = max(0, messageTime - dt)
+      laserFlash = max(0, laserFlash - dt)
+    }
     guard !docked, ![Screen.gameOver, .secret, .help, .title, .demo].contains(screen) else {
       return
     }
@@ -3420,20 +6401,143 @@ public struct Game: Sendable {
     let defensiveFlightBefore = defensiveFlightObservation()
     let fireRequested = controls.fire
     let wasElectricalDisabled = playerEMPDisabled
-    commander.flightSimulation.advancePhysicalTime(dt)
+    let c01MotionStartTime = commander.flightSimulation.physicalTime
+    if nativeIntervals { ensurePhysicalActors() }
+    beginEMPPlayerElectricalInterval(delta: dt)
+    beginNativeOriginalUtilityFatalInterval(delta: dt)
+    let c01InquiryOpening = prepareC01InquiryClockOpening(usedD: dt)
+    if !nativeIntervals {
+      commander.flightSimulation.advancePhysicalTime(dt)
+      if let c01InquiryOpening {
+        acceptC01InquiryClockWitness(
+          .init(
+            opening: c01InquiryOpening,
+            observedEnd: commander.flightSimulation.physicalTime))
+      }
+    }
     let safeGunneryAudioBefore = (dischargeAudio.epoch, dischargeAudio.events.last?.id)
-    advancePlayerElectrical()
-    if wasElectricalDisabled != playerEMPDisabled { interruptFlightTool() }
-    let fireAdmitted = admitFlightFire(held: fireRequested)
+    var fireAdmitted = false
+    if !nativeIntervals {
+      advancePlayerElectrical()
+      if wasElectricalDisabled != playerEMPDisabled { interruptFlightTool() }
+      fireAdmitted = admitFlightFire(held: fireRequested)
+    }
     let controls = playerEMPDisabled ? Controls() : controls
     gameplayRevision &+= 1
     ensurePhysicalActors()
     beginSafeGunneryIfNeeded()
     beginDefensiveFlightIfNeeded()
     defer { closeFailedSafeGunneryIfNeeded() }
-    let craft = commander.performance
+    applyFlightFrameControls(delta: dt, controls: controls)
+    if !nativeIntervals {
+      advanceFlightFrameActions(
+        delta: dt, fireAdmitted: fireAdmitted,
+        nativeSalvagePublish: nativeSalvagePublish)
+    }
+    var newtBirths: CurrentNewtEndBirths?
+    if !nativeIntervals {
+      let present = Set(bodies.compactMap { $0.physical?.identity })
+      advanceGameplayEncounters(delta: dt)
+      newtBirths = .init(game: self, previouslyPresent: present)
+    }
+    if !nativeIntervals { planWorkScene(delta: dt) }
+    advanceWorkGuidance(delta: dt, deferThrustDebit: nativeIntervals, bornAtEnd: newtBirths)
+    let workCameraStart = commander.flightSimulation.pose
+    let usedWorkCamera = workGuidance != nil || workBraking != nil
+    if nativeIntervals {
+      guard advanceNativeTickBodyMotion(delta: dt, c01MotionStartTime: c01MotionStartTime,
+        workCameraStart: workCameraStart, c01InquiryOpening: c01InquiryOpening,
+        wasElectricalDisabled: wasElectricalDisabled, fireRequested: fireRequested,
+        fireAdmitted: &fireAdmitted, nativeSalvagePublish: nativeSalvagePublish,
+        nativeClockProjection: nativeClockProjection) else { return }
+    } else {
+      moveBodies(
+        dt: dt, c01MotionStartTime: c01MotionStartTime,
+        newtBirthActors: newtBirths?.actors ?? [], newtBirths: newtBirths)
+    }
+    finishMovedFlightTick(
+      dt: dt, nativeIntervals: nativeIntervals, usedWorkCamera: usedWorkCamera,
+      workCameraStart: workCameraStart, fireAdmitted: fireAdmitted,
+      nativeSalvagePublish: nativeSalvagePublish, safeGunneryAudioBefore: safeGunneryAudioBefore,
+      defensiveFlightBefore: defensiveFlightBefore)
+  }
+
+  @inline(never)
+  private mutating func advanceNativeTickBodyMotion(
+    delta dt: Double, c01MotionStartTime: Double, workCameraStart: ShipPose,
+    c01InquiryOpening: NativeC01InquiryClockOpening?, wasElectricalDisabled: Bool,
+    fireRequested: Bool, fireAdmitted: inout Bool, nativeSalvagePublish: ScriptPublisher?,
+    nativeClockProjection: CurrentNewtScriptClockProjection?
+  ) -> Bool {
+    nativeC01TimingStandardPending = nil
+    guard let path = prepareCurrentNewtOuterMotion(delta: dt) else {
+      paused = true
+      notify("NATIVE MOTION UNAVAILABLE - PAUSED", voiced: false)
+      return false
+    }
+    guard let npcFrame = prepareCurrentNewtNPCFrame(path) else {
+      paused = true
+      notify("FLIGHT PAUSED - NPC MOTION UNAVAILABLE", voiced: false)
+      return false
+    }
+    let timingFrame = glassMeridianMission?.savedGlassMeridian?.timingStandard.flatMap {
+      beginC01TimingStandardObservation(
+        state: $0, delta: dt,
+        startTime: c01MotionStartTime, nativePath: path)
+    }
+    let interval = advanceCurrentNewtNativeInterval(path, npcFrame: npcFrame)
+    let attained = commander.flightSimulation.physicalTime - c01MotionStartTime
+    _ = nativeClockProjection?.apply(attained: attained, to: &self)
+    time += attained
+    messageTime = max(0, messageTime - attained)
+    laserFlash = max(0, laserFlash - attained)
+    finishCurrentNewtOuterMotion(path, attained: interval.fullMotionAttained)
+    guard let evidence = interval.evidence else {
+      if screen == .gameOver { return false }
+      starfield.advance(from: workCameraStart, to: commander.flightSimulation.pose)
+      paused = true
+      notify("NATIVE CONTACT UNPROVEN - PAUSED", voiced: false)
+      return false
+    }
+    if let c01InquiryOpening {
+      acceptCurrentNewtC01Clock(opening: c01InquiryOpening, evidence: evidence)
+    }
+    if screen == .gameOver { return false }
+    guard evidence.completedOuterInterval else {
+      starfield.advance(from: workCameraStart, to: commander.flightSimulation.pose)
+      paused = true
+      notify("NATIVE CONTACT UNPROVEN - PAUSED AT ATTAINED PREFIX", voiced: false)
+      return false
+    }
+    if let timingFrame, let state = glassMeridianMission?.savedGlassMeridian?.timingStandard {
+      nativeC01TimingStandardPending = sealC01TimingStandardCapture(
+        timingFrame, state: state, nativeEvidence: evidence)
+    }
+    let retainedActors = Set(bodies.compactMap { $0.physical?.identity })
+    advancePlayerElectrical()
+    if wasElectricalDisabled != playerEMPDisabled { interruptFlightTool() }
+    fireAdmitted = admitFlightFire(held: fireRequested)
+    guard screen != .gameOver else { return false }
+    advanceFlightFrameActions(
+      delta: dt, fireAdmitted: fireAdmitted,
+      nativeSalvagePublish: nativeSalvagePublish)
+    guard nativeStationRuntimeEpoch == path.epoch, !docked else { return false }
+    advanceGameplayEncounters(delta: dt)
+    let births = CurrentNewtEndBirths(game: self, previouslyPresent: retainedActors)
+    moveBodies(
+      dt: dt, c01MotionStartTime: c01MotionStartTime,
+      nativeMotion: evidence, nativeStart: path.motion.start,
+      newtBirthActors: births.actors, newtBirths: births, npcFrame: evidence.npcFrame)
+    return true
+  }
+
+  @inline(never)
+  private mutating func applyFlightFrameControls(delta dt: Double, controls: Controls) {
+    let craft = nativeFramePerformance()
     if !manualResidualFlight && workGuidance == nil && workBraking == nil {
-      speed = min(craft.speed, max(0, speed + controls.throttle * dt * craft.acceleration))
+      speed = ManualFlightThrottleKernel.cruise(
+        speed: speed, throttle: controls.throttle, delta: dt,
+        acceleration: craft.acceleration, maximum: craft.speed)
     }
     pitch = controls.pitch * craft.pitch
     yaw = controls.yaw * craft.yaw
@@ -3444,28 +6548,16 @@ public struct Game: Sendable {
       ? (previousSpinRate + spin.actualRate) * .pi / 360 : controls.roll * craft.roll
     if !playerEMPDisabled { applyAutoTarget(delta: dt, controls: controls) }
     applyManualResidualThrottle(delta: dt, throttle: controls.throttle)
-    laserHeat = max(0, laserHeat - dt * 12)
-    fireCooldown = max(0, fireCooldown - dt)
-    missileCooldown = max(0, missileCooldown - dt)
-    energy = min(craft.energy, energy + dt * craft.recharge * commander.energyRechargeMultiplier)
-    frontShield = min(commander.shieldCapacity, frontShield + dt * commander.frontShieldRecharge)
-    rearShield = min(commander.rearShieldCapacity, rearShield + dt * commander.rearShieldRecharge)
-    if fireAdmitted && screen.isFlight {
-      fireSelectedFlightTool(delta: dt, nativeSalvagePublish: nativeSalvagePublish)
-    } else {
-      fireStationAutoLaser()
-    }
-    if let remaining = jumpCountdown {
-      jumpCountdown = remaining - dt
-      if remaining <= dt { arrive() }
-    }
-    advanceGameplayEncounters(delta: dt)
-    planWorkScene(delta: dt)
-    advanceWorkGuidance(delta: dt)
-    let workCameraStart = commander.flightSimulation.pose
-    let usedWorkCamera = workGuidance != nil || workBraking != nil
-    moveBodies(dt: dt)
-    if paused { return }
+  }
+
+  @inline(never)
+  private mutating func finishMovedFlightTick(
+    dt: Double, nativeIntervals: Bool, usedWorkCamera: Bool, workCameraStart: ShipPose,
+    fireAdmitted: Bool, nativeSalvagePublish: ScriptPublisher?,
+    safeGunneryAudioBefore: (UUID, UInt64?),
+    defensiveFlightBefore: NativeDefensiveFlightObservation?
+  ) {
+    if paused || pendingMemoryAtlasMainDock != nil { return }
     if docked {
       stationAutoDefence = nil
       reconcileEliteReward()
@@ -3476,14 +6568,14 @@ public struct Game: Sendable {
     scoopCargo()
     if !workScenePlanned && missionLoopCounter & 7 == 0 { navalTactics() }
     detectIncomingMissiles()
-    advanceNavalMissiles(delta: dt)
+    advanceNavalMissiles(delta: nativeIntervals ? 0 : dt)
     ecmControl.advance(delta: dt)
     if ecmFrames == 0 {
       enemyECMSource = nil
       activeECMActivation = nil
     }
     advanceRetaliation()
-    if usedWorkCamera {
+    if usedWorkCamera || nativeIntervals {
       starfield.advance(from: workCameraStart, to: commander.flightSimulation.pose)
     } else {
       starfield.advance(
@@ -3492,7 +6584,8 @@ public struct Game: Sendable {
     }
     let beforeEMPEvent = dischargeAudio.events.last?.id
     advanceEMPCharge(
-      triggerHeld: fireAdmitted && !workFireSuspended && selectedFlightTool == .empPirateBlaster)
+      triggerHeld: fireAdmitted && !workFireSuspended && selectedFlightTool == .empPirateBlaster,
+      publish: nativeSalvagePublish)
     if selectedFlightTool == .empPirateBlaster,
       dischargeAudio.events.last?.id != beforeEMPEvent,
       dischargeAudio.events.last?.tool == .empPirateBlaster
@@ -3528,6 +6621,44 @@ public struct Game: Sendable {
     }
     advanceDefensiveFlight(before: defensiveFlightBefore, delta: dt)
   }
+  @inline(never)
+  private mutating func advanceFlightFrameActions(
+    delta dt: Double, fireAdmitted: Bool, nativeSalvagePublish: ScriptPublisher?
+  ) {
+    rechargeFlightFrameResources(delta: dt)
+    if fireAdmitted && screen.isFlight {
+      fireSelectedFlightTool(delta: dt, nativeSalvagePublish: nativeSalvagePublish)
+    } else {
+      fireStationAutoLaser()
+    }
+    if let remaining = jumpCountdown {
+      jumpCountdown = remaining - dt
+      if remaining <= dt { arrive() }
+    }
+  }
+
+  @inline(never)
+  private mutating func rechargeFlightFrameResources(delta dt: Double) {
+    let craft = nativeFramePerformance()
+    laserHeat = max(0, laserHeat - dt * 12)
+    fireCooldown = max(0, fireCooldown - dt)
+    missileCooldown = max(0, missileCooldown - dt)
+    energy = min(craft.energy, energy + dt * craft.recharge * nativeFrameEnergyRecharge())
+    frontShield = min(nativeStartupFrontShield(), frontShield + dt * nativeFrameFrontRecharge())
+    rearShield = min(nativeStartupRearShield(), rearShield + dt * nativeFrameRearRecharge())
+  }
+
+  mutating func acceptCurrentNewtC01Clock(
+    opening: NativeC01InquiryClockOpening, evidence: CurrentNewtNativeClockEvidence
+  ) {
+    guard let opening = attainedC01InquiryClockOpening(opening, usedD: evidence.attainedDuration)
+    else { return }
+    acceptC01InquiryClockWitness(
+      .init(
+        opening: opening,
+        observedEnd: commander.flightSimulation.physicalTime, nativeMotion: evidence))
+  }
+
   public func viewPosition(_ p: Vector3) -> Vector3 {
     Self.viewPosition(p, screen: screen)
   }
@@ -3539,41 +6670,38 @@ public struct Game: Sendable {
     default: return p
     }
   }
-  private mutating func moveBodies(dt: Double) {
-    let asteroidContactFrame = beginAsteroidContactStep(delta: dt)
-    let before = commander.flightSimulation.pose
-    if !moveWorkFrame(delta: dt) {
-      autoPilot.rotateVelocity(pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt)
-      commander.flightSimulation.pose.advanceView(
-        pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt,
-        translation: autoPilot.velocity * dt + Vector3(0, 0, speed * dt * 18))
-      rotateScriptNPCVelocities(from: before, to: commander.flightSimulation.pose)
-      moveCelestials(delta: dt)
-      for index in bodies.indices {
-        bodies[index].position = bodies[index].position.rotated(
-          pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt)
-        bodies[index].orientation.rotate(pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt)
-        bodies[index].position = bodies[index].position - autoPilot.velocity * dt
-        bodies[index].position.z -= speed * dt * 18
-        advanceBodyModelRotation(at: index, delta: dt)
-        advanceCanonicalModelSpin(at: index, delta: dt)
-        if let physical = bodies[index].physical, physical.spawnIdentity != nil,
-          physical.ordnance == nil, bodies[index].scriptShot == nil,
-          bodies[index].scriptNPC == nil || c01SurveyorActor(bodies[index]) != nil
-        {
-          bodies[index].position =
-            bodies[index].position
-            + commander.flightSimulation.pose.shipVector(physical.velocity) * dt
-        }
-        if bodies[index].hostile && bodies[index].energy > 0,
-          bodies[index].physical?.spawnIdentity == nil, !workScenePlanned,
-          bodies[index].missionInstanceID == nil
-        {
-          enemyAction(index: index, dt: dt)
-        }
-      }
+  @inline(never)
+  private mutating func moveBodies(
+    dt: Double, c01MotionStartTime: Double,
+    nativeMotion: CurrentNewtNativeClockEvidence? = nil, nativeStart: ShipPose? = nil,
+    newtBirthActors: Set<ActorIdentity> = [], newtBirths: CurrentNewtEndBirths? = nil,
+    npcFrame: CurrentNewtNPCFrame? = nil
+  ) {
+    guard admitMovedNewtEndpoint(dt: dt, nativeMotion: nativeMotion, newtBirths: newtBirths) else { return }
+    let asteroidContactFrame =
+      nativeMotion == nil
+      ? beginAsteroidContactStep(delta: dt, excluding: newtBirthActors) : nil
+    if nativeMotion == nil { nativeC01TimingStandardPending = nil }
+    let timingStandardFrame = beginMovedBodyTimingObservation(
+      dt: dt, c01MotionStartTime: c01MotionStartTime, nativeMotion: nativeMotion, newtBirths: newtBirths)
+    let before = nativeStart ?? commander.flightSimulation.pose
+    if nativeMotion == nil && !moveWorkFrame(delta: dt, bornAtEnd: newtBirthActors) {
+      moveManualCameraBodies(dt: dt, before: before, newtBirthActors: newtBirthActors)
     }
-    guard completeAsteroidContactStep(asteroidContactFrame, delta: dt).admitted else { return }
+    finishMovedBodyContacts(dt: dt, before: before, asteroidContactFrame: asteroidContactFrame,
+      timingStandardFrame: timingStandardFrame, nativeMotion: nativeMotion, npcFrame: npcFrame,
+      newtBirths: newtBirths, newtBirthActors: newtBirthActors)
+  }
+
+  @inline(never)
+  private mutating func finishMovedBodyContacts(
+    dt: Double, before: ShipPose, asteroidContactFrame: AsteroidContactFrame?,
+    timingStandardFrame: NativeC01TimingStandardFrame?, nativeMotion: CurrentNewtNativeClockEvidence?,
+    npcFrame: CurrentNewtNPCFrame?, newtBirths: CurrentNewtEndBirths?, newtBirthActors: Set<ActorIdentity>
+  ) {
+    guard
+      nativeMotion != nil || completeAsteroidContactStep(asteroidContactFrame, delta: dt).admitted
+    else { return }
     advanceNativeStationRecharge(delta: dt)
     detectNativeStationEntry(from: before, delta: dt)
     if pendingNativeStationDock != nil {
@@ -3595,12 +6723,138 @@ public struct Game: Sendable {
       applyDamage(dt * 100, front: true)
       if message != "DOCKING COLLISION" || messageTime <= 0 { notify("DOCKING COLLISION") }
     }
+    finishMovedBodies(
+      dt: dt, before: before, timingStandardFrame: timingStandardFrame,
+      nativeMotion: nativeMotion, npcFrame: npcFrame,
+      newtBirths: newtBirths, newtBirthActors: newtBirthActors)
+  }
+
+  @inline(never)
+  private mutating func moveManualCameraBodies(dt: Double, before: ShipPose, newtBirthActors: Set<ActorIdentity>) {
+    autoPilot.rotateVelocity(pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt)
+    commander.flightSimulation.pose.advanceView(
+      pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt,
+      translation: autoPilot.velocity * dt + Vector3(0, 0, speed * dt * 18))
+    rotateScriptNPCVelocities(from: before, to: commander.flightSimulation.pose)
+    moveCelestials(delta: dt)
+    for index in bodies.indices {
+      bodies[index].position = bodies[index].position.rotated(
+        pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt)
+      bodies[index].orientation.rotate(pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt)
+      bodies[index].position = bodies[index].position - autoPilot.velocity * dt
+      bodies[index].position.z -= speed * dt * 18
+      if let actor = bodies[index].physical?.identity, newtBirthActors.contains(actor) {
+        // Its genuine admission occurred at T1. Only the camera changes;
+        // there is no preceding self-motion or model spin to consume.
+        continue
+      }
+      advanceBodyModelRotation(at: index, delta: dt)
+      advanceCanonicalModelSpin(at: index, delta: dt)
+      advanceSpawnedBodyVelocity(index: index, dt: dt)
+      if bodies[index].hostile && bodies[index].energy > 0,
+        bodies[index].physical?.spawnIdentity == nil, !workScenePlanned,
+        bodies[index].missionInstanceID == nil
+      {
+        enemyAction(index: index, dt: dt)
+      }
+    }
+  }
+
+  @inline(never)
+  private mutating func advanceSpawnedBodyVelocity(index: Int, dt: Double) {
+    if let physical = bodies[index].physical, physical.spawnIdentity != nil,
+      physical.ordnance == nil, bodies[index].scriptShot == nil,
+      bodies[index].scriptNPC == nil || c01SurveyorActor(bodies[index]) != nil
+        || c01TimingStandardPart(bodies[index]) != nil
+        || c01LaneRepairTarget(bodies[index]) != nil
+        || c01ClinicCradleDeclared(bodies[index])
+    {
+      bodies[index].position =
+        bodies[index].position
+        + commander.flightSimulation.pose.shipVector(physical.velocity) * dt
+    }
+  }
+
+  @inline(never)
+  private mutating func beginMovedBodyTimingObservation(
+    dt: Double, c01MotionStartTime: Double, nativeMotion: CurrentNewtNativeClockEvidence?,
+    newtBirths: CurrentNewtEndBirths?
+  ) -> NativeC01TimingStandardFrame? {
+    let timingStandardState = glassMeridianMission?.savedGlassMeridian?.timingStandard
+    let timingStandardFrame =
+      nativeMotion == nil
+      ? timingStandardState.flatMap {
+        beginC01TimingStandardObservation(
+          state: $0, delta: dt, startTime: c01MotionStartTime,
+          bornAtEnd: newtBirths)
+      } : nil
+    return timingStandardFrame
+  }
+
+  @inline(never)
+  private mutating func admitMovedNewtEndpoint(
+    dt: Double, nativeMotion: CurrentNewtNativeClockEvidence?, newtBirths: CurrentNewtEndBirths?
+  ) -> Bool {
+    if nativeMotion == nil, let newtBirths, !newtBirths.actors.isEmpty,
+      workGuidance == nil, workBraking == nil
+    {
+      // A real T1 admission has no preceding trajectory. Manual flight must
+      // still prove clearance at its endpoint with the same component query
+      // and shared budget as work and the timing-standard observer.
+      var pilot = autoPilot
+      pilot.rotateVelocity(pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt)
+      let start = commander.flightSimulation.pose
+      var end = start
+      end.advanceView(
+        pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt,
+        translation: pilot.velocity * dt + Vector3(0, 0, speed * dt * 18))
+      guard let radius = commander.playerMesh.vertices.map(\.length).max(),
+        let motion = debrisRigidMotion(from: start, to: end, duration: dt, radius: radius),
+        workBirthEndpointIsClear(motion, bornAtEnd: newtBirths)
+      else {
+        paused = true
+        notify("NEW CONTACT AT FLIGHT ENDPOINT - PAUSED", voiced: false)
+        return false
+      }
+    }
+    return true
+  }
+
+  @inline(never)
+  private mutating func finishMovedBodies(
+    dt: Double, before: ShipPose, timingStandardFrame: NativeC01TimingStandardFrame?,
+    nativeMotion: CurrentNewtNativeClockEvidence?, npcFrame: CurrentNewtNPCFrame?,
+    newtBirths: CurrentNewtEndBirths?, newtBirthActors: Set<ActorIdentity>
+  ) {
     // Motion observers receive only the endpoint retained by physical collision handling.
+    if let timingStandardFrame, let state = glassMeridianMission?.savedGlassMeridian?.timingStandard
+    {
+      nativeC01TimingStandardPending = sealC01TimingStandardCapture(
+        timingStandardFrame, state: state)
+    }
     advanceNativeMissionFrame(from: before, to: commander.flightSimulation.pose, delta: dt)
-    advanceScriptNPCFlight(delta: dt)
+    // An existing ordinary moving actor currently refuses native preflight
+    // until its one prepared path is supplied. T1 births receive no earlier
+    // movement, recharge, projectile age or weapon cooldown from this tail.
+    let lateDelta = nativeMotion == nil ? dt : 0
+    if let npcFrame,
+      !commitCurrentNewtNPCDecisions(
+        npcFrame,
+        evidence: nativeMotion, admittedAtEnd: newtBirths)
+    {
+      paused = true
+      notify("FLIGHT PAUSED - NPC STATE CHANGED", voiced: false)
+      return
+    }
+    advanceScriptNPCFlight(
+      delta: lateDelta, excluding: Set(npcFrame?.entries.keys.map { $0 } ?? []))
     synchronizeScriptNPCPhysicalVelocities()
-    advanceScriptNPCWeapons(delta: dt)
-    advanceScriptNPCShots(delta: dt)
+    let weaponBirths =
+      npcFrame.map {
+        Set(bodies.compactMap { $0.physical?.identity }).subtracting($0.openingActors)
+      } ?? newtBirthActors
+    advanceScriptNPCWeapons(delta: dt, bornAtEnd: weaponBirths)
+    advanceScriptNPCShots(delta: lateDelta)
     persistBlackjackTargets()
     persistCargoPoses()
     persistOrePoses()
@@ -3613,6 +6867,20 @@ public struct Game: Sendable {
     persistScriptActors()
     let retainedNPCs = persistNPCStates()
     guard persistEMPState() else { return }
+    let departingActors = Set(
+      bodies.filter {
+        $0.energy > 0 && $0.leavesLocalBubble && $0.id != 0 && !retainedNPCs.contains($0.id)
+      }.compactMap { $0.physical?.identity })
+    if !departingActors.isEmpty,
+      bodies.contains(where: { $0.physical?.currentNewtKitStock != nil })
+    {
+      guard prepareCurrentNewtForActorRemoval(departingActors), persistEMPState() else {
+        notify("MECHANISM STATE UNAVAILABLE - CULL DEFERRED", voiced: false)
+        return
+      }
+    }
+    // Recapture bodies after the actual brake; the departing projections and
+    // native wreck flush must retain its new velocity and finite spent work.
     let departing = bodies.filter {
       $0.energy > 0 && $0.leavesLocalBubble && $0.id != 0 && !retainedNPCs.contains($0.id)
     }
@@ -3666,22 +6934,23 @@ public struct Game: Sendable {
       $0.energy > 0 && $0.leavesLocalBubble && $0.id != 0 && !retainedNPCs.contains($0.id)
     }
   }
+  @inline(never)
   mutating func enemyAction(index: Int, dt: Double) {
     guard !isEMPDisabled(bodies[index]), bodies[index].physical?.empCrewPod == nil else { return }
-    let priorPosition = commander.flightSimulation.pose.systemPoint(bodies[index].position)
+    let priorPosition = storedFlightSimulation().pose.systemPoint(bodies[index].position)
     if bodies[index].blackjackRole != nil {
       advanceBlackjackNPC(index: index, delta: dt)
       return
     }
     // The legacy hostile projection alone cannot authorize pursuit of the current player.
-    let flight = commander.flightSimulation
-    guard let player = flight.player, player.system == systemIdentity,
-      let physical = bodies[index].physical,
-      physical.identity.system == player.system, physical.identity.visit == player.visit,
-      physical.identity.entity >= 2, physical.identity.entity < flight.nextActor,
-      physical.npc?.intention == .engage(player)
-    else { return }
-    if let maximumSpeed = bodies[index].hull.navalSpeed {
+    guard legacyNPCPlayerEffectSourceIsCurrent(index: index) else { return }
+    moveEligibleLegacyEnemy(index: index, dt: dt, priorPosition: priorPosition)
+    applyLegacyNPCFlightEffects(index: index, delta: dt)
+  }
+
+  @inline(never)
+  private mutating func moveEligibleLegacyEnemy(index: Int, dt: Double, priorPosition: Vector3) {
+    if let maximumSpeed = bodies[index].nativeNavalCombat?.speed {
       let distance = bodies[index].position.length
       if distance > 0 {
         bodies[index].position =
@@ -3694,22 +6963,28 @@ public struct Game: Sendable {
     }
     if dt > 0 {
       let worldVelocity =
-        (commander.flightSimulation.pose.systemPoint(bodies[index].position) - priorPosition)
+        (storedFlightSimulation().pose.systemPoint(bodies[index].position) - priorPosition)
         * (1 / dt)
       bodies[index].physical?.velocity = worldVelocity
-    }
-    if bodies[index].position.length < 1500 {
-      let damage = dt * (bodies[index].hull.navalLaserDamage ?? 6) * 2
-      emitLegacyNPCBeam(bodyID: bodies[index].id, damage: damage, energyMultiplier: 2)
     }
   }
   mutating func resolveDestroyed() {
     do { try persistNativeStationConditions() } catch {
-      notify("RRS LIFECYCLE UNAVAILABLE - SETTLEMENT DEFERRED", voiced: false)
+      notify("ORIGINAL STATION LIFECYCLE UNAVAILABLE - SETTLEMENT DEFERRED", voiced: false)
       return
     }
-    let initial = bodies.filter { $0.energy <= 0 }
+    var initial = bodies.filter { $0.energy <= 0 }
     if !initial.isEmpty { ensurePhysicalActors() }
+    if !initial.isEmpty,
+      bodies.contains(where: { $0.physical?.currentNewtKitStock != nil })
+    {
+      guard prepareCurrentNewtForActorRemoval(Set(initial.compactMap { $0.physical?.identity }))
+      else {
+        notify("MECHANISM STATE UNAVAILABLE - DESTRUCTION SETTLEMENT DEFERRED", voiced: false)
+        return
+      }
+      initial = bodies.filter { $0.energy <= 0 }
+    }
     for body in initial { settleLegacyCombatDeath(body) }
     var deferred = registerDestroyedCargo()
     deferred.formUnion(registerDestroyedWrecks())
@@ -3718,6 +6993,7 @@ public struct Game: Sendable {
       notify("EMP CUSTODY SETTLEMENT DEFERRED")
       return
     }
+    deferred.formUnion(prepareC01InquiryDestroyedRemoval())
     let destroyed = bodies.filter { $0.energy <= 0 && !deferred.contains($0.id) }
     for body in destroyed {
       observeMeasuredOreDeath(body)
@@ -3757,6 +7033,7 @@ public enum SaveError: Error { case invalidCommander }
 public actor GameRuntime {
   var game: Game
   var controls = Controls()
+  var assemblyCalibrationControls = NativeAssemblySurveyInstrumentControls()
   var galleryNamespace: URL?
   var galleryParent: GalleryParentState?
   var scriptSaveURL: URL?
@@ -3764,6 +7041,7 @@ public actor GameRuntime {
   var scriptRefusalDiagnostic: ScriptRefusalDiagnostic?
   public init(game: Game = Game(), saveURL: URL? = nil) {
     var prepared = game
+    prepared.c01InquiryStepRuntime = .init()
     prepared.invalidateNativeStationAuthority()
     prepared.stationAutoDefence = nil
     prepared.gameplayCombatTrace = nil
@@ -3798,6 +7076,7 @@ public actor GameRuntime {
     let namespace = Self.newGalleryNamespace()
     let target = namespace.appendingPathComponent("commander.json")
     var candidate = trialGame
+    candidate.c01InquiryStepRuntime = .init()
     candidate.invalidateNativeStationAuthority()
     try candidate.commander.prepareEquipment()
     candidate.inventoryContextEpoch = .init()
@@ -3815,6 +7094,7 @@ public actor GameRuntime {
   }
   public func snapshot() -> Game {
     game.prepareFlightWeaponDisplay()
+    refreshAssemblyCalibrationProjection()
     return game
   }
   public func key(_ key: String) {
@@ -3823,6 +7103,7 @@ public actor GameRuntime {
   }
   private func keyAfterGallery(_ key: String) {
     // Safety input survives a refused candidate command because it precedes its rollback snapshot.
+    game.prepareIsolationWorkSafetyKey(key)
     let stopsTool = game.flightKeyStopsTool(key)
     if game.prepareFlightControlKey(key) {
       controls.fire = false
@@ -3874,7 +7155,7 @@ public actor GameRuntime {
   private func handleScriptContactKey(_ key: String) -> Bool {
     if key == "contacts-open" || (key == "b" && !game.acceptsTextInput), game.docked, !game.paused,
       ![
-        Screen.help, .gallery, .library, .handoff, .mission, .showroom, .title, .demo, .gameOver,
+        Screen.help, .gallery, .library, .journal, .handoff, .mission, .showroom, .title, .demo, .gameOver,
         .secret, .navigation, .rumour,
       ].contains(game.screen)
     {
@@ -3927,7 +7208,7 @@ public actor GameRuntime {
       if game.dockingComputer { controls = Controls() }
     }
     if old != game.screen || key == "pause"
-      || [.gallery, .library, .handoff, .showroom].contains(game.screen)
+      || [.gallery, .library, .journal, .handoff, .showroom].contains(game.screen)
     {
       controls = Controls()
     }
@@ -3948,40 +7229,108 @@ public actor GameRuntime {
     game.observeFlightFire(held: controls.fire)
   }
   public func setViewport(width: Double, height: Double) {
+    guard width.isFinite, height.isFinite, width > 0, height > 0 else { return }
     game.viewportWidth = width
     game.viewportHeight = height
   }
   public func selectSystem(x: Double, y: Double) { game.selectSystem(x: x, y: y) }
   @inline(never)
   public func advance(delta: Double) -> Game {
+    // Retry the attained entry before preparing clocks or any new physical work.
+    if game.pendingMemoryAtlasMainDock != nil {
+      _ = commitPendingMemoryAtlasMainStationEntry()
+      return snapshot()
+    }
+    guard game.admitC01InquiryGeometryAdvance() else { return snapshot() }
     guard game.admitFlightWorkAdvance(controls: controls) else { return snapshot() }
     game.pendingNativeSalvageCollections.removeAll(keepingCapacity: true)
     game.nativeCrimboAttainedMotion = nil
     game.nativeCrimboMotionSample = nil
     let utilityWorkStart = game.inductionUtilityEndpoint()
+    let isolationWorkStart = game.isolationWorkSample()
+    let c01LaneStart = game.c01LaneRepairEndpoint()
     guard let context = prepareAdvance(delta: delta) else {
       game.advanceInductionUtilityWork(from: nil, publish: scriptPublisher())
+      game.advanceIsolationWork(from: nil, publish: scriptPublisher())
+      game.advanceC01LaneRepairWork(from: nil, publish: scriptPublisher())
       return snapshot()
     }
     return advancePreparedFrame(
-      delta: delta, context: context, utilityWorkStart: utilityWorkStart)
+      delta: delta, context: context, utilityWorkStart: utilityWorkStart, c01LaneStart: c01LaneStart,
+      isolationWorkStart: isolationWorkStart)
   }
 
   @inline(never)
   private func advancePreparedFrame(
-    delta: Double, context: AdvanceContext, utilityWorkStart: NativeInductionUtilityEndpoint?
+    delta: Double, context: AdvanceContext, utilityWorkStart: NativeInductionUtilityEndpoint?,
+    c01LaneStart: NativeC01LaneRepairEndpoint?, isolationWorkStart: NativeIsolationWorkSample?
   ) -> Game {
-    let glassMeridianStart = game.glassMeridianSample()
-    let flightReceptionStart = game.flightReceptionSample()
-    let outlookStart = game.orbitalOutlookSample()
-    let surveyStart = game.originalSurveySample()
-    let recordStart = game.recordRecoveryIdentificationSample()
-    let committedRecordIdentification = game.recordRecoveryState?.identification?.operation
-    let salvageStart = game.commander.flightSimulation.physicalTime
-    let salvagePlayer = game.commander.flightSimulation.player
+    if game.pendingMemoryAtlasMainDock != nil {
+      _ = commitPendingMemoryAtlasMainStationEntry()
+      return snapshot()
+    }
+    game.c01ClinicEscortRuntime.attainedSample = game.c01ClinicAttainedSample()
+    let observations = PreparedFrameObservations(game: game)
+    beginAssemblyCalibrationMotion()
     game.tick(
       delta: delta, controls: controls,
-      nativeSalvagePublish: scriptPublisher(requireNativeSalvage: true))
+      nativeSalvagePublish: scriptPublisher(requireNativeSalvage: true),
+      nativeClockProjection: context.nativeClockProjection)
+    return finishPreparedFrame(
+      delta: delta, context: context, utilityWorkStart: utilityWorkStart,
+      c01LaneStart: c01LaneStart, isolationWorkStart: isolationWorkStart,
+      observations: observations)
+  }
+
+  // These exact pre-tick samples survive physical motion; commit-only locals do not.
+  private final class PreparedFrameObservations {
+    let glassMeridianStart: NativeOriginalSurveySample?
+    let flightReceptionStart: NativeFlightReceptionSample?
+    let outlookStart: NativeOrbitalOutlookSample?
+    let surveyStart: NativeOriginalSurveySample?
+    let recordStart: WayfarerRecordRecoveryObservation?
+    let committedRecordIdentification: UUID?
+    let salvageStart: Double
+    let salvagePlayer: ActorIdentity?
+
+    @inline(never)
+    init(game: borrowing Game) {
+      glassMeridianStart = game.glassMeridianSample()
+      flightReceptionStart = game.flightReceptionSample()
+      outlookStart = game.orbitalOutlookSample()
+      surveyStart = game.originalSurveySample()
+      recordStart = game.recordRecoveryIdentificationSample()
+      committedRecordIdentification = game.recordRecoveryState?.identification?.operation
+      salvageStart = game.commander.flightSimulation.physicalTime
+      salvagePlayer = game.commander.flightSimulation.player
+    }
+  }
+
+  @inline(never)
+  private func finishPreparedFrame(
+    delta: Double, context: AdvanceContext, utilityWorkStart: NativeInductionUtilityEndpoint?,
+    c01LaneStart: NativeC01LaneRepairEndpoint?, isolationWorkStart: NativeIsolationWorkSample?,
+    observations: PreparedFrameObservations
+  ) -> Game {
+    var context = context
+    let glassMeridianStart = observations.glassMeridianStart
+    let flightReceptionStart = observations.flightReceptionStart
+    let outlookStart = observations.outlookStart
+    let surveyStart = observations.surveyStart
+    let recordStart = observations.recordStart
+    let committedRecordIdentification = observations.committedRecordIdentification
+    let salvageStart = observations.salvageStart
+    let salvagePlayer = observations.salvagePlayer
+    let attained = game.commander.flightSimulation.physicalTime - context.startPhysicalTime
+    if context.nativeClockDeferred {
+      context.clockAdvanced = context.nativeClockProjection != nil && attained > 0
+    }
+    game.consumeC01InquiryAttainedClockStep()
+    if game.pendingMemoryAtlasMainDock != nil && !commitPendingMemoryAtlasMainStationEntry() {
+      return snapshot()
+    }
+    commitC01InquiryOperatorHostLoss()
+    commitIsolationProgrammerFatalLoss()
     commitNativeSalvageCollections()
     commitMeasuredExtraction()
     commitRecordRecoveryLoss()
@@ -3997,19 +7346,30 @@ public actor GameRuntime {
     if game.docked { game.stationAutoDefence = nil }
     commitGlassMeridianScan(start: glassMeridianStart)
     commitGlassMeridianBeacons()
+    game.observeC01ClinicFatalTransitions(from: game.c01ClinicEscortRuntime.attainedSample)
     commitC01Surveyor(startTime: salvageStart, startPlayer: salvagePlayer)
+    commitC01TimingStandard()
+    commitC01ClinicEscort()
     commitFlightReception(start: flightReceptionStart)
     commitOrbitalOutlookScan(start: outlookStart)
     commitOriginalSurveyScan(start: surveyStart)
-    finishAdvance(delta: delta, context: context, stationEntryAttempted: stationEntryAttempted)
+    finishAdvance(
+      delta: context.nativeClockDeferred ? attained : delta,
+      context: context, stationEntryAttempted: stationEntryAttempted)
     game.advanceInductionUtilityWork(from: utilityWorkStart, publish: scriptPublisher())
+    game.advanceIsolationWork(from: isolationWorkStart, publish: scriptPublisher())
+    game.advanceC01LaneRepairWork(from: c01LaneStart, publish: scriptPublisher())
+    game.finishEMPPlayerElectricalInterval(publish: scriptPublisher(requireNativeSalvage: true))
+    finishC01InquiryAttainedFrame()
+    finishAssemblyCalibrationMotion()
     return snapshot()
   }
   private typealias AdvanceContext = (
     wasDocked: Bool, wasLive: Bool, location: (Int, Int), localActive: Bool, flightActive: Bool,
     calendarActive: Bool, clockAdvanced: Bool, startPhysicalTime: Double,
     startPlayer: ActorIdentity?, transitSample: NativeWormholeMotionSample?,
-    startTransitSeconds: Double
+    startTransitSeconds: Double, nativeClockDeferred: Bool,
+    nativeClockProjection: CurrentNewtScriptClockProjection?
   )
   // Release preflight/read buffers before entering the deeper physical simulation.
   @inline(never)
@@ -4021,7 +7381,7 @@ public actor GameRuntime {
     let location = (game.commander.galaxy, game.commander.system)
     let localActive =
       !game.paused
-      && ![Screen.demo, .title, .gameOver, .gallery, .library, .help, .navigation].contains(
+      && ![Screen.demo, .title, .gameOver, .gallery, .library, .journal, .help, .navigation].contains(
         game.screen)
     let flightActive =
       localActive && !game.docked
@@ -4050,9 +7410,15 @@ public actor GameRuntime {
   ) -> AdvanceContext {
     // Physical facts commit first. A failed script save must never undo a real hit/death.
     let calendarActive = game.calendarActive
+    let nativeClockDeferred = flightActive && game.hasCurrentNewtNativeScene
+    let nativeClockProjection =
+      nativeClockDeferred
+      ? CurrentNewtScriptClockProjection(
+        game: game, flight: flightActive, local: localActive,
+        calendar: calendarActive) : nil
     game.scriptEventsDeferred = true
     let clockAdvanced =
-      game.requiresScriptDurability
+      !nativeClockDeferred && game.requiresScriptDurability
       && game.advanceScriptClockValues(
         delta: delta, flight: flightActive, local: localActive, calendar: calendarActive,
         missionCalendar: game.missionCalendarActive)
@@ -4063,14 +7429,14 @@ public actor GameRuntime {
         && (game.hasNativeWormholeMotionObservers || game.hasInductionArkMotionObserver
           || game.hasInductionRescueMotionObserver)
         ? NativeWormholeMotionSample(game) : nil,
-      game.commander.scriptState.transitSeconds
+      game.commander.scriptState.transitSeconds, nativeClockDeferred, nativeClockProjection
     )
   }
   // Reserve later event/restoration buffers only after the physical tick and native entry.
   private func finishAdvance(delta: Double, context: AdvanceContext, stationEntryAttempted: Bool) {
     let (
       wasDocked, wasLive, location, localActive, flightActive, calendarActive, clockAdvanced,
-      startPhysicalTime, startPlayer, transitSample, startTransitSeconds
+      startPhysicalTime, startPlayer, transitSample, startTransitSeconds, _, _
     ) =
       context
     if wasLive && game.screen == .gameOver {
@@ -4093,7 +7459,10 @@ public actor GameRuntime {
     commitMeasuredExtraction()
     commitRecordRecoveryLoss()
     commitIdentifiedSalvageLoss()
+    game.observeC01ClinicFatalTransitions(from: game.c01ClinicEscortRuntime.attainedSample)
     commitC01Surveyor(startTime: startPhysicalTime, startPlayer: startPlayer)
+    commitC01TimingStandard()
+    commitC01ClinicEscort()
     game.observeSelectedFleetDiscovery()
     game.observeNativeCrimboAttainedMotion(
       delta: delta, flightWasActive: wasLive && !wasDocked && localActive && flightActive,
@@ -4208,12 +7577,24 @@ public actor GameRuntime {
   }
 
   private static func validateNativeDockEvidenceForSave(_ candidate: inout Game) throws {
-    guard
+    guard candidate.pendingMemoryAtlasMainDock == nil,
       candidate.commander.nativeStations?.ledger.currentDock == nil
         || candidate.nativeStationDockEvidenceIsCurrent,
       candidate.commander.nativeStations?.currentMainDock == nil
         || candidate.nativeMainStationDockEvidenceIsCurrent
     else { throw SaveError.invalidCommander }
+  }
+
+  /// Comparison projection only. Do not settle unrelated pending effects or
+  /// invoke a publisher while validating C01 birth application storage.
+  static func validateC01InquiryPrivateBirthCandidate(
+    _ value: borrowing Game, navigationBinding: ScriptNavigationTradeBinding? = nil
+  ) throws {
+    var persisted = value.commander
+    clearNativeSaveBindings(&persisted, system: value.systemIdentity)
+    try ScriptSaveStore.validateC01InquiryPrivateBirthCandidate(commander: persisted,
+      world: value.scriptWorldSave, scope: value.isMissionTrial ? "gallery" : "commander",
+      navigationBinding: navigationBinding)
   }
 
   /// Disk commanders omit only current scene bindings; live load candidates restore them.
@@ -4250,6 +7631,7 @@ public actor GameRuntime {
     }
     candidate.persistBlackjackTargets()
     let refusedNPCs = candidate.persistNPCStates()
+    try candidate.captureC01InquiryCurrentLife()
     guard refusedNPCs.isEmpty, !candidate.hasUnsettledWreckDeaths, candidate.commander.valid,
       !candidate.bodies.contains(where: {
         $0.energy <= 0 && $0.hull.isTargetShip && $0.physical?.npc != nil
@@ -4290,6 +7672,7 @@ public actor GameRuntime {
   }
   public func load(from url: URL, persistMigrations: Bool = true) throws {
     try loadNativeCommander(from: url, persistMigrations: persistMigrations, navigationBinding: nil)
+    resetAssemblyCalibration()
   }
   func loadNativeCommander(
     from url: URL, persistMigrations: Bool, navigationBinding: ScriptNavigationTradeBinding?
@@ -4297,12 +7680,20 @@ public actor GameRuntime {
     try requireGalleryFileAccess(url)
     let data = try CommanderSaveInput.read(from: url)
     try ScriptSaveJSONPreflight.validate(data)
+    try CurrentNewtKitSave.validateFields(data, location: .commander, schema: nil)
+    // A malformed pointer must not turn a misplaced native inquiry into a raw-Commander fallback.
+    try NativeMemoryAtlasWatcherEnvelope.validateFields(data, location: .commander, schema: nil)
+    _ = try NativeC01InquirySave.validateFields(data, location: .commander, schema: nil)
+    try NativeIsolationWorkParentSave.validateFields(data, part: .commander)
+    try NativeIsolationWorkSave.validateFields(data, part: .commander)
+    try NativeBorrowedVoiceSave.validateFields(data, part: .commander)
+    try NativeQuietChoirSave.validateFields(data, part: .commander)
+    try NativeMemoryAtlasSave.validateFields(data, part: .commander)
+    try NativeSignedPassageOpeningSave.validateFields(data, part: .commander)
     if let pointer = try? JSONDecoder().decode(ScriptSavePointer.self, from: data) {
-      if pointer.schemaVersion >= 6 {
-        guard (pointer.scope == "gallery") == (galleryNamespace != nil) else {
-          throw MissionPackError(
-            "Trial saves open only in Gallery trials; commander saves open in the live game.")
-        }
+      guard (pointer.scope == "gallery") == (galleryNamespace != nil) else {
+        throw MissionPackError(
+          "Trial saves open only in Gallery trials; commander saves open in the live game.")
       }
       let generation = try ScriptSaveStore.generationDirectory(pointer.generation, from: url)
       try Self.requireGalleryPathAccess(generation, namespace: galleryNamespace)
@@ -4349,37 +7740,7 @@ public actor GameRuntime {
     guard galleryNamespace == nil else {
       throw MissionPackError("Legacy commander files cannot replace a Gallery trial.")
     }
-    try ScriptSaveJSONPreflight.rejectCourierFields(data, location: .rawCommander)
-    try ScriptSaveJSONPreflight.validateFreightFields(data, part: .commander)
-    try AlienStorageVersionedSave.rejectFields(data)
-    try EMPVersionedSave.rejectFields(data, part: .commander)
-    try NativePeopleVersionedSave.rejectFields(data)
-    try RingMiningVersionedSave.rejectFields(data)
-    try ElectricalVersionedSave.rejectFields(data)
-    try HyperspaceDriveVersionedSave.rejectFields(data)
-    try ScriptFinanceVersionedSave.rejectFields(data, part: .commander)
-    var commander = try ScriptValueStorage.decoder(typed: false).decode(Commander.self, from: data)
-    // Native pledge evidence belongs to versioned missions chunks.
-    guard commander.scriptState.pledgeLedger == nil,
-      commander.scriptState.instances.values.allSatisfy({ $0.pledgeReceiptID == nil })
-    else { throw SaveError.invalidCommander }
-    let original = commander
-    commander.migrateLegacyPassengerMarker()
-    var candidate = game
-    guard candidate.load(commander) else { throw SaveError.invalidCommander }
-    candidate.pendingNewSaveDestination = nil
-    candidate.newCommanderSaveReceipt = nil
-    try candidate.rebindNativeStationsAfterLoad()
-    if candidate.requiresScriptDurability { migrateScriptCalendar(&candidate) }
-    candidate.suspendUnavailableScriptContent(navigationBinding: navigationBinding)
-    guard candidate.commander.valid else { throw SaveError.invalidCommander }
-    if persistMigrations && candidate.commander != original {
-      try Self.writeCommander(&candidate, to: url, navigationBinding: navigationBinding)
-    }
-    game = candidate
-    controls = Controls()
-    scriptSaveURL = url
-    game.scriptDurabilityAvailable = true
+    throw SaveError.invalidCommander
   }
 }
 

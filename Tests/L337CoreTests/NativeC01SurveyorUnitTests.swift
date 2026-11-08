@@ -96,7 +96,7 @@ final class C01SurveyorFixture {
     let profile = NativeC01Surveyor.profile(recorder: false)
     var body = marker.body
     body.id = 11
-    body.energy = profile.energy
+    body.energy = 64
     body.missionActorID = logical
     body.scriptNPC = .init(
       fit: .init(
@@ -107,11 +107,17 @@ final class C01SurveyorFixture {
       identity: .init(system: NativeC01Surveyor.location, visit: 3, entity: 41),
       population: .mission,
       npc: .init(
-        role: .mission, origin: NativeC01Surveyor.location, destination: NativeC01Surveyor.location)
+        role: .mission, origin: NativeC01Surveyor.location, destination: NativeC01Surveyor.location,
+        legalProvenance: .recorded, cargoProvenance: .recorded, routeProvenance: .recorded)
     )
     body.physical?.spawnIdentity = .init(
       system: NativeC01Surveyor.location, visit: 3, sequence: 1, member: 1, producer: .mission)
-    body.physical?.npc?.resources = .legacyEnergyOnly(maximumEnergy: profile.energy)
+    let original = try NativeC01SurveyorGeometry.harrier.get()
+    var resources = try #require(NPCResources.stock(original.performance))
+    resources.frontShield = 0
+    resources.rearShield = 0
+    resources.fuel = 0
+    body.physical?.npc?.resources = resources
     var group = ScriptOwnedEncounter(
       id: NativeC01Surveyor.encounter, galaxy: 0, system: 164,
       actors: [
@@ -166,20 +172,41 @@ final class C01SurveyorFixture {
 }
 
 struct NativeC01SurveyorUnitTests {
-  @Test func harrierKeepsEveryVisualFaceAt65MetresAndUsesClosedConservativeCollision() throws {
+  @Test func originalSH026HarrierUsesItsActualNativeDesignAndDisabledCondition() throws {
     let geometry = try NativeC01SurveyorGeometry.harrier.get()
-    let original = try #require(ShipCatalogue.ship("SH056"))
-    #expect(original.name == "Harrier" && ShipCatalogue.ship("SH026")?.name == "Constrictor")
-    #expect(geometry.design.faces == original.design.faces)
-    #expect(geometry.design.vertices.count == original.design.vertices.count)
+    let original = try #require(ShipCatalogue.ship("SH026"))
+    let native = try #require(original.nativeDesign)
+    #expect(original.name == "Harrier" && original.catalogue.family == "harrier")
+    #expect(geometry.design == native)
+    #expect(geometry.collision.vertices == native.rawMesh.vertices)
+    #expect(geometry.collision.faces == native.rawMesh.faces)
+    #expect(geometry.collision.vertices.count == 306 && geometry.collision.faces.count == 512)
     #expect(
-      abs(try OriginalHullEnvelope(vertices: geometry.design.rawMesh.vertices).dimensions.z - 65)
-        < 1e-9)
+      abs(try OriginalHullEnvelope(vertices: geometry.collision.vertices).dimensions.z - 30) < 1e-9)
     #expect(try PreparedHull(mesh: geometry.collision).isClosed)
     #expect(geometry.collision.faces.allSatisfy { $0.count == 3 })
-    #expect(NativeC01Surveyor.profile(recorder: false).energy == 64)
+    let expected = ShipPerformance(
+      cargo: 18, speed: 44.5, acceleration: 15.4, energy: 390, recharge: 5.8,
+      roll: 1.32, pitch: 1.16, yaw: 1.08, shield: 280, shieldRecharge: 2,
+      fuel: 120, jump: 8, spool: 12, missiles: 7, facings: 7, cargoExpansion: 5,
+      price: 362000, workTools: [.salvageCutter])
+    #expect(geometry.performance == expected && original.game == expected)
+    let profile = try #require(original.profiles.first { $0.id == "PROJECT-HARRIER-R3-SH026" })
+    let mass = try #require(profile.fields.first { $0.key == "original.physical.dryMassKilograms" })
+    #expect(mass.unit == "kg" && mass.number == 25545 && geometry.dryMass == mass.number)
+    #expect(NativeC01Surveyor.profile(recorder: false).energy == expected.energy)
+    #expect(NativeC01Surveyor.profile(recorder: false).recharge == expected.recharge)
     #expect(NativeC01Surveyor.profile(recorder: false).speed == 0)
     #expect(NativeC01Surveyor.profile(recorder: false).drive == nil)
+    let raw = try #require(ShipCatalogue.rawMesh("SH026"))
+    let disabled = try #require(SalvageCatalogue.empProfile(catalogueShipID: "SH026"))
+    // A controlled geometry value is not ownership or fabrication of the pending player hull.
+    var playerGeometry = Commander()
+    playerGeometry.shipID = "SH026"
+    for mesh in [raw, disabled.mesh, playerGeometry.playerMesh] {
+      #expect(mesh.vertices == native.rawMesh.vertices && mesh.faces == native.rawMesh.faces)
+    }
+    #expect(MainStationGeometry.docking.fits(geometry.collision))
     let radius = NativeC01SurveyorGeometry.recorder.rawMesh.vertices.map(\.length).max()!
     #expect(
       NativeC01Surveyor.pairSeparated(harrier: .init(), recorder: .init(80, 0, 0), radius: radius))
@@ -196,12 +223,26 @@ struct NativeC01SurveyorUnitTests {
     game.bodies = group.actors.values.map(\.body)
     let harrier = try #require(group.actors[NativeC01Surveyor.aliases[0]])
     let recorder = try #require(group.actors[NativeC01Surveyor.aliases[1]])
-    #expect(game.c01SurveyorCollision(harrier.body)?.mass == 18_000)
+    #expect(harrier.body.energy == 64)
+    #expect(game.c01SurveyorCollision(harrier.body)?.mass == 25545)
     #expect(game.c01SurveyorCollision(recorder.body)?.mass == 8)
     #expect(game.c01SurveyorCollision(harrier.body)?.mesh.faces == geometry.collision.faces)
     var foreign = harrier.body
     foreign.missionActorID = UUID()
     #expect(game.c01SurveyorCollision(foreign) == nil)
+    // The retained enum tag and actor identity cannot supply the original geometry.
+    #expect(harrier.body.hull == .cobra)
+    var missingFit = harrier.body
+    missingFit.scriptNPC = nil
+    #expect(game.c01SurveyorCollision(missingFit) == nil)
+    let harrierFit = try #require(harrier.body.scriptNPC?.fit)
+    let recorderFit = try #require(recorder.body.scriptNPC?.fit)
+    let recorderHash = try #require(recorderFit.models[recorderFit.definition.model])
+    var substituted = harrier.body
+    substituted.scriptNPC = .init(
+      fit: .init(definition: harrierFit.definition, models: [harrierFit.definition.model: recorderHash]),
+      fuel: 0, guns: [:], components: [:])
+    #expect(game.c01SurveyorCollision(substituted) == nil)
     var drifting = harrier.body
     drifting.physical?.velocity = .init(3, 0, 0)
     if let index = game.bodies.firstIndex(where: { $0.id == drifting.id }) {

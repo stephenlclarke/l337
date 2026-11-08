@@ -1,0 +1,250 @@
+{
+  "status": "FROZEN_OWN_INTEGER_SOURCE_OWNERSHIP_ONLY_NO_ENGINEERING_OR_NATIVE_AUTHORITY",
+  "beforeCommit": "a0a74bf102839cd1df6333e82ddff2e4d1779001",
+  "scopeIDs": [
+    "SH005",
+    "SH006",
+    "SH025"
+  ],
+  "rows": [
+    {
+      "id": "SH005",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH005-design.toml",
+        "bytes": 355469,
+        "sha256": "63aba498e570d6b6e33f77c261019502cbe2c23b7aed69629a84c7ac17f52a08"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH005.toml",
+        "bytes": 403418,
+        "sha256": "a1592e007d95c8608f5bcc893d3ecf450fa94e9b4437d15f5fddc593f4d6e9fb"
+      },
+      "r3": {
+        "path": "docs/fleet-design-v2/ships/SH005.toml",
+        "bytes": 3502,
+        "sha256": "abb18a2f94877670d18008dddde590a16a2322bdcc2311cd11b3f241fac43bcd"
+      },
+      "sourceRecipeBase": "SH005",
+      "sourceArchetype": "container-train",
+      "sourceModuleCount": 4,
+      "sourceRole": "transporter",
+      "sourceMembers": [
+        "SH005",
+        "SH006"
+      ],
+      "sourceMark": 0,
+      "detailedVertexBound": 1320,
+      "detailedFaceBound": 2212,
+      "nativeVertexBound": 512,
+      "nativeFaceBound": 876,
+      "retainedCurrentCalibrationExact": "150/4.784",
+      "currentGeometryContext": "geometryContext = \"Metres under explicit new uniform authoring estimate150/4.784; +Zforward,+Yup, sourceorigin retained. Actual bounds from source mesh; not measurement/docking calibration. Original source never declared SI units. Full detailed2212triangles/native492triangles; no global budget increase.\"",
+      "currentNativeMaximumFaces": 512,
+      "currentNativeMaximumVertices": 4096
+    },
+    {
+      "id": "SH006",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH006-design.toml",
+        "bytes": 362774,
+        "sha256": "fedf4bda1c86c1a580b4799f6476446c98bb7a319d39c8452245a92c5f9f1108"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH006.toml",
+        "bytes": 407574,
+        "sha256": "1fcf843a53ef11d4b0f6c503219cebfebf81ef6b97051a9b395ddbd4acec46c8"
+      },
+      "r3": {
+        "path": "docs/fleet-design-v2/ships/SH006.toml",
+        "bytes": 3527,
+        "sha256": "a01ab6d02762226d4dc194b3311c731e694af1e179b07791755e7a330ba86f6c"
+      },
+      "sourceRecipeBase": "SH005",
+      "sourceArchetype": "container-train",
+      "sourceModuleCount": 4,
+      "sourceRole": "transporter",
+      "sourceMembers": [
+        "SH005",
+        "SH006"
+      ],
+      "sourceMark": 1,
+      "detailedVertexBound": 1320,
+      "detailedFaceBound": 2212,
+      "nativeVertexBound": 512,
+      "nativeFaceBound": 876,
+      "retainedCurrentCalibrationExact": "150/4.784",
+      "currentGeometryContext": "geometryContext = \"Metres under explicit new common Bison family uniform authoring estimate150/4.784; own Mk II larger source coordinates retained, +Zforward,+Yup and original origin. Dimensions are estimates, not measured calibration, docking or swept-clearance acceptance. Full detailed2212triangles and native492triangles; no global budget increase.\"",
+      "currentNativeMaximumFaces": 512,
+      "currentNativeMaximumVertices": 4096
+    },
+    {
+      "id": "SH025",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH025-design.toml",
+        "bytes": 534238,
+        "sha256": "5c76051fbb6f681065858b312dadfb1acad3e10ea22559d6da6f62d6684d25cc"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH025.toml",
+        "bytes": 690857,
+        "sha256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883"
+      },
+      "r3": {
+        "path": "docs/fleet-design-v2/ships/SH025.toml",
+        "bytes": 3492,
+        "sha256": "a305641b7be704a2af0129e146d4ef1d72d165a1cbc7b935458c4c35aea14cc0"
+      },
+      "sourceRecipeBase": "SH022",
+      "sourceArchetype": "split-prow",
+      "sourceModuleCount": 2,
+      "sourceRole": "trader",
+      "sourceMembers": [
+        "SH022",
+        "SH023",
+        "SH024",
+        "SH025"
+      ],
+      "sourceMark": 3,
+      "detailedVertexBound": 2072,
+      "detailedFaceBound": 3484,
+      "nativeVertexBound": 536,
+      "nativeFaceBound": 964,
+      "retainedCurrentCalibrationExact": "36.95309420575483",
+      "currentGeometryContext": "geometryContext = \"F01-SH025-CALIBRATION-v1: project estimate, maximum bounding extent 120 metres for size-tier-2 multirole hull; not an authored measurement or predecessor dimension. Uniform scale 36.95309420575483 from approved original nativeDesign bounds, +Z forward/+Y up; retain proportions and openings. Hull SHA256 33f4113a86ba833d4a0178984ca3bb6c963bbdeabc8eb9c38059d5a17d665671; specification SHA256 8c608e9f1a9a325b3c275f64a9428832c4f6890b7465f966c907daa70b4db313. Actual docking clearance remains unqualified.\"",
+      "currentNativeMaximumFaces": 512,
+      "currentNativeMaximumVertices": 4096
+    }
+  ],
+  "allInputAndConsumerPins": [
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH005-design.toml",
+      "bytes": 355469,
+      "sha256": "63aba498e570d6b6e33f77c261019502cbe2c23b7aed69629a84c7ac17f52a08"
+    },
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH005.toml",
+      "bytes": 403418,
+      "sha256": "a1592e007d95c8608f5bcc893d3ecf450fa94e9b4437d15f5fddc593f4d6e9fb"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH005.toml",
+      "bytes": 3502,
+      "sha256": "abb18a2f94877670d18008dddde590a16a2322bdcc2311cd11b3f241fac43bcd"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH006-design.toml",
+      "bytes": 362774,
+      "sha256": "fedf4bda1c86c1a580b4799f6476446c98bb7a319d39c8452245a92c5f9f1108"
+    },
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH006.toml",
+      "bytes": 407574,
+      "sha256": "1fcf843a53ef11d4b0f6c503219cebfebf81ef6b97051a9b395ddbd4acec46c8"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH006.toml",
+      "bytes": 3527,
+      "sha256": "a01ab6d02762226d4dc194b3311c731e694af1e179b07791755e7a330ba86f6c"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH025-design.toml",
+      "bytes": 534238,
+      "sha256": "5c76051fbb6f681065858b312dadfb1acad3e10ea22559d6da6f62d6684d25cc"
+    },
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH025.toml",
+      "bytes": 690857,
+      "sha256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH025.toml",
+      "bytes": 3492,
+      "sha256": "a305641b7be704a2af0129e146d4ef1d72d165a1cbc7b935458c4c35aea14cc0"
+    },
+    {
+      "path": "docs/fleet-physical/author-baseline-029-061-source-ownership.py",
+      "bytes": 22618,
+      "sha256": "b37e188fc3696a9c6421d59b80c3e21297333e62acda78e4985296b43cdb18f8"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetPhysicalRecord.swift",
+      "bytes": 9385,
+      "sha256": "ec6097c69c5380432df9d213a4064f3d07ed65cd13232d7e81008678134ef86f"
+    },
+    {
+      "path": "Sources/L337Core/OriginalHullPhysicalContract.swift",
+      "bytes": 20949,
+      "sha256": "4dfc05d6d886dc85ab48ea6071f735bf02f031c0874960518805afb542c51be2"
+    },
+    {
+      "path": "Sources/L337Core/ShipRawMeshCache.swift",
+      "bytes": 1626,
+      "sha256": "13879bfe6a2dd5871c5a26532e82231f25087401966931e6cce99ea8ac8ce23b"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/OriginalBisonActivation.swift",
+      "bytes": 14473,
+      "sha256": "46a345256bc7bc887ae2b049f6223ac4e54ea0662e7136466d0a56f32c3471f1"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetShowroomModels.swift",
+      "bytes": 5661,
+      "sha256": "657b8b24fda1ad75ca88cfb6bad9d09188c20e29a4985deca6876d678a0144ae"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+      "bytes": 48273,
+      "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+      "bytes": 32122,
+      "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet-redesign-manifest.json",
+      "bytes": 149499,
+      "sha256": "acbc9e01bd7c3dbc7ac301e46c793142805ecaa6a5e0041b000f02f4c30f182c"
+    },
+    {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+      "bytes": 69958,
+      "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+    }
+  ],
+  "creatorPins": {
+    "creatorPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+    "primitiveCreatorPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "primitiveCreatorSHA256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476",
+    "emissionManifestPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet-redesign-manifest.json",
+    "emissionManifestSHA256": "acbc9e01bd7c3dbc7ac301e46c793142805ecaa6a5e0041b000f02f4c30f182c",
+    "originalInputPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "originalInputSHA256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "algorithm": "Copy prior own Counter+operation_groups declarations byte-exact, never import/execute creators. Parse original and current TOML with parse_float=str: source decimal tokens remain strings, never numeric coordinates. Check complete original detailed/native integer append/index/material ownership. Require current detailed index topology/material indices match original exactly before retaining those named component roles; compare declared licence/material/appearance/UV metadata without RGB role inference or numeric UV normalization. Independently validate current native <=512/global integer indices/material slots; NEVER relabel original native component map as current native ownership when topology differs. Output explicit unmatched-current-native/correction provenance gaps. Preserve exact current resource/calibration text and original axes/voids without numerical transform/span/copy. No area/centroid/mass/tensor/sourcegeometry generation.",
+  "maximumDesignParses": 6,
+  "maximumPartRecords": 1024,
+  "maximumFaceIndexChecks": 60204,
+  "maximumFaceMaterialChecks": 20068,
+  "maximumCurrentCorrespondenceFaceComparisons": 7908,
+  "maximumCurrentNativeFaces": 1536,
+  "maximumResultRecords": 3,
+  "maximumRecordBytes": 1048576,
+  "coordinateConversions": 0,
+  "geometryOrSpanEvaluations": 0,
+  "areaCentroidMassTensorEvaluations": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "nativeCompilerRendererTests": 0,
+  "outputDirectory": "baseline-005-006-025-source-ownership",
+  "plannedAuthoringSource": "author-baseline-005-006-025-source-ownership.py",
+  "executionPrerequisite": "Freeze exact own code bytes/hash and operation counters FIRST before ONE own metadata pass. Root authorized only text/hash/integer-index ownership; no numerical pass or engineering-role adoption.",
+  "knownCurrentNativeDifference": "Original emission metadata says005/006876nativefaces each; current resource contexts declare492each. Current025 original964nativefaces and existing F01 custom native resource is separate. Current native topology/component provenance must remain explicit, never original-native passthrough or acceptance/count promotion.",
+  "engineeringNext": "Only after this ownership scope, propose exact named stock/hardware anchors and existing approved scales to Root separately. Full source/current-coordinate transform correspondence not numerically evaluated here. Current013/014 bridge/support/material corrections excluded/preserved;026existing25545 budget and all station/source records unchanged.",
+  "consumerHunkMapToPrepare": "Current raw-cache uses actual ship.nativeDesign for005/006/025, while OriginalFleetShowroomModels retains earlier original native876/964. Existing generic CurrentHullSource/model-native cache must not replace the approved current492/F01 native or infer current geometry from old display. Identify exact authentic current-baseline record/Source.engineering binding and model/source API need before any new consumer edits; no fictitious source wrapper, stage release or legacy fallback."
+}

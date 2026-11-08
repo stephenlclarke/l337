@@ -1,0 +1,39 @@
+{
+  "status": "FIRST_STATION_AUTO_CURRENT_TARGET_SOURCE_PROPOSAL_BEFORE_SHARED_RESERVATION_NO_EDITS",
+  "beforeCommit": "769651665e7e6f003cbc29594f6159d900021630",
+  "path": "Sources/L337Core/StationAutoDefence.swift",
+  "before": "      npc.resources?.valid == true, body.scriptNPC == nil, body.scriptShot == nil,\n      ShipCatalogue.nativeShip(body.hull) != nil,\n      physical.catalogueShipID == nil\n        || physical.catalogueShipID == ShipCatalogue.nativeShip(body.hull)?.id,\n      !context.protection.protectedActors.contains(physical.identity)\n",
+  "after": "      npc.resources?.valid == true, body.scriptNPC == nil, body.scriptShot == nil,\n      let catalogue = physical.catalogueShipID, snapshot.catalogueShipID == catalogue,\n      NPCPersistenceSnapshot.capture(\n        body: body, pose: commander.flightSimulation.pose, physicalTime: context.physicalTime,\n        protection: context.protection) != nil,\n      !context.protection.protectedActors.contains(physical.identity)\n",
+  "pins": [
+    {
+      "path": "Sources/L337Core/StationAutoDefence.swift",
+      "bytes": 40475,
+      "sha256": "d7458ad52bbf1a8da835ea3a51c61060ded0f19e78449b20d780036b76d56e5e"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36134,
+      "sha256": "ea48568940ba3b1dd6e45c3777db50f163fd0e203d00a63610075ef0979b21df"
+    },
+    {
+      "path": "Sources/L337Core/GameplayScene.swift",
+      "bytes": 20641,
+      "sha256": "23e99db96a86e68e0afb39e72e826fcf936c0ee0dcef19531c08a2e985507c31"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 150579,
+      "sha256": "7f46d4e3fd7be24ee55791d08edff749d9dd0ce1ec2b3eff2200e8fb7281e473"
+    }
+  ],
+  "reason": "stationAutoKnownTarget requires nativeShip(hull) and nil-or-reverse-ID; actual current original pirates/traders carry per-ID current R3 sources independent of old control hull. Current native reverse bindings only station028/police031, so eligible current original attackers are rejected. Replace only that source predicate with explicit body/context ID consistency and existing current snapshot capture validation, which already authenticates current source/profile/stock caps/consumed fuel/missiles/cargo/pose and ownership exclusions. No new source/role/equipment authority or reverse-ID fallback.",
+  "invariants": "All original pending dock/EMP/hostility/intention/unlawfulattack/current actor/pose/unique body/unique context/resource/script/protection and final legal defence checks untouched. No emitter/law/energy/heat/timing/cost/guidance/clearance/G1 combat changes. Capture is readonly, no ledger/resource mutation.",
+  "testPlan": "Existing controlled stationAutoGame and additional attacker fixtures still use nil/native.cobra alias and require exact current-source fixture adaptation before executable qualification; do not claim original positives pass. Freeze actual fixture/caller/real pool-damage oracles before any test edits, coordinate actual417 source ownership. New bounded test must prove actual current explicit source accepted, body/context wrongID/unknown/missing current source/forged capacity/spent-valid state/protected ownership refusal with law/emission/inventory state conservation. Do not nominate a hull/profile128/fixed2/mining workaround or erase shields to force hit.",
+  "reservationRequest": "Exact single source-predicate hunk only after Root overlap check; no edits yet. Test-source/oracle scope remains to freeze and reserve. Source-only new current source eligibility, not integration-ready until proper tests/source review/G1 qualification.",
+  "limits": "No native/model/geometry/numeric/renderer/compiler/test run, no claim source150151/025/actualcrew/loadedphysics/journey qualification. Shared station/actual417 path may remain Root-held; preserve C01enum/MC1/G1 lease."
+}

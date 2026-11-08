@@ -71,7 +71,7 @@ enum WayfarerFieldRelief {
   static let boardID = "field-relief"
   static let capability = "native-field-relief-v1"
   // Generated from the frozen production manifest and entry bytes, not descriptive source IDs.
-  static let digest = "59a1b1caf304c747f0e983a422b13f25e01801f6834ce26ca71bb1621b5d408b"
+  static let digest = "80745b3283505d25b30de4adb5ffd3b1fe07ab545091cb9be661ae52452f663b"
   static func instance(_ consignment: UUID) -> UUID {
     Game.contractJobIdentity(offer(consignment))
   }

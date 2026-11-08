@@ -19,9 +19,7 @@ public struct NPCResources: Equatable, Codable, Sendable {
   public let fuelCapacity: Int?
   public var scoopRemainder: Double = 0
   public var electrical: ElectricalReserve? = nil
-  /// Explicit catalogue-backed migration for legacy electrical recovery; hull recharge stays legacy.
-  var legacyElectricalRecharge: Double? = nil
-  var electricalRecharge: Double { legacyElectricalRecharge ?? energyRecharge }
+  var electricalRecharge: Double { energyRecharge }
 
   public var valid: Bool {
     let fuelValid: Bool
@@ -40,9 +38,6 @@ public struct NPCResources: Equatable, Codable, Sendable {
       && energyCapacity > 0 && energyCapacity <= 100000
       && frontShield <= frontCapacity && rearShield <= rearCapacity
       && laserHeat <= heatCapacity && scoopRemainder < 1
-      && (legacyElectricalRecharge.map {
-        profile == .legacyEnergyOnly && $0.isFinite && $0 > 0 && $0 <= 100000
-      } ?? true)
       && fuelValid
       && (electrical.map {
         $0.valid && $0.capacity == energyCapacity && $0.recharge == electricalRecharge
@@ -117,6 +112,46 @@ public struct NPCResources: Equatable, Codable, Sendable {
       laserHeat: laserHeat, heatCapacity: heatCapacity,
       fuelTenthsLY: fuel ?? -1, fuelCapacityTenthsLY: fuelCapacity ?? -1,
       electricalPower: electrical?.remaining, electricalCapacity: electrical?.capacity)
+  }
+}
+
+extension NPCResources {
+  private enum CodingKeys: String, CodingKey, CaseIterable {
+    case profile, energyCapacity, energyRecharge, frontCapacity, rearCapacity, shieldRecharge
+    case frontShield, rearShield, laserHeat, heatCapacity, heatCooling, fuel, fuelCapacity
+    case scoopRemainder, electrical
+  }
+
+  public init(from decoder: any Decoder) throws {
+    let fields = try decoder.container(keyedBy: ResourceKey.self)
+    let allowed = Set(CodingKeys.allCases.map(\.rawValue))
+    guard Set(fields.allKeys.map(\.stringValue)).isSubset(of: allowed) else {
+      throw SaveError.invalidCommander
+    }
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    self.init(
+      profile: try values.decode(Profile.self, forKey: .profile),
+      energyCapacity: try values.decode(Double.self, forKey: .energyCapacity),
+      energyRecharge: try values.decode(Double.self, forKey: .energyRecharge),
+      frontCapacity: try values.decode(Double.self, forKey: .frontCapacity),
+      rearCapacity: try values.decode(Double.self, forKey: .rearCapacity),
+      shieldRecharge: try values.decode(Double.self, forKey: .shieldRecharge),
+      frontShield: try values.decode(Double.self, forKey: .frontShield),
+      rearShield: try values.decode(Double.self, forKey: .rearShield),
+      laserHeat: try values.decode(Double.self, forKey: .laserHeat),
+      heatCapacity: try values.decode(Double.self, forKey: .heatCapacity),
+      heatCooling: try values.decode(Double.self, forKey: .heatCooling),
+      fuel: try values.decodeIfPresent(Int.self, forKey: .fuel),
+      fuelCapacity: try values.decodeIfPresent(Int.self, forKey: .fuelCapacity),
+      scoopRemainder: try values.decode(Double.self, forKey: .scoopRemainder),
+      electrical: try values.decodeIfPresent(ElectricalReserve.self, forKey: .electrical))
+  }
+
+  private struct ResourceKey: CodingKey {
+    let stringValue: String
+    var intValue: Int? { nil }
+    init?(stringValue: String) { self.stringValue = stringValue }
+    init?(intValue: Int) { return nil }
   }
 }
 

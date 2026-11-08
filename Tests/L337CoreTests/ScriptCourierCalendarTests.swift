@@ -7,6 +7,7 @@ import Testing
   let fixture = try CourierFixture()
   defer { fixture.clean() }
   var game = fixture.game()
+  try game.commander.prepareEquipment(legacy: false)
   _ = try fixture.offer(&game)
   let runtime = GameRuntime(game: game)
   _ = await runtime.advance(delta: 0.1)
@@ -361,6 +362,7 @@ func courierPinnedMultihopDeadlinesUseActualRuntimeTravelAndFlight(boundary: Cou
   let fixture = try CourierFixture()
   defer { fixture.clean() }
   var game = fixture.game()
+  try game.commander.prepareEquipment(legacy: false)
   _ = try fixture.offer(&game)
   game.commander.scriptState.missionCalendar?.seconds = 1e12 - 599
   game.commander.scriptState.calendarSeconds = 1e12 - 599
@@ -394,10 +396,11 @@ func courierPinnedMultihopDeadlinesUseActualRuntimeTravelAndFlight(boundary: Cou
   #expect(duplicate == nil && game.commander.scriptState.clock(.missionCalendar) == arrived)
 }
 
-@Test func courierFatalBarrierNormalizesOnlyFiniteActualDeathsAndPreservesOrdinaryFlight() async {
+@Test func courierFatalBarrierNormalizesOnlyFiniteActualDeathsAndPreservesOrdinaryFlight() async throws {
   for fatal in [false, true] {
     var game = Game(executive: false)
     game.screen = .status
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.bodies = [.init(id: 1, hull: .sidewinder, position: .init(0, 0, 100), hostile: true)]
     game.celestials = []
@@ -430,6 +433,7 @@ func courierPinnedMultihopDeadlinesUseActualRuntimeTravelAndFlight(boundary: Cou
     }
   }
   var invalid = Game(executive: false)
+  try invalid.commander.prepareEquipment(legacy: false)
   invalid.launch()
   invalid.bodies = []
   invalid.celestials = []

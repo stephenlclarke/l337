@@ -231,6 +231,7 @@ struct MissionCatalogueReplacementTests {
     game.screen = .gallery
     game.gallery.detail = true
     game.gallery.selection = game.missionCatalogue.count - 1
+    try game.commander.prepareEquipment(legacy: false)
     let runtime = GameRuntime(game: game)
     for file in removed { try FileManager.default.removeItem(at: file) }
     let replacement = drafts.appendingPathComponent("replacement.toml")

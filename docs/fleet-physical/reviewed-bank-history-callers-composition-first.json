@@ -1,0 +1,47 @@
+{
+  "status": "FIRST_REVIEWED_AA5_HISTORY_HELPER_FORWARD_AND_TWO_UNIT_OPTINS_BEFORE_MUTATION",
+  "beforeCommit": "495744a7da381e6cff40216c2a5a7b615385d88c",
+  "child": {
+    "path": "/tmp/elite-mc1-two-owned-bank-history-callers-child/manifest.json",
+    "bytes": 1634,
+    "sha256": "aa5bbf7f088f878bde0dbc719b5cf64449864db9079e3048a9535f939455334f"
+  },
+  "review": {
+    "path": "/tmp/elite-g2-aa5-two-bank-history-callers-source-review/review.json",
+    "bytes": 2907,
+    "sha256": "bd8846166eb41b19aaa190cbc83dc50de03755660acb9dc6d72fe81e89746c93"
+  },
+  "targetBefore": {
+    "path": "Tests/L337CoreTests/EMPBankOwnershipTests.swift",
+    "bytes": 18565,
+    "sha256": "71944fcb25ac6fe94c51b82bc056c37b3d23e37b510177ef7d1c5a6b37af8258"
+  },
+  "protectedCurrent495744DcaAndCodec": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/StationAutoDefence.swift",
+      "bytes": 40973,
+      "sha256": "90fc152975cc2ea60839429b02da297a8ca3287733ee8cebb68982f58912daaf"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 42926,
+      "sha256": "833eb2b203ad2ec37d0b17d2af436841cf90f61e44ae126f78c3045616232bdd"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 162476,
+      "sha256": "efdca609e257b8b2ff1ed445b2d2b42a5181f4f457258f2e861ff340e448abfd"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPBankNativeCodecTests.swift",
+      "bytes": 13198,
+      "sha256": "2adedf6158f8bafbda508526ccf1c3e629aa7547f75ff65814f7a8a3fd382f0a"
+    }
+  ],
+  "scope": "Exactly reviewed3hunks: optional historyGame defaultfalse forwarding and two unit optins. Modeled6to4/time10/player0target2/moduleowner recipe and all old assertions unchanged. Dependent d697 codec callers NOT included."
+}

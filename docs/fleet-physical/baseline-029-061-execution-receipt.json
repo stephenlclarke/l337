@@ -1,0 +1,91 @@
+{
+  "status": "ONE_AUTHORIZED_NEW_TWO_ROW_PASS_ONE_OKAPI_OUTPUT_ONE_TRUTHFUL_SAIGA_STOP",
+  "rootAuthorityFIRST": {
+    "path": "docs/fleet-physical/baseline-029-061-numeric-scope-authority-first.json",
+    "bytes": 849,
+    "sha256": "c27189047ccdac3718d9871725315ff03182ebfd87a792f81ea022717fe028a3"
+  },
+  "codeInputOutputFIRST": {
+    "path": "docs/fleet-physical/baseline-029-061-area-moment-authoring-first.json",
+    "bytes": 4100,
+    "sha256": "ea78658aa84ce2057b2d4ea6369c6737b03f746fb04ef8e16c4ad547bc063085"
+  },
+  "codeSHA256": "0716197a6e1ea3cc31ae55709763f8d0c3f1a9c051533f505de7288c48df29ce",
+  "inputMapSHA256": "cd6f1104333dd94aa78b758e6ef0dac1504ab79fe6a3e6d5ef3ef3287536b3c3",
+  "numericCoreByteExact": true,
+  "listedInputOutputChangesReverseToParentSHA256": "70728675da99b0652b03eda9f1e777c6b24dfeae706337deb984e70f297ee9fd",
+  "command": "python3 docs/fleet-physical/baseline-029-061-area-moment-authoring.py",
+  "result": {
+    "path": "docs/fleet-physical/baseline-029-061-area-moment-results.json",
+    "bytes": 2184,
+    "sha256": "a256323ac497aedd83fae2ba100bd129f911dbd341d24a321f6660ff05e4caf5"
+  },
+  "records": [
+    {
+      "id": "SH029",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-baseline-029-061-records/SH029.json",
+      "sha256": "f64a24c2863cf047f852d99313ca7ee131ebcda40c3e140f43572d6fbf3aa827",
+      "bytes": 33093,
+      "dryMassKg": 45520,
+      "operations": {
+        "sourceParses": 1,
+        "coordinateConversions": 3744,
+        "scaledCoordinateEvaluations": 3744,
+        "faceIndexChecks": 7128,
+        "triangleAreaEvaluations": 2376,
+        "analyticMomentEvaluations": 2376,
+        "quadratureMomentEvaluations": 7128,
+        "hardwareAllocations": 8,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH061",
+      "status": "STOPPED_NO_MASS_RECORD",
+      "error": "AssertionError: ('SH061', 'radial structural collar')",
+      "operations": {
+        "sourceParses": 1,
+        "coordinateConversions": 9648,
+        "scaledCoordinateEvaluations": 9648,
+        "faceIndexChecks": 11952,
+        "triangleAreaEvaluations": 3984,
+        "analyticMomentEvaluations": 3984,
+        "quadratureMomentEvaluations": 11952,
+        "hardwareAllocations": 0,
+        "resultRecords": 0
+      }
+    }
+  ],
+  "operations": {
+    "sourceParses": 2,
+    "coordinateConversions": 13392,
+    "scaledCoordinateEvaluations": 13392,
+    "faceIndexChecks": 19080,
+    "triangleAreaEvaluations": 6360,
+    "analyticMomentEvaluations": 6360,
+    "quadratureMomentEvaluations": 19080,
+    "hardwareAllocations": 8,
+    "resultRecords": 1
+  },
+  "caps": {
+    "sourceParses": 2,
+    "coordinateConversions": 13392,
+    "scaledCoordinateEvaluations": 13392,
+    "faceIndexChecks": 24456,
+    "triangleAreaEvaluations": 8152,
+    "analyticMomentEvaluations": 8152,
+    "quadratureMomentEvaluations": 24456,
+    "hardwareAllocations": 16,
+    "resultRecords": 2
+  },
+  "retries": 0,
+  "capRaises": 0,
+  "toleranceChanges": 0,
+  "sourceGeometryWrites": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "nativeCompilerRendererTestsHelpers": 0,
+  "SH061RecordAbsent": true,
+  "SH122PriorSTOPUntouched": true,
+  "limits": "SH029 empty dry estimate only; no occupied/loaded mass, people/cabins/paidkit/native qualification or actualgame grant. SH061 exact named radial structural collar failed independent analytic/quadrature secondmoment identity1e-9; separate from existing1720nativeface blocker. No retry/omission/tolerancechange. Any future genuinelychangedmethod requires separate exact scope."
+}

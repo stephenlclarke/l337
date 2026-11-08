@@ -134,7 +134,7 @@ struct NativeDefensiveFlightUnitTests {
 
   private func nativeObservationGame() throws -> Game {
     var game = Game(executive: false)
-    try game.commander.prepareEquipment()
+    try game.commander.prepareEquipment(legacy: false)
     let owner = try #require(game.commander.equipmentOwnerID)
     let carrier = try #require(game.commander.hullInstanceID)
     let provider = try fixture(owner: owner, carrier: carrier)
@@ -183,7 +183,7 @@ struct NativeDefensiveFlightUnitTests {
   /// Actual command helpers with component course receipts; no Game.tick, native journey or disk store.
   private func receivingGame() throws -> Game {
     var game = Game(executive: false)
-    try game.commander.prepareEquipment()
+    try game.commander.prepareEquipment(legacy: false)
     let owner = try #require(game.commander.equipmentOwnerID)
     let carrier = try #require(game.commander.hullInstanceID)
     let system = NativeDefensiveFlight.location

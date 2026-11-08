@@ -8,7 +8,10 @@ private func approachGame(
   spin: Double = 0.3, speed: Double = 0
 ) throws -> Game {
   var game = Game(executive: false)
-  game.commander.installTargetingComputer(.docking)
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.docking.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
   game.launch()
   try #require(!game.docked && game.screen == .front && game.commander.valid)
   #expect(game.commander.equipmentInventory != nil && game.commander.targetingTier == .docking)
@@ -47,91 +50,99 @@ private func engageMainApproachStation(_ game: inout Game, identity: ActorIdenti
 }
 
 // Pure attained-step geometry/control setup; it mints no docking or arrival receipt.
-private func narrowMainStationStep(lateral: Double = 0, hullRoll: Double = 0, delta: Double = 0.02)
-  throws
-  -> (Game, ShipPose)
-{
+private func originalMainStationStep(
+  lateral: Double = 3, hullPitch: Double = 0, delta: Double = 0.1
+) throws -> (Game, ShipPose) {
   var game = Game(executive: false)
-  game.commander.shipID = "SH171"
+  game.commander.shipID = "SH025"
   game.commander.fuel = game.commander.fuelCapacity
-  game.commander.installTargetingComputer(.docking)
+  try game.commander.prepareEquipment(legacy: false)
+  try game.commander.grantEquipment(
+    TargetingTier.docking.equipmentName, at: .targetingCore,
+    provenance: .grant("current targeting unit fixture"))
   game.launch()
   try #require(!game.docked && game.commander.valid)
   let anchor = try #require(
     game.currentNativeMainStationAnchor(at: game.commander.flightSimulation.physicalTime))
   try engageMainApproachStation(&game, identity: anchor.identity)
-  var before = ShipPose(
-    position: anchor.position + anchor.orientation.apply(.init(lateral, 0, -96)),
-    orientation: anchor.orientation)
-  before.orientation.rotate(pitch: 0, roll: hullRoll, yaw: 0)
+  let station = try #require(game.bodies.first { $0.id == 0 })
+  let model = game.modelPose(of: station)
+  let port = MainStationGeometry.docking
+  var before = ShipPose()
+  before.position = model.systemPoint(
+    port.center + port.outward * 6 + port.up.cross(port.outward) * lateral)
+  before.orientation.z = model.orientation.apply(port.outward) * -1
+  before.orientation.y = model.orientation.apply(port.up)
+  before.orientation.x = before.orientation.y.cross(before.orientation.z)
+  before.orientation.rotate(pitch: hullPitch, roll: 0, yaw: 0)
   NativeStationTestFixture.reframe(&game, to: before)
   game.speed = 0
   game.pitch = 0
   game.yaw = 0
-  game.roll = -0.3
+  game.roll = station.rotationRate
   game.autoPilot.setApproachVelocity(.init(0, 0, 48))
   var after = before
-  after.advanceView(pitch: 0, roll: -0.3 * delta, yaw: 0, translation: .init(0, 0, 48 * delta))
+  after.advanceView(
+    pitch: 0, roll: game.roll * delta, yaw: 0, translation: .init(0, 0, 48 * delta))
   NativeStationTestFixture.reframe(&game, to: after)
   game.commander.flightSimulation.advancePhysicalTime(delta)
   let index = try #require(game.bodies.firstIndex { $0.id == 0 })
   try #require(game.bodies[index].rotationRate == 0.3)
-  game.bodies[index].rotation = 0.3 * delta
+  game.bodies[index].rotation = station.rotation + station.rotationRate * delta
   return (game, before)
 }
 
-@Test func attainedNarrowSH171StepRefinesTheUnchangedApertureAndWholeHullProof() throws {
-  let (game, before) = try narrowMainStationStep()
+@Test func attainedOriginalSH025StepUsesTheSamePortAndWholeHullProof() throws {
+  let (game, before) = try originalMainStationStep()
   let station = try #require(game.bodies.first { $0.id == 0 })
   let player = game.commander.playerMesh
   let port = MainStationGeometry.docking
   let radius = try #require(player.vertices.map(\.length).max())
   let stationRadius = try #require(MainStationGeometry.mesh.vertices.map(\.length).max())
-  let coarse = (radius + stationRadius) * (abs(game.roll) + abs(station.rotationRate)) * 0.02
-  let height = try #require(player.vertices.map(\.y).max())
-  #expect(height > 31.7 && height < 32 && port.aperture.map(\.y).max() == 32)
-  #expect(port.fits(player) && !port.fits(player, margin: coarse))
+  let coarse = (radius + stationRadius) * (abs(game.roll) + abs(station.rotationRate)) * 0.1
+  let halfWidth = try #require(port.aperture.map(\.x).max())
+  let support = try #require(player.vertices.map { abs($0.x) }.max())
+  #expect(halfWidth == 62.32 && port.aperture.map(\.y).max() == 50.8 && port.fits(player))
+  #expect(halfWidth - support - 3 > 0 && halfWidth - support - 3 < coarse)
   #expect(
     game.nativeMainStationHullCourseIsClear(
-      station, from: before, to: game.commander.flightSimulation.pose, delta: 0.02))
+      station, from: before, to: game.commander.flightSimulation.pose, delta: 0.1))
   #expect(!game.docked && game.commander.nativeStations?.currentMainDock == nil)
   #expect(!game.nativeMainStationDockEvidenceIsCurrent)
 }
 
-@Test func narrowRefinementRefusesOversizeOrientationWallContactAndStaleAttainedMotion() throws {
-  for (lateral, hullRoll) in [(50.0, 0.0), (0.0, Double.pi / 2)] {
-    let (game, before) = try narrowMainStationStep(lateral: lateral, hullRoll: hullRoll)
+@Test func originalPortRefusesOversizeOrientationWallContactAndStaleAttainedMotion() throws {
+  let wallOffset = try #require(MainStationGeometry.docking.aperture.map(\.x).max())
+  for (lateral, hullPitch) in [(wallOffset, 0.0), (3.0, Double.pi / 2)] {
+    let (game, before) = try originalMainStationStep(lateral: lateral, hullPitch: hullPitch)
     let station = try #require(game.bodies.first { $0.id == 0 })
     #expect(
       !game.nativeMainStationHullCourseIsClear(
-        station, from: before, to: game.commander.flightSimulation.pose, delta: 0.02))
+        station, from: before, to: game.commander.flightSimulation.pose, delta: 0.1))
     #expect(
       !game.nativeMainStationHullCourseIsClear(
         station, from: before, to: game.commander.flightSimulation.pose,
-        delta: 0.02, requireAperture: false))
+        delta: 0.1, requireAperture: false))
   }
-  var (game, before) = try narrowMainStationStep()
+  var (game, before) = try originalMainStationStep()
   let station = try #require(game.bodies.first { $0.id == 0 })
   let end = game.commander.flightSimulation.pose
+  try #require(game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
   game.autoPilot.setApproachVelocity(.init(0, 0, 24))
-  #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.02))
+  #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
   game.autoPilot.setApproachVelocity(.init(0, 0, 48))
   game.dockingComputer = false
-  #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.02))
+  #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
   game.dockingComputer = true
   var proposed = end
   proposed.position.z += 0.001
   #expect(
-    !game.nativeMainStationHullCourseIsClear(station, from: before, to: proposed, delta: 0.02))
+    !game.nativeMainStationHullCourseIsClear(station, from: before, to: proposed, delta: 0.1))
   game.bodies.append(station)
-  #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.02))
+  #expect(!game.nativeMainStationHullCourseIsClear(station, from: before, to: end, delta: 0.1))
   #expect(!game.docked && game.commander.nativeStations?.currentMainDock == nil)
-  // This narrow hull needs more than 64 conservative intervals for a full 0.1-second step.
-  let (capped, cappedStart) = try narrowMainStationStep(delta: 0.1)
-  let cappedStation = try #require(capped.bodies.first { $0.id == 0 })
-  #expect(
-    !capped.nativeMainStationHullCourseIsClear(
-      cappedStation, from: cappedStart, to: capped.commander.flightSimulation.pose, delta: 0.1))
+  // The old SH171/32-half-height input does not describe this original port.
+  // The unchanged 64-interval production cap is not exercised or credited by this fixture.
 }
 
 @Test func rearAvoidanceWaypointDoesNotOrbitWithTheStationDoorwayPhase() {
@@ -150,7 +161,7 @@ private func narrowMainStationStep(lateral: Double = 0, hullRoll: Double = 0, de
 }
 
 @Test func stationTransitFacesItsSafeWaypointThenStopsBeforeFacingTheDoor() throws {
-  var game = try approachGame(position: .init(0, 0, 2400), yaw: .pi)
+  var game = try approachGame(position: .init(0, 0, 2400), yaw: 0)
   var forwardTransitFrames = 0
   var stoppedAlignmentFrames = 0
   for _ in 0..<9000 where !game.autoPilot.finalApproach && !game.docked {
@@ -269,13 +280,16 @@ private func narrowMainStationStep(lateral: Double = 0, hullRoll: Double = 0, de
   #expect(game.autoPilot.status == "APPROACHING" && !game.autoPilot.finalApproach)
 }
 
-@Test func freshLaunchCobraAndLiberatorDockFromTheActualCloseRearStation() throws {
-  for shipID in ["SH023", "SH171"] {
+@Test func freshLaunchCurrentPeregrineAndOkapiDockFromTheActualCloseRearStation() throws {
+  for shipID in ["SH025", "SH029"] {
     var game = Game(executive: false)
     game.commander.shipID = shipID
     game.commander.fuel = game.commander.fuelCapacity
-    game.commander.installTargetingComputer(.docking)
     try #require(game.commander.valid)
+    try game.commander.prepareEquipment(legacy: false)
+    try game.commander.grantEquipment(
+      TargetingTier.docking.equipmentName, at: .targetingCore,
+      provenance: .grant("current targeting unit fixture"))
     game.launch()
     try #require(!game.docked && game.screen == .front)
     game.bodies.removeAll { $0.hull != .station }

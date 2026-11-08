@@ -1,0 +1,58 @@
+{
+  "status": "FROZEN_SOURCE_IDENTITY_GUARD_AND_SINGLE_PROVIDER_TEST_HUNK_AWAITING_ROOT_RESERVATION",
+  "beforeCommit": "3ddd1ae2dd8500995816efdb2c705a9037475b85",
+  "owner": "G4",
+  "sourcePins": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 35527,
+      "sha256": "32504fb0f26e98afe0b812f2d374b969df3889f049446e1a50dda7de4be35957"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 24840,
+      "sha256": "f2f1a91fb76eb790b7caede33980d3b7f877051250b065c6ef84ec53872e4b80"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeCrimboRegistryTests.swift",
+      "bytes": 19442,
+      "sha256": "ce4083d8a7c5e230345bcec55100e14fd748e9cd457d14b38829d086a7b61b21"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 27877,
+      "sha256": "69d77381074b409e1fc6c3d185f74a149317711356b1942004dff8d62685b352"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceRuntime.swift",
+      "bytes": 13079,
+      "sha256": "7dbd08a3c723ce7267dab90648bf8ded04ee8a687ddb5115719b654ab9f5f94a"
+    },
+    {
+      "path": "Sources/L337Core/NativeCrimboRuntime.swift",
+      "bytes": 33073,
+      "sha256": "5b6e7a7c1e6bb2207bb4b496d9f1423bc678712018404ff90ef8e94e6d416f92"
+    }
+  ],
+  "guard": {
+    "file": "Sources/L337Core/NPCPersistenceLedger.swift",
+    "before": "      var physical = body.physical, physical.identity == actor,\n",
+    "after": "      var physical = body.physical, physical.identity == actor,\n      physical.catalogueShipID == snapshot.catalogueShipID,\n"
+  },
+  "providerTestHunk": {
+    "file": "Tests/L337CoreTests/NativeCrimboRegistryTests.swift",
+    "method": "parkedImportAcceptsOnlyActualRotatedCameraRoundoff",
+    "before": "    body.physical = .init(identity: actor, population: .civilian, npc: original.npc)\n",
+    "after": "    body.physical = .init(\n      identity: actor, population: .civilian, npc: original.npc,\n      catalogueShipID: original.catalogueShipID)\n",
+    "outsideProof": "Invert only this exact initializer once inside the named method to restore the entire original file byte-exact; no arbitrary150 literal or provider production edit."
+  },
+  "actualForwarding": {
+    "GameplayAdmission.swift": "makeAdmittedBody physical initializer uses request.catalogueShipID",
+    "NPCPersistenceLedger.swift": "both pendingSpawnRequests and pendingProviderSpawnRequests forward snapshot.catalogueShipID",
+    "NPCPersistenceRuntime.swift": "acknowledged actual admitted actor selected by identity before restore",
+    "NativeCrimboRuntime.swift": "request forwards member.catalogueShipID; actual admitted body selected from receipt before parked restore"
+  },
+  "fleetRegressionTest": "Append exactly one source test using real ledger capture/cull/pending request/acknowledged receipt and same control-Hull fresh body. Different actual admitted SH031 stock/source, nil source, and pending SH067 all refuse without body/physical or ledger mutation. Existing currentSH025 positive remains; new matching same-source restore retains actual consumed damage/pools. No synthetic acquire/gear/blueprint/provider ownership or copied identity witness.",
+  "validation": "Source text/hash/outside comparison only, all Swift uncompiled/unrun; no compiler/native/model probes.",
+  "providerEditAuthorized": false
+}

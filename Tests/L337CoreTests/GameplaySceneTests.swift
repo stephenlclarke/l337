@@ -5,6 +5,7 @@ import Testing
 
 @Test func gameplaySceneCreatesCanonicalFieldsAndIndependentActorIdentities() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let context = try #require(game.gameplayContext())
   #expect((2...4).contains(game.miningFields.count))
@@ -22,6 +23,7 @@ import Testing
 
 @Test func gameplaySceneWorldAnchorsStayFixedWhileCameraMoves() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let original = try #require(game.gameplayContext())
   let fields = game.miningFields
@@ -44,8 +46,9 @@ import Testing
   }
 }
 
-@Test func gameplayPhysicalClockFreezesOnExcludedScreensAndPause() {
+@Test func gameplayPhysicalClockFreezesOnExcludedScreensAndPause() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.tick(delta: 0.1)
   let physical = game.commander.flightSimulation.physicalTime
@@ -65,6 +68,7 @@ import Testing
 
 @Test func gameplayCurrentSaveRoundTripPreservesCommanderProperty() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.credits = 123456
   game.commander.cargo[13] = 7
   game.commander.legal = 12
@@ -79,8 +83,9 @@ import Testing
   #expect(restored.wantedCareers == game.commander.wantedCareers)
 }
 
-@Test func gameplayFieldGenerationDoesNotConsumeMissionRandomStream() {
+@Test func gameplayFieldGenerationDoesNotConsumeMissionRandomStream() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   var reference = game
   game.launch()
   for _ in 0..<64 {

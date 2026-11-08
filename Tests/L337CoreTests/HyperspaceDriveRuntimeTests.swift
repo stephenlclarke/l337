@@ -36,37 +36,6 @@ struct HyperspaceDriveRuntimeTests {
     #expect(commander == before && commander.savedEquipmentVersion == 3)
   }
 
-  @Test func existingVersionTwoMigrationRetainsEveryOwnedItemAndPaidHistoryExactly() throws {
-    var commander = Commander()
-    try commander.prepareEquipment(legacy: false)
-    let current = try #require(commander.equipmentInventory)
-    let context = EquipmentRuntimeCatalog.context(
-      owner: current.owner, hull: current.activeHull,
-      performance: commander.nativePerformance)
-    commander.savedEquipmentInventory = try current.applyingBatch(
-      items: current.items.filter { $0.location?.slot != .drive },
-      expectedRevision: current.revision, context: context)
-    commander.savedEquipmentVersion = 2
-    commander.mirrorFittedEquipment()
-    try commander.validateEquipmentState()
-    let old = commander
-    let oldItems = try #require(old.equipmentInventory?.items)
-    try commander.prepareEquipment()
-    let migrated = try #require(commander.equipmentInventory)
-    #expect(migrated.items.filter { oldItems.map(\.id).contains($0.id) } == oldItems)
-    #expect(migrated.items.count == oldItems.count + 1)
-    #expect(commander.equipmentPurchaseHistory == old.equipmentPurchaseHistory)
-    #expect(
-      commander.cargo == old.cargo && commander.credits == old.credits && commander.fuel == old.fuel
-    )
-    #expect(
-      commander.equipmentOwnerID == old.equipmentOwnerID
-        && commander.hullInstanceID == old.hullInstanceID)
-    let once = commander
-    try commander.prepareEquipment()
-    #expect(commander == once)
-  }
-
   @Test func actualShopDebitsBothSequentialDrivesAndCannotSkipThePaidPredecessor() throws {
     var game = try modularDriveShop()
     let advanced = try #require(
@@ -157,41 +126,6 @@ struct HyperspaceDriveRuntimeTests {
 }
 
 extension HyperspaceDriveRuntimeTests {
-  @Test func fullLegacyInventoryGainsOnlyItsReservedStockDriveWithoutLosingAnyOwnedItem() throws {
-    var commander = Commander()
-    try commander.prepareEquipment(legacy: false)
-    let current = try #require(commander.equipmentInventory)
-    let context = EquipmentRuntimeCatalog.context(
-      owner: current.owner, hull: current.activeHull, performance: commander.nativePerformance)
-    var oldItems = current.items.filter { $0.location?.slot != .drive }
-    while oldItems.count < OwnedEquipmentInventory.maximumCount {
-      oldItems.append(
-        .init(
-          id: UUID(), node: EquipmentRuntimeCatalog.standardMissile, provenance: .standard))
-    }
-    commander.savedEquipmentInventory = try current.applyingBatch(
-      items: oldItems, expectedRevision: current.revision, context: context)
-    commander.savedEquipmentVersion = 2
-    commander.mirrorFittedEquipment()
-    try commander.validateEquipmentState()
-    let old = commander
-    try commander.prepareEquipment()
-    let migrated = try #require(commander.equipmentInventory)
-    #expect(migrated.items.count == 257 && migrated.ordinaryItemCount == 256)
-    #expect(migrated.items.filter { oldItems.map(\.id).contains($0.id) } == oldItems)
-    #expect(commander.equipmentPurchaseHistory == old.equipmentPurchaseHistory)
-    #expect(commander.credits == old.credits && commander.fuel == old.fuel)
-    let stored = try JSONDecoder().decode(Commander.self, from: JSONEncoder().encode(commander))
-    #expect(stored == commander && stored.valid)
-    let extra = OwnedEquipmentItem(
-      id: UUID(), node: EquipmentRuntimeCatalog.standardMissile, provenance: .standard)
-    var candidate = migrated
-    #expect(throws: OwnedEquipmentError.capacity) {
-      try candidate.admit(extra, expectedRevision: migrated.revision, context: context)
-    }
-    #expect(candidate == migrated)
-  }
-
   @Test func stockDriveReserveFollowsValidatedBirthIdentityThroughPromotionStorageAndReload()
     throws
   {

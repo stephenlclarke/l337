@@ -4,7 +4,7 @@ import Foundation
 enum OriginalGyrfalconAssaultActivation {
   static let id = "SH002"
   static let specificationSHA256 =
-    "39cd712ae422c7dc47d16ff5ad7a0fd5b01f18cc6cb2b9e30fa965c1505dd7fb"
+    "c2319489558505ed3d4eb6a437e8870e4f6f20055912e337792e324200d0230f"
 
   enum Failure: Error { case unsupportedDefinition }
 

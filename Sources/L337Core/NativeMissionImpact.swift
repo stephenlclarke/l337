@@ -1,5 +1,26 @@
 import Foundation
 
+/// Live allocation evidence from the actual mission ordnance impact owner.
+/// Neither a decoded incident nor an ordnance descriptor can construct it.
+final class NativeMissionOrdnanceClockEffect: Sendable {
+  private let opening: FlightSimulationState
+  let incident: CombatIncident
+
+  fileprivate init(opening: FlightSimulationState, incident: CombatIncident) {
+    self.opening = opening
+    self.incident = incident
+  }
+
+  func applying(to before: FlightSimulationState) -> FlightSimulationState? {
+    guard before == opening, [.missile, .plasma].contains(incident.kind),
+      incident.physicalTime == before.physicalTime
+    else { return nil }
+    var expected = before
+    guard expected.allocateIncident() == incident.id else { return nil }
+    return expected
+  }
+}
+
 enum NativeMissionAdjudication: Sendable, Equatable {
   case unknown, currentVisit, frozenLaunch
 }
@@ -112,7 +133,7 @@ extension Game {
     _ contact: MissionCollisionContact, owner: ActorIdentity, damage: Double,
     laser: LaserKind?, mount: LaserMount?
   ) throws -> ScriptMissionEventCapacityPlan {
-    guard let context = gameplayContext(),
+    guard contact.selectedGeometry == nil, let context = gameplayContext(),
       contact.selectedTargetBody.map({ selected in
         bodies.filter({ $0.id == selected.id }) == [selected]
       }) == true
@@ -122,10 +143,35 @@ extension Game {
       context: context, sourceWeaponInstanceID: nil)
   }
 
+  @inline(never)
+  func preflightSelectedNativeMissionContact(
+    _ contact: MissionCollisionContact, owner: ActorIdentity, damage: Double,
+    evidence: CurrentNewtNativeClockEvidence, admittedAtEnd: CurrentNewtEndBirths? = nil
+  ) throws -> ScriptMissionEventCapacityPlan {
+    let current = try bindSelectedNativeMissionContact(
+      contact, owner: owner,
+      evidence: evidence, admittedAtEnd: admittedAtEnd)
+    return try preflightBoundSelectedMissionContact(current, owner: owner, damage: damage)
+  }
+
+  @inline(never)
+  private func preflightBoundSelectedMissionContact(
+    _ current: MissionCollisionContact, owner: ActorIdentity, damage: Double
+  ) throws -> ScriptMissionEventCapacityPlan {
+    guard let context = gameplayContext(), let geometry = current.selectedGeometry else {
+      throw NativeMissionImpactError.staleProof
+    }
+    return try preflightCurrentMissionContact(
+      current, owner: owner, sourcePart: nil,
+      damage: damage, laser: nil, mount: nil, context: context, sourceWeaponInstanceID: nil,
+      selectedWorldPosition: geometry.selectedFrame.systemPoint(current.hit.point))
+  }
+
+  @inline(never)
   private func preflightCurrentMissionContact(
     _ contact: MissionCollisionContact?, owner: ActorIdentity, sourcePart: UUID?,
     damage: Double, laser: LaserKind?, mount: LaserMount?, context: EncounterContext,
-    sourceWeaponInstanceID: UUID?
+    sourceWeaponInstanceID: UUID?, selectedWorldPosition: Vector3? = nil
   ) throws -> ScriptMissionEventCapacityPlan {
     let emitter =
       owner == context.player.identity
@@ -135,7 +181,7 @@ extension Game {
     else { throw NativeMissionImpactError.staleProof }
     // These are the actual next native allocator values staged in a small value copy. No
     // emission, incident, body, law or event is published during this capacity preview.
-    var flight = commander.flightSimulation
+    var flight = storedFlightSimulation()
     guard let emission = flight.allocateEmission(), let eventID = flight.allocateIncident(),
       flight.valid
     else { throw NativeMissionImpactError.unavailableAllocator }
@@ -144,10 +190,11 @@ extension Game {
       ownerLegalAtEmission: emitter.legal, sourcePart: sourcePart?.uuidString)
     var plan = MissionDamagePlan()
     if let contact {
-      var mining = commander.miningLedger
+      var mining = nativeQueryStoredMiningLedger()
       let incident = missionCombatIncident(
         eventID: eventID, origin: origin, kind: .laser, hit: contact.hit, outcome: .hit,
-        part: contact.victimPart, context: context, laser: laser, mount: mount)
+        part: contact.victimPart, context: context, laser: laser, mount: mount,
+        selectedWorldPosition: selectedWorldPosition)
       plan = try missionDamagePlan(
         hit: contact.hit, victimPart: contact.victimPart, component: contact.componentUUID,
         damage: damage, kind: .laser, laser: laser, eventID: eventID, mining: &mining,
@@ -296,24 +343,38 @@ extension Game {
     _ contact: MissionCollisionContact, origin: AttackOrigin, damage: Double,
     laser: LaserKind?, mount: LaserMount?, emissionPosition: Vector3
   ) throws -> NativeMissionImpactReceipt {
+    guard contact.selectedGeometry == nil else { throw NativeMissionImpactError.staleProof }
+    return try applyCurrentNativeMissionContact(
+      contact, origin: origin, damage: damage,
+      laser: laser, mount: mount, emissionPosition: emissionPosition, selectedWorldPosition: nil
+    ).receipt
+  }
+
+  @inline(never)
+  private mutating func applyCurrentNativeMissionContact(
+    _ contact: MissionCollisionContact, origin: AttackOrigin, damage: Double,
+    laser: LaserKind?, mount: LaserMount?, emissionPosition: Vector3,
+    selectedWorldPosition: Vector3?
+  ) throws -> (receipt: NativeMissionImpactReceipt, incident: CombatIncident) {
     guard let target = contact.selectedTargetBody, target.scriptNPC != nil,
       bodies.filter({ $0.id == target.id }) == [target],
       let context = gameplayContext(),
       origin.owner.system == context.system, origin.owner.visit == context.visit,
       origin.emittedAt == context.physicalTime, emissionPosition.finite,
       origin.emissionID > consumedMissionLaserEmission,
-      origin.emissionID < commander.flightSimulation.nextEmission,
+      origin.emissionID < storedFlightSimulation().nextEmission,
       origin.owner == context.player.identity
         || context.actors.contains(where: { $0.identity == origin.owner && $0.energy > 0 })
     else { throw NativeMissionImpactError.staleProof }
-    var flight = commander.flightSimulation
+    var flight = storedFlightSimulation()
     guard let eventID = flight.allocateIncident() else {
       throw NativeMissionImpactError.unavailableAllocator
     }
-    var mining = commander.miningLedger
+    var mining = nativeQueryStoredMiningLedger()
     let preliminary = missionCombatIncident(
       eventID: eventID, origin: origin, kind: .laser, hit: contact.hit, outcome: .hit,
-      part: contact.victimPart, context: context, laser: laser, mount: mount)
+      part: contact.victimPart, context: context, laser: laser, mount: mount,
+      selectedWorldPosition: selectedWorldPosition)
     let plan = try missionDamagePlan(
       hit: contact.hit, victimPart: contact.victimPart, component: contact.componentUUID,
       damage: damage, kind: .laser, laser: laser, eventID: eventID, mining: &mining,
@@ -322,8 +383,9 @@ extension Game {
       plan, damage: damage, part: contact.victimPart, component: contact.componentUUID)
     let incident = missionCombatIncident(
       eventID: eventID, origin: origin, kind: .laser, hit: contact.hit, outcome: plan.outcome,
-      part: contact.victimPart, context: context, laser: laser, mount: mount)
-    var law = commander.crimeLedger
+      part: contact.victimPart, context: context, laser: laser, mount: mount,
+      selectedWorldPosition: selectedWorldPosition)
+    var law = nativeQueryStoredCrimeLedger()
     let resolution = law.record(
       incident, context: context, emissionPosition: emissionPosition,
       missionEntitlement: combatMissionEntitlement(
@@ -339,19 +401,80 @@ extension Game {
     observeSafeGunneryOrdinaryHit(incident)
     observeDefensiveFlightOrdinaryHit(incident)
     let source = bodies.first(where: { $0.physical?.identity == origin.owner })
-    return Self.missionImpactReceipt(
+    let receipt = Self.missionImpactReceipt(
       kind: .laser, hit: contact.hit, part: contact.victimPart,
       component: contact.componentUUID, damage: damage, plan: plan, eventID: eventID,
       sourceInstance: source?.missionInstanceID, sourceActor: source?.missionActorID,
       sourceComponent: nil, origin: origin, adjudication: .currentVisit, terminalShot: nil,
       player: origin.owner == context.player.identity)
+    return (receipt, incident)
+  }
+
+  /// Capacity preview for a genuine current projectile/contact. Its original
+  /// emission is retained; only the actual next incident is staged locally.
+  /// This returns event capacity, never an impact or clock capability.
+  func preflightNativeMissionOrdnanceContact(
+    bodyID: Int, state: OrdnanceState, contact: MissionCollisionContact
+  ) throws -> ScriptMissionEventCapacityPlan {
+    guard let context = gameplayContext(), state.valid, state.termination == nil,
+      let projectile = bodies.first(where: { $0.id == bodyID }), projectile.energy > 0,
+      projectile.scriptShot == nil, projectile.physical?.ordnance == state,
+      projectile.physical?.identity == state.origin.ordnance,
+      state.origin.owner.system == context.system, state.origin.owner.visit == context.visit,
+      state.lastUpdatedAt <= context.physicalTime,
+      let target = contact.selectedTargetBody, target.scriptNPC != nil,
+      bodies.filter({ $0.id == target.id }) == [target]
+    else { throw NativeMissionImpactError.staleProof }
+    var flight = commander.flightSimulation
+    guard let eventID = flight.allocateIncident(), flight.valid
+    else { throw NativeMissionImpactError.unavailableAllocator }
+    let kind = state.profile.attackKind
+    let damage = state.profile.damage  // Actual shielded mission NPC policy.
+    let preliminary = missionCombatIncident(
+      eventID: eventID, origin: state.origin, kind: kind, hit: contact.hit, outcome: .hit,
+      part: contact.victimPart, context: context)
+    var mining = commander.miningLedger
+    let plan = try missionDamagePlan(
+      hit: contact.hit, victimPart: contact.victimPart, component: contact.componentUUID,
+      damage: damage, kind: kind, laser: nil, eventID: eventID, mining: &mining,
+      projectile: nil, incident: preliminary, context: context)
+    return try missionEventCapacity(
+      plan, damage: damage, part: contact.victimPart, component: contact.componentUUID)
+  }
+
+  /// Execute the existing proof validation/damage owner atomically and retain
+  /// its actual accepted incident allocation for the native clock chain.
+  @inline(never)
+  mutating func applyNativeMissionOrdnanceImpact(_ proof: NativeMissionOrdnanceImpactProof) throws
+    -> (
+      receipt: NativeMissionImpactReceipt, incident: CombatIncident,
+      clockEffect: NativeMissionOrdnanceClockEffect
+    )
+  {
+    let opening = storedFlightSimulation()
+    var retained = self
+    let applied = try retained.applyMissionImpact(proof)
+    let effect = NativeMissionOrdnanceClockEffect(opening: opening, incident: applied.incident)
+    guard applied.receipt.eventID == applied.incident.id,
+      effect.applying(to: opening) == retained.storedFlightSimulation()
+    else { throw NativeMissionImpactError.staleProof }
+    self = retained
+    return (applied.receipt, applied.incident, effect)
   }
 
   /// Native missiles retain their genuine original emission; no laser watermark is consulted.
+  @inline(never)
   mutating func applyMissionImpact(_ proof: NativeMissionOrdnanceImpactProof) throws -> (
     receipt: NativeMissionImpactReceipt, incident: CombatIncident
   ) {
     try validateNativeMissionOrdnanceImpactProof(proof)
+    return try applyValidatedMissionOrdnanceImpact(proof)
+  }
+
+  @inline(never)
+  private mutating func applyValidatedMissionOrdnanceImpact(_ proof: NativeMissionOrdnanceImpactProof) throws -> (
+    receipt: NativeMissionImpactReceipt, incident: CombatIncident
+  ) {
     guard let target = proof.contact.selectedTargetBody, target.scriptNPC != nil,
       let context = gameplayContext()
     else { throw NativeMissionImpactError.staleProof }
@@ -536,24 +659,31 @@ extension Game {
     return ordnance.origin.emissionID
   }
 
+  @inline(never)
   private mutating func commitMissionDamage(
     _ plan: MissionDamagePlan, damage: Double, origin: AttackOrigin?, eventID: UInt64
   ) {
-    if let hit = plan.playerHit { applyDamage(damage, front: hit.point.z >= 0) }
+    if let hit = plan.playerHit {
+      let before = (front: frontShield, rear: rearShield, energy: energy)
+      applyDamage(damage, front: hit.point.z >= 0)
+      recordPlayerImpactFeedback(contact: hit.point, event: eventID, before: before)
+    }
     if let index = plan.bodyIndex, var body = plan.body {
       if plan.hullDestroyed {
         body.physical?.deathOrigin = origin
         body.physical?.deathIncidentID = eventID
-        body.destroyedByPlayer = origin?.owner == commander.flightSimulation.player
+        body.destroyedByPlayer = origin?.owner == storedFlightSimulation().player
       }
       bodies[index] = body
     }
   }
 
+  @inline(never)
   private func missionCombatIncident(
     eventID: UInt64, origin: AttackOrigin, kind: AttackKind, hit: GameplayHit?,
     outcome: AttackOutcome, part: String?, context: EncounterContext,
-    laser: LaserKind? = nil, mount: LaserMount? = nil
+    laser: LaserKind? = nil, mount: LaserMount? = nil,
+    selectedWorldPosition: Vector3? = nil
   ) -> CombatIncident {
     let victim: ActorSnapshot?
     switch hit?.target {
@@ -566,7 +696,8 @@ extension Game {
     return .init(
       id: eventID, physicalTime: context.physicalTime, origin: origin, victim: victim?.identity,
       kind: kind, outcome: outcome,
-      position: commander.flightSimulation.pose.systemPoint(hit?.point ?? .init(0, 0, 0)),
+      position: selectedWorldPosition
+        ?? storedFlightSimulation().pose.systemPoint(hit?.point ?? .init(0, 0, 0)),
       victimLegalBeforeAttack: victim?.legal, firstAggressor: victim?.npc?.firstAggressor,
       victimRole: victim?.npc?.role, victimIsStation: victim?.hull == .station,
       laser: laser, mount: mount, victimPart: part)
@@ -586,5 +717,86 @@ extension Game {
       sourceComponentID: sourceComponent, targetMissionInstanceID: plan.body?.missionInstanceID,
       targetMissionActorID: plan.body?.missionActorID, originalOrigin: origin,
       adjudication: adjudication, terminalShotID: terminalShot)
+  }
+}
+
+
+/// Only a successful actual selected mission beam owner constructs this effect.
+final class NativeMissionBeamClockEffect: Sendable {
+  private let opening: FlightSimulationState
+  let incident: CombatIncident
+  private let beforeBodies: [SpaceBody]
+  private let afterBodies: [SpaceBody]
+  fileprivate init(
+    opening: FlightSimulationState, incident: CombatIncident,
+    beforeBodies: [SpaceBody], afterBodies: [SpaceBody]
+  ) {
+    self.opening = opening; self.incident = incident
+    self.beforeBodies = beforeBodies; self.afterBodies = afterBodies
+  }
+  func applying(to before: FlightSimulationState) -> FlightSimulationState? {
+    guard before == opening, incident.kind == .laser,
+      incident.physicalTime == before.physicalTime
+    else { return nil }
+    var expected = before
+    guard expected.allocateIncident() == incident.id else { return nil }
+    return expected
+  }
+  @inline(never)
+  func updatedBirthBodies(matching expected: [ActorIdentity: SpaceBody], in game: Game)
+    -> [ActorIdentity: SpaceBody]?
+  {
+    guard applying(to: opening) == game.storedFlightSimulation() else { return nil }
+    var result: [ActorIdentity: SpaceBody] = [:]
+    for (actor, original) in expected {
+      guard beforeBodies.filter({ $0.physical?.identity == actor }) == [original],
+        let after = afterBodies.first(where: { $0.physical?.identity == actor }),
+        afterBodies.filter({ $0.physical?.identity == actor }).count == 1,
+        game.bodies.filter({ $0.physical?.identity == actor }) == [after]
+      else { return nil }
+      result[actor] = after
+    }
+    return result
+  }
+
+}
+
+extension Game {
+  @inline(never)
+  mutating func applySelectedNativeMissionContact(
+    _ contact: MissionCollisionContact, origin: AttackOrigin, damage: Double,
+    emissionPosition: Vector3, evidence: CurrentNewtNativeClockEvidence,
+    admittedAtEnd: CurrentNewtEndBirths? = nil
+  ) throws -> (receipt: NativeMissionImpactReceipt, clockEffect: NativeMissionBeamClockEffect) {
+    guard contact.selectedLaunch == emissionPosition else {
+      throw NativeMissionImpactError.staleProof
+    }
+    let current = try bindSelectedNativeMissionContact(
+      contact, owner: origin.owner,
+      evidence: evidence, admittedAtEnd: admittedAtEnd)
+    return try applyBoundSelectedMissionContact(
+      current, origin: origin, damage: damage, emissionPosition: emissionPosition)
+  }
+
+  @inline(never)
+  private mutating func applyBoundSelectedMissionContact(
+    _ current: MissionCollisionContact, origin: AttackOrigin, damage: Double,
+    emissionPosition: Vector3
+  ) throws -> (receipt: NativeMissionImpactReceipt, clockEffect: NativeMissionBeamClockEffect) {
+    guard let geometry = current.selectedGeometry else { throw NativeMissionImpactError.staleProof }
+    let opening = storedFlightSimulation()
+    var candidate = self  // Same-clock atomic effect; never a historical/future query Game.
+    let applied = try candidate.applyCurrentNativeMissionContact(
+      current, origin: origin,
+      damage: damage, laser: nil, mount: nil, emissionPosition: emissionPosition,
+      selectedWorldPosition: geometry.selectedFrame.systemPoint(current.hit.point))
+    let effect = NativeMissionBeamClockEffect(
+      opening: opening, incident: applied.incident,
+      beforeBodies: bodies, afterBodies: candidate.bodies)
+    guard effect.applying(to: opening) == candidate.storedFlightSimulation() else {
+      throw NativeMissionImpactError.staleProof
+    }
+    self = candidate
+    return (applied.receipt, effect)
   }
 }

@@ -1,0 +1,269 @@
+{
+  "id": "SH029",
+  "status": "EXACT_ORIGINAL_NAMED_COMPONENT_METADATA_NO_MASS_OR_NATIVE_AUTHORITY",
+  "sourceSHA256": "0d0741f3c0a1eed7595b65274eab5726bc1b22c258b6943f6fdb5332931e91b7",
+  "componentSourceSHA256": "f284cfd590e8d741a5b9f2b133cdf2879c6ed8104c9f6d5773252bb8df707b21",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "name": "reinforced low pallet",
+          "vertexStart": 0,
+          "vertexCount": 8,
+          "faceStart": 0,
+          "faceCount": 12
+        },
+        {
+          "name": "forward pressure cabin",
+          "vertexStart": 8,
+          "vertexCount": 194,
+          "faceStart": 12,
+          "faceCount": 384
+        },
+        {
+          "name": "segmented deck cargo",
+          "vertexStart": 202,
+          "vertexCount": 8,
+          "faceStart": 396,
+          "faceCount": 12
+        },
+        {
+          "name": "deck restraint",
+          "vertexStart": 210,
+          "vertexCount": 8,
+          "faceStart": 408,
+          "faceCount": 12
+        },
+        {
+          "name": "segmented deck cargo",
+          "vertexStart": 218,
+          "vertexCount": 8,
+          "faceStart": 420,
+          "faceCount": 12
+        },
+        {
+          "name": "deck restraint",
+          "vertexStart": 226,
+          "vertexCount": 8,
+          "faceStart": 432,
+          "faceCount": 12
+        },
+        {
+          "name": "segmented deck cargo",
+          "vertexStart": 234,
+          "vertexCount": 8,
+          "faceStart": 444,
+          "faceCount": 12
+        },
+        {
+          "name": "deck restraint",
+          "vertexStart": 242,
+          "vertexCount": 8,
+          "faceStart": 456,
+          "faceCount": 12
+        },
+        {
+          "name": "pallet stern drive casing",
+          "vertexStart": 250,
+          "vertexCount": 66,
+          "faceStart": 468,
+          "faceCount": 128
+        },
+        {
+          "name": "pallet stern drive throat",
+          "vertexStart": 316,
+          "vertexCount": 66,
+          "faceStart": 596,
+          "faceCount": 128
+        },
+        {
+          "name": "pallet stern drive luminous recess",
+          "vertexStart": 382,
+          "vertexCount": 66,
+          "faceStart": 724,
+          "faceCount": 128
+        },
+        {
+          "name": "pallet stern drive casing",
+          "vertexStart": 448,
+          "vertexCount": 66,
+          "faceStart": 852,
+          "faceCount": 128
+        },
+        {
+          "name": "pallet stern drive throat",
+          "vertexStart": 514,
+          "vertexCount": 66,
+          "faceStart": 980,
+          "faceCount": 128
+        },
+        {
+          "name": "pallet stern drive luminous recess",
+          "vertexStart": 580,
+          "vertexCount": 66,
+          "faceStart": 1108,
+          "faceCount": 128
+        },
+        {
+          "name": "broad cabin window pressure canopy",
+          "vertexStart": 646,
+          "vertexCount": 482,
+          "faceStart": 1236,
+          "faceCount": 960
+        },
+        {
+          "name": "broad cabin window centre brace",
+          "vertexStart": 1128,
+          "vertexCount": 8,
+          "faceStart": 2196,
+          "faceCount": 12
+        },
+        {
+          "name": "protected service pipe",
+          "vertexStart": 1136,
+          "vertexCount": 8,
+          "faceStart": 2208,
+          "faceCount": 12
+        },
+        {
+          "name": "instrumentation housing",
+          "vertexStart": 1144,
+          "vertexCount": 8,
+          "faceStart": 2220,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1152,
+          "vertexCount": 8,
+          "faceStart": 2232,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1160,
+          "vertexCount": 8,
+          "faceStart": 2244,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1168,
+          "vertexCount": 8,
+          "faceStart": 2256,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1176,
+          "vertexCount": 8,
+          "faceStart": 2268,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1184,
+          "vertexCount": 8,
+          "faceStart": 2280,
+          "faceCount": 12
+        },
+        {
+          "name": "protected service pipe",
+          "vertexStart": 1192,
+          "vertexCount": 8,
+          "faceStart": 2292,
+          "faceCount": 12
+        },
+        {
+          "name": "instrumentation housing",
+          "vertexStart": 1200,
+          "vertexCount": 8,
+          "faceStart": 2304,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1208,
+          "vertexCount": 8,
+          "faceStart": 2316,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1216,
+          "vertexCount": 8,
+          "faceStart": 2328,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1224,
+          "vertexCount": 8,
+          "faceStart": 2340,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1232,
+          "vertexCount": 8,
+          "faceStart": 2352,
+          "faceCount": 12
+        },
+        {
+          "name": "vent louvre",
+          "vertexStart": 1240,
+          "vertexCount": 8,
+          "faceStart": 2364,
+          "faceCount": 12
+        }
+      ],
+      "vertices": 1248,
+      "faces": 2376,
+      "materials": [
+        {
+          "name": "skin",
+          "colour": 1871155455,
+          "emissive": false
+        },
+        {
+          "name": "armour",
+          "colour": 927882495,
+          "emissive": false
+        },
+        {
+          "name": "trim",
+          "colour": 3751498495,
+          "emissive": false
+        },
+        {
+          "name": "recess",
+          "colour": 388641023,
+          "emissive": false
+        },
+        {
+          "name": "service",
+          "colour": 2308940031,
+          "emissive": false
+        },
+        {
+          "name": "glazing",
+          "colour": 1958726911,
+          "emissive": false
+        },
+        {
+          "name": "emitter",
+          "colour": 3119241727,
+          "emissive": true
+        },
+        {
+          "name": "inlay",
+          "colour": 3419591167,
+          "emissive": false
+        }
+      ],
+      "license": "MIT"
+    }
+  },
+  "calibration": "Retain declaredmetres1; selectednative585cb9binding separate",
+  "sourceCoordinatesConverted": 0
+}

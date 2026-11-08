@@ -134,19 +134,29 @@ struct NativeMainStationCapacityTests {
     let world = try #require(game.commander.nativeStations)
     let state = game.commander.scriptState
     #expect(world.valid && state.worldJobsValid)
-    // Retained independent station chances joined to authenticated l337-world-1 governments.
-    let expectedWaystations = [45, 49, 51, 44, 46, 52, 42, 45]
-    #expect(NativeStationLedger.recordLimit == 382 && NativeStationSource.bindings.count == 382)
+    // The adopted registry has three Avenor dispatch sites and one remote utility site.
+    let sources = NativeStationSource.bindings
+    #expect(NativeStationLedger.recordLimit == 4 && sources.count == 4)
     #expect(NativeStationLedger.recordLimit <= NativeStationLedger.maximumSourceRecords)
-    let waystationCounts = (0..<8).map { galaxy in
-      NativeStationSource.bindings.filter { $0.system.galaxy == galaxy && $0.kind == .waystation }
-        .count
+    #expect(Set(sources.map(\.site)) == Set([
+      OriginalStationSite.salamander, .frog, .dhole, .remoteUtility,
+    ]))
+    #expect((0..<8).map { galaxy in
+      sources.filter { $0.system.galaxy == galaxy }.count
+    } == [4, 0, 0, 0, 0, 0, 0, 0])
+    for source in sources {
+      let remote = source.site == .remoteUtility
+      #expect(source.system == SystemIdentity(galaxy: 0, system: remote ? 237 : 7))
+      #expect(source.catalogueShipID == (remote ? "SH102" : source.site.rawValue))
+      #expect(source.descriptor.version == "original-station-sites-v1")
+      #expect(source.descriptor.capabilities.contains(.sealedDispatchBoard) == !remote)
+      #expect((source.site.sealedDispatchDefinition != nil) == !remote)
     }
-    #expect(waystationCounts == expectedWaystations)
-    let sourceKeys = NativeStationSource.bindings.map(\.key).sorted().joined(separator: "\n")
+    #expect(sources.filter { $0.descriptor.capabilities.contains(.sealedDispatchBoard) }.count == 3)
+    let sourceKeys = sources.map(\.key).sorted().joined(separator: "\n")
     #expect(
       ScriptPackLibrary.hash(Data(sourceKeys.utf8))
-        == "3d539657453551102a6f0f682bc9db8039fe231c2dde2cd83b4b3901aee1859b")
+        == "26c35d16f6fe7731480ffa09798d30a8cd9559cc0171bb8fa3b5168cb48ec5f6")
     #expect(world.mainStations.count == 2056 && world.mainObservations.count == 2056)
     #expect(state.stationResources.count == 2056)
     #expect(Set(world.mainStations.map(\.system)) == Set(systems))

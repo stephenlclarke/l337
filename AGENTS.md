@@ -13,3 +13,13 @@ The work-item owner is responsible for implementation, focused unit tests and en
 ## Pull request review
 
 The MBA independently reviews the actual project/tap PR for bugs, performance and style, raises actionable GitHub issues, verifies corrected code and relevant hosted unit results, and answers/resolves actual review threads. Do not trigger automated bot-review requests or waits from CI or the delivery workflow. Address existing actionable automated findings through correction and independent review. Reuse completed reviews and unaffected unit evidence; cover remaining changed code and interactions once. Required GitHub checks and the MBA's independent review must pass for the final PR head before merging. Stephen gave standing approval on 31 October 2026 to use the owner override without asking again when another account's GitHub approval is the only blocker. Keep branch protections unchanged.
+
+## Pre-App-Store development policy
+
+Until the game is actually published on the App Store, do not add or maintain backward compatibility, migrations, legacy save readers, historical-version tests, old aliases or superseded-content fallbacks. GitHub releases do not change this cutoff. Fresh games, the current save format, purchases, fittings and current mission behavior must work.
+
+Finish the actual M02 and M03 replacement work before progressing to later milestones. Source reviews, inventories, asset imports, registry counts and published archives do not establish completion. Original hulls, connected missions, worlds, equipment, physical behavior and documentation need actual game acceptance.
+
+Replace or remove superseded game material and its derived assets before removing the associated notices. Keep notices required for legitimate engine and tool dependencies. Preserve frozen historical evidence outside the current shipping tree and in Git history; do not retain obsolete game content or documentation for compatibility. Do not claim a legal clearance from a content scan.
+
+While M02/M03 delivery is active, keep every existing coder assigned to useful work. When a subtask finishes, assign the next necessary task without waiting for a user reminder. Resolve and relay dependencies proactively; use independent source-only work while blocked. G1 remains the sole integration/build/native/renderer executor. Do not create busywork, new workers, competing execution, or extra approval gates.

@@ -107,7 +107,7 @@ extension Game {
     parent.revision += 1
     parent.acknowledge(sequence)
     parent.journal.append(
-      "Enlirin's actual custodian rebrief consented to one reserved Haflinger, forty distinct reserved seed tonnes, six distinct reserved crew and its own 1000 CR fuel issue. The original borrowed key stays aboard; no payment or progress is granted. No further reserve exists."
+      "Enlirin's actual custodian rebrief consented to one reserved Saiga, forty distinct reserved seed tonnes, six distinct reserved crew and its own 1000 CR fuel issue. The original borrowed key stays aboard; no payment or progress is granted. No further reserve exists."
     )
     var child = ScriptInstance(
       id: authorization.job, definition: NativeInductionArkPack.stateID,

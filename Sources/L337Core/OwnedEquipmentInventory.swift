@@ -34,6 +34,9 @@ public struct OwnedEquipmentItem: Equatable, Codable, Sendable {
   public let preferredSlot: ComponentFittingSlot?
   public let retainedLegacyState: LegacyEquipmentState?
   public let nativeRepairLoopCondition: NativeRepairLoopCondition?
+  /// Current EMP items require both values; decoding never creates a bank or paid grade.
+  let empBank: EMPBankState?
+  let empGrades: EMPModuleGrades?
 
   public init(
     id: UUID, node: EquipmentNodeID, provenance: EquipmentAcquisitionProvenance,
@@ -41,6 +44,21 @@ public struct OwnedEquipmentItem: Equatable, Codable, Sendable {
     boundHull: UUID? = nil, preferredSlot: ComponentFittingSlot? = nil,
     retainedLegacyState: LegacyEquipmentState? = nil,
     nativeRepairLoopCondition: NativeRepairLoopCondition? = nil
+  ) {
+    self.init(
+      id: id, node: node, provenance: provenance, component: component, location: location,
+      boundHull: boundHull, preferredSlot: preferredSlot, retainedLegacyState: retainedLegacyState,
+      nativeRepairLoopCondition: nativeRepairLoopCondition, empBank: nil, empGrades: nil)
+  }
+
+  /// Explicit state is owner input, not acquisition, recharge or native publication authority.
+  init(
+    id: UUID, node: EquipmentNodeID, provenance: EquipmentAcquisitionProvenance,
+    component: ComponentInstance? = nil, location: ComponentFittingLocation? = nil,
+    boundHull: UUID? = nil, preferredSlot: ComponentFittingSlot? = nil,
+    retainedLegacyState: LegacyEquipmentState? = nil,
+    nativeRepairLoopCondition: NativeRepairLoopCondition? = nil,
+    empBank: EMPBankState?, empGrades: EMPModuleGrades?
   ) {
     self.id = id
     self.node = node
@@ -51,13 +69,71 @@ public struct OwnedEquipmentItem: Equatable, Codable, Sendable {
     self.preferredSlot = preferredSlot
     self.retainedLegacyState = retainedLegacyState
     self.nativeRepairLoopCondition = nativeRepairLoopCondition
+    self.empBank = empBank
+    self.empGrades = empGrades
+  }
+
+  var empBankValid: Bool {
+    guard node == EMPModuleGradePolicy.node else { return empBank == nil && empGrades == nil }
+    guard let empBank, let empGrades else { return false }
+    return empBank.valid && empBank.module == id && empGrades.valid
+      && empBank.capacity == EMPModuleGradePolicy.capacities[empGrades.capacity]
+      && empGrades.paid.allSatisfy { $0.module == id }
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case id, node, provenance, component, location, boundHull, preferredSlot
+    case retainedLegacyState, nativeRepairLoopCondition, empBank, empGrades
+  }
+
+  public init(from decoder: any Decoder) throws {
+    let values = try decoder.container(keyedBy: CodingKeys.self)
+    self.init(
+      id: try values.decode(UUID.self, forKey: .id),
+      node: try values.decode(EquipmentNodeID.self, forKey: .node),
+      provenance: try values.decode(EquipmentAcquisitionProvenance.self, forKey: .provenance),
+      component: try values.decodeIfPresent(ComponentInstance.self, forKey: .component),
+      location: try values.decodeIfPresent(ComponentFittingLocation.self, forKey: .location),
+      boundHull: try values.decodeIfPresent(UUID.self, forKey: .boundHull),
+      preferredSlot: try values.decodeIfPresent(ComponentFittingSlot.self, forKey: .preferredSlot),
+      retainedLegacyState: try values.decodeIfPresent(
+        LegacyEquipmentState.self, forKey: .retainedLegacyState),
+      nativeRepairLoopCondition: try values.decodeIfPresent(
+        NativeRepairLoopCondition.self, forKey: .nativeRepairLoopCondition),
+      empBank: values.contains(.empBank)
+        ? try values.decode(EMPBankState.self, forKey: .empBank) : nil,
+      empGrades: values.contains(.empGrades)
+        ? try values.decode(EMPModuleGrades.self, forKey: .empGrades) : nil)
+    guard empBankValid else {
+      throw DecodingError.dataCorrupted(
+        .init(codingPath: decoder.codingPath, debugDescription: "Invalid current EMP item"))
+    }
+  }
+
+  public func encode(to encoder: any Encoder) throws {
+    guard empBankValid else {
+      throw EncodingError.invalidValue(
+        self, .init(codingPath: encoder.codingPath, debugDescription: "Invalid current EMP item"))
+    }
+    var values = encoder.container(keyedBy: CodingKeys.self)
+    try values.encode(id, forKey: .id)
+    try values.encode(node, forKey: .node)
+    try values.encode(provenance, forKey: .provenance)
+    try values.encodeIfPresent(component, forKey: .component)
+    try values.encodeIfPresent(location, forKey: .location)
+    try values.encodeIfPresent(boundHull, forKey: .boundHull)
+    try values.encodeIfPresent(preferredSlot, forKey: .preferredSlot)
+    try values.encodeIfPresent(retainedLegacyState, forKey: .retainedLegacyState)
+    try values.encodeIfPresent(nativeRepairLoopCondition, forKey: .nativeRepairLoopCondition)
+    try values.encodeIfPresent(empBank, forKey: .empBank)
+    try values.encodeIfPresent(empGrades, forKey: .empGrades)
   }
 
   func moved(to location: ComponentFittingLocation?) -> Self {
     .init(
       id: id, node: node, provenance: provenance, component: component, location: location,
       boundHull: boundHull, preferredSlot: preferredSlot, retainedLegacyState: retainedLegacyState,
-      nativeRepairLoopCondition: nativeRepairLoopCondition)
+      nativeRepairLoopCondition: nativeRepairLoopCondition, empBank: empBank, empGrades: empGrades)
   }
 }
 
@@ -101,7 +177,7 @@ public enum OwnedEquipmentError: Error, Equatable, Sendable {
   case staleRevision, staleItem, occupiedSlot, noChange, revisionExhausted
 }
 
-/// Physical items only: no funds, entitlement history, salvage consumption or resource levels.
+/// Physical items and their optional module-bound EMP bank; no funds or second main reserve.
 public struct OwnedEquipmentInventory: Equatable, Codable, Sendable {
   /// Ordinary physical items. One authenticated born-stock drive has a reserved place
   /// so migration never evicts any of an old commander's 256 owned items.
@@ -241,6 +317,30 @@ public struct OwnedEquipmentInventory: Equatable, Codable, Sendable {
     }
   }
 
+  /// Replace the actual item's value through the existing inventory transaction. The caller
+  /// still owns paid resource validation and durable publication; a bank value grants neither.
+  mutating func replaceEMPBank(
+    expected item: OwnedEquipmentItem, with bank: EMPBankState,
+    expectedRevision: UInt64, context: OwnedEquipmentContext
+  ) throws {
+    try mutate(expectedRevision: expectedRevision, context: context) { items in
+      let index = try Self.index(of: item, in: items)
+      guard bank.valid, bank.module == item.id,
+        let grades = item.empGrades, grades.valid,
+        bank.capacity == EMPModuleGradePolicy.capacities[grades.capacity],
+        item.node.family == EquipmentRuntimeCatalog.utilityFamily(.empPirateBlaster),
+        item.node.key == Equipment.empPirateBlaster,
+        item.empBank.map({ bank.physicalTime >= $0.physicalTime }) ?? true
+      else { throw OwnedEquipmentError.invalidStructure }
+      guard item.empBank != bank else { throw OwnedEquipmentError.noChange }
+      items[index] = .init(
+        id: item.id, node: item.node, provenance: item.provenance,
+        component: item.component, location: item.location, boundHull: item.boundHull,
+        preferredSlot: item.preferredSlot, retainedLegacyState: item.retainedLegacyState,
+        nativeRepairLoopCondition: item.nativeRepairLoopCondition, empBank: bank, empGrades: item.empGrades)
+    }
+  }
+
   public mutating func store(
     expected item: OwnedEquipmentItem, expectedRevision: UInt64, context: OwnedEquipmentContext
   ) throws {
@@ -282,7 +382,8 @@ public struct OwnedEquipmentInventory: Equatable, Codable, Sendable {
         id: item.id, node: item.node, provenance: item.provenance,
         component: application.component, location: item.location, boundHull: item.boundHull,
         preferredSlot: item.preferredSlot, retainedLegacyState: item.retainedLegacyState,
-        nativeRepairLoopCondition: item.nativeRepairLoopCondition)
+        nativeRepairLoopCondition: item.nativeRepairLoopCondition, empBank: item.empBank,
+        empGrades: item.empGrades)
     }
   }
 
@@ -302,7 +403,7 @@ public struct OwnedEquipmentInventory: Equatable, Codable, Sendable {
         id: item.id, node: item.node, provenance: item.provenance, component: item.component,
         location: item.location, boundHull: item.boundHull, preferredSlot: item.preferredSlot,
         retainedLegacyState: item.retainedLegacyState,
-        nativeRepairLoopCondition: condition)
+        nativeRepairLoopCondition: condition, empBank: item.empBank, empGrades: item.empGrades)
     }
   }
 
@@ -316,7 +417,7 @@ public struct OwnedEquipmentInventory: Equatable, Codable, Sendable {
     guard Set(locations).count == locations.count else { throw OwnedEquipmentError.occupiedSlot }
     for item in items {
       guard !item.node.family.rawValue.isEmpty, !item.node.key.isEmpty,
-        item.component.map({ $0.id == item.id }) ?? true
+        item.component.map({ $0.id == item.id }) ?? true, item.empBankValid
       else { throw OwnedEquipmentError.invalidStructure }
       guard item.boundHull.map({ $0 == activeHull }) ?? true,
         item.location.map({ $0.hullInstanceID == activeHull }) ?? true

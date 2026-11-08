@@ -2,8 +2,9 @@ import Testing
 
 @testable import L337Core
 
-@Test func starsMoveContinuouslyWithTheShipAndStayStillAtRest() {
+@Test func starsMoveContinuouslyWithTheShipAndStayStillAtRest() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   let stationary = game.starfield
@@ -36,8 +37,9 @@ import Testing
   #expect((turn.positions[0] - expected).length < 1e-8)
 }
 
-@Test func starfieldRecyclesWithoutGrowingOrLeavingTheViewEmpty() {
+@Test func starfieldRecyclesWithoutGrowingOrLeavingTheViewEmpty() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   // Isolate star points from the solid solar disk introduced in flight space.
   game.celestials = []

@@ -1,0 +1,134 @@
+{
+  "id": "SH162",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "14d4e261029ca1fcf61a2688c43c192e17c7e523a268ffb9c9b726b087b14151",
+  "contractSHA256": "243c15f460f4c990a2e4d9573ab6ea4ae24168477c68d7345139e1fe6dc28e59",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "alien probe primary envelope",
+          "vertexStart": 0,
+          "vertexCount": 120,
+          "faceStart": 0,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-probe",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "alien probe open structural arc",
+          "vertexStart": 120,
+          "vertexCount": 528,
+          "faceStart": 236,
+          "faceCount": 1052,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 1052
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "alien-probe",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "alien luminous aft organ",
+          "vertexStart": 648,
+          "vertexCount": 120,
+          "faceStart": 1288,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-probe",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [],
+      "vertices": 768,
+      "faces": 1524
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "alien probe primary envelope",
+          "vertexStart": 0,
+          "vertexCount": 60,
+          "faceStart": 0,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-probe",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "alien probe open structural arc",
+          "vertexStart": 60,
+          "vertexCount": 184,
+          "faceStart": 116,
+          "faceCount": 364,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 364
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "alien-probe",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "alien luminous aft organ",
+          "vertexStart": 244,
+          "vertexCount": 60,
+          "faceStart": 480,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-probe",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [],
+      "vertices": 304,
+      "faces": 596
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

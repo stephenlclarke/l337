@@ -29,6 +29,7 @@ private struct ValueStorageFixture {
   }
   func game() throws -> (Game, UUID) {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .status
     game.scriptPacks = [pack]
     let id = try game.acceptScriptMission(pack)
@@ -69,6 +70,7 @@ private struct ValueStorageFixture {
   let fixture = try ValueStorageFixture()
   defer { fixture.clean() }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.credits = 1000
   game.screen = .status
   game.scriptPacks = [fixture.pack]
@@ -264,6 +266,7 @@ private struct ValueStorageFixture {
     to: directory.appendingPathComponent("scripts/main.lua"), atomically: true, encoding: .utf8)
   let pack = try ScriptPackLibrary.read(directory)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   let origin = try game.acceptScriptMission(pack)

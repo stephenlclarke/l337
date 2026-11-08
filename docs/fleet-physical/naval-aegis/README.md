@@ -1,0 +1,16 @@
+# Aegis Prototype naval target
+
+Aegis Prototype is an original L337 design authored for the existing naval hunt. Its source identifier is `naval.aegis-prototype` and its role is `naval.experimental-warship-target`. It belongs to the mission and has no ship catalogue ID. SH026 remains Harrier. The mesh uses new station coordinates and wing outlines from this packet. The BBC numerical blueprint and archived third-party assets contribute no geometry, texture, or design coordinates.
+
+`author.py` serializes the source in metres, with +Z forward and +Y up. The 160 vertices and 288 triangles form eight outward-wound closed parts. The bounds are X ±11.5, Y −2.25 to +3.15, and Z −12.95 to +16. The materials are flat slate, brass, blue canopy and emissive ion apertures. There are no texture resources. The visual and collision owners use the same `nativeDesign` geometry in the authored frame. The proposed forward muzzle is at (0, 0, 16.2).
+
+The current M01 tree at `042f82b9180237ef0e8b207f5c52105264b4ce36` carries the hunt in the naval pack and still uses a `.constrictor` discriminator. Aegis changes the live hull source and displayed identity. The existing discriminator and TP stage values can preserve save compatibility, with no second mesh or catalogue alias. The current mission pack retains the encounter schedule, target removal event, stage progression, and debrief reward.
+
+G1 integration uses a hash-pinned resource wrapper containing `schemaVersion`, `id`, `name`, `role`, `units`, `forwardAxis`, `upAxis`, `collision`, `nativeDesign`, and `muzzle`. Decode `nativeDesign` as `ShipDesign` and check validity, face count, and the explicit source identity before accessing `rawMesh`. A mission-only source lookup should fail closed before spawning a body if these checks fail.
+
+- Briefing, sightings, target labels and debrief present the Aegis Prototype. Any briefing illustration uses the same checked source as the actual encounter.
+- The existing naval producer admits the hull only in the hunt. It retains the one-target check, placement gates and removal event.
+- The collision paths and presentation resolve the same mesh and reject the missing source. The source combat contract retains 252 energy, speed 36, four missiles, zero bounty, ECM, bomb and plasma immunity, and military and naval laser damage floored after division by four. The outgoing laser retains the previous hunt target’s mounted damage of 26 from the `nativeCombat` record at `e691630c`. That record supplies combat values only. The 57,600-axis removal threshold remains part of the mission role.
+- G1 owns product integration and qualification of the briefing, live encounter, damage, removal and paid debrief. The authored packet grants no general fleet admission.
+
+Run `python3 verify.py` beside `source.json` for the source checks. They verify oriented edges and positive signed volume on each closed part, seven positive solid overlaps between parts, six assembled surface hits, four clearance rays, and a clear forward muzzle. The source model contains separate intersecting closed parts. The check measures their assembled boundary hits at the specified samples. Native hit selection, depth sorting, presentation and mission progression remain to be verified in the game.

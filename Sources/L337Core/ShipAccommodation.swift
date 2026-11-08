@@ -9,39 +9,66 @@ public struct ShipAccommodationProfile: Sendable, Equatable {
   public let initialCharterBerths: Int
   public let crewBasis: String
   public let crewStatus: String
+  public let maximumPhysicalCabinModules: Int?
   public init(ship: CatalogueShip) throws {
-    if ship.id == "SH171", let native = ship.game,
-      ship.profiles.contains(where: { $0.group == "liberator-native-v1" })
+    if let source = OriginalFleetR3Fitting.contract(for: ship),
+      let crew = source.accommodation,
+      let nativeUnits = OriginalFleetR3Fitting.nativeEquipmentUnits(for: ship, contract: source)
     {
-      // Explicit player adapter for the project-authored Liberator, not television canon.
-      guard let dimensions = ship.dimensions, dimensions.count == 3,
-        dimensions.allSatisfy({ $0.isFinite && (0.001...1e6).contains($0) })
-      else {
-        throw MissionPackError("The Liberator accommodation estimate needs its model envelope.")
-      }
-      let referenceVolume = 369874.0268262
-      let volumeRatio = dimensions.reduce(1, *) / referenceVolume
-      let budget = 8 + Int(ceil(Double(native.cargo) / 5))
-      let complement = max(
-        1,
-        1
-          + Int(
-            floor(
-              0.5 * max(0, sqrt(volumeRatio) - 1)
-                + max(Double(budget) / 24, Double(native.cargo) / 200))))
-      guard (1...100000).contains(complement), (0...100000).contains(budget) else {
-        throw MissionPackError("The Liberator accommodation estimate exceeds supported counts.")
-      }
-      shipID = ship.id
-      operatingCrew = complement
-      intrinsicCrewQuarters = complement
-      equipmentUnits = budget
-      initialCharterBerths = 0
-      crewStatus = "estimated"
-      crewBasis =
-        "PROJECT-LIBERATOR-ACCOMMODATION-v1: renderer-envelope volume relative to the O08 CobraIII369874.0268262 reference; equipment budget8+ceil(cargo/5); crew1+floor(0.5*max(0,sqrt(volumeRatio)-1)+max(equipmentUnits/24,cargo/200)). Project coefficients and equivalent-volume proxy; not TV canon staffing."
+      shipID = source.id
+      operatingCrew = crew.operatingCrew
+      intrinsicCrewQuarters = crew.intrinsicCrewPlaces
+      equipmentUnits = nativeUnits
+      initialCharterBerths = crew.initialPurchasedCabins
+      maximumPhysicalCabinModules = crew.maximumCabins
+      crewBasis = "Current original R3 contract " + source.sourceSHA256
+      crewStatus = "original-r3-current-fit"
       return
     }
+    if ship.id == OriginalImpalaVoyagerActivation.id {
+      guard OriginalImpalaVoyagerActivation.authenticates(ship),
+        ship.profiles.count == 1, let profile = ship.profiles.first,
+        profile.id == "ORIGINAL-IMPALA-R3-SH007", profile.group == "original-r3-source-stage",
+        Set(profile.fields.map(\.key)).count == profile.fields.count
+      else { throw MissionPackError("The original Impala source profile is unavailable.") }
+      func nativeField(_ key: String, unit: String) throws -> ShipSpec {
+        guard let field = profile.fields.first(where: { $0.key == key }), field.unit == unit,
+          field.status == "declared-original-r3-planning"
+        else { throw MissionPackError("The original Impala accommodation source is incomplete.") }
+        return field
+      }
+      func nativeCount(_ key: String, unit: String) throws -> Int {
+        guard let value = try nativeField(key, unit: unit).number,
+          value.isFinite, (0...100000).contains(value), value.rounded() == value
+        else { throw MissionPackError("Original Impala counts must be finite source integers.") }
+        return Int(value)
+      }
+      let placesUnit = "source r3 places/modules"
+      let crewKey = "original.r3.accommodation.minimumOperatingCrewIncludingCommander"
+      let required = try nativeCount(crewKey, unit: placesUnit)
+      let places = try nativeCount("original.r3.accommodation.intrinsicCrewPlaces", unit: placesUnit)
+      let initial = try nativeCount("original.r3.accommodation.initialPurchasedCabins", unit: placesUnit)
+      let maximum = try nativeCount(
+        "original.r3.accommodation.maximumPhysicalCabinModules", unit: placesUnit)
+      let budget = try nativeCount(
+        "original.r3.fitting.equipmentBudgetUnits", unit: "source r3 planning units")
+      guard required == 2, places == 2, initial == 0, maximum == 12, budget == 26 else {
+        throw MissionPackError("The original Impala source counts do not match its adopted layout.")
+      }
+      shipID = ship.id
+      operatingCrew = required
+      intrinsicCrewQuarters = places
+      equipmentUnits = budget
+      initialCharterBerths = initial
+      maximumPhysicalCabinModules = maximum
+      crewBasis = try nativeField(crewKey, unit: placesUnit).basis
+      crewStatus = "authored-r3-native-adapter"
+      return
+    }
+    guard OriginalFleetR3Data.contract(for: ship.id) == nil else {
+      throw MissionPackError("The current original hull requires its exact native fitting adapter.")
+    }
+    maximumPhysicalCabinModules = nil
     guard ship.game != nil,
       let profile = ship.profiles.first(where: { $0.group == "project-refit-v1" })
     else {
@@ -174,6 +201,9 @@ public enum AccommodationFitting {
       profile.equipmentUnits - otherFittedEquipmentUnits - cabins.count
       * equipmentUnitsPerCabin
     var issues: [String] = []
+    if let maximum = profile.maximumPhysicalCabinModules, cabins.count > maximum {
+      issues.append("This original hull supports at most \(maximum) physical cabin modules.")
+    }
     if Set(berths.map(\.id)).count != berths.count {
       issues.append("A berth module cannot be fitted more than once.")
     }

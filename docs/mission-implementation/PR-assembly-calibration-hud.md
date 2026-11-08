@@ -1,0 +1,11 @@
+# Format Assembly's last measured calibration exposure in three short lines
+
+The new owned pure formatter emits no lines when off. Seeking, running, paused, ready exposure and reset each emit a phase line, elapsed/required seconds with `UNVERIFIED`, and `NO REGISTER READING`. Each line fits 20 ASCII columns for the real instrument's bounded values. POSIX decimal formatting keeps the display stable. Phase comes from the actual readout mode; rounded `12.0` during a still-running exposure cannot declare readiness.
+
+FIRST 208d441c pins the unchanged controls/optics/window, frozen controls/macro-correction packets and exact shared integration reservation. Only this formatter, its new test file, paired notes and source packet are added. All six earlier optics/controls methods, their fixture, the reviewed four-call correction and every prior production/packet byte remain unchanged. No Game root, actor storage, menu intent, tick, snapshot, cockpit renderer or raw boundary is edited.
+
+Two authored test methods cover all display phases, explicit unqualified warnings, unchanged input, ASCII/column limits, near-threshold rounding, reset text and the existing responsive wrapping rule at 320/640/1280 widths. The parameterized method has three cases. Synthetic DTOs are display fixtures only, never real clock samples, geometry, permission, original registers or mission receipts. These tests do not claim that the pending shared HUD hook is installed or that the game has been rendered.
+
+Source-only raw-byte/hash/literal, ASCII/whitespace and reversible Git patch checks pass. Both methods/four expected cases are UNCOMPILED/UNRUN; the prior six instrument methods also remain UNRUN. No compiler/parser, native/model/numeric/helper execution, tests, renderer, markdownlint, coverage or CI ran. G1 owns execution and actual shared integration. Independent source review remains pending; this component is not integration-ready or playable.
+
+The shared reservation still requires Root approval before any proposed hunk. The three original Darik registers, consent/occupancy joins, qualified reading storage and later physical C23 mission work remain absent. This formatter consumes only last measured unqualified display data and cannot award a stage, work receipt, fee or clue. Root retains the sole completion ledger. [Issue](ISSUE-assembly-calibration-hud.md).

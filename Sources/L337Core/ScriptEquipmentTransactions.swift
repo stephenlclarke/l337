@@ -1,10 +1,67 @@
 import Foundation
 
+/// Issued only by the synchronous script command owner, never decoded or publicly constructed.
+struct EMPMissionIssueSeed: Equatable, Sendable {
+  let source: EquipmentIssueSource
+  let command: UUID
+  let module: UUID
+  let index: Int
+  let physicalTime: Double
+  let bank: EMPBankState
+  let grades: EMPModuleGrades
+
+  fileprivate init?(
+    source: EquipmentIssueSource, command: UUID, module: UUID, index: Int, physicalTime: Double
+  ) {
+    guard source.valid, index >= 0, index < 32,
+      module == OwnedGear.issuedIdentity(
+        mission: source.mission, resource: source.resource, index: index),
+      let bank = EMPBankState(module: module, capacity: 8, remaining: 0, at: physicalTime)
+    else { return nil }
+    self.source = source
+    self.command = command
+    self.module = module
+    self.index = index
+    self.physicalTime = physicalTime
+    self.bank = bank
+    grades = .base
+  }
+
+  func matches(source: EquipmentIssueSource, command: UUID, device: IssuedDeviceRequest) -> Bool {
+    guard self.source == source, self.command == command, module == device.id,
+      index == device.index, device.node == EMPModuleGradePolicy.node,
+      physicalTime.isFinite, physicalTime >= 0, bank.module == module,
+      bank.physicalTime == physicalTime, bank.capacity == 8, bank.remaining == 0,
+      bank.lastDischarge == nil, bank.valid, grades == .base
+    else { return false }
+    return true
+  }
+}
+
 extension Game {
   func issueScriptGear(
     _ definition: ScriptGearDefinition, fields: [String: ScriptValue], command: UUID,
     state: inout ScriptInstance, candidate: inout Commander
   ) throws -> (String, [String: ScriptValue])? {
+    try issueScriptGearWithReceipt(
+      definition, fields: fields, command: command, state: &state, candidate: &candidate)?.event
+  }
+
+  @inline(never)
+  func issueScriptGearWithReceipt(
+    _ definition: ScriptGearDefinition, fields: [String: ScriptValue], command: UUID,
+    state: inout ScriptInstance, candidate: inout Commander,
+    memoryAtlasPermit: NativeMemoryAtlasWatcherIssuePermit? = nil
+  ) throws -> (event: (String, [String: ScriptValue]), receipt: EquipmentIssueReceipt)? {
+    if definition.id == NativeMemoryAtlasWatcherSource.resource
+      || definition.name == NativeMemoryAtlasWatcherSource.name
+      || definition.kind?.canonicalNode == NativeMemoryAtlasWatcherSource.node
+    {
+      guard let memoryAtlasPermit,
+        memoryAtlasPermit.permits(definition, fields: fields, command: command,
+          state: state, candidate: candidate)
+      else { throw EquipmentIssueError.invalidRequest }
+    }
     if state.gearIssues[definition.id] != nil { return nil }
     let fit: Bool
     if let value = fields["fit"] {
@@ -23,8 +80,17 @@ extension Game {
     let identities = (0..<definition.quantity).map {
       OwnedGear.issuedIdentity(mission: state.id, resource: definition.id, index: $0)
     }
-    let devices = identities.enumerated().map { index, id in
-      IssuedDeviceRequest(
+    let issueTime = candidate.flightSimulation.physicalTime
+    let devices = try identities.enumerated().map { index, id in
+      if node == EMPModuleGradePolicy.node {
+        guard let seed = EMPMissionIssueSeed(
+          source: source, command: command, module: id, index: index, physicalTime: issueTime)
+        else { throw EquipmentIssueError.invalidRequest }
+        return IssuedDeviceRequest(
+          id: id, node: node, index: index, preferredSlot: definition.slot(index).canonicalSlot,
+          empIssueSeed: seed)
+      }
+      return IssuedDeviceRequest(
         id: id, node: node, index: index,
         preferredSlot: definition.slot(index).canonicalSlot,
         originalEquipmentName: definition.name == Equipment.legacyDockingComputer
@@ -83,7 +149,10 @@ extension Game {
           retainedLegacyState: device.originalEquipmentName.map {
             LegacyEquipmentState(
               conditionBasisPoints: 10000, modifications: [:], originalEquipmentName: $0)
-          }))
+          }, empBank: device.empIssueSeed?.bank, empGrades: device.empIssueSeed?.grades))
+    }
+    guard candidate.flightSimulation.physicalTime == issueTime else {
+      throw EquipmentIssueError.invalidRequest
     }
     let budget = try candidate.equipmentFitBudget(projectedItems: projected)
     let obligations = try candidate.equipmentIssueObligations()
@@ -93,7 +162,14 @@ extension Game {
     let applied = try EquipmentIssueTransactions.applyAdmission(
       quote: quote, inventory: inventory, context: context, obligations: obligations, budget: budget
     )
-    guard applied.receipt.command == command, applied.receipt.source == source,
+    guard candidate.flightSimulation.physicalTime == issueTime,
+      devices.allSatisfy({ device in
+        guard let seed = device.empIssueSeed else {
+          return device.node != EMPModuleGradePolicy.node
+        }
+        return seed.physicalTime == issueTime
+          && seed.matches(source: source, command: command, device: device)
+      }), applied.receipt.command == command, applied.receipt.source == source,
       applied.receipt.operation == .issued, applied.receipt.originalItems == identities,
       applied.receipt.consumedItems.isEmpty
     else { throw EquipmentIssueError.identityMismatch }
@@ -103,22 +179,36 @@ extension Game {
       resource: definition.id, kind: kind, items: identities, loan: definition.loan,
       returnRemaining: definition.returnPolicy == "remaining", savedGearVersion: 2,
       source: source, node: node, displacements: applied.receipt.displacements)
-    return (
+    let event: (String, [String: ScriptValue]) = (
       "equipment.issued",
       [
         "gear": .string(definition.id), "items": .array(identities.map { .string($0.uuidString) }),
         "loan": .bool(definition.loan),
       ]
     )
+    return (event: event, receipt: applied.receipt)
   }
 
   func settleScriptGear(
     _ record: ScriptGearIssue, release: Bool, command: UUID,
     state: inout ScriptInstance, candidate: inout Commander
   ) throws -> (String, [String: ScriptValue]) {
+    try settleScriptGearWithReceipt(
+      record, release: release, command: command, state: &state, candidate: &candidate).event
+  }
+
+  @inline(never)
+  func settleScriptGearWithReceipt(
+    _ record: ScriptGearIssue, release: Bool, command: UUID,
+    state: inout ScriptInstance, candidate: inout Commander
+  ) throws -> (event: (String, [String: ScriptValue]), receipt: EquipmentIssueReceipt) {
     guard let obligation = record.obligation, let inventory = candidate.equipmentInventory else {
       throw EquipmentIssueError.invalidRequest
     }
+    guard record.resource != NativeMemoryAtlasWatcherSource.resource,
+      record.node != NativeMemoryAtlasWatcherSource.node,
+      record.kind != .module(NativeMemoryAtlasWatcherSource.name)
+    else { throw EquipmentIssueError.invalidRequest }
     let operation: EquipmentIssueSettlement = release ? .releaseLoan : .returnOriginals
     let context = EquipmentRuntimeCatalog.context(
       owner: inventory.owner, hull: inventory.activeHull, performance: candidate.nativePerformance)
@@ -143,7 +233,7 @@ extension Game {
     var settled = record
     settled.status = release ? .released : .returned
     state.gearIssues[record.resource] = settled
-    return (
+    let event: (String, [String: ScriptValue]) = (
       release ? "equipment.released" : "equipment.returned",
       [
         "gear": .string(record.resource),
@@ -154,12 +244,17 @@ extension Game {
         "consumed": .integer(Int64(record.consumed.count)),
       ]
     )
+    return (event: event, receipt: applied.receipt)
   }
 
   func refitScriptGear(
     _ record: ScriptGearIssue, fields: [String: ScriptValue], fitted: Bool, command: UUID,
     state: inout ScriptInstance, candidate: inout Commander
   ) throws -> (String, [String: ScriptValue]) {
+    guard record.resource != NativeMemoryAtlasWatcherSource.resource,
+      record.node != NativeMemoryAtlasWatcherSource.node,
+      record.kind != .module(NativeMemoryAtlasWatcherSource.name)
+    else { throw EquipmentIssueError.invalidRequest }
     guard let index = fields["index"]?.integer, (0..<Int64(record.items.count)).contains(index),
       let inventory = candidate.equipmentInventory, let obligation = record.obligation,
       let item = inventory.items.first(where: { $0.id == record.items[Int(index)] })

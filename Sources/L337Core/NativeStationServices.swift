@@ -72,8 +72,8 @@ struct NativeStationEventFacts: Equatable, Codable, Sendable {
       "station_id": .string(receipt.station.key),
       "definition": .string(receipt.station.definition),
       "version": .string(receipt.station.version),
-      "board_origin": .string(descriptor.boardOrigin == .source ? "source" : "project_extension"),
-      "capabilities": .array([.string("rrs_contract_board")]),
+      "board_origin": .string(descriptor.boardOrigin.rawValue),
+      "capabilities": .array(descriptor.capabilities.map { .string($0.rawValue) }),
       "docking_sequence": .integer(Int64(receipt.sequence)),
       "lifecycle_revision": .integer(Int64(receipt.lifecycleRevision)),
     ])
@@ -157,7 +157,7 @@ extension Game {
       let record = world.ledger.records.first(where: { $0.identity == receipt.station }),
       NativeStationSource.authentic(record, owner: world.ledger.world),
       let service = world.ledger.serviceContext(
-        capability: .rrsContractBoard, docked: docked, system: systemIdentity,
+        capability: .sealedDispatchBoard, docked: docked, system: systemIdentity,
         commanderOwner: commander.equipmentOwnerID, runtimeEpoch: nativeStationRuntimeEpoch),
       let hour = NativeStationSource.boardHour(
         calendarSeconds: commander.scriptState.calendarSeconds)
@@ -172,7 +172,7 @@ extension Game {
         commanderOwner: commander.equipmentOwnerID, runtimeEpoch: nativeStationRuntimeEpoch) == true
   }
 
-  /// Source waystation/HQ limited markets need their own adapters; a board grants no shop.
+  /// Secondary source capabilities never grant the main market or equipment service.
   var stationAllowsMarketServices: Bool {
     docked && dockedAtMainStation && commander.nativeStationStateValid
       && commander.nativeStations?.ledger.currentDock == nil
@@ -183,7 +183,7 @@ extension Game {
     guard let receipt = commander.nativeStations?.ledger.currentDock,
       let source = NativeStationSource.binding(for: receipt.station)
     else { return nil }
-    return source.kind == .waystation ? "RRS Waystation" : "RRS Headquarters"
+    return source.site.name
   }
 
   /// Factual query data never contains the sealed context or an executable service token.
@@ -199,11 +199,11 @@ extension Game {
       "version": .string(receipt.station.version),
       "roles": .array(source.descriptor.sourceRoles.map(ScriptValue.string)),
       "board_origin": .string(
-        source.descriptor.boardOrigin == .source ? "source" : "project_extension"),
-      "capabilities": .array([.string("rrs_contract_board")]),
+        source.descriptor.boardOrigin.rawValue),
+      "capabilities": .array(source.descriptor.capabilities.map { .string($0.rawValue) }),
       "docking_sequence": .integer(Int64(receipt.sequence)),
       "lifecycle_revision": .integer(Int64(receipt.lifecycleRevision)),
-      "technology": .integer(Int64(source.technology)),
+      "system_technology": .integer(Int64(currentSystem.technology)),
       "market_available": .bool(false), "equipment_available": .bool(false),
       "board_hour": NativeStationSource.boardHour(
         calendarSeconds: commander.scriptState.calendarSeconds
@@ -228,35 +228,27 @@ extension GameRuntime {
   }
 }
 
-/// Ephemeral project utility service, independent of RRS board/shop capabilities.
+/// Ephemeral original utility authority, independent of the sealed-dispatch board.
 struct NativeUtilityServiceContext: Equatable, Sendable {
   let receipt: NativeStationDockReceipt
   let runtimeEpoch: UUID
   let utilityRevision: UInt64
-  let engineer: UUID
-  fileprivate init(
-    receipt: NativeStationDockReceipt, runtimeEpoch: UUID, utility: NativeUtilityState
-  ) {
-    self.receipt = receipt
-    self.runtimeEpoch = runtimeEpoch
-    utilityRevision = utility.revision
-    engineer = utility.engineer
+  let authority: NativeUtilityEngineerInspectionAuthority
+  var engineer: UUID { authority.engineer }
+  fileprivate init(witness: NativeOriginalUtilityDockWitness,
+    authority: NativeUtilityEngineerInspectionAuthority)
+  {
+    receipt = witness.receipt
+    runtimeEpoch = witness.runtimeEpoch
+    utilityRevision = witness.utilityRevision
+    self.authority = authority
   }
 }
 extension Game {
   var nativeUtilityServiceContext: NativeUtilityServiceContext? {
-    guard docked, !dockedAtMainStation, !paused, scriptDurabilityAvailable,
-      nativeStationDockEvidenceIsCurrent, pendingNativeStationDock == nil,
-      commander.nativeStationStateValid, let world = commander.nativeStations,
-      let receipt = world.ledger.currentDock,
-      let record = world.ledger.records.first(where: { $0.identity == receipt.station }),
-      NativeUtilityState.isTarget(record.identity), record.tombstone == nil,
-      NativeStationSource.authentic(record, owner: world.ledger.world),
-      record.binding == receipt.dockingBinding, record.revision == receipt.lifecycleRevision,
-      receipt.commanderOwner == commander.equipmentOwnerID,
-      let pose = world.pose(for: record.identity), pose.energy > 0,
-      let utility = record.utility, utility.valid
+    guard let witness = nativeOriginalUtilityDockWitness(),
+      let authority = nativeUtilityEngineerInspectionAuthority(witness)
     else { return nil }
-    return .init(receipt: receipt, runtimeEpoch: nativeStationRuntimeEpoch, utility: utility)
+    return .init(witness: witness, authority: authority)
   }
 }

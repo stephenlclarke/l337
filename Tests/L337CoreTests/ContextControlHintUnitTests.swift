@@ -8,7 +8,8 @@ struct ContextControlHintUnitTests {
     throws
   {
     var observed = Set<Bool>()
-    let initial = Game(executive: false)
+    var initial = Game(executive: false)
+    try initial.commander.prepareEquipment(legacy: false)
     for hasTarget in [false, true] {
       for tier in [TargetingTier.basic, .identification, .military] {
         for expanded: Bool? in [nil, false, true] {
@@ -16,7 +17,9 @@ struct ContextControlHintUnitTests {
             var game = initial
             game.docked = false
             game.screen = .front
-            game.commander.installTargetingComputer(tier)
+            try game.commander.grantEquipment(
+              tier.equipmentName, at: .targetingCore,
+              provenance: .grant("current targeting unit fixture"))
             game.bodies = [SpaceBody(id: 90, hull: .cobra, position: .init(0, 0, 500))]
             game.weaponsTargetID = hasTarget ? 90 : nil
             game.targetPanelExpanded = expanded

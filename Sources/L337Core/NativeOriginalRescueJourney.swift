@@ -119,14 +119,9 @@ enum NativeOriginalRescueJourney {
   static let aliases = ["neri-capsule", "ilan-capsule", "emergency-record"]
   static let names = ["Neri Voss", "Ilan Rook"]
   static let reward = 10200
-  static let geometryHash: String? = {
-    guard let design = ShipCatalogue.ship("SH040")?.design,
-      let bytes = try? ScriptPackLibrary.canonicalGeometry(design)
-    else { return nil }
-    return ScriptPackLibrary.hash(bytes)
-  }()
+  static let geometryHash = OriginalCryostasisCapsule.source?.collisionSHA256
   // Resolved by the native pack loader, including actual referenced geometry bytes.
-  static let digest = "5ca2543b9a3d5ad03129c290c81cdba652a316ef2a11b23741125fe9567800fd"
+  static let digest = "7e2bddffd27d74f284d3e525a4c12d438260fbf12f254bae146b7693f07b2bf3"
   static let source = ContractStationIdentity(galaxy: 0, system: 85, stationClass: "main-orbital")
   static let destination = ContractStationIdentity(
     galaxy: 0, system: 241, stationClass: "main-orbital")

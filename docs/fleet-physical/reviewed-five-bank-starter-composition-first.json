@@ -1,0 +1,24 @@
+{
+  "status": "FIRST_REVIEWED18F3_ONE_PATH_FIVE_CONSTRUCTOR_HUNKS_BEFORE_MUTATION",
+  "beforeCommit": "769651665e7e6f003cbc29594f6159d900021630",
+  "child": {
+    "path": "/tmp/elite-mc1-five-bank-ownership-owned-starter-child/manifest.json",
+    "sha256": "18f3c3e47dac7bcfd4ded9122d0e0b6d6024191efafc66993d1cbe06b13fad6f"
+  },
+  "review": {
+    "path": "/tmp/elite-g2-18f3-bank-owned-starter-source-review/review.json",
+    "sha256": "d1786ebb5921148854763f81d350b20d6ea4dae805f9fffec7a2b9958cf1b506"
+  },
+  "target": {
+    "path": "Tests/L337CoreTests/EMPBankOwnershipTests.swift",
+    "before": {
+      "bytes": 18459,
+      "sha256": "604b4082bd362f49926c4268773c89ab6bc66d987f742d95204166dc1da2530f"
+    },
+    "after": {
+      "bytes": 18565,
+      "sha256": "71944fcb25ac6fe94c51b82bc056c37b3d23e37b510177ef7d1c5a6b37af8258"
+    }
+  },
+  "scope": "Only reviewed5constructorhunks in5existingmethods; originalhelpers/defaultfalse/historyGame/othermethods/prod/alloriginaloracles exact. No stalewholefile,Source23/native025/13fixed2/mining/crew/physics/journey/G1overlay grant. AllSwiftUNRUN."
+}

@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "id": "SH113",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "1a86eadf7eae395da5bf6f1329cc56d4bf24e14f97bfa34a39b598ed6ff3062f",
+  "detailedSourceSHA256": "5e9d7670be4b1997ad270d55f1cbecb1009eafc697ab4ddd2df1b34cc7a9e007",
+  "componentSourceSHA256": "47a627f4f7e90e3bf639b346bdbf4cf2944b97124cd71b6a0d17ee1bf2d3eabb",
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "coordinateUnits": "metres",
+  "metresPerSourceUnit": 1,
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 2337.478625165337,
+  "stockMassKg": 32724.700752314733,
+  "intrinsicHardwareMassKg": 2340.0,
+  "unroundedMassKg": 35064.70075231473,
+  "roundingReserveKg": 0.2992476852668915,
+  "dryMassKilograms": 35065,
+  "centreOfMassMetres": [
+    -2.8415187316014816e-12,
+    0.5403805298240083,
+    5.419831135372437
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    6206033.660178066,
+    -9.153484237292522,
+    -7.806834246839757e-06,
+    -9.153484237292522,
+    7538961.605189362,
+    500746.2783147733,
+    -7.806834246839757e-06,
+    500746.2783147733,
+    1927074.287767645
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    7246283.433118707,
+    -9.153484183450626,
+    -7.26681851029442e-06,
+    -9.153484183450626,
+    8568972.095695596,
+    398049.7918963274,
+    -7.26681851029442e-06,
+    398049.7918963274,
+    1937313.5702020507
+  ],
+  "reserveLocationMetres": [
+    -2.8415187316014816e-12,
+    0.5403805298240083,
+    5.419831135372437
+  ],
+  "positiveLeadingPrincipalMinors": [
+    6206033.660178066,
+    46787049484511.45,
+    8.860597676239408e+19
+  ],
+  "zeroAreaSourceFaces": 0,
+  "stockComponents": [
+    {
+      "name": "swept dorsal carapace",
+      "areaSquareMetres": 959.6425223854131,
+      "stockMassKg": 13434.995313395808,
+      "areaCentroidMetres": [
+        5.10054071765105e-17,
+        3.000000000000004,
+        -3.6204515006795086
+      ],
+      "massFirst": [
+        -1.1890488593735427e-13,
+        40304.98594018747,
+        -48640.74894400589
+      ],
+      "massSecond": [
+        131292.16569977457,
+        9.236611145922703,
+        2.76560996326225e-11,
+        9.236611145922703,
+        217854.9281999861,
+        -145922.24683201787,
+        2.76560996326225e-11,
+        -145922.24683201787,
+        1546862.6910634132
+      ],
+      "verificationSecond": [
+        131292.1656997748,
+        9.23661114590771,
+        2.7116087153444823e-12,
+        9.236611145907702,
+        217854.9281999863,
+        -145922.24683201805,
+        6.008527009271347e-12,
+        -145922.24683201805,
+        1546862.6910634171
+      ]
+    },
+    {
+      "name": "open hooked forward growth",
+      "areaSquareMetres": 525.0966610109473,
+      "stockMassKg": 7351.3532541532595,
+      "areaCentroidMetres": [
+        -7.0000000000067795,
+        -1.0000000000000009,
+        17.092820105569142
+      ],
+      "massFirst": [
+        -51459.47277912271,
+        -7351.353254153262,
+        125655.35870573207
+      ],
+      "massSecond": [
+        635354.7078262792,
+        51459.431215591685,
+        -879587.5109364898,
+        51459.431215591685,
+        23871.563787322433,
+        -125655.35870725392,
+        -879587.5109364898,
+        -125655.35870725392,
+        2337873.0638277223
+      ],
+      "verificationSecond": [
+        635354.7078262788,
+        51459.43121559167,
+        -879587.5109364911,
+        51459.43121559168,
+        23871.56378732246,
+        -125655.35870725402,
+        -879587.5109364911,
+        -125655.35870725402,
+        2337873.0638277205
+      ]
+    },
+    {
+      "name": "inner forward gold gland",
+      "areaSquareMetres": 94.85750933568487,
+      "stockMassKg": 1328.0051306995879,
+      "areaCentroidMetres": [
+        -9.000000000000004,
+        -1.9999999999999976,
+        10.00000000000001
+      ],
+      "massFirst": [
+        -11952.046176296306,
+        -2656.010261399175,
+        13280.051306995876
+      ],
+      "massSecond": [
+        109904.57173864428,
+        23904.092352592586,
+        -119520.46176296301,
+        23904.092352592586,
+        6780.839858498185,
+        -26560.102613991818,
+        -119520.46176296301,
+        -26560.102613991818,
+        140230.71394737717
+      ],
+      "verificationSecond": [
+        109904.57173864423,
+        23904.09235259262,
+        -119520.46176296328,
+        23904.092352592615,
+        6780.839858498171,
+        -26560.102613991752,
+        -119520.46176296328,
+        -26560.102613991752,
+        140230.713947377
+      ]
+    },
+    {
+      "name": "open hooked forward growth",
+      "areaSquareMetres": 525.0966610109473,
+      "stockMassKg": 7351.353254153259,
+      "areaCentroidMetres": [
+        6.999999999993225,
+        -1.0000000000000007,
+        17.092820105569142
+      ],
+      "massFirst": [
+        51459.47277902308,
+        -7351.353254153264,
+        125655.35870573205
+      ],
+      "massSecond": [
+        635354.707824885,
+        -51459.51434255413,
+        879587.5109437566,
+        -51459.51434255413,
+        23871.56378732244,
+        -125655.35870725395,
+        879587.5109437566,
+        -125655.35870725395,
+        2337873.063827722
+      ],
+      "verificationSecond": [
+        635354.7078248847,
+        -51459.51434255394,
+        879587.5109437583,
+        -51459.51434255394,
+        23871.563787322455,
+        -125655.35870725405,
+        879587.5109437583,
+        -125655.35870725407,
+        2337873.0638277205
+      ]
+    },
+    {
+      "name": "inner forward gold gland",
+      "areaSquareMetres": 94.8575093356849,
+      "stockMassKg": 1328.0051306995879,
+      "areaCentroidMetres": [
+        8.999999999999998,
+        -1.9999999999999973,
+        10.000000000000005
+      ],
+      "massFirst": [
+        11952.046176296299,
+        -2656.010261399173,
+        13280.051306995882
+      ],
+      "massSecond": [
+        109904.5717386443,
+        -23904.092352592612,
+        119520.46176296304,
+        -23904.092352592612,
+        6780.839858498185,
+        -26560.102613991814,
+        119520.46176296304,
+        -26560.102613991814,
+        140230.71394737714
+      ],
+      "verificationSecond": [
+        109904.57173864412,
+        -23904.092352592652,
+        119520.46176296337,
+        -23904.092352592652,
+        6780.839858498172,
+        -26560.102613991763,
+        119520.46176296336,
+        -26560.102613991767,
+        140230.71394737696
+      ]
+    },
+    {
+      "name": "stern gold organ",
+      "areaSquareMetres": 137.92776208665947,
+      "stockMassKg": 1930.9886692132316,
+      "areaCentroidMetres": [
+        -6.326252925557541e-18,
+        -2.000000000000001,
+        -11.999999999999996
+      ],
+      "massFirst": [
+        1.071365218763276e-14,
+        -3861.977338426462,
+        -23171.864030558765
+      ],
+      "massSecond": [
+        8190.391561243068,
+        -4.163336342344337e-15,
+        1.1441958491786863e-12,
+        -4.163336342344337e-15,
+        11592.718320952245,
+        46343.728061117494,
+        1.1441958491786863e-12,
+        46343.728061117494,
+        287425.68923348206
+      ],
+      "verificationSecond": [
+        8190.3915612430565,
+        3.3459346404640655e-14,
+        -1.149080830487037e-14,
+        1.9234613901630837e-14,
+        11592.718320952261,
+        46343.72806111757,
+        6.972200594645983e-13,
+        46343.72806111757,
+        287425.68923348014
+      ]
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 5,
+      "anchorName": "stern gold organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -6.326252925557541e-18,
+        -2.000000000000001,
+        -11.999999999999996
+      ]
+    },
+    {
+      "name": "Empty intrinsic power system",
+      "count": 1,
+      "eachKg": 750,
+      "anchorComponent": 0,
+      "anchorName": "swept dorsal carapace",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 750,
+      "anchorMetres": [
+        5.10054071765105e-17,
+        3.000000000000004,
+        -3.6204515006795086
+      ]
+    },
+    {
+      "name": "Empty fuel-containment and transfer system",
+      "count": 1,
+      "eachKg": 180,
+      "anchorComponent": 0,
+      "anchorName": "swept dorsal carapace",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 180,
+      "anchorMetres": [
+        5.10054071765105e-17,
+        3.000000000000004,
+        -3.6204515006795086
+      ]
+    },
+    {
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+      "count": 1,
+      "eachKg": 120,
+      "anchorComponent": 0,
+      "anchorName": "swept dorsal carapace",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 120,
+      "anchorMetres": [
+        5.10054071765105e-17,
+        3.000000000000004,
+        -3.6204515006795086
+      ]
+    },
+    {
+      "name": "Control and sensing system",
+      "count": 1,
+      "eachKg": 90,
+      "anchorComponent": 0,
+      "anchorName": "swept dorsal carapace",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 90,
+      "anchorMetres": [
+        5.10054071765105e-17,
+        3.000000000000004,
+        -3.6204515006795086
+      ]
+    },
+    {
+      "name": "Empty carried-equipment interfaces",
+      "count": 1,
+      "eachKg": 140,
+      "anchorComponent": 0,
+      "anchorName": "swept dorsal carapace",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 140,
+      "anchorMetres": [
+        5.10054071765105e-17,
+        3.000000000000004,
+        -3.6204515006795086
+      ]
+    },
+    {
+      "name": "Empty launcher system, no ammunition",
+      "count": 1,
+      "eachKg": 160,
+      "anchorComponent": 0,
+      "anchorName": "swept dorsal carapace",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 160,
+      "anchorMetres": [
+        5.10054071765105e-17,
+        3.000000000000004,
+        -3.6204515006795086
+      ]
+    }
+  ],
+  "operations": {
+    "coordinateConversions": 9240,
+    "faceIndexChecks": 18408,
+    "triangleAreaEvaluations": 6136,
+    "analyticMomentEvaluations": 6136,
+    "quadratureMomentEvaluations": 18408,
+    "hardwareAllocations": 7,
+    "sourceParses": 1,
+    "resultRecords": 1
+  },
+  "sourceGeometryNotEdited": true,
+  "nativeQualification": "UNRUN; source budget never activates a hull"
+}

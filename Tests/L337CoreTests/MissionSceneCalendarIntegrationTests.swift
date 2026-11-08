@@ -4,8 +4,9 @@ import Testing
 @testable import L337Core
 
 struct MissionSceneCalendarIntegrationTests {
-  @Test func anOrdinaryNativeLaunchCreatesStationCalendarWithoutAMission() {
+  @Test func anOrdinaryNativeLaunchCreatesStationCalendarWithoutAMission() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .status
     game.launch()
     #expect(!game.docked && game.commander.valid)
@@ -24,8 +25,9 @@ struct MissionSceneCalendarIntegrationTests {
     #expect(game.commander.nativeStations != nil)
   }
 
-  @Test func aCalendarLaunchRefusalPreservesPhysicalAndCommanderState() {
+  @Test func aCalendarLaunchRefusalPreservesPhysicalAndCommanderState() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .status
     game.commander.scriptState.calendarLedger = .init(origin: .newCommander)
     game.commander.scriptState.calendarSeconds = 1e12 - 100

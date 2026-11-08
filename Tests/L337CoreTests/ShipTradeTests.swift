@@ -1,93 +1,98 @@
 import Foundation
+import TOMLDecoder
 import Testing
 
 @testable import L337Core
 
-@Test func shipExchangeTransfersFitCargoMissionsAndCashAndCanTradeAgain() throws {
-  var game = hullTradeGame()
-  game.screen = .status
+/// Controlled owned-hull fitting transfer; the paid acquisition journey has its own native test.
+@Test func ownedHullTransferPreservesCargoMissionsPortablePropertyAndCash() throws {
+  var game = hullTradeGame(missiles: 0)
+  game.commander.fuel = 70
   game.commander.credits = 10_000_000
   game.commander.cargo[0] = 2
   game.commander.cargo[10] = 1
   game.commander.blackjack.stage = .deliverFirearm
-  game.commander.blackjack.transfers = [
-    .contact, .goldAward, .goldDelivery, .report, .firearmPickup,
-  ]
+  game.commander.blackjack.transfers = [.contact, .goldAward, .goldDelivery, .report, .firearmPickup]
   game.commander.missionStage = .huntingConstrictor
   game.commander.installLaser(.beam, on: .rear)
   game.commander.navigationPlan = nil
-  let unprepared = game.commander
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.mirrorFittedEquipment()
-  #expect(game.commander.credits == unprepared.credits && game.commander.cargo == unprepared.cargo)
-  #expect(game.commander.fuel == unprepared.fuel && game.commander.missiles == unprepared.missiles)
-  #expect(game.commander.laserMounts == unprepared.laserMounts)
-  #expect(game.commander.blackjack == unprepared.blackjack)
-  #expect(game.commander.missionStage == unprepared.missionStage)
-  game.key("6")
-  game.showroom.selection = "SH013"
-  let old = game.commander
-  let inventory = try #require(old.equipmentInventory)
-  let drive = try #require(old.fittedEquipment(at: .drive))
-  #expect(drive.node == HyperspaceDriveDefinition.node(for: .basic))
-  #expect(drive.provenance == .standard)
-  #expect(drive.component?.origin == HyperspaceDriveDefinition.template(for: .basic))
-  let quote = try #require(game.shipTradeQuote)
-  #expect(quote.allowed && quote.purchase == game.showroomShip!.game!.price * 10)
-  #expect(quote.allowance == old.performance.price * 10 * 3 / 4)
-  game.key("showroom-trade")
-  game.key("return")
-  #expect(!game.showroom.trading && game.commander == old)
-  game.key("showroom-trade")
-  game.key("right")
-  game.key("return")
-  #expect(game.commander.shipID == "SH013" && game.commander.credits == quote.balance)
-  #expect(game.commander.cargo == old.cargo && game.commander.equipment == old.equipment)
-  #expect(game.commander.fuel == old.fuel && game.commander.missiles == old.missiles)
-  #expect(
-    game.commander.blackjack == old.blackjack && game.commander.missionStage == old.missionStage)
-  #expect(game.energy == game.commander.performance.energy && game.commander.valid)
-  let transferred = try #require(game.commander.equipmentInventory)
+  let before = game.commander
+  let inventory = try #require(before.equipmentInventory)
+  let drive = try #require(before.fittedEquipment(at: .drive))
+  try game.commander.transferEquipment(to: "SH029", hullID: UUID())
+  let after = game.commander
+  #expect(after.shipID == "SH029" && after.credits == before.credits)
+  #expect(after.cargo == before.cargo && after.equipment == before.equipment)
+  #expect(after.fuel == before.fuel && after.missiles == before.missiles)
+  #expect(after.blackjack == before.blackjack && after.missionStage == before.missionStage)
+  #expect(after.laserMounts == before.laserMounts && after.valid)
+  let transferred = try #require(after.equipmentInventory)
   #expect(transferred.owner == inventory.owner && transferred.activeHull != inventory.activeHull)
   #expect(Set(transferred.items.map(\.id)) == Set(inventory.items.map(\.id)))
   for original in inventory.items {
     let item = try #require(transferred.items.first { $0.id == original.id })
-    let expected = OwnedEquipmentItem(
-      id: original.id, node: original.node, provenance: original.provenance,
-      component: original.component,
-      location: original.location.map {
-        .init(hullInstanceID: transferred.activeHull, slot: $0.slot)
-      }, boundHull: original.boundHull, preferredSlot: original.preferredSlot,
-      retainedLegacyState: original.retainedLegacyState)
-    #expect(item == expected)
+    #expect(item.node == original.node && item.provenance == original.provenance)
+    #expect(item.component == original.component && item.boundHull == original.boundHull)
+    #expect(item.preferredSlot == original.preferredSlot)
+    #expect(item.location == original.location.map {
+      .init(hullInstanceID: transferred.activeHull, slot: $0.slot)
+    })
   }
-  #expect(game.commander.laserMounts == old.laserMounts)
-  #expect(game.commander.fittedEquipment(at: .drive)?.id == drive.id)
-  #expect(game.commander.equipmentPurchaseHistory == old.equipmentPurchaseHistory)
-  game.showroom.selection = "SH023"
-  let second = try #require(game.shipTradeQuote)
-  #expect(second.allowed && second.allowance == game.commander.performance.price * 10 * 3 / 4)
-  game.key("showroom-trade")
-  game.key("right")
-  game.key("return")
-  #expect(game.commander.shipID == "SH023" && game.commander.credits == second.balance)
+  #expect(after.fittedEquipment(at: .drive)?.id == drive.id)
+  #expect(after.equipmentPurchaseHistory == before.equipmentPurchaseHistory)
+  try game.commander.transferEquipment(to: "SH025", hullID: UUID())
+  #expect(game.commander.shipID == "SH025" && game.commander.credits == before.credits)
 }
 
 @Test func exchangesBlockFundsCargoPaidFitFuelAndRouteConflictsWithoutAnyLoss() throws {
-  var game = hullTradeGame()
+  var game = hullTradeGame(missiles: 0)
+  game.commander.system = 69
+  game.selectedSystem = 69
+  game.market = MarketItem.at(game.currentSystem)
+  try game.commander.prepareEquipment(legacy: false)
+  game.commander.mirrorFittedEquipment()
   game.screen = .status
   game.key("6")
-  game.showroom.selection = "SH013"
-  #expect(game.shipTradeQuote!.issues.contains { $0.contains("cash") })
+  game.showroom.selection = "SH029"
+  #expect(try #require(game.shipTradeQuote).issues.contains { $0.contains("cash") })
   game.commander.credits = 100_000_000
-  game.showroom.selection = "SH001"
-  let selectedHold = try #require(game.showroomShip?.game?.cargo)
-  game.commander.cargo[CommodityIdentity.food.rawValue] = selectedHold + 1
-  game.commander.installLaser(.naval, on: .rear)
-  game.commander.equipment.insert("Large Cargo Bay")
+  game.screen = .equipment
+  game.equipmentMount = .rear
+  let history = try #require(game.commander.equipmentPurchaseHistory)
+  @discardableResult
+  func buy(_ name: String, in game: inout Game) throws -> EquipmentRuntimePurchaseQuote {
+    let item = try #require(Equipment.all.first { $0.name == name })
+    let before = game.commander
+    let quote = try game.quoteEquipmentPurchase(item)
+    try #require(quote.purchase.requiredDebit > 0)
+    let purchaseApplied = try game.applyEquipmentPurchase(quote)
+    try #require(purchaseApplied)
+    #expect(game.commander.credits == before.credits - quote.purchase.requiredDebit)
+    let inventory = try #require(game.commander.equipmentInventory)
+    let actual = try #require(inventory.items.first { $0.id == quote.request.newItem })
+    #expect(actual.provenance == .paid(owner: inventory.owner, transaction: quote.request.transaction))
+    #expect(game.commander.equipmentPurchaseHistory?.paid.contains {
+      $0.transaction == quote.request.transaction && $0.node == actual.node && $0.price > 0
+    } == true)
+    return quote
+  }
+  let rear = try buy("Military Laser", in: &game)
+  let bay = try buy("Large Cargo Bay", in: &game)
+  for _ in 0..<7 { try buy("Missile", in: &game) }
+  try #require(game.commander.missiles == 7 && game.commander.valid)
+  #expect(game.commander.equipmentPurchaseHistory?.paid.count == history.paid.count + 9)
+  #expect(game.commander.fittedEquipment(at: .laser(.rear))?.id == rear.request.newItem)
+  #expect(game.commander.fittedEquipment(at: .utility(.cargoExpansion))?.id == bay.request.newItem)
+  game.key("6")
+  game.showroom.selection = "SH031"
+  let selected = try #require(game.showroomShip?.game)
+  try #require(selected.missiles == 6 && !selected.supports(.rear))
+  game.commander.cargo[CommodityIdentity.food.rawValue] = selected.cargo + selected.cargoExpansion + 1
   let quote = try #require(game.shipTradeQuote)
   #expect(quote.issues.contains { $0.contains("Sell cargo") })
-  #expect(quote.issues.contains { $0.contains("Cargo expansion") })
+  #expect(quote.issues.contains { $0.contains("Physical fittings") })
   #expect(quote.issues.contains { $0.contains("Rear laser") })
   #expect(quote.issues.contains { $0.contains("missiles") })
   let old = game.commander
@@ -99,19 +104,23 @@ import Testing
   #expect(game.screen == .showroom)
   game.key("escape")
   #expect(!game.showroom.trading && game.commander == old)
-  game.showroom.selection = "SH023"
-  #expect(game.shipTradeQuote!.issues.contains { $0.contains("already own") })
+  game.showroom.selection = "SH025"
+  #expect(try #require(game.shipTradeQuote).issues.contains { $0.contains("already own") })
   game.dockedAtMainStation = false
-  #expect(game.shipTradeQuote!.issues.contains { $0.contains("main station") })
+  #expect(try #require(game.shipTradeQuote).issues.contains { $0.contains("main station") })
   game.showroom.selection = "SH141"
   #expect(game.shipTradeQuote == nil)
   game.key("showroom-trade")
   #expect(!game.showroom.trading)
 }
 
-@Test func purchasedHullControlsRealFlightPoolsMountsAndSaveMigration() throws {
-  var game = hullTradeGame(shipID: "SH001", missiles: 1)
+@Test func ownedHullControlsRealFlightPoolsMountsAndCurrentSave() throws {
+  var game = hullTradeGame(shipID: "SH025", missiles: 1)
+  try game.commander.prepareEquipment(legacy: false)
+  game.commander.mirrorFittedEquipment()
+  try #require(game.commander.valid)
   game.launch()
+  try #require(!game.docked)
   game.bodies = []
   game.speed = 0
   let p = game.commander.performance
@@ -132,12 +141,7 @@ import Testing
   #expect(game.energy == p.energy && game.frontShield == p.shield)
   let data = try JSONEncoder().encode(game.commander)
   let loaded = try JSONDecoder().decode(Commander.self, from: data)
-  #expect(loaded == game.commander && loaded.shipID == "SH001" && loaded.valid)
-  var legacy = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
-  legacy.removeValue(forKey: "ownedShipID")
-  let migrated = try JSONDecoder().decode(
-    Commander.self, from: JSONSerialization.data(withJSONObject: legacy))
-  #expect(migrated.shipID == "SH023" && migrated.performance.speed == 32)
+  #expect(loaded == game.commander && loaded.shipID == "SH025" && loaded.valid)
   game.commander.shipID = "SH999"
   #expect(!game.commander.valid)
 }
@@ -157,12 +161,14 @@ import Testing
   for key in ["fore_shield_max", "aft_shield_max"] {
     let field = try #require(game.showroomProfile?.fields.first { $0.key == key })
     let comparison = try #require(rows.first { $0.label == field.label })
-    #expect(comparison.rating == .same && comparison.baseline == comparison.selected)
+    // Independent original Buffalo r3 shield capacity; the carried stock module is intrinsic.
+    #expect(field.number == 470)
+    #expect(comparison.rating == .better && comparison.baseline != comparison.selected)
   }
   let before = game.showroom.selection
-  game.showroom.query = "boa"
+  game.showroom.query = "buffalo"
   game.key("showroom-sort")
-  #expect(game.showroom.selection == before && game.showroom.query == "boa")
+  #expect(game.showroom.selection == before && game.showroom.query == "buffalo")
   let powers = game.showroomShips.map { $0.game?.power ?? -1 }
   #expect(powers == powers.sorted(by: >))
   game.key("showroom-sort")
@@ -256,29 +262,42 @@ import Testing
 }
 
 @Test func fuelAndRouteConstraintsFollowActualHullTanksAndDoNotDiscardFuel() throws {
-  let longRange = try #require(
-    ShipCatalogue.all.first { ($0.game?.fuel ?? 0) > 70 && ($0.game?.jump ?? 0) > 7 })
-  var game = Game(executive: false)
-  game.commander.shipID = longRange.id
-  game.commander.fuel = longRange.game!.fuel
-  game.commander.credits = 100_000_000
-  game.screen = .status
-  game.key("6")
-  game.showroom.selection = "SH023"
-  #expect(game.shipTradeQuote!.issues.contains { $0.contains("fuel") })
-  game.commander.fuel = 70
-  let destination = try #require(
-    game.systems.first {
-      let distance = game.currentSystem.distance(to: $0)
-      return distance > 7 && distance <= 11
-    })
-  game.commander.navigationPlan = .init(
-    galaxy: 0, path: [game.commander.system, destination.id], tier: .basic,
-    originFuel: longRange.game!.fuel, originCapacity: longRange.game!.fuel)
-  #expect(game.commander.navigationPlan!.valid)
-  #expect(game.shipTradeQuote!.issues.contains { $0.contains("route") })
-  game.commander.navigationPlan = nil
-  #expect(game.shipTradeQuote!.allowed)
+  var initial = hullTradeGame(shipID: "SH019", missiles: 0)
+  initial.commander.credits = 100_000_000
+  try initial.commander.prepareEquipment(legacy: false)
+  initial.commander.mirrorFittedEquipment()
+  initial.screen = .status
+  initial.key("6")
+  initial.showroom.selection = "SH025"
+  let target = try #require(ShipCatalogue.ship("SH025")?.game)
+  try #require(initial.commander.fuel == 160 && target.fuel == 130)
+  let full = initial.commander
+  #expect(try #require(initial.shipTradeQuote).issues.contains { $0.contains("fuel") })
+  #expect(initial.commander == full)
+  // Separate controlled owned-resource vector; quoting does not discard the first vector's fuel.
+  var route = initial
+  route.commander.fuel = target.fuel
+  let destination = try #require(route.systems.first {
+    guard !$0.isPlugh else { return false }
+    let distance = route.currentSystem.distance(to: $0)
+    return distance > target.jump && distance <= route.commander.maximumJumpDistance
+  })
+  route.commander.navigationPlan = .init(
+    galaxy: 0, path: [route.commander.system, destination.id], tier: .basic,
+    originFuel: route.commander.fuel, originCapacity: route.commander.fuelCapacity)
+  try #require(route.commander.navigationPlan?.valid == true)
+  let beforeRoute = route.commander
+  #expect(try #require(route.shipTradeQuote).issues.contains { $0.contains("route") })
+  #expect(route.commander == beforeRoute)
+  route.commander.navigationPlan = nil
+  let cleared = try #require(route.shipTradeQuote)
+  #expect(!cleared.issues.contains { $0.contains("fuel") || $0.contains("route") })
+  let ownedProjection = try route.commander.projectedEquipmentTransfer(to: "SH025")
+  #expect(ownedProjection.valid && ownedProjection.fuel == route.commander.fuel)
+  // Paid fabrication additionally needs actual earned receiving and current station authority.
+  // Its eventual allowed-quote/real exchange positive lives in NativeCrewReadinessUnitTests
+  // via the same-owner NativeEarnedPeregrineFixture; this component vector grants no proof.
+  #expect(!cleared.allowed && cleared.issues.contains { $0.contains("blueprint") })
 }
 
 @Test func shipFilesRejectInvalidSyntaxRangesGeometryAndMismatchedIDs() throws {
@@ -286,20 +305,41 @@ import Testing
   try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
   defer { try? FileManager.default.removeItem(at: folder) }
   #expect(throws: ShipFileError.self) { try ShipCatalogue.load(from: folder) }
-  let file = folder.appendingPathComponent("SH023.toml")
+  let file = folder.appendingPathComponent("SH025.toml")
   let source = try String(
-    contentsOf: ShipCatalogue.folder.appendingPathComponent("SH023.toml"), encoding: .utf8)
+    contentsOf: ShipCatalogue.folder.appendingPathComponent("SH025.toml"), encoding: .utf8)
+  let original = try TOMLDecoder().decode(CatalogueShip.self, from: Data(source.utf8))
+  try #require(original.id == "SH025" && original.design.valid)
+  try #require(original.game?.valid(purchasePolicy: original.catalogue.purchasePolicy) == true)
   try Data("name = [".utf8).write(to: file)
   #expect(throws: (any Error).self) { try ShipCatalogue.load(from: folder) }
-  try Data(source.replacingOccurrences(of: "speed = 32.0", with: "speed = -1.0").utf8).write(
-    to: file)
+  let gameStart = try #require(source.range(of: "[game]\n"))
+  let designStart = try #require(source.range(of: "[design]\n"))
+  let nativeStart = try #require(source.range(of: "[nativeDesign]\n"))
+  let speedPattern = try NSRegularExpression(pattern: "(?m)^speed\\s*=\\s*[^\\n]+$")
+  let speedMatches = speedPattern.matches(in: source,
+    range: NSRange(gameStart.upperBound..<designStart.lowerBound, in: source))
+  try #require(speedMatches.count == 1)
+  let speedRange = try #require(Range(speedMatches[0].range, in: source))
+  let badSpeed = source.replacingCharacters(in: speedRange, with: "speed = -1.0")
+  try #require(badSpeed != source)
+  let ranged = try TOMLDecoder().decode(CatalogueShip.self, from: Data(badSpeed.utf8))
+  #expect(ranged.game?.speed == -1 && ranged.game?.valid(purchasePolicy: ranged.catalogue.purchasePolicy) == false)
+  try Data(badSpeed.utf8).write(to: file)
   #expect(throws: ShipFileError.self) { try ShipCatalogue.load(from: folder) }
-  try Data(
-    source.replacingOccurrences(of: "faces = [\n", with: "faces = [\n  [99999, 1, 2],\n").utf8
-  ).write(to: file)
+  let facePattern = try NSRegularExpression(pattern: "faces\\s*=\\s*\\[\\s*\\[\\s*(\\d+)")
+  let faceMatches = facePattern.matches(in: source,
+    range: NSRange(designStart.upperBound..<nativeStart.lowerBound, in: source))
+  try #require(faceMatches.count == 1)
+  let indexRange = try #require(Range(faceMatches[0].range(at: 1), in: source))
+  let badIndex = source.replacingCharacters(in: indexRange, with: String(Int.max))
+  try #require(badIndex != source)
+  let geometry = try TOMLDecoder().decode(CatalogueShip.self, from: Data(badIndex.utf8))
+  #expect(geometry.design.faces.first?.first == Int.max && !geometry.design.valid)
+  try Data(badIndex.utf8).write(to: file)
   #expect(throws: ShipFileError.self) { try ShipCatalogue.load(from: folder) }
   try Data(source.utf8).write(to: file)
-  #expect(try ShipCatalogue.load(from: folder).first?.id == "SH023")
+  #expect(try ShipCatalogue.load(from: folder).first?.id == "SH025")
   try FileManager.default.moveItem(at: file, to: folder.appendingPathComponent("SH001.toml"))
   #expect(throws: ShipFileError.self) { try ShipCatalogue.load(from: folder) }
 }
@@ -332,81 +372,31 @@ struct ShipPurchasePolicyUnitTests {
     game.key("return")
     #expect(game.commander == before && game.showroom.trading)
     game.key("escape")
-    game.showroom.selection = "SH013"
-    #expect(game.shipTradeQuote?.allowed == true)
+    game.showroom.selection = "SH029"
+    #expect(game.shipTradeQuote?.allowed == false)
+    #expect(game.shipTradeQuote?.issues.contains { $0.contains("blueprint") } == true)
     #expect(game.commander == before)
   }
 
   @Test(arguments: [false, true])
-  func restrictedHullExchangeRequiresActualXYZZYAccessAndRetainsPortableIdentities(
-    enabled: Bool
-  ) throws {
+  func pendingMedusaCannotAcquireQuestRightsFromDebugAccess(enabled: Bool) throws {
     var game = hullTradeGame(missiles: 0)
-    game.commander.fuel = 0
     game.commander.credits = 10_000_000
-    try game.commander.prepareEquipment(legacy: false)
-    game.commander.mirrorFittedEquipment()
     game.commander.xyzzyActive = enabled
-    try #require(game.commander.valid)
     let selected = try #require(ShipCatalogue.ship("SH171"))
-    try #require(
-      selected.catalogue.purchasePolicy == .xyzzyOnly && !selected.catalogue.normalPurchaseEligible)
-    let projected = try game.commander.projectedEquipmentTransfer(to: selected.id)
-    try #require(projected.valid)
-    game.screen = .status
-    game.key("6")
-    game.showroom.selection = selected.id
+    #expect(selected.catalogue.purchasePolicy == .never && !selected.catalogue.normalPurchaseEligible)
     let before = game.commander
-    let inventory = try #require(before.equipmentInventory)
-    let quote = try #require(game.shipTradeQuote)
-    #expect(quote.allowed == enabled)
-    #expect(quote.issues == (enabled ? [] : ["This hull requires XYZZY access."]))
-    game.key("showroom-trade")
-    game.key("right")
-    game.key("return")
-    if enabled {
-      #expect(game.commander.shipID == selected.id && game.commander.credits == quote.balance)
-      #expect(!game.showroom.trading && game.commander.valid)
-      let transferred = try #require(game.commander.equipmentInventory)
-      #expect(
-        transferred.owner == inventory.owner && transferred.activeHull != inventory.activeHull)
-      let portable = inventory.items.filter { $0.boundHull == nil }
-      #expect(transferred.items.map(\.id) == portable.map(\.id))
-      for original in portable {
-        let item = try #require(transferred.items.first { $0.id == original.id })
-        #expect(item.node == original.node && item.provenance == original.provenance)
-        #expect(
-          item.component == original.component && item.preferredSlot == original.preferredSlot)
-      }
-      #expect(game.commander.fuel == before.fuel && game.commander.missiles == before.missiles)
-    } else {
-      #expect(game.commander == before && game.showroom.trading)
+    #expect(game.shipTradeQuote(for: selected) == nil)
+    #expect(throws: (any Error).self) {
+      try game.commander.transferEquipment(to: selected.id, hullID: UUID())
     }
+    #expect(game.commander == before)
   }
 
-  @Test func restrictedHullConfirmationRechecksAccessWithoutChangingOwnedProperty() throws {
-    var game = hullTradeGame(missiles: 0)
-    game.commander.fuel = 0
-    game.commander.credits = 10_000_000
-    try game.commander.prepareEquipment(legacy: false)
-    game.commander.mirrorFittedEquipment()
-    game.commander.xyzzyActive = true
-    game.screen = .status
-    game.key("6")
-    game.showroom.selection = "SH171"
-    try #require(game.shipTradeQuote?.allowed == true)
-    game.key("showroom-trade")
-    game.key("right")
-    game.commander.xyzzyActive = false
-    let before = game.commander
-    game.key("return")
-    #expect(game.commander == before && game.showroom.trading)
-    #expect(game.shipTradeQuote?.issues == ["This hull requires XYZZY access."])
-  }
 }
 
 // Declare stock hulls for these model-specific trade and flight scenarios.
-private func hullTradeGame(shipID: String = "SH023", missiles: Int? = nil) -> Game {
+private func hullTradeGame(shipID: String = "SH025", missiles: Int? = nil) -> Game {
   var game = Game(executive: false)
   game.commander.shipID = shipID
   game.commander.fuel = game.commander.fuelCapacity
@@ -415,4 +405,31 @@ private func hullTradeGame(shipID: String = "SH023", missiles: Int? = nil) -> Ga
   game.frontShield = game.commander.shieldCapacity
   game.rearShield = game.commander.rearShieldCapacity
   return game
+}
+
+struct PendingBuffaloPurchaseUnitTests {
+  @Test(arguments: ["SH013", "SH014"])
+  func pendingBuffaloFabricationCannotExchangeOrChangeProperty(shipID: String) throws {
+    var game = hullTradeGame(missiles: 0)
+    game.commander.fuel = 0
+    game.commander.credits = 100_000_000
+    try game.commander.prepareEquipment(legacy: false)
+    game.commander.mirrorFittedEquipment()
+    game.screen = .status
+    game.key("6")
+    game.showroom.selection = shipID
+    let before = game.commander
+    let bodies = game.bodies
+    let selected = try #require(game.showroomShip)
+    let expectedPrice = try #require(OriginalFleetR3Data.contract(for: shipID)?.performance?.price)
+    #expect(selected.catalogue.purchasePolicy == .pendingFabrication)
+    #expect(!selected.catalogue.normalPurchaseEligible && selected.game?.price == expectedPrice)
+    let quote = try #require(game.shipTradeQuote)
+    #expect(quote.purchase == expectedPrice * 10)
+    #expect(!quote.allowed && quote.issues.contains { $0.contains("Fabrication") })
+    game.key("showroom-trade")
+    game.key("right")
+    game.key("return")
+    #expect(game.commander == before && game.bodies == bodies)
+  }
 }

@@ -1,0 +1,38 @@
+{
+  "status": "CURRENT_COMPOSITION_FIRST_EXACT_ROOT_RESERVED_DECLARED_NATIVE_BINDING_BEFORE_MUTATION",
+  "beforeCommit": "dca0f4aad5d8f4fdd2f87f613b0dcf6b7c0ea899",
+  "sourceFirst": {
+    "path": "/tmp/elite-g4-current-npc-declared-binding-FIRST/FIRST.json",
+    "bytes": 3575,
+    "sha256": "dcd9e828e73e72822508e8479a7095b5d11ef472a7be6f41838148779efcc9f0"
+  },
+  "testScopeFirst": {
+    "path": "/tmp/elite-g4-current-npc-declared-binding-FIRST/test-scope-FIRST.json",
+    "bytes": 2044,
+    "sha256": "cc07f762b7af1254de40d3ea43efe4bbe12160ee1156a1b962afc5c083ffa229"
+  },
+  "currentTargets": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36371,
+      "sha256": "e7fed0a7b01ee9c4d51b712f8f50245cc1a26fca5a26ea5ec63b191c5a7cad87"
+    },
+    {
+      "path": "Sources/L337Core/StationAutoDefence.swift",
+      "bytes": 40956,
+      "sha256": "046d6dba54f0d6469c767333b347b192d649b99e8bc6ca4a68584dd743783206"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 39278,
+      "sha256": "5aa65678ae56c28e88316b409d9fb7a98f67bd479dbf61f799fc23a1dd6bc76f"
+    }
+  ],
+  "readonlyCurrentStationTest": {
+    "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+    "bytes": 162476,
+    "sha256": "efdca609e257b8b2ff1ed445b2d2b42a5181f4f457258f2e861ff340e448abfd"
+  },
+  "currentDelta": "Only own reserved dca0 P2 grouping differs in readonly station test from immutable5a FIRST; inverse correction restores exact original5a blob. Other5 original pins current exact. All6 immutable source FIRST pins verified.",
+  "scope": "Actual current declared nativeHull must match actual hull when nonnil; nil declaration preserves existing per-ID role tags. Only predicate hull param/conditional guard/two callers and one new NPC31 police capture/cold-validity/cull-ACK-rebind method. No codec/owner/resource/other old test changes."
+}

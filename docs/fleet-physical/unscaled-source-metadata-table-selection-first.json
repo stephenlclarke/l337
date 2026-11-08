@@ -1,0 +1,14 @@
+{
+  "status": "CORRECTED_EXPLICIT_TABLE_SELECTION_BEFORE_METADATA_ONLY_PASS",
+  "maximumSources": 82,
+  "maximumHeaderParses": 82,
+  "maximumMaterialDeclarationParses": 164,
+  "sourcePins": "unscaled-source-metadata-first.json",
+  "allowedTables": [
+    "design",
+    "nativeDesign"
+  ],
+  "coordinateConversions": 0,
+  "spanAreaMassTensorEvaluations": 0,
+  "nativeExecutions": 0
+}

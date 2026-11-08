@@ -127,7 +127,7 @@ struct ScriptProviderPersistenceTests {
     state.receipts.insert(.manifest)
     #expect(!state.valid)
     var commander = Commander()
-    try commander.prepareEquipment()
+    try commander.prepareEquipment(legacy: false)
     state = ProviderContractFixture.state()
     state.crew = ProviderContractFixture.crew(state)
     state.receipts.insert(.care)

@@ -1,0 +1,980 @@
+{
+  "status": "ONE_BOUNDED_SOURCE_AUTHORING_PASS_NO_NATIVE_OR_ACTIVATION",
+  "roleMapSHA256": "c70c7d725480d8dd346a5b13799c53b966a50fe32312071cd808f8a4f94baf80",
+  "authoringSourceSHA256": "70728675da99b0652b03eda9f1e777c6b24dfeae706337deb984e70f297ee9fd",
+  "results": [
+    {
+      "id": "SH036",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH036.json",
+      "sha256": "c32a65aaa57bf82dc3a47e3e54820fe6c0d6fe9fd3da7c772da889d5ecf372b1",
+      "bytes": 32044,
+      "dryMassKg": 64051,
+      "operations": {
+        "coordinateConversions": 5370,
+        "faceIndexChecks": 10404,
+        "triangleAreaEvaluations": 3468,
+        "analyticMomentEvaluations": 3468,
+        "quadratureMomentEvaluations": 10404,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH041",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH041.json",
+      "sha256": "fc24f453e5fa80317db52c61ffff755f1f7cd503196bd34b8a71f019edd14575",
+      "bytes": 30640,
+      "dryMassKg": 23775,
+      "operations": {
+        "coordinateConversions": 6516,
+        "faceIndexChecks": 12708,
+        "triangleAreaEvaluations": 4236,
+        "analyticMomentEvaluations": 4236,
+        "quadratureMomentEvaluations": 12708,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH042",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH042.json",
+      "sha256": "f113d1c0b723760cb7755ae51204d89e125bb5c3f8d1cf1f0070eaf96d54fa75",
+      "bytes": 36452,
+      "dryMassKg": 26588,
+      "operations": {
+        "coordinateConversions": 5988,
+        "faceIndexChecks": 11592,
+        "triangleAreaEvaluations": 3864,
+        "analyticMomentEvaluations": 3864,
+        "quadratureMomentEvaluations": 11592,
+        "hardwareAllocations": 9,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH043",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH043.json",
+      "sha256": "8cf7dc3345f41175856ef1a571e7aebc709901fd9f186b4e454b0e81e7ce90a5",
+      "bytes": 34351,
+      "dryMassKg": 295038,
+      "operations": {
+        "coordinateConversions": 6000,
+        "faceIndexChecks": 11628,
+        "triangleAreaEvaluations": 3876,
+        "analyticMomentEvaluations": 3876,
+        "quadratureMomentEvaluations": 11628,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH044",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH044.json",
+      "sha256": "ced88e65a0c1d24d861578bb924de0998aba0d03d696afbd5b3f8224d2f11a4d",
+      "bytes": 35403,
+      "dryMassKg": 47408,
+      "operations": {
+        "coordinateConversions": 5466,
+        "faceIndexChecks": 10548,
+        "triangleAreaEvaluations": 3516,
+        "analyticMomentEvaluations": 3516,
+        "quadratureMomentEvaluations": 10548,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH045",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH045.json",
+      "sha256": "cc3c79b8e83df2db5d3fff549ebefbe5a751ec7f6a6cdb0ff7605050abd1420c",
+      "bytes": 30821,
+      "dryMassKg": 84357,
+      "operations": {
+        "coordinateConversions": 3672,
+        "faceIndexChecks": 7020,
+        "triangleAreaEvaluations": 2340,
+        "analyticMomentEvaluations": 2340,
+        "quadratureMomentEvaluations": 7020,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH046",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH046.json",
+      "sha256": "ceedb96a59a0c93e86658dff9f3e5e92720eb9fc256c6f481f820cf917397ffb",
+      "bytes": 34316,
+      "dryMassKg": 51822,
+      "operations": {
+        "coordinateConversions": 4884,
+        "faceIndexChecks": 9396,
+        "triangleAreaEvaluations": 3132,
+        "analyticMomentEvaluations": 3132,
+        "quadratureMomentEvaluations": 9396,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH047",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH047.json",
+      "sha256": "9fdc76b3008800424a93fea132abcc725884437a826ba027f7d5dfbb2529b043",
+      "bytes": 35400,
+      "dryMassKg": 47068,
+      "operations": {
+        "coordinateConversions": 7752,
+        "faceIndexChecks": 15120,
+        "triangleAreaEvaluations": 5040,
+        "analyticMomentEvaluations": 5040,
+        "quadratureMomentEvaluations": 15120,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH054",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH054.json",
+      "sha256": "c2a250a9eaaffe6776ef3bfa8447ab9e9c96ddf83cdeb1f1b9098ff2e65208ef",
+      "bytes": 36356,
+      "dryMassKg": 19880,
+      "operations": {
+        "coordinateConversions": 7122,
+        "faceIndexChecks": 13860,
+        "triangleAreaEvaluations": 4620,
+        "analyticMomentEvaluations": 4620,
+        "quadratureMomentEvaluations": 13860,
+        "hardwareAllocations": 10,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH055",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH055.json",
+      "sha256": "aee0c5493ba99898321e3c883f1db848c145728cedfa7a142149ecf485aca723",
+      "bytes": 31258,
+      "dryMassKg": 34306,
+      "operations": {
+        "coordinateConversions": 6924,
+        "faceIndexChecks": 13512,
+        "triangleAreaEvaluations": 4504,
+        "analyticMomentEvaluations": 4504,
+        "quadratureMomentEvaluations": 13512,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH056",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH056.json",
+      "sha256": "46dfd0fdf73694925122c7b4f13da5c98efdd698e3df4e3ae17358ba65e406d9",
+      "bytes": 30685,
+      "dryMassKg": 21754,
+      "operations": {
+        "coordinateConversions": 3672,
+        "faceIndexChecks": 7020,
+        "triangleAreaEvaluations": 2340,
+        "analyticMomentEvaluations": 2340,
+        "quadratureMomentEvaluations": 7020,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH057",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH057.json",
+      "sha256": "60235d52f24576f85bb3eedb17e63af6d23659d29566d34dfed4cd3f7e5d06dd",
+      "bytes": 32520,
+      "dryMassKg": 13602,
+      "operations": {
+        "coordinateConversions": 4836,
+        "faceIndexChecks": 9324,
+        "triangleAreaEvaluations": 3108,
+        "analyticMomentEvaluations": 3108,
+        "quadratureMomentEvaluations": 9324,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH058",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH058.json",
+      "sha256": "3a45a010017b750f3eba59fcf486679328fdee5eca34bfb14b6ae2fec7baa104",
+      "bytes": 32707,
+      "dryMassKg": 113117,
+      "operations": {
+        "coordinateConversions": 6510,
+        "faceIndexChecks": 12672,
+        "triangleAreaEvaluations": 4224,
+        "analyticMomentEvaluations": 4224,
+        "quadratureMomentEvaluations": 12672,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH059",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH059.json",
+      "sha256": "942af82dc68ac189928080fcaf582569cc5f44661be1b629a2db53a0737e55ec",
+      "bytes": 29836,
+      "dryMassKg": 25117,
+      "operations": {
+        "coordinateConversions": 5928,
+        "faceIndexChecks": 11556,
+        "triangleAreaEvaluations": 3852,
+        "analyticMomentEvaluations": 3852,
+        "quadratureMomentEvaluations": 11556,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH062",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH062.json",
+      "sha256": "229b7639fa35a6612d84ebd7571be582c89f742ba18fc16d85887e6ebb73adba",
+      "bytes": 31921,
+      "dryMassKg": 114359,
+      "operations": {
+        "coordinateConversions": 5370,
+        "faceIndexChecks": 10404,
+        "triangleAreaEvaluations": 3468,
+        "analyticMomentEvaluations": 3468,
+        "quadratureMomentEvaluations": 10404,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH064",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH064.json",
+      "sha256": "60e354044e7fcbba7c340868f4d4977da4c777798a7eee0dd6d5b7e07b228349",
+      "bytes": 34231,
+      "dryMassKg": 137251,
+      "operations": {
+        "coordinateConversions": 4884,
+        "faceIndexChecks": 9396,
+        "triangleAreaEvaluations": 3132,
+        "analyticMomentEvaluations": 3132,
+        "quadratureMomentEvaluations": 9396,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH065",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH065.json",
+      "sha256": "3cbe06321892ef549e7664c4ab66bd91deca4562eb2d936d22163c9be36cd591",
+      "bytes": 34301,
+      "dryMassKg": 57471,
+      "operations": {
+        "coordinateConversions": 6360,
+        "faceIndexChecks": 12360,
+        "triangleAreaEvaluations": 4120,
+        "analyticMomentEvaluations": 4120,
+        "quadratureMomentEvaluations": 12360,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH068",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH068.json",
+      "sha256": "3281be54b432227dcdb00159dd93ec099f80a52a193d6c35e942683189925b36",
+      "bytes": 33855,
+      "dryMassKg": 33622,
+      "operations": {
+        "coordinateConversions": 9036,
+        "faceIndexChecks": 17736,
+        "triangleAreaEvaluations": 5912,
+        "analyticMomentEvaluations": 5912,
+        "quadratureMomentEvaluations": 17736,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH069",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH069.json",
+      "sha256": "44bf5ec89e29744029ce18bcc72ccd0b031e835c392a3f2371f9442126220506",
+      "bytes": 30657,
+      "dryMassKg": 28011,
+      "operations": {
+        "coordinateConversions": 3672,
+        "faceIndexChecks": 7020,
+        "triangleAreaEvaluations": 2340,
+        "analyticMomentEvaluations": 2340,
+        "quadratureMomentEvaluations": 7020,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH070",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH070.json",
+      "sha256": "ce10a7f8f5d16dfa700ec3890f4667010306683d3bdf38d066c261140b9ba345",
+      "bytes": 32453,
+      "dryMassKg": 33139,
+      "operations": {
+        "coordinateConversions": 3720,
+        "faceIndexChecks": 7092,
+        "triangleAreaEvaluations": 2364,
+        "analyticMomentEvaluations": 2364,
+        "quadratureMomentEvaluations": 7092,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH074",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH074.json",
+      "sha256": "c3956342ca0d080df0c32fa0ea24c56f5ada70985cc4e82c3adee6dc32fc9aa7",
+      "bytes": 34859,
+      "dryMassKg": 72768,
+      "operations": {
+        "coordinateConversions": 14004,
+        "faceIndexChecks": 27684,
+        "triangleAreaEvaluations": 9228,
+        "analyticMomentEvaluations": 9228,
+        "quadratureMomentEvaluations": 27684,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH075",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH075.json",
+      "sha256": "02d0e3a9747649377067b94b0282933a9af16f78f918d8567cd94cbe9ec8b282",
+      "bytes": 35728,
+      "dryMassKg": 88810,
+      "operations": {
+        "coordinateConversions": 14586,
+        "faceIndexChecks": 28836,
+        "triangleAreaEvaluations": 9612,
+        "analyticMomentEvaluations": 9612,
+        "quadratureMomentEvaluations": 28836,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH077",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH077.json",
+      "sha256": "c6b490088d15e9bf3bc4d3700b9f7fe97e6cf366efed74ff27bb868ae9d1b04f",
+      "bytes": 33299,
+      "dryMassKg": 85631,
+      "operations": {
+        "coordinateConversions": 5976,
+        "faceIndexChecks": 11592,
+        "triangleAreaEvaluations": 3864,
+        "analyticMomentEvaluations": 3864,
+        "quadratureMomentEvaluations": 11592,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH078",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH078.json",
+      "sha256": "7c1d1b23584d79f839880e4786fe92274709a2be6c097201adf9dc5592107009",
+      "bytes": 31963,
+      "dryMassKg": 50196,
+      "operations": {
+        "coordinateConversions": 7092,
+        "faceIndexChecks": 13860,
+        "triangleAreaEvaluations": 4620,
+        "analyticMomentEvaluations": 4620,
+        "quadratureMomentEvaluations": 13860,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH079",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH079.json",
+      "sha256": "9e8e535d93ddcdfd5e4d9b2f31b0a099de7bccf7452c0903915c49245dac02c8",
+      "bytes": 36778,
+      "dryMassKg": 178803,
+      "operations": {
+        "coordinateConversions": 3888,
+        "faceIndexChecks": 7344,
+        "triangleAreaEvaluations": 2448,
+        "analyticMomentEvaluations": 2448,
+        "quadratureMomentEvaluations": 7344,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH080",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH080.json",
+      "sha256": "37058a684deb956d934b69605485bc20f269e26aa850d99b9d8362f7e0f34d70",
+      "bytes": 39547,
+      "dryMassKg": 197841,
+      "operations": {
+        "coordinateConversions": 4518,
+        "faceIndexChecks": 8568,
+        "triangleAreaEvaluations": 2856,
+        "analyticMomentEvaluations": 2856,
+        "quadratureMomentEvaluations": 8568,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH081",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH081.json",
+      "sha256": "2dbd5e4563126ab862778bb98930932001a4096d503e00459931dfcb7ffcd2f4",
+      "bytes": 46121,
+      "dryMassKg": 187775,
+      "operations": {
+        "coordinateConversions": 8982,
+        "faceIndexChecks": 17460,
+        "triangleAreaEvaluations": 5820,
+        "analyticMomentEvaluations": 5820,
+        "quadratureMomentEvaluations": 17460,
+        "hardwareAllocations": 10,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH083",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH083.json",
+      "sha256": "76ae3537e9050a292aca093b9e3cdbeecac96d5cebc77456383a3cec5f2cb660",
+      "bytes": 32236,
+      "dryMassKg": 24721,
+      "operations": {
+        "coordinateConversions": 4836,
+        "faceIndexChecks": 9324,
+        "triangleAreaEvaluations": 3108,
+        "analyticMomentEvaluations": 3108,
+        "quadratureMomentEvaluations": 9324,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH084",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH084.json",
+      "sha256": "d2bd879d2b924f85e87f5d1e37fc524ab57001ce4cb8ab433057258225f48e36",
+      "bytes": 31048,
+      "dryMassKg": 50305,
+      "operations": {
+        "coordinateConversions": 4812,
+        "faceIndexChecks": 9288,
+        "triangleAreaEvaluations": 3096,
+        "analyticMomentEvaluations": 3096,
+        "quadratureMomentEvaluations": 9288,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH085",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH085.json",
+      "sha256": "9245c92c5e28b89c121da28a16619cc09ba2d4a7d45ce9e793efa2d488d11eb4",
+      "bytes": 32653,
+      "dryMassKg": 24443,
+      "operations": {
+        "coordinateConversions": 4836,
+        "faceIndexChecks": 9324,
+        "triangleAreaEvaluations": 3108,
+        "analyticMomentEvaluations": 3108,
+        "quadratureMomentEvaluations": 9324,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH091",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH091.json",
+      "sha256": "70e788982a0c7fb468ee835a913a122f5c7dec607e2bd3aef897e963fa0200e1",
+      "bytes": 32124,
+      "dryMassKg": 20633,
+      "operations": {
+        "coordinateConversions": 7206,
+        "faceIndexChecks": 14088,
+        "triangleAreaEvaluations": 4696,
+        "analyticMomentEvaluations": 4696,
+        "quadratureMomentEvaluations": 14088,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH093",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH093.json",
+      "sha256": "3a8575e843ab3ea8bf7e792c26852c247469ced469dc40cbc5017a75aaf17351",
+      "bytes": 33413,
+      "dryMassKg": 72102,
+      "operations": {
+        "coordinateConversions": 5418,
+        "faceIndexChecks": 10476,
+        "triangleAreaEvaluations": 3492,
+        "analyticMomentEvaluations": 3492,
+        "quadratureMomentEvaluations": 10476,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH101",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH101.json",
+      "sha256": "f56345014e3f31bfdc506ee3f0f7001489a66a2125761538f8ff9597cd37b46d",
+      "bytes": 31272,
+      "dryMassKg": 16567,
+      "operations": {
+        "coordinateConversions": 4788,
+        "faceIndexChecks": 9252,
+        "triangleAreaEvaluations": 3084,
+        "analyticMomentEvaluations": 3084,
+        "quadratureMomentEvaluations": 9252,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH109",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH109.json",
+      "sha256": "6813d411feb87d14e228400fcc254dd269cf07f284733a4998bb53b34acc6b4a",
+      "bytes": 30162,
+      "dryMassKg": 50041,
+      "operations": {
+        "coordinateConversions": 4764,
+        "faceIndexChecks": 9216,
+        "triangleAreaEvaluations": 3072,
+        "analyticMomentEvaluations": 3072,
+        "quadratureMomentEvaluations": 9216,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH110",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH110.json",
+      "sha256": "6233fa1dd2f6d046b74db0aac1c19fac3e3531d7fedbe7dd20419f5a4fb67a39",
+      "bytes": 29346,
+      "dryMassKg": 40293,
+      "operations": {
+        "coordinateConversions": 3648,
+        "faceIndexChecks": 6984,
+        "triangleAreaEvaluations": 2328,
+        "analyticMomentEvaluations": 2328,
+        "quadratureMomentEvaluations": 6984,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH111",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH111.json",
+      "sha256": "b11780ed56d800d266072a453d015ae4005de7d7e23895aebda58fb13ded1a51",
+      "bytes": 32063,
+      "dryMassKg": 26516,
+      "operations": {
+        "coordinateConversions": 4812,
+        "faceIndexChecks": 9288,
+        "triangleAreaEvaluations": 3096,
+        "analyticMomentEvaluations": 3096,
+        "quadratureMomentEvaluations": 9288,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH126",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH126.json",
+      "sha256": "957768f955490aa724a2862951e2ebcaa86b279b7c56db9ff0dfd0e3971bb6ae",
+      "bytes": 30160,
+      "dryMassKg": 50015,
+      "operations": {
+        "coordinateConversions": 4764,
+        "faceIndexChecks": 9216,
+        "triangleAreaEvaluations": 3072,
+        "analyticMomentEvaluations": 3072,
+        "quadratureMomentEvaluations": 9216,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH129",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH129.json",
+      "sha256": "503c854b0b4081561b590778d70e71e129d9dc950e73a4e702527996fe52ed2a",
+      "bytes": 34758,
+      "dryMassKg": 133323,
+      "operations": {
+        "coordinateConversions": 4908,
+        "faceIndexChecks": 9432,
+        "triangleAreaEvaluations": 3144,
+        "analyticMomentEvaluations": 3144,
+        "quadratureMomentEvaluations": 9432,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH130",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH130.json",
+      "sha256": "f1669515728857220c23bcec4de82303e0971040fc65dfa74855e0c0f3ef87a6",
+      "bytes": 38040,
+      "dryMassKg": 92530,
+      "operations": {
+        "coordinateConversions": 12918,
+        "faceIndexChecks": 25452,
+        "triangleAreaEvaluations": 8484,
+        "analyticMomentEvaluations": 8484,
+        "quadratureMomentEvaluations": 25452,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH131",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH131.json",
+      "sha256": "18574c138817aeac621940b4de018bf3811f721889b4b2fc4f8d2f91e24f7b79",
+      "bytes": 31571,
+      "dryMassKg": 114238,
+      "operations": {
+        "coordinateConversions": 4812,
+        "faceIndexChecks": 9288,
+        "triangleAreaEvaluations": 3096,
+        "analyticMomentEvaluations": 3096,
+        "quadratureMomentEvaluations": 9288,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH132",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH132.json",
+      "sha256": "490c02746613c885472063a9b903b8a8305300b5628a7dcb46d79e0b04c48354",
+      "bytes": 32126,
+      "dryMassKg": 127730,
+      "operations": {
+        "coordinateConversions": 4836,
+        "faceIndexChecks": 9324,
+        "triangleAreaEvaluations": 3108,
+        "analyticMomentEvaluations": 3108,
+        "quadratureMomentEvaluations": 9324,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH133",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH133.json",
+      "sha256": "cafdaef61aacaa28d58ac5e0cb229762d65ecd8a7bfd7835c7bec5d305066d33",
+      "bytes": 32444,
+      "dryMassKg": 143152,
+      "operations": {
+        "coordinateConversions": 4836,
+        "faceIndexChecks": 9324,
+        "triangleAreaEvaluations": 3108,
+        "analyticMomentEvaluations": 3108,
+        "quadratureMomentEvaluations": 9324,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH134",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH134.json",
+      "sha256": "2c5695791c0c708946e9f05ab03c2050cb7842b63b9dcad9793151de4c7690b7",
+      "bytes": 32001,
+      "dryMassKg": 151862,
+      "operations": {
+        "coordinateConversions": 4836,
+        "faceIndexChecks": 9324,
+        "triangleAreaEvaluations": 3108,
+        "analyticMomentEvaluations": 3108,
+        "quadratureMomentEvaluations": 9324,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH135",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH135.json",
+      "sha256": "051ce66f1250342d1a796d7bcd2c491f935fdeb76dc0aa7c00c5bbaa2e014025",
+      "bytes": 30478,
+      "dryMassKg": 54624,
+      "operations": {
+        "coordinateConversions": 5346,
+        "faceIndexChecks": 10368,
+        "triangleAreaEvaluations": 3456,
+        "analyticMomentEvaluations": 3456,
+        "quadratureMomentEvaluations": 10368,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH140",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH140.json",
+      "sha256": "864b42d09ba3ce364ff0e83ba14ca0b06e7fd6611041554d46e9fb8b446b381e",
+      "bytes": 30783,
+      "dryMassKg": 26022,
+      "operations": {
+        "coordinateConversions": 4788,
+        "faceIndexChecks": 9252,
+        "triangleAreaEvaluations": 3084,
+        "analyticMomentEvaluations": 3084,
+        "quadratureMomentEvaluations": 9252,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH144",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH144.json",
+      "sha256": "6bdde2f0777e44ed0600fc0e89145ef46eff9db20413a1eb06e04e4517454f4f",
+      "bytes": 31544,
+      "dryMassKg": 39712,
+      "operations": {
+        "coordinateConversions": 4812,
+        "faceIndexChecks": 9288,
+        "triangleAreaEvaluations": 3096,
+        "analyticMomentEvaluations": 3096,
+        "quadratureMomentEvaluations": 9288,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH145",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH145.json",
+      "sha256": "ed850d5989ee8e231e7f057cc4b2b99e78ece28fb3f7485b18de56a5b16a918e",
+      "bytes": 28649,
+      "dryMassKg": 20783,
+      "operations": {
+        "coordinateConversions": 3624,
+        "faceIndexChecks": 6948,
+        "triangleAreaEvaluations": 2316,
+        "analyticMomentEvaluations": 2316,
+        "quadratureMomentEvaluations": 6948,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH146",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH146.json",
+      "sha256": "f5e954f9a6063449dcb8d2c31955876ef3e3ab78756619f67134aa3638da102e",
+      "bytes": 31110,
+      "dryMassKg": 23622,
+      "operations": {
+        "coordinateConversions": 4788,
+        "faceIndexChecks": 9252,
+        "triangleAreaEvaluations": 3084,
+        "analyticMomentEvaluations": 3084,
+        "quadratureMomentEvaluations": 9252,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    },
+    {
+      "id": "SH147",
+      "status": "AUTHORED_SOURCE_BUDGET",
+      "file": "calculated-records/SH147.json",
+      "sha256": "f392487ad2c5d5d6c9907bf3122823e0569eaa5b1c6fb842de7825696215c728",
+      "bytes": 29544,
+      "dryMassKg": 24869,
+      "operations": {
+        "coordinateConversions": 5928,
+        "faceIndexChecks": 11556,
+        "triangleAreaEvaluations": 3852,
+        "analyticMomentEvaluations": 3852,
+        "quadratureMomentEvaluations": 11556,
+        "hardwareAllocations": 8,
+        "sourceParses": 1,
+        "resultRecords": 1
+      }
+    }
+  ],
+  "used": {
+    "coordinateConversions": 289044,
+    "faceIndexChecks": 560976,
+    "triangleAreaEvaluations": 186992,
+    "analyticMomentEvaluations": 186992,
+    "quadratureMomentEvaluations": 560976,
+    "hardwareAllocations": 397,
+    "sourceParses": 49,
+    "resultRecords": 49
+  },
+  "caps": {
+    "coordinateConversions": 289044,
+    "faceIndexChecks": 560976,
+    "triangleAreaEvaluations": 186992,
+    "analyticMomentEvaluations": 186992,
+    "quadratureMomentEvaluations": 560976,
+    "hardwareAllocations": 397,
+    "sourceParses": 49,
+    "resultRecords": 49
+  },
+  "unresolvedSourceMaps": [
+    {
+      "id": "SH112",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-components.json",
+      "componentSHA256": "8e92b8b5b65efa8bbd8544e7270d980c9d4b39d2033ca1e32a39a4b652d10bc3"
+    },
+    {
+      "id": "SH113",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-components.json",
+      "componentSHA256": "47a627f4f7e90e3bf639b346bdbf4cf2944b97124cd71b6a0d17ee1bf2d3eabb"
+    },
+    {
+      "id": "SH114",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-components.json",
+      "componentSHA256": "f71459dc1dda6040a8014bd8dc9426e6a618bb3093c27b899ab041aaee606e51"
+    },
+    {
+      "id": "SH115",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-components.json",
+      "componentSHA256": "ab757c36e7dc8d09fba3bf129cf670fad4db02b11984ea282ccdd50d4aa422ab"
+    },
+    {
+      "id": "SH116",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-components.json",
+      "componentSHA256": "efe5e0d62c7da1368080cabc2d03946d7a455ed265ffbde6eca04703cd3edc6a"
+    },
+    {
+      "id": "SH117",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-components.json",
+      "componentSHA256": "135d71d900fa087677ebbeeb5a03b9496a7888f89339aefb8209d69ebb92af64"
+    },
+    {
+      "id": "SH118",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-components.json",
+      "componentSHA256": "93637233a52a586243e7f998c435e12a2d01a9d0f1ea2b3d112ee05cd1272820"
+    },
+    {
+      "id": "SH119",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-components.json",
+      "componentSHA256": "3a787daecebc52105fb6547440a19e1fc5edb3805821cf44da73fb3bf2a90b35"
+    },
+    {
+      "id": "SH120",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-components.json",
+      "componentSHA256": "656d34be6678c64aa07043d0a0ccfaaae80feaedda6344b76fcce834097edfa4"
+    },
+    {
+      "id": "SH121",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-components.json",
+      "componentSHA256": "9df9ef2f2f5cf136111aaca92e4ebb1404b7a96d3dd3ee0fb30facaf924b1b3b"
+    },
+    {
+      "id": "SH122",
+      "reason": "Actual source names do not issue a propulsion/organ mechanism role map. No human drive/biology inference, count default or mass supplied.",
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-components.json",
+      "componentSHA256": "76599c75eabb8c2499cd8a8ce76a93fe47774e6f21f71fba6bc779951b1d7090"
+    }
+  ],
+  "nativeRendererCompilerTestsHelpers": 0,
+  "retries": 0,
+  "sourceGeometryWrites": 0
+}

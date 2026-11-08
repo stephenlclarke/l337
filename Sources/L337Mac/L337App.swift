@@ -27,6 +27,21 @@ final class GameView: NSView {
       } else if game.spin.mode != oldValue.spin.mode {
         trackpad.setSpinMode(game.spin.mode)
       }
+      if game.commander != oldValue.commander
+        || game.inventoryContextEpoch != oldValue.inventoryContextEpoch
+        || game.selection != oldValue.selection || game.equipmentMount != oldValue.equipmentMount
+        || game.equipmentWorkTool != oldValue.equipmentWorkTool
+        || game.equipmentCrewSelected != oldValue.equipmentCrewSelected
+        || game.docked != oldValue.docked
+        || game.screen != oldValue.screen || game.paused != oldValue.paused
+      {
+        if !game.empModuleManagementAvailable
+          || game.commander.equipmentInventory?.owner != oldValue.commander.equipmentInventory?.owner
+          || game.commander.shipID != oldValue.commander.shipID
+          || game.commander.hullInstanceID != oldValue.commander.hullInstanceID
+        { resetEMPPanel() }
+        else { invalidateEMPControls() }
+      }
       modelInventoryInputGeneration = processedInventoryInputGeneration
     }
   }
@@ -56,6 +71,23 @@ final class GameView: NSView {
   private var paintedInventoryState: InventoryPaintState?
   private var paintedPurchaseContext: EquipmentPurchaseContext?
   private var paintedPurchaseBounds: NSRect?
+  struct PendingEMPUpgrade {
+    let context: EMPModulePurchaseContext
+    let generation: UInt64
+    let bounds: NSRect
+  }
+  var pendingEMPUpgrade: PendingEMPUpgrade?
+  private var empUpgradeInFlight = false
+  private var empPanelActive = false
+  private var empModule: UUID?
+  private var empPage = 0
+  private var empFocus = 0
+  private var empNotice: String?
+  private var empGeneration: UInt64 = 0
+  private var paintedEMP: EMPModuleUpgradePresentation?
+  private var paintedEMPBounds: NSRect?
+  private var paintedEMPGeneration: UInt64 = 0
+  private var paintedEMPEntry: CanvasRect?
   var trackpad = TrackpadInput()
   override init(frame frameRect: NSRect) {
     super.init(frame: frameRect)
@@ -94,10 +126,28 @@ final class GameView: NSView {
   override func draw(_ _: NSRect) {
     NSColor.black.setFill()
     bounds.fill()
-    guard let context = NSGraphicsContext.current?.cgContext else { return }
+    guard let context = NSGraphicsContext.current?.cgContext else {
+      paintedEMP = nil
+      paintedEMPEntry = nil
+      paintedEMPBounds = nil
+      return
+    }
     let snapshot = game
     let presentationStart = frameProfile == nil ? nil : ContinuousClock.now
-    let frame = Display.presentation(snapshot, width: bounds.width, height: bounds.height)
+    let managed: EMPModuleUpgradePresentation?
+    if empPanelActive, snapshot.empModuleManagementAvailable {
+      if let cached = paintedEMP, paintedEMPBounds == bounds,
+        paintedEMPGeneration == empGeneration, cached.isCurrent(in: snapshot)
+      {
+        managed = cached
+      } else {
+        managed = snapshot.empModuleUpgradePresentation(selected: empModule, page: empPage,
+          focus: empFocus, notice: empNotice, busy: empUpgradeInFlight,
+          width: bounds.width, height: bounds.height)
+      }
+    } else { managed = nil }
+    let frame = managed?.frame
+      ?? Display.presentation(snapshot, width: bounds.width, height: bounds.height)
     let drawStart = frameProfile == nil ? nil : ContinuousClock.now
     let startup = snapshot.screen == .title || snapshot.screen == .demo
     let panels = drawFrame(
@@ -115,10 +165,20 @@ final class GameView: NSView {
       InventoryPaintState(game: snapshot, bounds: bounds)
     }
     paintedInventoryInputGeneration = modelInventoryInputGeneration
-    paintedPurchaseContext = snapshot.equipmentPurchaseContext
+    paintedEMP = managed
+    paintedEMPBounds = bounds
+    paintedEMPGeneration = empGeneration
+    paintedEMPEntry = managed == nil
+      ? snapshot.empModuleManagementBounds(width: bounds.width, height: bounds.height) : nil
+    if let managed {
+      empModule = managed.selectedModule
+      empPage = managed.page
+      empFocus = managed.focus
+    }
+    paintedPurchaseContext = managed == nil ? snapshot.equipmentPurchaseContext : nil
     paintedPurchaseBounds = paintedPurchaseContext == nil ? nil : bounds
     var painted = snapshot
-    if [.gallery, .contracts].contains(painted.screen) {
+    if [.gallery, .contracts, .journal].contains(painted.screen) {
       painted.viewportWidth = Double(bounds.width)
       painted.viewportHeight = Double(bounds.height)
     }
@@ -186,6 +246,76 @@ final class GameView: NSView {
     pendingEquipmentPurchases.append(context)
     pending.append("equipment-purchase")
   }
+  private func invalidateEMPControls() {
+    empGeneration &+= 1
+    paintedEMP = nil
+    paintedEMPEntry = nil
+    paintedEMPBounds = nil
+    needsDisplay = true
+  }
+  func resetEMPPanel() {
+    empPanelActive = false
+    empModule = nil
+    empPage = 0
+    empFocus = 0
+    empNotice = nil
+    pendingEMPUpgrade = nil
+    invalidateEMPControls()
+  }
+  private func openEMPPanel() {
+    guard game.empModuleManagementAvailable else { return }
+    empPanelActive = true
+    empModule = nil
+    empPage = 0
+    empFocus = 0
+    empNotice = nil
+    invalidateEMPControls()
+    paintedPurchaseContext = nil
+    paintedPurchaseBounds = nil
+  }
+  private func performEMPAction(_ action: EMPModuleShopAction) {
+    switch action {
+    case .back: resetEMPPanel()
+    case .choose(let module):
+      guard !empUpgradeInFlight else { return }
+      empModule = module
+      empFocus = 0
+      empNotice = nil
+      invalidateEMPControls()
+    case .page(let page):
+      guard !empUpgradeInFlight else { return }
+      empModule = nil
+      empPage = page
+      empFocus = 0
+      empNotice = nil
+      invalidateEMPControls()
+    case .disabled(let reason):
+      empNotice = reason
+      invalidateEMPControls()
+    case .purchase(let context):
+      guard !empUpgradeInFlight, pendingEMPUpgrade == nil,
+        paintedEMPBounds == bounds, paintedEMPGeneration == empGeneration,
+        context.moduleID == empModule, context.isCurrent(in: game)
+      else { invalidateEMPControls(); return }
+      pendingEMPUpgrade = .init(context: context, generation: empGeneration, bounds: bounds)
+      empUpgradeInFlight = true
+      pending.append("emp-module-upgrade")
+      // Keep the queued generation, but retire the three painted quotes immediately.
+      paintedEMP = nil
+      needsDisplay = true
+    }
+  }
+  func acceptsEMPUpgrade(_ queued: PendingEMPUpgrade) -> Bool {
+    empPanelActive && game.empModuleManagementAvailable && queued.generation == empGeneration
+      && queued.bounds == bounds && queued.context.moduleID == empModule
+      && queued.context.isCurrent(in: game)
+  }
+  func finishEMPUpgrade(committed: Bool) {
+    empUpgradeInFlight = false
+    pendingEMPUpgrade = nil
+    empNotice = committed ? "UPGRADE COMMITTED" : "UPGRADE NOT COMMITTED. REFRESH THE QUOTE."
+    invalidateEMPControls()
+  }
   private func queuePaintedPassengerBerthFitting(fitted: Bool) {
     guard pendingPassengerBerthFittings.count < 64,
       inventoryInputGeneration == paintedInventoryInputGeneration,
@@ -250,12 +380,31 @@ final class GameView: NSView {
       return
     }
     if !event.modifierFlags.intersection([.command, .control]).isEmpty { return }
+    if game.screen == .equipment, empPanelActive {
+      if key == "escape" { resetEMPPanel(); return }
+      if ["up", "down", "return"].contains(key), !event.isARepeat,
+        let presentation = paintedEMP, paintedEMPBounds == bounds,
+        paintedEMPGeneration == empGeneration, presentation.isCurrent(in: game)
+      {
+        if key == "return", presentation.controls.indices.contains(empFocus) {
+          performEMPAction(presentation.controls[empFocus].action)
+        } else if key != "return", !presentation.controls.isEmpty {
+          let count = presentation.controls.count
+          empFocus = (empFocus + (key == "up" ? count - 1 : 1)) % count
+          invalidateEMPControls()
+        }
+      }
+      return
+    }
     if game.screen == .inventory, key == "return" {
       if !event.isARepeat { queuePaintedInventoryCommand() }
       return
     }
     if game.screen == .equipment, key == "return" {
-      if !event.isARepeat { queuePaintedEquipmentPurchase() }
+      if !event.isARepeat {
+        if game.empModuleReturnOpensManagement { openEMPPanel() }
+        else { queuePaintedEquipmentPurchase() }
+      }
       return
     }
     if game.passengerBerthSelected, ["s", "r"].contains(key) {
@@ -317,6 +466,8 @@ final class GameView: NSView {
       }
       return
     }
+    // Journal has keyboard navigation and no pointer hit regions.
+    if game.screen == .journal { return }
     if [.handoff, .gallery, .contracts].contains(game.screen) {
       let point = convert(event.locationInWindow, from: nil)
       guard let token = scriptPageToken() else { return }
@@ -325,6 +476,16 @@ final class GameView: NSView {
     }
     if game.screen == .equipment {
       let point = convert(event.locationInWindow, from: nil)
+      if empPanelActive {
+        if let presentation = paintedEMP, paintedEMPBounds == bounds,
+          paintedEMPGeneration == empGeneration, presentation.isCurrent(in: game),
+          let action = presentation.action(at: .init(point.x, point.y))
+        { performEMPAction(action) }
+        return
+      }
+      if paintedEMPBounds == bounds, let entry = paintedEMPEntry,
+        entry.contains(.init(point.x, point.y)), game.empModuleManagementAvailable
+      { openEMPPanel(); return }
       inventoryInputGeneration &+= 1
       pending.append("equipment-click:\(point.x):\(point.y)")
       return
@@ -339,7 +500,7 @@ final class GameView: NSView {
     pending.append("map-click:\(point.x):\(point.y)")
   }
   override func scrollWheel(with event: NSEvent) {
-    if game.screen == .contracts {
+    if game.screen == .contracts || game.screen == .journal {
       enqueueKey(event.scrollingDeltaY > 0 ? "up" : "down")
       return
     }
@@ -496,19 +657,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
     let runtime = self.runtime
     // Controlled launches retain their configured script library.
     let shouldLoadDefaultScriptPacks = restoreOnLaunch
+    let isolatedData = saves.isolatedData
     loop = Task { [weak view, weak self] in
       guard !Task.isCancelled else { return }
-      if let profile = self?.frameProfile {
-        await runtime.loadMissionPacks(
-          directory: profile.directory.appendingPathComponent("mission-packs"))
-      } else {
-        await runtime.loadMissionPacks()
-      }
-      guard !Task.isCancelled else { return }
-      var packErrors = await runtime.snapshot().missionPacks.errors
-      guard !Task.isCancelled else { return }
-      if shouldLoadDefaultScriptPacks {
-        packErrors += await runtime.loadDefaultScriptPacks()
+      var packErrors: [String] = []
+      do {
+        let isolated = try isolatedData?.packDirectories()
+        if let isolated {
+          await runtime.loadMissionPacks(directory: isolated.legacy)
+        } else if let profile = self?.frameProfile {
+          await runtime.loadMissionPacks(
+            directory: profile.directory.appendingPathComponent("mission-packs"))
+        } else {
+          await runtime.loadMissionPacks()
+        }
+        guard !Task.isCancelled else { return }
+        packErrors = await runtime.snapshot().missionPacks.errors
+        guard !Task.isCancelled else { return }
+        if shouldLoadDefaultScriptPacks {
+          if let isolated {
+            packErrors += await runtime.loadDefaultScriptPacks(directory: isolated.script)
+          } else {
+            packErrors += await runtime.loadDefaultScriptPacks()
+          }
+        }
+      } catch {
+        packErrors.append(error.localizedDescription)
       }
       guard !Task.isCancelled else { return }
       if !packErrors.isEmpty {
@@ -520,7 +694,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
       var failedRestore = false
       if let self, self.restoreOnLaunch, let url = self.saves.startupURL {
         do {
-          try await runtime.restoreStartup(from: url)
+          try await runtime.restoreStartup(from: self.saves.checkedSave(url))
           guard !Task.isCancelled else { return }
           view?.game = await runtime.snapshot()
         } catch {
@@ -579,17 +753,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
     let proposed = saves.newCommanderDestination(afterFailedRestore: afterFailedRestore)
     let accepted: URL
     do {
-      accepted = try await runtime.registerNewCommanderDestination(at: proposed)
+      accepted = try await runtime.registerNewCommanderDestination(at: saves.checkedSave(proposed))
     } catch {
       // A racing first-run file is never adopted or overwritten by this fresh commander.
       let fresh = saves.newCommanderDestination(afterFailedRestore: true)
-      accepted = try await runtime.registerNewCommanderDestination(at: fresh)
+      accepted = try await runtime.registerNewCommanderDestination(at: saves.checkedSave(fresh))
     }
     saves.activeURL = accepted
   }
   func acknowledgeNewCommanderSave() async {
     if let receipt = await runtime.takeNewCommanderSaveReceipt() {
-      saves.didSave(to: receipt.url)
+      do { try saves.recordSave(to: receipt.url) } catch { commanderFileFailure(error) }
     }
   }
   func processFrame(in view: GameView, delta: () -> Double) async {
@@ -625,12 +799,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
     guard !processingPendingCommands else { return }
     processingPendingCommands = true
     defer { processingPendingCommands = false }
+    if view.game.screen == .journal {
+      // Painted page proofs must be checked against the current view, before queued input.
+      let viewport = view.bounds.size
+      guard viewport.width.isFinite, viewport.height.isFinite,
+        viewport.width > 0, viewport.height > 0 else { return }
+      await runtime.setViewport(width: viewport.width, height: viewport.height)
+      // MainActor can resize while the actor call suspends. Retain the queue until resynchronized.
+      guard view.bounds.size == viewport else { return }
+    }
     let events = view.pending
     view.pending.removeAll()
     let inventoryCommands = view.pendingInventoryCommands
     view.pendingInventoryCommands.removeAll(keepingCapacity: true)
     let purchases = view.pendingEquipmentPurchases
     view.pendingEquipmentPurchases.removeAll(keepingCapacity: true)
+    let empUpgrade = view.pendingEMPUpgrade
+    view.pendingEMPUpgrade = nil
     let cabinFittings = view.pendingPassengerBerthFittings
     view.pendingPassengerBerthFittings.removeAll(keepingCapacity: true)
     let files = view.pendingCommanderFiles
@@ -649,6 +834,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
         let intent = missionIntents[missionUIIndex]
         missionUIIndex += 1
         await runtime.missionUICommand(intent)
+      } else if event == "emp-module-upgrade" {
+        guard let empUpgrade else { view.finishEMPUpgrade(committed: false); continue }
+        // Earlier events in this same batch may have changed the actor's selection/source.
+        view.game = await runtime.snapshot()
+        guard view.acceptsEMPUpgrade(empUpgrade) else {
+          view.finishEMPUpgrade(committed: false)
+          continue
+        }
+        do {
+          try await runtime.confirmEMPModuleUpgrade(empUpgrade.context)
+          view.game = await runtime.snapshot()
+          view.finishEMPUpgrade(committed: true)
+        } catch {
+          view.game = await runtime.snapshot()
+          view.finishEMPUpgrade(committed: false)
+        }
       } else if event == "equipment-purchase" {
         if purchases.indices.contains(purchaseIndex) {
           _ = await runtime.equipmentTransaction(.purchase(purchases[purchaseIndex]))
@@ -667,20 +868,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
       } else if event == "commander-file" {
         guard files.indices.contains(fileIndex) else { continue }
         let intent = files[fileIndex]
-        let operation = intent.operation(activeURL: saves.activeURL)
         fileIndex += 1
         do {
+          let operation: CommanderFileOperation
+          switch intent.operation(activeURL: saves.activeURL) {
+          case .save(let url):
+            operation = .save(try saves.checkedSave(url))
+          case .load(let url, let persist):
+            operation = .load(try saves.checkedSave(url), persistMigrations: persist)
+          }
           let receipt = try await runtime.commanderFileOperationForInterface(
             operation,
             activePath: intent.usesActivePath)
           switch operation {
           case .save:
-            if !receipt.isTrial { saves.didSave(to: receipt.url) }
+            if !receipt.isTrial { try saves.recordSave(to: receipt.url) }
           case .load:
             if !receipt.isTrial { saves.activeURL = receipt.url }
             view.held.removeAll()
             view.pressedKeys.removeAll()
             view.trackpad.reset()
+            view.resetEMPPanel()
             view.game = await runtime.snapshot()
           }
         } catch { commanderFileFailure(error) }
@@ -971,10 +1179,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
     panel.allowsMultipleSelection = false
     panel.allowedContentTypes = [.folder, UTType(filenameExtension: "toml") ?? .plainText]
     panel.message = "Choose a mission file or the complete mission folder."
+    if let isolated = saves.isolatedData { panel.directoryURL = isolated.directory }
     guard panel.runModal() == .OK, let url = panel.url else { return }
     Task { [weak self] in
       guard let self else { return }
-      do { try await runtime.installMissionPackInput(from: url) } catch { show(error) }
+      do {
+        if let isolated = saves.isolatedData {
+          let directories = try isolated.packDirectories()
+          try await runtime.installMissionPackInput(
+            from: isolated.checkedTree(url), legacyDirectory: directories.legacy,
+            scriptDirectory: directories.script)
+        } else {
+          try await runtime.installMissionPackInput(from: url)
+        }
+      } catch { show(error) }
     }
   }
   @objc private func loadCommander() {
@@ -988,12 +1206,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
     panel.canChooseDirectories = false
     panel.allowsMultipleSelection = false
     panel.allowedContentTypes = [.json]
+    if let isolated = saves.isolatedData { panel.directoryURL = isolated.directory }
     guard panel.runModal() == .OK, let url = panel.url else { return }
     queueCommanderFile(.open(url))
   }
   @objc private func saveCommanderAs() {
     let panel = NSSavePanel()
     panel.allowedContentTypes = [.json]
+    if let isolated = saves.isolatedData { panel.directoryURL = isolated.directory }
     panel.nameFieldStringValue = "commander.json"
     guard panel.runModal() == .OK, let url = panel.url else { return }
     queueCommanderFile(.saveAs(url))
@@ -1010,9 +1230,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
   private func show(_ error: Error) { NSAlert(error: error).runModal() }
 }
 
-@main
-struct L337App {
-  @MainActor static func main() async throws {
+public struct L337App {
+  @MainActor public static func main() async throws {
     if let index = CommandLine.arguments.firstIndex(of: "--validate-commander-save") {
       do {
         guard CommandLine.arguments.indices.contains(index + 1) else {
@@ -1047,13 +1266,27 @@ struct L337App {
       return
     }
     if let index = CommandLine.arguments.firstIndex(of: "--ship-media") {
-      let ids = Array(CommandLine.arguments.dropFirst(index + 1))
-      try exportShipMedia(ids: ids, directory: URL(fileURLWithPath: "docs/ships"))
-      try exportShipOverview(directory: URL(fileURLWithPath: "docs/ships"))
+      let arguments = CommandLine.arguments
+      let ids = Array(arguments.dropFirst(index + 1))
+      let directory: URL
+      if let output = arguments.firstIndex(of: "--ship-media-directory") {
+        guard output + 1 < index, arguments[output + 1].hasPrefix("/") else {
+          throw CocoaError(.fileWriteInvalidFileName)
+        }
+        directory = URL(fileURLWithPath: arguments[output + 1], isDirectory: true)
+      } else {
+        directory = URL(fileURLWithPath: "docs/ships", isDirectory: true)
+      }
+      try exportShipMedia(ids: ids, directory: directory)
+      try exportShipOverview(directory: directory)
+      return
+    }
+    if CommandLine.arguments.contains("--readme-screenshot-preview") {
+      try await previewReadmeScreenshot()
       return
     }
     if CommandLine.arguments.contains("--readme-media") {
-      try media()
+      try await media()
       return
     }
     if CommandLine.arguments.contains("--diagnostics") {
@@ -1097,10 +1330,7 @@ struct L337App {
         directory: directory, sourceSHA: CommandLine.arguments[index + 2], system: system,
         mode: mode, diagnosticCaptures: CommandLine.arguments.contains("--profile-station-geometry")
       )
-      var game = Game(executive: false)
-      game.commander.system = system.id
-      game.commander.shipDisplayStyle = .shadedPanels
-      game.screen = .status
+      let game = try Game.planetFrameProfileFixture(system: system.id)
       let runtime = GameRuntime(game: game)
       let saves = CommanderSaveSession(
         preferences: nil, defaultURL: directory.appendingPathComponent("commander.json"))
@@ -1124,41 +1354,76 @@ struct L337App {
       ? NSSize(
         width: max(512, min(3600, dimensions[0])), height: max(518, min(2160, dimensions[1])))
       : NSSize(width: 768, height: 768)
-    let delegate = AppDelegate(windowSize: size)
+    let liveDirectory = FileManager.default.homeDirectoryForCurrentUser
+      .appendingPathComponent(".xyzzy/l337", isDirectory: true)
+    let isolated = try IsolatedApplicationData.parse(CommandLine.arguments, liveDirectory: liveDirectory)
+    let saves = try isolated.map { try CommanderSaveSession(isolatedData: $0) }
+    let delegate = AppDelegate(saves: saves, windowSize: size)
     app.setActivationPolicy(.regular)
     app.delegate = delegate
     withExtendedLifetime(delegate) { app.run() }
   }
-  @MainActor private static func media() throws {
+  @MainActor private static func exportReadmeScreenshot(
+    composition: ReadmeMedia.CaptureComposition, destination: URL
+  ) async throws {
+    let game = try await ReadmeMedia.dockingUnderAttackScene(
+      sourceDirectory: URL(fileURLWithPath: "docs/mission-packs/readme-capture"),
+      composition: composition)
+    guard let image = imageForGame(game, width: 1024, height: 768),
+      let png = CGImageDestinationCreateWithURL(
+        destination as CFURL, UTType.png.identifier as CFString, 1, nil)
+    else { throw SaveError.invalidCommander }
+    CGImageDestinationAddImage(png, image, nil)
+    guard CGImageDestinationFinalize(png) else { throw SaveError.invalidCommander }
+  }
+
+  @MainActor private static func previewReadmeScreenshot() async throws {
+    let directory = URL(fileURLWithPath: ".build/readme-screenshot-previews", isDirectory: true)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    var figures: [String] = []
+    for composition in ReadmeMedia.CaptureComposition.allCases {
+      let filename = composition.rawValue + ".png"
+      try await exportReadmeScreenshot(
+        composition: composition, destination: directory.appendingPathComponent(filename))
+      figures.append(
+        "<figure><figcaption>" + composition.rawValue
+          + "</figcaption><a href=\"" + filename + "\"><img src=\"" + filename
+          + "\" width=\"680\" height=\"510\"></a></figure>")
+    }
+    let html =
+      "<!doctype html><meta charset=\"utf-8\"><title>Actual renderer previews</title>"
+      + "<style>body{background:#151515;color:#eee;font:16px system-ui}figure{margin:24px}</style>"
+      + "<p>680-pixel README preview. Open each original image to inspect all 1024 pixels.</p>"
+      + figures.joined()
+    try html.write(
+      to: directory.appendingPathComponent("index.html"), atomically: true, encoding: .utf8)
+  }
+
+  @MainActor private static func media() async throws {
     try medusaReadmeImage()
     if CommandLine.arguments.contains("--medusa-only") {
       return
     }
     try exportAppIcon()
-    try exportRouteReadmeMedia()
+    try await exportRouteReadmeMedia()
     try FileManager.default.createDirectory(atPath: "docs", withIntermediateDirectories: true)
-    var game = try ReadmeMedia.dockingUnderAttackScene(
-      sourceDirectory: URL(fileURLWithPath: "docs/mission-packs/profiled-skirmish"))
-    guard let image = imageForGame(game, width: 1024, height: 768),
-      let png = CGImageDestinationCreateWithURL(
-        URL(fileURLWithPath: "docs/l337.png") as CFURL, UTType.png.identifier as CFString, 1, nil)
-    else { throw SaveError.invalidCommander }
-    CGImageDestinationAddImage(png, image, nil)
-    guard CGImageDestinationFinalize(png) else { throw SaveError.invalidCommander }
+    try await exportReadmeScreenshot(
+      composition: .balanced, destination: URL(fileURLWithPath: "docs/l337.png"))
+    let ships = ReadmeMedia.galleryShipIDs
+    let split = ships.count / 2
+    let firstReel = ships.prefix(split)
+    let secondReel = ships.dropFirst(split)
+    let anglesPerShip = ReadmeMedia.galleryAngles.count
     let gif = try ReadmeGIFStream(
       destination: URL(fileURLWithPath: "docs/start-sequence.gif"), width: 1024, height: 768,
-      frameCount: ReadmeMedia.frameCount)
-    game = Game()
+      frameCount: ReadmeMedia.introductionFrameCount + firstReel.count * anglesPerShip)
+    var game = try await ReadmeMedia.introductionCommander()
     for index in 0..<ReadmeMedia.introductionFrameCount {
       try autoreleasepool {
+        if index == 16 { game.screen = .title }
+        if index == 24 { game.screen = .status }
+        if index == 30 { try ReadmeMedia.launchIntroductionFlight(&game) }
         game.time = Double(index) / 6
-        if index >= 16 { game.screen = .title }
-        if index >= 24 { game.screen = .status }
-        if index >= 30 {
-          game.launch()
-          game.bodies[1].position = .init(-35, 10, 320)
-          game.time = Double(index) / 6
-        }
         game.prepareFlightWeaponDisplay()
         guard let image = imageForGame(game, width: 1024, height: 768) else {
           throw SaveError.invalidCommander
@@ -1166,7 +1431,20 @@ struct L337App {
         try gif.append(image, delay: ReadmeMedia.introductionFrameDelay)
       }
     }
-    for shipID in ReadmeMedia.galleryShipIDs {
+    try appendGallery(firstReel, game: game, to: gif)
+    try gif.finish()
+
+    let continuation = try ReadmeGIFStream(
+      destination: URL(fileURLWithPath: "docs/ship-gallery-reel-2.gif"), width: 1024, height: 768,
+      frameCount: secondReel.count * anglesPerShip)
+    try appendGallery(secondReel, game: game, to: continuation)
+    try continuation.finish()
+  }
+
+  @MainActor private static func appendGallery(
+    _ shipIDs: ArraySlice<String>, game: borrowing Game, to gif: ReadmeGIFStream
+  ) throws {
+    for shipID in shipIDs {
       for angle in ReadmeMedia.galleryAngles {
         try autoreleasepool {
           let frame = try Display.galleryShipPresentation(
@@ -1178,7 +1456,6 @@ struct L337App {
         }
       }
     }
-    try gif.finish()
   }
   @MainActor private static func medusaReadmeImage() throws {
     var game = Game(executive: false)

@@ -198,6 +198,7 @@ public enum Display {
     case .secret: secret(game, into: &frame)
     case .help: help(game, into: &frame)
     case .library: return referenceLibrary(game, width: 768, height: 768)
+    case .journal: return c01InquiryJournal(game, width: 768, height: 768)
     case .gallery: return gallery(game, width: 768, height: 768)
     case .contracts: return contractBoard(game, width: 768, height: 768)
     case .navigation: return navigation(game, width: 768, height: 768)
@@ -227,7 +228,7 @@ public enum Display {
     // Keep the complete rotating hull between the title and version text.
     var ship = SpaceBody(id: 0, hull: .cobra, position: .init(0, 0, 280))
     ship.rotation = game.time * 0.6
-    draw(ship, game: game, into: &frame)
+    draw(ship, game: game, into: &frame, mesh: L337Branding.titleMesh)
     frame.centered("RIGHT-ON COMMANDER VERSION", 163)
     frame.centered("PRESS SPACE COMMANDER", 190)
     frame.centered(BuildIdentity.current.versionLine, 208)
@@ -237,18 +238,24 @@ public enum Display {
     }
   }
   private static func demo(_ game: Game, into frame: inout Frame) {
+    guard let human = ShipCatalogue.ship("SH031"), let humanMesh = human.previewMesh else {
+      frame.centered("SHIP PRESENTATION UNAVAILABLE", 96)
+      return
+    }
+    let meshes = [humanMesh, L337Branding.titleMesh]
     var demonstration = game
     demonstration.bodies = [
       SpaceBody(id: 0, hull: .cobra, position: .init(-70, 20, 450)),
-      SpaceBody(id: 1, hull: .thargoid, position: .init(80, -15, 600)),
+      SpaceBody(id: 1, hull: .cobra, position: .init(80, -15, 600)),
     ]
     for index in demonstration.bodies.indices {
       demonstration.bodies[index].rotation = game.time * 0.7
+      draw(
+        demonstration.bodies[index], game: demonstration, into: &frame, mesh: meshes[index])
     }
-    for body in demonstration.bodies { draw(body, game: demonstration, into: &frame) }
     let lines =
       [
-        "XYZZY PRESENTS", "RIGHT-ON COMMANDER VERSION", "WELCOME COMMANDER " + game.commander.name,
+        NewCommanderDefaults.title, "ORIGINAL SHIP DESIGNS", "WELCOME COMMANDER " + game.commander.name,
         "THE GALAXY AWAITS", "FLY. TRADE. SURVIVE.",
         BuildIdentity.current.versionLine, BuildIdentity.repository,
       ] + BuildIdentity.current.legacyRevisionLines
@@ -284,6 +291,7 @@ public enum Display {
     }
     flightObjects(game, projection: projection, into: &frame)
     drawNativeWormholes(game, into: &frame, projection: projection)
+    drawPlayerImpactFeedback(game, into: &frame)
     let x = projection.center.x
     let y = projection.center.y
     let size = frame.responsive ? 1.5 : 1.0
@@ -328,11 +336,21 @@ public enum Display {
     let mesh: Mesh
     if let supplied = suppliedMesh {
       mesh = supplied
-    } else if let scripted = game.scriptNPCMesh(body) {
+    } else if drawCurrentNewtKit(body, game: game, into: &frame,
+      projection: projection, screen: view)
+    {
+      return
+    } else if let scripted = game.scriptNPCDisplayMesh(body) {
       mesh = scripted
+    } else if let fit = body.scriptNPC?.fit,
+      OriginalCryostasisCapsule.isReferenced(by: fit)
+        || OriginalScopedScriptedHull.referenced(by: fit.definition) != nil
+    {
+      return
     } else {
       mesh = game.gameplayMesh(for: body)
     }
+    guard !mesh.vertices.isEmpty else { return }
     let miningFields = game.miningFields
     let oreInk = body.physical?.rock.flatMap { identity in
       miningFields.lazy.flatMap(\.rocks).first { $0.identity == identity }
@@ -346,6 +364,14 @@ public enum Display {
     guard vertices.allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }),
       vertices.contains(where: { $0.z >= 1 })
     else { return }
+    let enclosure = style == .shadedPanels ? mesh.opticalEnclosure : nil
+    let aperture: [ScreenPoint] = enclosure.map { interior in
+      guard mesh.faces.indices.contains(interior.paneFace) else { return [] }
+      let face = mesh.faces[interior.paneFace]
+      let a = vertices[face[0]], b = vertices[face[1]], c = vertices[face[2]]
+      guard (b - a).cross(c - a).dot(a) < 0 else { return [] }
+      return ShipProjection.polygon(face, vertices: vertices, projection: projection)
+    } ?? []
     var drawn: Set<String> = []
     var visibleFaces: Set<Int> = []
     let depths = mesh.faces.enumerated().map { index, face -> (index: Int, distance: Double) in
@@ -360,9 +386,19 @@ public enum Display {
       let normal = (b - a).cross(c - a)
       guard normal.dot(a) < 0 else { continue }
       if style == .shadedPanels {
+        let interior = enclosure.map { entry.index >= $0.firstInteriorFace } ?? false
+        if interior && aperture.count < 3 { continue }
         let material =
           mesh.faceMaterials.isEmpty ? nil : mesh.materials[mesh.faceMaterials[entry.index]]
-        if mesh.faceTextures.indices.contains(entry.index),
+        if let material, let opacity = material.opticalOpacity, opacity > 0, opacity < 1 {
+          let lit = ShipProjection.shade(material.colour, normal: normal, emissive: material.emissive)
+          let alpha = UInt32(min(254, max(1, (opacity * 255).rounded())))
+          frame.panel(
+            ShipProjection.polygon(face, vertices: vertices, projection: projection),
+            colour: (lit & 0xffff_ff00) | alpha, isOpticalPane: true)
+          continue
+        }
+        if !interior, mesh.faceTextures.indices.contains(entry.index),
           let texture = mesh.faceTextures[entry.index],
           ShipTextureAssets.pixels(for: texture.asset) != nil
         {
@@ -393,7 +429,8 @@ public enum Display {
           colour: material.map {
             ShipProjection.shade($0.colour, normal: normal, emissive: $0.emissive)
           }
-            ?? ShipProjection.shade(body.blackjackRole?.ink ?? body.hull.ink, normal: normal))
+            ?? ShipProjection.shade(body.blackjackRole?.ink ?? body.hull.ink, normal: normal),
+          isOpticalPane: false, opticalAperture: interior ? aperture : nil)
         continue
       }
       visibleFaces.insert(entry.index)
@@ -427,9 +464,8 @@ public enum Display {
     drawScriptBeams(body, game: game, into: &frame, projection: projection, screen: view)
     if body.hull == .station {
       let aperture: [Vector3]
-      if let identity = body.nativeStationIdentity,
-        let source = NativeStationSource.binding(for: identity)
-      {
+      if let identity = body.nativeStationIdentity {
+        guard let source = NativeStationSource.binding(for: identity) else { return }
         aperture = source.geometry.docking.aperture.map { source.geometry.docking.center + $0 }
       } else {
         aperture = MainStationGeometry.docking.aperture.map {
@@ -642,10 +678,10 @@ public enum Display {
       return
     }
     header("INCOMING MESSAGE", into: &frame)
-    if notice.showsShip {
+    if notice.showsShip, let mesh = AegisPrototype.mesh {
       var ship = SpaceBody(id: 0, hull: .constrictor, position: .init(0, 80, 600))
       ship.rotation = game.time * 0.6
-      draw(ship, game: game, into: &frame)
+      draw(ship, game: game, into: &frame, mesh: mesh)
     }
     let pages = notice.pages
     let page = min(game.missionPage, pages.count - 1)

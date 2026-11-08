@@ -6,6 +6,8 @@ import tomllib
 import unittest
 from pathlib import Path
 
+from legacy_showroom_fixture import ship_bytes
+
 spec = importlib.util.spec_from_file_location(
     "liberator_design", Path(__file__).with_name("liberator-design.py")
 )
@@ -15,9 +17,7 @@ spec.loader.exec_module(author)
 
 class LiberatorDesignTests(unittest.TestCase):
     def setUp(self):
-        self.ship = tomllib.loads(
-            Path("Sources/L337Core/Resources/Ships/SH171.toml").read_text()
-        )
+        self.ship = tomllib.loads(ship_bytes("SH171").decode())
         self.design = self.ship["design"]
 
     def points(self, name):

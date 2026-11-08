@@ -99,13 +99,22 @@ struct ScriptDurabilityTests {
     #expect(try Data(contentsOf: file) == currentBytes)
   }
 
-  @Test func ordinaryActorInitAndFlightDoNotCreateOrAdvanceScriptClocks() async throws {
-    let runtime = GameRuntime(game: Game(executive: false))
+  @Test func currentActorInitDefersItsCalendarUntilAnActualNativeLaunch() async throws {
+    var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
+    game.screen = .status
+    let runtime = GameRuntime(game: game)
     #expect(await runtime.snapshot().commander.scriptState == ScriptEngineState())
     await runtime.key("0")
+    let launched = await runtime.snapshot()
+    try #require(!launched.docked && launched.screen.isFlight && launched.commander.valid)
+    #expect(launched.commander.scriptState.calendarLedger?.origin == .newCommander)
+    #expect(launched.commander.scriptState.calendarSeconds == 600)
     for _ in 0..<5 { _ = await runtime.advance(delta: 0.1) }
     let after = await runtime.snapshot()
-    #expect(after.commander.scriptState == ScriptEngineState())
+    #expect(after.commander.scriptState.instances.isEmpty)
+    #expect(after.commander.scriptState.missionCalendar == nil)
+    #expect(abs(after.commander.scriptState.calendarSeconds - 600.5) < 1e-9)
   }
 
   @Test func actualNondefaultScriptAndAccommodationStateTriggerThePurePredicate() throws {
@@ -115,6 +124,14 @@ struct ScriptDurabilityTests {
     let before = game.commander
     #expect(game.requiresScriptDurability && game.commander == before)
     game.commander.scriptState = ScriptEngineState()
+    game.commander.accommodation = ShipAccommodation()
+    #expect(!game.requiresScriptDurability)
+    game.commander.scriptState.nextEvent = 7
+    let eventOpening = game
+    #expect(game.requiresScriptDurability)
+    #expect(game.currentNewtNativeCommanderMatches(eventOpening))
+    game.commander.scriptState = ScriptEngineState()
+    #expect(!game.requiresScriptDurability)
     let berth = PassengerBerth(
       id: UUID(uuidString: "61000000-0000-0000-0000-000000000001")!, cabinID: UUID())
     game.commander.accommodation.ownedCabins = [.init(id: berth.cabinID, grade: .stateroomSingle)]

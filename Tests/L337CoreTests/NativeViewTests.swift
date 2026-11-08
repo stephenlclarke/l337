@@ -65,6 +65,7 @@ struct NativeViewTests {
     let open = try #require(commander.item(withTitle: "Open Commander..."))
     #expect(save.keyEquivalent == "s" && save.keyEquivalentModifierMask == .command)
     #expect(open.keyEquivalent == "o" && open.keyEquivalentModifierMask == [.command, .shift])
+    try view.game.commander.prepareEquipment(legacy: false)
     view.game.launch()
     delegate.menuNeedsUpdate(screens)
     for number in [1, 2] {
@@ -153,9 +154,10 @@ struct NativeViewTests {
     #expect(view.pending == ["x", "y", "z", "z", "y"])
   }
 
-  @MainActor @Test func nativeSpinInputRecognizesCirclesRebasesAimAndKeepsForwardThrottleSeparate()
+  @MainActor @Test func nativeSpinInputRecognizesCirclesRebasesAimAndKeepsForwardThrottleSeparate() throws
   {
     let view = GameView()
+    try view.game.commander.prepareEquipment(legacy: false)
     view.game.launch()
     view.game.key("v")
     for index in 0...40 {
@@ -183,6 +185,7 @@ struct NativeViewTests {
     #expect(view.allowedTouchTypes == .indirect && view.wantsRestingTouches)
     view.updateTrackpad(positions: [.init(0.5, 1), .init(0.5, 1)])
     #expect(view.trackpad.fingerCount == 0)
+    try view.game.commander.prepareEquipment(legacy: false)
     view.game.launch()
     view.updateTrackpad(positions: [.init(0.5, 1), .init(0.5, 1)])
     #expect(view.controls.pitch == 1 && view.controls.throttle == 0)
@@ -253,6 +256,7 @@ struct NativeViewTests {
       view.keyUp(with: event)
       #expect(!view.held.contains(expected))
     }
+    try view.game.commander.prepareEquipment(legacy: false)
     view.game.launch()
     view.held = ["x", ",", " ", FlightControlInput.token(for: .fire)]
     #expect(
@@ -288,6 +292,7 @@ struct NativeViewTests {
       .count
     #expect(intermediate > 100)
     let view = GameView()
+    try view.game.commander.prepareEquipment(legacy: false)
     view.game.launch()
     let down = try #require(
       NSEvent.keyEvent(
@@ -338,6 +343,7 @@ struct NativeViewTests {
     guideMenu.performActionForItem(at: 0)
     await delegate.processFrame(in: view) { 0.02 }
     #expect(view.game.screen == .help)
+    try view.game.commander.prepareEquipment(legacy: false)
     view.game.launch()
     // Headless runners may not grant key-window status; inject the held touch for this reset check.
     view.trackpad.update(positions: [.zero, .zero, .zero])
@@ -378,6 +384,7 @@ struct NativeViewTests {
 
   @MainActor @Test func flightHasNoDecorativePlanetAndUsesNativeWindowSize() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.bodies = []
     let frame = Display.cockpit(game, width: 1379, height: 800)
@@ -441,6 +448,7 @@ struct NativeViewTests {
 extension NativeViewTests {
   @MainActor @Test func nativeTargetCameraAndEquipmentRenderResponsiveFrames() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.speed = 0
     for key in "xyzzy" { game.key(String(key)) }
@@ -466,6 +474,7 @@ extension NativeViewTests {
 extension NativeViewTests {
   @MainActor @Test func nativeMapsAndSearchRenderWithNoFlightInputLeakage() throws {
     let view = GameView()
+    try view.game.commander.prepareEquipment(legacy: false)
     view.game.launch()
     view.game.key("4")
     view.game.key("/")
@@ -540,7 +549,10 @@ extension NativeViewTests {
 extension NativeViewTests {
   @MainActor @Test func tabClearsHeldSteeringAndStationGuidanceOwnsTheTrackpad() throws {
     let view = GameView()
-    view.game.commander.installTargetingComputer(.military)
+    try view.game.commander.prepareEquipment(legacy: false)
+    try view.game.commander.grantEquipment(
+      TargetingTier.military.equipmentName, at: .targetingCore,
+      provenance: .grant("current targeting unit fixture"))
     view.game.launch()
     #expect(
       view.game.commander.equipmentInventory != nil
@@ -624,6 +636,7 @@ extension NativeViewTests {
   }
   @MainActor @Test func macBookControlsUseArrowsDeleteReturnAndSafeModifierCommands() throws {
     let view = GameView(frame: .init(x: 0, y: 0, width: 512, height: 518))
+    try view.game.commander.prepareEquipment(legacy: false)
     view.game.launch()
     func event(
       _ code: UInt16, _ text: String = "", flags: NSEvent.ModifierFlags = [], repeated: Bool = false

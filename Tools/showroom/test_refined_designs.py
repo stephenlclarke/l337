@@ -8,6 +8,8 @@ import math
 import unittest
 from pathlib import Path
 
+import legacy_showroom_fixture
+
 
 def load(name):
     spec = importlib.util.spec_from_file_location(
@@ -18,7 +20,6 @@ def load(name):
     return module
 
 
-files = load("ship-files")
 refine = load("refine-catalogue")
 author = load("refined-designs")
 
@@ -39,12 +40,12 @@ class RefinedDesignTests(unittest.TestCase):
         self.assertEqual((ship["game"]["cargo"], ship["game"]["cargoExpansion"]), (92, 35))
         self.assertNotIn("recipe", ship["design"])
         self.assertEqual(
-            hashlib.sha256((files.SHIP_FOLDER / "SH025.toml").read_bytes()).hexdigest(),
+            hashlib.sha256(legacy_showroom_fixture.ship_bytes("SH025")).hexdigest(),
             "794c19f74e633c5837ad78705398cf74f349b1ca4854b22bb3257d23bcb4059a",
         )
 
     def test_verified_untextured_revision_removes_obsolete_texture_facts(self):
-        ship = copy.deepcopy(next(s for s in files.read_ships() if s["id"] == "SH022"))
+        ship = copy.deepcopy(next(s for s in legacy_showroom_fixture.read_ships() if s["id"] == "SH022"))
         self.assertTrue(ship["design"]["sourceTextures"])
         incoming = {
             key: copy.deepcopy(ship["design"][key])
@@ -66,7 +67,7 @@ class RefinedDesignTests(unittest.TestCase):
         baseline = json.loads(
             Path("Tests/Fixtures/ship-visual-revision-baseline.json").read_text()
         )["ships"]
-        ships = {s["id"]: s for s in files.read_ships()}
+        ships = {s["id"]: s for s in legacy_showroom_fixture.read_ships()}
         deltas = json.loads(Path("Tests/Fixtures/ship-catalogue-balance-baseline-deltas.json").read_text())["ships"]
         balance = {row["id"]: row for row in json.loads(Path("docs/research/data/ship-catalogue-balance.json").read_text())["ships"]}
         self.assertTrue(set(baseline).issubset(ships))
@@ -234,7 +235,7 @@ class RefinedDesignTests(unittest.TestCase):
         self,
     ):
         count = 0
-        ships = files.read_ships()
+        ships = legacy_showroom_fixture.read_ships()
         self.assertEqual(sum(ship["id"] == "SH025" for ship in ships), 1)
         self.assert_original_peregrine(next(ship for ship in ships if ship["id"] == "SH025"))
         for ship in ships:

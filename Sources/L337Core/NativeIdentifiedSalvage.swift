@@ -125,7 +125,7 @@ struct NativeIdentifiedSalvageState: Codable, Sendable, Equatable {
 
 enum NativeIdentifiedSalvage {
   static let stateID = "l337.contract/identified-salvage"
-  static let digest = "ee65a469de1673c440e9b12effd8df2ff3bed96120d9e4b4c78a7c6bf8ab5e5c"
+  static let digest = "819fcdb9f4d594f1624ff2d70bdce6ac49f6f6b3f8eb1d1b9c225420373c4194"
   static let batch = "avenor-pell-cradle-01"
   static let boardID = "identified-salvage"
   static let encounterID = "pell-wreck"
@@ -136,8 +136,8 @@ enum NativeIdentifiedSalvage {
   static let objective = ContractStationIdentity(
     galaxy: 0, system: 185, stationClass: "main-orbital")
   static let reward = 8800
-  static let packageGeometry = "5362f0948c8a6f1b2acc770b100f746ff3f55799db7c0c53261f02943c6a680e"
-  static let cradleGeometry = "6bd163387c2fa30eaa34027add90ebb9eb377e87b46b996afd6979beaadfd813"
+  static let packageGeometry = OriginalScriptedMuskox.geometrySHA256
+  static let cradleGeometry = OriginalScriptedMuskox.cradleGeometrySHA256
 
   static func sourceIdentity(_ owner: NativeMainStationIdentity) -> UUID {
     ScriptIdentity.uuid("identified-salvage-source-v1:\(owner.world):\(owner.resource):\(batch)")

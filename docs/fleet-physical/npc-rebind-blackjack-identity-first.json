@@ -1,0 +1,36 @@
+{
+  "status": "FIRST_FROZEN_TINY_SUCCESSOR_TO_G2_19F8_BLACKJACK_IDENTITY_FINDING",
+  "beforeCommit": "19f8bbabd7e49e5a99116f502c10c3f24ba55619",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36097,
+      "sha256": "ab545dd64d16cddd6c3db50146cfb14f5560565aaf8de3cc42253bfad2224702"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 38844,
+      "sha256": "c491e0e862e724a47255d8253f4adbe04de2a20e98e001cb7fe7b8e47925df30"
+    }
+  ],
+  "replacements": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "before": "      !body.navalTarget, body.blackjackRole == nil, physical.npc?.role != .mission,\n",
+      "after": "      !body.navalTarget, body.blackjackRole == nil, body.blackjackIdentity == nil,\n      physical.npc?.role != .mission,\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "before": "    var protectedTargets = Array(repeating: target, count: 5)\n",
+      "after": "    var protectedTargets = Array(repeating: target, count: 6)\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "before": "    protectedTargets[4].physical?.payload = .wreck(crimeTestID(50), lot: 1)\n",
+      "after": "    protectedTargets[4].physical?.payload = .wreck(crimeTestID(50), lot: 1)\n    protectedTargets[5].blackjackIdentity = UUID(uuidString: \"00000000-0000-0000-0000-000000000006\")\n    try #require(protectedTargets[5].blackjackRole == nil\n      && protectedTargets[5].blackjackIdentity != nil)\n"
+    }
+  ],
+  "sourceFinding": "Restore omitted independent blackjackIdentity exclusion present in capture. Same actor/hull/catalogue and nil Blackjack role can retain foreign identity while ordinary state is restored. Actual freshly admitted Game caller unchanged; no observed gameplay exploit claimed.",
+  "scope": "Exact guard addition plus sixth fixed nonnil Blackjack UUID/nil role target in existing method. Keep first five targets, every original assertion, legitimate restore and all restoration assignments byte-exact. Inverse must restore both whole predecessor files. No other source/native/generic owner changes.",
+  "validation": "Source-only inverse and diff check; Swift tests UNCOMPILED UNRUN, G1 sole executor. G2 same-finding successor review requested."
+}

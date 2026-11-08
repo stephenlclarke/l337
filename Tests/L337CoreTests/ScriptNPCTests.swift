@@ -45,13 +45,15 @@ private func npcIndex(_ game: Game, _ id: UUID, _ alias: String = "lead") throws
   let identity = try #require(
     game.commander.scriptState.instances[id]?
       .ownedEncounters["opponents"]?.actors[alias]?.identity)
-  return try #require(game.bodies.firstIndex { $0.missionActorID == identity })
+  let matchingIndex = game.bodies.firstIndex { $0.missionActorID == identity }
+  return try #require(matchingIndex)
 }
 private func fillActualNPCSceneBudget(_ game: inout Game) throws -> Set<SpawnIdentity> {
   game.ensurePhysicalActors()
   let allocated = game.commander.flightSimulation.allocateSpawn()
   let sequence = try #require(allocated)
-  let context = try #require(game.gameplayContext())
+  let ownedPreparationRequired1 = game.gameplayContext()
+  let context = try #require(ownedPreparationRequired1)
   let count = context.budget.maximum - context.budget.total
   let requests = (0..<count).map { index in
     SpawnRequest(
@@ -67,9 +69,10 @@ private func fillActualNPCSceneBudget(_ game: inout Game) throws -> Set<SpawnIde
     .init(
       system: context.system, visit: context.visit, revision: context.revision,
       batches: [.init(requests: requests, atomic: true)], intents: []))
-  try #require(
-    receipts.count == count && receipts.allSatisfy { $0.actor != nil && $0.refusal == nil })
-  let full = try #require(game.gameplayContext())
+  let allSatisfied = receipts.count == count && receipts.allSatisfy { $0.actor != nil && $0.refusal == nil }
+  try #require(allSatisfied)
+  let ownedPreparationRequired2 = game.gameplayContext()
+  let full = try #require(ownedPreparationRequired2)
   try #require(full.budget.total == full.budget.maximum)
   return Set(requests.map(\.identity))
 }
@@ -89,7 +92,8 @@ private func npcIntent(
 }
 private func setNPCIntent(_ game: inout Game, id: UUID, command: ScriptValue) throws {
   var state = try #require(game.commander.scriptState.instances[id])
-  let pack = try #require(game.scriptPack(for: state))
+  let ownedPreparationRequired3 = game.scriptPack(for: state)
+  let pack = try #require(ownedPreparationRequired3)
   _ = try game.applyScriptNPCIntent(command, pack: pack, state: &state)
   game.commander.scriptState.instances[id] = state
 }
@@ -114,6 +118,27 @@ private func setNPCIntent(_ game: inout Game, id: UUID, command: ScriptValue) th
   #expect(mesh.vertices[0] == .init(-40, -20, -60))
   #expect(mesh.vertices[8] == .init(-6, 22, -9))
   #expect(game.commander.valid)
+  // Identification consumes an actual owned module and the admitted actor's
+  // authored fit name; the generic native hull label is not its identity.
+  var basic = game
+  try basic.commander.grantEquipment(
+    TargetingTier.basic.equipmentName, at: .targetingCore,
+    provenance: .grant("Target identity regression"))
+  let hidden = try #require(basic.information(for: basic.bodies[index]))
+  #expect(hidden.model == nil && hidden.identifier == "Target #\(basic.bodies[index].id)")
+  var identified = game
+  try identified.commander.grantEquipment(
+    TargetingTier.identification.equipmentName, at: .targetingCore,
+    provenance: .grant("Target identity regression"))
+  let information = try #require(identified.information(for: identified.bodies[index]))
+  #expect(information.model == npc.fit.definition.name)
+  #expect(information.identifier == npc.fit.definition.name + " #\(identified.bodies[index].id)")
+  var unavailable = identified
+  let hash = try #require(npc.fit.models[npc.fit.definition.model])
+  try #require(unavailable.commander.scriptState.geometry.removeValue(forKey: hash) != nil)
+  let missingModel = try #require(unavailable.information(for: unavailable.bodies[index]))
+  #expect(missingModel.model == "Unidentified craft")
+  #expect(missingModel.model != npc.fit.definition.name)
 }
 
 @Test func licensedModelBytesInstallImmutablyAndTamperingLinksOrMissingGeometryAreDenied() throws {
@@ -157,6 +182,183 @@ private func setNPCIntent(_ game: inout Game, id: UUID, command: ScriptValue) th
   }
 }
 
+@Test func originalNativeDefinitionCodecRejectsMalformedFitsAndRequiresTheDeclaredDriveComponent()
+  throws
+{
+  let original = try NativeInductionArkSource.profile()
+  let physical = try OriginalHullPhysicalContract.saiga.get()
+  let geometry = try ScriptPackLibrary.canonicalGeometry(physical.model.nativeDesign)
+  let models = [original.model: ScriptPackLibrary.hash(geometry)]
+  let originalFit = ScriptNPCFit(definition: original, models: models)
+  let originalValid = original.valid
+  let originalFitValid = originalFit.valid
+  try #require(originalValid && originalFitValid)
+  let encoder = JSONEncoder()
+  encoder.outputFormatting = .sortedKeys
+  let originalBytes = try encoder.encode(original)
+  let rawOriginal = try JSONSerialization.jsonObject(with: originalBytes)
+  let object = try #require(rawOriginal as? [String: Any])
+  let decoder = JSONDecoder()
+  decoder.nonConformingFloatDecodingStrategy = .convertFromString(
+    positiveInfinity: "Infinity", negativeInfinity: "-Infinity", nan: "NaN")
+
+  func check(_ label: String, _ input: [String: Any], expected: Bool) throws
+    -> ScriptNPCDefinition
+  {
+    let bytes = try JSONSerialization.data(withJSONObject: input)
+    let decoded = try decoder.decode(ScriptNPCDefinition.self, from: bytes)
+    let definitionValid = decoded.valid
+    let fit = ScriptNPCFit(definition: decoded, models: models)
+    let fitValid = fit.valid
+    #expect(definitionValid == expected, Comment(rawValue: label))
+    #expect(fitValid == expected, Comment(rawValue: label))
+    return decoded
+  }
+
+  let roundTrip = try check("authenticated original round trip", object, expected: true)
+  #expect(roundTrip == original)
+  let textCases: [(String, Any, Bool)] = [
+    ("id", "1-invalid", false),
+    ("name", String(repeating: "\u{1F680}", count: 20), true),
+    ("name", String(repeating: "\u{1F680}", count: 21), false),
+    ("source", "", false), ("source", String(repeating: "s", count: 4096), true),
+    ("source", String(repeating: "s", count: 4097), false),
+    ("basis", "", false), ("basis", String(repeating: "b", count: 4096), true),
+    ("basis", String(repeating: "b", count: 4097), false),
+    ("model", "catalogue:SH00x", false), ("model", "catalogue:SH999", false),
+  ]
+  for (index, entry) in textCases.enumerated() {
+    let (field, value, expected) = entry
+    var changed = object
+    changed[field] = value
+    _ = try check("text/model \(field) case \(index)", changed, expected: expected)
+  }
+  _ = try check("original after text/model inputs", object, expected: true)
+
+  let physicalCases: [(String, Any, Bool)] = [
+    ("scale", 0.0, false), ("scale", 0.001, true), ("scale", 1000.0, true),
+    ("scale", 1000.001, false), ("energy", 0.0, false), ("energy", 0.001, true),
+    ("energy", 1_000_000.0, true), ("energy", 1_000_000.001, false),
+    ("speed", -1.0, false), ("fuel", 100_000.01, false),
+    ("missiles", 32, true), ("missiles", 33, false),
+    ("bounty", -1, false), ("bounty", 1_000_000, true), ("bounty", 1_000_001, false),
+  ]
+  for (field, value, expected) in physicalCases {
+    var changed = object
+    changed[field] = value
+    _ = try check("physical \(field): \(value)", changed, expected: expected)
+  }
+  var infiniteScale = object
+  infiniteScale["scale"] = "Infinity"
+  let decodedInfinity = try check("decoded infinite scale", infiniteScale, expected: false)
+  #expect(decodedInfinity.scale == Double.infinity)
+  var nanEnergy = object
+  nanEnergy["energy"] = "NaN"
+  let decodedNaNEnergy = try check("decoded NaN energy", nanEnergy, expected: false)
+  #expect(decodedNaNEnergy.energy.isNaN)
+  let scalarFields = ["recharge", "speed", "acceleration", "pitch", "yaw", "roll", "fuel"]
+  for (index, field) in scalarFields.enumerated() {
+    var changed = object
+    changed[field] = "NaN"
+    let decoded = try check("decoded NaN \(field)", changed, expected: false)
+    let values = [
+      decoded.recharge, decoded.speed, decoded.acceleration, decoded.pitch,
+      decoded.yaw, decoded.roll, decoded.fuel,
+    ]
+    #expect(values[index].isNaN)
+  }
+  for bound in [0.0, 100_000.0] {
+    var changed = object
+    for field in scalarFields { changed[field] = bound }
+    _ = try check("all seven finite scalar boundary \(bound)", changed, expected: true)
+  }
+  _ = try check("original after physical inputs", object, expected: true)
+
+  // Reuse a real declared gun, without constructing a Game or requesting a capture.
+  let directory = npcExample.deletingLastPathComponent().appendingPathComponent("readme-capture")
+  let pack = try ScriptPackLibrary.read(directory)
+  let definitions = try #require(pack.manifest.npcs)
+  let captureDefinitionCandidate = definitions.first { $0.id == "lead" }
+  let captureDefinition = try #require(captureDefinitionCandidate)
+  let declaredLasers = try #require(captureDefinition.lasers)
+  let laserCandidate = declaredLasers.first { $0.id == "forward" }
+  let laser = try #require(laserCandidate)
+  let laserValid = laser.valid
+  try #require(laserValid)
+  let laserBytes = try encoder.encode(laser)
+  let rawLaser = try JSONSerialization.jsonObject(with: laserBytes)
+  let laserObject = try #require(rawLaser as? [String: Any])
+  let components = try #require(object["components"] as? [[String: Any]])
+  let driveComponentCandidate = components.first { ($0["id"] as? String) == "drive" }
+  let driveComponent = try #require(driveComponentCandidate)
+  var uniqueLasers: [[String: Any]] = []
+  for index in 0..<17 {
+    var weapon = laserObject
+    weapon["id"] = "forward-\(index)"
+    uniqueLasers.append(weapon)
+  }
+  for (count, expected) in [(16, true), (17, false)] {
+    var changed = object
+    changed["lasers"] = Array(uniqueLasers.prefix(count))
+    _ = try check("unique declared laser count \(count)", changed, expected: expected)
+  }
+  var duplicateLasers = object
+  duplicateLasers["lasers"] = [laserObject, laserObject]
+  _ = try check("duplicate declared laser id", duplicateLasers, expected: false)
+  var invalidLaser = laserObject
+  invalidLaser["trackingRate"] = -1.0
+  var invalidLaserProfile = object
+  invalidLaserProfile["lasers"] = [invalidLaser]
+  _ = try check("invalid declared laser", invalidLaserProfile, expected: false)
+  var uniqueComponents = [driveComponent]
+  for index in 1..<33 {
+    var component = driveComponent
+    component["id"] = "aux-\(index)"
+    uniqueComponents.append(component)
+  }
+  for (count, expected) in [(32, true), (33, false)] {
+    var changed = object
+    changed["components"] = Array(uniqueComponents.prefix(count))
+    _ = try check("unique declared component count \(count)", changed, expected: expected)
+  }
+  var duplicateComponents = object
+  duplicateComponents["components"] = [driveComponent, driveComponent]
+  _ = try check("duplicate declared component id", duplicateComponents, expected: false)
+  var invalidComponent = driveComponent
+  invalidComponent["energy"] = 0.0
+  var invalidComponentProfile = object
+  invalidComponentProfile["components"] = [invalidComponent]
+  _ = try check("invalid declared component", invalidComponentProfile, expected: false)
+  _ = try check("original after equipment inputs", object, expected: true)
+
+  let drive = try #require(object["drive"] as? [String: Any])
+  var absentDrive = object
+  absentDrive.removeValue(forKey: "drive")
+  _ = try check("absent optional drive with original component", absentDrive, expected: true)
+  absentDrive["components"] = [] as [[String: Any]]
+  _ = try check("absent optional drive without components", absentDrive, expected: true)
+  for (field, value) in [("fuelUnit", "tonnes" as Any), ("rangeLightYears", 0.0 as Any)] {
+    var invalidDrive = drive
+    invalidDrive[field] = value
+    var changed = object
+    changed["drive"] = invalidDrive
+    _ = try check("invalid drive \(field)", changed, expected: false)
+  }
+  var unmatchedDrive = drive
+  unmatchedDrive["component"] = "missing"
+  var unmatchedProfile = object
+  unmatchedProfile["drive"] = unmatchedDrive
+  _ = try check("valid drive terms without matching component", unmatchedProfile, expected: false)
+  var missingComponent = object
+  missingComponent["components"] = [] as [[String: Any]]
+  _ = try check("removed required drive component", missingComponent, expected: false)
+  _ = try check("original after drive inputs", object, expected: true)
+  let finalBytes = try encoder.encode(original)
+  #expect(finalBytes == originalBytes)
+  let finalFitValid = originalFit.valid
+  #expect(finalFitValid)
+}
+
 @Test func nativeFlightRequestsPreserveIdentityAndReachActualCoordinatesWithBoundedAcceleration()
   throws
 {
@@ -177,7 +379,8 @@ private func setNPCIntent(_ game: inout Game, id: UUID, command: ScriptValue) th
   #expect(abs((game.bodies[index].scriptNPC?.velocity.length ?? 0) - 5) < 1e-8)
   #expect((game.bodies[index].position - original.position).length <= 0.5 + 1e-8)
   for _ in 0..<200 { game.advanceScriptNPCFlight(delta: 0.1) }
-  let station = try #require(game.bodies.first { $0.id == 0 })
+  let stationCandidate = game.bodies.first { $0.id == 0 }
+  let station = try #require(stationCandidate)
   let actual = station.orientation.inverse(game.bodies[index].position - station.position)
   #expect((actual - goal).length <= 10.1)
   #expect(game.bodies[index].missionActorID == original.missionActorID)
@@ -242,15 +445,18 @@ private func applyActualNPCLaser(
 private func makeActualNPCLaserProof(
   _ game: inout Game, sourceID: Int, targetID: Int, targetPart: String?
 ) throws -> MissionNativeLaserProof {
-  let source = try #require(game.bodies.first { $0.id == sourceID })
-  let target = try #require(game.bodies.first { $0.id == targetID })
+  let sourceCandidate = game.bodies.first { $0.id == sourceID }
+  let source = try #require(sourceCandidate)
+  let targetCandidate = game.bodies.first { $0.id == targetID }
+  let target = try #require(targetCandidate)
   let npc = try #require(source.scriptNPC)
   let weapon = try #require(npc.fit.definition.lasers?.first)
   let muzzle = source.position + source.orientation.apply(weapon.muzzle * npc.fit.definition.scale)
   var aim = target.position
   if let targetPart {
     let fit = try #require(target.scriptNPC?.fit.definition)
-    let part = try #require(fit.components?.first { $0.id == targetPart })
+    let partCandidate = fit.components?.first { $0.id == targetPart }
+    let part = try #require(partCandidate)
     aim = aim + target.orientation.apply(part.position * fit.scale)
   }
   let proof = try game.makeMissionNativeLaserProof(
@@ -357,12 +563,11 @@ private func aimNPCAtPlayer(_ game: inout Game, id: UUID) throws -> Int {
   return index
 }
 
-// Only these gun-interception units use the example's declared SH023 trial hull.
-// The shared fixture retains the normal development hull for its other consumers.
+// Use the admitted current starting hull for the example's real gun-interception units.
 private func declaredNPCGunGame(_ fixture: NPCFixture) throws -> (Game, UUID) {
   let pack = try ScriptPackLibrary.read(fixture.directory)
   var game = Game(executive: false)
-  game.commander.shipID = "SH023"
+  try OriginalDetailedHullStage.requireRuntime(game.commander.shipID)
   game.commander.fuel = 70
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
@@ -389,12 +594,14 @@ private func declaredNPCGunGame(_ fixture: NPCFixture) throws -> (Game, UUID) {
   #expect(game.bodies[index].scriptNPC?.guns["forward"]?.heat == 3.2)
   #expect(game.bodies[index].scriptNPC?.shots == 2)
   #expect(game.bodies.filter { $0.scriptShot != nil }.count == 1)
-  let projectile = try #require(game.bodies.first { $0.scriptShot != nil })
+  let projectileCandidate = game.bodies.first { $0.scriptShot != nil }
+  let projectile = try #require(projectileCandidate)
   #expect(abs((projectile.scriptShot?.velocity.length ?? 0) - 2000) < 1e-8)
   #expect(projectile.scriptShot?.damage == 15 && projectile.scriptShot?.lifetime == 3)
   let shotMesh = try #require(game.scriptNPCMesh(projectile))
   #expect(shotMesh.vertices.count == 6 && shotMesh.faces.count == 8)
-  #expect(shotMesh.vertices.allSatisfy { abs($0.length - 2) < 1e-8 })
+  let allSatisfied2 = shotMesh.vertices.allSatisfy { abs($0.length - 2) < 1e-8 }
+  #expect(allSatisfied2)
   #expect(shotMesh.materials.first?.emissive == true)
   #expect(shotMesh.materials.first?.colour == Ink.redOrange.rawValue)
   for _ in 0..<5 { game.advanceScriptNPCShots(delta: 0.1) }
@@ -423,7 +630,8 @@ private func declaredNPCGunGame(_ fixture: NPCFixture) throws -> (Game, UUID) {
   try game.commander.grantEquipment(
     "E.C.M. System", at: .utility(.ecm), provenance: .grant("npc-ecm-fixture"))
   game.ecm()
-  #expect(game.bodies.contains { $0.scriptShot != nil })
+  let containsMatch = game.bodies.contains { $0.scriptShot != nil }
+  #expect(containsMatch)
   for _ in 0..<3 { game.advanceScriptNPCShots(delta: 0.1) }
   #expect(game.bodies[wing].energy == 105)
   #expect(game.frontShield == shield - 6)
@@ -518,7 +726,8 @@ private func declaredNPCGunGame(_ fixture: NPCFixture) throws -> (Game, UUID) {
   defer { fixture.clean() }
   var (game, id) = try fixture.game(launch: false)
   game.launch()
-  let station = try #require(game.bodies.first { $0.id == 0 })
+  let stationCandidate2 = game.bodies.first { $0.id == 0 }
+  let station = try #require(stationCandidate2)
   _ = try admitMissionTestObstruction(
     &game, hull: .asteroid,
     position: station.position + station.orientation.apply(.init(0, 0, 3000)))
@@ -584,7 +793,8 @@ private func declaredNPCGunGame(_ fixture: NPCFixture) throws -> (Game, UUID) {
   defer { fixture.clean() }
   var (game, id) = try fixture.game()
   let index = try npcIndex(game, id)
-  let station = try #require(game.bodies.firstIndex { $0.id == 0 })
+  let stationCandidate3 = game.bodies.firstIndex { $0.id == 0 }
+  let station = try #require(stationCandidate3)
   game.bodies[station].orientation.rotate(pitch: 0.3, roll: 0.4, yaw: 0.5)
   game.bodies[index].scriptNPC?.velocity = .init(10, 4, 2)
   game.persistScriptActors()
@@ -678,7 +888,8 @@ private func verifyProfileSceneSaveRejections(_ game: inout Game, id: UUID) thro
   game.speed = 0
   try game.commander.grantEquipment(
     LaserKind.naval.equipmentName, at: .laser(.front), provenance: .grant("npc-naval-fixture"))
-  let ordinary = try #require(game.bodies.firstIndex { $0.id == 1 })
+  let ordinaryCandidate = game.bodies.firstIndex { $0.id == 1 }
+  let ordinary = try #require(ordinaryCandidate)
   game.bodies[ordinary].position = .init(80, 0, 1400)
   let oldEnergy = game.bodies[ordinary].energy
   let index = try npcIndex(game, id)
@@ -699,7 +910,7 @@ private func verifyProfileSceneSaveRejections(_ game: inout Game, id: UUID) thro
   defer { fixture.clean() }
   let pack = try ScriptPackLibrary.read(fixture.directory)
   var game = Game(executive: false)
-  game.commander.shipID = "SH023"
+  try OriginalDetailedHullStage.requireRuntime(game.commander.shipID)
   game.commander.fuel = game.commander.fuelCapacity
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
@@ -719,11 +930,11 @@ private func verifyProfileSceneSaveRejections(_ game: inout Game, id: UUID) thro
   #expect(mesh.vertices.count > raw.vertices.count)
   #expect(Array(mesh.vertices.prefix(raw.vertices.count)) == raw.vertices.map { $0 * 1.6 })
   #expect(body.scriptNPC?.fit.models["catalogue:SH128"] != nil)
-  #expect(game.commander.shipID == "SH023")
+  #expect(game.commander.shipID == before.shipID)
   let transporter = try #require(ShipCatalogue.ship("SH128"))
   #expect(transporter.game?.cargo == 150)
-  let historicalNPC = try #require(
-    transporter.profiles.first { $0.id == "O08-oolite_template_transporter" })
+  let historicalNPCCandidate = transporter.profiles.first { $0.id == "O08-oolite_template_transporter" }
+  let historicalNPC = try #require(historicalNPCCandidate)
   #expect(historicalNPC.fields.first { $0.key == "max_cargo" }?.number == 12)
   #expect(game.commander == before)
   #expect(game.commander.playerMesh.vertices == playerMesh.vertices)
@@ -749,7 +960,8 @@ private func verifyProfileSceneSaveRejections(_ game: inout Game, id: UUID) thro
     body.physical?.spawnIdentity.map { fillers.contains($0) } ?? false
   }
   game.advanceScriptNPCWeapons(delta: 0.01)
-  let projectileIndex = try #require(game.bodies.firstIndex { $0.scriptShot != nil })
+  let projectileIndexCandidate = game.bodies.firstIndex { $0.scriptShot != nil }
+  let projectileIndex = try #require(projectileIndexCandidate)
   let shotIdentity = try #require(game.bodies[projectileIndex].scriptShot?.identity)
   game.bodies[projectileIndex].position = .init(5000, 5000, 5000)
   game.persistScriptActors()
@@ -1086,6 +1298,7 @@ private func alignNPCReplayNativeStationNamespace(_ game: inout Game) throws {
   let pack = try ScriptPackLibrary.read(fixture.directory)
   game.scriptPacks = [pack]
   game.commander.credits = 123456
+  try game.commander.prepareEquipment(legacy: false)
   game.openGallery()
   let runtime = GameRuntime(game: game)
   try await runtime.save(to: fixture.save)
@@ -1099,14 +1312,387 @@ private func alignNPCReplayNativeStationNamespace(_ game: inout Game) throws {
   #expect(await runtime.snapshot().bodies.filter { $0.scriptNPC != nil }.count == 2)
   #expect(await runtime.snapshot().commander.scriptState.geometry.count == 2)
   for _ in 0..<30 { _ = await runtime.advance(delta: 0.1) }
-  #expect(await runtime.snapshot().bodies.contains { ($0.scriptNPC?.shots ?? 0) > 0 })
+  let containsMatch2 = await runtime.snapshot().bodies.contains { ($0.scriptNPC?.shots ?? 0) > 0 }
+  #expect(containsMatch2)
   _ = try await runtime.saveForInterface()
   try await runtime.restartScriptGalleryTrial()
-  #expect(
-    await runtime.snapshot().bodies.filter { $0.scriptNPC != nil }.allSatisfy {
-      $0.energy == 120 && $0.scriptNPC?.shots == 0
-    })
+  let allSatisfied3 = await runtime.snapshot().bodies.filter { $0.scriptNPC != nil }.allSatisfy {
+    $0.energy == 120 && $0.scriptNPC?.shots == 0
+  }
+  #expect(allSatisfied3)
   try await runtime.returnFromScriptGalleryTrial()
   #expect(await runtime.snapshot().commander == before.commander)
   #expect(try Data(contentsOf: fixture.save) == bytes)
+}
+
+@Test(arguments: [false, true])
+func pureNPCDecisionProposesArrivalOrLossWithoutEmittingBeforeActualOwner(_ lost: Bool) throws {
+  let fixture = try NPCFixture()
+  defer { fixture.clean() }
+  var (game, id) = try fixture.game()
+  if lost {
+    try setNPCIntent(
+      &game, id: id, command: npcIntent("attack", request: "outer-decision", target: "wing"))
+    let wing = try npcIndex(game, id, "wing")
+    game.bodies[wing].energy = 0
+  } else {
+    try setNPCIntent(&game, id: id, command: npcIntent("hold", request: "outer-decision"))
+  }
+  let index = try npcIndex(game, id)
+  let body = game.bodies[index]
+  let snapshot = game.bodies
+  let owned = Dictionary(
+    snapshot.compactMap { value in
+      value.missionActorID.map { ($0, value) }
+    }, uniquingKeysWith: { first, _ in first })
+  let station = snapshot.first { $0.id == 0 && $0.hull == .station }
+  let before = (commander: game.commander, bodies: game.bodies, world: game.scriptWorldSave)
+  let ownedPreparationRequired4 = game.prepareScriptNPCFlightDecision(
+      body,
+      owned: owned, station: station, delta: 0.1)
+  let proposal = try #require(ownedPreparationRequired4)
+  let notice = try #require(proposal.pending)
+  #expect(notice.kind == (lost ? .targetLost : .arrived))
+  #expect(proposal.intent?.status == (lost ? .lost : .reached))
+  #expect(game.commander == before.commander && game.bodies == before.bodies)
+  #expect(game.scriptWorldSave == before.world && body.scriptNPC?.intent?.status == .requested)
+  let count = before.commander.scriptState.pendingEvents.filter {
+    $0.kind == notice.kind.rawValue && $0.values["request"] == .string("outer-decision")
+  }.count
+  game.advanceScriptNPCFlight(delta: 0.1)
+  #expect(game.bodies[index].orientation == proposal.orientation)
+  #expect(game.bodies[index].position == proposal.translation.end)
+  #expect(game.bodies[index].scriptNPC?.velocity == proposal.translation.velocity)
+  #expect(game.bodies[index].scriptNPC?.intent == proposal.intent)
+  #expect(
+    game.commander.scriptState.pendingEvents.filter {
+      $0.kind == notice.kind.rawValue && $0.values["request"] == .string("outer-decision")
+    }.count == count + 1)
+  game.advanceScriptNPCFlight(delta: 0.1)
+  #expect(
+    game.commander.scriptState.pendingEvents.filter {
+      $0.kind == notice.kind.rawValue && $0.values["request"] == .string("outer-decision")
+    }.count == count + 1)
+}
+
+@Test func pureNPCFollowDecisionUsesFrozenOwnedSnapshotAcrossBodyOrder() throws {
+  let fixture = try NPCFixture()
+  defer { fixture.clean() }
+  var (game, id) = try fixture.game()
+  try setNPCIntent(
+    &game, id: id,
+    command: npcIntent("follow", request: "outer-follow", target: "wing", offset: .init(100, 0, 0)))
+  let body = game.bodies[try npcIndex(game, id)]
+  let owned = Dictionary(
+    game.bodies.compactMap { value in
+      value.missionActorID.map { ($0, value) }
+    }, uniquingKeysWith: { first, _ in first })
+  let station = game.bodies.first { $0.id == 0 && $0.hull == .station }
+  let before = (commander: game.commander, bodies: game.bodies)
+  let ownedPreparationRequired5 = game.prepareScriptNPCFlightDecision(
+      body,
+      owned: owned, station: station, delta: 0.1)
+  let first = try #require(ownedPreparationRequired5)
+  var reversed = game
+  reversed.bodies.reverse()
+  let ownedPreparationRequired6 = reversed.prepareScriptNPCFlightDecision(
+      body,
+      owned: owned, station: station, delta: 0.1)
+  let second = try #require(ownedPreparationRequired6)
+  #expect(
+    second.orientation == first.orientation && second.translation.end == first.translation.end)
+  #expect(
+    second.translation.velocity == first.translation.velocity && second.intent == first.intent)
+  #expect(first.pending == nil && second.pending == nil)
+  #expect(game.commander == before.commander && game.bodies == before.bodies)
+  #expect(
+    reversed.commander == before.commander && Array(reversed.bodies.reversed()) == before.bodies)
+}
+
+// Retain the real opening through Game's existing CoW storage. Complete Commander
+// reads/equality retire in these frames before the original physical tick begins.
+@inline(never)
+private func expectNativeNPCOpeningUnchanged(_ game: Game, opening: Game, bodies: [SpaceBody]) {
+  let unchanged = game.currentNewtNativeCommanderMatches(opening) && game.bodies == bodies
+  #expect(unchanged)
+}
+
+@inline(never)
+private func nativeNPCOpeningHasNoTransit(_ game: Game) -> Bool {
+  game.withReadOnlyScriptState { $0.wormholeTransit == nil }
+}
+
+@inline(never)
+private func nativeNPCOriginalArrivalCount(_ game: Game) -> Int {
+  game.commander.scriptState.pendingEvents.filter {
+    $0.kind == "actor.arrived" && $0.values["request"] == .string("native-outer-once")
+  }.count
+}
+
+// Exercise the real scene owner inside the existing full owning comparison. Its
+// immutable opening/proposed cohorts must cover every actual body without a write.
+@inline(never)
+private func expectNativeNPCQuerySceneReadOnly(
+  _ game: Game, path: CurrentNewtOuterMotion, frame: CurrentNewtNPCFrame
+) throws {
+  let prepared = try prepareNativeNPCQueryScene(game, path: path, frame: frame)
+  try verifyNativeNPCQueryScene(game, path: path, prepared: prepared)
+}
+
+private struct PreparedNativeNPCQueryScene {
+  let bodies: [SpaceBody]
+  let celestials: [CelestialBody]
+  let epoch: UUID
+  let interval: CurrentNewtMechanicalInterval
+  let opening: CurrentNewtNativeSegmentOpening
+  let scene: CurrentNewtNativeQueryScene
+}
+
+@inline(never)
+private func prepareNativeNPCQueryScene(
+  _ game: Game, path: CurrentNewtOuterMotion, frame: CurrentNewtNPCFrame
+) throws -> PreparedNativeNPCQueryScene {
+  let bodies = game.bodies
+  let celestials = game.celestials
+  let epoch = game.nativeStationRuntimeEpoch
+  let interval = CurrentNewtMechanicalInterval(start: path.startTime, end: path.endTime)
+  let end = try #require(path.state(at: path.endTime))
+  let openingCandidate = game.beginCurrentNewtNativeSegment(
+    interval, playerMotion: path.motion, playerEnd: end, npcFrame: frame)
+  let opening = try #require(openingCandidate)
+  let ownedPreparationRequired7 = game.currentNewtMechanicalPlan(interval)
+  let mechanics = try #require(ownedPreparationRequired7)
+  var sceneRefusal: CurrentNewtPreparationRefusal? = nil
+  let sceneCandidate = game.prepareCurrentNewtNativeQueryScene(
+    opening: opening, mechanics: mechanics, report: {
+      if sceneRefusal == nil { sceneRefusal = $0 }
+    })
+  let sceneReason = sceneRefusal?.summary ?? "Native scene refusal checkpoint missing (instrumentation incomplete)"
+  let scene = try #require(sceneCandidate, Comment(rawValue: sceneReason))
+  return .init(bodies: bodies, celestials: celestials, epoch: epoch,
+    interval: interval, opening: opening, scene: scene)
+}
+
+@inline(never)
+private func verifyNativeNPCQueryScene(
+  _ game: Game, path: CurrentNewtOuterMotion, prepared: PreparedNativeNPCQueryScene
+) throws {
+  let bodies = prepared.bodies
+  let celestials = prepared.celestials
+  let epoch = prepared.epoch
+  let interval = prepared.interval
+  let opening = prepared.opening
+  let scene = prepared.scene
+  // Real launch traffic remains in the full scene. Its original per-body phase
+  // must be covered by both collider cohorts, without adding an AI decision.
+  for body in bodies where !body.hostile && body.physical?.npc != nil
+    && body.scriptNPC == nil && body.physical?.spawnIdentity == nil
+  {
+    let actor = try #require(body.physical?.identity)
+    let projectedCandidate = scene.motion.proposed.bodies.first {
+      $0.physical?.identity == actor
+    }
+    let projected = try #require(projectedCandidate)
+    let expectedCandidate = game.currentNewtPostCameraBodies(path).first {
+      $0.physical?.identity == actor
+    }
+    let expected = try #require(expectedCandidate)
+    let actualPose = scene.motion.proposed.modelPose(of: projected)
+    let expectedPose = Game.modelPose(of: expected, player: path.motion.end)
+    #expect(actualPose == expectedPose)
+    let ordinary = try #require(scene.colliders.first { $0.actor == actor })
+    let endpoint = try #require(ordinary.poseAt(path.motion.duration))
+    #expect(endpoint == expectedPose)
+    let solidCovered = scene.solidColliders.contains { $0.actor == actor }
+    #expect(solidCovered)
+  }
+  let ownedSceneExpected1 = scene.motion.opening === opening
+  #expect(ownedSceneExpected1)
+  expectNativeNPCOpeningUnchanged(game, opening: opening.before, bodies: bodies)
+  let ownedSceneExpected2 = game.celestials == celestials && game.nativeStationRuntimeEpoch == epoch
+  #expect(ownedSceneExpected2)
+  let ownedSceneExpected3 = game.storedFlightSimulation().physicalTime == interval.start
+  #expect(ownedSceneExpected3)
+  let ownedSceneExpected4 = scene.motion.proposed.storedFlightSimulation().physicalTime == interval.end
+  #expect(ownedSceneExpected4)
+  let originalActors = Set(bodies.compactMap { $0.physical?.identity })
+  let proposedActors = Set(scene.motion.proposed.bodies.compactMap { $0.physical?.identity })
+  #expect(proposedActors == originalActors)
+  for body in bodies where body.energy > 0 {
+    let physical = try #require(body.physical)
+    let covered = scene.colliders.contains { $0.actor == physical.identity }
+    let solidCovered = scene.solidColliders.contains { $0.actor == physical.identity }
+    #expect(covered && solidCovered)
+  }
+}
+
+@Test(arguments: [false, true])
+func nativeNPCPathsMatchOneOriginalStepAndCommitEffectsWithoutASecondMove(_ canonicalSpin: Bool)
+  throws
+{
+  let fixture = try NPCFixture()
+  defer { fixture.clean() }
+  let prepared = try prepareNativeNPCComparison(fixture, canonicalSpin: canonicalSpin)
+  try expectNativeNPCQuerySceneReadOnly(prepared.game, path: prepared.path, frame: prepared.frame)
+  try expectColdPhysicalSourceIdentityAndRefusal()
+  try verifyNativeNPCComparison(prepared)
+}
+
+private struct PreparedNativeNPCComparison {
+  let game: Game
+  let id: UUID
+  let lead: Int
+  let opening: FlightSimulationState
+  let bodies: [SpaceBody]
+  let openingGame: Game
+  let path: CurrentNewtOuterMotion
+  let frame: CurrentNewtNPCFrame
+}
+
+@inline(never)
+private func prepareNativeNPCComparison(_ fixture: NPCFixture, canonicalSpin: Bool) throws -> PreparedNativeNPCComparison {
+  var (game, id) = try fixture.game()
+  try setNPCIntent(&game, id: id, command: npcIntent("hold", request: "native-outer-once"))
+  let lead = try npcIndex(game, id)
+  game.bodies[lead].energy = 100
+  game.speed = 0
+  game.ensurePhysicalActors()
+  if canonicalSpin {
+    // Exercise the existing canonical-spin input; neither this fixture nor the
+    // path descriptor grants source qualification or contact authority.
+    try #require(game.bodies[lead].physical != nil)
+    game.bodies[lead].physical?.canonicalSpin = true
+    game.bodies[lead].physical?.angularVelocity = .init(0.03, -0.02, 0.04)
+  }
+  let opening = game.storedFlightSimulation()
+  let bodies = game.bodies
+  let openingGame = game
+  // Ordinary mission actors have no transit ledger. Querying the real steering
+  // path must remain inert before both the reference tick and native preparation.
+  let hasNoTransit = nativeNPCOpeningHasNoTransit(openingGame)
+  try #require(hasNoTransit)
+  for body in bodies where body.scriptNPC != nil {
+    let steeringGoal = game.nativeTransitSteeringGoal(body)
+    let clearanceGoal = game.nativeTransitExitClearanceGoal(body)
+    #expect(steeringGoal == nil && clearanceGoal == nil)
+    if let intent = body.scriptNPC?.intent {
+      let retainedIntent = game.nativeTransitSteeringIntent(body, intent: intent)
+      #expect(retainedIntent == intent)
+    }
+  }
+  expectNativeNPCOpeningUnchanged(game, opening: openingGame, bodies: bodies)
+  // The real profiled cohort has no clinic, Ark or rescue source. Every optional
+  // guidance query must preserve its native owner before the unchanged reference tick.
+  let clinicControls = game.c01ClinicEscortRuntime.controls.count
+  let clinicReason = game.c01ClinicEscortRuntime.reason
+  for body in bodies {
+    guard let profile = body.scriptNPC?.fit.definition else { continue }
+    let course = game.c01ClinicCourse(body, profile: profile, delta: 0.1)
+    let applied = game.c01ClinicGuidance(body, profile: profile, delta: 0.1)
+    let ark = game.inductionArkDockGuidance(body, profile: profile, delta: 0.1)
+    let rescue = game.inductionRescueDockGuidance(body, profile: profile, delta: 0.1)
+    #expect(course == nil && applied == nil && ark == nil && rescue == nil)
+  }
+  expectNativeNPCOpeningUnchanged(game, opening: openingGame, bodies: bodies)
+  #expect(game.c01ClinicEscortRuntime.controls.count == clinicControls)
+  #expect(game.c01ClinicEscortRuntime.reason == clinicReason)
+  let pathCandidate = game.prepareCurrentNewtOuterMotion(delta: 0.1)
+  let path = try #require(pathCandidate)
+  var frameRefusal: CurrentNewtPreparationRefusal? = nil
+  let frameCandidate = game.prepareCurrentNewtNPCFrame(path, report: {
+    if frameRefusal == nil { frameRefusal = $0 }
+  })
+  let frameReason = frameRefusal?.summary ?? "NPC frame refusal checkpoint missing (instrumentation incomplete)"
+  let frame = try #require(frameCandidate, Comment(rawValue: frameReason))
+  try #require(frame.entries.count == 2)
+  expectNativeNPCOpeningUnchanged(game, opening: openingGame, bodies: bodies)
+  return .init(game: game, id: id, lead: lead, opening: opening, bodies: bodies,
+    openingGame: openingGame, path: path, frame: frame)
+}
+
+@inline(never)
+private func verifyNativeNPCComparison(_ prepared: PreparedNativeNPCComparison) throws {
+  var game = prepared.game
+  let id = prepared.id
+  let lead = prepared.lead
+  let opening = prepared.opening
+  let bodies = prepared.bodies
+  let openingGame = prepared.openingGame
+  let path = prepared.path
+  let frame = prepared.frame
+  var original = game
+  original.tick(delta: 0.1)
+  for entry in frame.entries.values {
+    let bodyCandidate = original.bodies.first { $0.physical?.identity == entry.actor }
+    let body = try #require(bodyCandidate)
+    let expected = original.modelPose(of: body)
+    let displacement = expected.position - entry.before.pose.position
+    let quarter = try #require(entry.state(at: path.startTime + 0.025))
+    let threeQuarters = try #require(entry.state(at: path.startTime + 0.075))
+    let end = try #require(entry.state(at: path.endTime))
+    #expect(
+      (quarter.pose.position - (entry.before.pose.position + displacement * 0.25)).length < 1e-7)
+    #expect(
+      (threeQuarters.pose.position - (entry.before.pose.position + displacement * 0.75)).length
+        < 1e-7)
+    #expect((end.pose.position - expected.position).length < 1e-7)
+    #expect((end.pose.orientation.x - expected.orientation.x).length < 1e-7)
+    #expect((end.pose.orientation.y - expected.orientation.y).length < 1e-7)
+    #expect((end.pose.orientation.z - expected.orientation.z).length < 1e-7)
+  }
+  let interval = game.advanceCurrentNewtNativeInterval(path, npcFrame: frame)
+  let evidence = try #require(interval.evidence)
+  #expect(
+    evidence.verifiedFinalFlight(
+      from: opening, usedD: 0.1,
+      epoch: game.nativeStationRuntimeEpoch) == game.storedFlightSimulation())
+  let positions = Dictionary(
+    uniqueKeysWithValues: game.bodies.compactMap { body in
+      body.physical.map { ($0.identity, game.modelPose(of: body)) }
+    })
+  let decisionsCommitted = game.commitCurrentNewtNPCDecisions(frame)
+  try #require(decisionsCommitted)
+  game.advanceScriptNPCFlight(delta: 0, excluding: Set(frame.entries.keys))
+  let after = try npcIndex(game, id)
+  let definition = try #require(game.bodies[after].scriptNPC?.fit.definition)
+  #expect(game.bodies[after].energy == min(definition.energy, 100 + definition.recharge * 0.1))
+  #expect(nativeNPCOriginalArrivalCount(game) == 1)
+  for body in game.bodies {
+    guard let actor = body.physical?.identity else { continue }
+    #expect(game.modelPose(of: body) == positions[actor])
+  }
+}
+
+
+@inline(never)
+private func expectColdPhysicalSourceIdentityAndRefusal() throws {
+  let shipCandidate = ShipCatalogue.ship("SH040")
+  let ship = try #require(shipCandidate)
+  let physicalCandidate = ship.physicalSourceContract
+  let physical = try #require(physicalCandidate)
+  let capsuleCandidate = OriginalCryostasisCapsule.source
+  let capsule = try #require(capsuleCandidate)
+  let kitCandidate = CurrentNewtKitSource.current
+  let kit = try #require(kitCandidate)
+  #expect(physical.id == "SH040" && physical.nativeTriangles == 92)
+  #expect(physical.metresPerSourceUnit == 60.0 / 19.0)
+  #expect(abs(physical.envelope.dimensions.z - 2.4) < 1e-12)
+  #expect(physical.engineering?.dryMassKilograms == 248)
+  #expect(capsule.collisionDesign.vertices.count == physical.physicalMesh.vertices.count)
+  #expect(kit.configuration == CurrentNewtKitPhysicalSource.configurationID
+    && kit.sourceSHA256 == CurrentNewtKitPhysicalSource.sourceSHA256)
+  let definitionCandidate = OriginalFleetDefinitionData.definition(for: "SH040")
+  let definition = try #require(definitionCandidate)
+  let model = physical.model
+  let wrongID = OriginalFleetShowroomModel(id: "SH999", sourcePath: model.sourcePath,
+    sourceSHA256: model.sourceSHA256, coordinateUnits: model.coordinateUnits, nativeDesign: model.nativeDesign)
+  #expect(throws: OriginalHullPhysicalContract.Failure.self) {
+    _ = try OriginalHullPhysicalContract(definition: definition, model: wrongID)
+  }
+  let wrongPin = OriginalFleetShowroomModel(id: model.id, sourcePath: model.sourcePath,
+    sourceSHA256: String(repeating: "0", count: 64), coordinateUnits: model.coordinateUnits,
+    nativeDesign: model.nativeDesign)
+  #expect(throws: OriginalHullPhysicalContract.Failure.self) {
+    _ = try OriginalHullPhysicalContract(definition: definition, model: wrongPin)
+  }
 }

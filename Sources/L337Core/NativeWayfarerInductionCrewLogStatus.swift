@@ -102,7 +102,7 @@ extension Game {
     }
     guard let state = inductionCrewLogChild?.savedNativeCrewLog else {
       return
-        "Fly to Cevilis G01-S211 for the disabled Burro tender and marked two-person launch. Fit Fuel Scoops and keep one free tonne for their original custody recorder."
+        "Fly to Cevilis G01-S211 for the disabled Okapi tender and marked two-person launch. Fit Fuel Scoops and keep one free tonne for their original custody recorder."
     }
     if state.losses.contains(where: { $0.role == "recorder" }) {
       return

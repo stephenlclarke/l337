@@ -1,0 +1,54 @@
+{
+  "status": "ESSENTIAL_ASSERTION_DISPOSITION_SOURCE_ONLY_NOT_MEDUSA_ACCEPTANCE",
+  "removedFile": {
+    "path": "Tests/L337CoreTests/LiberatorTests.swift",
+    "bytes": 6689,
+    "sha256": "34420ab25099ca426e01a0e04782b552539fd03aec594baeb295610620f9ffc4"
+  },
+  "currentSourceCommit": "b09e073580a3796141cebd6c014aa656c3f23a36",
+  "rows": [
+    {
+      "old": "Search/name/source identity via Liberator/DSV2 aliases",
+      "current": "MedusaCurrentSourceTests.medusaCurrentBareRequirementsRemainSeparateFromQuestAndMaximumUpgradeRights; actualcurrent name/family/currentR3id query",
+      "limit": "Old aliases intentionally removed. No quest authority from naming."
+    },
+    {
+      "old": "Backdoor XYZZY quote allowed, old415000CRgross/205500CRallowance, immediateMedusaexchange",
+      "current": "CurrentMedusaR3bareprice/performance/authoredPLUGHrequirementprojections and debugcannotbuy. No actualMedusa purchase coverage claimed.",
+      "remaining": "Genuine fullQ01clue/EMP/salvage/lattice/receiving/PLUGH/paidprovider/exchange/actualcrew path is UNISSUED. Bisonpositive covers sharedpaidtransactionmechanism only, never Medusa acceptance."
+    },
+    {
+      "old": "All portable item IDs/node/provenance/component/preferredslot/location/drive/history/cargo/mission/cash retained across transfer",
+      "current": "ShipTradeTests.ownedHullTransferPreservesCargoMissionsPortablePropertyAndCash current025\u2192029\u2192025; OriginalBisonAcquisitionRuntimeTests actualpaid path retained unchanged",
+      "limit": "Controlledownedprojection is component coverage. ActualMedusa-specific transfer remains unfinished."
+    },
+    {
+      "old": "Launch/acceleration/pitch/energy/speed/dock/shields/currentCommanderencode-decode",
+      "current": "ShipTradeTests.ownedHullControlsRealFlightPoolsMountsAndCurrentSave current025 retains dynamic currentperformance oracles. Native Bisonrealflight/save/cold journey retained.",
+      "limit": "No currentMedusa physicalflight/dock/save/crew acceptance claimed; remains unfinished until geometry/physics/quest gates close."
+    },
+    {
+      "old": "White/colourwireframe independence,24angleprojection,emissiveunchanged/clippedpanels",
+      "current": "MedusaCurrentSourceTests.medusaOriginalMaterialsSurviveProjectionAndKeepWireframePoliciesIndependent: exactoriginalpalette/faceMaterials/UVs,actualemissivecolours,24angles,twoindependentwirestyles",
+      "limit": "Positive actualrenderer test source retained; UNRUN, no nativegeometryqualification."
+    },
+    {
+      "old": "Reject incomplete/out-of-range material assignments and alpha panels; no palette borrowing",
+      "current": "MedusaCurrentSourceTests.shipMaterialLoaderRejectsIncompleteIndicesAndTransparentPanels retains checks; genericuntextured case has no material fallback",
+      "limit": "Generic unpainted geometry validity does not authenticate a modified currentMedusa resource."
+    },
+    {
+      "old": "Rear-station actualautopilot unit scenario on old023/171; nativegeometry/time/clearancechecks",
+      "current": "StationApproachTests.freshLaunchCurrentPeregrineAndOkapiDockFromTheActualCloseRearStation current025/029. OnlysourceIDs/methodnamechanged; allremainingoraclesbyteexact.",
+      "limit": "Existing controlled isolatedunit removesambientactors, so it is NOT full native/game acceptance or currentMedusadocking. ActualordinaryBisonjourney retains unrestricted actualarrivals."
+    },
+    {
+      "old": "Fuel-overcapacity refusal, incompatible route refusal, eventual allowed exchange quote",
+      "current": "Domain ShipTradeTests fuelAndRouteConstraintsFollowActualHullTanksAndDoNotDiscardFuel retains isolated synchronous component vectors and explicit missing-blueprint refusal. NativeEarnedPeregrineFixture returns SAME Buffalo runtime/owner after actual paid EMP disable, empty-hull cut and >=50kg physical receiving; actual full-tank quote refuses; fixed ordinary two-leg flight consumes fuel; actual Basic-navigation planner/set/clear produces route refusal then actual allowed SH025 quote. NativeCrewReadinessUnitTests voluntaryDisembarkEnablesSmallerActualExchangeAndFailedWriterRollsBack continues same runtime through original people/contracts/places/cash/rollback/retry and added cold load.",
+      "limit": "All new source UNCOMPILED UNRUN. Source review requested for all three original blockers together. No native acceptance or b09e clean status claimed."
+    }
+  ],
+  "b09eOpenReview": "G2 f4ee three blockers REMAIN OPEN pending SAME reviewer re-review of exact child. Current quote vectors, independently guarded decoded range/index vectors and genuine same-owner earned SH025 positive are authored; none compiled or run.",
+  "allTests": "UNCOMPILED_UNRUN",
+  "nativeQualifiedOrAcceptedCountDelta": 0
+}

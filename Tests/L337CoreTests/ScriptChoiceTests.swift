@@ -40,8 +40,11 @@ private struct ChoiceFixture {
     courier = try ScriptPackLibrary.read(examples.appendingPathComponent("branch-courier"))
   }
   func clean() { try? FileManager.default.removeItem(at: root) }
-  func game() -> Game {
+  func game() throws -> Game {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
+    game.commander.mirrorFittedEquipment()
+    try #require(game.commander.valid)
     game.screen = .status
     game.scriptPacks = [parent, patrol, courier]
     return game
@@ -59,12 +62,13 @@ private struct ChoiceFixture {
   }
 }
 
-@Test func actualStationChoiceUnlocksOnlyItsMatchingFollowupAndSurvivesReload() async throws {
+@Test(arguments: ["patrol", "courier"])
+func actualStationChoiceUnlocksOnlyItsMatchingFollowupAndSurvivesReload(choice: String) async throws {
   let fixture = try ChoiceFixture()
   defer { fixture.clean() }
   #expect(fixture.patrol.manifest.receiptRequirements?.first?.digest == fixture.parent.digest)
   #expect(fixture.courier.manifest.receiptRequirements?.first?.digest == fixture.parent.digest)
-  let runtime = GameRuntime(game: fixture.game(), saveURL: fixture.save)
+  let runtime = GameRuntime(game: try fixture.game(), saveURL: fixture.save)
   let id = try await fixture.open(runtime)
   let before = await runtime.snapshot()
   await runtime.key("down")
@@ -75,29 +79,32 @@ private struct ChoiceFixture {
   #expect(
     await runtime.snapshot().commander.scriptState.instances[id]?.choiceReceipts.isEmpty == true)
   await runtime.key("contacts-open")
-  await runtime.key("down")
+  if choice == "courier" { await runtime.key("down") }
   await runtime.key("return")
   let chosen = await runtime.snapshot()
   let receipt = try #require(
     chosen.commander.scriptState.instances[id]?.choiceReceipts["assignment"])
-  #expect(receipt.choice == "courier" && receipt.committed.mainStation)
+  #expect(receipt.choice == choice && receipt.committed.mainStation)
   #expect(
     chosen.commander.scriptState.instances[id]?.completionReceipt?.choices?["assignment"] == receipt
   )
   #expect(chosen.commander.credits == before.commander.credits)
+  let matching = choice == "courier" ? fixture.courier : fixture.patrol
+  let opposite = choice == "courier" ? fixture.patrol : fixture.courier
   var attempt = chosen
-  #expect(throws: MissionPackError.self) { try attempt.acceptScriptMission(fixture.patrol) }
-  let restored = GameRuntime(game: fixture.game())
+  #expect(throws: MissionPackError.self) { try attempt.acceptScriptMission(opposite) }
+  let restored = GameRuntime(game: try fixture.game())
   try await restored.load(from: fixture.save)
   await restored.key("contacts-open")
-  #expect(await restored.snapshot().scriptAvailablePackDigest == fixture.courier.digest)
+  #expect(await restored.snapshot().scriptAvailablePackDigest == matching.digest)
   await restored.key("return")
   let working = await restored.snapshot()
   let child = try #require(
     working.commander.scriptState.instances.values.first {
-      $0.definition == fixture.courier.manifest.stateID
+      $0.definition == matching.manifest.stateID
     })
-  #expect(child.receiptJoins?["chosen-assignment"] == [id] && working.commander.cargoTonnes == 1)
+  #expect(child.receiptJoins?["chosen-assignment"] == [id])
+  #expect(working.commander.cargoTonnes == (choice == "courier" ? 1 : 0))
   #expect(working.commander.scriptState.instances[id]?.choiceReceipts["assignment"] == receipt)
   #expect(working.commander.valid)
 }
@@ -105,7 +112,7 @@ private struct ChoiceFixture {
 @Test func failedChoicePublicationRetainsTheUncommittedSelectionForOneRealRetry() async throws {
   let fixture = try ChoiceFixture()
   defer { fixture.clean() }
-  let runtime = GameRuntime(game: fixture.game(), saveURL: fixture.save)
+  let runtime = GameRuntime(game: try fixture.game(), saveURL: fixture.save)
   let id = try await fixture.open(runtime)
   await runtime.key("down")
   let before = await runtime.snapshot()
@@ -133,7 +140,7 @@ private struct ChoiceFixture {
 @Test func nativeChoiceButtonsAndBackOnlyBrowseUntilExplicitConfirmation() async throws {
   let fixture = try ChoiceFixture()
   defer { fixture.clean() }
-  let runtime = GameRuntime(game: fixture.game())
+  let runtime = GameRuntime(game: try fixture.game())
   let id = try await fixture.open(runtime)
   let before = await runtime.snapshot()
   await runtime.blackjackHandoffClick(
@@ -184,7 +191,7 @@ func aScriptCannotReplaceThePlayersConfirmedBranchOrKeepAnEarlierProposedReward(
       ("capabilities = [", "capabilities = [\"economy-v2\", ")
     ], plain: plain)
   defer { fixture.clean() }
-  let runtime = GameRuntime(game: fixture.game(), saveURL: fixture.save)
+  let runtime = GameRuntime(game: try fixture.game(), saveURL: fixture.save)
   let id = try await fixture.open(runtime)
   let dialogue = await runtime.snapshot()
   let helpRows = PlayerHelp.pages(for: dialogue).flatMap(\.rows)
@@ -214,7 +221,7 @@ func aScriptCannotReplaceThePlayersConfirmedBranchOrKeepAnEarlierProposedReward(
     """
   let fixture = try ChoiceFixture(source: source)
   defer { fixture.clean() }
-  var game = fixture.game()
+  var game = try fixture.game()
   let before = game.commander
   #expect(throws: MissionPackError.self) { try game.acceptScriptMission(fixture.parent) }
   #expect(game.commander == before)
@@ -240,7 +247,7 @@ func aScriptCannotReplaceThePlayersConfirmedBranchOrKeepAnEarlierProposedReward(
       ("[[dialogs]]", "[[handlers]]\nevent='dialogue.chosen'\nfunction='chosen'\n\n[[dialogs]]")
     ])
   defer { fixture.clean() }
-  let runtime = GameRuntime(game: fixture.game(), saveURL: fixture.save)
+  let runtime = GameRuntime(game: try fixture.game(), saveURL: fixture.save)
   let id = try await fixture.open(runtime)
   await runtime.key("return")
   _ = await runtime.advance(delta: 0.1)
@@ -298,7 +305,7 @@ func aScriptCannotReplaceThePlayersConfirmedBranchOrKeepAnEarlierProposedReward(
     """
   let fixture = try ChoiceFixture(source: source)
   defer { fixture.clean() }
-  let runtime = GameRuntime(game: fixture.game(), saveURL: fixture.save)
+  let runtime = GameRuntime(game: try fixture.game(), saveURL: fixture.save)
   let id = try await fixture.open(runtime)
   await runtime.key("return")
   let original = await runtime.snapshot()

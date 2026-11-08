@@ -1,0 +1,24 @@
+{
+  "status": "FROZEN_BEFORE_SINGLE_BOUNDED_82_SOURCE_ENGINEERING_PASS",
+  "authoringSourceSHA256": "f5483379bbfec30ae4c7c75956b1abee193b5c0978e3bad76d49c079e8a1584b",
+  "inputSHA256": "5283fe8d7b64ebe47c7ca5e7245d7c4b9f3c7da4e58112b5583d6f9f494b2c33",
+  "maximumRecordBytes": 1048576,
+  "operationBounds": {
+    "sourceParses": 82,
+    "coordinateConversions": 939480,
+    "spanComparisons": 626320,
+    "scaledCoordinateEvaluations": 939480,
+    "faceIndexChecks": 1740036,
+    "faceMaterialChecks": 580012,
+    "triangleAreaEvaluations": 580012,
+    "analyticMomentEvaluations": 580012,
+    "quadratureMomentEvaluations": 1740036,
+    "hardwareAllocations": 637,
+    "resultRecords": 82
+  },
+  "numericalPolicy": "Analytic triangle surface moments and independent degree2 quadrature with fixed1e-9 relative entry tolerance; math.fsum accumulation, full original-origin/COM tensors, positive principal minors, one ceil-kg reserve at COM.",
+  "nativeRendererCompilerTests": 0,
+  "originalCreatorHelperExecutions": 0,
+  "sourceGeometryWrites": 0,
+  "retriesAllowed": 0
+}

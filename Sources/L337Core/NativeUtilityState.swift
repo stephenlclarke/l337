@@ -252,9 +252,7 @@ struct NativeUtilityState: Equatable, Codable, Sendable {
     consignments = []
   }
   static func target(owner: UUID) -> NativeStationIdentity {
-    .init(
-      world: owner, system: .init(galaxy: 0, system: 237), definition: "rrs_headquarters",
-      version: "1.5.4", key: "rrs_headquarters-g0-s237")
+    OriginalStationSite.remoteUtility.identity(world: owner)
   }
   static func isTarget(_ identity: NativeStationIdentity) -> Bool {
     identity == target(owner: identity.world)

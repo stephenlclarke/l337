@@ -1,0 +1,56 @@
+{
+  "status": "FROZEN_SOURCE_METHOD_REVIEW_CANDIDATE_NO_EXECUTION_AUTHORIZATION",
+  "method": "decimal80-original-origin-moments-v1",
+  "beforeCommit": "4eb81b6321bc3e9c35ce460be2389e6ddd2b10d6",
+  "source": {
+    "path": "docs/fleet-physical/decimal80-061-122-authoring.py",
+    "bytes": 20175,
+    "sha256": "326458a4757a5e2d6d526e4025f61df6951f0dd17f8c5a12b16fa5e63dd9c943"
+  },
+  "input": {
+    "path": "docs/fleet-physical/decimal80-061-122-method-input-first.json",
+    "bytes": 114824,
+    "sha256": "3116ad99f94910fbc0c111fbfb539af0cec9998388f0527e0bff4f45bc8d1583"
+  },
+  "semantics": {
+    "path": "docs/fleet-physical/DECIMAL80-061-122-METHOD.md",
+    "bytes": 6663,
+    "sha256": "387c9bd7897ef92ab10c9993565c8e0f5f8b144b3e45e23d60cbd11d3e952c19"
+  },
+  "scopeIDs": [
+    "SH061",
+    "SH122"
+  ],
+  "precisionDigits": 80,
+  "rounding": "ROUND_HALF_EVEN",
+  "sourceInputSemantics": "TOMLparse_float=str; each detailed token directlyDecimal/int->Decimal exactlyonce; no Float64 roundtrip. Fixedsource61scale20/source122metre1/originalaxes+origin; exactparentrole/material/component/hardware semantic equality.",
+  "numericInvariants": "Independent analytic and explicit3barycentricpoint polynomial integration; original-origin mass/3first/9second comparisons withunchanged1e-9*max(1,abs(a),abs(b)); full9parallelaxis/symmetry/SPD; oneDecimalceiling reserveatCOM; no area/source/geometry truthcertificate.",
+  "errorSemantics": "Fixed80 HALF_EVEN noadaptiveprecision. Invalid/div0/overflow/underflow/subnormal/clamp/floatmix trap STOP. Inexact/rounded flagsnormal+recorded. Anyunownedmaterial/index/nonfinite/nonpositivearea orcomponent/identity/tensor/outputboundary failureSTOP, noomit/clamp/adjust.",
+  "outputBridge": "FinalDecimal->Float64 only, allconversionscounted; refuseceiling/reserve/integer-representability/scalar/symmetry/parallelaxis/SPD failure ratherthanaltervalues.",
+  "operationCaps": {
+    "sourceParses": 2,
+    "coordinateConversions": 27840,
+    "scaledCoordinateEvaluations": 27840,
+    "faceIndexChecks": 53616,
+    "faceMaterialChecks": 17872,
+    "triangleAreaEvaluations": 17872,
+    "squareRoots": 17872,
+    "analyticMomentEvaluations": 17872,
+    "quadratureMomentEvaluations": 53616,
+    "momentConsistencyChecks": 2275,
+    "hardwareAllocations": 15,
+    "decimalTensorChecks": 2,
+    "outputFloatConversions": 5374,
+    "floatBridgeChecks": 2,
+    "resultRecords": 2
+  },
+  "maximumRecordBytes": 1048576,
+  "outputDirectory": "calculated-decimal80-061-122-records",
+  "resultFile": "decimal80-061-122-results.json",
+  "executionGuard": "Requires futureauthorityFIRST thatpins reviewedmethod/sourceinput/Rootdisposition beforegeometryread. Noauthorityfile exists for thismethod. Processintegrityguardnotcryptographiccapability.",
+  "executedImportsParsersCompilersTestsSourceGeometryOrNumericalEvaluations": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "nativeOrLoadedMassQualification": false,
+  "oldSuccessfulRecordsAndStoppedResultsUnchanged": true,
+  "reviewRequest": "ONE bounded source-method assessment beforeRootmayauthorizenewexactscope; no evaluation/precisionescalation/unchangedretry whilewaiting. Entirefleet independentcodingcontinues."
+}

@@ -27,12 +27,96 @@ struct NativeGlassMeridianMarkerLoss: Codable, Sendable, Equatable {
   let physicalTime: Double
 }
 
-struct NativeGlassMeridianState: Codable, Sendable, Equatable {
+private struct NativeGlassMeridianStateValue: Codable, Sendable, Equatable {
   let permission: NativeGlassMeridianPermission
   var readings: [NativeGlassMeridianReading] = []
   var losses: [NativeGlassMeridianMarkerLoss] = []
   var surveyor: NativeC01SurveyorState?
   var reservationCase: NativeC01ReservationState?
+  var timingStandard: NativeC01TimingStandardState?
+  var laneRepair: NativeC01LaneRepairState?
+  var clinicEscort: NativeC01ClinicEscortState?
+  var completion: NativeC01CompletionState?
+}
+
+/// Keep the aggregate behind standard Array COW storage, as ScriptInstance does.
+struct NativeGlassMeridianState: Codable, Sendable, Equatable {
+  private var storage: [NativeGlassMeridianStateValue]
+
+  init(
+    permission: NativeGlassMeridianPermission,
+    readings: [NativeGlassMeridianReading] = [],
+    losses: [NativeGlassMeridianMarkerLoss] = [],
+    surveyor: NativeC01SurveyorState? = nil,
+    reservationCase: NativeC01ReservationState? = nil,
+    timingStandard: NativeC01TimingStandardState? = nil,
+    laneRepair: NativeC01LaneRepairState? = nil,
+    clinicEscort: NativeC01ClinicEscortState? = nil,
+    completion: NativeC01CompletionState? = nil
+  ) {
+    storage = [
+      .init(
+        permission: permission, readings: readings, losses: losses, surveyor: surveyor,
+        reservationCase: reservationCase, timingStandard: timingStandard, laneRepair: laneRepair,
+        clinicEscort: clinicEscort, completion: completion)
+    ]
+  }
+
+  init(from decoder: any Decoder) throws {
+    storage = [try NativeGlassMeridianStateValue(from: decoder)]
+  }
+
+  func encode(to encoder: any Encoder) throws {
+    try storage[0].encode(to: encoder)
+  }
+
+  static func == (lhs: Self, rhs: Self) -> Bool {
+    // Array equality may accept a shared buffer without comparing NaN-bearing fields.
+    lhs.storage[0] == rhs.storage[0]
+  }
+
+  var permission: NativeGlassMeridianPermission {
+    _read { yield storage[0].permission }
+  }
+
+  var readings: [NativeGlassMeridianReading] {
+    _read { yield storage[0].readings }
+    _modify { yield &storage[0].readings }
+  }
+
+  var losses: [NativeGlassMeridianMarkerLoss] {
+    _read { yield storage[0].losses }
+    _modify { yield &storage[0].losses }
+  }
+
+  var surveyor: NativeC01SurveyorState? {
+    _read { yield storage[0].surveyor }
+    _modify { yield &storage[0].surveyor }
+  }
+
+  var reservationCase: NativeC01ReservationState? {
+    _read { yield storage[0].reservationCase }
+    _modify { yield &storage[0].reservationCase }
+  }
+
+  var timingStandard: NativeC01TimingStandardState? {
+    _read { yield storage[0].timingStandard }
+    _modify { yield &storage[0].timingStandard }
+  }
+
+  var laneRepair: NativeC01LaneRepairState? {
+    _read { yield storage[0].laneRepair }
+    _modify { yield &storage[0].laneRepair }
+  }
+
+  var clinicEscort: NativeC01ClinicEscortState? {
+    _read { yield storage[0].clinicEscort }
+    _modify { yield &storage[0].clinicEscort }
+  }
+  var completion: NativeC01CompletionState? {
+    _read { yield storage[0].completion }
+    _modify { yield &storage[0].completion }
+  }
 }
 final class NativeGlassMeridianPending: Sendable {
   let sealed: NativeGlassMeridianReading
@@ -48,7 +132,7 @@ enum NativeGlassMeridian {
   static let stateID = "l337.glass-meridian/glass-meridian"
   static let capability = "native-glass-meridian-v1"
   static let version = "1.0.0"
-  static let digest = "9da0a7a020d3103a9ba528543b7694399fd81ef4aba2006df62219afdebcfaa8"
+  static let digest = "97d4ab6a0c65290dea7cd20b34f9e2a5c8d71911ad23255f907dd23e4941dd75"
   static let encounters = ["meridian-clock-a", "meridian-clock-b"]
   static let markerID = "meridian-clock"
   static let targets = ["sedan-clock-a", "sedan-clock-b"]
@@ -56,13 +140,13 @@ enum NativeGlassMeridian {
   static let source = ContractStationIdentity(galaxy: 0, system: 7, stationClass: "main-orbital")
   static let objective = SystemIdentity(galaxy: 0, system: 185)
   static let laterStages =
-    "Clocks verified. Recover the original recorder at Navidor; stages 4-9 remain unavailable. No payment or final clue."
+    "Clocks verified. Recover the same original recorder at Navidor, then continue the booking inquiry. Final payment and clue require successful archive receiving at Avenor."
 
   static func availability(_ pack: ScriptPack, accepted: Bool) -> String? {
     guard pack.manifest.stateID == stateID, pack.digest == digest,
       pack.manifest.glassMeridian?.valid == true
     else {
-      return "Restore the approved Glass Meridian opening."
+      return "Restore the approved Glass Meridian campaign."
     }
     return accepted
       ? nil : "Use Station Contracts at the actual Avenor berth for Venn's commission."
@@ -116,9 +200,12 @@ enum NativeGlassMeridian {
     ScriptIdentity.uuid("glass-meridian-clock-reading-v1:\(permission):\(ordinal)")
   }
   static func readingsValid(_ state: NativeGlassMeridianState) -> Bool {
-    guard state.readings.count <= 2,
-      Set(state.readings.map { $0.reading.ordinal }).count == state.readings.count
-    else { return false }
+    guard state.readings.count <= 2 else { return false }
+    if state.readings.count == 2 {
+      guard state.readings[0].reading.ordinal != state.readings[1].reading.ordinal else {
+        return false
+      }
+    }
     var lastEnd = state.permission.physicalTime
     for sealed in state.readings {
       let r = sealed.reading
@@ -168,7 +255,7 @@ enum NativeGlassMeridian {
 
 extension Game {
   var glassMeridianMission: ScriptInstance? {
-    commander.scriptState.instances.values.first { $0.definition == NativeGlassMeridian.stateID }
+    nativeGuidanceStoredMission(definition: NativeGlassMeridian.stateID)
   }
   var glassMeridianPack: ScriptPack? {
     scriptPacks.first {
@@ -178,9 +265,33 @@ extension Game {
   }
   var glassMeridianScanStatus: String? {
     guard let state = glassMeridianMission?.savedGlassMeridian else { return nil }
+    if state.completion?.terminal != nil {
+      return "MERIDIAN ORIGINAL RECORDER ARCHIVED - CASE, FEE AND CLUE RECORDED"
+    }
+    if state.completion != nil {
+      return state.surveyor?.loss == nil
+        ? "MERIDIAN EVIDENCE OUTCOME RECORDED - AVENOR ORIGINAL RECORDER RECEIVING NEXT"
+        : "MERIDIAN EVIDENCE OUTCOME RETAINED - LOST ORIGINAL PREVENTS FINAL RECEIVING"
+    }
+    if let lane = state.laneRepair {
+      if state.surveyor?.loss != nil {
+        return "MERIDIAN ORIGINAL RECORDER LOST - CALIBRATION HISTORY RETAINED"
+      }
+      if state.timingStandard?.loss != nil {
+        return "MERIDIAN ORIGINAL STANDARD LOST - CALIBRATION HISTORY RETAINED"
+      }
+      return lane.installation != nil
+        ? "MERIDIAN LANE CALIBRATED - STANDARD INSTALLED / ORIGINAL8KG RECORDER ABOARD"
+        : "MERIDIAN LANE RELAYS \(lane.receipts.count)/3 - SAME ORIGINAL STANDARD REQUIRED"
+    }
+    if let standard = state.timingStandard, standard.capture != nil {
+      return standard.held
+        ? "MERIDIAN STANDARD ABOARD - 1.008T PROTECTED / LANE REPAIR UNAVAILABLE"
+        : "MERIDIAN ORIGINAL STANDARD LOST - ORIGINAL CANNOT BE REISSUED"
+    }
     if state.reservationCase?.audit != nil {
       return state.surveyor?.loss == nil
-        ? "MERIDIAN SOREL AUDIT VERIFIED - 8KG RECORDER ABOARD / ENLIRIN STAGE UNAVAILABLE"
+        ? "MERIDIAN SOREL AUDIT VERIFIED - 8KG RECORDER ABOARD / RECOVER ENLIRIN STANDARD"
         : "MERIDIAN SOREL AUDIT VERIFIED - ORIGINAL RECORDER LOST / ENLIRIN STAGE UNAVAILABLE"
     }
     if state.surveyor?.loss != nil { return "MERIDIAN RECORDER LOST - ORIGINAL CANNOT BE REISSUED" }

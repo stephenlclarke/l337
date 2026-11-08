@@ -41,33 +41,41 @@ private struct StationAutoAssessment {
 }
 
 extension Game {
+  @inline(never)
   var stationAutoDockingActive: Bool {
     guard !docked, !paused, screen.isFlight, energy.isFinite, energy > 0,
       jumpCountdown == nil, workGuidance == nil,
       workBraking == nil,
-      commander.hasAutomaticDocking, targetingEnabled || autoPilot.manualEngagement,
+      nativeStationAutoHasDocking(), targetingEnabled || autoPilot.manualEngagement,
       let station = autoTargetBody, station.hull == .station, station.energy.isFinite,
       station.energy > 0,
       station.position.finite, station.position.length.isFinite, station.orientation.validRotation,
       let actor = station.physical?.identity, autoPilot.targetActor == actor,
       bodies.filter({ $0.id == station.id }).count == 1,
       bodies.filter({ $0.physical?.identity == actor }).count == 1,
-      let player = commander.flightSimulation.player,
+      let player = storedFlightSimulation().player,
       actor.system == player.system, actor.visit == player.visit
     else { return false }
     return station.nativeStationIdentity == nil
-      ? station.id == 0 && actor == commander.flightSimulation.anchors?.station.identity
+      ? station.id == 0 && actor == storedFlightSimulation().anchors?.station.identity
       : nativeStationBodyIsCurrent(station)
   }
 
+  @inline(never)
   private func stationAutoAssessment() -> StationAutoAssessment? {
-    guard stationAutoDockingActive, let context = gameplayContext(),
-      context.player.identity == commander.flightSimulation.player,
+    guard stationAutoDockingActive else { return nil }
+    return assessActiveStationDocking()
+  }
+
+  @inline(never)
+  private func assessActiveStationDocking() -> StationAutoAssessment? {
+    guard let context = gameplayContext(),
+      context.player.identity == storedFlightSimulation().player,
       context.revision == gameplayRevision, context.system == systemIdentity,
-      context.visit == commander.flightSimulation.visit,
+      context.visit == storedFlightSimulation().visit,
       context.player.identity.system == context.system,
       context.player.identity.visit == context.visit,
-      context.physicalTime == commander.flightSimulation.physicalTime,
+      context.physicalTime == storedFlightSimulation().physicalTime,
       context.physicalTime.isFinite, context.player.position.finite,
       context.player.orientation.validRotation,
       context.actors.filter({ $0.hull == .station }).allSatisfy({
@@ -79,7 +87,7 @@ extension Game {
       ($0.energy > 0 || !$0.energy.isFinite) && $0.hull.isTargetShip
         && ($0.hostile || $0.physical?.npc?.intention == .engage(player)
           || $0.physical.map {
-            commander.crimeLedger.hasCurrentUnlawfulAttack(
+            nativeQueryStoredCrimeLedger().hasCurrentUnlawfulAttack(
               from: $0.identity, against: player, context: context)
           } == true)
     }
@@ -98,12 +106,13 @@ extension Game {
     return .init(context: context, threats: threats, incoming: incoming)
   }
 
+  @inline(never)
   private func stationAutoKnownTarget(_ body: SpaceBody, context: EncounterContext) -> Bool {
     guard pendingNativeStationDock == nil, !isEMPDisabled(body), let physical = body.physical,
       let npc = physical.npc,
       physical.empSource == nil, physical.salvage == nil,
       npc.intention == .engage(context.player.identity)
-        || commander.crimeLedger.hasCurrentUnlawfulAttack(
+        || nativeQueryStoredCrimeLedger().hasCurrentUnlawfulAttack(
           from: physical.identity, against: context.player.identity, context: context),
       physical.identity != context.player.identity,
       physical.identity.system == context.system, physical.identity.visit == context.visit,
@@ -113,12 +122,13 @@ extension Game {
       let snapshot = context.actors.first(where: { $0.identity == physical.identity }),
       snapshot.hull == body.hull, snapshot.npc == npc, snapshot.energy == body.energy,
       npc.resources?.valid == true, body.scriptNPC == nil, body.scriptShot == nil,
-      ShipCatalogue.nativeShip(body.hull) != nil,
-      physical.catalogueShipID == nil
-        || physical.catalogueShipID == ShipCatalogue.nativeShip(body.hull)?.id,
+      let catalogue = physical.catalogueShipID, snapshot.catalogueShipID == catalogue,
+      NPCPersistenceSnapshot.capture(
+        body: body, pose: storedFlightSimulation().pose, physicalTime: context.physicalTime,
+        protection: context.protection) != nil,
       !context.protection.protectedActors.contains(physical.identity)
     else { return false }
-    return commander.crimeLedger.permitsAutonomousDefence(
+    return nativeQueryStoredCrimeLedger().permitsAutonomousDefence(
       owner: context.player.identity, victim: physical.identity, context: context)
   }
 
@@ -157,8 +167,9 @@ extension Game {
       let snapshot = context.actors.first(where: { $0.identity == physical.identity }),
       snapshot.hull == body.hull, snapshot.npc == npc, snapshot.energy == body.energy,
       body.scriptNPC == nil, body.scriptShot == nil,
-      let native = ShipCatalogue.nativeShip(body.hull),
-      physical.catalogueShipID == nil || physical.catalogueShipID == native.id,
+      let catalogue = physical.catalogueShipID, snapshot.catalogueShipID == catalogue,
+      NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+        catalogueShipID: catalogue, hull: body.hull, npc: npc, missiles: body.missiles),
       physical.empSource == nil || isEMPDisabled(body)
     else { return false }
     return true
@@ -211,7 +222,7 @@ extension Game {
       }
       if isEMPDisabled(body) { continue }
       guard
-        commander.crimeLedger.hasCurrentUnlawfulAttack(
+        nativeQueryStoredCrimeLedger().hasCurrentUnlawfulAttack(
           from: physical.identity, against: context.player.identity, context: context)
       else { continue }
       // Native ordinary flee/navigation does not emit a beam or run hostile naval tactics.
@@ -285,7 +296,7 @@ extension Game {
     }
     let structureRadius =
       (stationMesh.vertices.map(\.length).max() ?? .infinity)
-      + (commander.playerMesh.vertices.map(\.length).max() ?? .infinity)
+      + (nativeGuidanceStoredPlayerMesh().vertices.map(\.length).max() ?? .infinity)
     let clearanceRadius = max(station.stationClearanceRadius, structureRadius)
     let interruptionAllowed: Bool
     if pendingNativeStationDock == nil {
@@ -354,7 +365,7 @@ extension Game {
     let authenticated = nearby.filter { body in
       guard let actor = body.physical?.identity else { return false }
       return stationAutoKnownTarget(body, context: context)
-        && commander.crimeLedger.hasCurrentUnlawfulAttack(
+        && nativeQueryStoredCrimeLedger().hasCurrentUnlawfulAttack(
           from: actor, against: context.player.identity, context: context)
     }
     let previous = stationAutoDefence?.combatActor
@@ -399,10 +410,10 @@ extension Game {
       lateral = lateral - route * lateral.dot(route)
       if lateral.length < 1e-8 { lateral = route.cross(.init(0, 1, 0)) }
       if lateral.length < 1e-8 { lateral = route.cross(.init(1, 0, 0)) }
-      let worldLateral = commander.flightSimulation.pose.orientation.apply(lateral.unit)
+      let worldLateral = storedFlightSimulation().pose.orientation.apply(lateral.unit)
       stationAutoDefence?.evasionWorld = worldLateral
     }
-    let side = commander.flightSimulation.pose.shipVector(
+    let side = storedFlightSimulation().pose.shipVector(
       stationAutoDefence?.evasionWorld ?? .init(0, 0, 0))
     let lateral = (side - route * side.dot(route)).unit
     let pressure =
@@ -411,10 +422,10 @@ extension Game {
       : max(
         stationAutoPulseOnly(danger, context: context) ? 0 : 0.25,
         max(0, 1 - danger.position.length / 1500))
-    let front = commander.laser(on: .front)
+    let front = nativeStationAutoLaser(on: .front)
     let canFaceForResponse =
       (front != nil && front != .mining)
-      || commander.missiles > 0 || commander.unlimitedMissiles
+      || nativeStationAutoMissiles() > 0 || nativeStationAutoUnlimitedMissiles()
     let aim = canFaceForResponse ? combat?.position : nil
     var transitGoal: Vector3?
     if hazard == .active {
@@ -479,7 +490,7 @@ extension Game {
     let facing = hypot(atan2(-normal.y, hypot(normal.x, normal.z)), atan2(-normal.x, -normal.z))
     let phase = abs(atan2(station.entranceUp.x, station.entranceUp.y))
     let rate = abs(autoPilot.rollRate + station.rotationRate * station.orientation.z.z)
-    let relative = commander.flightSimulation.pose.shipVector(
+    let relative = storedFlightSimulation().pose.shipVector(
       flightWorldVelocity - nativeStationVelocity(station))
     let outward = relative.dot(normal)
     let lateralVelocity = relative - normal * outward
@@ -558,8 +569,8 @@ extension Game {
     let reserve = AutoTargetControl.stationEntryStepReserve
     let horizon = speed / acceleration + reserve
     let distance = speed * speed / (2 * acceleration) + speed * reserve
-    let radius = commander.playerMesh.vertices.map(\.length).max() ?? .infinity
-    let pose = commander.flightSimulation.pose
+    let radius = nativeGuidanceStoredPlayerMesh().vertices.map(\.length).max() ?? .infinity
+    let pose = storedFlightSimulation().pose
     let worldVelocity = pose.orientation.apply(relativeVelocity)
     let center = pose.position + worldVelocity.unit * (distance * 0.5)
     let enclosureRadius = radius + distance * 0.5
@@ -579,7 +590,7 @@ extension Game {
         physical.angularVelocity.length.isFinite,
         (body.rotation + abs(body.rotationRate) * horizon).isFinite, physical.ordnance == nil,
         physical.identity.system == systemIdentity,
-        physical.identity.visit == commander.flightSimulation.visit,
+        physical.identity.visit == storedFlightSimulation().visit,
         !isNativeCrimboMember(physical.identity), motionMargins[physical.identity] == nil
       else { return false }
       let mesh = gameplayMesh(for: body)
@@ -650,24 +661,34 @@ extension Game {
     if physical.spawnIdentity != nil {
       // steerGameplayActor uses this cap; the enclosing work box covers all orientations.
       guard physical.canonicalSpin != true else { return nil }
-      let craft = ShipCatalogue.nativeShip(body.hull)?.game
       return Self.stationAutoNPCMotionAllowance(
-        acceleration: max(1, (craft?.acceleration ?? 2) * 18), horizon: horizon)
+        catalogueShipID: physical.catalogueShipID, horizon: horizon)
     }
     // Legacy enemyAction contracts relative range. The player's finite stop travel
     // bounds the remaining increase in its native radial/per-axis displacement.
     let legacy =
-      body.hull.navalSpeed.map { $0 * 18 }
+      body.nativeNavalCombat.map { $0.speed * 18 }
       ?? ((body.position.length + playerDistance) * 0.25 + 60)
     return max(physical.velocity.length, legacy) * horizon
   }
 
   /// Semi-implicit velocity-then-position integration adds at most h*T/2
   /// to the continuous acceleration integral when every physics step is at most h.
+  static func stationAutoNPCMotionAllowance(
+    catalogueShipID: String?, horizon: Double
+  ) -> Double? {
+    guard let id = catalogueShipID,
+      let source = OriginalFleetRuntimeHullSource.source(for: id)
+    else { return nil }
+    return Self.stationAutoNPCMotionAllowance(
+      acceleration: max(1, source.performance.acceleration * 18), horizon: horizon)
+  }
+
   static func stationAutoNPCMotionAllowance(acceleration: Double, horizon: Double) -> Double {
     0.5 * acceleration * horizon * (horizon + AutoTargetControl.stationEntryStepReserve)
   }
 
+  @inline(never)
   private func stationAutoRayTarget(_ mount: LaserMount) -> SpaceBody? {
     let direction: Vector3
     switch mount {
@@ -684,19 +705,25 @@ extension Game {
     return bodies.first { $0.id == id }
   }
 
+  @inline(never)
   mutating func fireStationAutoLaser() {
     guard let assessment = stationAutoAssessment(), !playerEMPDisabled,
       !workFireSuspended, fireCooldown <= 0, laserHeat < 240, energy > 1
     else { return }
+    fireStationAutoLaserAfterAssessment(assessment)
+  }
+
+  @inline(never)
+  private mutating func fireStationAutoLaserAfterAssessment(_ assessment: StationAutoAssessment) {
     // A shot must not consume the strict native activation reserve before incoming detection.
     // Reserve even before a launcher acts later in this same frame; manual fire is unchanged.
-    if !ecmControl.fieldActive, commander.fittedEquipment(at: .utility(.ecm)) != nil,
+    if !ecmControl.fieldActive, nativeStationAutoHasECM(),
       energy - Self.combatLaserEnergyCost <= ECMControl.activationEnergyCost
     {
       return
     }
     for mount in LaserMount.allCases {
-      guard let laser = commander.laser(on: mount), laser != .mining,
+      guard let laser = nativeStationAutoLaser(on: mount), laser != .mining,
         let target = stationAutoRayTarget(mount),
         assessment.threats.contains(where: { $0.id == target.id }),
         stationAutoKnownTarget(target, context: assessment.context)
@@ -706,12 +733,18 @@ extension Game {
     }
   }
 
+  @inline(never)
   func stationAutoMissileTarget() -> SpaceBody? {
     guard let assessment = stationAutoAssessment(), !playerEMPDisabled,
       !workFireSuspended, !ecmControl.fieldActive, missileCooldown == 0, energy > 1,
-      commander.missiles > 0 || commander.unlimitedMissiles,
+      nativeStationAutoMissiles() > 0 || nativeStationAutoUnlimitedMissiles(),
       stationAutoDefence?.missilePublicationRefused != true, assessment.incoming.isEmpty
     else { return nil }
+    return stationAutoMissileTargetAfterAssessment(assessment)
+  }
+
+  @inline(never)
+  private func stationAutoMissileTargetAfterAssessment(_ assessment: StationAutoAssessment) -> SpaceBody? {
     let response = militaryRetaliationEnabled ? retaliation.pendingResponse(time: time) : nil
     let confirmed = assessment.threats.first { body in
       response.map {
@@ -721,7 +754,7 @@ extension Game {
     }
     let needsMissile =
       max(0, laserHeat - 0.1 * 12) >= 240
-      || commander.laser(on: .front) == nil || commander.laser(on: .front) == .mining
+      || nativeStationAutoLaser(on: .front) == nil || nativeStationAutoLaser(on: .front) == .mining
     // Filter each actor's genuine response eligibility before selecting nearest.
     // A closer unhurt craft must not mask a current authenticated attacker.
     let target =
@@ -732,7 +765,7 @@ extension Game {
           let actor = body.physical?.identity
         else { return false }
         return needsMissile
-          || commander.crimeLedger.hasCurrentUnlawfulAttack(
+          || nativeQueryStoredCrimeLedger().hasCurrentUnlawfulAttack(
             from: actor, against: assessment.context.player.identity, context: assessment.context)
       }.min { $0.position.length < $1.position.length }
     guard let target, target.position.z > 0, let actor = target.physical?.identity,
@@ -778,7 +811,7 @@ extension GameRuntime {
       return
     }
     if let station = game.autoTargetBody?.physical?.identity,
-      let player = game.commander.flightSimulation.player,
+      let player = game.storedFlightSimulation().player,
       game.stationAutoDefence?.station != station || game.stationAutoDefence?.player != player
     {
       game.stationAutoDefence = .init(station: station, player: player)
@@ -809,7 +842,7 @@ extension GameRuntime {
       // No physical frame, emitted actor or ammunition mutation has been installed.
       game = before
       if game.stationAutoDefence == nil, let station = game.autoTargetBody?.physical?.identity,
-        let player = game.commander.flightSimulation.player
+        let player = game.storedFlightSimulation().player
       {
         game.stationAutoDefence = .init(station: station, player: player)
       }

@@ -4,7 +4,7 @@ import Testing
 @testable import L337Core
 
 private func performanceWithPrice(_ price: Int, fuel: Int? = nil) throws -> ShipPerformance {
-  let original = try #require(ShipCatalogue.ship("SH013")?.game)
+  let original = try #require(ShipCatalogue.ship("SH025")?.game)
   let bytes = try JSONEncoder().encode(original)
   let decoded = try JSONSerialization.jsonObject(with: bytes)
   var fields = try #require(decoded as? [String: Any])
@@ -33,10 +33,10 @@ private func performanceWithPrice(_ price: Int, fuel: Int? = nil) throws -> Ship
 }
 
 private func priceAdmissionTOML(policy: ShipCataloguePurchasePolicy, price: Int) throws -> String {
-  let originalShip = try #require(ShipCatalogue.ship("SH013"))
+  let originalShip = try #require(ShipCatalogue.ship("SH025"))
   let performance = try #require(originalShip.game)
   let original = try String(
-    contentsOf: ShipCatalogue.folder.appendingPathComponent("SH013.toml"), encoding: .utf8)
+    contentsOf: ShipCatalogue.folder.appendingPathComponent("SH025.toml"), encoding: .utf8)
   let catalogueStart = try #require(original.range(of: "[catalogue]"))
   let gameStart = try #require(
     original.range(of: "[game]", range: catalogueStart.upperBound..<original.endIndex))
@@ -62,7 +62,10 @@ private func priceAdmissionTOML(policy: ShipCataloguePurchasePolicy, price: Int)
   let game = String(original[gameStart.lowerBound..<designStart.lowerBound])
     .replacingOccurrences(
       of: "price = " + String(performance.price), with: "price = " + String(price))
-  return String(original[..<catalogueStart.lowerBound]) + catalogue + game
+  // An unregistered fixture exercises generic policy without changing authenticated SH025.
+  let identity = String(original[..<catalogueStart.lowerBound]).replacingOccurrences(
+    of: "id = \"SH025\"", with: "id = \"SH999\"")
+  return identity + catalogue + game
     + String(original[designStart.lowerBound...])
 }
 
@@ -71,7 +74,8 @@ private func priceAdmissionTOML(policy: ShipCataloguePurchasePolicy, price: Int)
     "unpriced-ship-admission-" + UUID().uuidString)
   try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
   defer { try? FileManager.default.removeItem(at: directory) }
-  let file = directory.appendingPathComponent("SH013.toml")
+  let file = directory.appendingPathComponent("SH999.toml")
+  try #require(ShipCatalogue.ship("SH999") == nil)
   let policies: [ShipCataloguePurchasePolicy] = [.blueprintFabrication, .never]
   for policy in policies {
     for price in [-1, 0, 1] {
@@ -81,7 +85,9 @@ private func priceAdmissionTOML(policy: ShipCataloguePurchasePolicy, price: Int)
       if shouldLoad {
         let loaded = try ShipCatalogue.load(from: directory)
         let ship = try #require(loaded.first)
-        #expect(ship.game?.price == price && ship.catalogue.purchasePolicy == policy)
+        #expect(
+          ship.id == "SH999" && ship.game?.price == price
+            && ship.catalogue.purchasePolicy == policy)
         #expect(ship.catalogue.playerFlyable)
       } else {
         #expect(throws: (any Error).self) { try ShipCatalogue.load(from: directory) }
@@ -93,39 +99,14 @@ private func priceAdmissionTOML(policy: ShipCataloguePurchasePolicy, price: Int)
     of: "normalPurchaseEligible = false", with: "normalPurchaseEligible = true")
   try contradictory.write(to: file, atomically: true, encoding: .utf8)
   #expect(throws: (any Error).self) { try ShipCatalogue.load(from: directory) }
-}
-
-@Test func actualTradeQuoteRefusesUnpricedNeverWithoutChangingPositiveQuoteOrCommander() throws {
-  let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
-    "unpriced-ship-quote-" + UUID().uuidString)
-  try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-  defer { try? FileManager.default.removeItem(at: directory) }
-  let file = directory.appendingPathComponent("SH013.toml")
-  let source = try String(
-    contentsOf: ShipCatalogue.folder.appendingPathComponent("SH013.toml"), encoding: .utf8)
-  try source.write(to: file, atomically: true, encoding: .utf8)
-  let positiveShips = try ShipCatalogue.load(from: directory)
-  let positive = try #require(positiveShips.first)
-  var game = Game(executive: false)
-  game.commander.credits = 10_000_000
-  let destinationHull = try #require(positive.game)
-  game.commander.fuel = destinationHull.fuel
-  try game.commander.prepareEquipment()
-  game.commander.mirrorFittedEquipment()
-  try #require(game.commander.valid)
-  let before = game.commander
-  let optionalPositiveQuote = game.shipTradeQuote(for: positive)
-  let positiveQuote = try #require(optionalPositiveQuote)
-  #expect(positiveQuote.allowed && positiveQuote.purchase == positive.game!.price * 10)
-
-  let unpricedText = try priceAdmissionTOML(policy: .never, price: 0)
-  try unpricedText.write(to: file, atomically: true, encoding: .utf8)
-  let unpricedShips = try ShipCatalogue.load(from: directory)
-  let unpriced = try #require(unpricedShips.first)
-  let optionalQuote = game.shipTradeQuote(for: unpriced)
-  let quote = try #require(optionalQuote)
-  #expect(quote.purchase == 0 && quote.allowance == positiveQuote.allowance)
-  #expect(!quote.allowed && quote.issues.contains("This hull is unpriced and not for sale."))
-  let unchanged = game.commander == before
-  #expect(unchanged)
+  // Generic admission does not permit the same edits to an authenticated original.
+  try FileManager.default.removeItem(at: file)
+  let canonicalFile = directory.appendingPathComponent("SH025.toml")
+  let canonicalSource = try String(
+    contentsOf: ShipCatalogue.folder.appendingPathComponent("SH025.toml"), encoding: .utf8)
+  try canonicalSource.write(to: canonicalFile, atomically: true, encoding: .utf8)
+  #expect(try ShipCatalogue.load(from: directory).first?.id == "SH025")
+  let forgedCanonical = never.replacingOccurrences(of: "id = \"SH999\"", with: "id = \"SH025\"")
+  try forgedCanonical.write(to: canonicalFile, atomically: true, encoding: .utf8)
+  #expect(throws: (any Error).self) { try ShipCatalogue.load(from: directory) }
 }

@@ -13,10 +13,8 @@ private func shieldCobraGame() -> Game {
   return game
 }
 
-@Test func shieldBoosterPricesTechAndMultipliersFollowTheSpecifiedLaserProgression() {
-  let multipliers = [1.5, 5, 1.5, 2.3, 6.9]
-  for (index, booster) in ShieldBooster.allCases.enumerated() {
-    #expect(abs(booster.multiplier - multipliers[index]) < 1e-10)
+@Test func shieldModulePricesAndTechnologyFollowTheSpecifiedLaserPrices() {
+  for booster in ShieldBooster.allCases {
     if let shop = booster.shopItem {
       let laser = Equipment.base.first { $0.name == booster.label + " Laser" }!
       #expect(shop.price == laser.price * 3 / 4 && shop.technology == laser.technology)
@@ -27,20 +25,27 @@ private func shieldCobraGame() -> Game {
   #expect(
     Equipment.isReward(Equipment.navalLaser))
 }
-@Test func boostersIncreaseBothShieldCapacitiesWithoutStackingOrChangingRecharge() {
-  for booster in ShieldBooster.allCases {
+@Test func boostersIncreaseBothShieldCapacitiesWithoutStackingOrChangingRecharge() throws {
+  let currentGrades: [(ShieldBooster, Double)] = [
+    (.pulse, 1.5), (.mining, 1.8), (.beam, 2.0), (.military, 2.3), (.capital, 6.9),
+  ]
+  for (booster, multiplier) in currentGrades {
     var game = shieldCobraGame()
-    game.commander.installShieldBooster(booster)
+    try game.commander.prepareEquipment(legacy: false)
+    try game.commander.grantEquipment(
+      booster.equipmentName, at: .shield, provenance: .grant("current shield capacity fixture"))
     game.dock()
-    let capacity = 255 * booster.multiplier
+    let capacity = 255 * multiplier
     #expect(game.frontShield == capacity && game.rearShield == capacity)
     game.applyDamage(300, front: true)
     game.applyDamage(300, front: false)
     #expect(
       game.energy == 256 && game.frontShield == capacity - 300 && game.rearShield == capacity - 300)
-    game.commander.installShieldBooster(.pulse)
+    try game.commander.grantEquipment(
+      ShieldBooster.pulse.equipmentName, at: .shield, provenance: .grant("weaker shield fixture"))
     #expect(game.commander.shieldBooster == booster)
     #expect(game.commander.equipment.filter { ShieldBooster.from($0) != nil }.count == 1)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.speed = 0
     game.bodies = []
@@ -51,6 +56,7 @@ private func shieldCobraGame() -> Game {
 @Test func buyingBoosterRespectsTechnologyCashAndPreventsWeakerTierCharges() throws {
   var game = Game(executive: false)
   game.commander.credits = 232_375
+  try game.commander.prepareEquipment(legacy: false)
   let militaryItem = try #require(
     Equipment.all.first { $0.name == ShieldBooster.military.equipmentName })
   game.commander.system = try #require(
@@ -81,10 +87,11 @@ private func shieldCobraGame() -> Game {
   #expect(game.commander == fitted && game.commander.credits == 38_500)
   #expect(game.commander.shieldBooster == .military && game.commander.valid)
 }
-@Test func capitalRewardUsesEliteRankAndMigratesExistingSavesOnceWithoutCheatRankClaims()
+@Test func capitalRewardUsesCurrentEliteRankAndDoesNotReissueAfterReload()
   async throws
 {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   game.bodies = []
@@ -100,17 +107,26 @@ private func shieldCobraGame() -> Game {
   game.tick(delta: 0.01)
   #expect(
     game.ecmControl.events.filter { $0.announcement.text.hasPrefix("ELITE BONUS") }.count == 1)
-  var old = Commander()
-  old.kills = Commander.eliteThreshold
   let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
   defer { try? FileManager.default.removeItem(at: url) }
-  try JSONEncoder().encode(old).write(to: url)
+  let writer = GameRuntime(game: game)
+  try await writer.save(to: url)
+  let saved = await writer.snapshot().commander
+  let bytes = try Data(contentsOf: url)
   let runtime = GameRuntime()
-  try await runtime.load(from: url)
-  #expect(await runtime.snapshot().commander.capitalRewardClaimed)
-  try await runtime.load(from: url)
-  #expect(await runtime.snapshot().ecmControl.events.isEmpty)
+  try await runtime.load(from: url, persistMigrations: false)
+  let first = await runtime.snapshot()
+  #expect(first.commander.capitalRewardClaimed)
+  #expect(first.commander.fittedEquipment(at: .shield) == saved.fittedEquipment(at: .shield))
+  #expect(first.commander.equipmentPurchaseHistory == saved.equipmentPurchaseHistory)
+  try await runtime.load(from: url, persistMigrations: false)
+  let twice = await runtime.snapshot()
+  #expect(twice.commander.fittedEquipment(at: .shield) == first.commander.fittedEquipment(at: .shield))
+  #expect(twice.commander.equipmentInventory == first.commander.equipmentInventory)
+  #expect(twice.ecmControl.events == first.ecmControl.events)
+  #expect(try Data(contentsOf: url) == bytes)
   var cheat = Game(executive: false)
+  try cheat.commander.prepareEquipment(legacy: false)
   cheat.launch()
   for key in "xyzzy" { cheat.key(String(key)) }
   #expect(
@@ -119,9 +135,10 @@ private func shieldCobraGame() -> Game {
       && cheat.commander.fittedEquipment(at: .shield)?.provenance == .xyzzy
       && !cheat.commander.capitalRewardClaimed)
 }
-@Test func xyzzyNavalLasersAndEliteShieldsAreEffectiveAcrossEverySupportedView() {
+@Test func xyzzyNavalLasersAndEliteShieldsAreEffectiveAcrossEverySupportedView() throws {
   for screen in [Screen.front, .rear, .left, .right] {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.speed = 0
     for key in "xyzzy" { game.key(String(key)) }
@@ -131,8 +148,12 @@ private func shieldCobraGame() -> Game {
       game.commander.effectiveLaser == Equipment.navalLaser
         && game.commander.laserDamage(against: .cobra) == 64)
     #expect(game.commander.laserDamage(against: .constrictor) == 16)
+    #expect(abs(game.commander.shieldCapacity - 2760) < 1e-8)
+    #expect(abs(game.commander.rearShieldCapacity - 2760) < 1e-8)
+    #expect(game.frontShield == game.commander.shieldCapacity)
+    #expect(game.rearShield == game.commander.rearShieldCapacity)
     #expect(
-      game.commander.equipment.contains("Mining Laser")
+      !game.commander.equipment.contains("Mining Laser")
         && !game.commander.equipment.contains("Military Laser"))
     let position: Vector3
     switch screen {
@@ -141,14 +162,14 @@ private func shieldCobraGame() -> Game {
     case .right: position = .init(1000, 0, 0)
     default: position = .init(0, 0, 1000)
     }
-    game.bodies = [.init(id: 1, hull: .cobra, position: position)]
+    let target = try exactCombatFixtureBody(&game, id: 1, position: position)
+    game.bodies = [target]
     var controls = Controls()
     controls.fire = true
     game.tick(delta: 0.01, controls: controls)
     #expect(game.bodies[0].energy == 36)
-    #expect(
-      abs(game.commander.shieldCapacity - 2346) < 1e-8 && game.frontShield > 2300
-        && game.rearShield > 2300)
+    #expect(game.frontShield > 2300 && game.frontShield <= game.commander.shieldCapacity)
+    #expect(game.rearShield > 2300 && game.rearShield <= game.commander.rearShieldCapacity)
     #expect(game.commander.fittedEquipment(at: .shield)?.node.key == "Elite Shield Module")
     #expect(!game.commander.capitalRewardClaimed && game.commander.kills == 0)
   }
@@ -189,47 +210,6 @@ private func shieldCobraGame() -> Game {
   }
 }
 
-@Test func legacyMiningStrengthSurvivesPaidWeakerPurchasesStoredWithOriginalIdentity() throws {
-  var game = shieldCobraGame()
-  let militaryItem = try #require(
-    Equipment.all.first { $0.name == ShieldBooster.military.equipmentName })
-  game.commander.system = try #require(
-    game.systems.first { $0.technology >= militaryItem.requiredTechnologyLevel }?.id)
-  game.selectedSystem = game.commander.system
-  try #require(game.equipmentAvailable(militaryItem))
-  game.commander.credits = 232_375
-  game.commander.installShieldBooster(.mining)
-  try game.commander.prepareEquipment()
-  let original = try #require(game.commander.fittedEquipment(at: .shield))
-  #expect(original.component?.statistics[.frontShieldCapacity] == 5)
-  for booster in [ShieldBooster.pulse, .mining, .beam] {
-    game.selection = try #require(Equipment.all.firstIndex { $0.name == booster.equipmentName })
-    game.purchase()
-    #expect(game.commander.fittedEquipment(at: .shield)?.id == original.id)
-  }
-  game.dock()
-  game.selection = try #require(
-    Equipment.all.firstIndex { $0.name == ShieldBooster.military.equipmentName })
-  let cash = game.commander.credits
-  game.purchase()
-  #expect(game.message == "EQUIPMENT STORED - CURRENT FIT RETAINED")
-  #expect(game.commander.credits == cash - 123_000 && game.commander.credits == 38_500)
-  #expect(game.commander.fittedEquipment(at: .shield) == original)
-  #expect(game.commander.shieldBooster == .mining && game.commander.shieldCapacity == 1275)
-  let military = try #require(
-    game.commander.equipmentInventory?.items.first {
-      $0.node.key == ShieldBooster.military.equipmentName
-    })
-  let receipt = try #require(game.commander.equipmentPurchaseHistory?.paid.last)
-  #expect(military.location == nil && receipt.node == military.node && receipt.price == 123_000)
-  #expect(military.provenance == .paid(owner: receipt.owner, transaction: receipt.transaction))
-  #expect(
-    game.commander.equipmentPurchaseHistory?.paid.map(\.price) == [10875, 24750, 35250, 123000])
-  try game.commander.grantEquipment(
-    ShieldBooster.capital.equipmentName, at: .shield, provenance: .grant("shield-test"))
-  #expect(game.commander.shieldBooster == .capital)
-  #expect(abs(game.commander.shieldCapacity - 1759.5) < 1e-8 && game.commander.valid)
-}
 @Test func actualLaserResolutionKeepsDamageAndFiringRateFromTheSameSpecification() {
   var commander = Commander()
   commander.equipment = ["Pulse Laser", "Mining Laser", "Beam Laser"]
@@ -244,6 +224,7 @@ private func shieldCobraGame() -> Game {
 
 @Test func capitalBoosterAppearsInTheFullOrderedEquipmentListWithoutBecomingPurchasable() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .equipment
   let shieldNames = ShieldBooster.allCases.map(\.equipmentName)
   let shieldIndices = shieldNames.compactMap { name in

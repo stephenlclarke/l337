@@ -1,0 +1,44 @@
+{
+  "status": "FIRST_EXACT_PROPOSED_NO_EDITS",
+  "beforeCommit": "580de68dd20cc01436631bf2a64efef8033b5233",
+  "pins": [
+    {
+      "path": "Sources/L337Core/StationPoliceSource.swift",
+      "bytes": 4700,
+      "sha256": "71070f49f77b9d424a0071f2d3ed9ada4e968d2ff1508a46f1ab1c44a0f7bf00"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationPoliceSourceTests.swift",
+      "bytes": 9790,
+      "sha256": "d2dd0a9b7b604af2cc09da97b0a9a14431ae4bc7607704a58e0a2639f4d4caba"
+    },
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 28711,
+      "sha256": "228462e782a2e60ba1b064c0a2c0d471b7ad1b70f91d4cce402ca1e93bdd6cb3"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18744,
+      "sha256": "c66d53a177cd709582bdea8ba16df4f2d2894f3e648e752995b5c1c9e1074cf4"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 12543,
+      "sha256": "510f626c11e7a262b580ea1a5bd4c6ae3c52358d162167c0ad30e8fa4ae304e0"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    }
+  ],
+  "sourceEdit": {
+    "path": "Sources/L337Core/StationPoliceSource.swift",
+    "old": "  /// Reverse mesh lookup is never evidence that an unlabelled officer owns current crew.\n  static func empCatalogueID(for body: SpaceBody) -> String? {\n    if body.hull == .viper {\n      guard let id = body.physical?.catalogueShipID,\n        let current = OriginalFleetRuntimeHullSource.source(for: id),\n        current.ship.nativeHull == body.hull\n      else { return nil }\n      return id\n    }\n    return body.physical?.catalogueShipID ?? ShipCatalogue.nativeShip(body.hull)?.id\n  }",
+    "new": "  /// EMP custody requires an explicit current source and its declared native binding.\n  static func empCatalogueID(for body: SpaceBody) -> String? {\n    guard let id = body.physical?.catalogueShipID,\n      let current = OriginalFleetRuntimeHullSource.source(for: id),\n      current.ship.nativeHull == nil || current.ship.nativeHull == body.hull\n    else { return nil }\n    return id\n  }"
+  },
+  "testEdit": "Existing station-source method only: unlabelled cobra expected nil; explicit31 on cobra expected nil due declared viper binding; add explicit current025 on cobra positive, unknownID negative, no-native physical nil control. Retain every original station native mesh assertion and actual custody/recovery test. No new helper/public hook/test method.",
+  "scope": "Only empCatalogueID helper and existing bounded source test segment. Remove last non-viper reverse-mesh fallback from this custody source resolver; actual disable caller and fixture use current explicitIDs already. No source/people/hardware/role/spawn/stock/schema/history/cost mutation. All EMP source files readonly.",
+  "limits": "SOURCE ONLY UNCOMPILED UNRUN; runtime resolver cost unmeasured, G4 no native/model/geometry execution. No actual game or fleet qualification; legacy tests/migration fields remain separate required cleanup."
+}

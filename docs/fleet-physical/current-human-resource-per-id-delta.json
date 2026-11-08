@@ -1,0 +1,1471 @@
+{
+  "status": "PER_ID_RESOURCE_AND_REFUSAL_DELTA_NOT_IMPLEMENTATION_COUNT",
+  "beforeCommit": "70800ec57364852f902119cb2b00f9a9865cd0c1",
+  "afterCommit": "4389c47a9bb5545954262053873a9e3020ad39dc",
+  "prior70AuthoritativeIDSet": "UNISSUED_IN_G4_SCOPE; requested frozen list from Root, do not infer membership",
+  "countChangeAuthorized": false,
+  "nativeQualifiedShipDelta": 0,
+  "actualRuntimeAcceptanceDelta": 0,
+  "records": [
+    {
+      "id": "SH001",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "bd1ddd2311f6cb6ad8879a875415c7fac9f173b3170884bbd364c22e6ecea88b",
+      "afterResourceSHA256": "1c8cce7fb8130c12780fb522592249805cb06e6b22fcffb169ae651556f47c82",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1772,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH010",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "8fcf25bccfcb4dd4d61a77799e2bc84f93f562ba28a534568a48f06a4b23aa9d",
+      "afterResourceSHA256": "66f8a18a52854fad92f8c0b1cb76ef3d0b6f7405d6e8e66e944b1b9e63bb89d3",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1012,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH011",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "2799b59a0d06ca18e9b0fb9ba58d5126854a2d5d4a80470095dfddc2d5a3b903",
+      "afterResourceSHA256": "dec7c21964fd5e4521cde5c07fae024eb8c926607fc9223b2a3667830600729e",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1012,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH015",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "f5131ae16e4238ba82a8d8534dd92480e6abc50f9f81a18d1dc751c6efdd23de",
+      "afterResourceSHA256": "2a1173b5437c16144bf46b921e8888b229685bc7d046b8fc8e4a14eb1702c412",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 976,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH016",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "da0b920f77830f09ff219a360b5316033ff4a6da47742adca4e11d3247129c4a",
+      "afterResourceSHA256": "b23f6d0c214e199e19e6eaf71647cdbe45cc2a1c6b25935d30c1299335c5a2aa",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1100,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH017",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "ae404533d464d883ca056ca40f686d137254a0f4ee3fb5c5ad077c4b9ca66565",
+      "afterResourceSHA256": "1a31ae1c3827227f79d7fa826d69c6970d34806400d9ab642d0db0f1ddcd2fb6",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1100,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH020",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "7c4dfb10078637c5df958d6bd856a830394cd7dbf3716494317a0129823f33bb",
+      "afterResourceSHA256": "be4983ac1ac1d194e77cb67c8f83d51f9bfbbaa125e844733ec355455d6dec69",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 952,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH021",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "9a82a736e44d0b64c9ddab0f1b94372c67d95547f5178f9230311f8d1ffc9c6b",
+      "afterResourceSHA256": "78b8ba0570e4869297e8878c98df5f76503d20136da9e9636309de894ec2394b",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 744,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH022",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "5e7afde620c68e4535f924fd30eb98abcce222531e798360fd5812b118d78366",
+      "afterResourceSHA256": "a4e2830603cded5e8c2435819dcd554b1475096f0b519d2bdcdfd5da3473034d",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 964,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH023",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "1df887e23d11ed560f59b82d1ca89025c688dc0f735fd6e518fbf48a1c7a6f7b",
+      "afterResourceSHA256": "3724c6aba40f20ee90c39380279ecc0d657cd5442867a1240f1624f4cee57457",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 964,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH024",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "225fc9e12e2d7768aaa13201f55d00b10ed6d67ddfe5eb88456ef424cc1a049a",
+      "afterResourceSHA256": "1f51038d878610b3e43961380ce0cdabea70825a7bda3f799632165e6bf7b643",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 964,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH037",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "5d0802733b8bb2a1be2c1cf85d57bdc4e87c3227551361dd208a97811258967b",
+      "afterResourceSHA256": "4719491723bbaffa5901691987a7b980053d5d0b63c8afc10f3882c31139de78",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 3016,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH038",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "ecb6442abcdfe7631592a210e288a50e25f448e43b20859a4e05f2570e8315c9",
+      "afterResourceSHA256": "0f803ffa0cd5621773476f35e99e89ed1e9f9e8513899e40fbfa8b0621182eea",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 3016,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH039",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "a144dbd8aee13d2d6ac6efa3a3b5cfd9068a085a87482ecdc0d0e85e17d0acfa",
+      "afterResourceSHA256": "b3c12cbaabfc4163507969fb9bb8c5610303c8637a1b6e1143a0d672152acd6f",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 3016,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH048",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "520dda95040aa3da08c8f06922891320dc12b31de16875309ab8b7208dbc03c9",
+      "afterResourceSHA256": "614a29ae15792706a524deaee382c66318f6f05567a743ee4c2ffb28247215bf",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 936,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH049",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "ae71f3c86c378affcc3b7b3326bc38dcea336789666949c723dbf375cde4111f",
+      "afterResourceSHA256": "cd6f340288d45b7091b6b1e0e266c7110c2f9939e48f98f939c47481097fe93e",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 952,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH050",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "e1589d7dd24f4ca1540267645b891b54446b110f8f7d46936c3863b44848717e",
+      "afterResourceSHA256": "5b6e9eb756970bb36e2974d574e6dccea0a5d50b9a2a2c1481c5146aec8471c4",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 928,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH051",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "3abecdab56d1a20b5be102a7b40740f784f82ee9648ae012b40991bf864b7b39",
+      "afterResourceSHA256": "ac99eb09dbdd87e3597bc82d892272cbc2e94a024c54b2611dcacb322b087f92",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 940,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH052",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "49b07d913e1f8c0f79e73248ef0b8f74dbee81fc5158364341184a4d2e46d99e",
+      "afterResourceSHA256": "a82799c42bfc9a9f8f52f9c5bae3305946a2bb92a8b4f710bd36cac41c172187",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1332,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH053",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "b7b7b90e407161c247ac38ed4cede00324a2e952550fd335ec1d3951c87cad97",
+      "afterResourceSHA256": "ad45273f7deed268127d8cea7d7b79835cbe19e04aeee12dcc36882d820e96b9",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1380,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH060",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "9df371c4c5d630d4efebeb5e7953b3bd167b721b03dc6922250baab1e97f1a87",
+      "afterResourceSHA256": "f39ef39dab80770695df8108304b0508d547275239b4a40d333d12a083bf2a85",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1024,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH063",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "8d83ce392620b4d5a40481fc7221d346dbe02020f516a7f5cf6c947aabf56799",
+      "afterResourceSHA256": "296b86cff9f25fbe83e60f6efaddb2b3f59474d7d9ff53df83eb054bc1ea0efa",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 608,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH066",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "59ca45e09dfbdc3d68dd4d3df0fed73d6fd7a7b2010774bfcdbd6edbcaa3a2ca",
+      "afterResourceSHA256": "c5f34e04e9b37b254834729e64e28b3d44fbebbecb83cff1cc53ebb089911cae",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 888,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH067",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "3e3aee6fd3b99bc0aa536cfd66e2e250fab8030d1c125fdf8f071955f6c37c77",
+      "afterResourceSHA256": "18b486ffe7d4adceefa606b31bcbc8a0bd4b5c79f40e6faa6c481a8b53052c60",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 388,
+      "runtimeStatus": "NATIVE_EVIDENCE_PENDING_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH071",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "a80a2d8ac07757befe8c85d26049e0fe2d6028ba30486b6ce0b1cc9f43750006",
+      "afterResourceSHA256": "911a47c6e0044e0fc103951432f11b34bf3e2dcba83509f28c620d25e097e5c6",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 596,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH072",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "fa6fb9f86c24e10425bb800cf8b92a6debb64db74c113060c22fb8411baa896c",
+      "afterResourceSHA256": "376f8ee997f911c34ebd068636d9d37b9ee2c55131c38f3b3ae48fa308578ba0",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 596,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH073",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "28a1903b7c60d915ce6a8c39046a8d87fa6ea0e9413cb60829a855dbeb50ca81",
+      "afterResourceSHA256": "d386ff366bf2ea46931b4f6ed503f46b80d2457718dff64729465df9bac4b62f",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 596,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH076",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "b43dda26ce5e75f1c42532bab2866662ab2ffc5d4dbbff9408836a333b96d204",
+      "afterResourceSHA256": "2e41bcded4d3214b77b8379daa0ef6bb8f7cd1ba9f83163b0647bd0d0ee007b8",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 448,
+      "runtimeStatus": "NATIVE_EVIDENCE_PENDING_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH082",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "c4e9dedbc3e7f4a7d7465c4a660223180d9dcd10279d404e7b0d500713e3b649",
+      "afterResourceSHA256": "8722b085877be7e909bf0a74b88d56226d6977bfa427af6bd06e2e232d8ccec8",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 988,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH086",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "4af2f96d713063c4f2c0efd181f24588c6986827c4ed5410d4644915892811d0",
+      "afterResourceSHA256": "0a41ccf69de01bd2d5a2902c92a73cc3594be300a3dfd6014f87c61449771970",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 908,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH087",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "a3117a2d57c638808ba2a981929a599613446f79116b8090599d1f3d2519afd6",
+      "afterResourceSHA256": "3f2ff31b4c25cef0e00d2b8a1ce91ebc9d04c233d22be7c0c4cbf6b5e4795aa5",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 536,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH088",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "f549cb97cfdfc84c995e6a12c67070a9fcce7b79429a5c662af327c36d5455a5",
+      "afterResourceSHA256": "9472ffe6e4ad44a82238624f50f4ef10b67f9364e8befc23dfa41f7a137f9606",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 912,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH089",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "afe88482d2e0f56a6d747a35c12fefaa48e8dc5a67d8b9fc1b82386f44430acc",
+      "afterResourceSHA256": "64111eb6f1dca889d1d8db7de4f8bc711f184425a899848daad43f529b858eef",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 912,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH090",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "646bf2f00179676ee9466eec0b4416a224b2b075c126fe04a4e424a651c03d9f",
+      "afterResourceSHA256": "9a117e4f23f1ea6e7022cd4b3c8bb783c3745159ab117450683a7ed46f3299d5",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1112,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH092",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "6534a6be0818d099c70c8a4cd227bc0eb0aa043e9c7ef45b57583088d3373472",
+      "afterResourceSHA256": "c914c1d28437e4109c59f63a94488c37906a10d2ec04024a97c603c348c4960f",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 720,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH094",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "e8cfc167429bd78dece9bd918bba47240432dfb1e8d65f46e194ae790b112ba8",
+      "afterResourceSHA256": "90d1d29559d57cf1d0945c58415d0eede51ef13633675994b7c34ac9e7fca828",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1404,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH095",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "70af40b9264ead4a5c79ec4874d63a5a8da12bcf95a223830e1489f8118766bf",
+      "afterResourceSHA256": "fc6600f861ec54a3ce9406594ac386e2e4e914c7b84b55cd0686461aa2a240d0",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1404,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH096",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "db9494e90dc1181c86037dd4305ee08cdb9e371252fd17015cc1d62722803b45",
+      "afterResourceSHA256": "c688f7050eb12abb2a2eb5f1351cb260d04d0e767ca63d58ca47b1831b92c2f7",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 816,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH097",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "9b6118fe743f8e3bd2ebd640e02479cc95c4bb05035cb380d7160e2385962d87",
+      "afterResourceSHA256": "6275b430223584d94ca9d151669acc1d16cad5fd7c9e29065fdfa256daa78536",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 816,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH098",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "10b6119668384ed311e2e3b0b0434783248410544170e109bd2442cbdb7dc514",
+      "afterResourceSHA256": "7d8f4db7245f16dcef000d9db86ce5d0314244ee5d342429b40f12dc22427e5b",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1928,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH099",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "afbe03d865309b12dc0477233ae364795d6da97293da3c1c1bacbe0c64655758",
+      "afterResourceSHA256": "8ca94634b7ff176b1f0b16ab4bc4fb74ac3aceb669257ec22dfe116d5dc98b4e",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 376,
+      "runtimeStatus": "NATIVE_EVIDENCE_PENDING_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH100",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "e96573c891cb271ae7fede38e6fff86432fbcc11d6189b4ae52ada965682961a",
+      "afterResourceSHA256": "fbc34e8a189ef2e500633c7a89945b4e97596525bd94ce4ac6e61e30f34e9875",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 376,
+      "runtimeStatus": "NATIVE_EVIDENCE_PENDING_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH104",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "f437d14efa9060cd5eae48c6c2a8718befab3bdb641c9cdd84ae86caed137800",
+      "afterResourceSHA256": "add0c3181155b9d19c8be7efe212fd75edc57cf7ba50b219bcccec2c587f88c2",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 424,
+      "runtimeStatus": "NATIVE_EVIDENCE_PENDING_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH105",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "bce306f0dcf46f317132f954034d20689e564d67a57667f0ce15b826cea43b41",
+      "afterResourceSHA256": "86315197347263bc0e94b7ad76792cfef8144f3ae4a3f02df35b63a9d7664063",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 908,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH106",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "219975b979d969fbc310f4357a583cd10f679461388a45e271f5f128fcf9252d",
+      "afterResourceSHA256": "280c0ad039985f509ccb4c4f3778c3c2f4ca2e81ae9db60af69c623e4f9ac16c",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 908,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH107",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "3164d41dbfa9e9ad83b53f4c3c7756866e8d8b23eca263264c9cdaa04cdaffd1",
+      "afterResourceSHA256": "a19e2b044bc08313afb3c6157c7cbb919f8c1579148f98d09a1289208fefe446",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 964,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH127",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "03eab624b5c1d1af620b40a5a4626718ddeaef84527f61afc4de076aa4573d27",
+      "afterResourceSHA256": "441e3dedf6dc881958604dea54ff3d06c79838402587848e06b06adc562c0da1",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 2188,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH128",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "2700a3d508b18589244ff3fa46064b85e506cd2ca0a3c10c8a7c0c531da744c4",
+      "afterResourceSHA256": "6678128392d3d27d80463d0ae59ee62d8e26ef03efbe322c767953be8500ae8a",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 620,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH136",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "45fbc54a02eeebeb2c76b18c9c23628e989a3f08e6477d998c5ab1b68a7dca09",
+      "afterResourceSHA256": "c602702e4b5045ffad669cad5b8c777029b04d2e30b19d6e5fa13837b181b677",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 636,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH137",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "8e6f51c91ef00a0cb6fbc2ecacb0802a949766227cca422668332c9addf49812",
+      "afterResourceSHA256": "2893d72e520571aae41c2a0623e8d70ed806dec267a875aa6f8318427965409b",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 636,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH138",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "e7e62ad49567d5a70180416adee1b26b14d24d7afac49572b6e178d05c8f25a7",
+      "afterResourceSHA256": "203d759a6df714cf7ea721c13650e1a29f8cc442ca4ba2e274265884ae7c94e5",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 636,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH139",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "78196d7062c63974c69ff368c1f92340050735902b80e2877b6eb4e76ed1f814",
+      "afterResourceSHA256": "5aef4995471fb4cf5741a563894a96323db3390a8718e6bfa892516307ac5da7",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 636,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH142",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "f77e1789494d53ad78b8d724a83cb32ac2a18b4ca721342481663873f25db0c0",
+      "afterResourceSHA256": "600fe8e74bc2cbe3d627ca29228eef1ad11a05d5fee68f26813dc38b6fb23d8f",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1340,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH143",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "cf1365b3ca0ef1dad1767a2fe0be495f784314a7d05db36167826ec37372dd53",
+      "afterResourceSHA256": "fa77eb98d1f40c3897d265381f17bf1d8e37f08448cbeb2dc674ad4fc96bacca",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1112,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH148",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "2b8032a2bb90d54f1fe4a27cd909eed46c57ddb0f134823385ea6904a995ea3d",
+      "afterResourceSHA256": "d18070d603fd8331ea36797a691bcb5b3287d0e66effa5a0b5f191b686f8bb94",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 792,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH149",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "ce1973663de1abb30d369eb8f187d69f0d2b347922f691ac81f948e29d266e18",
+      "afterResourceSHA256": "b7ac93115e5fb82440e8ffb466ab29616c14265e14641aa8f1c1e3acdefb96c1",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1000,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH150",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "8d38fb5fd120e2d442ce4e33575bb7c8a67d9bec8af3dae399acdcf7914dbc0c",
+      "afterResourceSHA256": "1ddc07cac6ef9e3414e4c11d627aadebb35056882b3ecd90230173d2284eb758",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1052,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH151",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "3453c9d251de2702c5bfb6417764a70f4d0fdcf576768a7fc3b5b5c703eb4c61",
+      "afterResourceSHA256": "c77846c3a61193e094e8c5dcb2b0286ad0f56b8355fb0992a60517adcf44ffe1",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 988,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH152",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "70badd22c10fa537192b069a6a33b138f9c388419f019de154e55e5fca0b87c2",
+      "afterResourceSHA256": "4c215d8d2bff13550b8c0bb53e9980853d0573b5c4d478f38885c07260604854",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1384,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH153",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "82f47e96d5f581b6e9168f12bac928dd009e484c012f64bda41bb587d62093b6",
+      "afterResourceSHA256": "953256bd24d90a05e47b54ba0515b0b3e4fc1927f8a9b8e0e3712f9a07386ca4",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1384,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH154",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "a39ed86cf325b3c6476119e4c243c455be7fc3b6f9596eef6f6258d536df1242",
+      "afterResourceSHA256": "fb753ab358bf556b117eec537f022683abd7c5ff7cf5bdfac9472513e81c34e9",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1384,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH155",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "5f32d1de1f5ad152ebf69b4dc312575d2c24c731bf04da5191b9f55e54478ba8",
+      "afterResourceSHA256": "75a220eb88647dbbc3a6e9eaf899d54163de49e806a7c983fdead99e070b5a80",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1384,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH157",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "cd41d67b5fc392a699fbaaa3dd8da574fccad0ca3a6dce40c6cfb53aae2d3d43",
+      "afterResourceSHA256": "98b1f12fa74ed0434501e8de2d9acda4d192ef7d2d29297f1ef1ca638f14f506",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 764,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH158",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "a02459712479c85991ecbdb7551110f79e438535ce471e50e6e687fb53de9f6a",
+      "afterResourceSHA256": "5bce93d8cf1fdc578d608a5634a9b42e064f71a3f9cf3408eb99cd43c9e4189f",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 764,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH159",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "b2dffa2d7354983d9572a617d780f982844778c48a79059b11ce924ada93360e",
+      "afterResourceSHA256": "8f35cdf40aa1464b2ce1562fb7b12da535d7dee3a13bdeb66601203dbd75bf6a",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 764,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH160",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "4b3267c8cdc72121767598d7e4e01f0b4602fb21b15ca7eacdbe300fca5f283f",
+      "afterResourceSHA256": "085dbdafb20e8f4487d8dcefb298e17ec2e41e22ef1bac8c4d6d61b6f236a9cf",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 764,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH163",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "2566229fb59fe996b52bdacd5a54cfe88e3a2e1e5fc2a3d807c91fdcdd194399",
+      "afterResourceSHA256": "eefd1e476efca3ece00b5d2ba418eeb40798a6420f785a5a19b05b60fdfeb479",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 620,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH165",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "99906e2d54472199804c41f4445edcc2a32ed75958628ed0a7be039696d1becf",
+      "afterResourceSHA256": "496fb92ab8ff57e2232fa32dd132e757719664223afa80b1ec9913e610f343b9",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 620,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH166",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "cbbbc01c7c5ff6fed619de6195c3d21d22c821189ef24f2fd238efe22977c0b4",
+      "afterResourceSHA256": "c795a90d0f80bb80fe37f9a23ae6d241810ea025915f31a1131179b421cbe31a",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 988,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH167",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "b1930ba940cac645e2bb3b2d2042d4ee021223b04953c41d4f322ba4de9a8cb2",
+      "afterResourceSHA256": "f140c3d322aa63e53b998e68118edc26471e0632987bbec9a0840ffd907baa0b",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 620,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH168",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "e8153523bcd50b517e684c17f86498d938e4742b829616140ca352a632f78d62",
+      "afterResourceSHA256": "3d15c8d9d5113ea73d1953bc846f537cb93ece173ef1ba8c00a75817e165a6e9",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1452,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH169",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "a239bfc774a16e51467742d4ef98de46f9838537efadc4fd317b5e3f9caa9500",
+      "afterResourceSHA256": "1ffb117ac1f05b759d9e06c52fdd0fdb4d7d4b7aa3cae3d1fdbe6998111f195d",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1364,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    },
+    {
+      "id": "SH170",
+      "prior70Membership": "UNISSUED_PENDING_ROOT_SET",
+      "alreadyHadCurrentTypedR3Definition": true,
+      "alreadyHadOriginalShowroomSource": true,
+      "alreadyHadAuthenticatedEngineeringEstimate": true,
+      "beforeResourceSHA256": "36b0157df1d7a5ca2455d79e922b9bc84c5ddb8a2d247fad9620192d34874afe",
+      "afterResourceSHA256": "e8412b14817fbf9035dcbc9be730f0626455fb8f66fe2655419bcfac2fef5de1",
+      "newAuthoring": "Current original detailed/native resource + R3 mechanics/emptyfit/provenance + authenticated shared refusal join",
+      "sourceNativeFaces": 1364,
+      "runtimeStatus": "OVER512_EXPLICIT_REFUSAL",
+      "nativeQualified": false,
+      "tests": "AUTHORED_UNCOMPILED_UNRUN",
+      "actualRuntimeAcceptance": "UNRUN",
+      "remaining": [
+        "independent source review and G1 compile/tests",
+        "native LOD/material/void/containment/collision qualification",
+        "actual fitting/crew/blueprint acquisition/population and game acceptance"
+      ]
+    }
+  ]
+}

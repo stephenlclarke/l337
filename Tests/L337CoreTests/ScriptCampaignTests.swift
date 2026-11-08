@@ -284,7 +284,10 @@ private struct CampaignFixture {
   func game() -> Game {
     var game = Game(executive: false)
     game.screen = .status
-    do { try fitCampaignPatrolTargeting(&game) } catch { Issue.record(error) }
+    do {
+      try game.commander.prepareEquipment(legacy: false)
+      try fitCampaignPatrolTargeting(&game)
+    } catch { Issue.record(error) }
     game.scriptPacks = [child] + parents
     return game
   }

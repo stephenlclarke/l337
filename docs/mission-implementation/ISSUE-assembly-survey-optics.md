@@ -1,0 +1,7 @@
+# Supply the original Assembly survey instrument's physical acquisition and exposure window
+
+Assembly of Orbits requires three consented Darik occupancy/work registers to be compared with actual corridor use. Its physical-v2 profile calls for 12 uninterrupted seconds per target, front view, at most 2 degrees from the forward axis and 250-1500 native units from the nearest unobstructed mesh surface. The current opening and original loan do not supply this optical instrument component.
+
+Implement acquisition through the current full-scene native collision API, binding the actual held original reference, purchased/fitted targeting computer, case, player, target actor, geometry, poses, runtime epoch, frame and physical clock. Supply a runtime-only adjacent-frame exposure controller. Duplicate intervals and pause must add no time; interruptions and current cold load must invalidate unfinished exposure. Caller-supplied durations, injected positive readings and aliased target names cannot establish an observation.
+
+Instrument data remains unqualified until the actual original register, source consent and occupancy/corridor-use joins exist. An ordinary station can be a real optical calibration target without becoming a Darik register. This component must not emit a survey reading, work receipt, milestone, reward or clue. The actual simulation-actor storage/tick and UI hooks require later exact reservations through Root/G1. [Implementation](PR-assembly-survey-optics.md).

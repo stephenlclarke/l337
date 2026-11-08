@@ -1,0 +1,39 @@
+{
+  "status": "FIRST_G4_OWNED_CURRENT_NPC_RESOURCE_ADVANCE_SOURCE_GUARD_BEFORE_MUTATION",
+  "beforeCommit": "8b7252bdcf1e51667fecb20ceb88aec4acbe7401",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCResourceRuntime.swift",
+      "bytes": 2973,
+      "sha256": "b153f48a3040240dcc80cc195fe48ea9b3b540e882955ac09b5cf7931ee66a14"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/NPCResources.swift",
+      "bytes": 5256,
+      "sha256": "c04e5f893b188280e61aba7aa9290dec044bb585c2dccea6ec4fc01ac356e3aa"
+    },
+    {
+      "path": "Sources/L337Core/GameplayEncounters.swift",
+      "bytes": 20459,
+      "sha256": "56452e405ac0bc8612694e85188fde4ff364f0574ae56e1823074805d2e4235c"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCResourceTests.swift",
+      "bytes": 12530,
+      "sha256": "76a36932ca58f35a36f27ea963eb0f8dc4de995a976d51c78dc7d1010c4e8c61"
+    }
+  ],
+  "sourcePath": "Sources/L337Core/NPCResourceRuntime.swift",
+  "before": "      if var reserve = resources.electrical {",
+  "after": "      if let physical = bodies[index].physical, let npc = physical.npc,\n        npc.role != .mission, let id = physical.catalogueShipID\n      {\n        guard NPCPersistenceSnapshot.currentCatalogueSourceIsValid(\n          catalogueShipID: id, hull: bodies[index].hull, npc: npc, missiles: bodies[index].missiles)\n        else { continue }\n      }\n      if var reserve = resources.electrical {",
+  "finding": "advanceNPCResources currently accepts any generic-valid resources and updates heat/shields/HP/fuel on an explicit current actor without checking its source. The existing shared predicate can reject foreign profile, unknown fuel, ammo overflow or unknown currentID before reserve/resource mutation. This is source inspection only, no observed runtime failure.",
+  "scope": "One ordinary nonmission NPC explicitID source guard after existing resources.valid guard and before reserve.advance/any resource mutation. Reuse currentCatalogueSourceIsValid unchanged with actual hull/NPC/missiles. Existing mission/nilID behavior, all recharge/cooling/scoop algorithms/rates/admission and hardware policy unchanged. This kernel is outside reserved C01 Game/Runtime/Bridge/Work/Weapons/render/occlusion regions.",
+  "testPath": "Tests/L337CoreTests/NPCCurrentResourceAdvanceTests.swift",
+  "testScope": "One NEW5variant method: current-spent positive plus wrong-profile/unknown-fuel/missile-overflow/unknown-source refusal. Actual Game launch and mandatory current025 stock, controlled trader-role current actor with real allocated identity and explicitly spent nonzero pools/heat/fuel. Require generic resources valid, call actual advanceNPCResources at ordinary0.1 delta. Current source must regenerate/cool within same caps and retain fuel with no scoop flag; malformed current selected body must remain exact, Commander unchanged. Wrong-profile legacy fixture retains positive heat so old kernel would observably cool it; no zero-to-pass/slot/stock/source data changes. Existing tests unchanged.",
+  "limits": "Standing Root G4 NPC/fitting/source scope; no shared reserved hunk intersection, no new permission gate/framework/issuer. Source resolver may initialize geometry caches; cost unmeasured. All UNCOMPILED UNRUN, current025 native/actual kit/power/crew/loadedphysics/journey qualification OPEN; G1 sole executor."
+}

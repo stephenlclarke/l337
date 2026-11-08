@@ -1,0 +1,22 @@
+{
+  "status": "FROZEN_OWN_METADATA_AUTHORING_CODE_BEFORE_FIRST_EXECUTION",
+  "input": {
+    "path": "docs/fleet-physical/baseline-005-006-025-source-ownership-first.json",
+    "bytes": 13443,
+    "sha256": "9545a245e9672518ab3b551fd6b8419a0d7596e9b158d8be210f198d825d2d36"
+  },
+  "authoringSource": {
+    "path": "docs/fleet-physical/author-baseline-005-006-025-source-ownership.py",
+    "bytes": 29286,
+    "sha256": "f1fcea4f628856b9f22987f1fcf9c63cbb4f3da880ea86d7ef2413aaafb3ff9b"
+  },
+  "metadataOnly": true,
+  "coordinateConversions": 0,
+  "oldOwnCounterAndOperationGroupsExact": true,
+  "oldOwnCheckSourceOnlyMaterialLimitScopeChanged": "New frozen total original/current comparison faces, no numerical operation or geometry algorithm.",
+  "publicationHelpers": "Exact byte-copy from reviewed Decimal80 artifact_status and publish_exclusive; atomic verified nonoverwrite output and truthful failure status.",
+  "originalCreatorImportsOrExecutions": 0,
+  "nativeCompilerRendererTests": 0,
+  "executionCountBeforeFIRST": 0,
+  "output": "baseline-005-006-025-source-ownership/{SH005,SH006,SH025,result}.json; source STOP outputs no retry."
+}

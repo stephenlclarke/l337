@@ -1,0 +1,11 @@
+{
+  "status": "SOURCE_AUTHORED_UNCOMPILED_UNRUN_NOT_INTEGRATION_READY",
+  "definitionRows": 171,
+  "baselineResourceReplacements": 16,
+  "definitionSourceSHA256": "18c4aeebd050894a764d9d337c328eccf3afb41dd079c288268d23c4d6e3b5eb",
+  "sourceGeneratorSHA256": "865b3b4691850a38de28ce50dcfe6c378eac8db8ecd1ea5a66f5378e2a65c789",
+  "generatorExecuted": false,
+  "geometryTransformations": 0,
+  "compilerNativeRendererTestsExecuted": false,
+  "missionDependency": "Current C03 Okapi/Saiga source and six-person ark accommodation reconciliation remain open."
+}

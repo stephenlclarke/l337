@@ -4,8 +4,8 @@ import Testing
 @testable import L337Core
 @testable import L337Mac
 
-@MainActor @Test func routePreviewSequentialExportsRetainEveryCandidateAndMetricRow() throws {
-  var game = try makeRouteReadmeMediaGame()
+@MainActor @Test func routePreviewSequentialExportsRetainEveryCandidateAndMetricRow() async throws {
+  var game = try await makeRouteReadmeMediaGame()
   try #require(game.screen == .navigation && game.navigationOptions.count > 1)
   try #require(game.commander.navigationTier == .military && game.commander.valid)
   try #require(game.commander.equipmentPurchaseHistory?.paid.count == 2)

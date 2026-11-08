@@ -18,12 +18,12 @@ enum OriginalPantherFamilyActivation {
     case "SH032":
       return .init(
         id: id, name: "Panther Explorer", role: .leisure,
-        specificationSHA256: "f48b1280e7ab8713c10fa10fe243bcef82973dd9cb9cac35bb1685ecf4ff140c",
+        specificationSHA256: "9bbbecb8af20c7c20d0d95e0a1d82aeb27950d4a6243329af3a0e6848ecd3a6f",
         modelSHA256: "d87094362d608526b5e257173478f305b0b2f786d573abdb51f7ef613a4bb131")
     case "SH033":
       return .init(
         id: id, name: "Panther Scout", role: .military,
-        specificationSHA256: "07c577043396160f50098c3d4caf2e224843a057c0a18069347b70ce3381cf38",
+        specificationSHA256: "f2e0376401c62989cac6f1faad27d484e53627008818dabe0e49ae2e3f194c76",
         modelSHA256: "2bdbe5b0f70a0d0316d8288d73457f96364fdad930fd7b746ce311437dacf435")
     default: return nil
     }

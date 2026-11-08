@@ -50,7 +50,8 @@ struct StationSecurityTests {
     #expect(!immediate.encounters.intents.contains { $0.action == .engage(crimeTestID(1)) })
   }
 
-  @Test func stationAlarmLaunchesThreeThenBoundedWavesAtTheActualExit() {
+  @Test func stationAlarmLaunchesThreeThenBoundedWavesAtTheActualExit() throws {
+    let deployment = try #require(StationPoliceSource.current())
     var security = StationSecurity()
     let player = crimeTestActor(
       1, position: .init(0, 0, 500), role: nil, legal: .init(value: 64, bountyTenths: 0))
@@ -70,6 +71,10 @@ struct StationSecurityTests {
       #expect(
         request.population == .police && request.priority == .police && request.hull == .viper)
       #expect(request.identity.producer == .security && request.npc?.role == .police)
+      #expect(request.catalogueShipID == deployment.source.ship.id)
+      #expect(request.npc?.resources == deployment.stock && request.recoveredSecuritySource == nil)
+      #expect(request.npc?.legalProvenance == .generated
+        && request.npc?.cargoProvenance == .generated && request.npc?.routeProvenance == .generated)
       #expect(request.position.z < -200 && (request.position - player.position).length > 500)
       #expect(request.velocity == .init(0, 0, -180))
     }
@@ -303,6 +308,7 @@ extension StationSecurityTests {
     game.market = MarketItem.at(game.currentSystem)
     game.screen = .status
     try #require(game.currentSystem.government == 0 && game.commander.legal == 0)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.speed = 0
     let station = try #require(game.commander.flightSimulation.anchors?.station)

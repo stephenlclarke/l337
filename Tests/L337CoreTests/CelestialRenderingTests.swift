@@ -120,8 +120,9 @@ private func planetPreviews(_ frame: Frame) -> [PlanetPreview] {
   #expect(bytes[32 * image.bytesPerRow + 32 * 4 + 3] == 255)
 }
 
-@Test func celestialDefaultFlightSceneShowsPlanetAndSunWithinTheCockpitViewport() {
+@Test func celestialDefaultFlightSceneShowsPlanetAndSunWithinTheCockpitViewport() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let frame = Display.cockpit(game, width: 768, height: 768)
   #expect(frame.worldGraphics.contains { if case .planet = $0 { true } else { false } })
@@ -134,8 +135,8 @@ private func planetPreviews(_ frame: Frame) -> [PlanetPreview] {
   game.screen = .front
   game.commander.shipDisplayStyle = .shadedPanels
   game.celestials = [.init(kind: .planet, position: .init(0, 0, 1000), radius: 200)]
-  let far = SpaceBody(id: 1, hull: .cobra, position: .init(0, 0, 2000))
-  let near = SpaceBody(id: 2, hull: .cobra, position: .init(0, 0, 500))
+  let far = SpaceBody(id: 1, hull: .viper, position: .init(0, 0, 2000))
+  let near = SpaceBody(id: 2, hull: .viper, position: .init(0, 0, 500))
   game.bodies = [near, far]
   var farFrame = Frame()
   farFrame.rasterizeGraphics = false

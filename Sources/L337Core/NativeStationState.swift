@@ -1,66 +1,94 @@
 import Foundation
 
-/// RRS logical identity. Neither a scene body number nor a visit actor identifies a station.
+/// Exact original logical site, independent of a scene body or visit actor.
 struct NativeStationIdentity: Hashable, Codable, Sendable {
   let world: UUID
   let system: SystemIdentity
   let definition: String
   let version: String
   let key: String
-
-  var valid: Bool {
-    (0..<8).contains(system.galaxy) && (0..<256).contains(system.system)
-      && ["rescue_station", "rrs_headquarters"].contains(definition)
-      && version == "1.5.4" && Self.token(key)
+  init(world: UUID, system: SystemIdentity, definition: String, version: String, key: String) {
+    self.world = world
+    self.system = system
+    self.definition = definition
+    self.version = version
+    self.key = key
   }
-
-  /// One logical source-class slot per system, independent of provenance or display key.
-  var slot: NativeStationSlot { .init(world: world, system: system, definition: definition) }
-
-  private static func token(_ value: String) -> Bool {
-    guard !value.isEmpty, value.utf8.count <= 80 else { return false }
-    for byte in value.utf8 {
-      switch byte {
-      case 48...57, 65...90, 97...122, 45, 46, 95: break
-      default: return false
-      }
-    }
-    return true
+  var valid: Bool { OriginalStationSite.site(for: self, owner: world) != nil }
+  var slot: NativeStationSlot { .init(world: world, system: system, key: key) }
+  private enum CodingKeys: String, CodingKey { case world, system, definition, version, key }
+  init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, ["world", "system", "definition", "version", "key"])
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    world = try c.decode(UUID.self, forKey: .world)
+    let systemDecoder = try c.superDecoder(forKey: .system)
+    try NativeUtilityCoding.require(systemDecoder, ["galaxy", "system"])
+    system = try SystemIdentity(from: systemDecoder)
+    definition = try c.decode(String.self, forKey: .definition)
+    version = try c.decode(String.self, forKey: .version)
+    key = try c.decode(String.self, forKey: .key)
+    guard valid else { throw SaveError.invalidCommander }
   }
 }
-
 struct NativeStationSlot: Hashable, Sendable {
   let world: UUID
   let system: SystemIdentity
-  let definition: String
+  let key: String
 }
+enum NativeStationCapability: String, Hashable, Codable, Sendable { case sealedDispatchBoard }
+enum NativeStationCapabilityOrigin: String, Codable, Sendable { case authored }
 
-enum NativeStationCapability: String, Hashable, Codable, Sendable { case rrsContractBoard }
-enum NativeStationCapabilityOrigin: String, Codable, Sendable { case source, projectExtension }
-
-/// Structural metadata only. G1's checked source adapter must establish authenticity.
+/// Descriptive data must exactly match the compiled original site policy.
 struct NativeStationDescriptor: Equatable, Codable, Sendable {
   let definition: String
   let version: String
   let boardOrigin: NativeStationCapabilityOrigin
   let capabilities: [NativeStationCapability]
-
-  var sourceRoles: [String] {
-    [
-      definition == "rescue_station" ? "rescue_station" : "rrs_galactic_hq",
-      "rrs_group_spacestation",
-    ]
+  init(definition: String, version: String, boardOrigin: NativeStationCapabilityOrigin,
+    capabilities: [NativeStationCapability])
+  {
+    self.definition = definition
+    self.version = version
+    self.boardOrigin = boardOrigin
+    self.capabilities = capabilities
   }
-
+  var sourceRoles: [String] { [definition] }
   func matches(_ identity: NativeStationIdentity) -> Bool {
-    definition == identity.definition && version == identity.version
-      && Set(capabilities).count == capabilities.count
-      && ((definition == "rescue_station" && boardOrigin == .source)
-        || (definition == "rrs_headquarters" && boardOrigin == .projectExtension))
+    guard let site = OriginalStationSite.site(for: identity, owner: identity.world) else { return false }
+    return definition == identity.definition && version == OriginalStationSite.sourceVersion
+      && boardOrigin == .authored
+      && capabilities == (site.sealedDispatchDefinition == nil ? [] : [.sealedDispatchBoard])
+  }
+  private enum CodingKeys: String, CodingKey { case definition, version, boardOrigin, capabilities }
+  init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, ["definition", "version", "boardOrigin", "capabilities"])
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    definition = try c.decode(String.self, forKey: .definition)
+    version = try c.decode(String.self, forKey: .version)
+    boardOrigin = try c.decode(NativeStationCapabilityOrigin.self, forKey: .boardOrigin)
+    capabilities = try NativeUtilityCoding.array(NativeStationCapability.self,
+      key: .capabilities, container: c, limit: 1)
   }
 }
 
 struct NativeStationBinding: Equatable, Codable, Sendable {
+  init(actor: ActorIdentity, bodyID: Int) {
+    self.actor = actor
+    self.bodyID = bodyID
+  }
+  private enum CodingKeys: String, CodingKey { case actor, bodyID }
+  init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, ["actor", "bodyID"])
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    let actorDecoder = try c.superDecoder(forKey: .actor)
+    try NativeUtilityCoding.require(actorDecoder, ["system", "visit", "entity"])
+    let actorFields = try actorDecoder.container(keyedBy: NativeUtilityCoding.Key.self)
+    let actorSystem = try actorFields.superDecoder(forKey: NativeUtilityCoding.Key(stringValue: "system")!)
+    try NativeUtilityCoding.require(actorSystem, ["galaxy", "system"])
+    actor = try ActorIdentity(from: actorDecoder)
+    bodyID = try c.decode(Int.self, forKey: .bodyID)
+  }
+
   let actor: ActorIdentity
   let bodyID: Int
 
@@ -83,6 +111,18 @@ private struct NativeStationBodyBinding: Hashable {
 }
 
 struct NativeStationTombstone: Equatable, Codable, Sendable {
+  init(revision: UInt64, destroyedBinding: NativeStationBinding) {
+    self.revision = revision
+    self.destroyedBinding = destroyedBinding
+  }
+  private enum CodingKeys: String, CodingKey { case revision, destroyedBinding }
+  init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, ["revision", "destroyedBinding"])
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    revision = try c.decode(UInt64.self, forKey: .revision)
+    destroyedBinding = try c.decode(NativeStationBinding.self, forKey: .destroyedBinding)
+  }
+
   let revision: UInt64
   let destroyedBinding: NativeStationBinding
 }
@@ -94,14 +134,15 @@ struct NativeStationRecord: Equatable, Codable, Sendable {
   var binding: NativeStationBinding?
   var tombstone: NativeStationTombstone?
   var utility: NativeUtilityState? = nil
+  var utilitySourceBirth: NativeOriginalUtilityBirthReceipt? = nil
 
   private enum CodingKeys: String, CodingKey {
-    case identity, descriptor, revision, binding, tombstone, utility
+    case identity, descriptor, revision, binding, tombstone, utility, utilitySourceBirth
   }
   init(
     identity: NativeStationIdentity, descriptor: NativeStationDescriptor, revision: UInt64,
     binding: NativeStationBinding?, tombstone: NativeStationTombstone?,
-    utility: NativeUtilityState? = nil
+    utility: NativeUtilityState? = nil, utilitySourceBirth: NativeOriginalUtilityBirthReceipt? = nil
   ) {
     self.identity = identity
     self.descriptor = descriptor
@@ -109,19 +150,22 @@ struct NativeStationRecord: Equatable, Codable, Sendable {
     self.binding = binding
     self.tombstone = tombstone
     self.utility = utility
+    self.utilitySourceBirth = utilitySourceBirth
   }
   init(from decoder: Decoder) throws {
     try NativeUtilityCoding.require(
       decoder, ["identity", "descriptor", "revision"],
-      optional: ["binding", "tombstone", "utility"])
+      optional: ["binding", "tombstone", "utility", "utilitySourceBirth"])
     let c = try decoder.container(keyedBy: CodingKeys.self)
     identity = try c.decode(NativeStationIdentity.self, forKey: .identity)
     descriptor = try c.decode(NativeStationDescriptor.self, forKey: .descriptor)
     revision = try c.decode(UInt64.self, forKey: .revision)
-    binding = try c.decodeIfPresent(NativeStationBinding.self, forKey: .binding)
-    tombstone = try c.decodeIfPresent(NativeStationTombstone.self, forKey: .tombstone)
-    utility = try c.decodeIfPresent(NativeUtilityState.self, forKey: .utility)
-    guard NativeUtilityState.isTarget(identity) || !c.contains(.utility), valid else {
+    binding = c.contains(.binding) ? try c.decode(NativeStationBinding.self, forKey: .binding) : nil
+    tombstone = c.contains(.tombstone) ? try c.decode(NativeStationTombstone.self, forKey: .tombstone) : nil
+    utility = c.contains(.utility) ? try c.decode(NativeUtilityState.self, forKey: .utility) : nil
+    utilitySourceBirth = c.contains(.utilitySourceBirth)
+      ? try c.decode(NativeOriginalUtilityBirthReceipt.self, forKey: .utilitySourceBirth) : nil
+    guard NativeUtilityState.isTarget(identity) || (!c.contains(.utility) && !c.contains(.utilitySourceBirth)), valid else {
       throw SaveError.invalidCommander
     }
   }
@@ -135,9 +179,11 @@ struct NativeStationRecord: Equatable, Codable, Sendable {
           ($0.installation?.contact.lifecycle ?? 1) <= revision
         }) == true
     } else {
-      utilityValid = utility == nil
+      utilityValid = utility == nil && utilitySourceBirth == nil
     }
-    return utilityValid && identity.valid && descriptor.matches(identity) && revision > 0
+    let birthValid = utilitySourceBirth.map { $0.valid && $0.station == identity }
+      ?? (!NativeUtilityState.isTarget(identity) || (binding == nil && tombstone == nil))
+    return birthValid && utilityValid && identity.valid && descriptor.matches(identity) && revision > 0
       && revision < UInt64(Int64.max) && (binding?.valid(for: identity) ?? true)
       && (tombstone.map {
         $0.revision == revision && $0.destroyedBinding.valid(for: identity) && binding == nil
@@ -147,6 +193,24 @@ struct NativeStationRecord: Equatable, Codable, Sendable {
 
 /// Frozen evidence of actual docking, retained across load and subsequent visit rebinding.
 struct NativeStationDockReceipt: Equatable, Codable, Sendable {
+  init(station: NativeStationIdentity, lifecycleRevision: UInt64, dockingBinding: NativeStationBinding, sequence: UInt64, commanderOwner: UUID) {
+    self.station = station
+    self.lifecycleRevision = lifecycleRevision
+    self.dockingBinding = dockingBinding
+    self.sequence = sequence
+    self.commanderOwner = commanderOwner
+  }
+  private enum CodingKeys: String, CodingKey { case station, lifecycleRevision, dockingBinding, sequence, commanderOwner }
+  init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, ["station", "lifecycleRevision", "dockingBinding", "sequence", "commanderOwner"])
+    let c = try decoder.container(keyedBy: CodingKeys.self)
+    station = try c.decode(NativeStationIdentity.self, forKey: .station)
+    lifecycleRevision = try c.decode(UInt64.self, forKey: .lifecycleRevision)
+    dockingBinding = try c.decode(NativeStationBinding.self, forKey: .dockingBinding)
+    sequence = try c.decode(UInt64.self, forKey: .sequence)
+    commanderOwner = try c.decode(UUID.self, forKey: .commanderOwner)
+  }
+
   let station: NativeStationIdentity
   let lifecycleRevision: UInt64
   let dockingBinding: NativeStationBinding
@@ -172,9 +236,9 @@ struct NativeStationServiceContext: Equatable, Sendable {
 enum NativeStationStateError: Error { case invalidState, unavailable }
 
 struct NativeStationLedger: Equatable, Codable, Sendable {
-  /// At most one source waystation per ordinary world plus one HQ per galaxy.
+  /// Absolute decode budget; the exact current original source set is checked separately.
   static let maximumSourceRecords = 8 * (256 + 1)
-  static var recordLimit: Int { NativeStationSource.bindings.count }
+  static var recordLimit: Int { OriginalStationSite.allCases.count }
   let world: UUID
   private(set) var records: [NativeStationRecord]
   private(set) var nextDockSequence: UInt64
@@ -238,7 +302,7 @@ struct NativeStationLedger: Equatable, Codable, Sendable {
   mutating func recordDock(
     at identity: NativeStationIdentity, binding: NativeStationBinding, commanderOwner: UUID?
   ) throws {
-    guard let commanderOwner, valid, currentDock == nil, nextDockSequence < UInt64(Int64.max) - 1,
+    guard let commanderOwner, commanderOwner == world, valid, currentDock == nil, nextDockSequence < UInt64(Int64.max) - 1,
       let record = records.first(where: { $0.identity == identity }), record.tombstone == nil,
       record.binding == binding
     else { throw NativeStationStateError.unavailable }
@@ -262,6 +326,15 @@ struct NativeStationLedger: Equatable, Codable, Sendable {
   }
 
   /// A utility operation never changes a station lifecycle or manufactures docking authority.
+  /// Called only inside the sealed copied population plan before its native publication.
+  mutating func recordUtilityBirth(_ receipt: NativeOriginalUtilityBirthReceipt) throws {
+    guard receipt.valid, let index = records.firstIndex(where: { $0.identity == receipt.station }),
+      NativeUtilityState.isTarget(receipt.station), records[index].binding == nil,
+      records[index].tombstone == nil, records[index].utilitySourceBirth == nil
+    else { throw NativeStationStateError.invalidState }
+    records[index].utilitySourceBirth = receipt
+  }
+
   mutating func replaceUtility(_ state: NativeUtilityState) throws {
     guard state.owner == world, state.valid,
       let index = records.firstIndex(where: { $0.identity == state.target }),
@@ -279,7 +352,7 @@ struct NativeStationLedger: Equatable, Codable, Sendable {
     capability: NativeStationCapability, docked: Bool, system: SystemIdentity,
     commanderOwner: UUID?, runtimeEpoch: UUID
   ) -> NativeStationServiceContext? {
-    guard let commanderOwner, valid, docked, let receipt = currentDock,
+    guard let commanderOwner, commanderOwner == world, valid, docked, let receipt = currentDock,
       receipt.station.system == system,
       receipt.commanderOwner == commanderOwner,
       records.first(where: { $0.identity == receipt.station })?.descriptor.capabilities.contains(
@@ -301,6 +374,7 @@ struct NativeStationLedger: Equatable, Codable, Sendable {
   private enum CodingKeys: String, CodingKey { case world, records, nextDockSequence, currentDock }
 
   init(from decoder: Decoder) throws {
+    try NativeUtilityCoding.require(decoder, ["world", "records", "nextDockSequence"], optional: ["currentDock"])
     let values = try decoder.container(keyedBy: CodingKeys.self)
     world = try values.decode(UUID.self, forKey: .world)
     var entries = try values.nestedUnkeyedContainer(forKey: .records)
@@ -320,7 +394,8 @@ struct NativeStationLedger: Equatable, Codable, Sendable {
     }
     records = decoded
     nextDockSequence = try values.decode(UInt64.self, forKey: .nextDockSequence)
-    currentDock = try values.decodeIfPresent(NativeStationDockReceipt.self, forKey: .currentDock)
+    currentDock = values.contains(.currentDock)
+      ? try values.decode(NativeStationDockReceipt.self, forKey: .currentDock) : nil
     guard valid else {
       throw DecodingError.dataCorruptedError(
         forKey: .records, in: values, debugDescription: "Invalid native station custody.")

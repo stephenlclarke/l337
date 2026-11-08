@@ -1,0 +1,13 @@
+# M02 bounded original crew prerequisite
+
+Original Bison SH005/SH006 and Buffalo SH013/SH014 require12/14/6/7 people including the commander. Intrinsic quarters provide places, not people. This change adds a finite original crew service at Avenor main orbital and derives normal player launch readiness from actual assigned native people. It does not enable pending fabrication, unsupported devices or authored placement.
+
+The approved fleet r3 CREW.md (SHA2567704598858a9257778902d5feac812270467625770b0b34b5b225b3d23ea7609) sets200CR once per person, no wages, commander counted once, contextual Crew action and undercrew docked saving. Thirteen new named consenting adult volunteers are a bounded implementation source sufficient for the largest of these four complements. They do not replace four mission-reserved passengers. There is no general population replenishment or171-hull staffing claim.
+
+The first paid confirmation persists the whole finite source inside NativePeopleCustodyState. A native identity has one current station, owned hull/intrinsic place, or terminal loss/escape location. Disembarkation retains the same person and paid contract at the actual station, without refund. Reassignment of that same valid contract costs0CR. Station views, quotes, cancellation and reload cannot refill the source. No passenger cabin, cargo admission, fake equipment/tool or second Commander crew ledger is created.
+
+All changes use the existing GameRuntime command transaction/current writer. Failed writers restore source, cash, assignments, hull and prior published files. Crew exchanges require enough intrinsic places and current actual main-station authority; smaller targets require explicit disembarkation. Remaining crew are visibly moved to packed numbered places in the same disembark transaction, so read-only equipment projections need no crew history mutation. Actual destruction/escape closes only aboard crew through existing lifecycle hooks without inventing rescue, death details, mission progress or replacement people.
+
+Storage is bounded to1024 receipts with two terminal slots reserved (new implementation estimate). The service screen shows the latest16 receipts while retaining all bounded history. Historical validation uses a Set for unique operations and bounded13-person replay; runtime timing remains UNRUN.
+
+Implementation and focused tests are proposed, not integration-ready. All21 directly authored/affected literal test cases are UNRUN. Root/G1 must compose the actual original resources/runtime/fitting guard and source changes, obtain independent bug/performance/style review and actual focused test PASS, then perform required normal CI at the integration/release checkpoint. Source review alone is not playable completion.

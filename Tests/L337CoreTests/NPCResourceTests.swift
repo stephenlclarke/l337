@@ -69,7 +69,10 @@ struct NPCResourceTests {
 
   @Test func nonshipBuilderDoesNotInventShipArmamentOrResourceReadings() throws {
     var game = try resourceGame()
-    game.commander.installTargetingComputer(.military)
+    try game.commander.prepareEquipment(legacy: false)
+    try game.commander.grantEquipment(
+      TargetingTier.military.equipmentName, at: .targetingCore,
+      provenance: .grant("current targeting unit fixture"))
     for hull in [Hull.cargo, .asteroid, .missile] {
       let info = try #require(
         game.information(for: .init(id: 90, hull: hull, position: .init(0, 0, 500))))
@@ -104,7 +107,10 @@ struct NPCResourceTests {
 
   @Test func everyCargoAndResourceRowRemainsReadableAndReachableInCompactTargetPanel() throws {
     var game = try resourceGame()
-    game.commander.installTargetingComputer(.military)
+    try game.commander.prepareEquipment(legacy: false)
+    try game.commander.grantEquipment(
+      TargetingTier.military.equipmentName, at: .targetingCore,
+      provenance: .grant("current targeting unit fixture"))
     game.commander.shipDisplayStyle = .whiteWireframe
     game.weaponsTargetID = 40
     game.targetPanelExpanded = true
@@ -219,21 +225,34 @@ struct NPCResourceTests {
 
   @Test func targetReadsNPCFactsRatherThanCommanderAndRespectsDisclosure() throws {
     var game = try resourceGame()
-    game.commander.cargo[0] = 99
-    game.commander.fuel = 1
-    game.commander.legal = 100
-    game.frontShield = 1
     game.bodies[0].physical?.npc?.resources?.fuel = 23
     game.bodies[0].physical?.npc?.resources?.frontShield = 12
     game.bodies[0].physical?.npc?.resources?.laserHeat = 37
-    game.commander.installTargetingComputer(.pirate)
-    let pirate = try #require(game.information(for: game.bodies[0]))
+    try game.commander.prepareEquipment(legacy: false)
+    try game.commander.grantEquipment(
+      TargetingTier.pirate.equipmentName, at: .targetingCore,
+      provenance: .grant("current targeting unit fixture"))
+    // Keep current fitting transactions on the valid owner; the deliberate player
+    // overload belongs only to the read-only disclosure counterexample.
+    var observation = game
+    observation.commander.cargo[0] = 99
+    observation.commander.fuel = 1
+    observation.commander.legal = 100
+    observation.frontShield = 1
+    let pirate = try #require(observation.information(for: observation.bodies[0]))
     #expect(pirate.fields.contains { $0.label == "Cargo" && $0.value == "Gold 4 kg" })
     #expect(pirate.fields.contains { $0.label == "Destination" && $0.value.contains("Galaxy 2") })
     #expect(pirate.fields.contains { $0.label == "Legal status" && $0.value == "Clean" })
     #expect(!pirate.fields.contains { $0.label == "Front shield" || $0.label == "Fuel" })
-    game.commander.installTargetingComputer(.military)
-    let military = try #require(game.information(for: game.bodies[0]))
+    try game.commander.grantEquipment(
+      TargetingTier.military.equipmentName, at: .targetingCore,
+      provenance: .grant("current targeting unit fixture"))
+    observation = game
+    observation.commander.cargo[0] = 99
+    observation.commander.fuel = 1
+    observation.commander.legal = 100
+    observation.frontShield = 1
+    let military = try #require(observation.information(for: observation.bodies[0]))
     #expect(military.fields.contains { $0.label == "Front shield" && $0.value.hasPrefix("12.0 /") })
     #expect(military.fields.contains { $0.label == "Laser heat" && $0.value.hasPrefix("37.0 /") })
     #expect(military.fields.contains { $0.label == "Fuel" && $0.value.hasPrefix("2.3 /") })

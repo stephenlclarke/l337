@@ -1,0 +1,9 @@
+{
+  "status": "SOURCE_API_CORRECTION_FROZEN_BEFORE_NAV_INPUT_CHANGE",
+  "parentFirst": "earned-sh025-checkpoint-first.json",
+  "reason": "Readonly Swift source shows transferred Navigation Advanced/Military raises both source and target jump cap, invalidating a 9..10LY incompatibility oracle. Basic keeps reach7 below both native limits. No execution occurred.",
+  "paidNavigation": "Navigation Basic ONLY, actual one paid quote/apply at Verasel",
+  "routeBoundary": "Use actual projected target fullTankJumpDistance and actual source maximumJumpDistance; first ordinary known direct destination in original fixed cap256, actual planner must emit direct alternative. No plan injection.",
+  "capsChanged": false,
+  "hunk": "NativeEarnedPeregrineFixture only; remove Advanced/Military entries before first compile/run; unwrap actual CatalogueShip optional game"
+}

@@ -46,9 +46,25 @@ public struct ShipMaterial: Codable, Sendable, Equatable {
   public let name: String
   public let colour: UInt32
   public let emissive: Bool
+  public let opticalOpacity: Double?
+
+  init(name: String, colour: UInt32, emissive: Bool, opticalOpacity: Double? = nil) {
+    self.name = name
+    self.colour = colour
+    self.emissive = emissive
+    self.opticalOpacity = opticalOpacity
+  }
 }
 
 public struct Mesh: Sendable {
+  struct OpticalEnclosure: Sendable {
+    let paneFace: Int
+    let firstInteriorFace: Int
+  }
+
+  // An authenticated display mesh may name its only window and interior faces.
+  var opticalEnclosure: OpticalEnclosure?
+
   public let vertices: [Vector3]
   public let faces: [[Int]]
   public let details: [MeshDetail]
@@ -154,5 +170,50 @@ public struct SpaceBody: Sendable, Equatable, Codable, Identifiable {
     self.energy = hull.navalEnergy ?? 100
     self.missiles = hull.navalMissiles
     self.ecmEnabled = hull.hasECM
+  }
+}
+
+// The original Codable keys and optional omission are unchanged. Only large
+// field ownership is prepared before entering JSON's generic child encoder.
+extension SpaceBody {
+  private enum CodingKeys: String, CodingKey {
+    case id, hull, position, rotation, orientation, rotationRate
+    case energy, hostile, navalTarget, missiles, playerMissileTarget, enemyMissile
+    case missileSourceID, destroyedByPlayer, missionActorID, missionInstanceID, blackjackIdentity, blackjackRole
+    case blackjackLaserCooldown, scriptNPC, scriptShot, ecmEnabled, physical, nativeStationIdentity
+  }
+  @inline(never)
+  public func encode(to encoder: any Encoder) throws {
+    var values = encoder.container(keyedBy: CodingKeys.self)
+    try values.encode(id, forKey: .id)
+    try values.encode(hull, forKey: .hull)
+    try values.encode(position, forKey: .position)
+    try values.encode(rotation, forKey: .rotation)
+    try values.encode(orientation, forKey: .orientation)
+    try values.encode(rotationRate, forKey: .rotationRate)
+    try values.encode(energy, forKey: .energy)
+    try values.encode(hostile, forKey: .hostile)
+    try values.encode(navalTarget, forKey: .navalTarget)
+    try values.encode(missiles, forKey: .missiles)
+    try values.encodeIfPresent(playerMissileTarget, forKey: .playerMissileTarget)
+    try values.encode(enemyMissile, forKey: .enemyMissile)
+    try values.encodeIfPresent(missileSourceID, forKey: .missileSourceID)
+    try values.encodeIfPresent(destroyedByPlayer, forKey: .destroyedByPlayer)
+    try values.encodeIfPresent(missionActorID, forKey: .missionActorID)
+    try values.encodeIfPresent(missionInstanceID, forKey: .missionInstanceID)
+    try values.encodeIfPresent(blackjackIdentity, forKey: .blackjackIdentity)
+    try values.encodeIfPresent(blackjackRole, forKey: .blackjackRole)
+    try values.encodeIfPresent(blackjackLaserCooldown, forKey: .blackjackLaserCooldown)
+    if let value = NativeSaveEncodingValue<ScriptNPCState>.prepareIfPresent(scriptNPC) {
+      try values.encode(value, forKey: .scriptNPC)
+    }
+    if let value = NativeSaveEncodingValue<ScriptNPCShot>.prepareIfPresent(scriptShot) {
+      try values.encode(value, forKey: .scriptShot)
+    }
+    try values.encode(ecmEnabled, forKey: .ecmEnabled)
+    if let value = NativeSaveEncodingValue<PhysicalActorState>.prepareIfPresent(physical) {
+      try values.encode(value, forKey: .physical)
+    }
+    try values.encodeIfPresent(nativeStationIdentity, forKey: .nativeStationIdentity)
   }
 }

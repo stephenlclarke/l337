@@ -66,7 +66,7 @@ extension NativeViewTests {
   {
     let fixture = try CampaignGalleryFixture()
     defer { fixture.clean() }
-    var game = fixture.game()
+    var game = try fixture.game()
     let (parent, child) = try fixture.start(&game)
     let before = game.commander
     for (width, height, scale) in [(512, 518, 1), (1512, 982, 2)] {
@@ -150,7 +150,7 @@ private final class CampaignGalleryInputHarness {
       windowSize: .init(width: 512, height: 518))
     view = GameView(frame: NSRect(x: 0, y: 0, width: 512, height: 518))
     originalMenu = NSApp?.mainMenu
-    var game = fixture.game()
+    var game = try fixture.game()
     if retryFault { game.commander.credits = 0 }
     if contractRoot {
       let campaign = try fixture.startContractCampaign(&game)

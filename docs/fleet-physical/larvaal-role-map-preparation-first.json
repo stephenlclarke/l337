@@ -1,0 +1,156 @@
+{
+  "status": "METADATA_ONLY_ELEVEN_LARVAAL_ROLE_MAP_PREPARATION_FIRST_NOT_ADOPTION",
+  "beforeCommit": "697c90fce55612888b7251b6890f34614b4cc72e",
+  "proposal": {
+    "path": "docs/fleet-physical/larvaal-object-role-proposal.json",
+    "bytes": 41137,
+    "sha256": "34237241c36bf353060014a2af440099523b2931b34f4725f88a9c1c5219e11b"
+  },
+  "materialMetadata": {
+    "path": "docs/fleet-physical/component-role-authoring-metadata.json",
+    "bytes": 32343,
+    "sha256": "97a07f36616d7d8107facb01b3c9af21bb21c95b517a4c23cfabade2680ec6d1"
+  },
+  "componentPins": [
+    {
+      "id": "SH112",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-design.toml",
+      "geometrySHA256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1",
+      "geometryBytes": 880289,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-components.json",
+      "componentSHA256": "8e92b8b5b65efa8bbd8544e7270d980c9d4b39d2033ca1e32a39a4b652d10bc3",
+      "componentBytes": 1849,
+      "detailedComponents": 6,
+      "detailedFaceBound": 6816,
+      "detailedVertexBound": 3418
+    },
+    {
+      "id": "SH113",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-design.toml",
+      "geometrySHA256": "5e9d7670be4b1997ad270d55f1cbecb1009eafc697ab4ddd2df1b34cc7a9e007",
+      "geometryBytes": 808399,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH113-components.json",
+      "componentSHA256": "47a627f4f7e90e3bf639b346bdbf4cf2944b97124cd71b6a0d17ee1bf2d3eabb",
+      "componentBytes": 1863,
+      "detailedComponents": 6,
+      "detailedFaceBound": 6136,
+      "detailedVertexBound": 3080
+    },
+    {
+      "id": "SH114",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-design.toml",
+      "geometrySHA256": "d999e2f3324a8a593191765c20fcd48c03ed17fefa102d4ed1156710685d51f0",
+      "geometryBytes": 1135060,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH114-components.json",
+      "componentSHA256": "f71459dc1dda6040a8014bd8dc9426e6a618bb3093c27b899ab041aaee606e51",
+      "componentBytes": 1878,
+      "detailedComponents": 6,
+      "detailedFaceBound": 8736,
+      "detailedVertexBound": 4378
+    },
+    {
+      "id": "SH115",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-design.toml",
+      "geometrySHA256": "9b38f9641e6503b8aa2a7430f81d91c6f6870bc28f0c9dc13baee16397b01ab2",
+      "geometryBytes": 811798,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH115-components.json",
+      "componentSHA256": "ab757c36e7dc8d09fba3bf129cf670fad4db02b11984ea282ccdd50d4aa422ab",
+      "componentBytes": 1873,
+      "detailedComponents": 6,
+      "detailedFaceBound": 6184,
+      "detailedVertexBound": 3104
+    },
+    {
+      "id": "SH116",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-design.toml",
+      "geometrySHA256": "62153467e98fbf3e98a095a50bfc536227d322345d74a6a048e720b65c9fed73",
+      "geometryBytes": 921446,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH116-components.json",
+      "componentSHA256": "efe5e0d62c7da1368080cabc2d03946d7a455ed265ffbde6eca04703cd3edc6a",
+      "componentBytes": 1923,
+      "detailedComponents": 6,
+      "detailedFaceBound": 7048,
+      "detailedVertexBound": 3536
+    },
+    {
+      "id": "SH117",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-design.toml",
+      "geometrySHA256": "9a48f2e812240a38f2b90ea0333eda83f8032b0472dcba9fcb694931cc0a902e",
+      "geometryBytes": 973424,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH117-components.json",
+      "componentSHA256": "135d71d900fa087677ebbeeb5a03b9496a7888f89339aefb8209d69ebb92af64",
+      "componentBytes": 1841,
+      "detailedComponents": 6,
+      "detailedFaceBound": 7480,
+      "detailedVertexBound": 3752
+    },
+    {
+      "id": "SH118",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-design.toml",
+      "geometrySHA256": "65a9c46ec8547b76bc94aa261668b05f6a651bd39ee735c671d90f338be6f0e6",
+      "geometryBytes": 1999661,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH118-components.json",
+      "componentSHA256": "93637233a52a586243e7f998c435e12a2d01a9d0f1ea2b3d112ee05cd1272820",
+      "componentBytes": 4250,
+      "detailedComponents": 14,
+      "detailedFaceBound": 15360,
+      "detailedVertexBound": 7708
+    },
+    {
+      "id": "SH119",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-design.toml",
+      "geometrySHA256": "3d7d4b77a9f9c44ff9b15c3cf379bf68b4ca0106628a59eaae978e59394fa7d1",
+      "geometryBytes": 1077700,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH119-components.json",
+      "componentSHA256": "3a787daecebc52105fb6547440a19e1fc5edb3805821cf44da73fb3bf2a90b35",
+      "componentBytes": 2205,
+      "detailedComponents": 7,
+      "detailedFaceBound": 8160,
+      "detailedVertexBound": 4094
+    },
+    {
+      "id": "SH120",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-design.toml",
+      "geometrySHA256": "4968b8ce9ac6fc316fe67b58dd04e7fb2297ab8d40aa20e8322a26540437fedc",
+      "geometryBytes": 872098,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH120-components.json",
+      "componentSHA256": "656d34be6678c64aa07043d0a0ccfaaae80feaedda6344b76fcce834097edfa4",
+      "componentBytes": 1867,
+      "detailedComponents": 6,
+      "detailedFaceBound": 6816,
+      "detailedVertexBound": 3418
+    },
+    {
+      "id": "SH121",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-design.toml",
+      "geometrySHA256": "f205cf86f74b26cc75542f65a940aa92f287d24c58d53d4e250ba6e24a05218b",
+      "geometryBytes": 1113768,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH121-components.json",
+      "componentSHA256": "9df9ef2f2f5cf136111aaca92e4ebb1404b7a96d3dd3ee0fb30facaf924b1b3b",
+      "componentBytes": 1863,
+      "detailedComponents": 6,
+      "detailedFaceBound": 8540,
+      "detailedVertexBound": 4282
+    },
+    {
+      "id": "SH122",
+      "geometryPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-design.toml",
+      "geometrySHA256": "c0392366f0a900584961def6feed02002cced6a9760fa0178518f2f020600556",
+      "geometryBytes": 1588487,
+      "componentPath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH122-components.json",
+      "componentSHA256": "76599c75eabb8c2499cd8a8ce76a93fe47774e6f21f71fba6bc779951b1d7090",
+      "componentBytes": 2837,
+      "detailedComponents": 9,
+      "detailedFaceBound": 12096,
+      "detailedVertexBound": 6064
+    }
+  ],
+  "operationsAllowed": "Read each exact already-frozen component JSON once, compare named part/ranges to proposed allocations, copy exact material names from prior metadata, freeze integer operation caps. No source geometry reads/parses/coordinates/area/centroid/mass/tensor evaluation.",
+  "componentJSONReads": 11,
+  "geometryReads": 0,
+  "coordinateConversions": 0,
+  "areaMassTensorEvaluations": 0,
+  "nativeOrOriginalCreatorExecution": 0,
+  "roleAdoption": "UNISSUED; Root disposition still required before computation",
+  "output": "larvaal-area-moment-role-maps-prepared.json"
+}

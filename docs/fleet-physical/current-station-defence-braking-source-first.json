@@ -1,0 +1,32 @@
+{
+  "status": "FIRST_NEW_CONCRETE_BRAKING_SOURCE_FINDING_NO_EDITS_RESERVATION_PENDING",
+  "beforeCommit": "962055d3cc8bdbb4c6f0af2b5a8bdf0c0c55d0bc",
+  "pins": [
+    {
+      "path": "Sources/L337Core/StationAutoDefence.swift",
+      "bytes": 40575,
+      "sha256": "6df2a951613bdab340f72804a710d0d3a70e5f03aff9e43a1199f163b94a9966"
+    },
+    {
+      "path": "Sources/L337Core/GameplayEncounters.swift",
+      "bytes": 19957,
+      "sha256": "e01d4b1971b46c6ee1de1548edd2eb7eb3d7df74f3f31f5ac0fea999cf058c3d"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 150579,
+      "sha256": "7f46d4e3fd7be24ee55791d08edff749d9dd0ce1ec2b3eff2200e8fb7281e473"
+    }
+  ],
+  "before": "      let craft = ShipCatalogue.nativeShip(body.hull)?.game\n      return Self.stationAutoNPCMotionAllowance(\n        acceleration: max(1, (craft?.acceleration ?? 2) * 18), horizon: horizon)\n",
+  "proposedAfter": "      guard let id = physical.catalogueShipID,\n        let source = OriginalFleetRuntimeHullSource.source(for: id)\n      else { return nil }\n      return Self.stationAutoNPCMotionAllowance(\n        acceleration: max(1, source.performance.acceleration * 18), horizon: horizon)\n",
+  "reason": "stationAutoBrakingMotionAllowance for spawned current per-ID actors uses nativeShip(body.hull) instead of actual physical.catalogueShipID, while steerGameplayActor resolves actual OriginalFleetRuntimeHullSource and applies max(1,source.acceleration*18). Current cobra/sidewinder have no native reverse binding, so old braking bound uses fallback2 even when actual steering source differs. This can under-bound real motion and grant unsafe stopping course. Unknown current source must refuse allowance, not invent rate. Proposed one lookup hunk preserves horizon/margins/formula and legacy unspawned branch.",
+  "additionalFinding": "stationAutoThreatObserved still requires nativeShip and nil-or-reverseID at lines161-162. This conservatively marks actual per-ID threats uncertain and prevents known handover; cannot blindly replace with capture because genuine disabled EMP observation intentionally has empSource and potentially zero energy. Needs separately source/custody-aware policy, not within approved known-target hunk.",
+  "tests": "Existing stationAutoBrakingAllowanceContainsActualDiscreteNPCUpdates/FiniteBraking positive/negative and real current course methods require fixture source binding. Freeze/add explicit current-source acceleration bound/unknown-source conservative refusal; no actual safety or integration claim before G1 execution.",
+  "limits": "No source/model/numeric/native/test execution or edits. Request exact shared hunk scope from Root; this finding means original single known-target hunk alone does not close station current-source workflow."
+}

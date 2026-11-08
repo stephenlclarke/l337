@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 /// Shared actual native dock/travel setup; board tests own their UI interaction proofs.
 struct WayfarerRepairLoopNativeFixture {
@@ -27,7 +28,8 @@ struct WayfarerRepairLoopNativeFixture {
     if escapeReady {
       let pod = try #require(Equipment.all.first { $0.name == "Escape Pod" })
       let quote = try game.quoteEquipmentPurchase(pod)
-      try #require(try game.applyEquipmentPurchase(quote))
+      let purchaseApplied = try game.applyEquipmentPurchase(quote)
+      try #require(purchaseApplied)
     }
     let runtime = GameRuntime(game: game, saveURL: save)
     try await runtime.save(to: save)

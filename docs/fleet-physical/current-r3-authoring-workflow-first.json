@@ -1,0 +1,22 @@
+{
+  "status": "ADDITIONAL_CURRENT_AUTHORITY_TEST_AND_WORKFLOW_HUNKS_FROZEN_BEFORE_EDITS",
+  "parentFirst": "current-r3-authoring-entrypoints-first.json",
+  "beforePins": [
+    {
+      "path": "Tools/showroom/test_catalogue_balance.py",
+      "bytes": 6817,
+      "sha256": "0fba4713bbb5f2660ef94a30f04830459350153a4e7a86042f82a5418980a266"
+    },
+    {
+      "path": "docs/SHIP-FILES.md",
+      "bytes": 11106,
+      "sha256": "36e97cc2642b4bca7f3cfbdaf61dbf5fecffad5a591e33e0a979dd6a70c8230c"
+    }
+  ],
+  "scope": [
+    "Preserve first five historical balance fixture methods byte-exact; replace last two maintained-resource overlay oracles with exact currentR3 all171/no-mutation and current writer roundtrip/no-overwrite on actualcurrent IDs",
+    "SHIP-FILES: retire obsolete writer instructions, document exact currentR3 source workflow, actual crew/qualified geometry and remaining unfinished native/media work; preserve legitimate license notices"
+  ],
+  "sourceOnly": true,
+  "execution": 0
+}

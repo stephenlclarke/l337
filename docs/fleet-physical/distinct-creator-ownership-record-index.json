@@ -1,0 +1,35 @@
+{
+  "status": "SIX_EXACT_DISTINCT_SOURCE_RECORDS_NO_PHYSICS_OR_ACTIVATION",
+  "records": [
+    {
+      "id": "SH037",
+      "bytes": 345915,
+      "sha256": "3f04e065ece02f176f6fd51641351abaeebba0c669014a6602ae1aa4693f0de3"
+    },
+    {
+      "id": "SH038",
+      "bytes": 345915,
+      "sha256": "b8896ff0ff5051d3e9a4cc67e1d6085450a7767a92998160d76b71274a91ac43"
+    },
+    {
+      "id": "SH039",
+      "bytes": 345915,
+      "sha256": "35cb8f5f854620a8716ed47cc6ee0d2f386425e9c3475971816c91cd1b0811a0"
+    },
+    {
+      "id": "SH123",
+      "bytes": 14349,
+      "sha256": "49c0953a0bf0afb144c98125658c8594833fd2bdebac4882987f13cec5acd4c0"
+    },
+    {
+      "id": "SH125",
+      "bytes": 6726,
+      "sha256": "e7ca2843dec75a90851abd9b2ca427f03096bc4459be6d80dbe74e6f7771baea"
+    },
+    {
+      "id": "SH171",
+      "bytes": 649334,
+      "sha256": "0fab4ca06ec2a1224287086de2cb7be86e52e5ae60e366de78da3d2dc031f9cc"
+    }
+  ]
+}

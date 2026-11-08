@@ -655,8 +655,8 @@ extension Game {
       "At Enlirin, review the seed custodians' consent before Confirm borrows their unique one-tonne vault key for Lareria's receiving cradle. The key stays their property; the seed travels aboard the ark.",
       "The loan is untimed, needs one free tonne and cannot be sold, fitted or released as personal equipment. At Enlirin, separately review and Confirm the one original ark registration; no extra player cargo space is required.",
       "The registered ark uses actual native aperture docking and its own custodian escrow for needed-hop fuel. Each real main station has one finite 100-LY custodian-service reserve shared by seed arks and the original rescue launch. Saving, revisiting or reopening never refills stock or funds; actual Lareria receiving and original key return need their separate Confirm review.",
-      "Original escort terms: one custodian Haflinger, forty unique seed tonnes and six living crew, with its own finite 1000 CR fuel escrow. Its authored tank is 13 LY, drive 9 LY per hop and spool 12 seconds; your separate original vault key occupies one tonne.",
-      "One initial reserve holds a distinct Haflinger, forty distinct seed tonnes, six distinct crew and a separate 1000 CR fuel issue. Only proved original-ark destruction and fresh Enlirin custodian consent can release it once. The same original key must still be aboard. Unused prior escrow returns to its custodian; no payment or progress is awarded.",
+      "Original escort terms: one custodian Saiga, forty unique seed tonnes and six living crew, with its own finite 1000 CR fuel escrow. Its authored tank is 13 LY, drive 9 LY per hop and spool 12 seconds; your separate original vault key occupies one tonne.",
+      "One initial reserve holds a distinct Saiga, forty distinct seed tonnes, six distinct crew and a separate 1000 CR fuel issue. Only proved original-ark destruction and fresh Enlirin custodian consent can release it once. The same original key must still be aboard. Unused prior escrow returns to its custodian; no payment or progress is awarded.",
       "The destroyed hull, seed and crew remain lost. Station fuel stock stays depleted. After the single reserve is consumed, no further launch or new key is available without a separate real authored source.",
       "These stages pay nothing and grant no accreditation or clue. "
         + NativeWayfarerInduction.laterStages,
@@ -675,7 +675,7 @@ extension Game {
           "Real native route hops use the same launch's retained drive/fuel after separate Cevilis escort review. The original launch uses native aperture docking and its own paid needed-hop fuel from the same persistent station reserve as seed arks. Enmadan receiving needs that same launch actually berthed with both original crew alive and its original recorder on your actual docked carrier. Confirm returns people, recorder and unused custodian funds together; no extra station stock or arrival fuel is granted."
         )
         lines.append(
-          "One uncrewed Burro and separate future1000CR funding are reserved. Replacement cannot create people or a recorder: only the same original two surviving crew in actual supported custody may transfer after real rebrief/launch. The replacement branch remains unavailable."
+          "One uncrewed Okapi and separate future1000CR funding are reserved. Replacement cannot create people or a recorder: only the same original two surviving crew in actual supported custody may transfer after real rebrief/launch. The replacement branch remains unavailable."
         )
       } else {
         lines.append(
@@ -697,7 +697,7 @@ extension Game {
     if let status = inductionArkStatus { lines.append(status) }
     if wayfarerInductionMission?.savedWayfarerInduction?.seedReception != nil {
       lines += [
-        "Cevilis source: empty mechanically disabled original Burro tender, separate marked Burro rescue launch with two original crew, and their original one-tonne custody recorder for Enmadan shelter.",
+        "Cevilis source: empty mechanically disabled original Okapi tender, separate marked Okapi rescue launch with two original crew, and their original one-tonne custody recorder for Enmadan shelter.",
         "Source offsets in physical metres from the main station's non-spinning reference: tender(60000,20000,0), launch(60300,20000,0), recorder(60000,20000,100). Admission waits for real clearance/local range; no marker counts as pickup or rescue.",
         "Fit Fuel Scoops and keep one free tonne. Safely bring only the original recorder into the lower forward scoop at X0/Y-45m/Z+55m; package plus bounds must fit aperture half extents16m at relative speed <=\(Int(ScoopApproachController.maximumRelativeSpeed))m/s. Optional Salvage targeting can guide the same actual scoop. The tender, launch and their equipment stay custodian property; no player cabins are needed.",
         "Stage8 protects the original recorder as mission cargo, identifying both original launch occupants and Enmadan shelter. Its carrier loss releases the tonne but retains original pickup/loss history, with no reissue. Stage9 actual launch travel and survivors/recorder receiving remain unavailable; no payment, clue or accreditation is awarded here.",

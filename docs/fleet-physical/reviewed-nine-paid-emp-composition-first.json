@@ -1,0 +1,140 @@
+{
+  "status": "FIRST_FROZEN_REVIEWED_B590_TWO_PATH_TEN_HUNK_COMPOSITION_BEFORE_MUTATION",
+  "beforeCommit": "8ef91dac4ef85a5fb2be0a4d8b82db7815fc601c",
+  "childManifest": {
+    "path": "/tmp/elite-mc1-nine-paid-emp-callers-owned-starter-child/manifest.json",
+    "sha256": "b590e4b9a5866f823f8d62d51f5f5ba0c9fe83a56a32198ff853193a9be4a173"
+  },
+  "review": {
+    "path": "/tmp/elite-g2-b590-nine-paid-emp-source-review/review.json",
+    "sha256": "47e5138b1a8a70347cf6e82eb9285fd6cabd37d8e23a11b6f0abdde8f2eb7928"
+  },
+  "targetPins": {
+    "Tests/L337CoreTests/EMPModulePurchaseUnitTests.swift": {
+      "before": {
+        "bytes": 14098,
+        "sha256": "51b1c75a0a86a6097c7465d657ad0f4bcb76e6dbf18d4bbfd6d43d88c4442e45"
+      },
+      "after": {
+        "bytes": 18389,
+        "sha256": "785ab328117815fdf31a8685003f4ba38ba3f84417d429517e983a1619b43a7e"
+      },
+      "hunks": 6
+    },
+    "Tests/L337CoreTests/EMPModulePublicPresentationTests.swift": {
+      "before": {
+        "bytes": 17021,
+        "sha256": "72b88312669fbcc5733d8c9a289897d3f154577733f63959f4cd84c74e89e558"
+      },
+      "after": {
+        "bytes": 17107,
+        "sha256": "5c884c8195570637a6e1c46db08e9dcb0698ba72795fa9afd57842ceb64afcbe"
+      },
+      "hunks": 4
+    }
+  },
+  "protectedCurrentStationBatch": [
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 29427,
+      "sha256": "46458f06e42cd4fa6e072d81c78843c7b997b481b592cd0b05177b03aca9be9f"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 13134,
+      "sha256": "7e042d3fe817b6386c7ec34794af3f823d5a4c77c65632a1faf26387deff2b7f"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 28173,
+      "sha256": "e677224ab5e046f332c06e077ea28c4dd6471d348339a1c24fab879edb6c3909"
+    },
+    {
+      "path": "Sources/L337Core/GameplayContracts.swift",
+      "bytes": 10164,
+      "sha256": "4f5d90727c347782b5053700e9d22fa44789f31d5c35da40166e2b3b2c216554"
+    },
+    {
+      "path": "Sources/L337Core/OriginalPlayerHullActivation.swift",
+      "bytes": 10449,
+      "sha256": "d35c65855df5a5c1fc91cda831525454d4c7e7177e944102663d91443ee2ebe8"
+    },
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH031.toml",
+      "bytes": 393077,
+      "sha256": "13e4d6b94a801c84dd89b9f4af9c8ba21151a33782b7e9a98c03ef503302772f"
+    },
+    {
+      "path": "Sources/L337Core/StationPoliceSource.swift",
+      "bytes": 4700,
+      "sha256": "71070f49f77b9d424a0071f2d3ed9ada4e968d2ff1508a46f1ab1c44a0f7bf00"
+    },
+    {
+      "path": "Sources/L337Core/StationSecurity.swift",
+      "bytes": 19242,
+      "sha256": "2e053c87d48cd5e630cc3701bbf8c5216c9af39c2d4a837083075e9297ffaf3f"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPTravelAndSecurityTests.swift",
+      "bytes": 35014,
+      "sha256": "59d94d82c82fb730705a2f8a4f03e6aad7171ab4a9ceb99a447a77a65c397a5f"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalKiteInterceptorUnitTests.swift",
+      "bytes": 3373,
+      "sha256": "bce5e7fd0e0e083ab25215d38906a63bfcfc68ae1c78e91b7c1cdb8faed359f0"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationPoliceSourceTests.swift",
+      "bytes": 9790,
+      "sha256": "d2dd0a9b7b604af2cc09da97b0a9a14431ae4bc7607704a58e0a2639f4d4caba"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationSecurityTests.swift",
+      "bytes": 18482,
+      "sha256": "1c5dd01539a830f4d8095203fa3c354245bc23e84e93c2605df0672fbbef4d6f"
+    },
+    {
+      "path": "docs/COMPLETION-LEDGER.md",
+      "bytes": 2214085,
+      "sha256": "e8b4c96ebb6d8ee23755232f3a6ea194bccae57b90350db7c42f4e624a0bb4e9"
+    },
+    {
+      "path": "docs/fleet-physical/current-station-police-source-binding-refinement-first.json",
+      "bytes": 2803,
+      "sha256": "f8b502e3ce6b4a15b063223c5538cc0b0006ea06d77d9923415801374e8deeef"
+    },
+    {
+      "path": "docs/fleet-physical/current-station-police-source-emp-travel-first.json",
+      "bytes": 25599,
+      "sha256": "f9f7eb8ce6e316f0e3111f939844145a240f0d632e7f2eec59c4cb19360cb169"
+    },
+    {
+      "path": "docs/fleet-physical/current-station-police-source-first.json",
+      "bytes": 9761,
+      "sha256": "91f1ed8288d7c8f7dd4120700a7c459fd9dd6829deb774b2ce929f5186815d99"
+    },
+    {
+      "path": "docs/fleet-physical/current-station-police-source-literal-hunks.json",
+      "bytes": 8285,
+      "sha256": "bea5b70bf1c286817be78d440559514d6b4b0f00c351f340deebfeb71f6bd534"
+    },
+    {
+      "path": "docs/fleet-physical/current-station-police-source-partial-ack-first.json",
+      "bytes": 2564,
+      "sha256": "a9c2789215fb7a927c0a00b8a84c4d566d2ac1e3c802480e71b487c6856120f5"
+    },
+    {
+      "path": "docs/fleet-physical/current-station-police-source-tests-first.json",
+      "bytes": 5789,
+      "sha256": "efc61faa31dc57e0ab307ec895112b0b6f3ca6dccf0c6989de7434a3dd4c89bd"
+    }
+  ],
+  "game9356Lineage": {
+    "bytes": 179788,
+    "sha256": "4deeccae23639e71125f46fb3d13008aac7959bd4894eba3bb845563bc29cf09",
+    "matchesImmutable9356EntireGameFile": true
+  },
+  "scope": "Apply only reviewed forward.patch two targets10hunks, no stale whole-file replacement. Preserve all other current work.9explicit optins13defaults actual2Store operations/event conservation; source/native025/electrical/mining/loadedphysics prerequisites OPEN.",
+  "reviewLimit": "Review is immutable9356 child SOURCE only; current station-source interactions reviewed separately, all Swift UNCOMPILED UNRUN. No claim all29 immutable inputs are same as current post-station branch."
+}

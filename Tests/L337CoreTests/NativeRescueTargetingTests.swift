@@ -4,15 +4,22 @@ import Testing
 @testable import L337Core
 
 struct NativeRescueTargetingTests {
-  @Test(arguments: [false, true])
-  func tabActuallySelectsAndAutomaticallyCollectsOneOriginalProtectedPod(legacy: Bool) async throws
+  @Test func tabActuallySelectsAndAutomaticallyCollectsOneOriginalProtectedPod() async throws
   {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
-    let game = try NativePeopleTestFixture.podApproach(legacy: legacy)
-    let pod = try #require(game.bodies.first { $0.physical?.empCrewPod != nil })
+    let game = try NativePeopleTestFixture.podApproach()
+    let podCandidate = game.bodies.first { $0.physical?.empCrewPod != nil }
+    let pod = try #require(podCandidate)
     let person = try #require(pod.physical?.empCrewPod)
     let actor = try #require(pod.physical?.identity)
+    let kitReceipt = try #require(pod.physical?.currentNewtKitReceipt)
+    let kitStock = try #require(
+      game.commander.savedEMPState?.records[person.source]?.hull.body.physical?.currentNewtKitStock)
+    try #require(kitStock.phase == .released && kitStock.receipt == kitReceipt)
+    let kitSource = try #require(CurrentNewtKitSource.current)
+    #expect(kitSource.matchesCharges(kitReceipt.remainingCharges,
+      kitSource.charges(at: kitReceipt.releasedAt, actuation: kitReceipt.actuation)))
     let runtime = GameRuntime(game: game, saveURL: storage.url)
     await runtime.key("tab")
     #expect(await runtime.snapshot().workGuidance?.parent == actor)
@@ -34,6 +41,17 @@ struct NativeRescueTargetingTests {
     let record = try #require(collected.commander.savedEMPState?.records[person.source])
     let podIndex = try #require(record.podIndex(for: person.ordinal))
     #expect(record.pods[podIndex].binding == nil)
+    #expect(!collected.commander.worldOwnedPod(person))
+    #expect(record.pods[podIndex].body.physical?.currentNewtKitReceipt == kitReceipt)
+    let capturedStock = try #require(record.hull.body.physical?.currentNewtKitStock)
+    #expect(capturedStock.issue == kitStock.issue && capturedStock.receipt == kitReceipt)
+    #expect(capturedStock.charges.doesNotExceed(kitReceipt.remainingCharges))
+    #expect(capturedStock.observedAt >= kitReceipt.releasedAt)
+    #expect(capturedStock.serviceCapturedAt == admission.physicalTime)
+    #expect(record.pods[podIndex].physicalTime == admission.physicalTime)
+    #expect(kitSource.matchesCharges(capturedStock.charges,
+      kitSource.charges(at: capturedStock.observedAt, actuation: kitReceipt.actuation,
+        work: capturedStock.work, serviceCapturedAt: capturedStock.serviceCapturedAt)))
     #expect(collected.commander.valid)
     let emitted = try #require(record.podEjectionLowerBound(for: person.ordinal))
     try #require(emitted > record.disableIncident.physicalTime)
@@ -45,8 +63,8 @@ struct NativeRescueTargetingTests {
       from: JSONSerialization.data(withJSONObject: fields))
     #expect(!early.valid(commander: collected.commander))
     var forged = collected.commander
-    let admissionIndex = try #require(
-      forged.savedNativePeopleCustody?.admissions.firstIndex { $0.person == .emp(person) })
+    let admissionIndexCandidate = forged.savedNativePeopleCustody?.admissions.firstIndex { $0.person == .emp(person) }
+    let admissionIndex = try #require(admissionIndexCandidate)
     forged.savedNativePeopleCustody?.admissions[admissionIndex] = early
     #expect(!forged.nativePeopleStateValid && !forged.valid)
     for _ in 0..<40 { _ = await runtime.advance(delta: 0.05) }
@@ -66,12 +84,31 @@ struct NativeRescueTargetingTests {
     #expect(received.commander.nativePeople?.transfers.last?.members == [.emp(person)])
     #expect(received.commander.nativePeople?.transfers.last?.kind == .care)
     #expect(received.commander.credits == cash && received.commander.valid)
+    let closedRecord = try #require(received.commander.savedEMPState?.records[person.source])
+    #expect(closedRecord.pods[podIndex].body.physical?.currentNewtKitReceipt == kitReceipt)
+    let closedStock = try #require(closedRecord.hull.body.physical?.currentNewtKitStock)
+    #expect(closedStock.issue == kitStock.issue && closedStock.receipt == kitReceipt)
+    #expect(closedStock.charges.doesNotExceed(capturedStock.charges))
+    #expect(closedStock.serviceCapturedAt == capturedStock.serviceCapturedAt)
+    #expect(closedRecord.pods[podIndex].physicalTime == admission.physicalTime)
+    #expect(kitSource.matchesCharges(closedStock.charges,
+      kitSource.charges(at: closedStock.observedAt, actuation: kitReceipt.actuation,
+        work: closedStock.work, serviceCapturedAt: closedStock.serviceCapturedAt)))
+    let reader = GameRuntime()
+    try await reader.load(from: storage.url, persistMigrations: false)
+    let restored = await reader.snapshot()
+    let restoredRecord = try #require(restored.commander.savedEMPState?.records[person.source])
+    #expect(restoredRecord.pods[podIndex].body.physical?.currentNewtKitReceipt == kitReceipt)
+    #expect(restoredRecord.hull.body.physical?.currentNewtKitStock == closedStock)
+    #expect(restored.commander.nativePeople == received.commander.nativePeople)
+    #expect(restored.commander.valid && !restored.commander.worldOwnedPod(person))
   }
 
   @Test(arguments: ["module", "scoops", "hold", "core", "foreign"])
   func actualPodColourAndSelectionKeepIndependentHardwareAndCustodyRules(reason: String) throws {
     var game = try NativePeopleTestFixture.podApproach()
-    let index = try #require(game.bodies.firstIndex { $0.physical?.empCrewPod != nil })
+    let indexCandidate = game.bodies.firstIndex { $0.physical?.empCrewPod != nil }
+    let index = try #require(indexCandidate)
     if reason == "module" { try game.commander.removeFittedEquipment("Targeting: Salvage Module") }
     if reason == "scoops" { try game.commander.removeFittedEquipment("Fuel Scoops") }
     if reason == "core" {
@@ -112,7 +149,8 @@ struct NativeRescueTargetingTests {
     let failed = await runtime.snapshot()
     #expect(failed.message.contains("SAVE TO RETRY"))
     #expect(failed.commander.nativePeople == nil)
-    #expect(failed.bodies.contains { $0.physical?.identity == parent })
+    let containsMatch = failed.bodies.contains { $0.physical?.identity == parent }
+    #expect(containsMatch)
     #expect(failed.workGuidance?.parent == parent)
     #expect(try ScriptFinanceTestFixture.files(storage.backup) == files)
     try storage.restoreWriter()

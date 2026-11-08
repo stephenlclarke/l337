@@ -1,0 +1,11 @@
+{
+  "status": "BOUNDED_TEXT_TOKEN_GUARDS_ONLY_NOT_SWIFT_TEST_OR_PARSER_EXECUTION",
+  "sourceSHA256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883",
+  "speedPatternDecodedFromAuthoredSwiftLiteral": "(?m)^speed\\s*=\\s*[^\\n]+$",
+  "speedMatches": 1,
+  "speedToken": "speed = 34.3",
+  "firstDetailedIndexMatches": 1,
+  "beforeIndexToken": "23",
+  "nativeGeometryOrCoordinateEvaluation": 0,
+  "SwiftParserCompilerTests": 0
+}

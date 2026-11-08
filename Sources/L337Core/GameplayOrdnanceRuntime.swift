@@ -1,5 +1,15 @@
 import Foundation
 
+/// Exact native muzzle geometry, shared by admission and the manual-pair birth envelope.
+struct NativeMissileMuzzleDescription {
+  static let distance = 24.0
+  let position: Vector3
+
+  init(ownerPosition: Vector3, direction: Vector3) {
+    position = ownerPosition + direction * Self.distance
+  }
+}
+
 private final class PreparedGameplayMissile {
   let index: Int
   let owner: ActorIdentity
@@ -19,7 +29,47 @@ private final class PreparedGameplayMissile {
   }
 }
 
+/// The actual active opening cohort, before any outer-clock advancement.
+/// New emissions require another actual opening at their real birth boundary.
+struct GameplayOrdnanceFrame: Sendable {
+  let context: EncounterContext
+  let epoch: UUID
+  let endTime: Double
+  let entries: [GameplayOrdnanceOpening]
+
+  fileprivate init(context: EncounterContext, epoch: UUID, endTime: Double,
+    entries: [GameplayOrdnanceOpening])
+  {
+    self.context = context
+    self.epoch = epoch
+    self.endTime = endTime
+    self.entries = entries
+  }
+}
+
 extension Game {
+  /// Read-only capture. In particular, do not assign an opening clock, recreate
+  /// a projectile, consume ammunition, apply ECM or select a new director seed.
+  func prepareGameplayOrdnanceFrame(until endTime: Double) -> GameplayOrdnanceFrame? {
+    guard let context = gameplayContext(), endTime.isFinite,
+      endTime >= context.physicalTime, endTime - context.physicalTime <= 0.1 + 1e-9
+    else { return nil }
+    let active = bodies.filter {
+      $0.energy > 0 && $0.physical?.ordnance != nil && $0.physical?.ordnance?.termination == nil
+    }
+    var entries: [GameplayOrdnanceOpening] = []
+    var actors: Set<ActorIdentity> = []
+    var ids: Set<Int> = []
+    for body in active {
+      guard let entry = prepareGameplayOrdnanceOpening(bodyID: body.id, until: endTime),
+        ids.insert(body.id).inserted, actors.insert(entry.actor).inserted
+      else { return nil }
+      entries.append(entry)
+    }
+    return .init(context: context, epoch: nativeStationRuntimeEpoch,
+      endTime: endTime, entries: entries)
+  }
+
   /// Admission, ownership and launch evidence are one transaction. A refused launch leaves
   /// ammunition, identities, cash and target state unchanged.
   @inline(never)
@@ -132,7 +182,8 @@ extension Game {
     let direction =
       ownerBodyID == nil ? owner.orientation.z : (target.position - owner.position).unit
     guard direction.length > 0 else { return nil }
-    let position = owner.position + direction * 24
+    let position = NativeMissileMuzzleDescription(
+      ownerPosition: owner.position, direction: direction).position
     let request = SpawnRequest(
       identity: .init(
         system: context.system, visit: context.visit, sequence: sequence,
@@ -207,13 +258,17 @@ extension Game {
         result = advanceOrdnance(bodyID: id, state: &state, context: context, activeECM: [pulse])
       }
       bodies[index].physical?.ordnance = state
-      if result.endedNow, result.termination == .ecm,
-        activeECMActivation?.emitter == commander.flightSimulation.player,
-        ecmControl.ownFieldActive
-      {
-        ecmControl.recordDestruction()
-        confirmRetaliation(missile)
-      }
+      finishGameplayOrdnanceUpdate(result, missile: missile)
+    }
+  }
+
+  mutating func finishGameplayOrdnanceUpdate(_ result: OrdnanceUpdate, missile: SpaceBody) {
+    if result.endedNow, result.termination == .ecm,
+      activeECMActivation?.emitter == commander.flightSimulation.player,
+      ecmControl.ownFieldActive
+    {
+      ecmControl.recordDestruction()
+      confirmRetaliation(missile)
     }
   }
 }

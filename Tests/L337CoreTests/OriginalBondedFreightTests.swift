@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 private let originalBondedDigest =
   "08dfba917d8f630b0fb39a4458ec1fa06245eb1347352a172a7576c0967682ca"

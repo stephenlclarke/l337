@@ -2,6 +2,63 @@ import Foundation
 
 /// Export fixtures only. These scenes never enter a player's commander or save session.
 public enum ReadmeMedia {
+  /// Bounded export-fixture diagnostics; these phases confer no gameplay authority.
+  private enum CapturePhase: String, Error, Sendable, CustomStringConvertible {
+    case packBinding
+    case originalHull
+    case launchedCohort
+    case introductionTraffic
+    case retainedActor
+    case forwardWeapon
+    case attackerCount
+    case playerImpactScreenNotFlight
+    case playerImpactDocked
+    case playerImpactCapturePaused
+    case noStoredPlayerImpactFeedbackWithoutRecordedShots
+    case noStoredPlayerImpactFeedbackWithoutRecordedShotsWithRetainedForwardAim
+    case noStoredPlayerImpactFeedbackWithoutRecordedShotsPendingNativeDock
+    case noStoredPlayerImpactFeedbackWithRecordedShots
+    case noStoredPlayerImpactFeedbackCombatSuspendedWithoutRecordedShots
+    case noStoredPlayerImpactFeedbackCombatSuspendedWithRecordedShots
+    case noStoredPlayerImpactFeedbackOtherSuspendedWithoutRecordedShots
+    case noStoredPlayerImpactFeedbackOtherSuspendedWithRecordedShots
+    case storedPlayerImpactFeedbackNotVisible
+    case nonpositivePlayerEnergy
+    case currentGun
+    case playerContactOrRange
+    case attainment
+    case admissionUnavailableArrival
+    case admissionOutsideLocalBubble
+    case admissionNativeUnits
+    case admissionAllocatorCapacity
+    case admissionNativeStaleContext
+    case admissionNativePopulationLimit
+    case admissionNativeReservedCapacity
+    case admissionNativeMissionSuppression
+    case admissionNativeUnsafePosition
+    case admissionNativeUnqualifiedOriginalHull
+    case admissionPendingUnknown
+
+    var description: String { "Original docking capture refused at " + rawValue + "." }
+
+    static func pendingReason(_ reason: String?) -> CapturePhase {
+      guard let reason else { return .admissionPendingUnknown }
+      switch reason {
+      case "unavailableArrival": return .admissionUnavailableArrival
+      case "outsideLocalBubble": return .admissionOutsideLocalBubble
+      case "nativeUnits": return .admissionNativeUnits
+      case "allocatorCapacity": return .admissionAllocatorCapacity
+      case "native.staleContext": return .admissionNativeStaleContext
+      case "native.populationLimit": return .admissionNativePopulationLimit
+      case "native.reservedCapacity": return .admissionNativeReservedCapacity
+      case "native.missionSuppression": return .admissionNativeMissionSuppression
+      case "native.unsafePosition": return .admissionNativeUnsafePosition
+      case "native.unqualifiedOriginalHull": return .admissionNativeUnqualifiedOriginalHull
+      default: return .admissionPendingUnknown
+      }
+    }
+  }
+
   public static let introductionFrameCount = 48
   public static let introductionFrameDelay = 0.16
   public static let galleryFrameDelay = 0.10
@@ -16,52 +73,126 @@ public enum ReadmeMedia {
       + Double(galleryShipIDs.count * galleryAngles.count) * galleryFrameDelay
   }
 
-  /// Admit a disposable, explicitly authored capture encounter using the real mission engine.
-  /// Its four guns fire through the native boundary; no beam graphics or gun state are forged.
-  public static func dockingUnderAttackScene(sourceDirectory: URL) throws -> Game {
-    let temporary = FileManager.default.temporaryDirectory.appendingPathComponent(
-      "l337-readme-capture-" + UUID().uuidString, isDirectory: true)
-    defer { try? FileManager.default.removeItem(at: temporary) }
-    try FileManager.default.copyItem(at: sourceDirectory, to: temporary)
-    let manifestURL = temporary.appendingPathComponent("manifest.toml")
-    let original = try String(contentsOf: manifestURL, encoding: .utf8)
-    let wing = "  {id=\"wing\", npc=\"training-craft\", x=1000.0, y=0.0, z=4500.0, hostile=true}"
-    guard original.components(separatedBy: wing).count == 2 else {
-      throw SaveError.invalidCommander
+  package static func introductionCommander() async throws -> Game {
+    let runtime = GameRuntime()
+    try await runtime.startNewCommander()
+    return await runtime.snapshot()
+  }
+
+  package static func launchIntroductionFlight(_ game: inout Game) throws {
+    game.key("0")
+    guard !game.docked, game.screen.isFlight,
+      let index = game.bodies.firstIndex(where: {
+        $0.id == 1 && $0.physical?.catalogueShipID == NativeFleetLaunchSource.traderShipID
+          && $0.physical?.npc?.role == .trader && $0.physical?.npc?.routeProvenance == .generated
+      })
+    else { throw CapturePhase.introductionTraffic }
+    game.bodies[index].position = .init(-35, 10, 320)
+  }
+
+  public enum CaptureComposition: String, CaseIterable, Sendable {
+    case balanced, closeEscort, wideApproach
+
+    var stationDistance: Double {
+      switch self {
+      case .balanced: 2400
+      case .closeEscort: 2000
+      case .wideApproach: 2800
+      }
     }
-    let extra = """
-      \(wing),
-        {id="port", npc="training-craft", x=-1000.0, y=0.0, z=4500.0, hostile=true},
-        {id="upper", npc="training-craft", x=0.0, y=1000.0, z=6000.0, hostile=true}
-      """
-    let capture = original.replacingOccurrences(of: wing, with: extra)
-      .replacingOccurrences(
-        of: "id = \"example.profiled-skirmish\"", with: "id = \"media.docking-capture\"")
-    let labelledCapture = capture.replacingOccurrences(
-      of: "title = \"Profiled skirmish demonstration\"",
-      with: "title = \"README docking-under-attack capture\"")
-    try labelledCapture.write(to: manifestURL, atomically: true, encoding: .utf8)
-    let pack = try ScriptPackLibrary.read(temporary)
-    var game = Game(executive: false)
+
+    var muzzleClearanceRatio: Double {
+      switch self {
+      case .balanced: 8
+      case .closeEscort: 7.5
+      case .wideApproach: 9.5
+      }
+    }
+
+    // Directions frame the four real metre hulls. Range is based on the admitted muzzle,
+    // without scaling a ship or forcing its tracked gun into an invented firing state.
+    var positions: [Vector3] {
+      switch self {
+      case .balanced:
+        [
+          .init(-48, 22, 145), .init(50, 27, 170),
+          .init(-55, -30, 190), .init(65, -29, 225),
+        ]
+      case .closeEscort:
+        [
+          .init(-40, 17, 120), .init(44, 25, 150),
+          .init(-53, -32, 180), .init(56, -20, 200),
+        ]
+      case .wideApproach:
+        [
+          .init(-55, 25, 170), .init(58, 26, 190),
+          .init(-63, -30, 210), .init(75, -34, 250),
+        ]
+      }
+    }
+  }
+
+  public static let captureShipIDs = ["SH002", "SH027", "SH031", "SH103"]
+
+  /// A disposable encounter uses the same geometry, aiming, collision, damage and feedback
+  /// paths as gameplay. No beam graphics, gun states or player-hit indicators are authored here.
+  public static func dockingUnderAttackScene(
+    sourceDirectory: URL, composition: CaptureComposition = .balanced
+  ) async throws -> Game {
+    let pack = try ScriptPackLibrary.read(sourceDirectory)
+    guard pack.manifest.id == "media.original-docking-capture",
+      pack.manifest.npcs?.map(\.model) == captureShipIDs.map({ "catalogue:" + $0 })
+    else { throw CapturePhase.packBinding }
+    var fittedHashes: [String] = []
+    for (index, id) in captureShipIDs.enumerated() {
+      let reference = "catalogue:" + id
+      guard let ship = ShipCatalogue.ship(id), let performance = ship.game,
+        let npc = pack.manifest.npcs?[index],
+        npc.energy == performance.energy, npc.recharge == performance.recharge,
+        npc.speed == performance.speed, npc.acceleration == performance.acceleration,
+        npc.pitch == performance.pitch, npc.yaw == performance.yaw, npc.roll == performance.roll,
+        npc.fuel == Double(performance.fuel) / 10,
+        let original = ship.originalDefinition, ship.name == original.name,
+        original.approvedMeshAvailable, let native = ship.nativeDesign, native.license == "MIT",
+        let fitted = pack.models[reference], fitted.license == native.license,
+        fitted == (try? ScriptPackLibrary.currentCatalogueNPCDesign(id))
+      else { throw CapturePhase.originalHull }
+      fittedHashes.append(ScriptPackLibrary.hash(try ScriptPackLibrary.canonicalGeometry(fitted)))
+    }
+    // Use the same current born-berthed authority as a fresh player, without any save writer.
+    let runtime = GameRuntime()
+    try await runtime.startNewCommander()
+    var game = await runtime.snapshot()
     game.screen = .status
-    try game.commander.prepareEquipment(legacy: false)
     game.commander.retaliationEnabled = false
     game.commander.autoECM = false
     game.scriptPacks = [pack]
     let instance = try game.acceptScriptMission(pack)
     game.launch()
     game.emitScriptEvent("station.undocked")
+    let pendingPhase: CapturePhase = game.withReadOnlyScriptState { [instance] state in
+      for index in state.pendingEvents.indices {
+        guard state.pendingEvents[index].kind == "encounter.pending",
+          state.pendingEvents[index].instance == instance,
+          state.pendingEvents[index].values["encounter_id"]?.string == "opponents"
+        else { continue }
+        return CapturePhase.pendingReason(state.pendingEvents[index].values["reason"]?.string)
+      }
+      return .admissionPendingUnknown
+    }
     game.drainScriptEvents()
     guard !game.docked,
       let station = game.bodies.first(where: { $0.id == 0 && $0.hull == .station }),
       let encounter = game.commander.scriptState.instances[instance]?.ownedEncounters["opponents"],
-      encounter.actors.count == 4
-    else { throw SaveError.invalidCommander }
+      encounter.actors.count == captureShipIDs.count
+    else { throw CapturePhase.launchedCohort }
+    guard encounter.admitted else { throw pendingPhase }
 
-    // Move only the capture camera to the real entrance's approach axis. Preserve world poses.
+    // Preserve each world pose while moving the capture camera onto the real entrance axis.
     let previous = game.commander.flightSimulation.pose
     var pose = ShipPose()
-    pose.position = previous.systemPoint(station.entrancePosition + station.entranceNormal * 1400)
+    pose.position = previous.systemPoint(
+      station.entrancePosition + station.entranceNormal * composition.stationDistance)
     pose.orientation.y = previous.orientation.apply(station.entranceUp)
     pose.orientation.z = previous.orientation.apply(station.entranceNormal) * -1
     pose.orientation.x = pose.orientation.y.cross(pose.orientation.z)
@@ -76,95 +207,119 @@ public enum ReadmeMedia {
         previous.systemPoint(game.celestials[index].position))
     }
     game.commander.flightSimulation.pose = pose
+    // Stage a stationary capture camera. The launch cruise speed would carry it through
+    // the close formation before the guns can track the player's hull surface.
+    game.speed = 0
 
     let aliases = ["lead", "wing", "port", "upper"]
-    let positions = [
-      Vector3(-145, 85, 620), Vector3(160, 100, 760),
-      Vector3(-190, -105, 910), Vector3(220, -80, 1060),
-    ]
-    for (alias, position) in zip(aliases, positions) {
+    let rolls = [-0.28, 0.22, 0.35, -0.18]
+    for (offset, alias) in aliases.enumerated() {
       guard let actor = encounter.actors[alias],
         let index = game.bodies.firstIndex(where: { $0.missionActorID == actor.identity })
-      else { throw SaveError.invalidCommander }
+      else { throw CapturePhase.retainedActor }
+      guard let npc = game.bodies[index].scriptNPC,
+        npc.fit.definition.model == "catalogue:" + captureShipIDs[offset],
+        npc.fit.models[npc.fit.definition.model] == fittedHashes[offset]
+      else { throw CapturePhase.originalHull }
+      guard let weapon = npc.fit.definition.lasers?.first(where: { $0.id == "forward" }),
+        weapon.muzzle.length > 0, npc.fit.definition.scale == 1
+      else { throw CapturePhase.forwardWeapon }
+      let position =
+        composition.positions[offset].unit
+        * (weapon.muzzle.length * composition.muzzleClearanceRatio)
       var facing = Basis3()
       facing.z = position.unit * -1
       facing.x = Vector3(0, 1, 0).cross(facing.z).unit
       facing.y = facing.z.cross(facing.x)
+      var oblique = Basis3()
+      oblique.rotate(
+        pitch: offset.isMultiple(of: 2) ? 0.08 : -0.08, roll: 0,
+        yaw: offset.isMultiple(of: 2) ? 0.20 : -0.20)
+      oblique.rotate(pitch: 0, roll: rolls[offset], yaw: 0)
       game.bodies[index].position = position
-      game.bodies[index].orientation = facing
+      let orientation = oblique.transformed(by: facing)
+      game.bodies[index].orientation = orientation
+      game.bodies[index].scriptNPC?.intent = .init(
+        request: "capture-flyby", mode: .attack, target: nil, player: true,
+        offset: position + orientation.z * 300, speed: 0, tolerance: 1)
       game.bodies[index].rotation = 0
       game.bodies[index].rotationRate = 0
-      game.bodies[index].scriptNPC?.intent = .init(
-        request: "readme-attack", mode: .attack, target: nil, player: true,
-        offset: .init(0, 0, 0), speed: 0, tolerance: 1)
-    }
-    for alias in aliases {
-      guard let actor = encounter.actors[alias],
-        let index = game.bodies.firstIndex(where: { $0.missionActorID == actor.identity })
-      else { throw SaveError.invalidCommander }
-      game.bodies[index].orientation = try incomingSurfaceFacing(game.bodies[index], game: game)
     }
     game.persistScriptActors()
-    for alias in aliases {
-      guard let actor = encounter.actors[alias],
-        let body = game.bodies.first(where: { $0.missionActorID == actor.identity }),
-        let shots = body.scriptNPC?.shots
-      else { throw SaveError.invalidCommander }
-      guard
-        let impact = try game.fireMissionNativeLaser(
-          bodyID: body.id, weaponID: "forward", componentID: nil),
-        impact.target == .player, impact.damageAdmitted, impact.damage > 0
-      else { throw SaveError.invalidCommander }
-      guard game.bodies.first(where: { $0.id == body.id })?.scriptNPC?.shots == shots + 1 else {
-        throw SaveError.invalidCommander
-      }
-    }
-    game.speed = 8
     game.screen = .front
     game.commander.shipDisplayStyle = .shadedPanels
-    game.prepareFlightWeaponDisplay()
-    return game
+
+    // Let real frame time and bounded gun tracking produce the first simultaneous player hits.
+    // Refusing or missing guns never receive invented cooldown, aim, range or damage.
+    var lastFailure: CapturePhase?
+    for _ in 0..<12 {
+      game.tick(delta: 0.1)
+      lastFailure = try captureHasFourCurrentPlayerHits(game, instance: instance)
+      if case .none = lastFailure {
+        game.prepareFlightWeaponDisplay()
+        return game
+      }
+    }
+    throw lastFailure ?? CapturePhase.attainment
   }
 
-  /// Aim at a real off-axis hull surface, not the camera origin where a beam projects to a point.
-  /// The ordinary gun acceptance and native impact boundary still own the actual shot.
-  private static func incomingSurfaceFacing(_ body: SpaceBody, game: Game) throws -> Basis3 {
-    guard let npc = body.scriptNPC,
-      let weapon = npc.fit.definition.lasers?.first(where: { $0.id == "forward" })
-    else { throw SaveError.invalidCommander }
-    let mesh = game.commander.playerMesh
-    var candidates: [Vector3] = []
-    for face in mesh.faces where face.count >= 3 && face.allSatisfy(mesh.vertices.indices.contains)
-    {
-      let a = mesh.vertices[face[0]]
-      let b = mesh.vertices[face[1]]
-      let c = mesh.vertices[face[2]]
-      candidates += [
-        (a + b + c) * (1 / 3.0), (a * 2 + b + c) * 0.25,
-        (a + b * 2 + c) * 0.25, (a + b + c * 2) * 0.25,
-      ]
+  private static func captureHasFourCurrentPlayerHits(_ game: borrowing Game, instance: UUID) throws
+    -> CapturePhase?
+  {
+    let attackers = game.bodies.filter { $0.missionInstanceID == instance && $0.scriptNPC != nil }
+    guard attackers.count == captureShipIDs.count else { throw CapturePhase.attackerCount }
+    guard game.visiblePlayerImpactFeedback != nil else {
+      if !game.screen.isFlight { return .playerImpactScreenNotFlight }
+      if game.docked { return .playerImpactDocked }
+      if game.paused { return .playerImpactCapturePaused }
+      if game.playerImpactFeedback == nil {
+        let hasRecordedShots = attackers.contains { ($0.scriptNPC?.shots ?? 0) > 0 }
+        let failure: CapturePhase = game.withReadOnlyScriptState { [instance, hasRecordedShots] state in
+          guard let suspension = state.instances[instance]?.suspension else {
+            return hasRecordedShots
+              ? .noStoredPlayerImpactFeedbackWithRecordedShots
+              : .noStoredPlayerImpactFeedbackWithoutRecordedShots
+          }
+          if suspension.hasPrefix("Native mission combat refused: ") {
+            return hasRecordedShots
+              ? .noStoredPlayerImpactFeedbackCombatSuspendedWithRecordedShots
+              : .noStoredPlayerImpactFeedbackCombatSuspendedWithoutRecordedShots
+          }
+          return hasRecordedShots
+            ? .noStoredPlayerImpactFeedbackOtherSuspendedWithRecordedShots
+            : .noStoredPlayerImpactFeedbackOtherSuspendedWithoutRecordedShots
+        }
+        if case .noStoredPlayerImpactFeedbackWithoutRecordedShots = failure,
+          game.pendingNativeStationDock != nil
+        {
+          return .noStoredPlayerImpactFeedbackWithoutRecordedShotsPendingNativeDock
+        }
+        if case .noStoredPlayerImpactFeedbackWithoutRecordedShots = failure,
+          attackers.contains(where: { $0.scriptNPC?.guns["forward"]?.aim != nil })
+        {
+          return .noStoredPlayerImpactFeedbackWithoutRecordedShotsWithRetainedForwardAim
+        }
+        return failure
+      }
+      return .storedPlayerImpactFeedbackNotVisible
     }
-    candidates.sort { $0.x * $0.x + $0.y * $0.y < $1.x * $1.x + $1.y * $1.y }
-    let projection = FlightProjection(center: .init(512, 300), focal: 768)
-    for point in candidates where point.finite {
-      var facing = Basis3()
-      facing.z = (point - body.position).unit
-      facing.x = Vector3(0, 1, 0).cross(facing.z).unit
-      facing.y = facing.z.cross(facing.x)
-      let muzzle = body.position + facing.apply(weapon.muzzle * npc.fit.definition.scale)
-      let direction = facing.apply(weapon.direction).unit
-      let centerDirection = muzzle.unit * -1
-      guard direction.dot(centerDirection) > 0.999,
-        facing.inverse(centerDirection).dot(weapon.direction) >= cos(weapon.arc) - 1e-9,
-        let contact = try game.nearestMissionCollision(
-          from: muzzle, direction: direction, range: weapon.range, radius: 0,
-          excludingBodyIDs: [body.id], includePlayer: true),
-        contact.hit.target == .player,
-        let line = Display.project(muzzle, contact.hit.point, projection: projection),
-        hypot(line.2 - line.0, line.3 - line.1) >= 64
-      else { continue }
-      return facing
+    guard game.energy > 0 else { return .nonpositivePlayerEnergy }
+    for body in attackers {
+      guard let npc = body.scriptNPC,
+        let weapon = npc.fit.definition.lasers?.first(where: { $0.id == "forward" }),
+        let gun = npc.guns[weapon.id], let range = gun.beamRange,
+        gun.cooldown > weapon.interval - 0.05, npc.shots > 0
+      else { return .currentGun }
+      let muzzle = body.position + body.orientation.apply(weapon.muzzle * npc.fit.definition.scale)
+      let direction = body.orientation.apply(gun.aim ?? weapon.direction).unit
+      let contact = try game.nearestMissionCollision(
+        from: muzzle, direction: direction, range: weapon.range, radius: 0,
+        excludingBodyIDs: [body.id], includePlayer: true)
+      guard contact?.hit.target == .player,
+        abs((contact?.hit.distance ?? -1) - range) <= 1e-6
+      else { return .playerContactOrRange }
     }
-    throw SaveError.invalidCommander
+    return nil
   }
+
 }

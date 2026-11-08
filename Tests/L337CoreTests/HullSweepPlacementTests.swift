@@ -131,27 +131,39 @@ struct HullSweepPlacementTests {
   }
 
   @Test func actualSH005ReleasedLotMustProveGlobalMeshClearanceRatherThanRayDistance() throws {
-    // Source /tmp/elite-composed-admission-geometry.json SHA-256:
-    // bfe02fc7df3ed66d8b3971cf25bf38f32d997774a4f3abb6dc36cd7a3a5d527e
-    // Its 28.80603689960958 distance is along the work ray, not global surface distance.
     let profile = try #require(SalvageCatalogue.profile(catalogueShipID: "SH005"))
     let mesh = profile.mesh
-    #expect(mesh.vertices.count == 3101 && mesh.faces.count == 1413)
-    #expect(profile.sections.first?.index == 0 && profile.sections.first?.sourceFaceIndex == 508)
+    #expect(mesh.vertices.count == 296 && mesh.faces.count == 492)
+    let section = try #require(profile.sections.first { $0.structural })
+    try #require(mesh.faces.indices.contains(section.sourceFaceIndex))
     let hull = try PreparedHull(mesh: mesh)
-    var pose = ShipPose(position: .init(56.917199999999994, 0.4053399999999999, 731.2808))
-    pose.orientation.x = .init(0, 1, 0)
-    pose.orientation.y = .init(0, 0, -1)
-    pose.orientation.z = .init(-1, 0, 0)
-    let result = HullSweepSafety.validatePlacement(
-      center: .init(0, 0, 671.1939631003904),
-      radius: Vector3(10.857670466379625, 10.857670466379625, 10.857670466379625).length,
-      hull: hull, pose: pose, requiredClearance: 8)
-    #expect(
-      result.safe,
-      "Actual released lot must be globally separated; failure: \(String(describing: result.failure))"
-    )
-    #expect((result.minimumSampledClearance ?? -.infinity) > 8)
+    var pose = ShipPose(position: .init(100, -200, 700))
+    pose.orientation.rotate(pitch: 0.3, roll: 0.2, yaw: 0.4)
+    let wreck = WreckIdentity(system: .init(galaxy: 0, system: 7), site: 88, lineage: 1)
+    var ledger = SalvageLedger()
+    var released: [SalvageLot] = []
+    // Exercise the current section producer. These unit work conditions are not a flown cut.
+    for operation in 1...320 {
+      let result = ledger.advance(
+        wreck: wreck, section: section, pose: pose, velocity: .init(0, 0, 0),
+        angularVelocity: .init(0, 0, 0), tool: .cutter, elapsed: 1,
+        operation: UInt64(operation), conditions: .init(
+          toolInstalled: true, inRange: true, aligned: true, lineOfSight: true,
+          resourcesAvailable: true, ownershipAuthorized: true))
+      if case .released(let lots) = result {
+        released = lots
+        break
+      }
+    }
+    try #require(!released.isEmpty)
+    for lot in released {
+      #expect(ledger.pendingLots.contains { $0.identity == lot.identity })
+      let result = HullSweepSafety.validatePlacement(
+        center: lot.position, radius: lot.halfExtents.length,
+        hull: hull, pose: pose, requiredClearance: 8)
+      #expect(result.safe, "Current original lot requires global clearance: \(String(describing: result.failure))")
+      #expect((result.minimumSampledClearance ?? -.infinity) > 8)
+    }
   }
 
   @Test(arguments: [0.000001, 0.25, 1.0, 4.0, 1_000_000.0])

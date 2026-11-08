@@ -1,0 +1,71 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH125-complete-four-shell-and-core-native-candidate-v1",
+  "ship": "SH125",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "66671c43983362d99fa0ecbc361fe224db0a7ac50799fd7d35cedb4d3fa4506e",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH125-design.toml",
+    "bytes": 809842,
+    "sha256": "43340089afa8c01e2fe8e2482d9b8fa98e4735480ba45c65083d617e43bc66b1"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH125.toml",
+    "bytes": 834582,
+    "sha256": "59f90d0c480f818ce6ae325c48347fa26989dbc7e2f90b82dc4acd4d5562c0ff"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH125-native-candidate-recipe.py",
+    "bytes": 8936,
+    "sha256": "3339a85495683ed2a1e235ce2e79b76443954d35bdd2936d98c867efa84f164d"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH125-native-candidate-tests.py",
+    "bytes": 5805,
+    "sha256": "f53af9d8d26d16f79d466787fe2ea68a8e4e80cad6c9d3850647d91e2a1ab210"
+  },
+  "baseline": {
+    "declaredNativeFaces": 5112,
+    "limit": 512,
+    "basis": "Existing pinned creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "angularSides": 6,
+    "latitudeSteps": 4,
+    "status": "NEW geometric approximation only; output count and all fidelity UNKNOWN"
+  },
+  "retained": [
+    "All four original shell intervals and original latitude endpoints",
+    "Three complete circumferential gaps with original widths/positions",
+    "Every shell outer/inner surface and both applicable rim closures",
+    "One complete connected gold core sphere, original radius.59",
+    "Original oblate shell vertical radius.65/cavity radius.62",
+    "Original jade material variation formula and all five used materials",
+    "Exact original palette, emission flags, license and every metadata field",
+    "Original source axes/origin/units unchanged; calibration19000000/996381 not evaluated"
+  ],
+  "coupledRuntime": {
+    "implementation": "Existing363e7036 autonomous EMP path retains nativeCrew0 distinct from conversionCrew1, actual zero-person incident and atomic native wreck custody; no fake people/pods",
+    "qualification": "Current SH125 Stage/native5112 refusal remains unchanged; no runtime source, salvage or acquisition activation",
+    "tests": "Existing EMPAutonomousEpisodeBoundaryTests controls remain intact, UNRUN; new generator tests also UNRUN"
+  },
+  "stopRules": [
+    "Changed original source/creator/current resource digest rejects before geometry",
+    "All five parts must emit positive geometry; original packaged detailed/native tables must remain exact",
+    "Closed consistently wound parts and complete original material set required",
+    "Complete generated output must be<=512; no missing parts/materials, fallback or cap waiver",
+    "Actual full source shape/profile/slot/cavity/material-distribution fidelity needs independent G1 renderer/native comparison",
+    "No source metadata, test checks or generated count can issue native/occupied/hardware/people/acquisition/current-save authority"
+  ],
+  "blocker": {
+    "missing": "Actual source/void/profile fidelity, native qualification and installed hardware/power/loaded physical data",
+    "responsibleOwner": "G1 actual qualification; source owner must issue authentic hardware input",
+    "next": "G1 generate once from exact pinned inputs and run independent candidate checks; reject any failed source fidelity without changing assertions. G4 continues remaining fleet independently."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "authoringSourceSHA256": "f1fcea4f628856b9f22987f1fcf9c63cbb4f3da880ea86d7ef2413aaafb3ff9b",
+  "coordinateConversions": 0,
+  "geometryAreaMassTensorEvaluations": 0,
+  "inputSHA256": "9545a245e9672518ab3b551fd6b8419a0d7596e9b158d8be210f198d825d2d36",
+  "nativeCompilerRendererTests": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "results": [
+    {
+      "bytes": 79624,
+      "currentNativeFaces": 492,
+      "currentNativeOwnership": "UNISSUED_CURRENT_CUSTOM_NATIVE_APPEND_PROVENANCE",
+      "file": "baseline-005-006-025-source-ownership/SH005.json",
+      "id": "SH005",
+      "originalDetailedFaces": 2212,
+      "sha256": "72987d6cbc182b6f4c10d4b24f7ab08131d2401ff4e25c6e49ad8f4b531638c0",
+      "status": "INTEGER_SOURCE_COMPONENT_CORRESPONDENCE_ONLY_NOT_GEOMETRY_OR_ENGINEERING_ADOPTION"
+    },
+    {
+      "bytes": 79672,
+      "currentNativeFaces": 492,
+      "currentNativeOwnership": "UNISSUED_CURRENT_CUSTOM_NATIVE_APPEND_PROVENANCE",
+      "file": "baseline-005-006-025-source-ownership/SH006.json",
+      "id": "SH006",
+      "originalDetailedFaces": 2212,
+      "sha256": "e718fad1d2d38d323451aeed3299064da1e533170367674949ee3213afce461b",
+      "status": "INTEGER_SOURCE_COMPONENT_CORRESPONDENCE_ONLY_NOT_GEOMETRY_OR_ENGINEERING_ADOPTION"
+    },
+    {
+      "artifact": {
+        "presence": "ABSENT"
+      },
+      "error": "AssertionError: ",
+      "id": "SH025",
+      "status": "SOURCE_CORRESPONDENCE_STOP_NO_RECORD"
+    }
+  ],
+  "retries": 0,
+  "sourceGeometryWrites": 0,
+  "status": "ONE_OWN_INTEGER_METADATA_PASS_NO_GEOMETRY_OR_ENGINEERING_EVALUATION",
+  "used": {
+    "currentCorrespondenceFaceComparisons": 7908,
+    "currentNativeFaces": 984,
+    "designParses": 6,
+    "faceIndexChecks": 58548,
+    "faceMaterialChecks": 19516,
+    "partRecords": 480,
+    "resultRecords": 2
+  }
+}

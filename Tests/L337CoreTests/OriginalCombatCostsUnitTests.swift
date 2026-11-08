@@ -4,9 +4,19 @@ import Testing
 @testable import L337Core
 
 struct OriginalCombatCostsUnitTests {
+  private func okapiVictim(in game: inout Game) throws -> SpaceBody {
+    let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
+    let allocated = game.commander.flightSimulation.allocateActor()
+    let identity = try #require(allocated)
+    var body = SpaceBody(id: 70, hull: .cobra, position: .init(0, 0, 1000))
+    body.physical = game.nativePhysicalActorState(for: body, identity: identity)
+    body.physical?.catalogueShipID = source.ship.id
+    return body
+  }
+
   private func flight(bomb: Bool = true, rounds: Int = 3) throws -> Game {
     var game = Game(executive: false)
-    game.commander.shipID = "SH023"
+    game.commander.shipID = "SH029"
     game.commander.fuel = game.commander.fuelCapacity
     game.commander.missiles = rounds
     try game.commander.prepareEquipment(legacy: false)
@@ -19,7 +29,8 @@ struct OriginalCombatCostsUnitTests {
     game.speed = 0
     game.celestials = []
     game.commander.flightSimulation.pose.position = .init(0, 0, -3000)
-    game.bodies = [.init(id: 70, hull: .cobra, position: .init(0, 0, 1000))]
+    let target = try okapiVictim(in: &game)
+    game.bodies = [target]
     game.ensurePhysicalActors()
     try #require(!game.docked && game.commander.valid)
     return game
@@ -162,7 +173,10 @@ struct OriginalCombatCostsUnitTests {
     throws
   {
     var game = try flight()
-    let protected = SpaceBody(id: 71, hull: .constrictor, position: .init(500, 0, 1000))
+    var protected = SpaceBody(id: 71, hull: .constrictor, position: .init(500, 0, 1000))
+    let source = try #require(AegisPrototype.source)
+    protected.navalTarget = true
+    protected.energy = source.combat.energy
     game.bodies.append(protected)
     game.ensurePhysicalActors()
     var reserve = try #require(
@@ -213,7 +227,8 @@ struct OriginalCombatCostsUnitTests {
         game.celestials = []
         // Retain the original controlled impact scene after genuine native acquisition.
         game.commander.flightSimulation.pose.position = .init(0, 0, -3000)
-        game.bodies = [.init(id: 70, hull: .cobra, position: .init(0, 0, 1000))]
+        let target = try okapiVictim(in: &game)
+        game.bodies = [target]
         game.ensurePhysicalActors()
         try #require(!game.docked && game.commander.valid)
       } else {

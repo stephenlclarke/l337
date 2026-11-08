@@ -9,7 +9,8 @@ extension Game {
   }
 
   func usesNativeSalvageWork(section: WreckSectionIdentity, profile: SalvageProfile) -> Bool {
-    profile.sourceRoles.contains(.thargoid)
+    commander.savedEMPState?.records.values.contains(where: { $0.wreck == section.wreck }) == true
+      || profile.sourceRoles.contains(.thargoid)
       || commander.alienStorageState?.current.salvage.sections.contains(section) == true
   }
 
@@ -47,7 +48,10 @@ extension Game {
     actor: ActorIdentity, wreck: WreckIdentity, owner: UUID, hull: UUID,
     identity: WreckSectionIdentity
   ) -> Bool {
-    guard commander.alienStorageStateValid else { return false }
+    guard commander.alienStorageStateValid else {
+      notify("SALVAGE REFUSED - STORAGE CUSTODY", voiced: false)
+      return false
+    }
     do {
       var candidate = self
       candidate.canonicalizeWorkTarget(actor)
@@ -56,7 +60,10 @@ extension Game {
           $0.physical?.identity == actor && $0.id == body.id
         }),
         candidate.retainNativeSalvageWreck(canonical)
-      else { return false }
+      else {
+        notify("SALVAGE REFUSED - WRECK SOURCE", voiced: false)
+        return false
+      }
       if candidate.commander.salvageLedger.hasInspectedSection(identity),
         candidate.commander.alienStorageState?.current.salvage.sections.contains(identity) != true
       {
@@ -68,7 +75,10 @@ extension Game {
       }
       guard let previous = candidate.commander.alienStorageState?.current.snapshot,
         let view = candidate.commander.alienStorageState?.current.salvage.native
-      else { return false }
+      else {
+        notify("SALVAGE REFUSED - NATIVE STORAGE", voiced: false)
+        return false
+      }
       let time = candidate.commander.flightSimulation.physicalTime
       var world = previous.world
       let plan: SalvageLootPlan
@@ -77,7 +87,10 @@ extension Game {
       if let original = view.plans.values.first(where: { $0.plan.section == identity }) {
         plan = original.plan
         seed = original.seed
-        guard !original.depleted, !original.destroyed else { return false }
+        guard !original.depleted, !original.destroyed else {
+          notify("SALVAGE REFUSED - SECTION EXHAUSTED", voiced: false)
+          return false
+        }
         if let existing = view.works[original.id] {
           cycle = existing
         } else {
@@ -110,6 +123,7 @@ extension Game {
         return nil
       }).first {
         guard !legacy.sectionDepleted, !legacy.sectionDestroyed, !legacy.wreckDestroyed else {
+          notify("SALVAGE REFUSED - SECTION EXHAUSTED", voiced: false)
           return false
         }
         plan = legacy.plan
@@ -126,8 +140,14 @@ extension Game {
         guard let physicalWreck = view.wrecks[wreck],
           let facts = candidate.commander.salvageLedger.freshNativeInspection(
             wreck: wreck, section: section, source: source)
-        else { return false }
-        guard facts.matches(candidate.commander.salvageLedger) else { return false }
+        else {
+          notify("SALVAGE REFUSED - SECTION INSPECTION", voiced: false)
+          return false
+        }
+        guard facts.matches(candidate.commander.salvageLedger) else {
+          notify("SALVAGE REFUSED - SOURCE CHANGED", voiced: false)
+          return false
+        }
         let inspection = try NativeSalvageInspection(
           id: UUID(), owner: owner, wreck: physicalWreck, at: time, section: section, facts: facts)
         plan = facts.plan
@@ -160,7 +180,10 @@ extension Game {
       }
       guard
         let retained = candidate.commander.alienStorageState?.current.salvage.native.wrecks[wreck]
-      else { return false }
+      else {
+        notify("SALVAGE REFUSED - WRECK RETENTION", voiced: false)
+        return false
+      }
       candidate.nativeSalvageWork = .init(
         section: section, seed: seed, plan: plan, actor: actor, hull: hull,
         epoch: candidate.nativeStationRuntimeEpoch, wreckRecord: retained.id,
@@ -168,7 +191,10 @@ extension Game {
         originalCycle: cycle, cycle: cycle)
       self = candidate
       return true
-    } catch { return false }
+    } catch {
+      notify("SALVAGE REFUSED - " + String(describing: error), voiced: false)
+      return false
+    }
   }
 
   mutating func advanceNativeSalvageWork(

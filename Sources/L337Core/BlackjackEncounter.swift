@@ -72,54 +72,28 @@ extension Game {
     }
     commander.blackjack = mission
   }
-  mutating func restoreBlackjackEncounter() {
-    guard !docked, commander.galaxy == 1, let anchor = bodies.first(where: { $0.hull == .station })
+  mutating func retainPendingBlackjackEncounter() {
+    guard !docked, commander.galaxy == 1,
+      let anchor = bodies.first(where: { $0.hull == .station })
     else { return }
-    let mission = commander.blackjack
     let role: BlackjackTarget
-    switch mission.stage {
+    switch commander.blackjack.stage {
     case .huntBolts: role = .bolts
     case .huntWitness: role = .witness
     default: return
     }
     guard commander.system == role.system else { return }
-    var encounter = role == .bolts ? mission.bolts : mission.witness
-    if encounter == nil {
-      encounter = BlackjackEncounter(role: role, id: nextBodyID)
-      // Lane fraction 0.1 is mapped to the native station/witchpoint lane.
-      encounter?.body.position = anchor.orientation.inverse(anchor.position * -0.9)
-    }
-    guard let saved = encounter, saved.body.energy > 0,
-      !bodies.contains(where: { $0.blackjackIdentity == saved.identity })
-    else { return }
-    var body = saved.body
-    body = body.withID(nextBodyID)
-    nextBodyID += 1
-    if let prior = body.physical,
-      prior.identity.system != systemIdentity
-        || prior.identity.visit != commander.flightSimulation.visit
-    {
-      guard let identity = commander.flightSimulation.allocateActor() else { return }
-      var npc = prior.npc
-      npc?.firstAggressor = nil
-      npc?.intention = nil
-      body.physical = .init(
-        identity: identity, population: prior.population, npc: npc,
-        velocity: prior.velocity, laserCooldown: prior.laserCooldown,
-        blocksNavalEncounter: prior.blocksNavalEncounter, catalogueShipID: prior.catalogueShipID,
-        angularVelocity: prior.angularVelocity)
-    }
-    body.position = anchor.position + anchor.orientation.apply(saved.body.position)
-    body.orientation = saved.body.orientation.transformed(by: anchor.orientation)
-    if body.leavesLocalBubble { body.position = anchor.position * 0.1 }
-    bodies.append(body)
+    let existing = role == .bolts ? commander.blackjack.bolts : commander.blackjack.witness
+    guard existing == nil else { return }
+
+    // Keep the station-relative save record while its exact role hull is unavailable.
+    var pending = BlackjackEncounter(role: role, id: nextBodyID)
+    pending.body.position = anchor.orientation.inverse(anchor.position * -0.9)
     if role == .bolts {
-      commander.blackjack.bolts = saved
+      commander.blackjack.bolts = pending
     } else {
-      commander.blackjack.witness = saved
+      commander.blackjack.witness = pending
     }
-    persistBlackjackTargets()
-    notify(role.name.uppercased() + " ENCOUNTER")
   }
   mutating func blackjackTargetDestroyed(_ body: SpaceBody) {
     guard body.energy <= 0, commander.galaxy == 1, let role = body.blackjackRole,
@@ -131,20 +105,81 @@ extension Game {
     persistBlackjackTargets()
   }
   mutating func advanceBlackjackNPC(index: Int, delta: Double) {
-    bodies[index].energy = min(
-      BlackjackTarget.energy, bodies[index].energy + BlackjackTarget.recharge * delta)
+    rechargeBlackjackNPCForFlight(index: index, delta: delta)
     let distance = bodies[index].position.length
     if distance > 0 {
       bodies[index].position =
         bodies[index].position * max(0, 1 - BlackjackTarget.speed * delta / distance)
     }
+    advanceBlackjackNPCWeaponEffects(index: index, delta: delta, distance: distance)
+  }
+
+  /// Actual effect clauses only. The native outer owner still supplies its real current
+  /// actor/index, positive attained interval and Blackjack's actual opening distance.
+  /// True means the eligible phase ran, not that a native beam hit or was admitted.
+  @discardableResult
+  @inline(never)
+  mutating func applyLegacyNPCFlightEffects(
+    index: Int, delta: Double, blackjackStartingDistance: Double? = nil,
+    native: CurrentNewtLegacyEffectContext? = nil
+  ) -> Bool {
+    // Both original outer callers select live actors; recheck that cohort at attained time.
+    guard bodies[index].energy > 0, !isEMPDisabled(bodies[index]),
+      bodies[index].physical?.empCrewPod == nil
+    else { return false }
+    if let native {
+      guard native.decision.actor == bodies[index].physical?.identity,
+        native.decision.bodyID == bodies[index].id, native.decision.duration == delta
+      else { return false }
+    }
+    if bodies[index].blackjackRole != nil {
+      guard let distance = blackjackStartingDistance else { return false }
+      rechargeBlackjackNPCForFlight(index: index, delta: delta)
+      advanceBlackjackNPCWeaponEffects(
+        index: index, delta: delta, distance: distance, native: native)
+      return true
+    }
+    // Retain the exact ordinary current-player source guard at this effect boundary too.
+    guard legacyNPCPlayerEffectSourceIsCurrent(index: index) else { return false }
+    if (native?.decision.end.length ?? bodies[index].position.length) < 1500 {
+      let damage = delta * (bodies[index].nativeNavalCombat?.laserDamage ?? 6) * 2
+      emitLegacyNPCBeam(
+        bodyID: bodies[index].id, damage: damage, energyMultiplier: 2, native: native)
+    }
+    return true
+  }
+
+  @inline(never)
+  func legacyNPCPlayerEffectSourceIsCurrent(index: Int) -> Bool {
+    let flight = storedFlightSimulation()
+    guard let player = flight.player, player.system == systemIdentity,
+      let physical = bodies[index].physical,
+      physical.identity.system == player.system, physical.identity.visit == player.visit,
+      physical.identity.entity >= 2, physical.identity.entity < flight.nextActor,
+      physical.npc?.intention == .engage(player)
+    else { return false }
+    return true
+  }
+
+  // These raw clauses stay private to the original controller and guarded effect entry.
+  // Their placement preserves recharge-before-motion and cooldown/fire-after-motion.
+  private mutating func rechargeBlackjackNPCForFlight(index: Int, delta: Double) {
+    bodies[index].energy = min(
+      BlackjackTarget.energy, bodies[index].energy + BlackjackTarget.recharge * delta)
+  }
+
+  private mutating func advanceBlackjackNPCWeaponEffects(
+    index: Int, delta: Double, distance: Double, native: CurrentNewtLegacyEffectContext? = nil
+  ) {
     let cooldown = max(0, (bodies[index].blackjackLaserCooldown ?? 0) - delta)
     bodies[index].blackjackLaserCooldown = cooldown
     if distance < 1500 && cooldown == 0 {
-      emitLegacyNPCBeam(bodyID: bodies[index].id, damage: BlackjackTarget.weaponEnergy)
+      emitLegacyNPCBeam(
+        bodyID: bodies[index].id, damage: BlackjackTarget.weaponEnergy, native: native)
       bodies[index].blackjackLaserCooldown = LaserKind.pulse.firingInterval
     }
   }
+
 }
 extension SpaceBody {
   /// Numeric slots are scene-local; the mission UUID remains stable across scenes.

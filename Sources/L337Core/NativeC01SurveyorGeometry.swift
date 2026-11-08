@@ -1,33 +1,28 @@
 import Foundation
 
-/// C01-only authoring: the full ROC Harrier remains visual; its convex envelope is collision.
-/// Concave recesses are deliberately filled. This never activates original SH026 fleet physics.
+/// The disabled C01 Harrier uses the same original SH026 native record as the fleet.
 enum NativeC01SurveyorGeometry {
   struct Geometry: Sendable {
     let design: ShipDesign
     let collision: Mesh
+    let dryMass: Double
+    let performance: ShipPerformance
   }
   static let harrier: Result<Geometry, any Error> = Result {
-    guard let record = ShipCatalogue.ship("SH056"), record.name == "Harrier",
-      record.model == "ROC-SH056", record.design.valid
+    guard let record = ShipCatalogue.ship("SH026"), record.name == "Harrier",
+      record.catalogue.family == "harrier", let native = record.nativeDesign, native.valid,
+      let performance = record.game, performance.valid,
+      record.profiles.filter({ $0.id == "PROJECT-HARRIER-R3-SH026" }).count == 1,
+      let profile = record.profiles.first(where: { $0.id == "PROJECT-HARRIER-R3-SH026" })
     else { throw SaveError.invalidCommander }
-    let original = record.design
-    let envelope = try OriginalHullEnvelope(vertices: original.rawMesh.vertices)
-    let scale = 65 / envelope.dimensions.z
-    guard scale.isFinite, scale > 0 else { throw SaveError.invalidCommander }
-    let points = original.rawMesh.vertices.map { $0 * scale }
-    let design = ShipDesign(
-      vertices: points.map { [$0.x, $0.y, $0.z] }, faces: original.faces,
-      license: original.license,
-      source: original.source + "; C01 mission-only 65m fore-aft uniform calibration",
-      details: original.details, materials: original.materials,
-      faceMaterials: original.faceMaterials, paletteName: original.paletteName,
-      appearanceSource: original.appearanceSource, appearanceLicense: original.appearanceLicense,
-      appearanceBasis: original.appearanceBasis, sourceFaceColours: original.sourceFaceColours,
-      sourceTextures: original.sourceTextures, sourceFaceTextures: original.sourceFaceTextures,
-      resolvedTextures: original.resolvedTextures, textures: original.textures,
-      faceTextures: original.faceTextures)
-    return .init(design: design, collision: try convexEnvelope(points))
+    let mass = profile.fields.filter { $0.key == "original.physical.dryMassKilograms" }
+    guard mass.count == 1, mass[0].unit == "kg", let kilograms = mass[0].number,
+      kilograms.isFinite, kilograms > 0
+    else { throw SaveError.invalidCommander }
+    let collision = native.rawMesh
+    guard try PreparedHull(mesh: collision).isClosed else { throw SaveError.invalidCommander }
+    return .init(
+      design: native, collision: collision, dryMass: kilograms, performance: performance)
   }
 
   static let recorder: ShipDesign = .init(

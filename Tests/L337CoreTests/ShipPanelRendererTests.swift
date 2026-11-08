@@ -6,6 +6,78 @@ import Testing
 
 @Suite(.serialized)
 struct ShipPanelRendererTests {
+  @Test func opticalOpacityIsOptionalAndRequiresAnOpaqueBaseColour() throws {
+    let json = Data(#"{"name":"Hull","colour":4294967295,"emissive":false}"#.utf8)
+    let opaque = try JSONDecoder().decode(ShipMaterial.self, from: json)
+    #expect(opaque.opticalOpacity == nil)
+    #expect(try JSONDecoder().decode(ShipMaterial.self, from: JSONEncoder().encode(opaque)) == opaque)
+    func design(colour: UInt32, opacity: Double?) -> ShipDesign {
+      ShipDesign(
+        vertices: [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]],
+        faces: [[0, 2, 1], [0, 1, 3], [1, 2, 3], [2, 0, 3]],
+        license: "Test", source: "Test",
+        materials: [.init(name: "Pane", colour: colour, emissive: false, opticalOpacity: opacity)],
+        faceMaterials: [0, 0, 0, 0])
+    }
+    #expect(design(colour: 0xffff_ffff, opacity: nil).valid)
+    #expect(design(colour: 0xffff_ffff, opacity: 0.25).valid)
+    #expect(!design(colour: 0xffff_ff40, opacity: 0.25).valid)
+    #expect(!design(colour: 0xffff_ff40, opacity: nil).valid)
+    for value in [0.0, 1.0, Double.nan, Double.infinity] {
+      #expect(!design(colour: 0xffff_ffff, opacity: value).valid)
+    }
+  }
+
+  @MainActor @Test func opticalPaneBlendsInPainterOrderAndStaysOutOfOpaqueBatches() throws {
+    let occupant = ShipMaterial(name: "Occupant", colour: 0xff00_00ff, emissive: true)
+    let pane = ShipMaterial(
+      name: "Optical pane", colour: 0x0000_ffff, emissive: true, opticalOpacity: 0.5)
+    let rim = ShipMaterial(name: "Rim", colour: 0x00ff_00ff, emissive: true)
+    let mesh = Mesh(
+      vertices: [
+        .init(-25, -25, 20), .init(-25, 25, 20), .init(25, 25, 20), .init(25, -25, 20),
+        .init(-25, -25, 10), .init(-25, 25, 10), .init(25, 25, 10), .init(25, -25, 10),
+        .init(0, -25, 0), .init(0, 25, 0), .init(25, 25, 0), .init(25, -25, 0),
+      ], faces: [[0, 1, 2, 3], [4, 5, 6], [4, 6, 7], [8, 9, 10, 11]],
+      materials: [occupant, pane, rim], faceMaterials: [0, 1, 1, 2], preserveWinding: true)
+    var game = Game(executive: false)
+    game.commander.shipDisplayStyle = .shadedPanels
+    let body = SpaceBody(id: -1, hull: .cobra, position: .init(0, 0, 100))
+    var bitmap = Frame()
+    Display.draw(body, game: game, into: &bitmap, mesh: mesh, screen: .front)
+    #expect(bitmap.shipPanels.map(\.colour) == [0xff00_00ff, 0x0000_ff80, 0x0000_ff80, 0x00ff_00ff])
+    #expect(bitmap.shipPanels.map(\.isOpticalPane) == [false, true, true, false])
+    #expect(bitmap.shipPanels.filter(\.isOpticalPane).allSatisfy { !ShipPanelRenderer.eligible($0) })
+    #expect(bitmap.pixels[96 * Frame.width + 110] == 0x7f00_80ff)
+    #expect(bitmap.pixels[96 * Frame.width + 127] == 0x7f00_80ff)
+    #expect(bitmap.pixels[96 * Frame.width + 145] == rim.colour)
+
+    var frame = Frame()
+    frame.rasterizeGraphics = false
+    frame.responsive = true
+    Display.draw(body, game: game, into: &frame, mesh: mesh, screen: .front)
+    let drawing = try context(256)
+    drawFrame(frame, context: drawing, rect: CGRect(x: 0, y: 0, width: 256, height: 256))
+    let rendered = try bytes(drawing)
+    let oracle = try context(256)
+    oracle.setFillColor(CGColor(red: 1, green: 0, blue: 0, alpha: 1))
+    oracle.fill(CGRect(x: 0, y: 0, width: 256, height: 256))
+    oracle.setFillColor(CGColor(red: 0, green: 0, blue: 1, alpha: 128.0 / 255))
+    oracle.fill(CGRect(x: 0, y: 0, width: 256, height: 256))
+    oracle.setFillColor(CGColor(red: 0, green: 1, blue: 0, alpha: 1))
+    oracle.fill(CGRect(x: 128, y: 0, width: 128, height: 256))
+    let expected = try bytes(oracle)
+    func pixel(_ data: Data, _ x: Int) -> [UInt8] {
+      let start = ((255 - 96) * 256 + x) * 4
+      return Array(data[start..<start + 4])
+    }
+    let throughPane = pixel(rendered, 110)
+    let expectedBlend = pixel(expected, 110)
+    #expect(throughPane[3] == 255 && expectedBlend[0] > 0 && expectedBlend[2] > 0)
+    #expect(zip(throughPane, expectedBlend).allSatisfy { abs(Int($0.0) - Int($0.1)) <= 1 })
+    #expect(pixel(rendered, 145) == pixel(expected, 145))
+  }
+
   @MainActor private func context(_ size: Int) throws -> CGContext {
     try #require(
       CGContext(

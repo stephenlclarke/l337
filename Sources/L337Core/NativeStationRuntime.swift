@@ -149,6 +149,13 @@ extension Game {
   }
 }
 
+fileprivate struct NativeStationRigidPhysicalRead {
+  let catalogueShipID: String?
+  let velocity: Vector3
+  let canonicalSpin: Bool?
+  let angularVelocity: Vector3
+}
+
 extension SpaceBody {
   /// Checked payload access follows the existing flight-state read coroutine pattern.
   /// No mutation or suspension can invalidate the presence check before projection.
@@ -159,6 +166,49 @@ extension SpaceBody {
         yield identity
       } else {
         let absent: ActorIdentity? = nil
+        yield absent
+      }
+    }
+  }
+
+  var nativeStationPhysicalCatalogueShipID: String? {
+    _read {
+      if case .some = physical {
+        let catalogueShipID: String? = physical!.catalogueShipID
+        yield catalogueShipID
+      } else {
+        let absent: String? = nil
+        yield absent
+      }
+    }
+  }
+
+  var nativeStationPhysicalVelocity: Vector3? {
+    _read {
+      if case .some = physical {
+        let velocity: Vector3? = physical!.velocity
+        yield velocity
+      } else {
+        let absent: Vector3? = nil
+        yield absent
+      }
+    }
+  }
+
+  fileprivate var nativeStationRigidPhysicalRead: NativeStationRigidPhysicalRead? {
+    _read {
+      if case .some = physical,
+        physical!.population == .mission, physical!.npc == nil,
+        physical!.ordnance == nil, physical!.salvage == nil, physical!.payload == nil
+      {
+        let fields: NativeStationRigidPhysicalRead? = .init(
+          catalogueShipID: physical!.catalogueShipID,
+          velocity: physical!.velocity,
+          canonicalSpin: physical!.canonicalSpin,
+          angularVelocity: physical!.angularVelocity)
+        yield fields
+      } else {
+        let absent: NativeStationRigidPhysicalRead? = nil
         yield absent
       }
     }
@@ -226,7 +276,7 @@ extension Game {
     {
       guard
         let time = commander.nativeStations?.motionTime(
-          for: .rrs(identity), at: commander.flightSimulation.physicalTime)
+          for: .originalStation(identity), at: commander.flightSimulation.physicalTime)
       else { return }
       bodies[index].rotation =
         (time * source.rotationRate)
@@ -244,9 +294,21 @@ extension Game {
         let source = NativeStationSource.binding(for: identity),
         bodies[index].energy > 0, nativeStationBodyIsCurrent(bodies[index])
       else { continue }
-      let utilityBonus =
-        commander.nativeStations?.ledger.records.first(where: { $0.identity == identity })?.utility?
-        .rechargeBonus ?? 0
+      let utilityBonus: Double
+      if let owner = storedEquipmentOwnerID(),
+        identity == NativeUtilityState.target(owner: owner),
+        let world = storedNativeStationWorld(), world.ledger.world == owner,
+        let record = world.ledger.records.first(where: { $0.identity == identity }),
+        NativeStationSource.authentic(record, owner: owner), record.tombstone == nil,
+        record.utilitySourceBirth != nil,
+        let utility = record.utility, utility.owner == owner, utility.target == identity,
+        utility.valid, storedNativeUtilityStateIsValid(), storedNativePeopleStateIsValid(),
+        world.bodyRigidPoseIsConsistent(bodies[index], flight: storedFlightSimulation())
+      {
+        utilityBonus = utility.rechargeBonus
+      } else {
+        utilityBonus = 0
+      }
       bodies[index].energy = min(
         source.maximumEnergy, bodies[index].energy + (source.recharge + utilityBonus) * delta)
     }
@@ -322,7 +384,7 @@ extension Game {
         source.geometry.position(in: anchors) == saved.position,
         world.currentOrientation(for: saved.station, at: flightBefore.physicalTime) != nil,
         let position = world.currentPosition(
-          for: .rrs(record.identity), at: flightBefore.physicalTime)
+          for: .originalStation(record.identity), at: flightBefore.physicalTime)
       else { throw NativeStationRuntimeError.invalidSource }
       let radius = nativeStationRadius(source.geometry.mesh)
       for celestial in [anchors.planet, anchors.sun] {
@@ -340,7 +402,7 @@ extension Game {
       for (_, other, otherSource) in selected {
         guard
           (position
-            - (world.currentPosition(for: .rrs(other.station), at: flightBefore.physicalTime)
+            - (world.currentPosition(for: .originalStation(other.station), at: flightBefore.physicalTime)
               ?? other.position))
             .length > radius
             + nativeStationRadius(otherSource.geometry.mesh) + 8
@@ -357,43 +419,11 @@ extension Game {
     world: inout NativeStationWorld, flightBefore: FlightSimulationState,
     selected: [(NativeStationRecord, NativeStationSavedPose, NativeStationSourceBinding)]
   ) throws {
-    var flight = flightBefore
-    guard let sequence = flight.allocateSpawn() else { throw NativeStationRuntimeError.capacity }
-    var admitted: [SpaceBody] = []
-    for (member, entry) in selected.enumerated() {
-      let (record, saved, source) = entry
-      guard let actor = flight.allocateActor() else { throw NativeStationRuntimeError.capacity }
-      let id = nextBodyID + member
-      guard
-        let currentPosition = world.currentPosition(
-          for: .rrs(record.identity), at: flight.physicalTime)
-      else { throw NativeStationRuntimeError.invalidState }
-      var body = SpaceBody(id: id, hull: .station, position: flight.pose.shipPoint(currentPosition))
-      body.nativeStationIdentity = record.identity
-      body.orientation = saved.orientation.relative(to: flight.pose.orientation)
-      guard let phase = world.motionTime(for: .rrs(record.identity), at: flight.physicalTime) else {
-        throw NativeStationRuntimeError.invalidState
-      }
-      body.rotation = (phase * source.rotationRate).truncatingRemainder(dividingBy: 2 * .pi)
-      body.rotationRate = source.rotationRate
-      body.energy = saved.energy
-      body.missiles = 0
-      body.ecmEnabled = source.kind == .waystation
-      body.physical = nativePhysicalActorState(
-        for: body, identity: actor,
-        spawnIdentity: .init(
-          system: systemIdentity, visit: flight.visit, sequence: sequence,
-          member: UInt16(member), producer: .mission))
-      body.physical?.velocity =
-        world.inertia(for: .rrs(record.identity))?.velocity ?? .init(0, 0, 0)
-      try world.ledger.rebind(record.identity, to: .init(actor: actor, bodyID: id))
-      admitted.append(body)
-    }
-    guard world.valid, flight.valid else { throw NativeStationRuntimeError.invalidState }
-    commander.nativeStations = world
-    commander.flightSimulation = flight
-    nextBodyID += admitted.count
-    bodies.append(contentsOf: admitted)
+    let plan = try prepareNativeOriginalStationPopulation(
+      world: world, flightBefore: flightBefore, selected: selected)
+    try publishNativeOriginalStationPopulation(plan)
+    guard let published = commander.nativeStations else { throw NativeStationRuntimeError.invalidState }
+    world = published
   }
 
   private func nativeStationRadius(_ mesh: Mesh) -> Double {
@@ -435,6 +465,7 @@ extension Game {
         commander.scriptState.stationResources[original.key] = resource
       }
     }
+    var utilityDeath: SpaceBody?
     for body in bodies where body.nativeStationIdentity != nil {
       guard let identity = body.nativeStationIdentity, let physical = body.physical,
         let record = world.ledger.records.first(where: { $0.identity == identity }),
@@ -451,11 +482,20 @@ extension Game {
       let condition = max(0, body.energy)
       if world.poses[index].energy != condition { world.poses[index].energy = condition }
       if body.energy <= 0 {
+        if NativeUtilityState.isTarget(identity) { utilityDeath = body }
         try world.ledger.destroy(
           identity, binding: .init(actor: physical.identity, bodyID: body.id))
       }
     }
     guard world.valid else { throw NativeStationRuntimeError.invalidState }
+    if let actor = utilityDeath {
+      let transition = try prepareNativeOriginalUtilityFatalTransition(actor: actor, world: world)
+      let people = try prepareNativeUtilityEngineerCasualty(transition)
+      guard acceptsNativeOriginalUtilityFatalTransition(transition) else {
+        throw NativeStationRuntimeError.invalidState
+      }
+      try commitNativeUtilityEngineerMutation(people)
+    }
     commander.nativeStations = world
   }
 
@@ -469,12 +509,17 @@ extension Game {
   }
 
   mutating func invalidateNativeStationAuthority() {
-    let retainedRRS = nativeStationDockEvidenceIsCurrent
+    let retainedOriginal = nativeStationDockEvidenceIsCurrent
     let retainedMain = nativeMainStationDockEvidenceIsCurrent
     nativeStationRuntimeEpoch = UUID()
+    invalidateIsolationWorkAuthority()
+    nativeOriginalStationPopulationPlan = nil
+    nativeOriginalUtilityFatalStart = nil
+    nativeOriginalUtilityFatalTransition = nil
     pendingNativeStationDock = nil
+    pendingMemoryAtlasMainDock = nil
     nativeStationDockEvidence =
-      retainedRRS
+      retainedOriginal
       ? commander.nativeStations?.ledger.currentDock.map {
         .init(receipt: $0, runtimeEpoch: nativeStationRuntimeEpoch)
       } : nil
@@ -606,17 +651,35 @@ extension Game {
   }
 
   /// The legacy Boolean dock API issues no arrival. Only actual native doorway entry calls this.
+  @inline(never)
   mutating func dockAtOriginalNativeMainStation(
     _ station: SpaceBody, from before: ShipPose, delta: Double
   ) {
+    switch prepareOriginalMainStationArrival(station, from: before, delta: delta) {
+    case .unchanged: return
+    case .legacyDock: dock()
+    case .arrived(let receipt):
+      dock()
+      retainOriginalMainStationArrival(station, receipt: receipt)
+    }
+  }
+
+  private enum OriginalMainStationArrival {
+    case unchanged, legacyDock
+    case arrived(NativeMainStationDockReceipt)
+  }
+
+  @inline(never)
+  private mutating func prepareOriginalMainStationArrival(
+    _ station: SpaceBody, from before: ShipPose, delta: Double
+  ) -> OriginalMainStationArrival {
     guard delta.isFinite, delta > 0, delta <= 0.1,
       nativeMainStationHullCourseIsClear(
         station, from: before, to: commander.flightSimulation.pose, delta: delta)
-    else { return }
+    else { return .unchanged }
     let system = systemIdentity
     guard let world = commander.nativeStations else {
-      dock()
-      return
+      return .legacyDock
     }
     let pose = commander.flightSimulation.pose
     let normal = pose.orientation.apply(station.entranceNormal)
@@ -631,8 +694,7 @@ extension Game {
         let current = world.currentPosition(
           for: .main(id), at: commander.flightSimulation.physicalTime)
       else {
-        dock()
-        return
+        return .legacyDock
       }
       oldEntrance = entrance + previous - current
     } else {
@@ -652,13 +714,25 @@ extension Game {
       resource.identity == identity.resource, !resource.destroyed, resource.energy > 0,
       world.nextMainDockSequence < UInt64(Int64.max) - 1
     else {
-      dock()
-      return
+      return .legacyDock
     }
     let receipt = NativeMainStationDockReceipt(
       station: identity, actor: actor, commanderOwner: world.ledger.world,
       sequence: world.nextMainDockSequence, calendarSeconds: commander.scriptState.calendarSeconds)
-    dock()
+    if system == NativeMemoryAtlasWatcherSource.world {
+      pendingMemoryAtlasMainDock = .init(
+        station: station, receipt: receipt, pose: pose,
+        physicalTime: commander.flightSimulation.physicalTime,
+        revision: gameplayRevision, epoch: nativeStationRuntimeEpoch)
+      return .unchanged
+    }
+    return .arrived(receipt)
+  }
+
+  @inline(never)
+  private mutating func retainOriginalMainStationArrival(
+    _ station: SpaceBody, receipt: NativeMainStationDockReceipt
+  ) {
     guard docked, dockedAtMainStation, var updated = commander.nativeStations else { return }
     updated.ledger.depart()
     updated.currentMainDock = receipt
@@ -685,8 +759,8 @@ extension Game {
         let oldOrientation = world.currentOrientation(
           for: saved.station, at: max(0, flight.physicalTime - delta)),
         let oldPosition = world.currentPosition(
-          for: .rrs(identity), at: max(0, flight.physicalTime - delta)),
-        let currentPosition = world.currentPosition(for: .rrs(identity), at: flight.physicalTime)
+          for: .originalStation(identity), at: max(0, flight.physicalTime - delta)),
+        let currentPosition = world.currentPosition(for: .originalStation(identity), at: flight.physicalTime)
       else { continue }
       let port = source.geometry.docking
       let start = oldOrientation.inverse(before.position - oldPosition) - port.center
@@ -705,7 +779,7 @@ extension Game {
       let margin =
         (radius + max(start.length, end.length)) * angularSweep
         + world.stationSweepMargin(
-          .rrs(identity), from: max(0, flight.physicalTime - delta),
+          .originalStation(identity), from: max(0, flight.physicalTime - delta),
           to: flight.physicalTime)
       guard margin.isFinite, port.fits(player, margin: margin),
         nativeStationHullFits(
@@ -785,7 +859,6 @@ extension Game {
     }
     // Refinement proves the same attained native step, never an arbitrary predicted corridor.
     guard delta > 0, flight.physicalTime >= delta, end == flight.pose,
-      stationAutoDockingActive, dockingComputer, speed == 0,
       !playerEMPDisabled, !isEMPDisabled(station),
       workGuidance == nil, workBraking == nil,
       approvedWorkMotion == nil, lastAppliedWorkMotion == nil,
@@ -796,6 +869,19 @@ extension Game {
       [pitch, roll, yaw, station.rotationRate].allSatisfy(\.isFinite),
       autoPilot.velocity.finite
     else { return false }
+    let translation: Vector3
+    if stationAutoDockingActive, dockingComputer, speed == 0 {
+      translation = autoPilot.velocity * delta
+    } else {
+      // In a matched-roll manual approach the forward axis stays fixed throughout the step.
+      // Every subdivision still proves clearance against the same authored station triangles.
+      guard !stationAutoDockingActive, !dockingComputer, autoPilot.velocity == .init(0, 0, 0),
+        pitch == 0, yaw == 0, speed.isFinite, speed > 0, speed * 18 < 144,
+        station.entranceNormal.z < -0.98,
+        abs(roll + station.rotationRate * station.orientation.z.z) < 0.1
+      else { return false }
+      translation = .init(0, 0, speed * delta * 18)
+    }
     var expected = start
     expected.advanceView(
       pitch: pitch * delta, roll: roll * delta, yaw: yaw * delta,
@@ -805,8 +891,7 @@ extension Game {
       axes.allSatisfy({
         (expected.orientation.apply($0) - end.orientation.apply($0)).length < 1e-8
       }),
-      (end.position - start.position - end.orientation.apply(autoPilot.velocity * delta)).length
-        < 1e-8
+      (end.position - start.position - end.orientation.apply(translation)).length < 1e-8
     else { return false }
     guard let count = nativeMainStationRefinementCount(player, margin: margin, delta: delta) else {
       return false
@@ -968,28 +1053,28 @@ extension Game {
     var endpoint = flight.pose
     endpoint.position = flight.pose.systemPoint(advance)
     if let identity = station.nativeStationIdentity {
-      observation?["refusal"] = "rrs.current-source"
+      observation?["refusal"] = "original-station.current-source"
       guard nativeStationBodyIsCurrent(station),
         world.bodyRigidPoseIsConsistent(station, flight: flight),
         let source = NativeStationSource.binding(for: identity),
-        let position = world.currentPosition(for: .rrs(identity), at: flight.physicalTime),
+        let position = world.currentPosition(for: .originalStation(identity), at: flight.physicalTime),
         let orientation = world.currentOrientation(for: identity, at: flight.physicalTime)
       else { return nil }
-      observation?["refusal"] = "rrs.aperture-shape"
+      observation?["refusal"] = "original-station.aperture-shape"
       guard source.geometry.docking.fits(player) else { return nil }
-      observation?["refusal"] = "rrs.aperture-start"
+      observation?["refusal"] = "original-station.aperture-start"
       guard
         nativeStationHullFits(
           player, ship: flight.pose, station: position, orientation: orientation,
           port: source.geometry.docking, margin: 0)
       else { return nil }
-      observation?["refusal"] = "rrs.aperture-end"
+      observation?["refusal"] = "original-station.aperture-end"
       guard
         nativeStationHullFits(
           player, ship: endpoint, station: position, orientation: orientation,
           port: source.geometry.docking, margin: 0)
       else { return nil }
-      observation?["refusal"] = "rrs.structure"
+      observation?["refusal"] = "original-station.structure"
       guard
         nativeStructureHullSweepClear(
           player, from: flight.pose, to: endpoint, position: position,
@@ -1353,11 +1438,11 @@ extension Game {
         let start = world.currentOrientation(
           for: saved.station, at: max(0, flight.physicalTime - delta)),
         let oldPosition = world.currentPosition(
-          for: .rrs(identity), at: max(0, flight.physicalTime - delta)),
-        let currentPosition = world.currentPosition(for: .rrs(identity), at: flight.physicalTime)
+          for: .originalStation(identity), at: max(0, flight.physicalTime - delta)),
+        let currentPosition = world.currentPosition(for: .originalStation(identity), at: flight.physicalTime)
       else { continue }
       let translationMargin = world.stationSweepMargin(
-        .rrs(identity), from: max(0, flight.physicalTime - delta), to: flight.physicalTime)
+        .originalStation(identity), from: max(0, flight.physicalTime - delta), to: flight.physicalTime)
       let displacement =
         (flight.pose.position - before.position).length
         + (currentPosition - oldPosition).length + translationMargin
@@ -1387,7 +1472,7 @@ extension Game {
         }
         stopAtStationImpact(at: retained)
         applyDamage(delta * 100, front: true)
-        notify("RRS DOCKING COLLISION", voiced: false)
+        notify("STATION DOCKING COLLISION", voiced: false)
         return
       }
     }
@@ -1558,7 +1643,7 @@ extension Game {
     else { throw NativeStationRuntimeError.unsafeExit }
     guard
       let stationPosition = world.currentPosition(
-        for: .rrs(receipt.station),
+        for: .originalStation(receipt.station),
         at: commander.flightSimulation.physicalTime)
     else { throw NativeStationRuntimeError.unsafeExit }
     let center = stationPosition + orientation.apply(exit.center)
@@ -1608,7 +1693,7 @@ extension Game {
     let old = commander.flightSimulation.pose
     let pose = try prepareNativeStationExit(receipt)
     let velocity =
-      commander.nativeStations?.inertia(for: .rrs(receipt.station))?.velocity
+      commander.nativeStations?.inertia(for: .originalStation(receipt.station))?.velocity
       ?? .init(0, 0, 0)
     let combined = pose.orientation.apply(.init(0, 0, speed * 18)) + velocity
     guard combined.finite, combined.length <= AsteroidImpactPolicy.maximumSpeed else {
@@ -1641,17 +1726,26 @@ extension NativeStationWorld {
   func bodyRigidPoseIsConsistent(
     _ body: borrowing SpaceBody, flight: borrowing FlightSimulationState
   ) -> Bool {
-    guard let identity = body.nativeStationIdentity, let saved = pose(for: identity),
+    bodyRigidPoseIsConsistent(body, flight: flight, at: flight.physicalTime)
+  }
+
+  func bodyRigidPoseIsConsistent(
+    _ body: borrowing SpaceBody, flight: borrowing FlightSimulationState, at sampleTime: Double
+  ) -> Bool {
+    guard sampleTime.isFinite, sampleTime >= 0, let identity = body.nativeStationIdentity, let saved = pose(for: identity),
       let source = NativeStationSource.binding(for: identity), body.hull == .station,
-      let physical = body.physical, physical.population == .mission, physical.npc == nil,
-      (physical.velocity - (inertia(for: .rrs(identity))?.velocity ?? .init(0, 0, 0))).length
+      let physical = body.nativeStationRigidPhysicalRead,
+      body.missionActorID == nil, body.missionInstanceID == nil, body.scriptNPC == nil,
+      body.scriptShot == nil, body.blackjackRole == nil,
+      physical.catalogueShipID == source.catalogueShipID,
+      (physical.velocity - (inertia(for: .originalStation(identity))?.velocity ?? .init(0, 0, 0))).length
         < 1e-7,
       physical.canonicalSpin != true,
       physical.angularVelocity == Vector3(0, 0, 0),
       body.rotationRate == source.rotationRate,
-      let currentPosition = currentPosition(for: .rrs(identity), at: flight.physicalTime),
+      let currentPosition = currentPosition(for: .originalStation(identity), at: sampleTime),
       (flight.pose.systemPoint(body.position) - currentPosition).length < 1e-5,
-      let orientation = currentOrientation(for: saved.station, at: flight.physicalTime)
+      let orientation = currentOrientation(for: saved.station, at: sampleTime)
     else { return false }
     for axis in [Vector3(1, 0, 0), .init(0, 1, 0), .init(0, 0, 1)] {
       guard
@@ -1686,7 +1780,11 @@ extension NativeStationWorld {
       guard docked, mainStation, receipt.station.system == system else { return false }
     }
     let actual = bodies.filter { $0.nativeStationIdentity != nil }
-    guard !docked || actual.isEmpty, actual.count <= 2,
+    let expected = Set(ledger.records.filter {
+      $0.identity.system == system && $0.tombstone == nil
+    }.map(\.identity))
+    guard docked ? actual.isEmpty
+      : Set(actual.compactMap(\.nativeStationIdentity)) == expected,
       Set(actual.compactMap(\.nativeStationIdentity)).count == actual.count
     else { return false }
     for body in actual {
@@ -1712,7 +1810,7 @@ extension GameRuntime {
     guard let proof = game.pendingNativeStationDock else { return }
     guard let publish = scriptPublisher() else {
       game.pendingNativeStationDock = nil
-      game.notify("CHOOSE A SAVE LOCATION BEFORE RRS DOCKING")
+      game.notify("CHOOSE A SAVE LOCATION BEFORE STATION DOCKING")
       return
     }
     var candidate = game
@@ -1723,7 +1821,7 @@ extension GameRuntime {
       controls = Controls()
     } catch {
       game.pendingNativeStationDock = nil
-      game.notify("RRS DOCKING REFUSED - STATE NOT COMMITTED")
+      game.notify("STATION DOCKING REFUSED - STATE NOT COMMITTED")
     }
   }
 }
@@ -1745,7 +1843,7 @@ extension Game {
     guard state.admission != nil, state.loss == nil, state.dockedContact == nil,
       state.fuelContacts.count < 128,
       let profile = try? NativeInductionArkSource.profile(),
-      let physical = try? OriginalHullPhysicalContract.haflinger.get()
+      let physical = try? OriginalHullPhysicalContract.saiga.get()
     else { return nil }
     return nativeCustodianDockWitness(
       sample: sample, job: state.authorization.job,
@@ -1760,7 +1858,7 @@ extension Game {
     guard let flight = state.flight, state.livingCrew.count == 2, flight.dockedContact == nil,
       flight.fuelContacts.count < 128,
       let profile = try? NativeInductionCrewLogSource.flightProfile.get(),
-      let physical = try? OriginalHullPhysicalContract.burro.get()
+      let physical = try? OriginalHullPhysicalContract.okapi.get()
     else { return nil }
     return nativeCustodianDockWitness(
       sample: sample, job: state.authorization.job,
@@ -1881,5 +1979,101 @@ extension Game {
       else { return false }
     }
     return true
+  }
+}
+
+
+/// Minted only after the existing genuine Reris main-doorway geometry/identity checks above.
+/// Retained ephemeral facts are not Codable and cannot be manufactured by a decoded dock receipt.
+struct NativeMemoryAtlasMainEntryProof: Sendable {
+  let station: SpaceBody
+  let receipt: NativeMainStationDockReceipt
+  let pose: ShipPose
+  let physicalTime: Double
+  let revision: UInt64
+  let epoch: UUID
+
+  fileprivate init(
+    station: SpaceBody, receipt: NativeMainStationDockReceipt, pose: ShipPose,
+    physicalTime: Double, revision: UInt64, epoch: UUID
+  ) {
+    self.station = station
+    self.receipt = receipt
+    self.pose = pose
+    self.physicalTime = physicalTime
+    self.revision = revision
+    self.epoch = epoch
+  }
+}
+
+extension Game {
+  /// Internal publisher seam for the actual attained witness. No test/source caller can mint one.
+  /// Source, receipt, events, stock, inventory and clocks publish only after the real writer returns.
+  @inline(never)
+  mutating func commitPendingMemoryAtlasMainArrival(publish: ScriptPublisher) throws {
+    guard let proof = pendingMemoryAtlasMainDock,
+      !docked, !paused, screen != .gameOver, energy > 0, scriptDurabilityAvailable,
+      systemIdentity == NativeMemoryAtlasWatcherSource.world,
+      commander.flightSimulation.pose == proof.pose,
+      commander.flightSimulation.physicalTime == proof.physicalTime,
+      gameplayRevision == proof.revision, nativeStationRuntimeEpoch == proof.epoch,
+      bodies.filter({ $0.id == 0 }) == [proof.station],
+      proof.station.physical?.identity == proof.receipt.actor,
+      let original = commander.nativeStations, original.valid,
+      original.ledger.world == proof.receipt.commanderOwner,
+      commander.equipmentOwnerID == proof.receipt.commanderOwner,
+      original.nextMainDockSequence == proof.receipt.sequence,
+      original.mainStations.contains(proof.receipt.station),
+      original.mainObservations.contains(where: {
+        $0.station == proof.receipt.station && $0.actor == proof.receipt.actor
+      })
+    else { throw NativeStationRuntimeError.unsafeEntry }
+    var candidate = self
+    candidate.pendingMemoryAtlasMainDock = nil
+    candidate.dock(atMainStation: true, deferringNativeOffers: true)
+    guard candidate.docked, candidate.dockedAtMainStation,
+      var world = candidate.commander.nativeStations,
+      world.nextMainDockSequence == proof.receipt.sequence
+    else { throw NativeStationRuntimeError.unsafeEntry }
+    world.ledger.depart()
+    world.currentMainDock = proof.receipt
+    world.nextMainDockSequence += 1
+    guard world.valid else { throw NativeStationRuntimeError.invalidState }
+    candidate.commander.nativeStations = world
+    candidate.invalidateNativeStationAuthority()
+    candidate.nativeMainStationDockEvidence = .init(
+      receipt: proof.receipt, runtimeEpoch: candidate.nativeStationRuntimeEpoch)
+    guard candidate.nativeMainStationDockEvidenceIsCurrent else {
+      throw NativeStationRuntimeError.invalidState
+    }
+    try candidate.initializeMemoryAtlasWatcherSourceForCurrentNativeArrival()
+    candidate.observeFleetDocking(body: proof.station, main: proof.receipt)
+    candidate.finishNativeDockOffers()
+    guard candidate.commander.valid else { throw SaveError.invalidCommander }
+    try publish(&candidate)
+    self = candidate
+  }
+}
+
+extension GameRuntime {
+  /// A failed writer keeps the attained witness and its pre-publication game unchanged for retry.
+  /// This is the sole production publisher; a save decoder or Boolean dock never invokes it.
+  @inline(never)
+  func commitPendingMemoryAtlasMainStationEntry() -> Bool {
+    guard game.pendingMemoryAtlasMainDock != nil else { return true }
+    guard let publish = scriptPublisher(requireNativeMainArrival: true) else {
+      game.notify("CHOOSE A SAVE LOCATION BEFORE RERIS DOCKING")
+      controls = Controls()
+      return false
+    }
+    do {
+      try game.commitPendingMemoryAtlasMainArrival(publish: publish)
+      controls = Controls()
+      return true
+    } catch {
+      game.notify("RERIS DOCKING REFUSED - STATE NOT COMMITTED")
+      controls = Controls()
+      return false
+    }
   }
 }

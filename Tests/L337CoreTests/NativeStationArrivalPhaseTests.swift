@@ -5,15 +5,15 @@ import Testing
 
 @Test func nativeArrivalTickKeepsRotatingStationsOnPhysicalClockAndPublishes() throws {
   var game = Game(executive: false)
-  game.commander.galaxy = 3
+  game.commander.galaxy = 0
   game.systems = Universe.systemsIncludingPlugh(number: game.commander.galaxy)
-  let destination = 149  // Original Lolodor has both genuine source station kinds.
+  let destination = 7  // Avenor has the three adopted original dispatch sites.
   let identity = SystemIdentity(galaxy: game.commander.galaxy, system: destination)
-  try #require(
-    NativeStationSource.bindings.contains { $0.system == identity && $0.kind == .waystation })
-  try #require(
-    NativeStationSource.bindings.contains { $0.system == identity && $0.kind == .headquarters })
-  try game.commander.prepareEquipment()
+  let sources = NativeStationSource.bindings.filter { $0.system == identity }
+  try #require(Set(sources.map(\.site)) == Set([
+    OriginalStationSite.salamander, .frog, .dhole,
+  ]))
+  try game.commander.prepareEquipment(legacy: false)
   let target = game.systems[destination]
   let reach = game.commander.maximumJumpDistance
   let origin = try #require(
@@ -50,17 +50,21 @@ import Testing
     steps > 0 && steps < 500 && game.commander.system == destination
     && !game.docked && !game.paused && game.energy > 0
   try #require(arrived)
+  // This is the actual post-jump id-1 cohort, bound before station admission.
+  try requireNativeLaunchFleetAndStationPopulation(
+    game, expectedRole: game.currentSystem.government < 4 ? .pirate : .trader)
   #expect(game.commander.fuel == fuel - journey.nativeFuelDebit)
   let world = try #require(game.commander.nativeStations)
-  let waystation = try #require(
-    game.bodies.first { $0.nativeStationIdentity?.definition == "rescue_station" })
-  let headquarters = try #require(
-    game.bodies.first { $0.nativeStationIdentity?.definition == "rrs_headquarters" })
-  let rotatingPoseMatches = world.bodyRigidPoseIsConsistent(
-    waystation, flight: game.commander.flightSimulation)
-  let stationaryPoseMatches = world.bodyRigidPoseIsConsistent(
-    headquarters, flight: game.commander.flightSimulation)
-  #expect(rotatingPoseMatches && stationaryPoseMatches)
+  let owner = try #require(game.commander.equipmentOwnerID)
+  var stations: [SpaceBody] = []
+  for source in sources {
+    let station = try #require(game.bodies.first {
+      $0.nativeStationIdentity == source.identity(world: owner)
+    })
+    #expect(world.bodyRigidPoseIsConsistent(station, flight: game.commander.flightSimulation))
+    #expect(station.rotationRate == source.rotationRate && station.rotationRate == 0)
+    stations.append(station)
+  }
   let main = try #require(game.bodies.first { $0.id == 0 && $0.hull == .station })
   #expect(abs(main.rotation - 0.1 * main.rotationRate) < 1e-12)
   let sceneMatches = game.scriptWorldSave.consistent(with: game.commander)
@@ -76,7 +80,8 @@ import Testing
   #expect(retainedSceneMatches && cold.system == destination)
   // Actual source pose validation still rejects a changed station phase; no tolerance is relaxed.
   var changed = game.scriptWorldSave
-  let index = try #require(changed.bodies.firstIndex { $0.id == waystation.id })
+  let station = try #require(stations.first)
+  let index = try #require(changed.bodies.firstIndex { $0.id == station.id })
   changed.bodies[index].rotation += 0.01
   let changedSceneMatches = changed.consistent(with: game.commander)
   #expect(!changedSceneMatches)

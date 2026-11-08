@@ -4,6 +4,9 @@ enum NativePeopleVersionedSave {
   static func validateStationPassengerFields(
     _ bytes: Data, part: ScriptFreightVersionedSave.Part, schema: Int?
   ) throws {
+    try NativeCrewService.validateFields(bytes, part: part)
+    try NativeC01ClinicPeopleSave.validateFields(bytes, part: part)
+    try NativeUtilityEngineerSave.validateFields(bytes, part: part)
     try NativeOriginalEvacuationSave.validateFields(bytes, part: part, schema: schema)
     let rescueSchema = NativeOriginalEvacuationSave.lowerSchema(schema)
     try NativeOriginalRescueJourneySave.validateFields(bytes, part: part, schema: rescueSchema)

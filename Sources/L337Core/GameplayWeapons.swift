@@ -14,6 +14,13 @@ private final class NPCBeamPreparation {
   }
 }
 
+private struct NPCBeamAim {
+  let owner: ActorIdentity
+  let emitter: Vector3
+  let direction: Vector3
+  let launch: Vector3
+}
+
 /// Only the original flight snapshot can roll back a refused native mission impact.
 private final class NPCBeamEmission {
   let preparation: NPCBeamPreparation
@@ -122,10 +129,78 @@ extension Game {
     dischargeAudio.record(.combatLaser)
   }
 
+  /// The real selected legacy source supplies its sealed query and completed
+  /// motion proof. Re-query live availability in the original selected geometry
+  /// at this actual source turn, then use the unchanged emission/effect owners.
+  private mutating func emitSelectedLegacyNPCBeam(
+    _ native: CurrentNewtLegacyEffectContext, bodyID: Int, damage: Double,
+    energyMultiplier: Double
+  ) {
+    guard let plan = native.plan, plan.bodyID == bodyID,
+      let query = querySelectedLegacyNPCBeam(
+        plan, evidence: native.evidence,
+        admittedAtEnd: native.admittedAtEnd)
+    else { return }
+    if let contact = query.contact, contact.selectedTargetBody?.scriptNPC != nil {
+      guard
+        (try? preflightSelectedNativeMissionContact(
+          contact, owner: query.owner,
+          damage: damage, evidence: native.evidence, admittedAtEnd: native.admittedAtEnd)) != nil
+      else { return }
+    }
+    var retained = self
+    let preparation = NPCBeamPreparation(
+      owner: query.owner, launch: query.launch,
+      contact: query.contact)
+    guard let emission = retained.prepareNPCBeamEmission(preparation) else { return }
+    var combatEffect: NativeCombatHitClockEffect?
+    var missionEffect: NativeMissionBeamClockEffect?
+    if let contact = query.contact {
+      if contact.selectedTargetBody?.scriptNPC != nil {
+        guard
+          let applied = try? retained.applySelectedNativeMissionContact(
+            contact,
+            origin: emission.origin, damage: damage, emissionPosition: query.launch,
+            evidence: native.evidence, admittedAtEnd: native.admittedAtEnd)
+        else { return }
+        retained.projectScriptMissionImpact(applied.receipt)
+        missionEffect = applied.clockEffect
+      } else {
+        guard
+          let applied = retained.applySelectedNativeNPCBeamHit(
+            contact, origin: emission.origin,
+            damage: damage, emissionPosition: query.launch, energyMultiplier: energyMultiplier,
+            evidence: native.evidence, admittedAtEnd: native.admittedAtEnd)
+        else { return }
+        combatEffect = applied
+      }
+    } else {
+      guard
+        let applied = retained.recordNativeNPCDischarge(
+          origin: emission.origin,
+          position: query.launch)
+      else { return }
+      combatEffect = applied
+    }
+    retained.finishNPCBeam(emission, bodyID: bodyID, damage: damage)
+    self = retained
+    if let combatEffect { native.recordAccepted(combatEffect) }
+    if let missionEffect { native.recordAccepted(missionEffect) }
+  }
+
   /// NPC beams obey occlusion and record their real emitter; the encounter owns cadence/damage.
   /// Cold phases mutate the same live Game, without reserving their query values in this frame.
   @inline(never)
-  mutating func emitLegacyNPCBeam(bodyID: Int, damage: Double, energyMultiplier: Double = 1) {
+  mutating func emitLegacyNPCBeam(
+    bodyID: Int, damage: Double, energyMultiplier: Double = 1,
+    native: CurrentNewtLegacyEffectContext? = nil
+  ) {
+    if let native {
+      emitSelectedLegacyNPCBeam(
+        native, bodyID: bodyID, damage: damage,
+        energyMultiplier: energyMultiplier)
+      return
+    }
     ensurePhysicalActors()
     guard let preparation = prepareNPCBeam(bodyID: bodyID, damage: damage),
       let emission = prepareNPCBeamEmission(preparation),
@@ -136,19 +211,40 @@ extension Game {
 
   @inline(never)
   private mutating func prepareNPCBeam(bodyID: Int, damage: Double) -> NPCBeamPreparation? {
+    guard let aim = prepareNPCBeamAim(bodyID: bodyID) else { return nil }
+    return prepareNPCBeamContact(aim, bodyID: bodyID, damage: damage)
+  }
+
+  @inline(never)
+  private func prepareNPCBeamAim(bodyID: Int) -> NPCBeamAim? {
     guard let body = bodies.first(where: { $0.id == bodyID && $0.energy > 0 }),
       !isEMPDisabled(body),
       let owner = body.physical?.identity,
       body.position.length > 0
     else { return nil }
-    let aim = Self.nativePlayerSurfaceAim(from: body.position, mesh: commander.playerMesh)
-    let direction = aim - body.position
+    let emitter: Vector3
+    if body.isAegisPrototype, let muzzle = AegisPrototype.muzzle {
+      emitter = body.position + body.modelVector(muzzle)
+    } else {
+      emitter = body.position
+    }
+    let aim = Self.nativePlayerSurfaceAim(from: emitter, mesh: nativeGuidanceStoredPlayerMesh())
+    let direction = aim - emitter
     guard direction.finite, direction.length.isFinite, direction.length > 0 else { return nil }
-    let launch = commander.flightSimulation.pose.systemPoint(body.position)
+    let launch = storedFlightSimulation().pose.systemPoint(emitter)
+    return .init(owner: owner, emitter: emitter, direction: direction, launch: launch)
+  }
+
+  @inline(never)
+  private func prepareNPCBeamContact(_ aim: NPCBeamAim, bodyID: Int, damage: Double) -> NPCBeamPreparation? {
+    let owner = aim.owner
+    let emitter = aim.emitter
+    let direction = aim.direction
+    let launch = aim.launch
     let contact: MissionCollisionContact?
     do {
       contact = try nearestMissionCollision(
-        from: body.position, direction: direction.unit,
+        from: emitter, direction: direction.unit,
         range: direction.length + 1, radius: 0,
         excludingBodyIDs: [bodyID], includePlayer: true)
     } catch { return nil }
@@ -164,7 +260,7 @@ extension Game {
   /// Triangle centres are real surface targets; a camera origin can lie in a hull opening.
   /// Other topology keeps the old origin aim and must still pass the native physical query.
   @inline(never)
-  private static func nativePlayerSurfaceAim(from origin: Vector3, mesh: borrowing Mesh) -> Vector3
+  static func nativePlayerSurfaceAim(from origin: Vector3, mesh: borrowing Mesh) -> Vector3
   {
     var nearest = Vector3(0, 0, 0)
     var nearestRange = Double.infinity
@@ -193,7 +289,7 @@ extension Game {
   private mutating func prepareNPCBeamEmission(_ preparation: NPCBeamPreparation)
     -> NPCBeamEmission?
   {
-    let flightBeforeEmission = commander.flightSimulation
+    let flightBeforeEmission = storedFlightSimulation()
     guard let origin = makeAttackOrigin(owner: preparation.owner) else { return nil }
     return .init(
       preparation: preparation, flightBeforeEmission: flightBeforeEmission, origin: origin)
@@ -246,7 +342,7 @@ extension Game {
       guard
         applyCombatHit(
           .init(target: .body(body.id), distance: body.position.length, point: body.position),
-          origin: origin, kind: .bomb, damage: body.hull.bombImmune ? 0 : body.energy,
+          origin: origin, kind: .bomb, damage: body.nativeNavalBombImmune ? 0 : body.energy,
           emissionPosition: launch) != nil
       else { return false }
       if let damaged = bodies.first(where: { $0.id == body.id }), damaged.energy <= 0,
@@ -279,7 +375,8 @@ extension Game {
   var gameplayMeshOverrides: [Int: Mesh] {
     var result: [Int: Mesh] = [:]
     for body in bodies {
-      if nativePracticeReservation(body) != nil
+      if body.physical?.currentNewtKitStock != nil { continue }
+      if body.isAegisPrototype || nativePracticeReservation(body) != nil
         || body.physical?.catalogueShipID != nil || body.physical?.rock != nil
         || body.physical?.salvage?.lot != nil || body.nativeStationIdentity != nil
         || body.physical?.ordnance?.profile == .alienSeeker
@@ -291,6 +388,8 @@ extension Game {
   }
 
   func gameplayMesh(for body: SpaceBody) -> Mesh {
+    if let mesh = currentOccupiedNewtPodMesh(body) { return mesh }
+    precondition(!OriginalDetailedHullStage.blocksRuntime(body), "Pending original hull has no physical mesh")
     if let mesh = nativePracticeMesh(body) { return mesh }
     if body.physical?.ordnance?.profile == .alienSeeker { return AlienMissileMesh.mesh }
     if let identity = body.nativeStationIdentity {
@@ -304,6 +403,9 @@ extension Game {
 
   @inline(never)
   mutating func nativeStationApproachGameplayMesh(for body: borrowing SpaceBody) -> Mesh {
+    if let mesh = currentOccupiedNewtPodMesh(copy body) { return mesh }
+    let pendingOriginalHull = OriginalDetailedHullStage.blocksRuntime(body)
+    precondition(!pendingOriginalHull, "Pending original hull has no physical mesh")
     if body.physical?.ordnance?.profile == .alienSeeker { return AlienMissileMesh.mesh }
     if let identity = body.nativeStationIdentity {
       guard nativeStationApproachBodyIsCurrent(body),
@@ -316,6 +418,10 @@ extension Game {
 
   private func gameplayMeshAfterNativeStation(for body: SpaceBody) -> Mesh {
     if body.hull == .station { return MainStationGeometry.mesh }
+    if body.hull == .constrictor {
+      if body.isAegisPrototype, let mesh = AegisPrototype.mesh { return mesh }
+      return .init(vertices: [], faces: [])
+    }
     if let payload = body.physical?.payload, case .salvage(let identity) = payload,
       let lot = salvageLotForGeometry(identity)
     {
@@ -335,6 +441,10 @@ extension Game {
     if let id = body.physical?.catalogueShipID, let mesh = ShipCatalogue.rawMesh(id) {
       return mesh
     }
+    // Retired discriminators cannot supply implicit collision geometry.
+    guard body.hull != .cobra,
+      !body.hull.isTargetShip || ShipCatalogue.nativeMesh(body.hull) != nil
+    else { return .init(vertices: [], faces: []) }
     let base = Mesh.hull(body.hull)
     guard let identity = body.physical?.rock,
       let rock = miningFields.lazy.flatMap(\.rocks).first(where: { $0.identity == identity })

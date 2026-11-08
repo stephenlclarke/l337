@@ -1,0 +1,45 @@
+{
+  "status": "FIRST_MINING_ONLY_DECLARED_CURRENT_SOURCE_CAPABILITY_GUARD_NO_EDITS",
+  "beforeCommit": "73b40d968de15c1872e52216a19c5623d5d0c13c",
+  "pins": [
+    {
+      "path": "Sources/L337Core/GameplayEncounters.swift",
+      "bytes": 19957,
+      "sha256": "e01d4b1971b46c6ee1de1548edd2eb7eb3d7df74f3f31f5ac0fea999cf058c3d"
+    },
+    {
+      "path": "Sources/L337Core/ShipPerformance.swift",
+      "bytes": 4236,
+      "sha256": "62c217efd6983a6ad142416b40cdc802b2fddc1b346e0e8b69e8ec1121bbb199"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+      "bytes": 283481,
+      "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+    },
+    {
+      "path": "Tests/L337CoreTests/GameplayCombatTests.swift",
+      "bytes": 23349,
+      "sha256": "d2ba848da6bbf00bf7bbe46696bfb7a01dff28636db519bd2be193de99a5764a"
+    },
+    {
+      "path": "Sources/L337Core/MissionNativeBridge.swift",
+      "bytes": 58674,
+      "sha256": "e25858b41c429ee796d5b993710ce877c99af5fc190745533fbd48aaa2c12321"
+    }
+  ],
+  "sourcePath": "Sources/L337Core/GameplayEncounters.swift",
+  "before": "      let target = gameplayActor(identity, context: context)\n    else { return nil }\n    let position = bodies[index].position",
+  "proposedAfter": "      let target = gameplayActor(identity, context: context)\n    else { return nil }\n    if mining, let id = actor.catalogueShipID {\n      guard let source = OriginalFleetRuntimeHullSource.source(for: id),\n        source.performance.workTools?.contains(.miningLaser) == true\n      else { return nil }\n    }\n    let position = bodies[index].position",
+  "finding": "prepareGameplayNPCBeam chooses LaserKind.mining for mining:true without consulting per-ID current performance.workTools, while player equipment context already treats declared mining support as required. A current model declaring no miningLaser can therefore reach beam emission solely from the requested mode/role. Missing real installed NPC hardware issuer remains a separate blocker; this guard creates no equipment permission. No actual runtime failure or numeric test executed.",
+  "sourceScope": "One necessary source-capability guard only in private prepareGameplayNPCBeam before geometry/origin allocation, conditional on mining and explicit current catalogueID. Current source must resolve and explicitly support miningLaser. Normal combat path, nil-ID existing behavior, roles/admission, source stock, damage/range/heat/cooldown/law/geometry/C01 ownership unchanged. No source/tool/budget tuning and no current13 mining workaround or substitute hull.",
+  "testPath": "Tests/L337CoreTests/NPCMiningSourceRefusalTests.swift",
+  "testScope": "One new parameterized refusal method unsupported/unknown-source. Actual Game launch and mandatory current025 source/stock; require source025 workTools excludes miningLaser. Controlled miner-role current025 body + ordinary native asteroid target off player axis. Require real native fixed-front contact reaches that actual target BEFORE corruption, so no vacuous absent/occluded positive. Unknown-source case changes only explicitID after real contact. Invoke actual emitGameplayNPCBeam(mining:true), require whole Commander/bodies/resource/cooldown/gameplayRevision/time state unchanged. No fabricated incident/mining kit/equipment grant/ore yield or actual earned actor; this is controlled emitter-source refusal. All existing combat/station/mining tests remain exact.",
+  "coordination": "Shared NPC emitter helper can intersect maintained actual combat/C01 paths, so Root exact source overlap check/reservation required before edits. G4 fitting/source scope otherwise independent. No positive C01 geometry or emitter permission.",
+  "limits": "No source aftercode or mutations yet; all UNCOMPILED UNRUN. Current025964/native/source/actualhardware/crew/loadedphysics/miningjourney qualification remains OPEN. G1 sole executor."
+}

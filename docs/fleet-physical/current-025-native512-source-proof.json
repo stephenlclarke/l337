@@ -1,0 +1,27 @@
+{
+  "status": "SOURCE_TEXT_AND_FIXED_INTEGER_RECIPE_PROOF_ONLY_NO_GEOMETRY_EVALUATION",
+  "fixedRecipeComponentIndicesUniqueAndComplete27": true,
+  "fixedIntegerOutputVertices": 310,
+  "fixedIntegerOutputTriangles": 512,
+  "oldWellsAndSupportCopyFaces": 324,
+  "newLoftUVFaces": 188,
+  "perComponentBoundsAndOrientedClosedPositiveVolume": "REFUSAL_CHECKS_AUTHORED_NOT_EVALUATED",
+  "oldOwnCounterDefinitionsByteExact": true,
+  "initialSourceSnapshot": {
+    "path": "/tmp/elite-g4-current-025-native512-source-method/author-current-025-native512.initial.py",
+    "bytes": 38055,
+    "sha256": "d76060259ea0ed98e7f5412c22ae9f123e86780b573a470a8744f2e4b749354e"
+  },
+  "onlySelfCorrection": "Failure receipts synchronize actual original integer counters; geometry/UV/topology/input/caps unchanged. Frozen correctionFIRST retained.",
+  "plannedNativeResourceScope": "Only four native arrays/source provenance + explicit geometryContext suffix; complete current detailed/R3/mechanics/profiles/materials/textures/licences outside byte inverse proof required before candidate publish.",
+  "plannedExistingTestHunk": {
+    "file": "Tests/L337CoreTests/OriginalFleetRuntimeHullSourceUnitTests.swift",
+    "method": "currentPeregrineUsesItsCalibratedNativeMeshForPlayerNPCAndSalvage",
+    "insertionAfter": "    let native = try #require(source.ship.nativeDesign).rawMesh\n",
+    "insert": "    #expect(native.faces.count == 512 && native.faceMaterials.contains(5) && native.faceMaterials.contains(6))\n    #expect(source.ship.nativeDesign?.source.contains(\"current025-fixed-component-native512-v1\") == true)\n",
+    "executedOrApplied": false
+  },
+  "moduleImportsSyntaxChecksGeometryNumericEvaluations": 0,
+  "nativeCompilerRendererTests": 0,
+  "RootFutureExecutionAuthorityExists": false
+}

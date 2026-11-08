@@ -7,6 +7,13 @@ extension Game {
       guard var resources = bodies[index].physical?.npc?.resources, resources.valid else {
         continue
       }
+      if let physical = bodies[index].physical, let npc = physical.npc,
+        npc.role != .mission, let id = physical.catalogueShipID
+      {
+        guard NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+          catalogueShipID: id, hull: bodies[index].hull, npc: npc, missiles: bodies[index].missiles)
+        else { continue }
+      }
       if var reserve = resources.electrical {
         guard
           reserve.advance(
@@ -42,6 +49,19 @@ extension Game {
 
   func telemetryFacts(for body: SpaceBody) -> TargetTelemetry.Facts {
     let npc = body.physical?.npc
+    let resources: TargetTelemetry.Resources?
+    if let npc, let actual = npc.resources, actual.valid {
+      if npc.role != .mission, let id = body.physical?.catalogueShipID,
+        !NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+          catalogueShipID: id, hull: body.hull, npc: npc, missiles: body.missiles)
+      {
+        resources = nil
+      } else {
+        resources = actual.telemetry
+      }
+    } else {
+      resources = nil
+    }
     let route: TargetTelemetry.RouteProvenance? = npc?.routeProvenance.map {
       switch $0 {
       case .generated: .generated
@@ -69,6 +89,6 @@ extension Game {
         },
       legal: npc?.legalProvenance == nil ? nil : npc?.legal,
       hostile: body.hostile,
-      resources: npc?.resources?.valid == true ? npc?.resources?.telemetry : nil)
+      resources: resources)
   }
 }

@@ -1,0 +1,147 @@
+{
+  "schema": "l337.branch-cleanup-execution/1",
+  "checkedUTC": "2026-11-01T13:42:15.780236+00:00",
+  "authorizedScope": "One local ordinary non-force branch deletion after independent review be8875; no remote/source/worktree/tag deletion",
+  "auditManifestSHA256": "c0d05ea4211d3c13f87d6f8509ffa833f4764d398c6cc0c0fc9968017941d099",
+  "sourceReviewSHA256": "be8875b00bbc00d18db3fe96b27adae2f827d3e3001ecd0f152a3d7ba00b66a6",
+  "candidate": "refs/heads/feat/m04-redtail-besra",
+  "expectedTip": "41c69b40876e0d5e233617b1b7401b9278de8434",
+  "beforeRefs": {
+    "refs/heads/feat/m04-redtail-besra": {
+      "commit": "41c69b40876e0d5e233617b1b7401b9278de8434",
+      "tree": "77663e7693e0a4325040216a6bcb375a3d2ca0e0"
+    },
+    "refs/remotes/origin/feat/m04-redtail-besra": {
+      "commit": "41c69b40876e0d5e233617b1b7401b9278de8434",
+      "tree": "77663e7693e0a4325040216a6bcb375a3d2ca0e0"
+    },
+    "refs/remotes/origin/main": {
+      "commit": "0cc45dca928c7bae18a388fa775d7b53c6653d21",
+      "tree": "77663e7693e0a4325040216a6bcb375a3d2ca0e0"
+    },
+    "refs/heads/main": {
+      "commit": "bba862c558530ea2d40d634f84fbd490d9cc3401",
+      "tree": "52a8cfbc9ecfa493cfa240d8a0232e9125770490"
+    }
+  },
+  "activeSessionCwdRefs": [
+    {
+      "cwd": "/Users/sclarke/github/elite",
+      "exit": 0,
+      "ref": "refs/heads/main"
+    },
+    {
+      "cwd": "/Users/sclarke/.codex/worktrees/targeting-combat-projection/elite",
+      "exit": 0,
+      "ref": "refs/heads/feat/targeting-participant-classification"
+    },
+    {
+      "cwd": "/Users/sclarke/Library/EliteNativeCI/execution/m01-profile-projection/elite",
+      "exit": 0,
+      "ref": "refs/heads/fix/m04-compact-showroom-quote"
+    }
+  ],
+  "registeredWorktreeCount": 98,
+  "remoteChecks": {
+    "default": {
+      "command": [
+        "gh",
+        "api",
+        "repos/stephenlclarke/l337",
+        "--jq",
+        "{default_branch,archived,disabled}"
+      ],
+      "exit": 0,
+      "stdout": "{\"archived\":false,\"default_branch\":\"main\",\"disabled\":false}\n",
+      "stderr": ""
+    },
+    "protection": {
+      "command": [
+        "gh",
+        "api",
+        "graphql",
+        "-f",
+        "query={repository(owner:\"stephenlclarke\",name:\"l337\"){branchProtectionRules(first:100){nodes{pattern}pageInfo{hasNextPage}}}}"
+      ],
+      "exit": 0,
+      "stdout": "{\"data\":{\"repository\":{\"branchProtectionRules\":{\"nodes\":[{\"pattern\":\"main\"}],\"pageInfo\":{\"hasNextPage\":false}}}}}",
+      "stderr": ""
+    },
+    "rulesets": {
+      "command": [
+        "gh",
+        "api",
+        "repos/stephenlclarke/l337/rulesets",
+        "--paginate"
+      ],
+      "exit": 0,
+      "stdout": "[]",
+      "stderr": ""
+    },
+    "liveHeads": {
+      "command": [
+        "git",
+        "ls-remote",
+        "--heads",
+        "origin",
+        "main",
+        "feat/m04-redtail-besra"
+      ],
+      "exit": 0,
+      "stdout": "0cc45dca928c7bae18a388fa775d7b53c6653d21\trefs/heads/main\n",
+      "stderr": ""
+    },
+    "openPRs": {
+      "command": [
+        "gh",
+        "pr",
+        "list",
+        "--repo",
+        "stephenlclarke/l337",
+        "--state",
+        "open",
+        "--head",
+        "feat/m04-redtail-besra",
+        "--limit",
+        "100",
+        "--json",
+        "number,headRefName,headRefOid"
+      ],
+      "exit": 0,
+      "stdout": "[]\n",
+      "stderr": ""
+    }
+  },
+  "contentBaseline": "Fresh live protected default main0cc45/tree77663, independently rechecked immediately before action. Local human mainbba862/tree52a8 differs and is preserved; no equality or integration claim against local human main.",
+  "action": {
+    "command": [
+      "git",
+      "branch",
+      "-d",
+      "feat/m04-redtail-besra"
+    ],
+    "exit": 0,
+    "stdout": "Deleted branch feat/m04-redtail-besra (was 41c69b40).\n",
+    "stderr": "warning: deleting branch 'feat/m04-redtail-besra' that has been merged to\n         'refs/remotes/origin/feat/m04-redtail-besra', but not yet merged to HEAD\n"
+  },
+  "deleted": true,
+  "retentionReasons": [],
+  "candidatePresentAfter": false,
+  "retainedTrackingAfter": "41c69b40876e0d5e233617b1b7401b9278de8434",
+  "localHumanMainAfter": "bba862c558530ea2d40d634f84fbd490d9cc3401",
+  "ownedHeadAfterCleanup": "0e937de2ef13e0ac2934f2cd81d87ed0f346c06f",
+  "limits": "Retained exact41c69 tracking history must not be pruned by this cleanup. Snapshot ref tables remain as-of audit, not live current lists. No game/native/test execution.",
+  "afterRefVerification": {
+    "command": [
+      "git",
+      "for-each-ref",
+      "--format=%(refname) %(objectname)",
+      "refs/heads/feat/m04-redtail-besra",
+      "refs/remotes/origin/feat/m04-redtail-besra"
+    ],
+    "exit": 0,
+    "stdout": "refs/remotes/origin/feat/m04-redtail-besra 41c69b40876e0d5e233617b1b7401b9278de8434\n",
+    "stderr": ""
+  },
+  "receiptCorrection": "Absent show-ref --verify exits128 on this Git; result classifier corrected fromfalse totrue using successful ordinary deletion and exact for-each-ref absence plus retainedtracking. No second delete or force operation."
+}

@@ -41,9 +41,35 @@ struct ScriptEquipmentRefitTests {
       contact: "{op='gear.refit',id='refit',gear='kit',index=0}")
     defer { fixture.clean() }
     var game = Game(executive: false)
+    let initialCredits = game.commander.credits
+    let initialFuel = game.commander.fuel
+    if name == FuelStorage.equipmentName {
+      // Controlled initial hull, before any owned inventory; this is not ship acquisition.
+      try OriginalDetailedHullStage.requireRuntime("SH032")
+      let ship = try #require(ShipCatalogue.ship("SH032"))
+      let source = try #require(OriginalFleetR3Fitting.contract(for: ship))
+      let fitting = try #require(source.fitting)
+      let performance = try #require(source.performance)
+      try #require(ship.id == "SH032" && ship.name == "Panther Explorer")
+      try #require(ship.catalogue.playerFlyable && ship.game == performance)
+      try #require(fitting.compatibleUtilities.contains("auxiliaryFuelTank"))
+      try #require(fitting.utilityMounts >= 2 && fitting.equipmentUnits >= 2)
+      try #require(!fitting.roleKitIncluded && source.accommodation?.initialPurchasedCabins == 0)
+      try #require(
+        game.commander.equipmentInventory == nil && game.commander.equipmentPurchaseHistory == nil)
+      try #require(initialFuel <= performance.fuel && game.commander.missiles <= performance.missiles)
+      game.commander.shipID = ship.id
+    }
     try game.commander.prepareEquipment(legacy: false)
+    try #require(game.commander.credits == initialCredits && game.commander.fuel == initialFuel)
     game.scriptPacks = [fixture.pack]
     if name == FuelStorage.equipmentName {
+      game.energy = game.commander.performance.energy
+      game.frontShield = game.commander.shieldCapacity
+      game.rearShield = game.commander.rearShieldCapacity
+      try #require(game.commander.valid && game.commander.shipID == "SH032")
+      try #require(game.commander.fittedEquipment(at: .fuelStorage(0)) == nil)
+      try #require(game.commander.fittedEquipment(at: .fuelStorage(1)) == nil)
       try game.commander.grantEquipment(
         name, at: .fuelStorage(0), provenance: .grant("refit-personal-tank"))
     }
@@ -55,6 +81,7 @@ struct ScriptEquipmentRefitTests {
     #expect(game.commander.equipmentInventory?.items.first { $0.id == issuedID }?.location == nil)
     game.emitScriptEvent("contact.requested")
     let issued = try #require(game.commander.equipmentInventory?.items.first { $0.id == issuedID })
+    #expect(game.commander.credits == initialCredits && game.commander.fuel == initialFuel)
     #expect(game.commander.scriptState.instances[id]?.suspension == nil && game.commander.valid)
     for personal in before.items {
       #expect(game.commander.equipmentInventory?.items.first { $0.id == personal.id } == personal)
@@ -77,6 +104,7 @@ struct ScriptEquipmentRefitTests {
       contact: "{op='gear.refit',id='refit',gear='kit',index=0}")
     defer { fixture.clean() }
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     try game.commander.grantEquipment(
       "E.C.M. System", at: .utility(.ecm), provenance: .grant("personal-ecm"))
     game.scriptPacks = [fixture.pack]

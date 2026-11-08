@@ -6,7 +6,7 @@ import Testing
 struct EMPPersistenceAndEquipmentTests {
   @Test func nativeSaveRestoresDisabledHullAndEveryOccupiedPodWithoutReissuingPeople() async throws
   {
-    var game = try empFixture(catalogue: "SH001")
+    var game = try empFixture(catalogue: EMPUnitTargetCatalogue.twoPerson)
     game.bodies[0].physical?.velocity = .init(0, 0, 0)
     game.bodies[0].physical?.angularVelocity = .init(0, 0, 0)
     let empResult = try releaseDamagedEMPBoundary(&game)
@@ -50,14 +50,13 @@ struct EMPPersistenceAndEquipmentTests {
     #expect(!FileManager.default.fileExists(atPath: invalidFile.path))
   }
 
-  @Test func oldNativeSaveAndRawCommanderKeepInnocentEMPWordsButRejectActualNewState() async throws
-  {
-    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-    defer { try? FileManager.default.removeItem(at: directory) }
-    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+  @Test func currentSaveKeepsInnocentEMPWordsAndUnwrappedJSONCannotAcquireOwnership() async throws {
+    let storage = try NativeStationTestStorage()
+    defer { storage.clean() }
     var game = Game(executive: false)
     game.screen = .status
     game.commander.name = "empPirateBlaster"
+    try game.commander.prepareEquipment(legacy: false)
     var instance = ScriptInstance(
       id: UUID(), definition: "fixture/innocent-text", version: "1.0.0",
       digest: String(repeating: "a", count: 64))
@@ -66,42 +65,24 @@ struct EMPPersistenceAndEquipmentTests {
       "empSource": .string("dialogue only"), "name": .string(Equipment.empPirateBlaster),
     ])
     game.commander.scriptState.instances[instance.id] = instance
-    let raw = directory.appendingPathComponent("ordinary.json")
-    // A real legacy raw commander has no current owned-equipment/drive fields.
-    // Keep harmless authored text while letting the loader perform its normal migration.
-    var legacy = Commander()
-    legacy.name = game.commander.name
-    legacy.scriptState = game.commander.scriptState
-    let rawBytes = try JSONEncoder().encode(legacy)
-    try rawBytes.write(to: raw)
-    try EMPVersionedSave.rejectFields(rawBytes, part: .commander)
-    let rawRuntime = GameRuntime()
-    try await rawRuntime.load(from: raw, persistMigrations: false)
-    #expect(await rawRuntime.snapshot().commander.name == "empPirateBlaster")
-    let file = directory.appendingPathComponent("old-native.json")
-    let runtime = GameRuntime(game: game)
-    try await runtime.save(to: file)
-    let bytes = try Data(contentsOf: file)
-    let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)
-    #expect(pointer.schemaVersion >= 21)
-    let (saved, _) = try ScriptSaveStore.read(bytes, from: file)
+    let writer = GameRuntime(game: game)
+    try await writer.save(to: storage.url)
+    let bytes = try Data(contentsOf: storage.url)
+    let (saved, _) = try ScriptSaveStore.read(bytes, from: storage.url)
     #expect(saved.scriptState.instances[instance.id]?.data == instance.data)
-    var forged = try #require(JSONSerialization.jsonObject(with: rawBytes) as? [String: Any])
-    forged["savedEMPState"] = [:]
-    #expect(throws: SaveError.invalidCommander) {
-      try EMPVersionedSave.rejectFields(
-        JSONSerialization.data(withJSONObject: forged), part: .commander)
-    }
-    let innocentWorld: [String: Any] = [
-      "libraryScreen": ["text": ["empSource": "fiction"]], "bodies": [],
-    ]
-    try EMPVersionedSave.rejectFields(
-      JSONSerialization.data(withJSONObject: innocentWorld), part: .world)
-    let forgedWorld: [String: Any] = ["bodies": [["physical": ["empSource": [:]]]]]
-    #expect(throws: SaveError.invalidCommander) {
-      try EMPVersionedSave.rejectFields(
-        JSONSerialization.data(withJSONObject: forgedWorld), part: .world)
-    }
+    #expect(saved.savedEMPState == nil)
+    let raw = storage.root.appendingPathComponent("unwrapped.json")
+    try JSONEncoder().encode(saved).write(to: raw)
+    let files = try ScriptFinanceTestFixture.files(storage.root)
+    let reader = GameRuntime(game: Game(executive: false))
+    let before = await reader.snapshot()
+    await #expect(throws: SaveError.self) { try await reader.load(from: raw, persistMigrations: false) }
+    let after = await reader.snapshot()
+    #expect(after.commander == before.commander && after.bodies == before.bodies)
+    #expect(after.screen == before.screen && after.time == before.time)
+    #expect(after.inventoryContextEpoch == before.inventoryContextEpoch)
+    #expect(try Data(contentsOf: storage.url) == bytes)
+    #expect(try ScriptFinanceTestFixture.files(storage.root) == files)
   }
 
   @Test func actualEMPContainerCannotBeDowngradedOrEraseItsTrafficTransfer() async throws {
@@ -120,14 +101,16 @@ struct EMPPersistenceAndEquipmentTests {
     try await runtime.save(to: file)
     let bytes = try Data(contentsOf: file)
     let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)
-    try #require(pointer.schemaVersion >= 25)
-    for legacyHeader in 21..<pointer.schemaVersion {
-      let old = ScriptSavePointer(
-        format: pointer.format, schemaVersion: legacyHeader, generation: pointer.generation,
-        hashes: pointer.hashes, scope: pointer.scope, valueCodec: pointer.valueCodec)
-      #expect(throws: SaveError.invalidCommander) {
-        _ = try ScriptSaveStore.read(ScriptValueStorage.encoder().encode(old), from: file)
-      }
+    let saved = try NativeSaveTestFixture.readVersionedCommander(from: file)
+    try #require(pointer.schemaVersion == ScriptSaveStore.publicationSchema(
+      saved, alien: saved.alienStorageState != nil))
+    #expect(saved.savedEMPState == game.commander.savedEMPState)
+    #expect(saved.npcPersistence.terminalReason(for: source) == .empTransferred)
+    let malformed = ScriptSavePointer(
+      format: pointer.format, schemaVersion: Int.max, generation: pointer.generation,
+      hashes: pointer.hashes, scope: pointer.scope, valueCodec: pointer.valueCodec)
+    #expect(throws: SaveError.invalidCommander) {
+      _ = try ScriptSaveStore.read(ScriptValueStorage.encoder().encode(malformed), from: file)
     }
     let raw = directory.appendingPathComponent("raw.json")
     try JSONEncoder().encode(game.commander).write(to: raw)
@@ -138,7 +121,11 @@ struct EMPPersistenceAndEquipmentTests {
   @Test func realShopDebitsFiniteCashAndReloadKeepsOneSeparateFitting() async throws {
     var game = Game(executive: false)
     game.screen = .equipment
-    game.commander.shipID = "SH023"
+    try #require(game.commander.shipID == NewCommanderDefaults.shipID)
+    try #require(game.commander.shipID == "SH025")
+    try #require(!OriginalDetailedHullStage.blocksRuntime(game.commander.shipID))
+    let fitting = try #require(OriginalFleetR3Fitting.contract(for: game.commander.ship)?.fitting)
+    try #require(fitting.utilityMounts == 3)
     game.commander.fuel = game.commander.fuelCapacity
     game.commander.credits = 100_000
     game.commander.system = try #require(game.systems.first { $0.technology >= 9 }?.id)
@@ -182,6 +169,7 @@ struct EMPPersistenceAndEquipmentTests {
   @Test func xyzzyGrantsOneBlasterAndRetainsFourNavalLasersAcrossRepeatedGrantAndLoad() async throws
   {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     for key in "xyzzy" { game.key(String(key)) }
     for _ in 0..<3 { game.key("2") }

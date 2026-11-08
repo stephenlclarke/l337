@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate staged immutable Swift records from original specs, without reading geometry."""
+"""Generate current R3 immutable Swift records without reading geometry or granting runtime rights."""
 import argparse
 import hashlib
 import json
@@ -9,8 +9,6 @@ import re
 import sys
 import tomllib
 
-NATIVE_FIELDS = ("cargo", "speed", "acceleration", "energy", "recharge", "roll", "pitch", "yaw", "shield", "shieldRecharge", "fuel", "jump", "spool", "missiles", "facings", "cargoExpansion", "price")
-INT_FIELDS = {"cargo", "fuel", "missiles", "facings", "cargoExpansion", "price"}
 MIN_INT, MAX_INT = -(2**63), 2**63 - 1
 
 
@@ -80,105 +78,83 @@ def value_lines(value, prefix, indent):
     return [prefix + literal]
 
 
-def native_values(game):
-    if game is None:
-        return None, []
-    issues, values = [], []
-    for field in NATIVE_FIELDS:
-        value = game.get(field)
-        if field in INT_FIELDS:
-            if type(value) is not int or not MIN_INT <= value <= MAX_INT:
-                issues.append(f"game.{field}: not representable as native Int without conversion")
-            else:
-                values.append((field, "Int.min" if value == MIN_INT else str(value)))
-        else:
-            try:
-                converted = float(value) if type(value) in (int, float) else float("nan")
-            except OverflowError:
-                converted = float("nan")
-            if not math.isfinite(converted) or type(value) is int and int(converted) != value:
-                issues.append(f"game.{field}: not exactly representable as native Double")
-            else:
-                values.append((field, repr(converted)))
-    issues += [f"game.{field}: not represented by ShipPerformance; typed metadata retained"
-               for field in sorted(game.keys() - set(NATIVE_FIELDS) - {"workTools"})]
-    if game.get("workTools") is not None:
-        issues.append("game.workTools: explicit fitting integration required; authored value retained")
-    return (None if issues else values), issues
+def inline_value(item):
+    if isinstance(item, dict):
+        return ".object([" + ", ".join(quote(k) + ": " + inline_value(v) for k, v in sorted(item.items())) + "])" if item else ".object([:])"
+    if isinstance(item, list):
+        return ".array([" + ", ".join(inline_value(v) for v in item) + "])"
+    return value_lines(item, "", 0)[0] if not isinstance(item, str) else ".string(" + quote(item) + ")"
 
 
-def generate(staging, repo, expected=171):
+def generate(staging, repo, expected=171, model_ids=()):
+    """Current R3 only; output into a new handoff root. Reads no geometry or native state."""
     if repo.is_symlink():
         raise ValueError("Symlink output root")
     staging, repo = staging.resolve(), repo.resolve()
     if repo.is_relative_to(staging) or staging.is_relative_to(repo):
         raise ValueError("Input/output overlap")
-    ready_raw = bounded(safe(staging, "readiness.json"), 8 * 1024 * 1024)
-    ready = json.loads(ready_raw)
     wanted = {f"SH{i:03}" for i in range(1, expected + 1)}
-    entries = ready["ships"]
-    ids = [e["id"] for e in entries]
-    if len(ids) != len(set(ids)) or set(ids) != wanted:
-        raise ValueError("Duplicate, missing or extra definition IDs")
-    if {p.stem for p in (staging / "specs").glob("*.toml")} != wanted:
-        raise ValueError("Missing/extra spec files")
-    functions, fingerprints, representations = [], [], []
-    for entry in sorted(entries, key=lambda e: e["id"]):
-        identifier = entry["id"]
-        if entry["spec"] != f"specs/{identifier}.toml":
-            raise ValueError("Spec path/ID mismatch")
-        raw = bounded(safe(staging, entry["spec"]), 131072)
+    if {p.stem for p in (staging / "ships").glob("*.toml")} != wanted:
+        raise ValueError("Missing/extra current R3 files")
+    if not set(model_ids).issubset(wanted):
+        raise ValueError("Unexpected model ID")
+    records = []
+    for identifier in sorted(wanted):
+        raw = bounded(safe(staging, "ships/" + identifier + ".toml"), 131072)
         spec = tomllib.loads(raw.decode())
-        if spec["id"] != identifier or type(spec.get("playerFlyable")) is not bool:
-            raise ValueError("Invalid definition identity/capability")
-        for key in ("name", "family", "role", "purchasePolicy"):
-            if not isinstance(spec.get(key), str) or not spec[key]:
-                raise ValueError("Missing definition identity/policy")
-        source_sha = hashlib.sha256(raw).hexdigest()
-        sources = [s for s in entry["sources"] if s["path"] == f"fleet-specs/{identifier}.toml"]
-        if len(sources) != 1 or sources[0]["sha256"] != source_sha:
-            raise ValueError("Spec fingerprint mismatch")
-        native, issues = native_values(spec.get("game"))
-        functions += [f"  private static func {identifier.lower()}() -> OriginalFleetDefinition {{", "    let authored: [String: OriginalFleetValue] = ["]
-        for key, value in sorted(spec.items()):
-            lines = value_lines(value, "      " + quote(key) + ": ", 6)
-            functions += lines[:-1] + [lines[-1] + ","]
-        functions += ["    ]"]
-        if native is None:
-            functions += ["    let performance: ShipPerformance? = nil"]
-        else:
-            functions += ["    let performance: ShipPerformance? = ShipPerformance("]
-            functions += [f"      {field}: {literal}," for field, literal in native]
-            functions += ["      workTools: nil", "    )"]
-        functions += ["    return OriginalFleetDefinition("]
-        for key in ("id", "name", "family", "role"):
-            functions += [f"      {key}: {quote(spec[key])},"]
-        functions += [f"      playerFlyable: {str(spec['playerFlyable']).lower()},",
-                      f"      purchasePolicy: {quote(spec['purchasePolicy'])},", "      authored: authored,",
-                      f"      sourcePath: {quote(entry['spec'])},", f"      sourceSHA256: {quote(source_sha)},",
-                      "      nativePerformance: performance,",
-                      f"      approvedMeshAvailable: {str(entry['geometryAvailable']).lower()},",
-                      "      integrationBlockers: ["]
-        blockers = entry.get("dependencies", []) + entry.get("gameValidityIssues", []) + issues
-        functions += ["        " + quote(blocker) + "," for blocker in blockers]
-        functions += ["      ]", "    )", "  }", ""]
-        fingerprints.append({"id": identifier, "sha256": source_sha})
-        if issues:
-            representations.append({"id": identifier, "issues": issues})
-    lines = ["// Generated by Tools/generate-original-fleet-definitions.py; staged definitions only.",
-             "public enum OriginalFleetDefinitionData {", "  public static let staged: [OriginalFleetDefinition] = ["]
-    lines += [f"    {i.lower()}()," for i in sorted(wanted)]
-    lines += ["  ]", "", *functions, "}", ""]
+        if spec.get("schema") != "l337.fleet-design/2" or spec.get("id") != identifier:
+            raise ValueError("Current R3 schema/identity required")
+        if any(not isinstance(spec.get(k), str) or not spec[k] for k in ("name", "family", "classification", "objectKind")):
+            raise ValueError("Missing current identity")
+        if any(not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*", k) for k, v in spec.items() if isinstance(v, dict)):
+            raise ValueError("Invalid Swift source field identifier")
+        access = spec["access"]
+        if type(access["playerFlyable"]) is not bool or access["purchasePolicy"] not in ("blueprintFabrication", "plughQuestFabrication", "never"):
+            raise ValueError("Invalid current access policy")
+        records.append((identifier, spec, hashlib.sha256(raw).hexdigest()))
+    lines = ["// Current exact R3 definitions. Source rows confer no native or acquisition qualification.",
+             "public enum OriginalFleetDefinitionData {", "  public static var staged: [OriginalFleetDefinition] {",
+             "    OriginalFleetR3Data.ids.compactMap { definition(for: $0) }", "  }", "",
+             "  @inline(never)",
+             "  public static func definition(for id: String) -> OriginalFleetDefinition? {",
+             "    guard let load = definitionLoader(for: id) else { return nil }",
+             "    return load()", "  }", "",
+             "  // Dispatch without reserving a full definition result for every source row.",
+             "  @inline(never)",
+             "  private static func definitionLoader(for id: String) -> (@Sendable () -> OriginalFleetDefinition)? {",
+             "    switch id {"]
+    lines += ["    case " + quote(i) + ": return { " + i.lower() + " }" for i, _, _ in records]
+    lines += ["    default: return nil", "    }", "  }", ""]
+    for identifier, spec, source_sha in records:
+        lines += ["  private static let " + identifier.lower() + ": OriginalFleetDefinition = make" + identifier + "()",
+                  "  private static func make" + identifier + "() -> OriginalFleetDefinition {",
+                  "    guard let current = OriginalFleetR3Data.contract(for: " + quote(identifier) + "),",
+                  "      current.sourceSHA256 == " + quote(source_sha), "    else {",
+                  '      preconditionFailure("Missing generated current R3 contract ' + identifier + '")', "    }"]
+        for key, item in spec.items():
+            if isinstance(item, dict):
+                lines += ["    let `" + key + "`: [String: OriginalFleetValue] = ["]
+                lines += ["      " + quote(k) + ": " + inline_value(v) + "," for k, v in sorted(item.items())]
+                lines += ["    ]"]
+        lines += ["    let authored: [String: OriginalFleetValue] = ["]
+        lines += ["      " + quote(k) + ": " + (".object(`" + k + "`)" if isinstance(v, dict) else inline_value(v)) + "," for k, v in spec.items()]
+        lines += ["    ]", "    return .init(",
+                  "      id: current.id, name: current.name, family: current.family, role: current.classification,",
+                  "      playerFlyable: current.playerFlyable, purchasePolicy: current.purchasePolicy.rawValue,",
+                  "      authored: authored, sourcePath: " + quote("fleet-design-v2/ships/" + identifier + ".toml") + ",",
+                  "      sourceSHA256: current.sourceSHA256, nativePerformance: current.performance,",
+                  "      approvedMeshAvailable: " + str(identifier in model_ids).lower() + ",",
+                  '      integrationBlockers: ["native-and-actual-game-qualification", "paid-fitting-crew-and-acquisition-acceptance"]',
+                  "    )", "  }", ""]
+    lines += ["}", ""]
     data = "\n".join(lines).encode()
-    path = safe(repo, "Sources/L337Core/OriginalFleetDefinitions.generated.swift")
-    if path.exists():
-        raise ValueError("Refusing to overwrite an existing generated handoff")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(data)
-    manifest = {"records": len(wanted), "sourceSpecs": fingerprints,
-                "readinessSHA256": hashlib.sha256(ready_raw).hexdigest(),
-                "generatedSHA256": hashlib.sha256(data).hexdigest(), "nativeRepresentationIssues": representations,
-                "geometryRead": False, "runtimeActivated": False}
+    output = safe(repo, "Sources/L337Core/OriginalFleetDefinitions.generated.swift")
+    if output.exists():
+        raise ValueError("Refusing to overwrite existing source handoff")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_bytes(data)
+    manifest = dict(records=len(records), sourceSpecs=[dict(id=i, sha256=h) for i, _, h in records],
+                    generatedSHA256=hashlib.sha256(data).hexdigest(), geometryRead=False, runtimeActivated=False)
     safe(repo, "original-fleet-definitions.manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     return manifest
 
@@ -187,14 +163,21 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--staging", type=Path, required=True)
     parser.add_argument("--repo-root", type=Path, required=True)
+    parser.add_argument("--model-manifest", type=Path, required=True)
     parser.add_argument("--expected-count", type=int, default=171)
     args = parser.parse_args()
     try:
-        manifest = generate(args.staging, args.repo_root, args.expected_count)
-        print("PASS: " + str(manifest["records"]) + " immutable staged definitions generated")
+        raw = bounded(args.model_manifest, 262144)
+        if hashlib.sha256(raw).hexdigest() != "6b1c2ab50305c0881c6994ddb01a26d0de7f4a861a75bbe56a06e6a886aab2b0":
+            raise ValueError("Unrecognised current source-model manifest")
+        models = json.loads(raw)["models"]
+        manifest = generate(args.staging, args.repo_root, args.expected_count, {m["id"] for m in models})
+        print("Authored " + str(manifest["records"]) + " current R3 source records; no native qualification")
     except (OSError, ValueError, KeyError, TypeError) as error:
-        parser.exit(2, str(error) + "\n")
+        print(str(error), file=sys.stderr)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

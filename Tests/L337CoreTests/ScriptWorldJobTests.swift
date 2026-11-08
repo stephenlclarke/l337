@@ -63,6 +63,7 @@ private struct WorldJobFixture {
   }
   func game(actor: Bool = false) throws -> (Game, UUID, UUID) {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .status
     game.scriptPacks = [pack]
     if actor { game.launch() }

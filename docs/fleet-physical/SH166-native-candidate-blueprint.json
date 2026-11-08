@@ -1,0 +1,96 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH166-complete29part-native-candidate-v1",
+  "ship": "SH166",
+  "name": "Camel Rescue",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "40cc092dc15ba1aa8a2b9bd67cd8c051663462df24374abaf46c798bbc147094",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH166-design.toml",
+    "bytes": 534022,
+    "sha256": "5d782369e19a839d28bce557aa327701b0d9904e6381880fbabe9cf161f56db4"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH166.toml",
+    "bytes": 558931,
+    "sha256": "c795a90d0f80bb80fe37f9a23ae6d241810ea025915f31a1131179b421cbe31a"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH166.json",
+    "bytes": 112561,
+    "sha256": "75d9262874760d662d35d0d1f69c5911be35e66a9cdf3967a15c6b4d98def806"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH166-native-candidate-recipe.py",
+    "bytes": 8764,
+    "sha256": "4de76bcd67b1bb269c43b4994baa037d92555a7bad4f4028f53cbbca73993022"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH166-native-candidate-tests.py",
+    "bytes": 9777,
+    "sha256": "89f2f5fb177c746ab36bbcb3fd5401f3648e0d95dd1c39d20f41a733708cd363"
+  },
+  "baseline": {
+    "declaredNativeFaces": 988,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "sidePodLoftSides": 3,
+    "centralBodyAndCockpitSides": 4,
+    "driveLoftSides": 3,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      16,
+      21,
+      24,
+      25,
+      27,
+      28
+    ],
+    "unchangedFixedOriginalParts": 21,
+    "status": "NEW coarse triangular sidepod/drive angular proposals; actual output count/full source-profile/void/material/UV fidelity UNKNOWN and may fail qualification"
+  },
+  "retained": [
+    "BOTH full5station sidepod envelopes/endcaps atX+-beam*.40,Y-.10,length*.82,width.18,height.18*.72",
+    "ALL TWELVE analytical recessed wells with original own station geometry/skin0/inset3",
+    "ALL SIX complete dockframe pieces, BOTH lateral/BOTH transverse/BOTH full luminous markers",
+    "Full5station centralbody/endcaps at(0,0,-length*.14),length*.66,width.38,height.26; full cockpit/support and both complete connected drives at xbeam*.38/radius.23",
+    "Exact original red-ivory palette/emission/material/texture/license/source and full regenerated UVs"
+  ],
+  "coordinates": "Own original length3.1/beam2.10/source axes/coordinates/origin/units retained. Actual camel family ONLY166, no Secretarybird165167 substitution. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Camel Rescue R3/name/game remain pending and unchanged",
+    "nativeCrew": 8,
+    "conversionCrew": 8,
+    "authority": "Cradle/frame/marker labels grant no operating rescue/dock/provider/guidance, installed hardware/power/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed own source/creator/primitive/resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All29 original parts/material sets stay, including ALL12wells/BOTHsidepods/fullcentralbody/ALL6dockpieces/cockpit/full drives",
+    "All FIVE original stations per pod and TWO per drive/radii stay; explicit component samplers restore4 before centralbody/cockpit then3 fordrives",
+    "Complete actual output must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "All21 fixed parts exact own original vertices/localfaces/materialsequences/UVs, ownpod5stationprofiles/offset/radii and both drive rings/radii required",
+    "Full coarse sidepod/drive continuous source-profile/void/material/UV/native fidelity requires G1 evidence and may reject, noautomaticacceptance"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run29part/exact21fixed/ALL12wells/ALL6dockpieces/side3central4sampler/profiles/rings-radii/UV/input checks then assess full coarse-profile/source/native fidelity. Reject unfaithful proposal without waiver. G4 continues independent originals."
+  }
+}

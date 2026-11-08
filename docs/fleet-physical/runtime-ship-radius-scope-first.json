@@ -1,0 +1,15 @@
+{
+  "status": "FIRST_FROZEN_BEFORE_NONSHIP_OWNER_SCOPE_CORRECTION",
+  "beforeCommit": "5c0395e477ee8638b1a76a1aba537e09cb7bd46e",
+  "file": "Sources/L337Core/GameplayAdmission.swift",
+  "bytes": 27595,
+  "sha256": "2ec8603ba6bcf7bd4377c6329ffc4cf770821bba457c4ab30c132ec89d485df9",
+  "ownedHunks": [
+    "safeSpawn otherRadius new RuntimeHullSource branch ONLY",
+    "spawnRadius new RuntimeHullSource branch ONLY"
+  ],
+  "reason": "RuntimeHullSource admits objectKind.ship only. Actual EMP occupied-pod producer uses catalogueSH040 capsule/.cargo/.emp; d960 nonstation condition incorrectly consumed capsule then returned nil/NaN. Restrict new ship route to actual objectKind.ship. Existing capsule/mission owners remain untouched; no capsule qualification claimed.",
+  "sourceEvidence": "EMPPersistenceRuntime.swift ejectOneEMPCrewMember lines180..206 actual SH040 pod request; RuntimeHullSource objectKind.ship guard",
+  "nativeCompilerTests": "UNRUN",
+  "capsOrCrewSeedChanges": 0
+}

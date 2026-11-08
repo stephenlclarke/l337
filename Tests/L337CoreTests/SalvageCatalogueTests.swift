@@ -3,47 +3,45 @@ import Testing
 @testable import L337Core
 
 @Suite struct SalvageCatalogueTests {
-  @Test func reviewedCapitalCarrierAndLargeHullProfilesUseActualCatalogueRecords() throws {
-    let expected: [String: String] = [
-      "SH043": "Farragut-class Battle Cruiser", "SH081": "Majestic-class Interdictor",
-      "SH161": "Military Fiasco Leviathan", "SH155": "Ionics Funnelweb",
-      "SH123": "Thargoid Titan", "SH171": "Liberator DSV2",
-      "SH078": "Long Range Cruiser", "SH079": "Lynx Bulk Carrier", "SH080": "Lynx Highliner",
-    ]
-    #expect(SalvageCatalogue.all.count == 37)
-    #expect(Set(SalvageCatalogue.all.map(\.catalogueShipID)).count == SalvageCatalogue.all.count)
-    for (id, name) in expected {
+  @Test func retainedSourceProfilesBindCurrentNamesAndExcludePendingOriginals() throws {
+    let expected = Set(["SH005", "SH006", "SH012", "SH013", "SH014", "SH019", "SH028",
+      "SH034", "SH102", "SH141"])
+    #expect(Set(SalvageCatalogue.all.map(\.catalogueShipID)) == expected)
+    #expect(SalvageCatalogue.all.count == expected.count)
+    let names = ["SH005": "Bison", "SH006": "Bison Mk II", "SH012": "Sable Liner",
+      "SH013": "Buffalo", "SH014": "Buffalo Mk II", "SH019": "Gazelle Explorer",
+      "SH028": "Lion Citadel", "SH034": "Frog Station", "SH102": "Dhole Haven",
+      "SH141": "Salamander Station"]
+    for (id, name) in names {
       let profile = try #require(SalvageCatalogue.profile(catalogueShipID: id))
-      #expect(profile.name == name && !profile.basis.isEmpty)
+      #expect(profile.name == name && profile.basis.contains(name))
     }
-    for ship in ShipCatalogue.all
-    where ship.shipClass == "Capital ship" || ship.shipClass == "Carrier/station" {
-      #expect(SalvageCatalogue.profile(catalogueShipID: ship.id) != nil)
+    let pending = Set(OriginalFleetPendingSourceRegistrations.records.keys)
+      .union(OriginalFleetRelativePendingSourceRegistrations.records.keys)
+      .union(OriginalFleetLarvaalPendingSourceRegistrations.records.keys)
+    for id in pending {
+      #expect(SalvageCatalogue.profile(catalogueShipID: id) == nil)
+      #expect(SalvageCatalogue.eligibility(catalogueShipID: id, ownership: .abandoned) == .unsupportedHull)
     }
-    #expect(try #require(ShipCatalogue.all.first { $0.id == "SH043" }).game != nil)
-    #expect(try #require(ShipCatalogue.all.first { $0.id == "SH161" }).game == nil)
   }
 
-  @Test func sourceRolesUseExplicitInstallationsAndReviewedHullRoles() throws {
+  @Test func retainedSourceRolesKeepExistingLootProfilesWithoutAlienDefaults() throws {
     let expected: [String: SalvageSourceRole] = [
-      "SH161": .militaryCapital, "SH043": .militaryCapital, "SH081": .militaryCapital,
-      "SH156": .weaponsPlatform, "SH164": .drugFactory, "SH102": .rockHermit,
-      "SH123": .thargoid, "SH079": .commercialCarrier, "SH005": .commercialTrader,
-      "SH012": .commercialTrader, "SH062": .commercialTrader, "SH028": .station,
-      "SH155": .generalShip, "SH171": .generalShip, "SH078": .generalShip,
-      "SH019": .generalShip, "SH045": .generalShip,
+      "SH005": .commercialTrader, "SH012": .commercialTrader,
+      "SH028": .station, "SH019": .generalShip,
     ]
     for (id, role) in expected {
-      #expect(
-        try #require(SalvageCatalogue.profile(catalogueShipID: id)).sourceRoles.contains(role))
+      #expect(try #require(SalvageCatalogue.profile(catalogueShipID: id)).sourceRoles.contains(role))
     }
     for profile in SalvageCatalogue.all {
       #expect(SalvageLootProfiles.profile(roles: profile.sourceRoles) != nil)
     }
+    #expect(SalvageCatalogue.profile(catalogueShipID: "SH123") == nil)
+    #expect(SalvageCatalogue.profile(catalogueShipID: "SH171") == nil)
   }
 
   @Test func nonflyableObjectsAndOccupiedOrProtectedCounterpartsNeverBecomeFreeSalvage() {
-    for id in ["SH162", "SH163", "SH040", "SH125", "SH023", "SH999"] {
+    for id in ["SH156", "SH161", "SH162", "SH163", "SH164", "SH040", "SH125", "SH023", "SH999"] {
       #expect(SalvageCatalogue.profile(catalogueShipID: id) == nil)
       #expect(
         SalvageCatalogue.eligibility(catalogueShipID: id, ownership: .abandoned) == .unsupportedHull
@@ -64,7 +62,7 @@ import Testing
         SalvageCatalogue.eligibility(
           catalogueShipID: id, ownership: .abandoned, missionProtected: true) == .missionProtected)
     }
-    for id in ["SH028", "SH034", "SH102", "SH141", "SH156", "SH164"] {
+    for id in ["SH028", "SH034", "SH102", "SH141"] {
       #expect(SalvageCatalogue.profile(catalogueShipID: id)?.role == .abandonedInfrastructure)
     }
   }
@@ -118,11 +116,12 @@ import Testing
       }
     }
     diagnostic?.checkpoint(.profilesDone)
-    let leviathan = try #require(SalvageCatalogue.profile(catalogueShipID: "SH161"))
-    #expect(leviathan.maximum.z - leviathan.minimum.z > 1500)
+    let wolf = try #require(ShipCatalogue.ship("SH161"))
+    #expect(wolf.name == "Wolf Citadel" && OriginalDetailedHullStage.blocksRuntime(wolf.id))
+    #expect(SalvageCatalogue.profile(catalogueShipID: wolf.id) == nil)
     let wheel = try #require(SalvageCatalogue.profile(catalogueShipID: "SH141"))
     #expect(wheel.bounds.radius > 0)
-    try expectActivatedOriginalTexturesAndHaflingerScale(diagnostic: diagnostic)
+    try expectActivatedOriginalTexturesAndSaigaScale(diagnostic: diagnostic)
     try expectDisabledProfileMeshesMatchResolvedRecords()
   }
 
@@ -135,7 +134,7 @@ import Testing
     #expect(actual.faceTextures == expected.faceTextures)
   }
 
-  private func expectActivatedOriginalTexturesAndHaflingerScale(
+  private func expectActivatedOriginalTexturesAndSaigaScale(
     diagnostic: ASANAllocatorDiagnostic.Token?
   ) throws {
     for (id, vertices, faces) in [("SH012", 132, 228), ("SH019", 172, 304)] {
@@ -153,8 +152,9 @@ import Testing
     }
     diagnostic?.checkpoint(.haflingerBegin, argument: "SH061")
     let ship = try #require(ShipCatalogue.ship("SH061"))
-    let authored = ship.design.rawMesh
-    let physical = try OriginalHullPhysicalContract.haflinger.get()
+    let physical = try OriginalHullPhysicalContract.saiga.get()
+    let authored = physical.model.nativeDesign.rawMesh
+    #expect(ship.name == "Saiga" && ship.nativeDesign == physical.model.nativeDesign)
     let cached = try #require(ShipCatalogue.rawMesh("SH061"))
     diagnostic?.checkpoint(.empBefore, argument: "SH061")
     let disabled = try #require(SalvageCatalogue.empProfile(catalogueShipID: "SH061"))
@@ -163,24 +163,35 @@ import Testing
     #expect(physical.metresPerSourceUnit == 20)
     #expect(cached.vertices != authored.vertices)
     expectSameMesh(cached, as: physical.physicalMesh)
-    expectSameMesh(disabled.mesh, as: authored)
+    expectSameMesh(disabled.mesh, as: physical.physicalMesh)
     diagnostic?.checkpoint(.haflingerDone, argument: "SH061")
   }
 
   private func expectDisabledProfileMeshesMatchResolvedRecords() throws {
     for ship in ShipCatalogue.all
     where SalvageCatalogue.profile(catalogueShipID: ship.id) == nil {
+      if OriginalDetailedHullStage.blocksRuntime(ship.id) {
+        #expect(SalvageCatalogue.empProfile(catalogueShipID: ship.id) == nil)
+        #expect(ShipCatalogue.rawMesh(ship.id) == nil)
+        continue
+      }
       guard ship.game != nil else {
         #expect(SalvageCatalogue.empProfile(catalogueShipID: ship.id) == nil)
         continue
       }
       let profile = try #require(SalvageCatalogue.empProfile(catalogueShipID: ship.id))
-      let expected = ship.design.rawMesh
+      let expected: Mesh
+      if let physical = ship.physicalSourceContract {
+        expected = physical.physicalMesh
+      } else if ["SH005", "SH006", "SH007", "SH013", "SH014", "SH026"].contains(ship.id) {
+        expected = try #require(ship.nativeDesign).rawMesh
+      } else {
+        expected = ship.design.rawMesh
+      }
       #expect(profile.catalogueShipID == ship.id)
       #expect(profile.role == .disabledOrdinaryShip && profile.physicalScale == 1)
       expectSameMesh(profile.mesh, as: expected)
       try expectSectionGeometryMatchesArrayProjection(profile, mesh: expected)
-      guard ship.id != "SH061" else { continue }
       let cached = try #require(ShipCatalogue.rawMesh(ship.id))
       let sharesVertices = profile.mesh.vertices.withUnsafeBufferPointer { profileVertices in
         cached.vertices.withUnsafeBufferPointer { cachedVertices in

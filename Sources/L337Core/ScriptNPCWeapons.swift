@@ -8,10 +8,12 @@ private struct ScriptGunAddress {
 
 extension Game {
   /// Cooling and aim belong to the frame; the native firing boundary owns every discharge.
-  mutating func advanceScriptNPCWeapons(delta: Double) {
+  mutating func advanceScriptNPCWeapons(delta: Double, bornAtEnd: Set<ActorIdentity> = []) {
     guard delta.isFinite, delta > 0, delta <= 60 else { return }
     let identities = bodies.filter { $0.scriptNPC != nil && $0.energy > 0 }.map(\.id)
     for identity in identities {
+      if let actor = bodies.first(where: { $0.id == identity })?.physical?.identity,
+        bornAtEnd.contains(actor) { continue }
       guard let npc = bodies.first(where: { $0.id == identity })?.scriptNPC else { continue }
       var addresses = (npc.fit.definition.lasers ?? []).map {
         ScriptGunAddress(weapon: $0.id, componentAlias: nil, componentID: nil)
@@ -67,7 +69,7 @@ extension Game {
     if let intent = npc.intent, intent.mode == .attack {
       target =
         intent.player
-        ? Vector3(0, 0, 0)
+        ? Self.nativePlayerSurfaceAim(from: origin, mesh: commander.playerMesh)
         : bodies.first { $0.missionActorID == intent.target && $0.energy > 0 }?.position
     } else {
       target = nil

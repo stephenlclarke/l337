@@ -96,11 +96,19 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     var savedNavigationTrade: Field<ScriptNavigationTradeState>?
     var savedOriginalSurvey: Field<NativeOriginalSurveyState>?
     var savedGlassMeridian: Field<NativeGlassMeridianState>?
+    var savedUnderTow: Field<NativeUnderTowState>?
+    var savedBorrowedVoice: Field<NativeBorrowedVoiceState>?
+    var savedQuietChoir: Field<NativeQuietChoirState>?
+    var savedMemoryAtlas: Field<NativeMemoryAtlasState>?
+    var savedNativeSignedPassageOpening: Field<NativeSignedPassageOpeningState>?
+    var savedAssemblyOfOrbits: Field<NativeAssemblyOfOrbitsState>?
     var savedArkReserve: Field<NativeInductionArkReserve>?
     var savedArkRecovery: Field<NativeArkRecoveryReceipt>?
     var savedNativeArk: NativeInductionArkState?
     var savedNativeCrewLog: Field<NativeInductionCrewLogState>?
     var savedNativeInductionUtility: Field<NativeInductionUtilityState>?
+    var savedIsolationWorkParent: Field<NativeIsolationWorkParentState>?
+    var savedIsolationWork: Field<NativeIsolationWorkState>?
     var savedNativeInductionClinic: NativeInductionClinicContract?
     var savedNativeInductionWorkshop: NativeInductionWorkshopContract?
     var savedNativeInductionSeed: NativeInductionSeedContract?
@@ -147,10 +155,18 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       initializeSavedNavigationTrade()
       initializeSavedOriginalSurvey()
       initializeSavedGlassMeridian()
+      initializeSavedUnderTow()
+      initializeSavedBorrowedVoice()
+      initializeSavedQuietChoir()
+      initializeSavedMemoryAtlas()
+      initializeSavedNativeSignedPassageOpening()
+      initializeSavedAssemblyOfOrbits()
       initializeSavedArkReserve()
       initializeSavedArkRecovery()
       initializeSavedNativeCrewLog()
       initializeSavedNativeInductionUtility()
+      initializeSavedIsolationWorkParent()
+      initializeSavedIsolationWork()
       initializeSavedFlightReception()
       initializeSavedNativePractice()
       initializeSavedSafeGunnery()
@@ -199,6 +215,31 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     }
 
     @inline(never)
+    private func initializeSavedUnderTow() {
+      savedUnderTow = Field<NativeUnderTowState>()
+    }
+    @inline(never)
+    private func initializeSavedBorrowedVoice() {
+      savedBorrowedVoice = Field<NativeBorrowedVoiceState>()
+    }
+    @inline(never)
+    private func initializeSavedQuietChoir() {
+      savedQuietChoir = Field<NativeQuietChoirState>()
+    }
+    @inline(never)
+    private func initializeSavedMemoryAtlas() {
+      savedMemoryAtlas = Field<NativeMemoryAtlasState>()
+    }
+    @inline(never)
+    private func initializeSavedNativeSignedPassageOpening() {
+      savedNativeSignedPassageOpening = Field<NativeSignedPassageOpeningState>()
+    }
+    @inline(never)
+    private func initializeSavedAssemblyOfOrbits() {
+      savedAssemblyOfOrbits = Field<NativeAssemblyOfOrbitsState>()
+    }
+
+    @inline(never)
     private func initializeSavedArkReserve() {
       savedArkReserve = Field<NativeInductionArkReserve>()
     }
@@ -216,6 +257,16 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func initializeSavedNativeInductionUtility() {
       savedNativeInductionUtility = Field<NativeInductionUtilityState>()
+    }
+
+    @inline(never)
+    private func initializeSavedIsolationWorkParent() {
+      savedIsolationWorkParent = Field<NativeIsolationWorkParentState>()
+    }
+
+    @inline(never)
+    private func initializeSavedIsolationWork() {
+      savedIsolationWork = Field<NativeIsolationWorkState>()
     }
 
     @inline(never)
@@ -291,11 +342,19 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       copySavedNavigationTrade(from: source)
       copySavedOriginalSurvey(from: source)
       copySavedGlassMeridian(from: source)
+      copySavedUnderTow(from: source)
+      copySavedBorrowedVoice(from: source)
+      copySavedQuietChoir(from: source)
+      copySavedMemoryAtlas(from: source)
+      copySavedNativeSignedPassageOpening(from: source)
+      copySavedAssemblyOfOrbits(from: source)
       copySavedArkReserve(from: source)
       copySavedArkRecovery(from: source)
       copySavedNativeArk(from: source)
       copySavedNativeCrewLog(from: source)
       copySavedNativeInductionUtility(from: source)
+      copySavedIsolationWorkParent(from: source)
+      copySavedIsolationWork(from: source)
       copySavedNativeInductionClinic(from: source)
       copySavedNativeInductionWorkshop(from: source)
       copySavedNativeInductionSeed(from: source)
@@ -408,6 +467,31 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     }
 
     @inline(never)
+    private func copySavedUnderTow(from source: Storage) {
+      savedUnderTow = source.savedUnderTow
+    }
+    @inline(never)
+    private func copySavedBorrowedVoice(from source: Storage) {
+      savedBorrowedVoice = source.savedBorrowedVoice
+    }
+    @inline(never)
+    private func copySavedQuietChoir(from source: Storage) {
+      savedQuietChoir = source.savedQuietChoir
+    }
+    @inline(never)
+    private func copySavedMemoryAtlas(from source: Storage) {
+      savedMemoryAtlas = source.savedMemoryAtlas
+    }
+    @inline(never)
+    private func copySavedNativeSignedPassageOpening(from source: Storage) {
+      savedNativeSignedPassageOpening = source.savedNativeSignedPassageOpening
+    }
+    @inline(never)
+    private func copySavedAssemblyOfOrbits(from source: Storage) {
+      savedAssemblyOfOrbits = source.savedAssemblyOfOrbits
+    }
+
+    @inline(never)
     private func copySavedArkReserve(from source: Storage) {
       savedArkReserve = source.savedArkReserve
     }
@@ -430,6 +514,16 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func copySavedNativeInductionUtility(from source: Storage) {
       savedNativeInductionUtility = source.savedNativeInductionUtility
+    }
+
+    @inline(never)
+    private func copySavedIsolationWorkParent(from source: Storage) {
+      savedIsolationWorkParent = source.savedIsolationWorkParent
+    }
+
+    @inline(never)
+    private func copySavedIsolationWork(from source: Storage) {
+      savedIsolationWork = source.savedIsolationWork
     }
 
     @inline(never)
@@ -599,11 +693,19 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       try decodeSavedNavigationTrade(from: values)
       try decodeSavedOriginalSurvey(from: values)
       try decodeSavedGlassMeridian(from: values)
+      try decodeSavedUnderTow(from: values)
+      try decodeSavedBorrowedVoice(from: values)
+      try decodeSavedQuietChoir(from: values)
+      try decodeSavedMemoryAtlas(from: values)
+      try decodeSavedNativeSignedPassageOpening(from: values)
+      try decodeSavedAssemblyOfOrbits(from: values)
       try decodeSavedArkReserve(from: values)
       try decodeSavedArkRecovery(from: values)
       try decodeSavedNativeArk(from: values)
       try decodeSavedNativeCrewLog(from: values)
       try decodeSavedNativeInductionUtility(from: values)
+      try decodeSavedIsolationWorkParent(from: values)
+      try decodeSavedIsolationWork(from: values)
       try decodeSavedNativeInductionClinic(from: values)
       try decodeSavedNativeInductionWorkshop(from: values)
       try decodeSavedNativeInductionSeed(from: values)
@@ -748,6 +850,31 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     }
 
     @inline(never)
+    private func decodeSavedUnderTow(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedUnderTow = Field(try values.decodeIfPresent(NativeUnderTowState.self, forKey: .savedUnderTow))
+    }
+    @inline(never)
+    private func decodeSavedBorrowedVoice(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedBorrowedVoice = Field(try values.decodeIfPresent(NativeBorrowedVoiceState.self, forKey: .savedBorrowedVoice))
+    }
+    @inline(never)
+    private func decodeSavedQuietChoir(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedQuietChoir = Field(try values.decodeIfPresent(NativeQuietChoirState.self, forKey: .savedQuietChoir))
+    }
+    @inline(never)
+    private func decodeSavedMemoryAtlas(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedMemoryAtlas = Field(try values.decodeIfPresent(NativeMemoryAtlasState.self, forKey: .savedMemoryAtlas))
+    }
+    @inline(never)
+    private func decodeSavedNativeSignedPassageOpening(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedNativeSignedPassageOpening = Field(try values.decodeIfPresent(NativeSignedPassageOpeningState.self, forKey: .savedNativeSignedPassageOpening))
+    }
+    @inline(never)
+    private func decodeSavedAssemblyOfOrbits(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedAssemblyOfOrbits = Field(try values.decodeIfPresent(NativeAssemblyOfOrbitsState.self, forKey: .savedAssemblyOfOrbits))
+    }
+
+    @inline(never)
     private func decodeSavedArkReserve(from values: KeyedDecodingContainer<CodingKeys>) throws {
       savedArkReserve = Field(
         try values.decodeIfPresent(
@@ -781,6 +908,24 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       savedNativeInductionUtility = Field(
         try values.decodeIfPresent(
           NativeInductionUtilityState.self, forKey: .savedNativeInductionUtility))
+    }
+
+    @inline(never)
+    private func decodeSavedIsolationWorkParent(from values: KeyedDecodingContainer<CodingKeys>)
+      throws
+    {
+      savedIsolationWorkParent = Field(
+        try values.decodeIfPresent(
+          NativeIsolationWorkParentState.self, forKey: .savedIsolationWorkParent))
+    }
+
+    @inline(never)
+    private func decodeSavedIsolationWork(from values: KeyedDecodingContainer<CodingKeys>)
+      throws
+    {
+      savedIsolationWork = Field(
+        try values.decodeIfPresent(
+          NativeIsolationWorkState.self, forKey: .savedIsolationWork))
     }
 
     @inline(never)
@@ -985,11 +1130,19 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       try encodeSavedNavigationTrade(to: &values)
       try encodeSavedOriginalSurvey(to: &values)
       try encodeSavedGlassMeridian(to: &values)
+      try encodeSavedUnderTow(to: &values)
+      try encodeSavedBorrowedVoice(to: &values)
+      try encodeSavedQuietChoir(to: &values)
+      try encodeSavedMemoryAtlas(to: &values)
+      try encodeSavedNativeSignedPassageOpening(to: &values)
+      try encodeSavedAssemblyOfOrbits(to: &values)
       try encodeSavedArkReserve(to: &values)
       try encodeSavedArkRecovery(to: &values)
       try encodeSavedNativeArk(to: &values)
       try encodeSavedNativeCrewLog(to: &values)
       try encodeSavedNativeInductionUtility(to: &values)
+      try encodeSavedIsolationWorkParent(to: &values)
+      try encodeSavedIsolationWork(to: &values)
       try encodeSavedNativeInductionClinic(to: &values)
       try encodeSavedNativeInductionWorkshop(to: &values)
       try encodeSavedNativeInductionSeed(to: &values)
@@ -1145,6 +1298,31 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     }
 
     @inline(never)
+    private func encodeSavedUnderTow(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
+      try values.encodeIfPresent(savedUnderTow!.value, forKey: .savedUnderTow)
+    }
+    @inline(never)
+    private func encodeSavedBorrowedVoice(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
+      try values.encodeIfPresent(savedBorrowedVoice!.value, forKey: .savedBorrowedVoice)
+    }
+    @inline(never)
+    private func encodeSavedQuietChoir(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
+      try values.encodeIfPresent(savedQuietChoir!.value, forKey: .savedQuietChoir)
+    }
+    @inline(never)
+    private func encodeSavedMemoryAtlas(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
+      try values.encodeIfPresent(savedMemoryAtlas!.value, forKey: .savedMemoryAtlas)
+    }
+    @inline(never)
+    private func encodeSavedNativeSignedPassageOpening(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
+      try values.encodeIfPresent(savedNativeSignedPassageOpening!.value, forKey: .savedNativeSignedPassageOpening)
+    }
+    @inline(never)
+    private func encodeSavedAssemblyOfOrbits(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
+      try values.encodeIfPresent(savedAssemblyOfOrbits!.value, forKey: .savedAssemblyOfOrbits)
+    }
+
+    @inline(never)
     private func encodeSavedArkReserve(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
       try values.encodeIfPresent(savedArkReserve!.value, forKey: .savedArkReserve)
     }
@@ -1173,6 +1351,22 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     ) throws {
       try values.encodeIfPresent(
         savedNativeInductionUtility!.value, forKey: .savedNativeInductionUtility)
+    }
+
+    @inline(never)
+    private func encodeSavedIsolationWorkParent(
+      to values: inout KeyedEncodingContainer<CodingKeys>
+    ) throws {
+      try values.encodeIfPresent(
+        savedIsolationWorkParent!.value, forKey: .savedIsolationWorkParent)
+    }
+
+    @inline(never)
+    private func encodeSavedIsolationWork(
+      to values: inout KeyedEncodingContainer<CodingKeys>
+    ) throws {
+      try values.encodeIfPresent(
+        savedIsolationWork!.value, forKey: .savedIsolationWork)
     }
 
     @inline(never)
@@ -1557,6 +1751,73 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     }
   }
 
+  var savedUnderTow: NativeUnderTowState? {
+    _read { yield payload.savedUnderTow!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedUnderTow!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedUnderTow!.value
+    }
+  }
+  var savedBorrowedVoice: NativeBorrowedVoiceState? {
+    _read { yield payload.savedBorrowedVoice!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedBorrowedVoice!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedBorrowedVoice!.value
+    }
+  }
+  var savedQuietChoir: NativeQuietChoirState? {
+    _read { yield payload.savedQuietChoir!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedQuietChoir!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedQuietChoir!.value
+    }
+  }
+  var savedMemoryAtlas: NativeMemoryAtlasState? {
+    _read { yield payload.savedMemoryAtlas!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedMemoryAtlas!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedMemoryAtlas!.value
+    }
+  }
+  var savedNativeSignedPassageOpening: NativeSignedPassageOpeningState? {
+    _read { yield payload.savedNativeSignedPassageOpening!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedNativeSignedPassageOpening!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedNativeSignedPassageOpening!.value
+    }
+  }
+  var savedAssemblyOfOrbits: NativeAssemblyOfOrbitsState? {
+    _read { yield payload.savedAssemblyOfOrbits!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedAssemblyOfOrbits!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedAssemblyOfOrbits!.value
+    }
+  }
+
   var savedGlassMeridian: NativeGlassMeridianState? {
     _read { yield payload.savedGlassMeridian!.value }
     set {
@@ -1626,6 +1887,30 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     _modify {
       ensureUniqueStorage()
       yield &payload.savedNativeInductionUtility!.value
+    }
+  }
+
+  var savedIsolationWorkParent: NativeIsolationWorkParentState? {
+    _read { yield payload.savedIsolationWorkParent!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedIsolationWorkParent!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedIsolationWorkParent!.value
+    }
+  }
+
+  var savedIsolationWork: NativeIsolationWorkState? {
+    _read { yield payload.savedIsolationWork!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedIsolationWork!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedIsolationWork!.value
     }
   }
 
@@ -1997,11 +2282,19 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     guard equalSavedNavigationTrade(lhs.payload, rhs.payload) else { return false }
     guard equalSavedOriginalSurvey(lhs.payload, rhs.payload) else { return false }
     guard equalSavedGlassMeridian(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedUnderTow(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedBorrowedVoice(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedQuietChoir(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedMemoryAtlas(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedNativeSignedPassageOpening(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedAssemblyOfOrbits(lhs.payload, rhs.payload) else { return false }
     guard equalSavedArkReserve(lhs.payload, rhs.payload) else { return false }
     guard equalSavedArkRecovery(lhs.payload, rhs.payload) else { return false }
     guard equalSavedNativeArk(lhs.payload, rhs.payload) else { return false }
     guard equalSavedNativeCrewLog(lhs.payload, rhs.payload) else { return false }
     guard equalSavedNativeInductionUtility(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedIsolationWorkParent(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedIsolationWork(lhs.payload, rhs.payload) else { return false }
     guard equalSavedNativeInductionClinic(lhs.payload, rhs.payload) else { return false }
     guard equalSavedNativeInductionWorkshop(lhs.payload, rhs.payload) else { return false }
     guard equalSavedNativeInductionSeed(lhs.payload, rhs.payload) else { return false }
@@ -2144,6 +2437,31 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
   }
 
   @inline(never)
+  private static func equalSavedUnderTow(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedUnderTow!.value == rhs.savedUnderTow!.value
+  }
+  @inline(never)
+  private static func equalSavedBorrowedVoice(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedBorrowedVoice!.value == rhs.savedBorrowedVoice!.value
+  }
+  @inline(never)
+  private static func equalSavedQuietChoir(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedQuietChoir!.value == rhs.savedQuietChoir!.value
+  }
+  @inline(never)
+  private static func equalSavedMemoryAtlas(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedMemoryAtlas!.value == rhs.savedMemoryAtlas!.value
+  }
+  @inline(never)
+  private static func equalSavedNativeSignedPassageOpening(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedNativeSignedPassageOpening!.value == rhs.savedNativeSignedPassageOpening!.value
+  }
+  @inline(never)
+  private static func equalSavedAssemblyOfOrbits(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedAssemblyOfOrbits!.value == rhs.savedAssemblyOfOrbits!.value
+  }
+
+  @inline(never)
   private static func equalSavedGlassMeridian(_ lhs: Storage, _ rhs: Storage) -> Bool {
     lhs.savedGlassMeridian!.value == rhs.savedGlassMeridian!.value
   }
@@ -2173,6 +2491,20 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     -> Bool
   {
     lhs.savedNativeInductionUtility!.value == rhs.savedNativeInductionUtility!.value
+  }
+
+  @inline(never)
+  private static func equalSavedIsolationWorkParent(_ lhs: Storage, _ rhs: Storage)
+    -> Bool
+  {
+    lhs.savedIsolationWorkParent!.value == rhs.savedIsolationWorkParent!.value
+  }
+
+  @inline(never)
+  private static func equalSavedIsolationWork(_ lhs: Storage, _ rhs: Storage)
+    -> Bool
+  {
+    lhs.savedIsolationWork!.value == rhs.savedIsolationWork!.value
   }
 
   @inline(never)
@@ -2360,11 +2692,19 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     case savedNavigationTrade
     case savedOriginalSurvey
     case savedGlassMeridian
+    case savedUnderTow
+    case savedBorrowedVoice
+    case savedQuietChoir
+    case savedMemoryAtlas
+    case savedNativeSignedPassageOpening
+    case savedAssemblyOfOrbits
     case savedArkReserve
     case savedArkRecovery
     case savedNativeArk
     case savedNativeCrewLog
     case savedNativeInductionUtility
+    case savedIsolationWorkParent
+    case savedIsolationWork
     case savedNativeInductionClinic
     case savedNativeInductionWorkshop
     case savedNativeInductionSeed
@@ -2509,6 +2849,30 @@ public struct ScriptInstance: Codable, Sendable, Equatable, Identifiable {
     _read { yield storage[0].savedFieldRelief }
     _modify { yield &storage[0].savedFieldRelief }
   }
+  var savedUnderTow: NativeUnderTowState? {
+    _read { yield storage[0].savedUnderTow }
+    _modify { yield &storage[0].savedUnderTow }
+  }
+  var savedBorrowedVoice: NativeBorrowedVoiceState? {
+    _read { yield storage[0].savedBorrowedVoice }
+    _modify { yield &storage[0].savedBorrowedVoice }
+  }
+  var savedQuietChoir: NativeQuietChoirState? {
+    _read { yield storage[0].savedQuietChoir }
+    _modify { yield &storage[0].savedQuietChoir }
+  }
+  var savedMemoryAtlas: NativeMemoryAtlasState? {
+    _read { yield storage[0].savedMemoryAtlas }
+    _modify { yield &storage[0].savedMemoryAtlas }
+  }
+  var savedNativeSignedPassageOpening: NativeSignedPassageOpeningState? {
+    _read { yield storage[0].savedNativeSignedPassageOpening }
+    _modify { yield &storage[0].savedNativeSignedPassageOpening }
+  }
+  var savedAssemblyOfOrbits: NativeAssemblyOfOrbitsState? {
+    _read { yield storage[0].savedAssemblyOfOrbits }
+    _modify { yield &storage[0].savedAssemblyOfOrbits }
+  }
   var savedGlassMeridian: NativeGlassMeridianState? {
     _read { yield storage[0].savedGlassMeridian }
     _modify { yield &storage[0].savedGlassMeridian }
@@ -2516,6 +2880,10 @@ public struct ScriptInstance: Codable, Sendable, Equatable, Identifiable {
   @inline(never)
   var hasHeldGlassMeridianRecorder: Bool {
     storage[0].savedGlassMeridian?.surveyor?.held == true
+  }
+  @inline(never)
+  var hasHeldGlassMeridianTimingStandard: Bool {
+    storage[0].savedGlassMeridian?.timingStandard?.held == true
   }
 
   @inline(never)
@@ -2589,6 +2957,16 @@ public struct ScriptInstance: Codable, Sendable, Equatable, Identifiable {
   var savedNativeInductionUtility: NativeInductionUtilityState? {
     _read { yield storage[0].savedNativeInductionUtility }
     _modify { yield &storage[0].savedNativeInductionUtility }
+  }
+
+  var savedIsolationWorkParent: NativeIsolationWorkParentState? {
+    _read { yield storage[0].savedIsolationWorkParent }
+    _modify { yield &storage[0].savedIsolationWorkParent }
+  }
+
+  var savedIsolationWork: NativeIsolationWorkState? {
+    _read { yield storage[0].savedIsolationWork }
+    _modify { yield &storage[0].savedIsolationWork }
   }
   var savedWayfarerInduction: NativeWayfarerInductionState? {
     _read { yield storage[0].savedWayfarerInduction }
@@ -2740,6 +3118,8 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
   var savedWayfarerRepairLoopStock: WayfarerRepairLoopStockLedger?
   var savedFleetDiscovery: NativeFleetDiscovery?
   var firstNativeCommoditySale: NativeFirstCommoditySale?
+  var firstNativeCommodityTrade: NativeFirstCommodityTrade?
+  var savedC01Inquiry: NativeC01InquiryState?
   var savedClueJournal: ScriptClueJournal?
   var financeLedger: ScriptFinanceLedger?
   var wormholeTransit: NativeWormholeTransitState?
@@ -2785,6 +3165,8 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     guard equalSavedWayfarerRepairLoopStock(lhs, rhs) else { return false }
     guard equalSavedFleetDiscovery(lhs, rhs) else { return false }
     guard equalFirstNativeCommoditySale(lhs, rhs) else { return false }
+    guard equalFirstNativeCommodityTrade(lhs, rhs) else { return false }
+    guard equalSavedC01Inquiry(lhs, rhs) else { return false }
     guard equalSavedClueJournal(lhs, rhs) else { return false }
     guard equalFinanceLedger(lhs, rhs) else { return false }
     guard equalWormholeTransit(lhs, rhs) else { return false }
@@ -2859,6 +3241,18 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     -> Bool
   {
     lhs.firstNativeCommoditySale == rhs.firstNativeCommoditySale
+  }
+
+  @inline(never)
+  private static func equalFirstNativeCommodityTrade(_ lhs: borrowing Self, _ rhs: borrowing Self)
+    -> Bool
+  {
+    lhs.firstNativeCommodityTrade == rhs.firstNativeCommodityTrade
+  }
+
+  @inline(never)
+  private static func equalSavedC01Inquiry(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Bool {
+    lhs.savedC01Inquiry == rhs.savedC01Inquiry
   }
 
   @inline(never)
@@ -2976,7 +3370,9 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     }
   }
   var valid: Bool {
-    guard firstNativeCommoditySale?.valid ?? true, savedFleetDiscovery?.valid ?? true,
+    guard firstNativeCommoditySale?.valid ?? true, firstNativeCommodityTrade?.valid ?? true,
+      savedFleetDiscovery?.valid ?? true,
+      savedC01Inquiry?.shapeValid ?? true,
       WayfarerFieldReliefSave.engineValid(self),
       OriginalConsentedFreightSupply.engineValid(self),
       savedClueJournal?.valid(engine: self) ?? true, worldJobsValid, booksValid,
@@ -3078,10 +3474,17 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     guard instanceWorkshopPrefixValid(instance) else { return false }
     guard instanceClinicPrefixValid(instance) else { return false }
     guard instanceUtilityPrefixValid(instance) else { return false }
+    guard NativeIsolationLeafValidation.valid(instance) else { return false }
     guard instanceCrewLogPrefixValid(instance) else { return false }
     guard instanceArkPrefixValid(instance) else { return false }
     guard instanceInductionPrefixValid(instance) else { return false }
     guard instanceMeridianPrefixValid(instance) else { return false }
+    guard NativeUnderTowSave.prefixValid(instance) else { return false }
+    guard NativeBorrowedVoiceSave.prefixValid(instance) else { return false }
+    guard NativeQuietChoirSave.prefixValid(instance) else { return false }
+    guard NativeMemoryAtlasSave.prefixValid(instance) else { return false }
+    guard NativeSignedPassageOpening.prefixValid(instance) else { return false }
+    guard NativeAssemblyOfOrbitsSave.prefixValid(instance) else { return false }
     guard instanceReceptionPrefixValid(instance) else { return false }
     guard instanceExtractionPrefixValid(instance) else { return false }
     guard instanceRecordRecoveryPrefixValid(instance) else { return false }
@@ -3243,7 +3646,10 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     guard let opening = instance.savedGlassMeridian,
       opening.permission.mission == instance.id, instance.payloads.isEmpty,
       NativeGlassMeridian.readingsValid(opening), NativeGlassMeridian.lossesValid(opening),
-      NativeC01Surveyor.shapeValid(opening), NativeC01ReservationAuditSave.shapeValid(opening)
+      NativeC01Surveyor.shapeValid(opening), NativeC01ReservationAuditSave.shapeValid(opening),
+      opening.timingStandard.map({ NativeC01TimingStandardSave.shapeValid($0) }) ?? true,
+      opening.laneRepair.map({ NativeC01LaneRepairSave.shapeValid($0) }) ?? true,
+      opening.clinicEscort.map({ NativeC01ClinicEscortSave.shapeValid($0) }) ?? true
     else { return false }
     return true
   }
@@ -3452,9 +3858,6 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     _ encounter: borrowing ScriptOwnedEncounter, key: String, owner: borrowing ScriptInstance
   ) -> Bool {
     guard key == encounter.id, encounter.valid else { return false }
-    if let provenance = encounter.legacyProvenance {
-      guard provenance.matches(owner: owner, encounter: encounter) else { return false }
-    }
     for index in encounter.actors.indices {
       guard encounter.actors.values[index].body.missionInstanceID == owner.id else { return false }
     }

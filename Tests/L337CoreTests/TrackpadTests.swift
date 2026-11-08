@@ -57,9 +57,10 @@ import Testing
   #expect(input.fingerCount == 0)
 }
 
-@Test func trackpadFlightHelpFitsEveryPageWhileUsingOtherScreensInSpace() {
+@Test func trackpadFlightHelpFitsEveryPageWhileUsingOtherScreensInSpace() throws {
   for screen in [Screen.front, .chart, .shortChart, .system, .market, .status, .inventory] {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.screen = screen
     game.key("k")
@@ -84,6 +85,7 @@ import Testing
   game.rearShield = game.commander.rearShieldCapacity
   let validHull = game.commander.valid
   try #require(validHull)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.bodies = [SpaceBody(id: 99, hull: .cargo, position: .init(0, 100, 5000))]
   let runtime = GameRuntime(game: game)

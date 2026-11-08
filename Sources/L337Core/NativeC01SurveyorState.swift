@@ -51,14 +51,15 @@ struct NativeC01SurveyorState: Codable, Sendable, Equatable {
   let source: NativeC01SurveyorSource
   var capture: NativeC01SurveyorCapture?
   var loss: NativeC01SurveyorLoss?
-  var held: Bool { capture != nil && loss == nil }
+  var archive: NativeC01RecorderArchive? = nil
+  var held: Bool { capture != nil && loss == nil && archive == nil }
 }
 
 enum NativeC01Surveyor {
   static let location = SystemIdentity(galaxy: 0, system: 164)
   static let encounter = "meridian-surveyor"
   static let aliases = ["disabled-harrier", "original-recorder"]
-  static let harrierModel = "asset:c01-harrier-65m"
+  static let harrierModel = "asset:c01-original-sh026-harrier"
   static let recorderModel = "asset:c01-recorder-8kg"
   static func actor(mission: UUID, alias: String) -> UUID {
     ScriptIdentity.uuid(
@@ -68,18 +69,26 @@ enum NativeC01Surveyor {
     ScriptIdentity.uuid("c01-original-recorder-custody-v1:\(permission)")
   }
   static func profile(recorder: Bool) -> ScriptNPCDefinition {
-    .init(
-      id: recorder ? "c01-original-recorder" : "c01-disabled-harrier",
-      name: recorder
-        ? "Original Glass Meridian flight recorder" : "Disabled Glass Meridian Harrier",
-      source: "L337 C01 explicit mission authoring, 22 October 2026",
-      basis: recorder
-        ? "Protected original 8kg recorder; closed 0.8 x 0.5 x 0.3m box."
-        : "Original SH026 Harrier identity, ROC-SH056 visual adapter; uniform65m calibration, conservative closed convex collision,18000kg. Uncrewed; mechanical propulsion and weapon failure, no EMP timer or fleet activation.",
-      model: recorder ? recorderModel : harrierModel, scale: 1,
-      energy: recorder ? 16 : 64, recharge: 0, speed: 0, acceleration: 0,
-      pitch: 0, yaw: 0, roll: 0, missiles: 0, fuel: 0, drive: nil,
-      ecm: false, bounty: 0, lasers: [], components: [])
+    if recorder {
+      return .init(
+        id: "c01-original-recorder", name: "Original Glass Meridian flight recorder",
+        source: "L337 C01 explicit mission authoring, 22 October 2026",
+        basis: "Protected original 8kg recorder; closed 0.8 x 0.5 x 0.3m box.",
+        model: recorderModel, scale: 1, energy: 16, recharge: 0, speed: 0, acceleration: 0,
+        pitch: 0, yaw: 0, roll: 0, missiles: 0, fuel: 0, drive: nil,
+        ecm: false, bounty: 0, lasers: [], components: [])
+    }
+    guard let original = try? NativeC01SurveyorGeometry.harrier.get() else {
+      preconditionFailure("Original SH026 Harrier native geometry and performance are required.")
+    }
+    return .init(
+      id: "c01-disabled-harrier", name: "Disabled Glass Meridian Harrier",
+      source: "L337 original SH026 Harrier catalogue and C01 disabled condition",
+      basis: "Same original native hull, mass and capacities. Current damaged energy64, empty fuel and shields, uncrewed, no weapons/ammunition/ECM; mechanical propulsion and weapon failure.",
+      model: harrierModel, scale: 1,
+      energy: original.performance.energy, recharge: original.performance.recharge,
+      speed: 0, acceleration: 0, pitch: 0, yaw: 0, roll: 0,
+      missiles: 0, fuel: 0, drive: nil, ecm: false, bounty: 0, lasers: [], components: [])
   }
   static let models: Result<[String: ShipDesign], any Error> = Result {
     [
@@ -144,6 +153,33 @@ enum NativeC01Surveyor {
     else { return false }
     return true
   }
+  static func isPreparedDisabledHarrier(_ actor: ScriptOwnedActor) -> Bool {
+    guard actor.presence == .prepared, actor.body.physical == nil,
+      let mission = actor.body.missionInstanceID
+    else { return false }
+    return original(actor, mission: mission, recorder: false)
+  }
+
+  static func initialResources(state: borrowing ScriptInstance, actor: ScriptOwnedActor) throws
+    -> NPCState?
+  {
+    guard state.definition == NativeGlassMeridian.stateID, state.digest == NativeGlassMeridian.digest,
+      actor.alias == aliases[0], definition(copy state, id: encounter) != nil,
+      isPreparedDisabledHarrier(actor), actor.body.missionInstanceID == state.id,
+      actor.body.energy == 64, !actor.body.ecmEnabled,
+      let original = try? NativeC01SurveyorGeometry.harrier.get(),
+      var resources = NPCResources.stock(original.performance)
+    else { throw SaveError.invalidCommander }
+    resources.frontShield = 0
+    resources.rearShield = 0
+    resources.fuel = 0
+    guard resources.valid else { throw SaveError.invalidCommander }
+    return .init(
+      role: .mission, origin: location, destination: location,
+      legalProvenance: .recorded, cargoProvenance: .recorded, routeProvenance: .recorded,
+      resources: resources, hasFuelScoops: false)
+  }
+
   static func nativeValid(_ physical: PhysicalActorState, recorder: Bool) -> Bool {
     guard physical.population == .mission, physical.npc?.role == .mission,
       physical.velocity.finite, physical.angularVelocity.finite,
@@ -152,13 +188,21 @@ enum NativeC01Surveyor {
       let spawn = physical.spawnIdentity, spawn.producer == .mission,
       spawn.system == physical.identity.system, spawn.visit == physical.identity.visit,
       spawn.sequence > 0, spawn.sequence < UInt64(Int64.max),
-      let resources = physical.npc?.resources, resources.valid,
-      resources.profile == .legacyEnergyOnly,
-      resources.energyCapacity == profile(recorder: recorder).energy,
-      resources.energyRecharge == 0, resources.frontCapacity == 0, resources.rearCapacity == 0,
-      resources.electrical == nil
+      let resources = physical.npc?.resources, resources.valid
     else { return false }
-    return true
+    if recorder {
+      return resources.profile == .legacyEnergyOnly
+        && resources.energyCapacity == profile(recorder: true).energy
+        && resources.energyRecharge == 0 && resources.frontCapacity == 0
+        && resources.rearCapacity == 0 && resources.electrical == nil
+    }
+    guard let original = try? NativeC01SurveyorGeometry.harrier.get() else { return false }
+    let game = original.performance
+    return resources.profile == .nativeHull
+      && resources.energyCapacity == game.energy && resources.energyRecharge == game.recharge
+      && resources.frontCapacity == game.shield && resources.rearCapacity == game.shield
+      && resources.shieldRecharge == game.shieldRecharge && resources.fuelCapacity == game.fuel
+      && resources.fuel != nil
   }
   static func consumed(_ id: UUID, commander: borrowing Commander) -> Bool {
     commander.scriptState.instances.values.contains { mission in
@@ -169,6 +213,7 @@ enum NativeC01Surveyor {
   @inline(never)
   static func shapeValid(_ state: borrowing NativeGlassMeridianState) -> Bool {
     if case .none = state.surveyor { return true }
+    guard NativeC01CompletionSave.archiveShapeValid(state) else { return false }
     let source = state.surveyor!.source
     guard state.readings.count == 2, source.valid, source.mission == state.permission.mission,
       source.permission == state.permission.operation,

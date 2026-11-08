@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "id": "SH120",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "b510e195c30517d6ad5cd4a04277612fdb4800198dffc8f01c695a95573f2eaf",
+  "detailedSourceSHA256": "4968b8ce9ac6fc316fe67b58dd04e7fb2297ab8d40aa20e8322a26540437fedc",
+  "componentSourceSHA256": "656d34be6678c64aa07043d0a0ccfaaae80feaedda6344b76fcce834097edfa4",
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "coordinateUnits": "metres",
+  "metresPerSourceUnit": 1,
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 2656.1871155643207,
+  "stockMassKg": 37186.61961790051,
+  "intrinsicHardwareMassKg": 3360.0,
+  "unroundedMassKg": 40546.61961790051,
+  "roundingReserveKg": 0.3803820994871785,
+  "dryMassKilograms": 40547,
+  "centreOfMassMetres": [
+    9.249366364884685e-17,
+    -1.1601591888085314,
+    0.03214888839574137
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    4419573.7104521915,
+    -4.074750573507394,
+    4.2917741420659314e-10,
+    -4.074750573507394,
+    3786333.021441018,
+    -395618.22106412903,
+    4.3645337182077657e-10,
+    -395618.22106412903,
+    4514783.39442884
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    4474190.124435718,
+    -4.074750573503043,
+    4.290568460569339e-10,
+    -4.074750573503043,
+    3786374.928441288,
+    -394105.9202081929,
+    4.363328036711173e-10,
+    -394105.9202081929,
+    4569357.901412097
+  ],
+  "reserveLocationMetres": [
+    9.249366364884685e-17,
+    -1.1601591888085314,
+    0.03214888839574137
+  ],
+  "positiveLeadingPrincipalMinors": [
+    4419573.7104521915,
+    16733977880561.135,
+    7.485856128446036e+19
+  ],
+  "zeroAreaSourceFaces": 0,
+  "stockComponents": [
+    {
+      "name": "tall forward sensing vault",
+      "areaSquareMetres": 1159.4982410632106,
+      "stockMassKg": 16232.975374885,
+      "areaCentroidMetres": [
+        7.20042243231487e-17,
+        9.305013988994138e-16,
+        2.0000000000000013
+      ],
+      "massFirst": [
+        -1.3073986337985843e-12,
+        -1.1613821015998838e-11,
+        32465.950749770003
+      ],
+      "massSecond": [
+        1129711.2403145717,
+        1.2505552149377763e-11,
+        -5.286437954055145e-12,
+        1.2505552149377763e-11,
+        2151631.931865005,
+        1.5776535633449384e-10,
+        -5.286437954055145e-12,
+        1.5776535633449384e-10,
+        99117.30669923977
+      ],
+      "verificationSecond": [
+        1129711.240314571,
+        1.17694298751303e-10,
+        1.4210854715202004e-14,
+        1.1951328815484885e-10,
+        2151631.931865006,
+        -1.8199663998075266e-10,
+        1.4210854715202004e-14,
+        -1.815383399161874e-10,
+        99117.30669924007
+      ]
+    },
+    {
+      "name": "tall gold sensing nucleus",
+      "areaSquareMetres": 564.3816486491058,
+      "stockMassKg": 7901.3430810874615,
+      "areaCentroidMetres": [
+        1.780270211993468e-17,
+        -4.2441248424043175e-17,
+        4.999999999999981
+      ],
+      "massFirst": [
+        -1.7541523789077473e-14,
+        6.369904603786836e-14,
+        39506.715405437295
+      ],
+      "massSecond": [
+        82586.40630528258,
+        -3.123890035539034e-13,
+        1.2079226507921703e-12,
+        -3.123890035539034e-13,
+        224919.0231762173,
+        -1.7975843036310835e-11,
+        1.2079226507921703e-12,
+        -1.7975843036310835e-11,
+        268962.98173122306
+      ],
+      "verificationSecond": [
+        82586.40630528258,
+        1.2209261379680925e-12,
+        -4.769518113789672e-13,
+        -1.044813541239975e-12,
+        224919.02317621754,
+        4.179712131957558e-12,
+        -2.5757174171303632e-14,
+        6.453448886389879e-12,
+        268962.9817312233
+      ]
+    },
+    {
+      "name": "rear curved balance lobe",
+      "areaSquareMetres": 420.0047618288532,
+      "stockMassKg": 5880.066665603941,
+      "areaCentroidMetres": [
+        -7.000000000000004,
+        -4.000000000000002,
+        -8.378007058014237
+      ],
+      "massFirst": [
+        -41160.46665922759,
+        -23520.266662415765,
+        -49263.24002602413
+      ],
+      "massSecond": [
+        308053.4664242082,
+        164643.9040121971,
+        344842.68018216826,
+        164643.9040121971,
+        124816.09006426913,
+        197052.96010409636,
+        344842.68018216826,
+        197052.96010409636,
+        635994.3610305625
+      ],
+      "verificationSecond": [
+        308053.4664242081,
+        164643.90401219734,
+        344842.6801821685,
+        164643.90401219734,
+        124816.09006426914,
+        197052.96010409665,
+        344842.6801821685,
+        197052.9601040967,
+        635994.3610305635
+      ]
+    },
+    {
+      "name": "inward sensing gland",
+      "areaSquareMetres": 46.148851097148814,
+      "stockMassKg": 646.0839153600848,
+      "areaCentroidMetres": [
+        -6.0000000000000195,
+        3.505537252085313e-17,
+        8.000000000000036
+      ],
+      "massFirst": [
+        -3876.5034921605106,
+        -2.5666968550552838e-14,
+        5168.671322880676
+      ],
+      "massSecond": [
+        23783.38662028096,
+        -3.236994006172722e-15,
+        -31012.027937284067,
+        -3.236994006172722e-15,
+        1201.7067667515807,
+        -1.8783238853181672e-13,
+        -31012.027937284067,
+        -1.8783238853181672e-13,
+        42047.2826204328
+      ],
+      "verificationSecond": [
+        23783.38662028094,
+        7.984238270530852e-14,
+        -31012.02793728401,
+        -6.223840887109588e-14,
+        1201.7067667515762,
+        -9.126328165409703e-13,
+        -31012.02793728401,
+        -6.568339622203823e-13,
+        42047.28262043268
+      ]
+    },
+    {
+      "name": "rear curved balance lobe",
+      "areaSquareMetres": 420.00476182885336,
+      "stockMassKg": 5880.06666560394,
+      "areaCentroidMetres": [
+        6.999999999999998,
+        -3.999999999999999,
+        -8.378007058014234
+      ],
+      "massFirst": [
+        41160.4666592276,
+        -23520.266662415765,
+        -49263.24002602413
+      ],
+      "massSecond": [
+        308053.46642420837,
+        -164639.8292616236,
+        -344842.68018216867,
+        -164639.8292616236,
+        124816.09006426913,
+        197052.9601040964,
+        -344842.68018216867,
+        197052.9601040964,
+        635994.3610305625
+      ],
+      "verificationSecond": [
+        308053.4664242078,
+        -164639.82926162385,
+        -344842.6801821682,
+        -164639.82926162385,
+        124816.09006426913,
+        197052.9601040967,
+        -344842.6801821682,
+        197052.9601040967,
+        635994.3610305634
+      ]
+    },
+    {
+      "name": "inward sensing gland",
+      "areaSquareMetres": 46.148851097148814,
+      "stockMassKg": 646.0839153600848,
+      "areaCentroidMetres": [
+        6.000000000000017,
+        3.505537252085313e-17,
+        8.000000000000036
+      ],
+      "massFirst": [
+        3876.50349216051,
+        -2.5666968550552838e-14,
+        5168.671322880676
+      ],
+      "massSecond": [
+        23783.386620280962,
+        1.0666814653781387e-13,
+        31012.027937284067,
+        1.0666814653781387e-13,
+        1201.7067667515807,
+        -1.8783238853181672e-13,
+        31012.027937284067,
+        -1.8783238853181672e-13,
+        42047.2826204328
+      ],
+      "verificationSecond": [
+        23783.386620280948,
+        1.199643683003071e-13,
+        31012.027937284005,
+        6.157704554587973e-14,
+        1201.7067667515762,
+        -9.126328165409703e-13,
+        31012.027937284005,
+        -6.568339622203823e-13,
+        42047.28262043268
+      ]
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 3,
+      "anchorName": "inward sensing gland",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -6.0000000000000195,
+        3.505537252085313e-17,
+        8.000000000000036
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 5,
+      "anchorName": "inward sensing gland",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        6.000000000000017,
+        3.505537252085313e-17,
+        8.000000000000036
+      ]
+    },
+    {
+      "name": "Empty intrinsic power system",
+      "count": 1,
+      "eachKg": 750,
+      "anchorComponent": 0,
+      "anchorName": "tall forward sensing vault",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 750,
+      "anchorMetres": [
+        7.20042243231487e-17,
+        9.305013988994138e-16,
+        2.0000000000000013
+      ]
+    },
+    {
+      "name": "Empty fuel-containment and transfer system",
+      "count": 1,
+      "eachKg": 180,
+      "anchorComponent": 0,
+      "anchorName": "tall forward sensing vault",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 180,
+      "anchorMetres": [
+        7.20042243231487e-17,
+        9.305013988994138e-16,
+        2.0000000000000013
+      ]
+    },
+    {
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+      "count": 2,
+      "eachKg": 120,
+      "anchorComponent": 0,
+      "anchorName": "tall forward sensing vault",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 240,
+      "anchorMetres": [
+        7.20042243231487e-17,
+        9.305013988994138e-16,
+        2.0000000000000013
+      ]
+    },
+    {
+      "name": "Control and sensing system",
+      "count": 1,
+      "eachKg": 90,
+      "anchorComponent": 0,
+      "anchorName": "tall forward sensing vault",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 90,
+      "anchorMetres": [
+        7.20042243231487e-17,
+        9.305013988994138e-16,
+        2.0000000000000013
+      ]
+    },
+    {
+      "name": "Empty carried-equipment interfaces",
+      "count": 1,
+      "eachKg": 140,
+      "anchorComponent": 0,
+      "anchorName": "tall forward sensing vault",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 140,
+      "anchorMetres": [
+        7.20042243231487e-17,
+        9.305013988994138e-16,
+        2.0000000000000013
+      ]
+    },
+    {
+      "name": "Empty launcher system, no ammunition",
+      "count": 1,
+      "eachKg": 160,
+      "anchorComponent": 0,
+      "anchorName": "tall forward sensing vault",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 160,
+      "anchorMetres": [
+        7.20042243231487e-17,
+        9.305013988994138e-16,
+        2.0000000000000013
+      ]
+    }
+  ],
+  "operations": {
+    "coordinateConversions": 10254,
+    "faceIndexChecks": 20448,
+    "triangleAreaEvaluations": 6816,
+    "analyticMomentEvaluations": 6816,
+    "quadratureMomentEvaluations": 20448,
+    "hardwareAllocations": 8,
+    "sourceParses": 1,
+    "resultRecords": 1
+  },
+  "sourceGeometryNotEdited": true,
+  "nativeQualification": "UNRUN; source budget never activates a hull"
+}

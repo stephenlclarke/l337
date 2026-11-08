@@ -1,0 +1,171 @@
+{
+  "schema": "l337.closed-family-native-tessellation-proposal/1",
+  "id": "wolf-four-actual-ship-members-complete29part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH157",
+      "name": "Wolf Scout",
+      "r3ContractSHA256": "f0d74284c9d18ebf3116b8750fdc39f8aa1adefc36b73009230b879c4fd9d961",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH157-design.toml",
+        "bytes": 317457,
+        "sha256": "065e52fa27d9d46ea52229e7a7135e5d6b49bb2d39edcb50a16fd1154cf30e0c"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH157.toml",
+        "bytes": 341560,
+        "sha256": "98b1f12fa74ed0434501e8de2d9acda4d192ef7d2d29297f1ef1ca638f14f506"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH157.json",
+        "bytes": 69643,
+        "sha256": "26ab255379875fe33fd05177a5612ebdfbcfbcb707062d015874431aff4d1ef4"
+      },
+      "declaredOriginalNativeFaces": 764,
+      "originalComponents": 29,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own original ship resource remains pending; no family identity/mechanics/crew/station fallback"
+    },
+    {
+      "id": "SH158",
+      "name": "Wolf Mk I",
+      "r3ContractSHA256": "08748137eeec587b584f66faa9d6139c7a41b45d9ed8920aa1498eb2f50ae024",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH158-design.toml",
+        "bytes": 326777,
+        "sha256": "2a4f09b965f5fcbb38105bb3a11a4fe9245a6cf6be93895bcf888b06a9219a3b"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH158.toml",
+        "bytes": 350854,
+        "sha256": "5bce93d8cf1fdc578d608a5634a9b42e064f71a3f9cf3408eb99cd43c9e4189f"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH158.json",
+        "bytes": 69643,
+        "sha256": "aa6c9aa1c92e32db8885595f6c3e105011aefb7185af3f468b82c3a49a68335a"
+      },
+      "declaredOriginalNativeFaces": 764,
+      "originalComponents": 29,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own original ship resource remains pending; no family identity/mechanics/crew/station fallback"
+    },
+    {
+      "id": "SH159",
+      "name": "Wolf Mk II",
+      "r3ContractSHA256": "3e9dace75fa8fea326ff95d4137a49dd3b6918a86bcb1daeaaa7a9605e06d55a",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH159-design.toml",
+        "bytes": 326399,
+        "sha256": "6a683a22e7fb9238426da2f284d1eacb29bb008b4b3514208d18e666af0569eb"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH159.toml",
+        "bytes": 350492,
+        "sha256": "8f35cdf40aa1464b2ce1562fb7b12da535d7dee3a13bdeb66601203dbd75bf6a"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH159.json",
+        "bytes": 69643,
+        "sha256": "7fc451d006028511315f2fd08bdf8f39074775f9354640c8676561e60dd25cf9"
+      },
+      "declaredOriginalNativeFaces": 764,
+      "originalComponents": 29,
+      "nativeCrew": 2,
+      "conversionCrew": 2,
+      "status": "Own original ship resource remains pending; no family identity/mechanics/crew/station fallback"
+    },
+    {
+      "id": "SH160",
+      "name": "Wolf Cutter",
+      "r3ContractSHA256": "59dd3fc84c4188f5b16873859cfab2eaafd28bba688e25d1cdb52b9b1ee9419e",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH160-design.toml",
+        "bytes": 327175,
+        "sha256": "febeb15ca6ed5dc6b53b3c59f8405edec733ff85af13f923fab3122d14f73083"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH160.toml",
+        "bytes": 351303,
+        "sha256": "085dbdafb20e8f4487d8dcefb298e17ec2e41e22ef1bac8c4d6d61b6f236a9cf"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH160.json",
+        "bytes": 69643,
+        "sha256": "580c981873eb79531763a9ff56adf31e0bdfe45299f5b559f5cb98d02b634d17"
+      },
+      "declaredOriginalNativeFaces": 764,
+      "originalComponents": 29,
+      "nativeCrew": 3,
+      "conversionCrew": 3,
+      "status": "Own original ship resource remains pending; no family identity/mechanics/crew/station fallback"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/wolf-native-candidate-recipe.py",
+    "bytes": 10736,
+    "sha256": "6b1d3f9e1847a383661484d2bda7ce19e236041d0e4443e2ce1ecf1530bdb6fd"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/wolf-native-candidate-tests.py",
+    "bytes": 10179,
+    "sha256": "5bff32cc42ada852b7059d63d3a0e59533df4315e0a7463654b47d16842d1930"
+  },
+  "limit": 512,
+  "sampling": {
+    "bodyLoftSides": 6,
+    "cockpitOnlySides": 4,
+    "driveLoftSides": 4,
+    "allPodStationsRetained": 5,
+    "allDriveStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      12,
+      17,
+      20,
+      21,
+      23,
+      24
+    ],
+    "unchangedFixedPartsPerMember": 23,
+    "status": "NEW angular approximations only; actual output count/full source-profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Both complete box spines/BOTH shoulder envelopes, ALL SIX shoulder wells",
+    "Both original transverse bridges and full5station centralforward envelope/ALL FOUR analytical service wells",
+    "Full cockpit/support and both connected complete drive supports/casings/luminous recesses",
+    "ALL FOUR genuine military structural mount pieces, not installed guns/paid devices",
+    "Each own actual mark0/1/2/3 dimensions, exact navy-copper palette/emission/material/texture/license/source and regenerated complete face UVs"
+  ],
+  "coordinates": "Original RECIPES[SH157] base length3.8/beam1.85 times genuine mark over actualfamily[157,158,159,160,161]. Explicit allowed shipIDs157160 only; station161 remains separate. No recenter/rescale/unit/calibration inference.",
+  "runtime": "Original per-ID resources/R3/native-conversion crew1/1/2/3 and all runtime/source/fitting/EMP/acquisition/save/mission guards unchanged. Mount labels install no paidkit/gun/origin/hardware/power/people/source/actor/blueprint authority.",
+  "stopRules": [
+    "Explicit closed four actual ship IDs and own source/resource/R3 hashes; no name/family/prefix/othermember/station161 substitution",
+    "All29 parts and exact original material sets retained, no omitted spines/shoulders/wells/mounts",
+    "All23 own fixed components exact original vertices/localfaces/material sequence/UVs",
+    "Complete actual output must fit512 and genuine closure/winding or refuse without waiver",
+    "Full curved-source/profile/void/material/UV/native/occupied/installed qualification remains unknown until G1/source-owner evidence"
+  ],
+  "blocker": {
+    "missing": "Actual output/fidelity/native evidence and authentic occupied/installed hardware/people/power/empty-loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 explicitly generate/check each own29part/exact23fixed/all10wells/mounts/markstations/UV/inputcrossmember rejection, then full fidelity/native qualification. G4 continues independent original entries."
+  }
+}

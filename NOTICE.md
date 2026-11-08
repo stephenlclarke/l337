@@ -26,19 +26,21 @@ Elite was created by David Braben and Ian Bell. The project credits Mark Moxon's
 
 ## BBC-derived material
 
-The numerical Constrictor/Thargon blueprints in `Sources/EliteCore/NavalShips.swift` and any retained original Elite narrative or design material are excluded from the MIT grant. The renderer, native control/simulation implementation and original explanatory prose are separately authored; those additions do not relicense the underlying material.
+The numerical Constrictor/Thargon blueprints in `Sources/L337Core/NavalShips.swift` and any retained original Elite narrative or design material are excluded from the MIT grant. The renderer, native control/simulation implementation and original explanatory prose are separately authored; those additions do not relicense the underlying material.
 
 The [pinned BBC source repository](https://github.com/markmoxon/elite-source-code-6502-second-processor/tree/9080bd09c814b43c9c82571493c74bfb447aa607#a-note-on-licences-copyright-etc) explicitly supplies no licence and retains original copyright. Public source availability, attribution and a noncommercial project are not a reuse licence. This repository does not claim permission to sublicense that material or that the complete game has been cleared for redistribution. See the bundled [BBC provenance notice](Sources/L337Core/Resources/Legal/BBC-PROVENANCE.txt). The original rights remain with their holders.
 
 ## Distribution
 
-Renderer-generated `docs/elite.png`, `docs/start-sequence.gif`, `Resources/Elite.icns` and `docs/images/elite-icon.png` contain the adapted Oolite Cobra Mk III and are distributed under CC-BY-NC-SA-3.0, with attribution to the Oolite artwork contributors above and Stephen Clarke for the native rendering/composition. Their generation by this project's renderer does not turn the depicted model into MIT artwork.
+Earlier Elite-branded icons and README media depicted an adapted Oolite Cobra Mk III under CC-BY-NC-SA-3.0, credited to the Oolite artwork contributors above and Stephen Clarke for the native rendering and composition. This attribution applies to the historical artwork.
 
-Keep the applicable copyright, attribution and licence notices with redistributed material. The standard app build includes this notice, the MIT licence, all bundled asset notices and the Creative Commons legal codes in `Elite.app/Contents/Resources`. Preserve the per-model licence metadata and additional source terms when redistributing adapted meshes or renderer-generated media containing those meshes.
+The L337 icon and title use the project-authored Larvaal Sovereign (SH123). The README gallery uses the mesh of each named catalogue entry. Imported gallery artwork retains the terms and credits in its model definition, including the applicable terms for adapted Oolite models.
+
+Keep the applicable copyright, attribution and licence notices with redistributed material. The standard app build includes this notice, the MIT licence, all bundled asset notices and the Creative Commons legal codes in `L337.app/Contents/Resources`. Preserve the per-model licence metadata and additional source terms when redistributing adapted meshes or renderer-generated media containing those meshes.
 
 ## Individual ship definitions
 
-The runtime ship catalogue and numerical geometry now live in `Sources/EliteCore/Resources/Ships/*.toml`. The 77 imported models retain the original terms and custody metadata in each definition and the preserved asset notices. Ninety-four original project designs are MIT licensed. Generated GIFs depict each definition and follow that design's listed terms; the central source/design appendix records the distinction. TOMLDecoder 0.4.5 is MIT licensed, with its full notice packaged in `Legal/TOMLDecoder-LICENSE.md`.
+The runtime ship catalogue and numerical geometry now live in `Sources/L337Core/Resources/Ships/*.toml`. The 77 imported models retain the original terms and custody metadata in each definition and the preserved asset notices. Ninety-four original project designs are MIT licensed. Generated GIFs depict each definition and follow that design's listed terms; the central source/design appendix records the distinction. TOMLDecoder 0.4.5 is MIT licensed, with its full notice packaged in `Legal/TOMLDecoder-LICENSE.md`.
 
 ## Liberator DSV2 adaptation
 

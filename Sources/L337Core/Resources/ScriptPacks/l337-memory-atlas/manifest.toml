@@ -1,0 +1,24 @@
+# Original Memory Atlas opening. Testimony is not an instrument observation.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.memory-atlas"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2"]
+priority = 592
+source = "Original C25 Memory Atlas from Meridian c70110b292077588a0855fb48127adfb1b611c9d; memory-atlas.json SHA256 376678f1e4ca646d299e2205739e74f81f02b525a6a2f187db0ce9893218a7d6. No diary consent, landmark birth/reading, instrument test, living custodian receiving, settlement, payment or clue is produced by this module."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "memory-atlas"
+title = "The Memory Atlas"
+briefing = "ORR: A beautiful memory is not a measured approach vector.\n\nA navigation publisher has combined voluntary travel diaries with instrument surveys and now presents memories as exact route measurements. The commander revisits three disputed orbital landmarks, separates consented testimony from physical data and chooses an annotated public atlas or a custodian-held memory archive.\n\nAt Reris in Galaxy 1, after one ordinary trade. No imported score gate or source campaign prerequisite. The reference loan needs one tonne of free hold. The original reference is collected here before the survey departure. The settlement choice is made with actual arrived delegates at the witness receiver; final return/audit remains at this issuer."
+destination = "Galaxy 1 / Reris / Nedasen / Cemalis / Ledanor / original Reris audit"
+reward = "7200 CR only after actual independent landmark observations, both instrument tests, living custodian receiving, both selected settlement proofs and original watcher return. The source clue accompanies successful terminal settlement."
+milestones = ["Accept The Memory Atlas at Reris.", "Collect the identified one-tonne reference instrument from Agent Mara Vale.", "Observe three actual orbital landmarks independently of the consented travel diaries.", "Compare two landmark instruments with the onboard reference watcher.", "Verify actual safe transit and living reception of the consenting diary custodian to the archive receiving berth.", "At the actual witness receiving station, choose the settlement with the arrived authorised operator delegates.", "Verify both independent proofs for the selected settlement.", "Return the reference instrument and confirm all physical receiving and settlement receipts.", "Confirm successful completion, the recorded settlement and the once-only fee."]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"

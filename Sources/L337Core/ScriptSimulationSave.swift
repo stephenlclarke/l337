@@ -1,7 +1,7 @@
 import Foundation
 
 /// Native gameplay counters must resume independently of UI clocks and script-local RNG.
-struct ScriptSimulationSave: Codable, Sendable {
+struct ScriptSimulationSave: Codable, Sendable, Equatable {
   private enum CodingKeys: String, CodingKey {
     case randomState, fireCooldown, spawnClock, missionLoopCounter, missionSpawnDelay, ecmFrames
     case ecmRemainingDuration, enemyECMSource, missileCooldown, cabinTemperature, altitude, solar

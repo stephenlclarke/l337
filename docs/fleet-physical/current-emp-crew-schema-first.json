@@ -1,0 +1,291 @@
+{
+  "status": "FIRST_EXACT_CURRENT_CREW_SCHEMA_PLUS_TEST_DRAFTS_NO_REPO_EDITS",
+  "beforeCommit": "1a09a43bc2f0d0215a4f5ee718de4518f58a9926",
+  "pins": [
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "bytes": 16611,
+      "sha256": "c6b5b9613643b84ad1e1ca1b06a1105da9334b88f9e97c99475c02bc65feecf2"
+    },
+    {
+      "path": "Sources/L337Core/EMPPersistenceRuntime.swift",
+      "bytes": 23473,
+      "sha256": "14100eaf35bd1366344eec44309ece91c2597d92ef51948659265f2355c63853"
+    },
+    {
+      "path": "Sources/L337Core/NativePeopleState.swift",
+      "bytes": 32200,
+      "sha256": "1abeb0837c10d2148f6ac0ad50bdbb25ad95b35eb9499c4bff9427b7e308c400"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18744,
+      "sha256": "c66d53a177cd709582bdea8ba16df4f2d2894f3e648e752995b5c1c9e1074cf4"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "bytes": 20216,
+      "sha256": "e600b6bda7ea6ebddc562c72be58d3f4fa070f8540c7f8eb97e05b518eab824f"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeopleCensusTests.swift",
+      "bytes": 12233,
+      "sha256": "a8d084d910870ebbe9c42c31d3ef739c1a3fb6a035c73f22aa9eb49e10b387ea"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeRescueTargetingTests.swift",
+      "bytes": 6494,
+      "sha256": "80d33501ce5e32a1ea3b811942b7eba81ffd06aef3265a8896e3b62d4a2b873a"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePodProtectionTests.swift",
+      "bytes": 7374,
+      "sha256": "1782fd4de9ffad9ca603decf5f6fe4b6446b98791eabad306c22f0bbc3829ee2"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPCurrentCatalogueReleaseTests.swift",
+      "bytes": 17079,
+      "sha256": "3124b53b09e84993f2342db79645d1e21d05475a2651313653964693027449c8"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPCurrentRecordRecoveryTests.swift",
+      "bytes": 6025,
+      "sha256": "71a5973a61aff1c04f4f9975c3223c1bf2811fb91203455d1a52ddafd7505270"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 12543,
+      "sha256": "510f626c11e7a262b580ea1a5bd4c6ae3c52358d162167c0ad30e8fa4ae304e0"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationPoliceSourceTests.swift",
+      "bytes": 10294,
+      "sha256": "0b79f999bac56db5cf7712352644e301b772f31bcc7c8434ecc9e79a72d7839d"
+    }
+  ],
+  "sourceEdits": [
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "struct EMPLegacyCrewEjection: Equatable, Codable, Sendable {\n  let ordinal: Int\n  let time: Double\n}\n\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "  let legacyTiming: Bool\n  var actorBindings: [ActorIdentity]\n  let legacyPods: [Int]\n  let legacyNextEjectionAt: Double?\n  var legacyEmissions: [EMPLegacyCrewEjection]",
+      "new": "  var actorBindings: [ActorIdentity]"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "      && (legacyTiming ? ejections.isEmpty : (1...crewTotal).contains(ejections.count))\n      && (legacyTiming\n        || (legacyPods.isEmpty && legacyEmissions.isEmpty && legacyNextEjectionAt == nil))\n      && legacyPods.count <= crewTotal && legacyEmissions.count <= crewTotal\n      && legacyPods == Array(0..<legacyPods.count)\n      && (!legacyTiming\n        || legacyNextEjectionAt.map { $0.isFinite && $0 >= incident.physicalTime } == true)\n      && legacyEmissions.enumerated().allSatisfy { index, entry in\n        (0..<crewTotal).contains(entry.ordinal) && entry.time.isFinite && entry.time < deadline\n          && entry.time\n            >= (index == 0\n              ? (legacyNextEjectionAt ?? .infinity) : legacyEmissions[index - 1].time + 1)\n      }\n",
+      "new": "      && (1...crewTotal).contains(ejections.count)\n"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "    case incident, weapon, weaponOwner, ejections, legacyTiming, actorBindings, legacyPods,\n      legacyNextEjectionAt,\n      legacyEmissions",
+      "new": "    case incident, weapon, weaponOwner, ejections, actorBindings"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "    guard let legacyPods = try NativePeopleDecoding.array(values, key: .legacyPods, type: Int.self),\n      let legacyEmissions = try NativePeopleDecoding.array(\n        values, key: .legacyEmissions, type: EMPLegacyCrewEjection.self)\n    else { throw SaveError.invalidCommander }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "      ejections: schedule,\n      legacyTiming: try values.decode(Bool.self, forKey: .legacyTiming), actorBindings: bindings,\n      legacyPods: legacyPods,\n      legacyNextEjectionAt: try values.decodeIfPresent(Double.self, forKey: .legacyNextEjectionAt),\n      legacyEmissions: legacyEmissions)",
+      "new": "      ejections: schedule, actorBindings: bindings)"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "      if let emitted = episode.legacyEmissions.first(where: { $0.ordinal == ordinal }) {\n        return emitted.time\n      }\n      if episode.legacyPods.contains(ordinal) { return episode.incident.physicalTime }\n    }\n    // A genuine pre-24 pod has no historical ejection timestamp.\n    return disableEpisodes.isEmpty ? disableIncident.physicalTime : nil\n  }\n",
+      "new": "    }\n    return nil\n  }\n"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "    if episode.legacyTiming { return time >= nextEjectionAt ? aboardOrdinals.first : nil }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "    if disableEpisodes.isEmpty, incident != disableIncident {\n      var candidate = self\n      guard candidate.installLegacyCrewEpisode(),\n        candidate.appendCrewDisableEpisode(\n          incident: incident, weapon: weapon, owner: owner, ejections: ejections)\n      else { return false }\n      self = candidate\n      return true\n    }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "      ejections: ejections, legacyTiming: false, actorBindings: [victim],\n      legacyPods: [], legacyNextEjectionAt: nil, legacyEmissions: [])",
+      "new": "      ejections: ejections, actorBindings: [victim])"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "      savedDisableEpisodes == nil || !disableEpisodes.isEmpty,",
+      "new": "      !disableEpisodes.isEmpty,"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "    if let current = disableEpisodes.last {\n      guard\n        current.legacyTiming\n          || Set(aboardOrdinals).isSubset(of: Set(current.ejections.map(\\.ordinal)))\n      else { return false }\n      if !current.legacyTiming, savedDeceasedOrdinals != nil,\n        !Set(deceasedOrdinals).isSubset(of: Set(current.ejections.map(\\.ordinal)))\n      {\n        return false\n      }\n    } else if savedCrewCaptures != nil || savedDeceasedOrdinals != nil {\n      return false\n    } else if !pods.enumerated().allSatisfy({\n      $0.element.body.physical?.empCrewPod?.ordinal == $0.offset\n    }) {\n      return false\n    }\n    return true\n  }\n",
+      "new": "    guard let current = disableEpisodes.last,\n      Set(aboardOrdinals).isSubset(of: Set(current.ejections.map(\\.ordinal))),\n      Set(deceasedOrdinals).isSubset(of: Set(current.ejections.map(\\.ordinal)))\n    else { return false }\n    return true\n  }\n"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "      if index == 0, !episode.legacyTiming, members != Set(0..<crewTotal) { return false }\n      if episode.legacyTiming && (index != 0 || episode.incident != disableIncident) {\n        return false\n      }\n      if index > 0, !disableEpisodes[index - 1].legacyTiming,",
+      "new": "      if index == 0, members != Set(0..<crewTotal) { return false }\n      if index > 0,"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "        prior.ejections.contains { $0.emittedAt != nil && members.contains($0.ordinal) }\n          || prior.legacyPods.contains(where: { members.contains($0) })\n          || prior.legacyEmissions.contains(where: { members.contains($0.ordinal) })",
+      "new": "        prior.ejections.contains { $0.emittedAt != nil && members.contains($0.ordinal) }"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "    let legacy =\n      disableEpisodes.flatMap(\\.legacyPods)\n      + disableEpisodes.flatMap(\\.legacyEmissions).map(\\.ordinal)\n    let emittedOrdinals = emissions.map(\\.ordinal) + legacy",
+      "new": "    let emittedOrdinals = emissions.map(\\.ordinal)"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "    if !disableEpisodes.isEmpty {\n      // Only the frozen legacy prefix has unknown historical timing.\n      guard Set(ejected) == Set(emittedOrdinals) else { return false }\n    }",
+      "new": "    guard Set(ejected) == Set(emittedOrdinals) else { return false }"
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "    if episodes[index].legacyTiming {\n      guard time.isFinite, time >= nextEjectionAt, time < episodes[index].deadline,\n        crewOutcome(ordinal: ordinal) == .aboard,\n        episodes[index].legacyEmissions.count < EMPState.maximumPeople\n      else { return false }\n      episodes[index].legacyEmissions.append(.init(ordinal: ordinal, time: time))\n      savedDisableEpisodes = episodes\n      return true\n    }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "  mutating func installLegacyCrewEpisode() -> Bool {\n    guard disableEpisodes.isEmpty, crewCaptures.isEmpty, let original = disableIncident.victim,\n      let current = hull.body.physical?.identity\n    else { return false }\n    let episode = EMPCrewDisableEpisode(\n      incident: disableIncident, weapon: weapon, weaponOwner: weaponOwner,\n      ejections: [], legacyTiming: true,\n      actorBindings: original == current ? [original] : [original, current],\n      legacyPods: pods.compactMap { $0.body.physical?.empCrewPod?.ordinal },\n      legacyNextEjectionAt: nextEjectionAt, legacyEmissions: [])\n    guard episode.valid(source: source, crewTotal: crewTotal) else { return false }\n    savedDisableEpisodes = [episode]\n    return true\n  }\n\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/EMPCrewEpisodes.swift",
+      "old": "        && episode.legacyEmissions.allSatisfy { $0.time <= flight.physicalTime }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/EMPPersistenceRuntime.swift",
+      "old": "      if record.disableEpisodes.isEmpty, !record.terminal, !record.isRecovered,\n        record.crewAboard > 0\n      {\n        guard record.installLegacyCrewEpisode()\n        else { continue }\n      }\n",
+      "new": ""
+    },
+    {
+      "path": "Sources/L337Core/EMPPersistenceRuntime.swift",
+      "old": "      record.disableEpisodes.last?.legacyTiming == true\n      ? context.physicalTime + 1\n      : record.disableEpisodes.last?.ejections.filter {",
+      "new": "      record.disableEpisodes.last?.ejections.filter {"
+    },
+    {
+      "path": "Sources/L337Core/NativePeopleState.swift",
+      "old": "          && (entry.legacyTiming\n            || ordinals.allSatisfy { ordinal in entry.ejections.contains { $0.ordinal == ordinal } })",
+      "new": "          && ordinals.allSatisfy { ordinal in entry.ejections.contains { $0.ordinal == ordinal } }"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "old": "    if let savedDeceasedOrdinals { return savedDeceasedOrdinals }\n    guard (1...EMPState.maximumPeople).contains(crewTotal),\n      (0...crewTotal).contains(lostCrewCount)\n    else { return [] }\n    // Schema 22/23 recorded a contiguous tail before any native captures existed.\n    return Array((crewTotal - lostCrewCount)..<crewTotal)",
+      "new": "    savedDeceasedOrdinals ?? []"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "old": "    guard let pods = try NativePeopleDecoding.array(values, key: .pods, type: EMPStoredObject.self)",
+      "new": "    guard let episodes, !episodes.isEmpty,\n      let pods = try NativePeopleDecoding.array(values, key: .pods, type: EMPStoredObject.self)"
+    }
+  ],
+  "sourceScope": "Four sources only, 24 exact removals/simplifications of legacy episode schema/timing/pod/emission/upgrade readers. Current records require existing nonempty episodes in validation+decoder; deceased ordinal identities only actual stored field, no contiguous historical reconstruction. Current schedule/actor/reissue/duplicate/census/timeline algorithms retained; capture receipts require actual current schedule membership. No actual people/power/reserve/geometry data or permission added. EMPRecoveryRuntime readonly.",
+  "testScope": "Five bounded existing files: NativePeoplePersistence removes historical22 projector+upgrade method, replaces with current record roundtrip and missing/null/empty schedule decode+runtime refusal conservation; retain later data-hook negative cases/current first episode rather than legacy reconstruction, explicitly test missing prior cannot append. Current full-record re-disable positive must use existing actual paid/disable/recovery kernel, never synthetic incident receipt. Existing poisoned bounded collections retain six current cases, remove only two deleted schema fields. NativePeopleCensus helper default current025, remove legacy podApproach branch/arg; NativeRescueTargeting+NativePodProtection retain current scenario and every functional assertion, remove duplicated legacy argument only; EMPReleaseBoundaryFixture drops removed flag check while retaining sampled nonempty actual schedule. No other production/shared helper edits.",
+  "testAssertionIssue": "Timing-hook unit retains current first schedule and owner/order/five negative/rollback checks. Hook census valid but full record invalid because it cannot issue a later real electrical disable. Old synthetic full-record positive replaced by an added actual paid disable\u2192existing recovery\u2192actual re-disable kernel test proving second full record valid and original episode exact. Missing-prior append refuses unchanged. No fabricated positive custody receipt.",
+  "excluded": "General historical version dispatch/NativePeopleVersionedSave/ElectricalVersionedSave and NPCResources migration field remain required next cleanup, not permanent fallback. Current publication/readiness1a09 test and current580de recovery source readonly.",
+  "limits": "SOURCE ONLY UNCOMPILED UNRUN. Actual paid/current source/large crew/aim/ejection/recovery/load prerequisites may block execution and must remain honest; no generated people/record or source-term edits to force success. G1 sole executor. No native/model/geometry/creator execution by G4.",
+  "testEdits": [
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "/// An authentic historical container fixture, not a modern writer with a forged old header.\n/// This fresh unit scene has no mining history or authored bodies to discard.\nprivate func writeHistoricalNativePeople22(_ game: Game, to url: URL) throws {\n  try #require(game.commander.miningLedger.requiredPresencePinSystems.isEmpty)\n  try #require(game.bodies.allSatisfy { $0.scriptNPC == nil && $0.missionInstanceID == nil })\n  var legacy = game.commander\n  let inventory = try #require(legacy.equipmentInventory)\n  legacy.savedEquipmentInventory = try .init(\n    owner: inventory.owner, activeHull: inventory.activeHull, revision: inventory.revision,\n    items: inventory.items.filter { $0.node.family != HyperspaceDriveDefinition.purchaseFamily })\n  legacy.savedEquipmentVersion = 2\n  legacy.savedPlayerElectrical = nil\n  legacy.savedEMPCharge = nil\n  legacy.mirrorFittedEquipment()\n  var object = try #require(\n    JSONSerialization.jsonObject(\n      with: JSONEncoder().encode(legacy)) as? [String: Any])\n  object.removeValue(forKey: \"savedMiningLedger\")\n  // Only actual native EMP/NPC resource archives are projected to their historical shape.\n  func oldElectricalShape(_ value: Any) -> Any {\n    if var dictionary = value as? [String: Any] {\n      dictionary.removeValue(forKey: \"electrical\")\n      dictionary.removeValue(forKey: \"legacyElectricalRecharge\")\n      return dictionary.mapValues(oldElectricalShape)\n    }\n    if let array = value as? [Any] { return array.map(oldElectricalShape) }\n    return value\n  }\n  for key in [\"savedEMPState\", \"savedNPCPersistence\"] {\n    if let value = object[key] { object[key] = oldElectricalShape(value) }\n  }\n  let header = try JSONSerialization.data(withJSONObject: object)\n  try ElectricalVersionedSave.rejectFields(header)\n  try NativePeopleVersionedSave.rejectFields(header)\n  try RingMiningVersionedSave.rejectFields(header)\n  try HyperspaceDriveVersionedSave.rejectFields(header)\n  legacy = try JSONDecoder().decode(Commander.self, from: header)\n  var worldObject = try #require(\n    JSONSerialization.jsonObject(\n      with: JSONEncoder().encode(game.scriptWorldSave)) as? [String: Any])\n  worldObject[\"bodies\"] = oldElectricalShape(worldObject[\"bodies\"] ?? [])\n  let worldBytes = try JSONSerialization.data(withJSONObject: worldObject)\n  try ElectricalVersionedSave.rejectFields(worldBytes)\n  let world = try JSONDecoder().decode(ScriptWorldSave.self, from: worldBytes)\n  try #require(legacy.valid && world.valid && world.consistent(with: legacy))\n  try ScriptSaveStore.write(commander: legacy, world: world, to: url)\n}\n\n",
+      "new": ""
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "legacyDataHookAcceptsLaterGenuineEpisodeWithoutInventingAnOldSchedule",
+      "new": "laterScheduleHookPreservesCurrentEpisodeAndRefusesMissingPrior"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "    record.savedDisableEpisodes = nil\n",
+      "new": ""
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "    #expect(record.disableEpisodes[0].legacyTiming && record.disableEpisodes[0].ejections.isEmpty)",
+      "new": "    #expect(record.disableEpisodes[0] == prior.disableEpisodes[0])"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "    #expect(record.crewCensusValid && record.valid)",
+      "new": "    #expect(record.crewCensusValid)\n    // This hook cannot issue a later electrical disable or update its stored hull.\n    #expect(!record.valid)\n    var missingPrior = prior\n    missingPrior.savedDisableEpisodes = nil\n    let missingBefore = missingPrior\n    let missingAccepted = missingPrior.appendCrewDisableEpisode(\n      incident: later, weapon: replacement, owner: prior.weaponOwner, ejections: schedule)\n    #expect(!missingAccepted && missingPrior == missingBefore && !missingPrior.crewCensusValid)"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "        weaponOwner: valid.weaponOwner, ejections: valid.ejections,\n        legacyTiming: valid.legacyTiming,\n        actorBindings: valid.actorBindings, legacyPods: valid.legacyPods,\n        legacyNextEjectionAt: valid.legacyNextEjectionAt, legacyEmissions: valid.legacyEmissions)",
+      "new": "        weaponOwner: valid.weaponOwner, ejections: valid.ejections, actorBindings: valid.actorBindings)"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "  @Test func legacy22AbsentFieldsRemainAbsentUntilRealRuntimeUpgradeAndKeepUnknownOldTimes()\n    async throws\n  {\n    let storage = try NativeStationTestStorage()\n    defer { storage.clean() }\n    var game = try NativePeopleTestFixture.disabled()\n    let source = try NativePeopleTestFixture.source(game)\n    // Restore the exact pre-24 record shape: original producer, no sampled schedule or captures.\n    game.commander.savedEMPState?.records[source]?.savedDisableEpisodes = nil\n    let nextLegacyEjection = game.commander.flightSimulation.physicalTime + 1\n    game.commander.savedEMPState?.records[source]?.nextEjectionAt = nextLegacyEjection\n    try #require(game.commander.valid)\n    game.ensureScriptCalendar(origin: .inactiveLegacyMigration)\n    try writeHistoricalNativePeople22(game, to: storage.url)\n    let bytes = try Data(contentsOf: storage.url)\n    #expect(try JSONDecoder().decode(ScriptSavePointer.self, from: bytes).schemaVersion == 22)\n    let reader = GameRuntime()\n    try await reader.load(from: storage.url, persistMigrations: false)\n    #expect(try Data(contentsOf: storage.url) == bytes)\n    #expect(await reader.snapshot().commander.savedEquipmentVersion == 3)\n    #expect(\n      await reader.snapshot().commander.savedEMPState?.records[source]?.savedDisableEpisodes == nil)\n    for _ in 0..<15 { _ = await reader.advance(delta: 0.1) }\n    let upgraded = await reader.snapshot()\n    let record = try #require(upgraded.commander.savedEMPState?.records[source])\n    let episode = try #require(record.disableEpisodes.first)\n    #expect(episode.legacyTiming && episode.ejections.isEmpty && episode.legacyPods.isEmpty)\n    #expect(episode.legacyEmissions.count == 1 && episode.legacyEmissions[0].ordinal == 0)\n    #expect(episode.legacyEmissions[0].time >= episode.legacyNextEjectionAt!)\n    #expect(record.valid && upgraded.commander.valid)\n    var frozenLegacy = record\n    frozenLegacy.savedDisableEpisodes = nil\n    try #require(frozenLegacy.valid)\n    let installed = frozenLegacy.installLegacyCrewEpisode()\n    try #require(installed)\n    #expect(frozenLegacy.disableEpisodes[0].legacyPods == [0])\n    #expect(frozenLegacy.disableEpisodes[0].legacyEmissions.isEmpty)\n    #expect(frozenLegacy.podEjectionLowerBound(for: 0) == record.disableIncident.physicalTime)\n    #expect(frozenLegacy.valid)\n    try await reader.save(to: storage.url)\n    #expect(\n      try JSONDecoder().decode(ScriptSavePointer.self, from: Data(contentsOf: storage.url))\n        .schemaVersion == 26)\n    var forged = record\n    forged.savedDisableEpisodes?[0].legacyEmissions = []\n    #expect(!forged.crewCensusValid)\n  }\n\n",
+      "new": "  @Test func currentRecordRequiresItsActualNonemptyScheduleWithoutRuntimeReconstruction() throws {\n    let game = try NativePeopleTestFixture.disabled()\n    let source = try NativePeopleTestFixture.source(game)\n    let record = try #require(game.commander.savedEMPState?.records[source])\n    try #require(record.valid && !record.disableEpisodes.isEmpty)\n    let bytes = try JSONEncoder().encode(record)\n    #expect(try JSONDecoder().decode(EMPHullRecord.self, from: bytes) == record)\n    let object = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])\n    for condition in [\"missing\", \"null\", \"empty\"] {\n      var malformed = object\n      switch condition {\n      case \"missing\": malformed.removeValue(forKey: \"savedDisableEpisodes\")\n      case \"null\": malformed[\"savedDisableEpisodes\"] = NSNull()\n      default: malformed[\"savedDisableEpisodes\"] = []\n      }\n      #expect(throws: SaveError.invalidCommander) {\n        _ = try JSONDecoder().decode(EMPHullRecord.self,\n          from: JSONSerialization.data(withJSONObject: malformed))\n      }\n    }\n    var missing = game\n    missing.commander.savedEMPState?.records[source]?.savedDisableEpisodes = nil\n    let before = missing\n    #expect(!missing.commander.valid)\n    missing.advanceEMPActors()\n    #expect(missing.commander == before.commander && missing.bodies == before.bodies)\n    #expect(missing.commander.savedEMPState?.records[source]?.savedDisableEpisodes == nil)\n  }\n\n  @Test func actualPaidKernelRecoveryAndRedisableKeepOriginalCurrentEpisode() async throws {\n    let paid = try await paidEMPNativeFixture()\n    defer { paid.clean() }\n    var game = await paid.runtime.snapshot()\n    let current = try #require(StationPoliceSource.current())\n    let actor = try #require(game.commander.flightSimulation.allocateActor())\n    let id = game.nextBodyID\n    game.nextBodyID += 1\n    var npc = NPCState(role: .police, origin: game.systemIdentity, destination: game.systemIdentity)\n    var worn = current.stock\n    worn.frontShield = 0\n    worn.rearShield = 0\n    worn.fuel = 0\n    let now = game.commander.flightSimulation.physicalTime\n    var reserve = try #require(ElectricalReserve(\n      capacity: worn.energyCapacity, recharge: worn.energyRecharge, at: now))\n    try #require(reserve.drain(worn.energyCapacity - 1, at: now))\n    worn.electrical = reserve\n    npc.resources = worn\n    var body = SpaceBody(id: id, hull: .viper, position: .init(0, 0, 1000))\n    body.energy = current.source.performance.energy - 3\n    body.missiles = 0\n    body.physical = .init(\n      identity: actor, population: .police, npc: npc, blocksNavalEncounter: true,\n      catalogueShipID: current.source.ship.id)\n    game.bodies.append(body)\n    _ = try await disableNativeEMPActor(actor, game: &game)\n    let key = try #require(game.bodies.first { $0.physical?.identity == actor }?.physical?.empSource)\n    let disabled = try #require(game.commander.nativeEMPCustodyRecord(for: key))\n    try #require(disabled.valid && !disabled.isRecovered && disabled.crewAboard > 0)\n    try #require(disabled.disableEpisodes.count == 1)\n    let episode = try #require(disabled.disableEpisodes.first)\n    let deadline = try #require(disabled.crewDeadline)\n    // Controlled owner-clock boundary, not an executed native recovery journey.\n    game.commander.flightSimulation.advancePhysicalTime(\n      deadline + 1 - game.commander.flightSimulation.physicalTime)\n    game.recoverEMPHulls()\n    let recovered = try #require(game.commander.nativeEMPCustodyRecord(for: key))\n    try #require(recovered.isRecovered && recovered.valid)\n    #expect(recovered.disableEpisodes == disabled.disableEpisodes)\n    #expect(recovered.crewAboard == disabled.crewAboard && recovered.crewTotal == disabled.crewTotal)\n    _ = try await disableNativeEMPActor(actor, game: &game)\n    let second = try #require(game.commander.nativeEMPCustodyRecord(for: key))\n    try #require(second.valid && !second.isRecovered && second.disableEpisodes.count == 2)\n    #expect(second.disableEpisodes[0] == episode && second.disableIncident == disabled.disableIncident)\n    #expect(second.disableEpisodes[1].incident.id > episode.incident.id)\n    #expect(second.disableEpisodes[1].incident.physicalTime >= episode.deadline)\n    #expect(Set(second.disableEpisodes[1].ejections.map(\\.ordinal)) == Set(recovered.aboardOrdinals))\n    #expect(second.crewTotal == disabled.crewTotal && second.crewAboard == recovered.crewAboard)\n    #expect(second.hull.body.physical?.npc?.resources?.fuel == 0)\n  }\n\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "    \"captures\", \"ordinals\", \"episodes\", \"ejections\", \"bindings\", \"deceased\", \"legacyPods\",\n    \"legacyEmissions\",",
+      "new": "    \"captures\", \"ordinals\", \"episodes\", \"ejections\", \"bindings\", \"deceased\","
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeoplePersistenceTests.swift",
+      "old": "          \"ejections\": [], \"actorBindings\": [], \"legacyPods\": [], \"legacyEmissions\": [],",
+      "new": "          \"ejections\": [], \"actorBindings\": [],"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "old": "  try #require(!episode.legacyTiming && !episode.ejections.isEmpty)",
+      "new": "  try #require(!episode.ejections.isEmpty)"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeopleCensusTests.swift",
+      "old": "      id = \"SH023\"",
+      "new": "      id = \"SH025\""
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePeopleCensusTests.swift",
+      "old": "  static func podApproach(legacy: Bool = false) throws -> Game {\n    var game = try disabled()\n    if legacy {\n      let source = try source(game)\n      game.commander.savedEMPState?.records[source]?.savedDisableEpisodes = nil\n      let nextEjection = game.commander.flightSimulation.physicalTime + 1\n      game.commander.savedEMPState?.records[source]?.nextEjectionAt = nextEjection\n    }\n",
+      "new": "  static func podApproach() throws -> Game {\n    var game = try disabled()\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeRescueTargetingTests.swift",
+      "old": "  @Test(arguments: [false, true])\n  func tabActuallySelectsAndAutomaticallyCollectsOneOriginalProtectedPod(legacy: Bool) async throws",
+      "new": "  @Test func tabActuallySelectsAndAutomaticallyCollectsOneOriginalProtectedPod() async throws"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativeRescueTargetingTests.swift",
+      "old": "NativePeopleTestFixture.podApproach(legacy: legacy)",
+      "new": "NativePeopleTestFixture.podApproach()"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePodProtectionTests.swift",
+      "old": "  @Test(arguments: [false, true])\n  func actualProtectedPodAllowsNativeRescueButCannotBecomeOrdinaryCargo(legacy: Bool) throws",
+      "new": "  @Test func actualProtectedPodAllowsNativeRescueButCannotBecomeOrdinaryCargo() throws"
+    },
+    {
+      "path": "Tests/L337CoreTests/NativePodProtectionTests.swift",
+      "old": "NativePeopleTestFixture.podApproach(legacy: legacy)",
+      "new": "NativePeopleTestFixture.podApproach()"
+    }
+  ],
+  "supersedesUnreservedFIRST": {
+    "path": "/tmp/elite-g4-current-emp-crew-schema-FIRST/FIRST.json",
+    "bytes": 15224,
+    "sha256": "264bb01e4cec9e460e4ee215f62ee334aa21a2021602626d209ca5d113808fcf"
+  },
+  "supersedesUnreservedRebasedDraft": {
+    "path": "/tmp/elite-g4-current-emp-crew-schema-rebased-1a09-FIRST/FIRST.json",
+    "bytes": 30372,
+    "sha256": "12555b4f95868d36dfefbd8acd8c98a67eeb0c9ed99d6c9b5897855d791ddc7e"
+  },
+  "decoderOrder": "Retain existing bounded captures\u2192episodes\u2192deceased decoding order, then require existing nonempty episodes together with pods. This preserves poisoned collection early-limit checks, including deceased. No current decoding-limit assertion removed."
+}

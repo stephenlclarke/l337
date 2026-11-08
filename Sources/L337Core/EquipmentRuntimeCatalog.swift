@@ -39,6 +39,9 @@ enum EquipmentRuntimeCatalog {
       nodes: modular.nodes + HyperspaceDriveDefinition.purchaseGraph.nodes + lasers + utilityNodes
         + [
           storage, ammunition, NativeIsolationProgrammerDefinition.purchaseNode,
+          NativeUnderTowReferenceDefinition.purchaseNode,
+          NativeAssemblyReferenceDefinition.purchaseNode,
+          NativeMemoryAtlasWatcherSource.purchaseNode,
           .init(
             id: AlienMissileDefinition.node, displayName: AlienMissileDefinition.name,
             policy: .repeatable(maximumCount: 256)),

@@ -79,7 +79,7 @@ extension Game {
     parent.revision += 1
     parent.acknowledge(sequence)
     parent.journal.append(
-      "Enlirin's custodians registered their one original Haflinger ark, forty seed-tonne units and six living crew. Their 1000 CR fuel escrow stays separate from commander cash. Depart the berth for native ark admission; its own drive and fuel govern every hop."
+      "Enlirin's custodians registered their one original Saiga ark, forty seed-tonne units and six living crew. Their 1000 CR fuel escrow stays separate from commander cash. Depart the berth for native ark admission; its own drive and fuel govern every hop."
     )
     var child = ScriptInstance(
       id: job, definition: NativeInductionArkPack.stateID,

@@ -1,0 +1,333 @@
+{
+  "status": "TEN_EXACT_RECORD_COPIES_ELEVEN_PHYSICAL_METADATA_ONLY_RESOURCE_JOINS",
+  "rows": [
+    {
+      "id": "SH112",
+      "before": {
+        "bytes": 904134,
+        "sha256": "6a802611ae41f0c094e1b8c2b2ae14cd1e6c593a23365118e6a83dfd533ac29e"
+      },
+      "after": {
+        "bytes": 904610,
+        "sha256": "549133779c63fa4e3f27e35a2e337107a7211ca9bbc910352af58a3e99bedab5"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH112",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH112.json",
+        "sha256": "56d9bfb85c9970767561b8a65fb89c6970a9485d1227caf0d1c2384212cc56fa",
+        "bytes": 11770,
+        "dryMassKg": 49413,
+        "operations": {
+          "coordinateConversions": 10254,
+          "faceIndexChecks": 20448,
+          "triangleAreaEvaluations": 6816,
+          "analyticMomentEvaluations": 6816,
+          "quadratureMomentEvaluations": 20448,
+          "hardwareAllocations": 8,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH113",
+      "before": {
+        "bytes": 832221,
+        "sha256": "7faab506d6fe95d94eba57a96dd38d82fdaf83f35d01ac20a3912596eecd9750"
+      },
+      "after": {
+        "bytes": 832697,
+        "sha256": "bbb58de84347d1a03e47389cddf628f4e1ddca9c2144721fe010b6dcb1bbfdee"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH113",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH113.json",
+        "sha256": "59df30f843d29693fecb2a08a27a872d4d2daa867682f927d9030f4d47e55f24",
+        "bytes": 11126,
+        "dryMassKg": 35065,
+        "operations": {
+          "coordinateConversions": 9240,
+          "faceIndexChecks": 18408,
+          "triangleAreaEvaluations": 6136,
+          "analyticMomentEvaluations": 6136,
+          "quadratureMomentEvaluations": 18408,
+          "hardwareAllocations": 7,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH114",
+      "before": {
+        "bytes": 1158903,
+        "sha256": "4575bcf365ad87f7e84c35a19e7fef34b82ce2c944718c706e938db6fec44728"
+      },
+      "after": {
+        "bytes": 1159379,
+        "sha256": "d26eccaf20d09e3ecc67c145548ff4f12e9d76a0cd9dcffb7be8e44aafb495f3"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH114",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH114.json",
+        "sha256": "00b780b01c52069fe2de8c9427ad38959524682772560bf2513add066216f2c1",
+        "bytes": 11968,
+        "dryMassKg": 61633,
+        "operations": {
+          "coordinateConversions": 13134,
+          "faceIndexChecks": 26208,
+          "triangleAreaEvaluations": 8736,
+          "analyticMomentEvaluations": 8736,
+          "quadratureMomentEvaluations": 26208,
+          "hardwareAllocations": 8,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH115",
+      "before": {
+        "bytes": 835624,
+        "sha256": "a78ccc307d957d98b986a726031f53e72333b357f00aa9b413855a79985eb089"
+      },
+      "after": {
+        "bytes": 836100,
+        "sha256": "21c29af4bc4375d43a879d7e0d21b4c78ff3f0711fc137bfe5a9ff8df2a71f40"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH115",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH115.json",
+        "sha256": "1c3d3e7e55530e413f6c44a5048b46b858e1f10c41cf7d59371f8adba13ce6e1",
+        "bytes": 11807,
+        "dryMassKg": 27537,
+        "operations": {
+          "coordinateConversions": 9312,
+          "faceIndexChecks": 18552,
+          "triangleAreaEvaluations": 6184,
+          "analyticMomentEvaluations": 6184,
+          "quadratureMomentEvaluations": 18552,
+          "hardwareAllocations": 8,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH116",
+      "before": {
+        "bytes": 945326,
+        "sha256": "513cd2b0cc587930abf0024b715848878813d51bf68ff5f99b37ba46998da5f5"
+      },
+      "after": {
+        "bytes": 945802,
+        "sha256": "fa7814f20fe1dacf82c8439f9d0d429e3b68f61f75e1a5fdfc2664083c70588a"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH116",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH116.json",
+        "sha256": "9085a0b83305f3bc102a6538117569829b87910744c267a6e8b23bcfda6d05dd",
+        "bytes": 11686,
+        "dryMassKg": 70716,
+        "operations": {
+          "coordinateConversions": 10608,
+          "faceIndexChecks": 21144,
+          "triangleAreaEvaluations": 7048,
+          "analyticMomentEvaluations": 7048,
+          "quadratureMomentEvaluations": 21144,
+          "hardwareAllocations": 8,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH117",
+      "before": {
+        "bytes": 997190,
+        "sha256": "1f782668b110322395bf82e9a97fae03549a61374042909aa2d20f7f7800a9d0"
+      },
+      "after": {
+        "bytes": 997666,
+        "sha256": "222fec46fb060fd5e990c363dcdfcdb8d7c5b06839f8507831a7dbd411274e66"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH117",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH117.json",
+        "sha256": "d7221197fcb1e568a8ea234e9e2de61eb6497e69c9f1700562fd43e4c04c1f4b",
+        "bytes": 11660,
+        "dryMassKg": 40841,
+        "operations": {
+          "coordinateConversions": 11256,
+          "faceIndexChecks": 22440,
+          "triangleAreaEvaluations": 7480,
+          "analyticMomentEvaluations": 7480,
+          "quadratureMomentEvaluations": 22440,
+          "hardwareAllocations": 8,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH118",
+      "before": {
+        "bytes": 2023434,
+        "sha256": "c5df704dc3a4ff1e863d7813149dfe39d2643b3daa06e84a5ad12f204bfd9766"
+      },
+      "after": {
+        "bytes": 2023910,
+        "sha256": "e82aaac4980c268d11bed2b1900c563a2ade3fe4d73b34aff6fc794a27d29dcc"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH118",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH118.json",
+        "sha256": "29eeb5691f135698387d3930aff7fff98dd92f7d3ebb8378873bf03a7650ab45",
+        "bytes": 20210,
+        "dryMassKg": 51857,
+        "operations": {
+          "coordinateConversions": 23124,
+          "faceIndexChecks": 46080,
+          "triangleAreaEvaluations": 15360,
+          "analyticMomentEvaluations": 15360,
+          "quadratureMomentEvaluations": 46080,
+          "hardwareAllocations": 10,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH119",
+      "before": {
+        "bytes": 1101551,
+        "sha256": "655440564775f6d7ac78fd0c6d829cc963addf082393992977cb4c793730e19e"
+      },
+      "after": {
+        "bytes": 1102027,
+        "sha256": "9ba89d22ef881efe2d9d1ad0eb6510e315a1a7fad54624df6bc0390874e9a876"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH119",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH119.json",
+        "sha256": "02bb40b4b975514c755403606d1b2bfadbb3017d9e96d44a3fb4873e547ad0c6",
+        "bytes": 12626,
+        "dryMassKg": 55472,
+        "operations": {
+          "coordinateConversions": 12282,
+          "faceIndexChecks": 24480,
+          "triangleAreaEvaluations": 8160,
+          "analyticMomentEvaluations": 8160,
+          "quadratureMomentEvaluations": 24480,
+          "hardwareAllocations": 8,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH120",
+      "before": {
+        "bytes": 895945,
+        "sha256": "dd597b60bb0b91d4f79695cf23d2a1cbb6ec4e1796681d0adc0395ac652943a3"
+      },
+      "after": {
+        "bytes": 896421,
+        "sha256": "e2421f1c8b7ac91cecfa0a59ce85f1ba182aa9464bca7f4a3e11674b91c511d4"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH120",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH120.json",
+        "sha256": "0768c480a77e4ea03cf45087f080cfec186fe79c8a7e39e4f59565e74dd7acdd",
+        "bytes": 11826,
+        "dryMassKg": 40547,
+        "operations": {
+          "coordinateConversions": 10254,
+          "faceIndexChecks": 20448,
+          "triangleAreaEvaluations": 6816,
+          "analyticMomentEvaluations": 6816,
+          "quadratureMomentEvaluations": 20448,
+          "hardwareAllocations": 8,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH121",
+      "before": {
+        "bytes": 1137636,
+        "sha256": "3d22b183c8d635d92b5048cca90897b36e913eab0efc7bfc2499882c1eed838a"
+      },
+      "after": {
+        "bytes": 1138112,
+        "sha256": "baade0780d9b38715b3a66f750dd8973845b9aa8f710c4ea3a1ee1fc49ec3b7f"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "NEW_EMPTY_HULL_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+      "record": {
+        "id": "SH121",
+        "status": "AUTHORED_SOURCE_BUDGET",
+        "file": "calculated-larvaal-records/SH121.json",
+        "sha256": "b2d9d8715ce15ea8ec0c33168b6b23d10d5812f321bb05301a122e1463ac5be6",
+        "bytes": 11313,
+        "dryMassKg": 42211,
+        "operations": {
+          "coordinateConversions": 12846,
+          "faceIndexChecks": 25620,
+          "triangleAreaEvaluations": 8540,
+          "analyticMomentEvaluations": 8540,
+          "quadratureMomentEvaluations": 25620,
+          "hardwareAllocations": 7,
+          "sourceParses": 1,
+          "resultRecords": 1
+        }
+      }
+    },
+    {
+      "id": "SH122",
+      "before": {
+        "bytes": 1612283,
+        "sha256": "d3ff6ba04e0e7aebe74a166d13cce589227997ad0464f1e70ec053e51cf47501"
+      },
+      "after": {
+        "bytes": 1612276,
+        "sha256": "8d5a5ef59b53b2dcc8a875b4498436f4d7b5ab0045aad8ee1d6248fefc0fee33"
+      },
+      "outsideExactOwnedPhysicalProfileField": true,
+      "physicalStatus": "UNISSUED_SOURCE_MOMENT_CONSISTENCY_STOP",
+      "record": null
+    }
+  ],
+  "sourceGeometryWrites": 0,
+  "sourceGeometryParses": 0,
+  "old130RecordEdits": 0,
+  "nativeOrLoadedMassGrants": 0
+}

@@ -1,0 +1,444 @@
+{
+  "schemaVersion": 1,
+  "id": "SH119",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "f44ea27d0015ea2fdc28491277d4d5fc2625f66a597670db8351c68211dd91f3",
+  "detailedSourceSHA256": "3d7d4b77a9f9c44ff9b15c3cf379bf68b4ca0106628a59eaae978e59394fa7d1",
+  "componentSourceSHA256": "3a787daecebc52105fb6547440a19e1fc5edb3805821cf44da73fb3bf2a90b35",
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "coordinateUnits": "metres",
+  "metresPerSourceUnit": 1,
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 3730.81251127654,
+  "stockMassKg": 52231.37515787159,
+  "intrinsicHardwareMassKg": 3240.0,
+  "unroundedMassKg": 55471.37515787159,
+  "roundingReserveKg": 0.624842128410819,
+  "dryMassKilograms": 55472,
+  "centreOfMassMetres": [
+    1.3033857279023933e-16,
+    1.0386258327338505,
+    -2.4082550636564357
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    8304395.706427886,
+    -0.4524769780706651,
+    1.8626908716219134e-10,
+    -0.4524769780724841,
+    12059964.088800877,
+    -187375.32599128364,
+    1.8626908716219134e-10,
+    -187375.32599128364,
+    4357828.912401736
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    8685952.01427995,
+    -0.45247697807817444,
+    2.0368091545174143e-10,
+    -0.45247697807999343,
+    12381681.004585346,
+    -48626.11100826463,
+    2.0368091545174143e-10,
+    -48626.11100826463,
+    4417668.30446933
+  ],
+  "reserveLocationMetres": [
+    1.3033857279023933e-16,
+    1.0386258327338505,
+    -2.4082550636564357
+  ],
+  "positiveLeadingPrincipalMinors": [
+    8304395.706427886,
+    100150713998712.3,
+    4.3614811377399484e+20
+  ],
+  "zeroAreaSourceFaces": 0,
+  "stockComponents": [
+    {
+      "name": "thin laminar jade mantle",
+      "areaSquareMetres": 2791.8038132102606,
+      "stockMassKg": 39085.25338494366,
+      "areaCentroidMetres": [
+        -3.187343430174066e-17,
+        1.9999999999999998,
+        -1.0000000000000027
+      ],
+      "massFirst": [
+        1.2003731342247193e-12,
+        78170.5067698871,
+        -39085.25338494393
+      ],
+      "massSecond": [
+        2953921.6150755165,
+        -2.5144331061710545e-12,
+        -3.7402969610411674e-11,
+        -2.5144331061710545e-12,
+        301795.56932431,
+        -78170.50676988724,
+        -3.7402969610411674e-11,
+        -78170.50676988724,
+        6275689.568133996
+      ],
+      "verificationSecond": [
+        2953921.6150755147,
+        -1.8381740574113792e-11,
+        -5.8264504332328215e-12,
+        -1.680389161151652e-11,
+        301795.5693243101,
+        -78170.50676988601,
+        3.268496584496461e-12,
+        -78170.50676988601,
+        6275689.5681339735
+      ]
+    },
+    {
+      "name": "exposed gold underwing organ",
+      "areaSquareMetres": 289.2691708408284,
+      "stockMassKg": 4049.768391771597,
+      "areaCentroidMetres": [
+        -7.999999999999983,
+        -1.6999999999999982,
+        2.0000000000000018
+      ],
+      "massFirst": [
+        -32398.147134172727,
+        -6884.6062660117195,
+        8099.53678354321
+      ],
+      "massSecond": [
+        278064.5571949603,
+        55076.85012809366,
+        -64796.29426834544,
+        55076.85012809366,
+        15738.821722057017,
+        -13769.212532023434,
+        -64796.29426834544,
+        -13769.212532023434,
+        120402.68994449169
+      ],
+      "verificationSecond": [
+        278064.55719496065,
+        55076.850128093654,
+        -64796.294268345344,
+        55076.850128093654,
+        15738.821722056988,
+        -13769.212532023379,
+        -64796.29426834535,
+        -13769.212532023377,
+        120402.68994449153
+      ]
+    },
+    {
+      "name": "short aft stabilising growth",
+      "areaSquareMetres": 143.78139132649883,
+      "stockMassKg": 2012.9394785709903,
+      "areaCentroidMetres": [
+        -10.000000000000009,
+        -1.0000000000000027,
+        -15.229230287010811
+      ],
+      "massFirst": [
+        -20129.39478570986,
+        -2012.9394785709853,
+        -30655.518872972993
+      ],
+      "massSecond": [
+        203832.22285079592,
+        20129.62102419896,
+        306555.18872972974,
+        20129.62102419896,
+        5054.377872356571,
+        30655.51887297297,
+        306555.18872972974,
+        30655.51887297297,
+        495019.15768188384
+      ],
+      "verificationSecond": [
+        203832.2228507958,
+        20129.621024199012,
+        306555.18872972956,
+        20129.621024199012,
+        5054.37787235657,
+        30655.518872973,
+        306555.1887297295,
+        30655.518872973003,
+        495019.15768188296
+      ]
+    },
+    {
+      "name": "aft lower green organ",
+      "areaSquareMetres": 36.4537868658126,
+      "stockMassKg": 510.35301612137584,
+      "areaCentroidMetres": [
+        -6.999999999999986,
+        -1.9999999999999927,
+        -16.999999999999883
+      ],
+      "massFirst": [
+        -3572.471112849632,
+        -1020.7060322427499,
+        -8676.001274063392
+      ],
+      "massSecond": [
+        25391.73611016729,
+        7144.942225699252,
+        60732.008918443695,
+        7144.942225699252,
+        2313.844284415185,
+        17352.002548126726,
+        60732.008918443695,
+        17352.002548126726,
+        148404.54690562168
+      ],
+      "verificationSecond": [
+        25391.736110167287,
+        7144.942225699246,
+        60732.00891844378,
+        7144.942225699245,
+        2313.8442844151814,
+        17352.0025481267,
+        60732.00891844378,
+        17352.0025481267,
+        148404.54690562136
+      ]
+    },
+    {
+      "name": "exposed gold underwing organ",
+      "areaSquareMetres": 289.2691708408284,
+      "stockMassKg": 4049.768391771598,
+      "areaCentroidMetres": [
+        7.999999999999981,
+        -1.6999999999999975,
+        2.0000000000000018
+      ],
+      "massFirst": [
+        32398.147134172727,
+        -6884.606266011717,
+        8099.536783543209
+      ],
+      "massSecond": [
+        278064.5571949603,
+        -55076.85012809373,
+        64796.29426834546,
+        -55076.85012809373,
+        15738.821722057024,
+        -13769.212532023439,
+        64796.29426834546,
+        -13769.212532023439,
+        120402.6899444917
+      ],
+      "verificationSecond": [
+        278064.5571949604,
+        -55076.85012809362,
+        64796.29426834527,
+        -55076.85012809361,
+        15738.821722056988,
+        -13769.212532023377,
+        64796.29426834528,
+        -13769.212532023379,
+        120402.68994449153
+      ]
+    },
+    {
+      "name": "short aft stabilising growth",
+      "areaSquareMetres": 143.78139132649883,
+      "stockMassKg": 2012.9394785709903,
+      "areaCentroidMetres": [
+        10.000000000000014,
+        -1.0000000000000027,
+        -15.229230287010811
+      ],
+      "massFirst": [
+        20129.39478570987,
+        -2012.9394785709853,
+        -30655.518872972993
+      ],
+      "massSecond": [
+        203832.22285079592,
+        -20129.168547220812,
+        -306555.18872972985,
+        -20129.168547220812,
+        5054.377872356571,
+        30655.51887297297,
+        -306555.18872972985,
+        30655.51887297297,
+        495019.15768188384
+      ],
+      "verificationSecond": [
+        203832.22285079578,
+        -20129.168547220816,
+        -306555.18872972985,
+        -20129.168547220816,
+        5054.37787235657,
+        30655.518872973,
+        -306555.18872972985,
+        30655.518872973003,
+        495019.15768188296
+      ]
+    },
+    {
+      "name": "aft lower green organ",
+      "areaSquareMetres": 36.4537868658126,
+      "stockMassKg": 510.35301612137584,
+      "areaCentroidMetres": [
+        6.999999999999988,
+        -1.9999999999999927,
+        -16.999999999999886
+      ],
+      "massFirst": [
+        3572.471112849629,
+        -1020.7060322427498,
+        -8676.001274063392
+      ],
+      "massSecond": [
+        25391.73611016729,
+        -7144.942225699251,
+        -60732.0089184437,
+        -7144.942225699251,
+        2313.844284415185,
+        17352.002548126726,
+        -60732.0089184437,
+        17352.002548126726,
+        148404.5469056217
+      ],
+      "verificationSecond": [
+        25391.736110167287,
+        -7144.942225699253,
+        -60732.00891844374,
+        -7144.942225699253,
+        2313.8442844151805,
+        17352.0025481267,
+        -60732.00891844374,
+        17352.0025481267,
+        148404.54690562136
+      ]
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 3,
+      "anchorName": "aft lower green organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -6.999999999999986,
+        -1.9999999999999927,
+        -16.999999999999883
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 6,
+      "anchorName": "aft lower green organ",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        6.999999999999988,
+        -1.9999999999999927,
+        -16.999999999999886
+      ]
+    },
+    {
+      "name": "Empty intrinsic power system",
+      "count": 1,
+      "eachKg": 750,
+      "anchorComponent": 0,
+      "anchorName": "thin laminar jade mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 750,
+      "anchorMetres": [
+        -3.187343430174066e-17,
+        1.9999999999999998,
+        -1.0000000000000027
+      ]
+    },
+    {
+      "name": "Empty fuel-containment and transfer system",
+      "count": 1,
+      "eachKg": 180,
+      "anchorComponent": 0,
+      "anchorName": "thin laminar jade mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 180,
+      "anchorMetres": [
+        -3.187343430174066e-17,
+        1.9999999999999998,
+        -1.0000000000000027
+      ]
+    },
+    {
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+      "count": 1,
+      "eachKg": 120,
+      "anchorComponent": 0,
+      "anchorName": "thin laminar jade mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 120,
+      "anchorMetres": [
+        -3.187343430174066e-17,
+        1.9999999999999998,
+        -1.0000000000000027
+      ]
+    },
+    {
+      "name": "Control and sensing system",
+      "count": 1,
+      "eachKg": 90,
+      "anchorComponent": 0,
+      "anchorName": "thin laminar jade mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 90,
+      "anchorMetres": [
+        -3.187343430174066e-17,
+        1.9999999999999998,
+        -1.0000000000000027
+      ]
+    },
+    {
+      "name": "Empty carried-equipment interfaces",
+      "count": 1,
+      "eachKg": 140,
+      "anchorComponent": 0,
+      "anchorName": "thin laminar jade mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 140,
+      "anchorMetres": [
+        -3.187343430174066e-17,
+        1.9999999999999998,
+        -1.0000000000000027
+      ]
+    },
+    {
+      "name": "Empty launcher system, no ammunition",
+      "count": 1,
+      "eachKg": 160,
+      "anchorComponent": 0,
+      "anchorName": "thin laminar jade mantle",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 160,
+      "anchorMetres": [
+        -3.187343430174066e-17,
+        1.9999999999999998,
+        -1.0000000000000027
+      ]
+    }
+  ],
+  "operations": {
+    "coordinateConversions": 12282,
+    "faceIndexChecks": 24480,
+    "triangleAreaEvaluations": 8160,
+    "analyticMomentEvaluations": 8160,
+    "quadratureMomentEvaluations": 24480,
+    "hardwareAllocations": 8,
+    "sourceParses": 1,
+    "resultRecords": 1
+  },
+  "sourceGeometryNotEdited": true,
+  "nativeQualification": "UNRUN; source budget never activates a hull"
+}

@@ -4,21 +4,57 @@ import Testing
 @testable import L337Core
 
 enum NativePeopleTestFixture {
+  @inline(never)
   static func disabled(large: Bool = false, seed: UInt64 = 0) throws -> Game {
-    let id: String
+    var game: Game
+    let targetIndex: Int
     if large {
-      id = try #require(
+      let id = try largePeopleCatalogueID()
+      game = try empFixture(catalogue: id)
+      targetIndex = 0
+    } else {
+      // Same genuinely equipped birth; future stock checks do not enter its constructor stack.
+      game = try NativePagedSalvageFixture.equippedNewtStowedGame()
+      targetIndex = try validateEquippedPeopleTarget(game)
+    }
+    return try disablePeopleTarget(&game, targetIndex: targetIndex, seed: seed)
+  }
+
+  @inline(never)
+  private static func largePeopleCatalogueID() throws -> String {
+      let id = try #require(
         ShipCatalogue.all.sorted(by: { $0.id < $1.id }).first {
           $0.game != nil && EMPState.hasSupportedCrew($0)
-            && ((try? ShipAccommodationProfile(ship: $0).operatingCrew) ?? 0) > 30
+            && (EMPState.declaredNativeCrewCount($0) ?? 0) >= 8
+            && OriginalFleetR3Fitting.contract(for: $0) != nil
+            && ((try? ShipAccommodationProfile(ship: $0).operatingCrew) ?? 0) >= 8
         }?.id)
-    } else {
-      id = "SH023"
-    }
-    var game = try empFixture(catalogue: id)
-    game.bodies[0].physical?.velocity = .init(0, 0, 0)
-    game.bodies[0].physical?.angularVelocity = .init(0, 0, 0)
-    game.bodies[0].rotationRate = 0
+    return id
+  }
+
+  @inline(never)
+  private static func validateEquippedPeopleTarget(_ game: Game) throws -> Int {
+      let matchingIndex = game.bodies.firstIndex {
+        $0.physical?.currentNewtKitStock != nil
+      }
+      let targetIndex = try #require(matchingIndex)
+      let physical = try #require(game.bodies[targetIndex].physical)
+      let stock = try #require(physical.currentNewtKitStock)
+      try #require(stock.phase == .stowed && stock.remaining == 1)
+      try #require(physical.identity == stock.issue.birthActor)
+      try #require(physical.spawnIdentity == stock.issue.birthSpawn)
+      let ownedStartupCheck11 = stock.validForNPC(
+        catalogueShipID: physical.catalogueShipID, actor: physical.identity,
+        physicalTime: game.storedFlightSimulation().physicalTime)
+      try #require(ownedStartupCheck11)
+    return targetIndex
+  }
+
+  @inline(never)
+  private static func disablePeopleTarget(_ game: inout Game, targetIndex: Int, seed: UInt64) throws -> Game {
+    game.bodies[targetIndex].physical?.velocity = .init(0, 0, 0)
+    game.bodies[targetIndex].physical?.angularVelocity = .init(0, 0, 0)
+    game.bodies[targetIndex].rotationRate = 0
     game.seedScriptTrial(seed)
     let fireEMPPirateBlasterResult1 = try releaseDamagedEMPBoundary(&game, seed: nil)
     try #require(fireEMPPirateBlasterResult1)
@@ -36,10 +72,12 @@ enum NativePeopleTestFixture {
   }
   static func aimCutter(_ game: inout Game) throws {
     let source = try source(game)
-    let index = try #require(game.bodies.firstIndex { $0.physical?.empSource == source })
+    let indexCandidate = game.bodies.firstIndex { $0.physical?.empSource == source }
+    let index = try #require(indexCandidate)
     let catalogue = try #require(game.bodies[index].physical?.catalogueShipID)
     let profile = try #require(SalvageCatalogue.empProfile(catalogueShipID: catalogue))
-    let section = try #require(profile.sections.first { $0.kind == .cargo })
+    let sectionCandidate = profile.sections.first { $0.kind == .cargo }
+    let section = try #require(sectionCandidate)
     let forward = section.normal.unit * -1
     let cardinal = abs(forward.y) < 0.8 ? Vector3(0, 1, 0) : .init(1, 0, 0)
     var frame = Basis3()
@@ -64,16 +102,12 @@ enum NativePeopleTestFixture {
         maxDistance: 300, bodies: game.bodies, meshOverrides: game.gameplayMeshOverrides))
     try #require(hit.target == .body(game.bodies[index].id))
   }
-  static func podApproach(legacy: Bool = false) throws -> Game {
+  static func podApproach() throws -> Game {
     var game = try disabled()
-    if legacy {
-      let source = try source(game)
-      game.commander.savedEMPState?.records[source]?.savedDisableEpisodes = nil
-      let nextEjection = game.commander.flightSimulation.physicalTime + 1
-      game.commander.savedEMPState?.records[source]?.nextEjectionAt = nextEjection
-    }
-    for _ in 0..<15 { game.tick(delta: 0.1) }
-    let index = try #require(game.bodies.firstIndex { $0.physical?.empCrewPod != nil })
+    let originalSource = try source(game)
+    try ejectScheduledEMPCrewBoundary(&game, source: originalSource)
+    let indexCandidate2 = game.bodies.firstIndex { $0.physical?.empCrewPod != nil }
+    let index = try #require(indexCandidate2)
     game.bodies[index].position = .init(0, -45, 500)
     game.bodies[index].physical?.velocity = .init(0, 0, 0)
     game.bodies[index].physical?.angularVelocity = .init(0, 0, 0)
@@ -108,7 +142,8 @@ enum NativePeopleTestFixture {
   {
     await runtime.key("contracts-open")
     let game = await runtime.snapshot()
-    let index = try #require(game.contractBoard.rows.firstIndex { $0.people == row })
+    let indexCandidate3 = game.contractBoard.rows.firstIndex { $0.people == row }
+    let index = try #require(indexCandidate3)
     for _ in 0..<abs(index - game.contractBoard.selection) {
       await runtime.key(index < game.contractBoard.selection ? "up" : "down")
     }
@@ -196,7 +231,8 @@ struct NativePeopleCensusTests {
     let source = try NativePeopleTestFixture.source(game)
     let original = try #require(game.commander.savedEMPState?.records[source])
     let aboard = original.aboardOrdinals
-    let index = try #require(game.bodies.firstIndex { $0.physical?.empSource == source })
+    let indexCandidate4 = game.bodies.firstIndex { $0.physical?.empSource == source }
+    let index = try #require(indexCandidate4)
     game.bodies[index].energy = 0
     let registerEMPHullDeathsResult1 = game.registerEMPHullDeaths()
     try #require(registerEMPHullDeathsResult1)
@@ -244,7 +280,8 @@ struct NativePeopleCensusTests {
     let deadline = try #require(game.commander.savedEMPState?.records[source]?.crewDeadline)
     game.commander.flightSimulation.advancePhysicalTime(
       deadline + offset - game.commander.flightSimulation.physicalTime)
-    let body = try #require(game.bodies.first { $0.physical?.empSource == source })
+    let bodyCandidate = game.bodies.first { $0.physical?.empSource == source }
+    let body = try #require(bodyCandidate)
     let context = try #require(game.gameplayContext())
     #expect(game.nativeCrewCaptureAvailable(body, context: context) == (offset < 0))
     #expect(game.commander.nativePeople == nil && game.commander.cargo[3] == 0)

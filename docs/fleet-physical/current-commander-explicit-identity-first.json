@@ -1,0 +1,21 @@
+{
+  "status": "FIRST_FROZEN_PENDING_ROOT_EXACT_SHARED_HUNK_RESERVATION",
+  "beforeCommit": "24c9fa033ba67e868c663e92d27f7383421fae7d",
+  "pins": [
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 179800,
+      "sha256": "1645bba55a4069c4e899d73215246011aef59cf4913bd66b0d1b5e428783cdf5"
+    },
+    {
+      "path": "Tests/L337CoreTests/NewCommanderDefaultsTests.swift",
+      "bytes": 9428,
+      "sha256": "dbcaa3d5560750cf9a82b0a51bb6eae7a70e24b1611821d3ad3d62a7f09e4093"
+    }
+  ],
+  "productionBefore": "  private var ownedShipID: String?\n  public var shipID: String {\n    get { ownedShipID ?? \"SH023\" }",
+  "productionAfter": "  private var ownedShipID: String\n  public var shipID: String {\n    get { ownedShipID }",
+  "contract": "Existing synthesized current Codable must require ownedShipID. Existing explicit initializer, same coding key, setter, equality and valid current encoded bytes stay unchanged. No default, migration, custom decoder or legacy reader. Missing/null current JSON refuse through standard DecodingError.",
+  "testScope": "Only existing continuePreservesCurrentImplicitShipIdentityAndOwnedEquipment method: rename ExplicitShipIdentity; retain legitimate explicitly selected current SH023 and every save/cold/equipment/cash/fuel/owner/hull/title/continue/file byte oracle; decode original explicit JSON to explicit commander; independently remove ownedShipID then set NSNull and require throws for each. Replace implicit variable references with explicit. No fresh025 geometry dependency or changed default.",
+  "boundaries": "No other Game.swift hunks, methods, source geometry, provider/EMP/MC1 reservation changes. Source and tests UNCOMPILED UNRUN; G1 only executor. Root must reserve exact Game.swift field/getter hunk before mutation."
+}

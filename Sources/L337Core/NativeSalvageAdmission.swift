@@ -22,21 +22,37 @@ extension Game {
     for pending in available {
       guard let context = gameplayContext(), context.budget.ordinaryRemaining > 0,
         context.budget.active[.cargo, default: 0] < PopulationClass.cargo.maximum
-      else { return }
+      else {
+        recordNativeSalvageAdmissionRefusal(lot: pending.lot.identity,
+          stage: "eligibility.budget", reason: "context or ordinary/cargo capacity")
+        return
+      }
       let lot = pending.lot
       guard !context.protection.protectedPayloads.contains(.salvage(lot.identity)),
         (lot.position - context.player.position).length <= context.perceptionRadius
-      else { continue }
+      else {
+        recordNativeSalvageAdmissionRefusal(lot: lot.identity,
+          stage: "eligibility.protectionOrPerception", reason: "false")
+        continue
+      }
       // Keep immutable preparation even when this private admission candidate later refuses.
       // Warming failure is not admission/refusal authority: the full original path still runs.
       warmPendingNativeSalvageParentGeometry(for: lot, context: context)
       var candidate = self
-      guard candidate.prepareNativeSalvageOfferParent(for: lot) else { continue }
-      guard
-        let spawn = candidate.commander.salvageLedger.reserveNativeSpawnIdentity(
-          system: context.system, visit: context.visit),
-        candidate.stageNativeSalvageOffer(pending, spawn: spawn, context: context)
-      else { return }
+      guard candidate.prepareNativeSalvageOfferParent(for: lot) else {
+        recordNativeSalvageAdmissionRefusal(lot: lot.identity, stage: "parent", reason: "false")
+        continue
+      }
+      guard let spawn = candidate.commander.salvageLedger.reserveNativeSpawnIdentity(
+        system: context.system, visit: context.visit)
+      else {
+        recordNativeSalvageAdmissionRefusal(lot: lot.identity, stage: "reserve", reason: "nil")
+        return
+      }
+      guard candidate.stageNativeSalvageOffer(pending, spawn: spawn, context: context) else {
+        recordNativeSalvageAdmissionRefusal(lot: lot.identity, stage: "stage", reason: "false")
+        return
+      }
       let request = NativeSalvageOffer.request(lot: lot, spawn: spawn)
       let receipts = candidate.admitEncounterPlan(
         .init(
@@ -44,13 +60,23 @@ extension Game {
           revision: context.revision, batches: [.init(requests: [request], atomic: false)],
           intents: []))
       guard receipts.count == 1, receipts[0].request == spawn, receipts[0].refusal == nil,
-        let actor = receipts[0].actor,
+        let actor = receipts[0].actor
+      else {
+        recordNativeSalvageAdmissionRefusal(lot: lot.identity, stage: "receipt",
+          reason: "count=\(receipts.count) refusal=\(receipts.first?.refusal?.rawValue ?? "none") actor=\(String(describing: receipts.first?.actor))")
+        continue
+      }
+      guard
         let offered = candidate.commander.alienStorageState?.current.salvage.pending[lot.identity],
         offered.record == pending.record, offered.lot == lot,
         offered.physicalTime == pending.physicalTime,
         offered.offer == spawn, offered.binding == nil,
         let previous = candidate.commander.alienStorageState?.current.snapshot
-      else { continue }
+      else {
+        recordNativeSalvageAdmissionRefusal(lot: lot.identity, stage: "postReceipt",
+          reason: "record/lot/time/offer/binding/snapshot join")
+        continue
+      }
       do {
         let world = try previous.world.map { record -> AlienStorageWorldRecord in
           guard record.id == pending.record else { return record }
@@ -78,7 +104,10 @@ extension Game {
           }
         }
         let revision = previous.worldRevision.addingReportingOverflow(1)
-        guard !revision.overflow else { return }
+        guard !revision.overflow else {
+          recordNativeSalvageAdmissionRefusal(lot: lot.identity, stage: "worldRevision", reason: "overflow")
+          return
+        }
         try candidate.commander.replaceAlienStorage(
           with: .init(
             owner: previous.owner,
@@ -87,9 +116,16 @@ extension Game {
             upgrades: previous.upgrades,
             receipts: previous.receipts, commands: previous.commands))
         guard candidate.commander.nativeSalvageSceneIsConsistent(candidate.bodies, docked: false)
-        else { continue }
+        else {
+          recordNativeSalvageAdmissionRefusal(lot: lot.identity, stage: "scene", reason: "false")
+          continue
+        }
         self = candidate
-      } catch { continue }
+      } catch {
+        let reason = (error as? AlienStorageError).map { String(describing: $0) } ?? "other"
+        recordNativeSalvageAdmissionRefusal(lot: lot.identity, stage: "worldReplace", reason: reason)
+        continue
+      }
     }
   }
 

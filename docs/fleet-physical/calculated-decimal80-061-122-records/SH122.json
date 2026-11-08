@@ -1,0 +1,625 @@
+{
+  "centreOfMassMetres": [
+    -4.492398507535679e-80,
+    -5.902638214678802e-10,
+    4.051473060220845
+  ],
+  "componentSourceSHA256": "76599c75eabb8c2499cd8a8ce76a93fe47774e6f21f71fba6bc779951b1d7090",
+  "contextFlags": {
+    "Clamped": false,
+    "DivisionByZero": false,
+    "FloatOperation": false,
+    "Inexact": true,
+    "InvalidOperation": false,
+    "Overflow": false,
+    "Rounded": true,
+    "Subnormal": false,
+    "Underflow": false
+  },
+  "contractSHA256": "65f2ecb53a56251a6b3e38f5d459f636732bfdb017ae341a32aef0361d32d6f3",
+  "coordinateUnits": "metres",
+  "decimalAudit": {
+    "centreOfMassMetres": [
+      "-4.4923985075356796795137875149039437842089054456379378424712044234742380390121146E-80",
+      "-5.9026382146788023657035909858597806575710841334196669692763056983354361933688958E-10",
+      "4.0514730602208445981480645712682229616812294444488493397562098624119870989231144"
+    ],
+    "inertiaAboutCentreOfMassKgM2": [
+      "4705613.5668055771662327938476599786568668912316859495524047544062843782073772015",
+      "-12.908683921102284236504109110764179620762823856812757663045087259701776341976896",
+      "3.3643752005398727915647663248964784655347894569946384494166695641800772344755382E-75",
+      "-12.908683921102284236504109110764179620762823856812757663045087259701776341976896",
+      "5057429.4705236472950770993420503162682088998742933413266801167753396722145894406",
+      "-0.000033388788728827987276459086676380661512092445411740810093590494332378495580048523",
+      "3.3643752005398727915647663248964784655347894569946384494166695641800772344755382E-75",
+      "-0.000033388788728827987276459086676380661512092445411740810093590494332378495580048523",
+      "2421556.9957194808580795807632476685754006245757284059513411382843237354470815328"
+    ],
+    "unroundedMassKg": "49809.894911116409013726842993948642544047354304448746340252512756385264520353882"
+  },
+  "detailedSourceSHA256": "c0392366f0a900584961def6feed02002cced6a9760fa0178518f2f020600556",
+  "dryMassKilograms": 49810,
+  "id": "SH122",
+  "inertiaAboutCentreOfMassKgM2": [
+    4705613.566805577,
+    -12.908683921102284,
+    3.3643752005398727e-75,
+    -12.908683921102284,
+    5057429.470523647,
+    -3.338878872882799e-05,
+    3.3643752005398727e-75,
+    -3.338878872882799e-05,
+    2421556.995719481
+  ],
+  "intrinsicHardware": [
+    {
+      "anchorComponent": 1,
+      "anchorMetres": [
+        -2.1955445771974982e-80,
+        1.3612806245404167e-81,
+        -5.545505191294492
+      ],
+      "anchorName": "smooth rear processing body",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "count": 1,
+      "eachKg": 900,
+      "massKg": 900.0,
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function."
+    },
+    {
+      "anchorComponent": 0,
+      "anchorMetres": [
+        9.144958668163036e-81,
+        5.778742929834452e-80,
+        12.0
+      ],
+      "anchorName": "open circular collection mouth",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "count": 1,
+      "eachKg": 750,
+      "massKg": 750.0,
+      "name": "Empty intrinsic power system"
+    },
+    {
+      "anchorComponent": 0,
+      "anchorMetres": [
+        9.144958668163036e-81,
+        5.778742929834452e-80,
+        12.0
+      ],
+      "anchorName": "open circular collection mouth",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "count": 1,
+      "eachKg": 180,
+      "massKg": 180.0,
+      "name": "Empty fuel-containment and transfer system"
+    },
+    {
+      "anchorComponent": 0,
+      "anchorMetres": [
+        9.144958668163036e-81,
+        5.778742929834452e-80,
+        12.0
+      ],
+      "anchorName": "open circular collection mouth",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "count": 4,
+      "eachKg": 120,
+      "massKg": 480.0,
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation"
+    },
+    {
+      "anchorComponent": 0,
+      "anchorMetres": [
+        9.144958668163036e-81,
+        5.778742929834452e-80,
+        12.0
+      ],
+      "anchorName": "open circular collection mouth",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "count": 1,
+      "eachKg": 90,
+      "massKg": 90.0,
+      "name": "Control and sensing system"
+    },
+    {
+      "anchorComponent": 0,
+      "anchorMetres": [
+        9.144958668163036e-81,
+        5.778742929834452e-80,
+        12.0
+      ],
+      "anchorName": "open circular collection mouth",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "count": 1,
+      "eachKg": 140,
+      "massKg": 140.0,
+      "name": "Empty carried-equipment interfaces"
+    },
+    {
+      "anchorComponent": 0,
+      "anchorMetres": [
+        9.144958668163036e-81,
+        5.778742929834452e-80,
+        12.0
+      ],
+      "anchorName": "open circular collection mouth",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "count": 1,
+      "eachKg": 160,
+      "massKg": 160.0,
+      "name": "Empty launcher system, no ammunition"
+    }
+  ],
+  "intrinsicHardwareMassKg": 2700.0,
+  "method": "decimal80-original-origin-moments-v1",
+  "metresPerSourceUnit": 1,
+  "nativeQualification": "UNRUN; empty source estimate, no occupied/loaded mass or actor grant.",
+  "operations": {
+    "analyticMomentEvaluations": 12096,
+    "coordinateConversions": 18192,
+    "decimalTensorChecks": 1,
+    "faceIndexChecks": 36288,
+    "faceMaterialChecks": 12096,
+    "floatBridgeChecks": 1,
+    "hardwareAllocations": 7,
+    "momentConsistencyChecks": 117,
+    "outputFloatConversions": 330,
+    "quadratureMomentEvaluations": 36288,
+    "resultRecords": 1,
+    "scaledCoordinateEvaluations": 18192,
+    "sourceParses": 1,
+    "squareRoots": 12096,
+    "triangleAreaEvaluations": 12096
+  },
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "positiveLeadingPrincipalMinors": [
+    4705613.566805577,
+    23798308729491.79,
+    5.762896099019283e+19
+  ],
+  "precisionDigits": 80,
+  "reserveLocationMetres": [
+    -4.492398507535679e-80,
+    -5.902638214678802e-10,
+    4.051473060220845
+  ],
+  "roleMapSHA256": "3116ad99f94910fbc0c111fbfb539af0cec9998388f0527e0bff4f45bc8d1583",
+  "rounding": "ROUND_HALF_EVEN",
+  "roundingReserveKg": 0.10508888359098627,
+  "schemaVersion": 1,
+  "sourceGeometryNotEdited": true,
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    5523214.797263838,
+    -12.908683921102284,
+    1.2430190258112574e-74,
+    -12.908683921102284,
+    5875030.7009819085,
+    8.572848529812257e-05,
+    1.2430190258112574e-74,
+    8.572848529812257e-05,
+    2421556.995719481
+  ],
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 3364.992493651172,
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "stockComponents": [
+    {
+      "areaCentroidMetres": [
+        9.144958668163036e-81,
+        5.778742929834452e-80,
+        12.0
+      ],
+      "areaSquareMetres": 688.9041523973877,
+      "massFirst": [
+        4.63e-76,
+        -2.5714e-75,
+        115735.89760276114
+      ],
+      "massSecond": [
+        401191.04070080596,
+        8.62e-76,
+        -6.69e-75,
+        8.62e-76,
+        281921.3015921809,
+        -2.7654e-74,
+        -6.69e-75,
+        -2.7654e-74,
+        1411122.1137443434
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "1.7572E-74",
+      "name": "open circular collection mouth",
+      "sourceFaceCount": 1536,
+      "sourceFaceStart": 0,
+      "stockMassKg": 9644.65813356343,
+      "verificationFirst": [
+        6.54e-76,
+        -6.632e-76,
+        115735.89760276114
+      ],
+      "verificationMass": 9644.65813356343,
+      "verificationSecond": [
+        401191.04070080596,
+        -1.8e-76,
+        -7.03e-75,
+        8.12e-76,
+        281921.3015921809,
+        -1.9903e-74,
+        -4.8e-75,
+        -1.0082e-74,
+        1411122.1137443434
+      ]
+    },
+    {
+      "areaCentroidMetres": [
+        -2.1955445771974982e-80,
+        1.3612806245404167e-81,
+        -5.545505191294492
+      ],
+      "areaSquareMetres": 930.5208471821538,
+      "massFirst": [
+        7.4e-77,
+        -4.487e-76,
+        -72242.91464118936
+      ],
+      "massSecond": [
+        180463.67304750043,
+        12.908683921102284,
+        -6.3e-76,
+        12.908683921102284,
+        144811.7184000463,
+        -6.23e-76,
+        -6.3e-76,
+        -6.23e-76,
+        1217217.8685306085
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "1E-73",
+      "name": "smooth rear processing body",
+      "sourceFaceCount": 480,
+      "sourceFaceStart": 1536,
+      "stockMassKg": 13027.291860550155,
+      "verificationFirst": [
+        8.4e-77,
+        -1.6387e-75,
+        -72242.91464118936
+      ],
+      "verificationMass": 13027.291860550155,
+      "verificationSecond": [
+        180463.67304750043,
+        12.908683921102284,
+        -7.29e-76,
+        12.908683921102284,
+        144811.7184000463,
+        -3.4241e-75,
+        -6.6e-76,
+        -3.6341e-75,
+        1217217.8685306085
+      ]
+    },
+    {
+      "areaCentroidMetres": [
+        -5.79538418490964e-81,
+        7.2,
+        4.0
+      ],
+      "areaSquareMetres": 415.6756348047977,
+      "massFirst": [
+        -6.8e-78,
+        41900.10398832361,
+        23277.835549068674
+      ],
+      "massSecond": [
+        33446.391689294534,
+        2.668e-76,
+        2.841e-76,
+        2.668e-76,
+        335127.1404052245,
+        167600.41595329443,
+        2.841e-76,
+        167600.41595329443,
+        252054.37062661324
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "1E-74",
+      "name": "collection mantle bulb",
+      "sourceFaceCount": 1440,
+      "sourceFaceStart": 2016,
+      "stockMassKg": 5819.458887267168,
+      "verificationFirst": [
+        1.398e-77,
+        41900.10398832361,
+        23277.835549068674
+      ],
+      "verificationMass": 5819.458887267168,
+      "verificationSecond": [
+        33446.391689294534,
+        -9e-77,
+        7.47e-77,
+        9.1e-77,
+        335127.1404052245,
+        167600.41595329443,
+        -1.172e-76,
+        167600.41595329443,
+        252054.37062661324
+      ]
+    },
+    {
+      "areaCentroidMetres": [
+        -3.9238888811695185e-81,
+        4.752,
+        11.0
+      ],
+      "areaSquareMetres": 49.338807969072086,
+      "massFirst": [
+        6.18e-79,
+        3282.412216566428,
+        7598.176427237101
+      ],
+      "massSecond": [
+        692.0542643953139,
+        2.89e-78,
+        -2.616e-77,
+        2.89e-78,
+        16290.077117518978,
+        36106.534382230704,
+        -2.616e-77,
+        36106.534382230704,
+        84972.63050891877
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "1E-75",
+      "name": "inward luminous intake organ",
+      "sourceFaceCount": 1440,
+      "sourceFaceStart": 3456,
+      "stockMassKg": 690.7433115670092,
+      "verificationFirst": [
+        -2.274e-78,
+        3282.412216566428,
+        7598.176427237101
+      ],
+      "verificationMass": 690.7433115670092,
+      "verificationSecond": [
+        692.0542643953139,
+        -4.08e-78,
+        -2.529e-77,
+        -3.4e-79,
+        16290.077117518978,
+        36106.534382230704,
+        -6.29e-78,
+        36106.534382230704,
+        84972.63050891877
+      ]
+    },
+    {
+      "areaCentroidMetres": [
+        -7.361215928519859,
+        -3.6,
+        4.0
+      ],
+      "areaSquareMetres": 415.675635141649,
+      "massFirst": [
+        -42838.29349103242,
+        -20950.05201113911,
+        23277.835567932347
+      ],
+      "massSecond": [
+        348788.32021247887,
+        154217.85656771672,
+        -171353.17396412967,
+        154217.85656771672,
+        108866.57885859611,
+        -83800.20804453865,
+        -171353.17396412967,
+        -83800.20804453865,
+        252054.37110346023
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "1E-74",
+      "name": "collection mantle bulb",
+      "sourceFaceCount": 1440,
+      "sourceFaceStart": 4896,
+      "stockMassKg": 5819.458891983087,
+      "verificationFirst": [
+        -42838.29349103242,
+        -20950.05201113911,
+        23277.835567932347
+      ],
+      "verificationMass": 5819.458891983087,
+      "verificationSecond": [
+        348788.32021247887,
+        154217.85656771672,
+        -171353.17396412967,
+        154217.85656771672,
+        108866.57885859611,
+        -83800.20804453865,
+        -171353.17396412967,
+        -83800.20804453865,
+        252054.37110346023
+      ]
+    },
+    {
+      "areaCentroidMetres": [
+        -4.858402517414248,
+        -2.376,
+        11.0
+      ],
+      "areaSquareMetres": 49.33880790062523,
+      "massFirst": [
+        -3355.9090391486184,
+        -1641.2061060063975,
+        7598.176416696285
+      ],
+      "massSecond": [
+        16996.411185253764,
+        7973.639877017117,
+        -36914.9994306348,
+        7973.639877017117,
+        4591.559970575603,
+        -18053.26716606879,
+        -36914.9994306348,
+        -18053.26716606879,
+        84972.63039050937
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "2E-75",
+      "name": "inward luminous intake organ",
+      "sourceFaceCount": 1440,
+      "sourceFaceStart": 6336,
+      "stockMassKg": 690.7433106087532,
+      "verificationFirst": [
+        -3355.9090391486184,
+        -1641.2061060063975,
+        7598.176416696285
+      ],
+      "verificationMass": 690.7433106087532,
+      "verificationSecond": [
+        16996.411185253764,
+        7973.639877017117,
+        -36914.9994306348,
+        7973.639877017117,
+        4591.559970575603,
+        -18053.26716606879,
+        -36914.9994306348,
+        -18053.26716606879,
+        84972.63039050937
+      ]
+    },
+    {
+      "areaCentroidMetres": [
+        7.361215928519859,
+        -3.6,
+        4.0
+      ],
+      "areaSquareMetres": 415.675635141649,
+      "massFirst": [
+        42838.29349103242,
+        -20950.05201113911,
+        23277.835567932347
+      ],
+      "massSecond": [
+        348788.32021247887,
+        -154217.85656771672,
+        171353.17396412967,
+        -154217.85656771672,
+        108866.57885859611,
+        -83800.20804457422,
+        171353.17396412967,
+        -83800.20804457422,
+        252054.37110346023
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "2E-74",
+      "name": "collection mantle bulb",
+      "sourceFaceCount": 1440,
+      "sourceFaceStart": 7776,
+      "stockMassKg": 5819.458891983087,
+      "verificationFirst": [
+        42838.29349103242,
+        -20950.05201113911,
+        23277.835567932347
+      ],
+      "verificationMass": 5819.458891983087,
+      "verificationSecond": [
+        348788.32021247887,
+        -154217.85656771672,
+        171353.17396412967,
+        -154217.85656771672,
+        108866.57885859611,
+        -83800.20804457422,
+        171353.17396412967,
+        -83800.20804457422,
+        252054.37110346023
+      ]
+    },
+    {
+      "areaCentroidMetres": [
+        4.858402517414248,
+        -2.376,
+        11.0
+      ],
+      "areaSquareMetres": 49.33880790062523,
+      "massFirst": [
+        3355.9090391486184,
+        -1641.2061060063975,
+        7598.176416696285
+      ],
+      "massSecond": [
+        16996.411185253764,
+        -7973.639877017117,
+        36914.9994306348,
+        -7973.639877017117,
+        4591.559970575603,
+        -18053.267166071957,
+        36914.9994306348,
+        -18053.267166071957,
+        84972.63039050937
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "2E-75",
+      "name": "inward luminous intake organ",
+      "sourceFaceCount": 1440,
+      "sourceFaceStart": 9216,
+      "stockMassKg": 690.7433106087532,
+      "verificationFirst": [
+        3355.9090391486184,
+        -1641.2061060063975,
+        7598.176416696285
+      ],
+      "verificationMass": 690.7433106087532,
+      "verificationSecond": [
+        16996.411185253764,
+        -7973.639877017117,
+        36914.9994306348,
+        -7973.639877017117,
+        4591.559970575603,
+        -18053.267166071957,
+        36914.9994306348,
+        -18053.267166071957,
+        84972.63039050937
+      ]
+    },
+    {
+      "areaCentroidMetres": [
+        1.2181756420139253e-81,
+        -2.122535544867355e-81,
+        10.0
+      ],
+      "areaSquareMetres": 350.52416521321214,
+      "massFirst": [
+        6.564e-77,
+        4.2458e-77,
+        49073.3831298497
+      ],
+      "massSecond": [
+        39323.827221314066,
+        -4.453e-78,
+        2.627e-76,
+        -4.453e-78,
+        29804.0308273912,
+        -1.50424e-75,
+        2.627e-76,
+        -1.50424e-75,
+        562045.8998207032
+      ],
+      "maximumOriginalOriginMomentDifferenceDecimal": "2E-74",
+      "name": "visible inner gold chamber",
+      "sourceFaceCount": 1440,
+      "sourceFaceStart": 10656,
+      "stockMassKg": 4907.338312984971,
+      "verificationFirst": [
+        -3.039e-77,
+        4.359e-78,
+        49073.3831298497
+      ],
+      "verificationMass": 4907.338312984971,
+      "verificationSecond": [
+        39323.827221314066,
+        -1.4549e-77,
+        -3.83e-77,
+        -4.549e-78,
+        29804.0308273912,
+        -1.12524e-75,
+        -1.382e-76,
+        -7.8524e-76,
+        562045.8998207032
+      ]
+    }
+  ],
+  "stockMassKg": 47109.89491111641,
+  "unroundedMassKg": 49809.89491111641,
+  "zeroAreaSourceFaces": 0
+}

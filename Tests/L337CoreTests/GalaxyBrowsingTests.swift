@@ -132,6 +132,7 @@ import Testing
 
 @Test func hyperspaceCommitsACurrentGalaxyPreviewBeforeTestingTheDestination() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   try #require(!game.docked && game.commander.valid, "Native launch refused: \(game.message)")
   game.bodies = []

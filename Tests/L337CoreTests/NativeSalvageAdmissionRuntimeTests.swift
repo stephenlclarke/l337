@@ -3,20 +3,29 @@ import Testing
 
 @testable import L337Core
 
+private enum NativeSalvageReleaseProducer: Hashable, Sendable {
+  case generated, emp
+}
+
 /// Shares genuine setup only; every scenario receives its own Game value.
 private actor NativeSalvageReleaseSnapshot {
   static let shared = NativeSalvageReleaseSnapshot()
-  private var setup: Task<Game, Error>?
+  private var setups: [NativeSalvageReleaseProducer: Task<Game, Error>] = [:]
 
-  func game() async throws -> Game {
+  func game(producer: NativeSalvageReleaseProducer = .generated) async throws -> Game {
     let task: Task<Game, Error>
-    if let setup {
+    if let setup = setups[producer] {
       task = setup
     } else {
       // Inherit the first caller's Testing context. Install before suspension so
       // concurrent callers share the same success or failure, with no retry/reset.
-      let created = Task { try await NativeSalvageAdmissionTestFixture.makeReleased() }
-      setup = created
+      let created = Task<Game, Error> {
+        switch producer {
+        case .generated: try await NativeSalvageAdmissionTestFixture.makeReleased()
+        case .emp: try await NativeSalvageAdmissionTestFixture.makeEMPReleased()
+        }
+      }
+      setups[producer] = created
       task = created
     }
     return try await task.value
@@ -31,8 +40,22 @@ enum NativeSalvageAdmissionTestFixture {
   }
 
   fileprivate static func makeReleased() async throws -> Game {
-    var (game, site) = try NativePagedSalvageFixture.game()
-    let body = try #require(game.bodies.first { $0.physical?.salvage?.wreck == site.identity })
+    let (game, site) = try NativePagedSalvageFixture.game()
+    return try await release(game, wreck: site.identity)
+  }
+
+  static func empReleased() async throws -> Game {
+    try await NativeSalvageReleaseSnapshot.shared.game(producer: .emp)
+  }
+
+  fileprivate static func makeEMPReleased() async throws -> Game {
+    let (game, source) = try NativePagedSalvageFixture.empGame()
+    return try await release(game, wreck: source.identity)
+  }
+
+  private static func release(_ input: Game, wreck: WreckIdentity) async throws -> Game {
+    var game = input
+    let body = try #require(game.bodies.first { $0.physical?.salvage?.wreck == wreck })
     let metadata = try #require(body.physical?.salvage)
     let section = try #require(game.workSurface(for: body, metadata: metadata)?.section)
     game.selectFlightTool(.salvageCutter)
@@ -179,670 +202,11 @@ enum NativeSalvageAdmissionTestFixture {
   }
 }
 
-/// Authored original-format custody, not a historical archive or a fresh human bootstrap.
-/// Its original producer and sealed import retain all eight emissions and old evidence.
-private enum NativeSalvageOldParentFixture {
-  struct Loaded {
-    let runtime: GameRuntime
-    let game: Game
-    let site: SalvageSite
-    let parent: SpaceBody
-    let lots: [SalvageLot]
-    let snapshot: AlienStorageSnapshot
-    let immutable: [AlienStorageWorldRecord]
-    let folder: URL
-    let file: URL
-    let generation: String
-    let files: [String: Data]
-  }
-
-  static func loaded(format: String) async throws -> Loaded {
-    var (game, site) = try NativePagedSalvageFixture.game(humanCargo: true)
-    try #require(game.commander.alienStorageState == nil)
-    let parent = try #require(game.bodies.first { $0.physical?.salvage?.wreck == site.identity })
-    let physical = try #require(parent.physical)
-    let profile = try #require(SalvageCatalogue.profile(catalogueShipID: site.catalogueShipID))
-    let section = try #require(profile.sections.first { $0.index == 1 })
-    let owner = try #require(game.commander.equipmentOwnerID)
-    let identity = WreckSectionIdentity(wreck: site.identity, section: section.index)
-    let source = SalvageLootSource(
-      roles: profile.sourceRoles, legalValue: 0, economy: game.currentSystem.economy,
-      technology: game.currentSystem.technology, ownership: .abandoned,
-      manifest: [.init(commodity: .food, quantity: 120)])
-    var producer = game.commander.salvageLedger
-    var remaining = section.workSeconds
-    var lots: [SalvageLot] = []
-    while remaining > 0 {
-      let elapsed = min(1, remaining)
-      let allocated = game.commander.flightSimulation.allocateIncident()
-      let operation = try #require(allocated)
-      let result = producer.advance(
-        wreck: site.identity, section: section, pose: game.modelPose(of: parent),
-        velocity: physical.velocity, angularVelocity: physical.angularVelocity, tool: .cutter,
-        elapsed: elapsed, operation: operation, conditions: NativePagedSalvageFixture.permitted,
-        source: source)
-      remaining -= elapsed
-      if remaining == 0 {
-        guard case .released(let emitted) = result else { throw SaveError.invalidCommander }
-        lots = emitted
-      } else {
-        guard case .progress = result else { throw SaveError.invalidCommander }
-      }
-    }
-    try #require(lots.count == 8)
-    let original = try producer.exportNativeSection(identity)
-    if format == "legacy-current" {
-      game.commander.salvageLedger = producer
-      let imported = try NativeSalvageImport(
-        ledger: producer, section: identity, owner: owner,
-        at: game.commander.flightSimulation.physicalTime, previous: nil)
-      try imported.apply(to: &game.commander)
-    } else {
-      let id = UUID()
-      var world: [AlienStorageWorldRecord] = [
-        .plan(
-          .init(
-            id: id, owner: owner, seed: original.seed, plan: original.plan, inspectedAt: 0,
-            requiredWorkSeconds: section.workSeconds, workSeconds: section.workSeconds,
-            damagedTechnology: original.damagedTechnology, depleted: original.depleted,
-            destroyed: false, lastOperation: original.lastOperation, progress: original.progress))
-      ]
-      let emissions = try SalvageSectionEmissionView(
-        seed: original.seed, plan: original.plan, progress: original.progress
-      ).emissions()
-      for lot in lots {
-        let origin = try #require(emissions.first { $0.value.identity == lot.identity }?.key)
-        world.append(
-          .companion(
-            .init(
-              id: UUID(), owner: owner, plan: id, origin: origin, issuedAt: 0,
-              state: .pending(lot: lot, physicalTime: 0, offer: nil, binding: nil))))
-      }
-      try game.commander.replaceAlienStorage(
-        with: .init(
-          owner: owner, revision: 0, worldRevision: 1, world: world, sources: [], attachments: [],
-          upgrades: [], receipts: [], commands: []))
-    }
-    let old = try #require(game.commander.alienStorageState?.current.snapshot)
-    let (oldRoot, oldPages) = try NativeSalvageReleasedOldFormat.encode(old)
-    let folder = try NativePagedSalvageFixture.folder()
-    var completed = false
-    defer { if !completed { try? FileManager.default.removeItem(at: folder) } }
-    let file = folder.appendingPathComponent("commander.json")
-    let runtime = GameRuntime(game: game)
-    try await runtime.save(to: file)
-    let saved = await runtime.snapshot()
-    let bytes = try Data(contentsOf: file)
-    let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)
-    #expect(pointer.schemaVersion == 27)
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.sortedKeys]
-    let oldPointer = try encoder.encode(
-      FrozenV27SavePointer(generation: pointer.generation, hashes: pointer.hashes))
-    #expect(oldPointer == bytes)
-    let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: file)
-    let store = try AlienStoragePageStore(directory: directory)
-    let root = try store.readGenerationRoot()
-    #expect(root == oldRoot && pointer.hashes["alien-root.json"] == ScriptPackLibrary.hash(oldRoot))
-    for (hash, expected) in oldPages {
-      let actual = try store.readPage(hash: hash)
-      #expect(actual == expected)
-    }
-    let before = try files(in: folder)
-    try await runtime.load(from: file, persistMigrations: false)
-    let loaded = await runtime.snapshot()
-    #expect(loaded.commander == saved.commander && loaded.bodies == saved.bodies)
-    #expect(loaded.commander.alienStorageState?.current.snapshot == old)
-    #expect(loaded.commander.alienStorageState?.current.salvage.native.wrecks.isEmpty == true)
-    #expect(loaded.nativeSalvageWork == nil)
-    let after = try files(in: folder)
-    #expect(after == before)
-    let immutable = old.world.filter {
-      switch $0 {
-      case .plan, .legacySection, .legacyLot: true
-      default: false
-      }
-    }
-    completed = true
-    return .init(
-      runtime: runtime, game: loaded, site: site, parent: parent, lots: lots, snapshot: old,
-      immutable: immutable, folder: folder, file: file, generation: pointer.generation,
-      files: before)
-  }
-
-  static func files(in folder: URL) throws -> [String: Data] {
-    var result: [String: Data] = [:]
-    let enumerator = try #require(
-      FileManager.default.enumerator(at: folder, includingPropertiesForKeys: [.isRegularFileKey]))
-    for case let url as URL in enumerator {
-      if try url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true {
-        result[String(url.path.dropFirst(folder.path.count + 1))] = try Data(contentsOf: url)
-      }
-    }
-    return result
-  }
-}
-
-/// Failure-only scalar facts; eight rows and an ASCII UTF-8 ceiling prevent corpus dumps.
-private func oldParentClearanceFacts(
-  format: String, body: SpaceBody, pose: ShipPose, metadata: SalvageTargetMetadata,
-  lots: [SalvageLot], results: [SalvageLotIdentity: HullSweepResult]
-) -> String {
-  func vector(_ value: Vector3) -> String { "(\(value.x),\(value.y),\(value.z))" }
-  func asciiField(_ value: String) -> String {
-    String(decoding: value.utf8.prefix(16).filter { $0 < 128 }, as: UTF8.self)
-  }
-  let catalogue = asciiField(body.physical?.catalogueShipID ?? "nil")
-  let velocity = body.physical.map { vector($0.velocity) } ?? "nil"
-  let angular = body.physical.map { vector($0.angularVelocity) } ?? "nil"
-  var rows = [
-    "No original released lot proves mesh clearance and broad-parent overlap",
-    "format=\(asciiField(format)) catalogue=\(catalogue) pose=\(vector(pose.position))"
-      + " basisX=\(vector(pose.orientation.x)) basisY=\(vector(pose.orientation.y))"
-      + " basisZ=\(vector(pose.orientation.z)) v=\(velocity) omega=\(angular)"
-      + " broadRadius=\(metadata.bounds.radius) broadCenter=\(vector(metadata.bounds.center))"
-      + " broadReach=\(metadata.bounds.radius + metadata.bounds.center.length)",
-  ]
-  for lot in lots.prefix(8) {
-    let id = lot.identity
-    let wreck = id.section.wreck
-    let identity =
-      "\(wreck.system.galaxy)/\(wreck.system.system)/\(wreck.site)/\(wreck.lineage)"
-      + "/\(id.section.section)/\(id.lot)"
-    let result = results[id]
-    let reason = result?.failure.map { String(describing: $0) } ?? "none"
-    let minimum = result?.minimumSampledClearance.map { String($0) } ?? "nil"
-    let overlap =
-      (lot.position - pose.position).length < metadata.bounds.radius
-      + metadata.bounds.center.length + lot.halfExtents.length + 8
-    rows.append(
-      "lot=\(identity) p=\(vector(lot.position)) half=\(vector(lot.halfExtents))"
-        + " broad=\(overlap) safe=\(result?.safe ?? false) reason=\(reason) min=\(minimum)")
-  }
-  // All emitted fields are ASCII scalars/identities; reserve one byte for the newline.
-  return String(decoding: rows.joined(separator: "\n").utf8.prefix(4095), as: UTF8.self) + "\n"
-}
-
-struct NativeSalvageOldParentAdmissionTests {
-  @Test(arguments: ["old-native", "legacy-current"])
-  func originalReleasedOldCustodyReadmitsAfterRealNoWriteLoadWithoutAnotherCut(format: String)
-    async throws
-  {
-    let fixture = try await NativeSalvageOldParentFixture.loaded(format: format)
-    defer { try? FileManager.default.removeItem(at: fixture.folder) }
-    let body = try #require(fixture.game.bodies.first { $0.id == fixture.parent.id })
-    let metadata = try #require(body.physical?.salvage)
-    let profile = try #require(
-      SalvageCatalogue.profile(catalogueShipID: fixture.site.catalogueShipID))
-    let hull = try PreparedHull(mesh: profile.mesh)
-    let pose = fixture.game.modelPose(of: body)
-    // Original emission order is fixed; its first row need not clear every hull component.
-    var clearanceResults: [SalvageLotIdentity: HullSweepResult] = [:]
-    let selected = fixture.lots.first { lot in
-      let overlapsParent =
-        (lot.position - pose.position).length < metadata.bounds.radius
-        + metadata.bounds.center.length + lot.halfExtents.length + 8
-      guard overlapsParent else { return false }
-      let clearance = HullSweepSafety.validatePlacement(
-        center: lot.position, radius: lot.halfExtents.length, hull: hull, pose: pose,
-        requiredClearance: 8)
-      clearanceResults[lot.identity] = clearance
-      return clearance.safe && (clearance.minimumSampledClearance ?? -.infinity) > 8
-    }
-    let failureMessage: String
-    if selected == nil {
-      // Reuse every selector result; only unqueried originals complete the eight-row inventory.
-      for lot in fixture.lots.prefix(8) where clearanceResults[lot.identity] == nil {
-        clearanceResults[lot.identity] = HullSweepSafety.validatePlacement(
-          center: lot.position, radius: lot.halfExtents.length, hull: hull, pose: pose,
-          requiredClearance: 8)
-      }
-      failureMessage = oldParentClearanceFacts(
-        format: format, body: body, pose: pose, metadata: metadata, lots: fixture.lots,
-        results: clearanceResults)
-    } else {
-      failureMessage = "No original released lot proves mesh clearance and broad-parent overlap"
-    }
-    let originalPhysical = try #require(body.physical)
-    let originalPlayer = try #require(fixture.game.commander.flightSimulation.player)
-    let originalOwner = try #require(fixture.game.commander.equipmentOwnerID)
-    let originalSeed = fixture.game.commander.salvageLedger.nativeInspectionSeed
-    let identities = Set(fixture.lots.map(\.identity))
-    func invariantFailure(_ game: Game, allowingBindings: Bool) -> String? {
-      guard !game.docked, !game.paused, game.screen.isFlight, game.energy > 0,
-        game.systemIdentity == fixture.game.systemIdentity, game.jumpCountdown == nil,
-        game.commander.flightSimulation.player == originalPlayer,
-        game.commander.equipmentOwnerID == originalOwner,
-        game.commander.salvageLedger.nativeInspectionSeed == originalSeed
-      else { return "flight/player/owner changed" }
-      let parents = game.bodies.filter { $0.physical?.identity == originalPhysical.identity }
-      guard parents.count == 1, let current = parents.first, let physical = current.physical,
-        current.id == body.id, current.hull == body.hull, current.energy > 0,
-        current.rotationRate == body.rotationRate, physical.salvage == metadata,
-        physical.catalogueShipID == originalPhysical.catalogueShipID,
-        physical.spawnIdentity == originalPhysical.spawnIdentity, physical.spawnIdentity != nil,
-        physical.canonicalSpin == true, physical.npc == nil, physical.payload == nil,
-        physical.velocity == originalPhysical.velocity,
-        physical.angularVelocity == originalPhysical.angularVelocity
-      else { return "parent identity/source/motion/liveness changed" }
-      guard let context = game.gameplayContext(), context.player.identity == originalPlayer,
-        !context.protection.protectedActors.contains(originalPhysical.identity),
-        fixture.lots.allSatisfy({
-          !context.protection.protectedPayloads.contains(.salvage($0.identity))
-            && ($0.position - context.player.position).length <= context.perceptionRadius
-        })
-      else { return "parent/lot protection or perception changed" }
-      guard let state = game.commander.alienStorageState?.current,
-        Set(state.salvage.pending.keys) == identities, state.snapshot.owner == originalOwner,
-        game.nativeSalvageWork == nil, game.workGuidance == nil, game.workBraking == nil,
-        state.salvage.native.works.isEmpty, state.salvage.native.inspections.isEmpty,
-        fixture.immutable.allSatisfy(state.snapshot.world.contains)
-      else { return "custody/history/work changed" }
-      if let retained = state.salvage.native.wrecks[fixture.site.identity] {
-        guard retained.binding == originalPhysical.identity,
-          retained.source == .generated(fixture.site), retained.seed == originalSeed,
-          retained.destroyedAt == nil
-        else { return "retained parent source/binding changed" }
-      }
-      for lot in fixture.lots {
-        guard let pending = state.salvage.pending[lot.identity], pending.offer == nil,
-          pending.lot.content == lot.content, pending.lot.loot == lot.loot,
-          pending.lot.massKg == lot.massKg, pending.lot.halfExtents == lot.halfExtents
-        else { return "original lot custody changed" }
-        if pending.binding == nil {
-          guard pending.lot == lot else { return "unbound original lot moved/changed" }
-        } else if !allowingBindings {
-          return "binding preceded observed first transition"
-        }
-      }
-      return nil
-    }
-    func boundedWaitFailure(_ reason: String, frame: Int) -> Comment {
-      let text = "old-readmission frame=\(frame)/1400 reason=\(reason)\n" + failureMessage
-      return Comment(rawValue: String(decoding: text.utf8.prefix(4095), as: UTF8.self) + "\n")
-    }
-    // Actual388 showed no original was initially eligible. The analytic moving-parent
-    // window supports this finite cap only; real pre-frame geometry controls acceptance.
-    var preFrame = fixture.game
-    var admitted = fixture.game
-    var newlyBound: [SalvageLot] = []
-    var frames = 0
-    for frame in 1...1400 {
-      preFrame = admitted
-      if let reason = invariantFailure(preFrame, allowingBindings: false) {
-        let valid = false
-        try #require(valid, boundedWaitFailure(reason, frame: frame))
-      }
-      let before = try #require(preFrame.commander.alienStorageState?.current.salvage)
-      // No control, cutter, target acquisition, copied actor or synthetic motion is supplied.
-      admitted = await fixture.runtime.advance(delta: 0.02)
-      frames = frame
-      if let reason = invariantFailure(admitted, allowingBindings: true) {
-        let valid = false
-        try #require(valid, boundedWaitFailure(reason, frame: frame))
-      }
-      let after = try #require(admitted.commander.alienStorageState?.current.salvage)
-      let previousParent = try #require(
-        preFrame.bodies.first { $0.physical?.identity == originalPhysical.identity })
-      let currentParent = try #require(
-        admitted.bodies.first { $0.physical?.identity == originalPhysical.identity })
-      let parentStep =
-        admitted.modelPose(of: currentParent).position
-        - preFrame.modelPose(of: previousParent).position - originalPhysical.velocity * 0.02
-      let timeStep =
-        admitted.commander.flightSimulation.physicalTime
-        - preFrame.commander.flightSimulation.physicalTime
-      let genuineStep = parentStep.length < 1e-7 && abs(timeStep - 0.02) < 1e-7
-      try #require(genuineStep, boundedWaitFailure("parent/time step changed", frame: frame))
-      newlyBound = fixture.lots.filter {
-        before.pending[$0.identity]?.binding == nil && after.pending[$0.identity]?.binding != nil
-      }
-      if !newlyBound.isEmpty { break }
-    }
-    let observedTransition = !newlyBound.isEmpty
-    try #require(
-      observedTransition, boundedWaitFailure("no binding within finite cap", frame: frames))
-    let admissionParent = try #require(
-      preFrame.bodies.first { $0.physical?.identity == originalPhysical.identity })
-    let admissionPose = preFrame.modelPose(of: admissionParent)
-    let originalCustody = try #require(preFrame.commander.alienStorageState?.current.salvage)
-    var eligibleOriginal: SalvageLot?
-    // At most eight additional queries: only originals actually bound in the FIRST transition.
-    // Their saved unbound poses and this authentic pre-frame parent pose are the oracle.
-    for lot in newlyBound.prefix(8) {
-      let pending = try #require(originalCustody.pending[lot.identity])
-      try #require(pending.binding == nil && pending.offer == nil && pending.lot == lot)
-      let broad =
-        (lot.position - admissionPose.position).length < metadata.bounds.radius
-        + metadata.bounds.center.length + lot.halfExtents.length + 8
-      let clearance = HullSweepSafety.validatePlacement(
-        center: lot.position, radius: lot.halfExtents.length, hull: hull, pose: admissionPose,
-        requiredClearance: 8)
-      if broad && clearance.safe && (clearance.minimumSampledClearance ?? -.infinity) > 8 {
-        eligibleOriginal = lot
-        break
-      }
-    }
-    let strictTransition = eligibleOriginal != nil
-    try #require(
-      strictTransition,
-      boundedWaitFailure("first binding lacks strict pre-frame proof", frame: frames))
-    let first = try #require(eligibleOriginal)
-    #expect(
-      (first.position - admissionPose.position).length < metadata.bounds.radius
-        + metadata.bounds.center.length + first.halfExtents.length + 8)
-    let native = try #require(admitted.commander.alienStorageState?.current.salvage)
-    let parent = try #require(native.native.wrecks[fixture.site.identity])
-    #expect(parent.binding == body.physical?.identity && parent.source == .generated(fixture.site))
-    #expect(
-      admitted.nativeSalvageWork == nil && native.native.works.isEmpty
-        && native.native.inspections.isEmpty)
-    #expect(Set(native.pending.keys) == Set(fixture.lots.map(\.identity)))
-    for lot in fixture.lots {
-      let pending = try #require(native.pending[lot.identity])
-      #expect(pending.lot.content == lot.content && pending.lot.loot == lot.loot)
-      #expect(pending.lot.massKg == lot.massKg && pending.lot.halfExtents == lot.halfExtents)
-      #expect(pending.offer == nil)
-    }
-    let binding = try #require(native.pending[first.identity]?.binding)
-    let fragment = try #require(admitted.bodies.first { $0.physical?.identity == binding })
-    let position = admitted.commander.flightSimulation.pose.systemPoint(fragment.position)
-    let actualOwnership = admitted.commander.nativeSalvageBodyOwnershipMatches(fragment, lot: first)
-    try #require(actualOwnership)
-    #expect(fragment.physical?.payload == .salvage(first.identity))
-    #expect(fragment.physical?.velocity == first.velocity && fragment.energy > 0)
-    #expect((position - first.position - first.velocity * 0.02).length < 1e-7)
-    let currentWorld = try #require(admitted.commander.alienStorageState?.current.snapshot.world)
-    #expect(fixture.immutable.allSatisfy(currentWorld.contains))
-    let unchanged = try NativeSalvageOldParentFixture.files(in: fixture.folder)
-    #expect(unchanged == fixture.files)
-    try await fixture.runtime.save(to: fixture.file)
-    let saved = await fixture.runtime.snapshot()
-    let beforeLoad = try NativeSalvageOldParentFixture.files(in: fixture.folder)
-    try await fixture.runtime.load(from: fixture.file, persistMigrations: false)
-    let loaded = await fixture.runtime.snapshot()
-    #expect(loaded.commander == saved.commander && loaded.bodies == saved.bodies)
-    let afterLoad = try NativeSalvageOldParentFixture.files(in: fixture.folder)
-    #expect(afterLoad == beforeLoad)
-    for (relative, bytes) in fixture.files
-    where relative.hasPrefix("commander.json.missions/" + fixture.generation + "/") {
-      #expect(afterLoad[relative] == bytes)
-    }
-  }
-
-  @Test(arguments: ["wrong source", "protected parent", "player blocked", "retained mismatch"])
-  func oldParentFactoryAndGeometryRefusalsPreserveAllOriginalCustody(mismatch: String)
-    async throws
-  {
-    let fixture = try await NativeSalvageOldParentFixture.loaded(format: "legacy-current")
-    defer { try? FileManager.default.removeItem(at: fixture.folder) }
-    var game = fixture.game
-    let index = try #require(game.bodies.firstIndex { $0.id == fixture.parent.id })
-    switch mismatch {
-    case "wrong source": game.bodies[index].physical?.catalogueShipID = "SH001"
-    case "protected parent": game.bodies[index].navalTarget = true
-    case "player blocked":
-      var pose = game.commander.flightSimulation.pose
-      pose.position = try #require(fixture.lots.first).position
-      NativePagedSalvageFixture.moveObserver(&game, to: pose)
-    default:
-      let retained = game.retainNativeSalvageWreck(game.bodies[index])
-      try #require(retained)
-      let old = try #require(game.bodies[index].physical)
-      let allocated = game.commander.flightSimulation.allocateActor()
-      let actor = try #require(allocated)
-      game.bodies[index].physical = .init(
-        identity: actor, population: old.population, npc: old.npc, velocity: old.velocity,
-        laserCooldown: old.laserCooldown, rock: old.rock, payload: old.payload,
-        attackOrigin: old.attackOrigin, emissionPosition: old.emissionPosition,
-        deathOrigin: old.deathOrigin, deathIncidentID: old.deathIncidentID, ordnance: old.ordnance,
-        spawnIdentity: old.spawnIdentity, blocksNavalEncounter: old.blocksNavalEncounter,
-        catalogueShipID: old.catalogueShipID, angularVelocity: old.angularVelocity,
-        canonicalSpin: old.canonicalSpin, salvage: old.salvage, empSource: old.empSource,
-        empCrewPod: old.empCrewPod, suspendedNPCIntention: old.suspendedNPCIntention)
-    }
-    let before = game.commander
-    let bodies = game.bodies
-    let original = try #require(before.alienStorageState?.current.salvage)
-    let first = try #require(fixture.lots.first)
-    if mismatch == "protected parent" {
-      let body = game.bodies[index]
-      let bounds = try #require(body.physical?.salvage?.bounds)
-      let distance = (first.position - game.modelPose(of: body).position).length
-      try #require(distance < bounds.radius + bounds.center.length + first.halfExtents.length + 8)
-    } else if mismatch == "player blocked" {
-      let radius = try #require(game.commander.playerMesh.vertices.map(\.length).max())
-      try #require(
-        (first.position - game.commander.flightSimulation.pose.position).length <= radius
-          + first.halfExtents.length + 8)
-    }
-    game.admitPendingNativeSalvage()
-    if mismatch == "wrong source" || mismatch == "retained mismatch" {
-      // This source/binding mismatch rejects every lot before namespace allocation.
-      #expect(game.commander == before && game.bodies == bodies)
-    } else {
-      let current = try #require(game.commander.alienStorageState?.current.salvage)
-      #expect(Set(current.pending.keys) == Set(original.pending.keys))
-      let refused = try #require(current.pending[first.identity])
-      #expect(refused.binding == nil && refused.offer == nil && refused.lot == first)
-      #expect(!game.bodies.contains { $0.physical?.payload == .salvage(first.identity) })
-      for old in original.pending.values {
-        let retained = try #require(current.pending[old.lot.identity])
-        #expect(retained.lot == old.lot && retained.physicalTime == old.physicalTime)
-        #expect(retained.offer == nil)
-        if let binding = retained.binding {
-          let body = try #require(game.bodies.first { $0.physical?.identity == binding })
-          #expect(game.currentSalvageLot(for: body)?.identity == old.lot.identity)
-        }
-      }
-      let world = try #require(game.commander.alienStorageState?.current.snapshot.world)
-      #expect(fixture.immutable.allSatisfy(world.contains))
-      #expect(game.commander.credits == before.credits && game.commander.cargo == before.cargo)
-      #expect(game.commander.equipmentInventory == before.equipmentInventory)
-      #expect(game.commander.flightSimulation.physicalTime == before.flightSimulation.physicalTime)
-      #expect(game.commander.nativeSalvageSceneIsConsistent(game.bodies, docked: false))
-    }
-    let observed = try NativeSalvageOldParentFixture.files(in: fixture.folder)
-    #expect(observed == fixture.files)
-  }
-
-  @Test func actualParentDeathDoesNotRequireALiveParentToReadmitReleasedOldLots() async throws {
-    let fixture = try await NativeSalvageOldParentFixture.loaded(format: "old-native")
-    defer { try? FileManager.default.removeItem(at: fixture.folder) }
-    var game = fixture.game
-    let parent = try #require(game.bodies.first { $0.id == fixture.parent.id })
-    let player = try #require(game.commander.flightSimulation.player)
-    let allocated = game.makeAttackOrigin(owner: player)
-    let origin = try #require(allocated)
-    let contact = try game.nearestMissionCollision(
-      from: .init(0, 0, 0), direction: .init(0, 0, 1), range: 300, radius: 0,
-      includePlayer: false)
-    let hit = try #require(contact?.hit)
-    try #require(hit.target == .body(parent.id))
-    // Controlled lethal native hit/death settlement, not a stock pulse firing or
-    // damage/cadence/energy-cost acceptance test.
-    let applied = game.applyCombatHit(
-      hit, origin: origin, kind: .laser, damage: parent.energy + 1, laser: .pulse)
-    try #require(applied != nil)
-    game.commander.crimeLedger.finishEmission(origin.emissionID)
-    game.resolveDestroyed()
-    try #require(!game.bodies.contains { $0.id == parent.id })
-    try #require(game.commander.salvageLedger.isWreckDestroyed(fixture.site.identity))
-    #expect(game.commander.alienStorageState?.current.snapshot == fixture.snapshot)
-    let runtime = GameRuntime(game: game)
-    try await runtime.save(to: fixture.file)
-    let admitted = await runtime.advance(delta: 0.02)
-    let native = try #require(admitted.commander.alienStorageState?.current.salvage)
-    #expect(native.native.wrecks.isEmpty && admitted.nativeSalvageWork == nil)
-    #expect(native.pending.values.contains { $0.binding != nil })
-    #expect(Set(native.pending.keys) == Set(fixture.lots.map(\.identity)))
-    for lot in fixture.lots { #expect(native.pending[lot.identity]?.lot.loot == lot.loot) }
-  }
-}
-
-/// Original schema-27 pending records only. New native tags are deliberately rejected.
-/// Field tables are frozen separately from the current page encoder, like FrozenV27SalvageFormat.
-/// Pending companion/legacy field tables match 55d57c4f5d1e3a61562cd13c55355d54051a48ad.
-private enum NativeSalvageReleasedOldFormat {
-  struct Companion: Encodable {
-    enum State: Encodable {
-      case pending(
-        lot: SalvageLot, physicalTime: Double, offer: SpawnIdentity?, binding: ActorIdentity?)
-    }
-    let id: UUID
-    let owner: UUID
-    let plan: UUID
-    let origin: AlienStorageEmissionOrigin
-    let issuedAt: Double
-    let state: State
-  }
-  struct LegacyLot: Encodable {
-    enum State: Encodable {
-      case pending(lot: SalvageLot, offer: SpawnIdentity?, binding: ActorIdentity?)
-    }
-    let id: UUID
-    let owner: UUID
-    let section: UUID
-    let origin: AlienStorageEmissionOrigin
-    let identity: SalvageLotIdentity
-    let state: State
-  }
-  struct LegacyCurrent: Encodable {
-    enum State: Encodable {
-      case pending(lot: SalvageLot, at: Double, offer: SpawnIdentity?, binding: ActorIdentity?)
-    }
-    let id: UUID
-    let owner: UUID
-    let claim: UUID
-    let state: State
-  }
-  enum World: Encodable {
-    case plan(FrozenV27WorldPlan)
-    case companion(Companion)
-    case legacySection(FrozenV27LegacySection)
-    case legacyLot(LegacyLot)
-    case legacyCurrent(LegacyCurrent)
-
-    init(_ value: AlienStorageWorldRecord) throws {
-      switch value {
-      case .plan(let p):
-        self = .plan(
-          .init(
-            id: p.id, owner: p.owner, seed: p.seed, plan: p.plan, inspectedAt: p.inspectedAt,
-            requiredWorkSeconds: p.requiredWorkSeconds, workSeconds: p.workSeconds,
-            damagedTechnology: p.damagedTechnology, depleted: p.depleted, destroyed: p.destroyed,
-            lastOperation: p.lastOperation, progress: .init(p.progress)))
-      case .companion(let p):
-        guard case .pending(let lot, let time, let offer, let binding) = p.state else {
-          throw AlienStorageError.invalidPage
-        }
-        self = .companion(
-          .init(
-            id: p.id, owner: p.owner, plan: p.plan, origin: p.origin,
-            issuedAt: p.issuedAt,
-            state: .pending(lot: lot, physicalTime: time, offer: offer, binding: binding)))
-      case .legacySection(let p):
-        self = .legacySection(
-          .init(
-            id: p.id, owner: p.owner, importOperation: p.importOperation, importedAt: p.importedAt,
-            ledgerRevision: p.ledgerRevision, seed: p.seed, plan: p.plan,
-            progress: .init(p.progress),
-            savedPartialWorkSeconds: p.savedPartialWorkSeconds,
-            savedDamagedTechnology: p.savedDamagedTechnology, sectionDepleted: p.sectionDepleted,
-            sectionDestroyed: p.sectionDestroyed, wreckDestroyed: p.wreckDestroyed,
-            savedLedgerLastOperation: p.savedLedgerLastOperation))
-      case .legacyLot(let p):
-        guard case .pending(let lot, let offer, let binding) = p.state else {
-          throw AlienStorageError.invalidPage
-        }
-        self = .legacyLot(
-          .init(
-            id: p.id, owner: p.owner, section: p.section, origin: p.origin,
-            identity: p.identity, state: .pending(lot: lot, offer: offer, binding: binding)))
-      case .legacyCurrent(let p):
-        guard case .pending(let lot, let time, let offer, let binding) = p.state else {
-          throw AlienStorageError.invalidPage
-        }
-        self = .legacyCurrent(
-          .init(
-            id: p.id, owner: p.owner, claim: p.claim,
-            state: .pending(lot: lot, at: time, offer: offer, binding: binding)))
-      default: throw AlienStorageError.invalidPage
-      }
-    }
-  }
-  enum Payload: Encodable { case world(World) }
-  struct Entry: Encodable {
-    let key: String
-    let payload: Payload
-  }
-  struct Tree: Encodable {
-    let hash: String?
-    let count: UInt64
-    let height: UInt64
-    let firstKey: String?
-    let lastKey: String?
-    static let empty = Self(hash: nil, count: 0, height: 0, firstKey: nil, lastKey: nil)
-  }
-  struct Index: Encodable {
-    let index: String
-    let tree: Tree
-  }
-  struct Root: Encodable {
-    let version: Int
-    let owner: UUID
-    let revision: UInt64
-    let worldRevision: UInt64
-    let indices: [Index]
-  }
-  struct Page: Encodable {
-    let version: Int
-    let owner: UUID
-    let index: String
-    let height: UInt64
-    let entries: [Entry]
-    let children: [Tree]
-  }
-  static func encode(_ snapshot: AlienStorageSnapshot) throws -> (Data, [String: Data]) {
-    guard snapshot.world.count <= 128, snapshot.sources.isEmpty, snapshot.attachments.isEmpty,
-      snapshot.upgrades.isEmpty, snapshot.receipts.isEmpty, snapshot.commands.isEmpty
-    else { throw AlienStorageError.invalidPage }
-    let encoder = JSONEncoder()
-    encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
-    let entries = try snapshot.world.sorted { $0.id.uuidString < $1.id.uuidString }.map {
-      Entry(key: $0.id.uuidString, payload: .world(try .init($0)))
-    }
-    var pages: [String: Data] = [:]
-    var indices: [Index] = []
-    for index in ["sources", "attachments", "upgrades", "receipts", "commands", "world"] {
-      var tree = Tree.empty
-      if index == "world", !entries.isEmpty {
-        let bytes = try encoder.encode(
-          Page(
-            version: 1, owner: snapshot.owner, index: index,
-            height: 0, entries: entries, children: []))
-        guard bytes.count <= 262144 else { throw AlienStorageError.oversizedRecord }
-        let hash = ScriptPackLibrary.hash(bytes)
-        pages[hash] = bytes
-        tree = .init(
-          hash: hash, count: UInt64(entries.count), height: 0,
-          firstKey: entries.first?.key, lastKey: entries.last?.key)
-      }
-      indices.append(.init(index: index, tree: tree))
-    }
-    let root = try encoder.encode(
-      Root(
-        version: 1, owner: snapshot.owner,
-        revision: snapshot.revision, worldRevision: snapshot.worldRevision, indices: indices))
-    return (root, pages)
-  }
-}
-
 struct NativeSalvageAdmissionRuntimeTests {
   @Test func genuineNativeReleaseAdmitsOnlyActualSafeActorsAndMovesThemInItsReleaseFrame()
     async throws
   {
-    let released = try await NativeSalvageAdmissionTestFixture.released()
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
     let native = try #require(released.commander.alienStorageState?.current.salvage)
     let bound = native.pending.values.filter { $0.binding != nil }
     #expect(!bound.isEmpty && bound.count <= native.pending.count)
@@ -881,7 +245,7 @@ struct NativeSalvageAdmissionRuntimeTests {
   @Test func nativeOfferCannotBypassExactParentProtectionMeshPlayerOrOtherActorChecks()
     async throws
   {
-    let released = try await NativeSalvageAdmissionTestFixture.released()
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
     for mismatch in [
       "unoffered", "unoffered allocated", "changed position", "changed bounds", "protected parent",
       "wrong wreck",
@@ -982,7 +346,7 @@ struct NativeSalvageAdmissionRuntimeTests {
   @Test func refusedNativePlacementDiscardsPrivateOfferAndPreservesEveryReleasedLot()
     async throws
   {
-    let released = try await NativeSalvageAdmissionTestFixture.released()
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
     var (game, pending) = try NativeSalvageAdmissionTestFixture.parked(released)
     var pose = game.commander.flightSimulation.pose
     pose.position = pending.lot.position
@@ -994,14 +358,14 @@ struct NativeSalvageAdmissionRuntimeTests {
     let retained = try #require(
       game.commander.alienStorageState?.current.salvage.pending[pending.lot.identity])
     #expect(retained.lot == pending.lot && retained.binding == nil && retained.offer == nil)
-    let fresh = try await NativeSalvageAdmissionTestFixture.released()
+    let fresh = try await NativeSalvageAdmissionTestFixture.empReleased()
     #expect(fresh.commander == released.commander && fresh.bodies == released.bodies)
   }
 
   @Test func fullActualCargoPopulationLeavesOriginalNativeCustodyAndAllocatorUntouched()
     async throws
   {
-    let released = try await NativeSalvageAdmissionTestFixture.released()
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
     var (game, pending) = try NativeSalvageAdmissionTestFixture.parked(released)
     let initial = try #require(game.gameplayContext())
     let planet = (initial.player.position - initial.anchors.planet.position).unit
@@ -1058,7 +422,7 @@ struct NativeSalvageAdmissionRuntimeTests {
   }
 
   @Test func nativeSectionNeverFallsBackToAnOriginalOrdinaryOffer() async throws {
-    let released = try await NativeSalvageAdmissionTestFixture.released()
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
     var game = released
     let current = try #require(game.commander.alienStorageState?.current.salvage)
     let pending = try #require(current.pending.values.first { $0.binding != nil })
@@ -1138,63 +502,224 @@ extension GameRuntime {
   }
 }
 
-@Test(arguments: ["old-native", "legacy-current"])
-func nativeOldUnsafeAdmissionsRetainOnlyPreparedGeometryAcrossAttemptsAndRealMotion(format: String)
-  async throws
-{
-  let fixture = try await NativeSalvageOldParentFixture.loaded(format: format)
-  defer { try? FileManager.default.removeItem(at: fixture.folder) }
-  let original = await fixture.runtime.snapshot()
-  let parent = try #require(original.bodies.first { $0.id == fixture.parent.id })
-  let catalogue = try #require(parent.physical?.catalogueShipID)
-  let profile = try #require(SalvageCatalogue.profile(catalogueShipID: catalogue))
-  let lot = try #require(fixture.lots.first)
-  let cold = original.salvageAdmissionGeometry[catalogue] == nil
-  try #require(cold, "The genuine no-write load must begin with cold admission geometry.")
-  let first = await fixture.runtime.attemptPendingSalvageForGeometryCacheTest()
-  let cached = try #require(first.salvageAdmissionGeometry[catalogue])
-  let sourceMatches =
-    cached.mesh.vertices == profile.mesh.vertices
-    && cached.mesh.faces == profile.mesh.faces
-  #expect(sourceMatches && first.salvageAdmissionGeometry.count <= 128)
-  #expect(first.commander == original.commander && first.bodies == original.bodies)
-  #expect(
-    first.nextBodyID == original.nextBodyID && first.gameplayRevision == original.gameplayRevision)
-  let initialPose = original.modelPose(of: parent)
-  let initialProof = HullSweepSafety.validatePlacement(
-    center: lot.position, radius: lot.halfExtents.length, hull: cached.hull,
-    pose: initialPose, requiredClearance: 8)
-  try #require(!initialProof.safe)
-  let repeated = await fixture.runtime.attemptPendingSalvageForGeometryCacheTest()
-  let retained = try #require(repeated.salvageAdmissionGeometry[catalogue])
-  let sameSource =
-    retained.mesh.vertices == cached.mesh.vertices
-    && retained.mesh.faces == cached.mesh.faces
-  #expect(sameSource && retained.hull.triangleCount == cached.hull.triangleCount)
-  #expect(repeated.commander == original.commander && repeated.bodies == original.bodies)
-  #expect(repeated.nextBodyID == original.nextBodyID)
-  let beforeMotionFiles = try NativeSalvageOldParentFixture.files(in: fixture.folder)
-  #expect(beforeMotionFiles == fixture.files)
-  // A genuine frame changes the parent pose; only immutable local source geometry survives.
-  let moved = await fixture.runtime.advance(delta: 0.02)
-  let movingParent = try #require(moved.bodies.first { $0.id == parent.id })
-  let movingPose = moved.modelPose(of: movingParent)
-  let changedPose = movingPose != initialPose
-  try #require(changedPose)
-  let movingProof = HullSweepSafety.validatePlacement(
-    center: lot.position, radius: lot.halfExtents.length, hull: retained.hull,
-    pose: movingPose, requiredClearance: 8)
-  try #require(!movingProof.safe)
-  #expect(movingProof.minimumSampledClearance != initialProof.minimumSampledClearance)
-  let afterMotionAttempt = await fixture.runtime.attemptPendingSalvageForGeometryCacheTest()
-  let movingCache = try #require(afterMotionAttempt.salvageAdmissionGeometry[catalogue])
-  let stillOriginalSource =
-    movingCache.mesh.vertices == profile.mesh.vertices
-    && movingCache.mesh.faces == profile.mesh.faces
-  #expect(stillOriginalSource && afterMotionAttempt.salvageAdmissionGeometry.count <= 128)
-  #expect(
-    afterMotionAttempt.commander == moved.commander && afterMotionAttempt.bodies == moved.bodies)
-  #expect(afterMotionAttempt.nextBodyID == moved.nextBodyID)
-  let unchangedFiles = try NativeSalvageOldParentFixture.files(in: fixture.folder)
-  #expect(unchangedFiles == fixture.files)
+extension NativeSalvageAdmissionRuntimeTests {
+  @Test func actualEMPReleaseKeepsCurrentCustodyAcrossNoWriteReloadAndReadmission() async throws {
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
+    let original = try #require(released.commander.alienStorageState?.current.salvage)
+    let pending = try #require(original.pending.values.first { $0.binding != nil })
+    let parent = try #require(
+      released.bodies.first {
+        $0.physical?.salvage?.wreck == pending.lot.identity.section.wreck
+          && $0.physical?.payload == nil
+      })
+    let source = try #require(parent.physical?.empSource)
+    let record = try #require(released.commander.savedEMPState?.records[source])
+    let wreck = try #require(original.native.wrecks[record.wreck])
+    #expect(wreck.source == .emp(actor: source, sequence: record.sequence))
+    #expect(record.crewAboard == 0 && record.pods.count == record.crewTotal)
+    #expect(released.salvageSites.isEmpty)
+    let inspection = try #require(original.native.inspections[pending.lot.identity.section])
+    let cycle = try #require(original.native.works[inspection.id])
+    #expect(cycle.inspection == .fresh(inspection.id) && cycle.releases == 1)
+
+    let folder = try NativePagedSalvageFixture.folder()
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let file = folder.appendingPathComponent("commander.json")
+    let runtime = GameRuntime(game: released)
+    try await runtime.save(to: file)
+    let saved = await runtime.snapshot()
+    let persisted = try #require(saved.commander.alienStorageState?.current.salvage)
+    let files = try currentFiles(in: folder)
+    try await runtime.load(from: file, persistMigrations: false)
+    let loaded = await runtime.snapshot()
+    #expect(loaded.commander == saved.commander && loaded.bodies == saved.bodies)
+    #expect(loaded.nativeSalvageWork == nil)
+    #expect(try currentFiles(in: folder) == files)
+    let restored = try #require(loaded.commander.alienStorageState?.current.salvage)
+    #expect(Set(restored.pending.keys) == Set(original.pending.keys))
+    for old in persisted.pending.values {
+      #expect(restored.pending[old.lot.identity]?.lot == old.lot)
+      #expect(restored.pending[old.lot.identity]?.binding == old.binding)
+    }
+    for old in original.pending.values {
+      #expect(restored.pending[old.lot.identity]?.record == old.record)
+      #expect(restored.pending[old.lot.identity]?.lot.loot == old.lot.loot)
+      #expect(restored.pending[old.lot.identity]?.lot.content == old.lot.content)
+    }
+
+    let (parked, parkedLot) = try NativeSalvageAdmissionTestFixture.parked(loaded)
+    let oldBinding = try #require(restored.pending[parkedLot.lot.identity]?.binding)
+    // A source mismatch is a controlled negative input, never a substitute producer.
+    var refused = parked
+    let index = try #require(
+      refused.bodies.firstIndex { $0.physical?.identity == parent.physical?.identity })
+    refused.bodies[index].physical?.catalogueShipID = "SH001"
+    let beforeRefusal = refused.commander
+    let beforeBodies = refused.bodies
+    refused.admitPendingNativeSalvage()
+    #expect(refused.commander == beforeRefusal && refused.bodies == beforeBodies)
+    #expect(try currentFiles(in: folder) == files)
+
+    let readmission = GameRuntime(game: parked)
+    try await readmission.save(to: file)
+    let admitted = await readmission.advance(delta: 0.02)
+    let current = try #require(admitted.commander.alienStorageState?.current.salvage)
+    let rebound = try #require(current.pending[parkedLot.lot.identity])
+    let binding = try #require(rebound.binding)
+    let body = try #require(admitted.bodies.first { $0.physical?.identity == binding })
+    #expect(binding != oldBinding && rebound.offer == nil)
+    #expect(rebound.lot.identity == parkedLot.lot.identity)
+    #expect(rebound.lot.loot == parkedLot.lot.loot && rebound.lot.content == parkedLot.lot.content)
+    let age = admitted.commander.flightSimulation.physicalTime - rebound.physicalTime
+    let world = admitted.commander.flightSimulation.pose.systemPoint(body.position)
+    #expect((world - rebound.lot.position - rebound.lot.velocity * age).length < 1e-7)
+    #expect(admitted.currentSalvageLot(for: body)?.identity == parkedLot.lot.identity)
+    #expect(
+      admitted.bodies.filter { $0.physical?.payload == .salvage(parkedLot.lot.identity) }.count
+        == 1)
+    #expect(Set(current.pending.keys) == Set(original.pending.keys))
+    #expect(admitted.commander.cargo == loaded.commander.cargo)
+    try expectEMPInventoryProperty(
+      #require(loaded.commander.equipmentInventory),
+      #require(admitted.commander.equipmentInventory))
+    #expect(admitted.commander.credits == loaded.commander.credits)
+    #expect(admitted.commander.nativeSalvageSceneIsConsistent(admitted.bodies, docked: false))
+  }
+
+  @Test func actualEMPUnsafeAdmissionKeepsOnlyLocalGeometryAcrossRealParentMotion() async throws {
+    var released = try await NativeSalvageAdmissionTestFixture.empReleased()
+    let native = try #require(released.commander.alienStorageState?.current.salvage)
+    let selected = try #require(
+      native.pending.values.filter { $0.binding != nil }.sorted {
+        $0.lot.identity.lot < $1.lot.identity.lot
+      }.first)
+    let binding = try #require(selected.binding)
+    let fragment = try #require(released.bodies.firstIndex { $0.physical?.identity == binding })
+    let parent = try #require(
+      released.bodies.first {
+        $0.physical?.salvage?.wreck == selected.lot.identity.section.wreck
+          && $0.physical?.payload == nil
+      })
+    let catalogue = try #require(parent.physical?.catalogueShipID)
+    let profile = try #require(SalvageCatalogue.empProfile(catalogueShipID: catalogue))
+    let section = try #require(
+      profile.sections.first { $0.index == selected.lot.identity.section.section })
+    // Put an already released fragment on its actual source face only as a negative
+    // collision input. The positive release and custody came from real cutter work.
+    let surface = released.modelPose(of: parent).systemPoint(section.localPosition)
+    released.bodies[fragment].position = released.commander.flightSimulation.pose.shipPoint(surface)
+    let (parked, pending) = try NativeSalvageAdmissionTestFixture.parked(released)
+    let folder = try NativePagedSalvageFixture.folder()
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let file = folder.appendingPathComponent("commander.json")
+    let runtime = GameRuntime(game: parked)
+    try await runtime.save(to: file)
+    let saved = await runtime.snapshot()
+    let files = try currentFiles(in: folder)
+    try await runtime.load(from: file, persistMigrations: false)
+    let original = await runtime.snapshot()
+    #expect(original.commander == saved.commander && original.bodies == saved.bodies)
+    try #require(original.salvageAdmissionGeometry[catalogue] == nil)
+    #expect(try currentFiles(in: folder) == files)
+    let first = await runtime.attemptPendingSalvageForGeometryCacheTest()
+    let cached = try #require(first.salvageAdmissionGeometry[catalogue])
+    #expect(
+      cached.mesh.vertices == profile.mesh.vertices && cached.mesh.faces == profile.mesh.faces)
+    #expect(first.salvageAdmissionGeometry.count <= 128)
+    #expect(first.commander == original.commander && first.bodies == original.bodies)
+    #expect(first.nextBodyID == original.nextBodyID)
+    #expect(first.gameplayRevision == original.gameplayRevision)
+    let initialPose = original.modelPose(of: parent)
+    let initialProof = HullSweepSafety.validatePlacement(
+      center: pending.lot.position, radius: pending.lot.halfExtents.length, hull: cached.hull,
+      pose: initialPose, requiredClearance: 8)
+    try #require(!initialProof.safe)
+    let repeated = await runtime.attemptPendingSalvageForGeometryCacheTest()
+    let retained = try #require(repeated.salvageAdmissionGeometry[catalogue])
+    #expect(
+      retained.mesh.vertices == cached.mesh.vertices && retained.mesh.faces == cached.mesh.faces)
+    #expect(retained.hull.triangleCount == cached.hull.triangleCount)
+    #expect(repeated.commander == original.commander && repeated.bodies == original.bodies)
+    #expect(repeated.nextBodyID == original.nextBodyID)
+    #expect(try currentFiles(in: folder) == files)
+    let moved = await runtime.advance(delta: 0.02)
+    // The actual frame may publish electrical receipts; direct admission attempts
+    // must preserve whichever complete current generation that frame produced.
+    let motionFiles = try currentFiles(in: folder)
+    let movingParent = try #require(moved.bodies.first { $0.id == parent.id })
+    let movingPose = moved.modelPose(of: movingParent)
+    try #require(movingPose != initialPose)
+    let movingProof = HullSweepSafety.validatePlacement(
+      center: pending.lot.position, radius: pending.lot.halfExtents.length, hull: retained.hull,
+      pose: movingPose, requiredClearance: 8)
+    try #require(!movingProof.safe)
+    #expect(movingProof.minimumSampledClearance != initialProof.minimumSampledClearance)
+    let afterMotion = await runtime.attemptPendingSalvageForGeometryCacheTest()
+    let movingCache = try #require(afterMotion.salvageAdmissionGeometry[catalogue])
+    #expect(
+      movingCache.mesh.vertices == profile.mesh.vertices
+        && movingCache.mesh.faces == profile.mesh.faces)
+    #expect(afterMotion.salvageAdmissionGeometry.count <= 128)
+    #expect(afterMotion.commander == moved.commander && afterMotion.bodies == moved.bodies)
+    #expect(afterMotion.nextBodyID == moved.nextBodyID)
+    #expect(try currentFiles(in: folder) == motionFiles)
+  }
+
+  @Test func actualEMPParentDeathPreservesReleasedCurrentCustodyAndReadmitsItsFragments()
+    async throws
+  {
+    let released = try await NativeSalvageAdmissionTestFixture.empReleased()
+    var (game, pending) = try NativeSalvageAdmissionTestFixture.parked(released)
+    let parent = try #require(
+      game.bodies.first {
+        $0.physical?.salvage?.wreck == pending.lot.identity.section.wreck
+          && $0.physical?.payload == nil
+      })
+    let before = try #require(game.commander.alienStorageState?.current.salvage)
+    let player = try #require(game.commander.flightSimulation.player)
+    let allocated = game.makeAttackOrigin(owner: player)
+    let origin = try #require(allocated)
+    // Controlled lethal damage tests the native death boundary, not weapon cadence or cost.
+    let applied = game.applyCombatHit(
+      .init(target: .body(parent.id), distance: parent.position.length, point: parent.position),
+      origin: origin, kind: .laser, damage: parent.energy + 1, laser: .pulse)
+    try #require(applied != nil)
+    game.commander.crimeLedger.finishEmission(origin.emissionID)
+    game.resolveDestroyed()
+    #expect(!game.bodies.contains { $0.id == parent.id })
+    let dead = try #require(game.commander.alienStorageState?.current.salvage)
+    #expect(dead.native.wrecks[pending.lot.identity.section.wreck]?.destroyedAt != nil)
+    #expect(Set(dead.pending.keys) == Set(before.pending.keys))
+    for old in before.pending.values { #expect(dead.pending[old.lot.identity]?.lot == old.lot) }
+    let folder = try NativePagedSalvageFixture.folder()
+    defer { try? FileManager.default.removeItem(at: folder) }
+    let file = folder.appendingPathComponent("commander.json")
+    let runtime = GameRuntime(game: game)
+    try await runtime.save(to: file)
+    let admitted = await runtime.advance(delta: 0.02)
+    let current = try #require(admitted.commander.alienStorageState?.current.salvage)
+    let rebound = try #require(current.pending[pending.lot.identity]?.binding)
+    let body = try #require(admitted.bodies.first { $0.physical?.identity == rebound })
+    #expect(admitted.currentSalvageLot(for: body)?.identity == pending.lot.identity)
+    #expect(Set(current.pending.keys) == Set(before.pending.keys))
+    for old in before.pending.values {
+      #expect(current.pending[old.lot.identity]?.record == old.record)
+      #expect(current.pending[old.lot.identity]?.lot.loot == old.lot.loot)
+      #expect(current.pending[old.lot.identity]?.lot.content == old.lot.content)
+    }
+    #expect(!admitted.bodies.contains { $0.id == parent.id })
+    #expect(admitted.commander.nativeSalvageSceneIsConsistent(admitted.bodies, docked: false))
+  }
+
+  private func currentFiles(in folder: URL) throws -> [String: Data] {
+    var files: [String: Data] = [:]
+    let enumerator = try #require(
+      FileManager.default.enumerator(at: folder, includingPropertiesForKeys: [.isRegularFileKey]))
+    for case let url as URL in enumerator {
+      if try url.resourceValues(forKeys: [.isRegularFileKey]).isRegularFile == true {
+        files[String(url.path.dropFirst(folder.path.count + 1))] = try Data(contentsOf: url)
+      }
+    }
+    return files
+  }
 }

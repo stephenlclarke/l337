@@ -1,97 +1,105 @@
+import Foundation
 import Testing
 
 @testable import L337Core
 
-@Test func nativeRRSGeometryRetainsStructuralSourceBoundsAndPorts() {
-  let way = NativeStationGeometry.waystation
-  #expect(way.mesh.vertices.count == 152)
-  #expect(way.mesh.faces.count == 272)
-  #expect(way.bounds.minimum == Vector3(-675, -150, -500))
-  #expect(way.bounds.maximum == Vector3(675, 150, 500))
-  #expect(way.docking.center == Vector3(0, 0, -350))
-  #expect(way.launch.center == Vector3(0, 0, 350))
-  #expect(way.docking.outward == Vector3(0, 0, -1))
-  #expect(way.launch.outward == Vector3(0, 0, 1))
-  #expect(way.docking.tunnelDepth == 140)
-  #expect(way.docking.aperture.count == 8)
-  #expect(way.kind.sourceRoles == ["rescue_station", "rrs_group_spacestation"])
-  let hq = NativeStationGeometry.headquarters
-  #expect(hq.mesh.vertices.count == 280)
-  #expect(hq.mesh.faces.count == 413)
-  #expect(hq.bounds.minimum == Vector3(-1585.29214, -1779.0468, -1860.83266))
-  #expect(hq.bounds.maximum == Vector3(1566.54969, 1716.77885, 1931.09101))
-  #expect(hq.docking.center == Vector3(250, 86.5, -1860.8))
-  #expect(hq.launch == hq.docking)
-  #expect(hq.docking.tunnelDepth == 350)
-  #expect(hq.kind.sourceDefinition == "rrs_headquarters")
-  #expect(hq.kind.sourceRoles == ["rrs_galactic_hq", "rrs_group_spacestation"])
-}
-
-@Test func nativeRRSRotationAdaptsFaceConventionAndPreservesSeparateLaunchDock() {
-  let native = NativeStationGeometry.nativePoint
-  #expect(native(Vector3(1, 0, 0)).cross(native(Vector3(0, 1, 0))) == native(Vector3(0, 0, 1)))
-  let mesh = NativeStationGeometry.waystation.mesh
-  let face = mesh.faces[0]
-  let normal = (mesh.vertices[face[1]] - mesh.vertices[face[0]])
-    .cross(mesh.vertices[face[2]] - mesh.vertices[face[0]])
-  // Proper Y180 preserves handedness; the explicit native surface convention
-  // reverses the source triangle so native back-face culling sees the right side.
-  #expect(normal == Vector3(0, -700, 0))
-  // Actual source launch subentity applies X180 before native Y180.
-  #expect(mesh.vertices[136] == Vector3(-112.80569, 46.72565, 210))
-}
-
-@Test func nativeRRSPlacementUsesCanonicalAnchorsAndRefusesUnsafeInputs() throws {
-  var flight = FlightSimulationState()
-  flight.enter(.init(galaxy: 0, system: 237), arriving: true)
-  let anchors = try #require(flight.anchors)
-  let half = anchors.planet.position * 0.5
-  let expected =
-    half * 0.7 + anchors.sun.position * (half.length / anchors.sun.position.length * 0.3)
-  #expect(NativeStationGeometry.waystation.position(in: anchors) == expected)
-  let hq = try #require(NativeStationGeometry.headquarters.position(in: anchors))
-  #expect(abs(hq.length - (anchors.arrival - anchors.station.position).length) < 1e-8)
-  #expect(abs(hq.dot(anchors.sun.position)) < 1e-5)
-  #expect(abs(hq.dot(anchors.planet.position)) < 1e-5)
-  #expect(hq.dot(anchors.sun.position.cross(anchors.planet.position)) > 0)
-  for badSun in [Vector3(0, 0, 0), .init(.nan, 0, 1)] {
-    let bad = SystemAnchors(
-      system: anchors.system, station: anchors.station, arrival: anchors.arrival,
-      planet: anchors.planet, sun: .init(position: badSun, radius: 1100))
-    #expect(NativeStationGeometry.waystation.position(in: bad) == nil)
-    #expect(NativeStationGeometry.headquarters.position(in: bad) == nil)
+@Test func originalStationGeometryUsesSameTypedCatalogueMeshAndPort() throws {
+  let sources = try NativeStationSource.requireBindings()
+  #expect(Set(sources.map(\.site)) == Set(OriginalStationSite.allCases))
+  for source in sources {
+    let ship = try #require(ShipCatalogue.ship(source.site.catalogueID))
+    let design = try #require(ship.nativeDesign)
+    let port = try #require(ship.nativeDocking)
+    #expect(design.valid && port.valid && ship.catalogue.objectKind == .station)
+    #expect(source.geometry.site == source.site)
+    #expect(source.geometry.mesh.vertices == design.rawMesh.vertices)
+    #expect(source.geometry.mesh.faces == design.rawMesh.faces)
+    #expect(source.geometry.docking == port && source.geometry.launch == port)
+    #expect(source.physical == OriginalStationPhysical.read(from: ship))
+    let minimum = design.rawMesh.vertices.reduce(Vector3(.infinity, .infinity, .infinity)) {
+      .init(min($0.x, $1.x), min($0.y, $1.y), min($0.z, $1.z))
+    }
+    let maximum = design.rawMesh.vertices.reduce(Vector3(-.infinity, -.infinity, -.infinity)) {
+      .init(max($0.x, $1.x), max($0.y, $1.y), max($0.z, $1.z))
+    }
+    #expect(source.geometry.bounds.minimum == minimum)
+    #expect(source.geometry.bounds.maximum == maximum)
+    #expect(source.geometry.docking.tunnelDepth > 0)
+    #expect(source.descriptor.sourceRoles == [source.identity(world: UUID()).definition])
   }
-  let parallel = SystemAnchors(
-    system: anchors.system, station: anchors.station,
-    arrival: anchors.arrival, planet: anchors.planet,
-    sun: .init(position: anchors.planet.position * 2, radius: 1100))
-  #expect(NativeStationGeometry.headquarters.position(in: parallel) == nil)
-  let overlap = SystemAnchors(
-    system: anchors.system, station: anchors.station,
-    arrival: anchors.arrival, planet: .init(position: anchors.planet.position, radius: 100000),
-    sun: anchors.sun)
-  #expect(NativeStationGeometry.waystation.position(in: overlap) == nil)
-  #expect(NativeStationGeometry.headquarters.position(in: overlap) == nil)
 }
 
-@Test func nativeRRSAperturesAndExitsCheckEveryEffectiveFlyableHull() throws {
+@Test func originalStationRawMetreGeometryNeedsNoImportedAxisAdaptation() throws {
+  let owner = UUID()
+  let world = try NativeStationWorld(owner: owner)
+  for source in try NativeStationSource.requireBindings() {
+    let identity = source.identity(world: owner)
+    let saved = try #require(world.pose(for: identity))
+    #expect(saved.orientation == Basis3())
+    #expect(saved.orientation(at: 0) == saved.orientation(at: 12_345))
+    #expect(saved.orientation(at: .nan) == nil)
+    #expect(source.rotationRate == 0 && source.recharge == 0)
+    let ship = try #require(ShipCatalogue.ship(source.catalogueShipID))
+    let design = try #require(ship.nativeDesign)
+    let original = design.rawMesh
+    // Both vertices and face winding stay in their original metre-space convention.
+    #expect(source.geometry.mesh.vertices == original.vertices)
+    #expect(source.geometry.mesh.faces == original.faces)
+    #expect(source.geometry.launch == source.geometry.docking)
+    #expect(saved.orientation.x.cross(saved.orientation.y) == saved.orientation.z)
+  }
+}
+
+@Test func originalStationPlacementUsesItsExactSiteAndFullSceneSafety() throws {
+  let offsets: [OriginalStationSite: Vector3] = [
+    .salamander: .init(6000, 0, 0), .frog: .init(-6000, 0, 0),
+    .dhole: .init(0, 6000, 0), .remoteUtility: .init(0, -6000, 0),
+  ]
+  for source in try NativeStationSource.requireBindings() {
+    let anchors = NativeStationSource.canonicalAnchors(system: source.system)
+    let expected = anchors.station.position + (try #require(offsets[source.site]))
+    #expect(source.geometry.position(in: anchors) == expected)
+    #expect(source.site.sourcePose(in: anchors)?.position == expected)
+    let foreign = NativeStationSource.canonicalAnchors(system: .init(galaxy: 1, system: 7))
+    #expect(source.geometry.position(in: foreign) == nil)
+    for point in [Vector3(.nan, 0, 0), .init(.infinity, 0, 0)] {
+      let bad = SystemAnchors(
+        system: anchors.system,
+        station: .init(
+          identity: anchors.station.identity, position: point,
+          orientation: anchors.station.orientation, exitPosition: anchors.station.exitPosition,
+          exitDirection: anchors.station.exitDirection),
+        arrival: anchors.arrival, planet: anchors.planet, sun: anchors.sun)
+      #expect(source.geometry.position(in: bad) == nil)
+    }
+    // This is a candidate pose, not admission. The actual population tests retain
+    // celestial, other-hull and complete-cohort refusal before any publication.
+    #expect(source.site.sourcePose(in: anchors)?.orientation == Basis3())
+  }
+}
+
+@Test func originalStationAperturesAndExitsCheckEveryEffectiveFlyableHull() throws {
   let ships = ShipCatalogue.all.filter { $0.game != nil }
   #expect(ships.count == 162)
   for ship in ships {
     var commander = Commander()
     commander.shipID = ship.id
     let player = commander.playerMesh
-    for geometry in [NativeStationGeometry.waystation, .headquarters] {
-      // Independent rectangular/diagonal half-plane calculation on the actual effective mesh.
-      let fits = player.vertices.allSatisfy { vertex in
-        if geometry.kind == .headquarters { return abs(vertex.x) < 125 && abs(vertex.y) < 62.5 }
-        return abs(vertex.x) < 106.72374 && abs(vertex.y) < 106.72374
-          && abs(vertex.x) + abs(vertex.y) < 150.93016
+    for source in try NativeStationSource.requireBindings() {
+      let geometry = source.geometry
+      let aperture = geometry.docking.aperture
+      // Independent convex half-plane test on the actual effective player vertices.
+      let fits = aperture.indices.allSatisfy { index in
+        let a = aperture[index]
+        let b = aperture[(index + 1) % aperture.count]
+        return player.vertices.allSatisfy { point in
+          (b.x - a.x) * (point.y - a.y) - (b.y - a.y) * (point.x - a.x) > 0
+        }
       }
-      #expect(geometry.docking.fits(player) == fits, "\(ship.id) docking")
-      #expect(geometry.launch.fits(player) == fits, "\(ship.id) launch")
+      #expect(geometry.docking.fits(player) == fits, "\(source.site) / \(ship.id) docking")
+      #expect(geometry.launch.fits(player) == fits, "\(source.site) / \(ship.id) launch")
       let exit = geometry.exit(for: player)
-      #expect((exit != nil) == fits, "\(ship.id) exit refusal")
+      #expect((exit != nil) == fits, "\(source.site) / \(ship.id) exit refusal")
       if let exit {
         #expect(exit.orientation.x.cross(exit.orientation.y) == exit.orientation.z)
         #expect(exit.orientation.apply(.init(0, 0, 1)) == exit.direction)
@@ -108,27 +116,53 @@ import Testing
   }
 }
 
-private func stationProbe(_ halfWidth: Double, _ halfHeight: Double) -> Mesh {
+private func stationProbe(around center: Vector3, radius: Double) -> Mesh {
   Mesh(
     vertices: [
-      .init(-halfWidth, -halfHeight, -1), .init(halfWidth, -halfHeight, -1),
-      .init(halfWidth, halfHeight, 1), .init(-halfWidth, halfHeight, 1),
+      center + .init(-radius, -radius, -1), center + .init(radius, -radius, -1),
+      center + .init(radius, radius, 1), center + .init(-radius, radius, 1),
     ],
     faces: [[0, 1, 2], [0, 2, 3], [0, 3, 1], [1, 3, 2]])
 }
 
-@Test func nativeRRSAperturesRefuseBoundaryOversizeAndInvalidGeometry() {
-  let way = NativeStationGeometry.waystation
-  let hq = NativeStationGeometry.headquarters
-  #expect(hq.docking.fits(stationProbe(124, 61)))
-  #expect(!hq.docking.fits(stationProbe(125, 61)))
-  #expect(!hq.docking.fits(stationProbe(124, 62.5)))
-  #expect(!hq.docking.fits(stationProbe(124, 61), margin: 2))
-  #expect(!way.docking.fits(stationProbe(100, 100)))
-  #expect(way.docking.fits(stationProbe(75, 75)))
-  #expect(!way.docking.fits(stationProbe(.infinity, 1)))
-  #expect(!way.docking.fits(stationProbe(1, 1), margin: .nan))
-  #expect(hq.exit(for: stationProbe(125, 1)) == nil)
-  #expect(hq.exit(for: stationProbe(1, 1), clearance: 0) == nil)
-  #expect(hq.exit(for: stationProbe(1, 1), clearance: .infinity) == nil)
+@Test func originalStationAperturesRefuseBoundaryOversizeAndInvalidGeometry() throws {
+  for source in try NativeStationSource.requireBindings() {
+    let geometry = source.geometry
+    let port = geometry.docking
+    let center = port.aperture.reduce(Vector3(0, 0, 0), +) * (1 / Double(port.aperture.count))
+    let distances = port.aperture.indices.map { index in
+      let a = port.aperture[index]
+      let b = port.aperture[(index + 1) % port.aperture.count]
+      let edge = b - a
+      return (edge.x * (center.y - a.y) - edge.y * (center.x - a.x)) / edge.length
+    }
+    let distance = try #require(distances.min())
+    try #require(distance.isFinite && distance > 0)
+    let interior = stationProbe(around: center, radius: distance * 0.25)
+    #expect(port.fits(interior))
+    let a = port.aperture[0]
+    let b = port.aperture[1]
+    let edgePoint = a
+    var boundaryVertices = interior.vertices
+    boundaryVertices[0] = edgePoint
+    let boundary = Mesh(vertices: boundaryVertices, faces: interior.faces)
+    #expect(!port.fits(boundary))
+    #expect(geometry.exit(for: boundary) == nil)
+    let outward = Vector3(b.y - a.y, a.x - b.x, 0).unit
+    var oversizedVertices = interior.vertices
+    oversizedVertices[0] = edgePoint + outward
+    let oversized = Mesh(vertices: oversizedVertices, faces: interior.faces)
+    #expect(!port.fits(oversized))
+    #expect(!port.fits(interior, margin: distance * 2))
+    #expect(!port.fits(stationProbe(around: center, radius: .infinity)))
+    #expect(!port.fits(interior, margin: .nan))
+    #expect(geometry.exit(for: interior, clearance: 0) == nil)
+    #expect(geometry.exit(for: interior, clearance: .infinity) == nil)
+    // A malformed port cannot inherit validity from its otherwise authentic source.
+    let invalid = NativeStationGeometry.Port(
+      center: port.center, outward: .init(0, 0, 0), up: port.up,
+      tunnelDepth: port.tunnelDepth, aperture: port.aperture)
+    #expect(!invalid.valid && !invalid.fits(interior))
+    #expect(NativeStationGeometry(site: source.site, mesh: geometry.mesh, port: invalid) == nil)
+  }
 }

@@ -97,7 +97,7 @@ extension Game {
     let hop: Int
     let attempt: Int
     if let previous = state.legs.last,
-      let leg = commander.scriptState.wormholeTransit?.legs[previous.leg]
+      let leg = nativeTransitStoredLedger()?.legs[previous.leg]
     {
       if leg.phase == .arrived {
         hop = previous.hop + 1

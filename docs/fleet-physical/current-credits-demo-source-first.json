@@ -1,0 +1,39 @@
+{
+  "status": "FIRST_CREDITS_DEMO_EXPLICIT_ORIGINAL_PRESENTATION_MESH_SOURCE_FIX_BEFORE_MUTATION",
+  "beforeCommit": "342a2badcda953d563ff4d3fccb089e17ed28bf3",
+  "path": "Sources/L337Core/Display.swift",
+  "beforeBytes": 31006,
+  "beforeSHA256": "7931f62351c02d52887f1c533bb7769ee316faafbf7ecd383481e08da9460d79",
+  "beforeMethod": "  private static func demo(_ game: Game, into frame: inout Frame) {\n    var demonstration = game\n    demonstration.bodies = [\n      SpaceBody(id: 0, hull: .cobra, position: .init(-70, 20, 450)),\n      SpaceBody(id: 1, hull: .thargoid, position: .init(80, -15, 600)),\n    ]\n    for index in demonstration.bodies.indices {\n      demonstration.bodies[index].rotation = game.time * 0.7\n    }\n    for body in demonstration.bodies { draw(body, game: demonstration, into: &frame) }\n    let lines =\n      [\n        \"XYZZY PRESENTS\", \"RIGHT-ON COMMANDER VERSION\", \"WELCOME COMMANDER \" + game.commander.name,\n        \"THE GALAXY AWAITS\", \"FLY. TRADE. SURVIVE.\",\n        BuildIdentity.current.versionLine, BuildIdentity.repository,\n      ] + BuildIdentity.current.legacyRevisionLines\n\n    let speed = Double(250 + lines.count * 24) / 11\n    for (index, line) in lines.enumerated() {\n      let y = 250 + index * 24 - Int(game.time * speed)\n      if (0..<250).contains(y) { frame.centered(line, y) }\n    }\n  }",
+  "afterMethod": "  private static func demo(_ game: Game, into frame: inout Frame) {\n    guard let human = ShipCatalogue.ship(\"SH031\"), let humanMesh = human.previewMesh else {\n      frame.centered(\"SHIP PRESENTATION UNAVAILABLE\", 96)\n      return\n    }\n    let meshes = [humanMesh, L337Branding.titleMesh]\n    var demonstration = game\n    demonstration.bodies = [\n      SpaceBody(id: 0, hull: .cobra, position: .init(-70, 20, 450)),\n      SpaceBody(id: 1, hull: .cobra, position: .init(80, -15, 600)),\n    ]\n    for index in demonstration.bodies.indices {\n      demonstration.bodies[index].rotation = game.time * 0.7\n      draw(\n        demonstration.bodies[index], game: demonstration, into: &frame, mesh: meshes[index])\n    }\n    let lines =\n      [\n        NewCommanderDefaults.title, \"ORIGINAL SHIP DESIGNS\", \"WELCOME COMMANDER \" + game.commander.name,\n        \"THE GALAXY AWAITS\", \"FLY. TRADE. SURVIVE.\",\n        BuildIdentity.current.versionLine, BuildIdentity.repository,\n      ] + BuildIdentity.current.legacyRevisionLines\n\n    let speed = Double(250 + lines.count * 24) / 11\n    for (index, line) in lines.enumerated() {\n      let y = 250 + index * 24 - Int(game.time * speed)\n      if (0..<250).contains(y) { frame.centered(line, y) }\n    }\n  }",
+  "reason": "Game executive initialization selects demo; existing demo calls renderer for bare cobra/thargoid without supplied mesh. Current packaged nativeHull bindings only station028/viper031, so generic Mesh.hull fallback has no source for those tags. Explicit current31 catalogue presentation plus already-approved123 branding mesh removes old source fallback. Both remain presentation only.",
+  "invariants": "Existing two body IDs/poses/depths/time rotations/shaded presentation/line count/scroll speed/revision and legitimate engine dependency metadata retained. Second carrier changes only internal unowned rendering tag, no real actor. First two product demo headings become current L337/original designs; all revision credits unchanged. No Game/NPC/body state mutation, simulation source/crew/blueprint/native permission, new geometry/media or README artifact. No renderer execution by G4.",
+  "testScope": "One new bounded credits-demo render regression at finite times0/2: actual explicit original meshes render nonempty finite ship panels while commander/body/cursors/time unchanged. Current raw tags have no packaged fallback, so old implementation fails at renderer native source precondition. Authored test UNCOMPILED UNRUN, G1 only; no visual/game/native qualification claimed.",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NewCommanderDefaults.swift",
+      "bytes": 1774,
+      "sha256": "7937c25bc12c53b6dd88a3b1eccd8feb2c0d0e222d5b9ed66dc5c9bc0a26a90f"
+    },
+    {
+      "path": "Sources/L337Core/ShipCatalogue.swift",
+      "bytes": 12862,
+      "sha256": "d6a777a426b9958bc6539bb27c2d53b3ee76e390b20039eab2a144966f5d8d03"
+    },
+    {
+      "path": "Sources/L337Core/Geometry.swift",
+      "bytes": 5672,
+      "sha256": "aa5a26ab86a03b6ab6bee1fa36df35906e20b1bd9b4a8593d964668c01bded1c"
+    },
+    {
+      "path": "Sources/L337Core/StartupDisplay.swift",
+      "bytes": 5404,
+      "sha256": "d4cab42a6e0ce5bd0575a6cb045f55f3a873cea796df07cefde20ab00999aeeb"
+    },
+    {
+      "path": "Sources/L337Core/Game.swift",
+      "bytes": 179788,
+      "sha256": "4deeccae23639e71125f46fb3d13008aac7959bd4894eba3bb845563bc29cf09"
+    }
+  ]
+}

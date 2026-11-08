@@ -190,6 +190,7 @@ import Testing
   try #require(!game.equipmentAvailable(unavailableItem))
   game.screen = .equipment
   game.commander.fuel = 60
+  try game.commander.prepareEquipment(legacy: false)
   game.purchase()
   #expect(game.commander.fuel == 70 && game.commander.credits == 1980)
   game.selection = 1
@@ -244,6 +245,7 @@ import Testing
   #expect(game.selectedSystem == 7)
   game.beginHyperspace()
   #expect(game.jumpCountdown == nil)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   // Avenor to Renas is 3.364975176728651 LY: the native rounded debit is 34 units.
   // Beliven (129) is 23.533908197534895 LY away and cannot exercise a stock seven-LY drive.
@@ -273,6 +275,7 @@ import Testing
   var game = Game(executive: false)
   game.inSystemJump()
   #expect(game.message == "MASS LOCKED")
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.inSystemJump()
   #expect(game.message == "MASS LOCKED")
@@ -337,6 +340,7 @@ import Testing
         "target=\(String(describing: game.autoPilot.targetID)), actor=\(String(describing: game.autoPilot.targetActor)), status=\(game.autoPilot.status), distance=\(String(describing: game.autoTargetBody?.position.length)), energy=\(game.energy), pendingRRS=\(game.pendingNativeStationDock != nil)"
     ))
   #expect(game.nativeMainStationDockEvidenceIsCurrent)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let manual = try #require(
     game.currentNativeMainStationAnchor(at: game.commander.flightSimulation.physicalTime))
@@ -351,6 +355,7 @@ import Testing
   game.tick(delta: 0.02)
   #expect(game.docked)
   #expect(game.nativeMainStationDockEvidenceIsCurrent)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   let impact = try #require(
     game.currentNativeMainStationAnchor(at: game.commander.flightSimulation.physicalTime))
@@ -371,7 +376,7 @@ import Testing
   game.commander.fuel = game.commander.fuelCapacity
   game.commander.credits = 1000
   game.commander.equipment.insert("Military Laser")
-  try game.commander.prepareEquipment()
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.mirrorFittedEquipment()
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
@@ -431,6 +436,7 @@ import Testing
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
   game.rearShield = game.commander.rearShieldCapacity
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   try #require(!game.docked && game.commander.valid)
   game.speed = 0
@@ -461,6 +467,7 @@ import Testing
   game.energy = game.commander.performance.energy
   game.frontShield = game.commander.shieldCapacity
   game.rearShield = game.commander.rearShieldCapacity
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.key("escape-pod")
   #expect(!game.docked)
@@ -471,6 +478,7 @@ import Testing
   game.commander.legal = 30
   game.key("escape-pod")
   #expect(game.docked && game.commander.cargoTonnes == 0 && game.commander.legal == 0)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.bodies = []
   try game.commander.grantEquipment(
@@ -496,7 +504,7 @@ import Testing
   #expect(game.bodies.allSatisfy { $0.physical?.spawnIdentity != nil })
 }
 
-@Test func viewTransformsAndGeometry() {
+@Test func viewTransformsAndGeometry() throws {
   let p = Vector3(1, 2, 3)
   #expect((p + p) == Vector3(2, 4, 6))
   #expect((p - p).length == 0)
@@ -511,8 +519,8 @@ import Testing
     game.screen = view
     #expect(game.viewPosition(p) == expected)
   }
-  for hull in Hull.allCases {
-    let mesh = Mesh.hull(hull)
+  for source in try currentRendererMeshSources() {
+    let mesh = source.mesh
     #expect(
       mesh.faces.allSatisfy {
         $0.count >= 3 && $0.allSatisfy { mesh.vertices.indices.contains($0) }
@@ -524,7 +532,7 @@ import Testing
   #expect(Display.project(.init(.infinity, 0, 1), .init(0, 0, 1)) == nil)
 }
 
-@Test func rasterClippingAndRenderingEveryScreen() {
+@Test func rasterClippingAndRenderingEveryScreen() throws {
   var frame = Frame()
   frame.pixel(-1, 0)
   frame.pixel(256, 0)
@@ -542,6 +550,7 @@ import Testing
   frame.text("ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789.,:;-/?!()+='<>*", -8, 252)
   #expect(frame.pixels[0] == Ink.white.rawValue)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.commander.cargo[0] = 2
   for screen in Screen.allCases {
@@ -650,6 +659,7 @@ import Testing
 
 @Test func xyzzyJumpLimitsPersistAndObeyCurrentFuelAndNavigationComputer() async throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   for key in "xyzzy" { game.key(String(key)) }
   #expect(game.commander.unlimitedFuel && !game.commander.unlimitedJumps)
@@ -751,7 +761,7 @@ private func reboundJumpLimitWorldAfterLoad(
   return expected
 }
 
-@Test func autoTraderUsesEconomyCapitalAndCargo() {
+@Test func autoTraderUsesEconomyCapitalAndCargo() throws {
   var game = Game(executive: false)
   game.commander.credits = 20000
   game.selectedSystem = 129
@@ -765,6 +775,7 @@ private func reboundJumpLimitWorldAfterLoad(
   #expect(game.commander.credits >= 0 && game.commander.credits < 20000)
   let cargo = game.commander.cargo
   let initialFreightCost = 20000 - game.commander.credits
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.autoTrade()
   #expect(game.commander.cargo == cargo)
@@ -835,6 +846,7 @@ private func reboundJumpLimitWorldAfterLoad(
   #expect(game.commander.credits == cashBefore - purchaseCost)
   #expect(illegal.allSatisfy { game.market[$0].quantity == 0 })
   try #require(game.commander.valid)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   #expect(!game.docked && game.screen == .front && game.commander.legal == 16)
   #expect(game.commander.valid)
@@ -957,10 +969,11 @@ private func reboundJumpLimitWorldAfterLoad(
   _ = Display.render(game)
 }
 
-@Test func primitiveHullFacesHaveOutwardNormalsAndClosedEdges() {
-  // The detailed, non-convex source Cobra has a welded-boundary rotation oracle.
-  for hull in Hull.allCases where hull != .cobra {
-    let mesh = Mesh.hull(hull)
+@Test func primitiveHullFacesHaveOutwardNormalsAndClosedEdges() throws {
+  // The named non-convex Peregrine source keeps its welded-boundary rotation oracle.
+  for source in try currentRendererMeshSources() where source.catalogueShipID == nil {
+    let hull = source.hull
+    let mesh = source.mesh
     let center = mesh.vertices.reduce(Vector3(0, 0, 0), +) * (1 / Double(mesh.vertices.count))
     var adjacency: [String: Int] = [:]
     for face in mesh.faces {

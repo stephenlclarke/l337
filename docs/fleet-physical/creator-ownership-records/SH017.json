@@ -1,0 +1,4232 @@
+{
+  "id": "SH017",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "2a5efee25247b09a861d5112c7d070685b1f9aa2892143505fca28332fb2d4f3",
+  "contractSHA256": "c31408f9cbf0e76af47c583fcf084080addb1d8e84970cc0168d7c065bae385a",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "body primary pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 120,
+          "faceStart": 0,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "body primary pressure envelope/service-well-0-0",
+          "vertexStart": 120,
+          "vertexCount": 12,
+          "faceStart": 236,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 132,
+          "vertexCount": 8,
+          "faceStart": 256,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 140,
+          "vertexCount": 8,
+          "faceStart": 268,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "body primary pressure envelope/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 148,
+          "vertexCount": 8,
+          "faceStart": 280,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "body primary pressure envelope/service-well-0-1",
+          "vertexStart": 156,
+          "vertexCount": 12,
+          "faceStart": 292,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 168,
+          "vertexCount": 8,
+          "faceStart": 312,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 176,
+          "vertexCount": 8,
+          "faceStart": 324,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "body primary pressure envelope/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 184,
+          "vertexCount": 8,
+          "faceStart": 336,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "body primary pressure envelope/service-well-0-2",
+          "vertexStart": 192,
+          "vertexCount": 12,
+          "faceStart": 348,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 204,
+          "vertexCount": 8,
+          "faceStart": 368,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 212,
+          "vertexCount": 8,
+          "faceStart": 380,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "body primary pressure envelope/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 220,
+          "vertexCount": 8,
+          "faceStart": 392,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "body primary pressure envelope/service-well-1-0",
+          "vertexStart": 228,
+          "vertexCount": 12,
+          "faceStart": 404,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 240,
+          "vertexCount": 8,
+          "faceStart": 424,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 248,
+          "vertexCount": 8,
+          "faceStart": 436,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "body primary pressure envelope/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 256,
+          "vertexCount": 8,
+          "faceStart": 448,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "body primary pressure envelope/service-well-1-1",
+          "vertexStart": 264,
+          "vertexCount": 12,
+          "faceStart": 460,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 276,
+          "vertexCount": 8,
+          "faceStart": 480,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 284,
+          "vertexCount": 8,
+          "faceStart": 492,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "body primary pressure envelope/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 292,
+          "vertexCount": 8,
+          "faceStart": 504,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "body primary pressure envelope/service-well-1-2",
+          "vertexStart": 300,
+          "vertexCount": 12,
+          "faceStart": 516,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 312,
+          "vertexCount": 8,
+          "faceStart": 536,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 320,
+          "vertexCount": 8,
+          "faceStart": 548,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "body primary pressure envelope/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 328,
+          "vertexCount": 8,
+          "faceStart": 560,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "body primary pressure envelope/service-well-2-0",
+          "vertexStart": 336,
+          "vertexCount": 12,
+          "faceStart": 572,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 26,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 348,
+          "vertexCount": 8,
+          "faceStart": 592,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 356,
+          "vertexCount": 8,
+          "faceStart": 604,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "body primary pressure envelope/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 364,
+          "vertexCount": 8,
+          "faceStart": 616,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "body primary pressure envelope/service-well-2-1",
+          "vertexStart": 372,
+          "vertexCount": 12,
+          "faceStart": 628,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 384,
+          "vertexCount": 8,
+          "faceStart": 648,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 392,
+          "vertexCount": 8,
+          "faceStart": 660,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "body primary pressure envelope/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 400,
+          "vertexCount": 8,
+          "faceStart": 672,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 33,
+          "name": "body primary pressure envelope/service-well-2-2",
+          "vertexStart": 408,
+          "vertexCount": 12,
+          "faceStart": 684,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 34,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 420,
+          "vertexCount": 8,
+          "faceStart": 704,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 35,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 428,
+          "vertexCount": 8,
+          "faceStart": 716,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 36,
+          "name": "body primary pressure envelope/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 436,
+          "vertexCount": 8,
+          "faceStart": 728,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 37,
+          "name": "body primary pressure envelope/service-well-3-0",
+          "vertexStart": 444,
+          "vertexCount": 12,
+          "faceStart": 740,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 38,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 456,
+          "vertexCount": 8,
+          "faceStart": 760,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 39,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 464,
+          "vertexCount": 8,
+          "faceStart": 772,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 40,
+          "name": "body primary pressure envelope/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 472,
+          "vertexCount": 8,
+          "faceStart": 784,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 41,
+          "name": "body primary pressure envelope/service-well-3-1",
+          "vertexStart": 480,
+          "vertexCount": 12,
+          "faceStart": 796,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 42,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 492,
+          "vertexCount": 8,
+          "faceStart": 816,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 43,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 500,
+          "vertexCount": 8,
+          "faceStart": 828,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 44,
+          "name": "body primary pressure envelope/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 508,
+          "vertexCount": 8,
+          "faceStart": 840,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 45,
+          "name": "body primary pressure envelope/service-well-3-2",
+          "vertexStart": 516,
+          "vertexCount": 12,
+          "faceStart": 852,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 46,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 528,
+          "vertexCount": 8,
+          "faceStart": 872,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 47,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 536,
+          "vertexCount": 8,
+          "faceStart": 884,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 48,
+          "name": "body primary pressure envelope/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 544,
+          "vertexCount": 8,
+          "faceStart": 896,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 49,
+          "name": "body primary pressure envelope/longitudinal-service-strut-0",
+          "vertexStart": 552,
+          "vertexCount": 8,
+          "faceStart": 908,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 50,
+          "name": "body primary pressure envelope/longitudinal-service-strut-1",
+          "vertexStart": 560,
+          "vertexCount": 8,
+          "faceStart": 920,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 51,
+          "name": "dock lateral structural member 0",
+          "vertexStart": 568,
+          "vertexCount": 8,
+          "faceStart": 932,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 52,
+          "name": "dock lateral structural member 1",
+          "vertexStart": 576,
+          "vertexCount": 8,
+          "faceStart": 944,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 53,
+          "name": "dock transverse structural member 0",
+          "vertexStart": 584,
+          "vertexCount": 8,
+          "faceStart": 956,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 54,
+          "name": "dock transverse structural member 1",
+          "vertexStart": 592,
+          "vertexCount": 8,
+          "faceStart": 968,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 55,
+          "name": "dock aperture guidance marker 0",
+          "vertexStart": 600,
+          "vertexCount": 8,
+          "faceStart": 980,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 56,
+          "name": "dock aperture guidance marker 1",
+          "vertexStart": 608,
+          "vertexCount": 8,
+          "faceStart": 992,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 57,
+          "name": "pods explicit member 0",
+          "vertexStart": 616,
+          "vertexCount": 120,
+          "faceStart": 1004,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 58,
+          "name": "pods explicit member 0/service-well-0-0",
+          "vertexStart": 736,
+          "vertexCount": 12,
+          "faceStart": 1240,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 59,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 748,
+          "vertexCount": 8,
+          "faceStart": 1260,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 60,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 756,
+          "vertexCount": 8,
+          "faceStart": 1272,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 61,
+          "name": "pods explicit member 0/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 764,
+          "vertexCount": 8,
+          "faceStart": 1284,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 62,
+          "name": "pods explicit member 0/service-well-0-1",
+          "vertexStart": 772,
+          "vertexCount": 12,
+          "faceStart": 1296,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 63,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 784,
+          "vertexCount": 8,
+          "faceStart": 1316,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 64,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 792,
+          "vertexCount": 8,
+          "faceStart": 1328,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 65,
+          "name": "pods explicit member 0/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 800,
+          "vertexCount": 8,
+          "faceStart": 1340,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 66,
+          "name": "pods explicit member 0/service-well-0-2",
+          "vertexStart": 808,
+          "vertexCount": 12,
+          "faceStart": 1352,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 67,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 820,
+          "vertexCount": 8,
+          "faceStart": 1372,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 68,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 828,
+          "vertexCount": 8,
+          "faceStart": 1384,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 69,
+          "name": "pods explicit member 0/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 836,
+          "vertexCount": 8,
+          "faceStart": 1396,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 70,
+          "name": "pods explicit member 0/service-well-1-0",
+          "vertexStart": 844,
+          "vertexCount": 12,
+          "faceStart": 1408,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 71,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 856,
+          "vertexCount": 8,
+          "faceStart": 1428,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 72,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 864,
+          "vertexCount": 8,
+          "faceStart": 1440,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 73,
+          "name": "pods explicit member 0/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 872,
+          "vertexCount": 8,
+          "faceStart": 1452,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 74,
+          "name": "pods explicit member 0/service-well-1-1",
+          "vertexStart": 880,
+          "vertexCount": 12,
+          "faceStart": 1464,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 75,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 892,
+          "vertexCount": 8,
+          "faceStart": 1484,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 76,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 900,
+          "vertexCount": 8,
+          "faceStart": 1496,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 77,
+          "name": "pods explicit member 0/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 908,
+          "vertexCount": 8,
+          "faceStart": 1508,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 78,
+          "name": "pods explicit member 0/service-well-1-2",
+          "vertexStart": 916,
+          "vertexCount": 12,
+          "faceStart": 1520,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 79,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 928,
+          "vertexCount": 8,
+          "faceStart": 1540,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 80,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 936,
+          "vertexCount": 8,
+          "faceStart": 1552,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 81,
+          "name": "pods explicit member 0/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 944,
+          "vertexCount": 8,
+          "faceStart": 1564,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 82,
+          "name": "pods explicit member 0/service-well-2-0",
+          "vertexStart": 952,
+          "vertexCount": 12,
+          "faceStart": 1576,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 83,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 964,
+          "vertexCount": 8,
+          "faceStart": 1596,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 84,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 972,
+          "vertexCount": 8,
+          "faceStart": 1608,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 85,
+          "name": "pods explicit member 0/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 980,
+          "vertexCount": 8,
+          "faceStart": 1620,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 86,
+          "name": "pods explicit member 0/service-well-2-1",
+          "vertexStart": 988,
+          "vertexCount": 12,
+          "faceStart": 1632,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 87,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 1000,
+          "vertexCount": 8,
+          "faceStart": 1652,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 88,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 1008,
+          "vertexCount": 8,
+          "faceStart": 1664,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 89,
+          "name": "pods explicit member 0/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 1016,
+          "vertexCount": 8,
+          "faceStart": 1676,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 90,
+          "name": "pods explicit member 0/service-well-2-2",
+          "vertexStart": 1024,
+          "vertexCount": 12,
+          "faceStart": 1688,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 91,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 1036,
+          "vertexCount": 8,
+          "faceStart": 1708,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 92,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 1044,
+          "vertexCount": 8,
+          "faceStart": 1720,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 93,
+          "name": "pods explicit member 0/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 1052,
+          "vertexCount": 8,
+          "faceStart": 1732,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 94,
+          "name": "pods explicit member 0/service-well-3-0",
+          "vertexStart": 1060,
+          "vertexCount": 12,
+          "faceStart": 1744,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 95,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 1072,
+          "vertexCount": 8,
+          "faceStart": 1764,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 96,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 1080,
+          "vertexCount": 8,
+          "faceStart": 1776,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 97,
+          "name": "pods explicit member 0/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 1088,
+          "vertexCount": 8,
+          "faceStart": 1788,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 98,
+          "name": "pods explicit member 0/service-well-3-1",
+          "vertexStart": 1096,
+          "vertexCount": 12,
+          "faceStart": 1800,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 99,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 1108,
+          "vertexCount": 8,
+          "faceStart": 1820,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 100,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 1116,
+          "vertexCount": 8,
+          "faceStart": 1832,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 101,
+          "name": "pods explicit member 0/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 1124,
+          "vertexCount": 8,
+          "faceStart": 1844,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 102,
+          "name": "pods explicit member 0/service-well-3-2",
+          "vertexStart": 1132,
+          "vertexCount": 12,
+          "faceStart": 1856,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 103,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 1144,
+          "vertexCount": 8,
+          "faceStart": 1876,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 104,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 1152,
+          "vertexCount": 8,
+          "faceStart": 1888,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 105,
+          "name": "pods explicit member 0/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 1160,
+          "vertexCount": 8,
+          "faceStart": 1900,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 106,
+          "name": "pods explicit member 0/longitudinal-service-strut-0",
+          "vertexStart": 1168,
+          "vertexCount": 8,
+          "faceStart": 1912,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 107,
+          "name": "pods explicit member 0/longitudinal-service-strut-1",
+          "vertexStart": 1176,
+          "vertexCount": 8,
+          "faceStart": 1924,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 108,
+          "name": "pods explicit member 1",
+          "vertexStart": 1184,
+          "vertexCount": 120,
+          "faceStart": 1936,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 109,
+          "name": "pods explicit member 1/service-well-0-0",
+          "vertexStart": 1304,
+          "vertexCount": 12,
+          "faceStart": 2172,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 110,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-0",
+          "vertexStart": 1316,
+          "vertexCount": 8,
+          "faceStart": 2192,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 111,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-1",
+          "vertexStart": 1324,
+          "vertexCount": 8,
+          "faceStart": 2204,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 112,
+          "name": "pods explicit member 1/service-well-0-0/recess-service-strut-2",
+          "vertexStart": 1332,
+          "vertexCount": 8,
+          "faceStart": 2216,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 113,
+          "name": "pods explicit member 1/service-well-0-1",
+          "vertexStart": 1340,
+          "vertexCount": 12,
+          "faceStart": 2228,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 114,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-0",
+          "vertexStart": 1352,
+          "vertexCount": 8,
+          "faceStart": 2248,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 115,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-1",
+          "vertexStart": 1360,
+          "vertexCount": 8,
+          "faceStart": 2260,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 116,
+          "name": "pods explicit member 1/service-well-0-1/recess-service-strut-2",
+          "vertexStart": 1368,
+          "vertexCount": 8,
+          "faceStart": 2272,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 117,
+          "name": "pods explicit member 1/service-well-0-2",
+          "vertexStart": 1376,
+          "vertexCount": 12,
+          "faceStart": 2284,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 118,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-0",
+          "vertexStart": 1388,
+          "vertexCount": 8,
+          "faceStart": 2304,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 119,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-1",
+          "vertexStart": 1396,
+          "vertexCount": 8,
+          "faceStart": 2316,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 120,
+          "name": "pods explicit member 1/service-well-0-2/recess-service-strut-2",
+          "vertexStart": 1404,
+          "vertexCount": 8,
+          "faceStart": 2328,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 121,
+          "name": "pods explicit member 1/service-well-1-0",
+          "vertexStart": 1412,
+          "vertexCount": 12,
+          "faceStart": 2340,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 122,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-0",
+          "vertexStart": 1424,
+          "vertexCount": 8,
+          "faceStart": 2360,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 123,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-1",
+          "vertexStart": 1432,
+          "vertexCount": 8,
+          "faceStart": 2372,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 124,
+          "name": "pods explicit member 1/service-well-1-0/recess-service-strut-2",
+          "vertexStart": 1440,
+          "vertexCount": 8,
+          "faceStart": 2384,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 125,
+          "name": "pods explicit member 1/service-well-1-1",
+          "vertexStart": 1448,
+          "vertexCount": 12,
+          "faceStart": 2396,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 126,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-0",
+          "vertexStart": 1460,
+          "vertexCount": 8,
+          "faceStart": 2416,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 127,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-1",
+          "vertexStart": 1468,
+          "vertexCount": 8,
+          "faceStart": 2428,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 128,
+          "name": "pods explicit member 1/service-well-1-1/recess-service-strut-2",
+          "vertexStart": 1476,
+          "vertexCount": 8,
+          "faceStart": 2440,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 129,
+          "name": "pods explicit member 1/service-well-1-2",
+          "vertexStart": 1484,
+          "vertexCount": 12,
+          "faceStart": 2452,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 130,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-0",
+          "vertexStart": 1496,
+          "vertexCount": 8,
+          "faceStart": 2472,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 131,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-1",
+          "vertexStart": 1504,
+          "vertexCount": 8,
+          "faceStart": 2484,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 132,
+          "name": "pods explicit member 1/service-well-1-2/recess-service-strut-2",
+          "vertexStart": 1512,
+          "vertexCount": 8,
+          "faceStart": 2496,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 133,
+          "name": "pods explicit member 1/service-well-2-0",
+          "vertexStart": 1520,
+          "vertexCount": 12,
+          "faceStart": 2508,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 134,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-0",
+          "vertexStart": 1532,
+          "vertexCount": 8,
+          "faceStart": 2528,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 135,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-1",
+          "vertexStart": 1540,
+          "vertexCount": 8,
+          "faceStart": 2540,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 136,
+          "name": "pods explicit member 1/service-well-2-0/recess-service-strut-2",
+          "vertexStart": 1548,
+          "vertexCount": 8,
+          "faceStart": 2552,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 137,
+          "name": "pods explicit member 1/service-well-2-1",
+          "vertexStart": 1556,
+          "vertexCount": 12,
+          "faceStart": 2564,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 138,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-0",
+          "vertexStart": 1568,
+          "vertexCount": 8,
+          "faceStart": 2584,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 139,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-1",
+          "vertexStart": 1576,
+          "vertexCount": 8,
+          "faceStart": 2596,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 140,
+          "name": "pods explicit member 1/service-well-2-1/recess-service-strut-2",
+          "vertexStart": 1584,
+          "vertexCount": 8,
+          "faceStart": 2608,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 141,
+          "name": "pods explicit member 1/service-well-2-2",
+          "vertexStart": 1592,
+          "vertexCount": 12,
+          "faceStart": 2620,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 142,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-0",
+          "vertexStart": 1604,
+          "vertexCount": 8,
+          "faceStart": 2640,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 143,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-1",
+          "vertexStart": 1612,
+          "vertexCount": 8,
+          "faceStart": 2652,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 144,
+          "name": "pods explicit member 1/service-well-2-2/recess-service-strut-2",
+          "vertexStart": 1620,
+          "vertexCount": 8,
+          "faceStart": 2664,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 145,
+          "name": "pods explicit member 1/service-well-3-0",
+          "vertexStart": 1628,
+          "vertexCount": 12,
+          "faceStart": 2676,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 146,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-0",
+          "vertexStart": 1640,
+          "vertexCount": 8,
+          "faceStart": 2696,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 147,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-1",
+          "vertexStart": 1648,
+          "vertexCount": 8,
+          "faceStart": 2708,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 148,
+          "name": "pods explicit member 1/service-well-3-0/recess-service-strut-2",
+          "vertexStart": 1656,
+          "vertexCount": 8,
+          "faceStart": 2720,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 149,
+          "name": "pods explicit member 1/service-well-3-1",
+          "vertexStart": 1664,
+          "vertexCount": 12,
+          "faceStart": 2732,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 150,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-0",
+          "vertexStart": 1676,
+          "vertexCount": 8,
+          "faceStart": 2752,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 151,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-1",
+          "vertexStart": 1684,
+          "vertexCount": 8,
+          "faceStart": 2764,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 152,
+          "name": "pods explicit member 1/service-well-3-1/recess-service-strut-2",
+          "vertexStart": 1692,
+          "vertexCount": 8,
+          "faceStart": 2776,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 153,
+          "name": "pods explicit member 1/service-well-3-2",
+          "vertexStart": 1700,
+          "vertexCount": 12,
+          "faceStart": 2788,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 154,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-0",
+          "vertexStart": 1712,
+          "vertexCount": 8,
+          "faceStart": 2808,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 155,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-1",
+          "vertexStart": 1720,
+          "vertexCount": 8,
+          "faceStart": 2820,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 156,
+          "name": "pods explicit member 1/service-well-3-2/recess-service-strut-2",
+          "vertexStart": 1728,
+          "vertexCount": 8,
+          "faceStart": 2832,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 157,
+          "name": "pods explicit member 1/longitudinal-service-strut-0",
+          "vertexStart": 1736,
+          "vertexCount": 8,
+          "faceStart": 2844,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 158,
+          "name": "pods explicit member 1/longitudinal-service-strut-1",
+          "vertexStart": 1744,
+          "vertexCount": 8,
+          "faceStart": 2856,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 4,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 159,
+          "name": "boring-head structural support",
+          "vertexStart": 1752,
+          "vertexCount": 8,
+          "faceStart": 2868,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 160,
+          "name": "boring head",
+          "vertexStart": 1760,
+          "vertexCount": 24,
+          "faceStart": 2880,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 161,
+          "name": "boring head collar",
+          "vertexStart": 1784,
+          "vertexCount": 576,
+          "faceStart": 2924,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 162,
+          "name": "boring head collar",
+          "vertexStart": 2360,
+          "vertexCount": 576,
+          "faceStart": 4076,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 163,
+          "name": "boring head collar",
+          "vertexStart": 2936,
+          "vertexCount": 576,
+          "faceStart": 5228,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 164,
+          "name": "boring head collar",
+          "vertexStart": 3512,
+          "vertexCount": 576,
+          "faceStart": 6380,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 165,
+          "name": "boring-head structural support",
+          "vertexStart": 4088,
+          "vertexCount": 8,
+          "faceStart": 7532,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 166,
+          "name": "boring head",
+          "vertexStart": 4096,
+          "vertexCount": 24,
+          "faceStart": 7544,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 167,
+          "name": "boring head collar",
+          "vertexStart": 4120,
+          "vertexCount": 576,
+          "faceStart": 7588,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 168,
+          "name": "boring head collar",
+          "vertexStart": 4696,
+          "vertexCount": 576,
+          "faceStart": 8740,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 169,
+          "name": "boring head collar",
+          "vertexStart": 5272,
+          "vertexCount": 576,
+          "faceStart": 9892,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 170,
+          "name": "boring head collar",
+          "vertexStart": 5848,
+          "vertexCount": 576,
+          "faceStart": 11044,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 3,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 171,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 6424,
+          "vertexCount": 120,
+          "faceStart": 12196,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 172,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 6544,
+          "vertexCount": 8,
+          "faceStart": 12432,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 173,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 6552,
+          "vertexCount": 8,
+          "faceStart": 12444,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 174,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 6560,
+          "vertexCount": 48,
+          "faceStart": 12456,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 175,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 6608,
+          "vertexCount": 48,
+          "faceStart": 12548,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 176,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 6656,
+          "vertexCount": 8,
+          "faceStart": 12640,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 177,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 6664,
+          "vertexCount": 48,
+          "faceStart": 12652,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 178,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 6712,
+          "vertexCount": 48,
+          "faceStart": 12744,
+          "faceCount": 92,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 92
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        174,
+        177
+      ],
+      "vertices": 6760,
+      "faces": 12836
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "body primary pressure envelope",
+          "vertexStart": 0,
+          "vertexCount": 60,
+          "faceStart": 0,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "body primary pressure envelope/service-well-0-0",
+          "vertexStart": 60,
+          "vertexCount": 12,
+          "faceStart": 116,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "body primary pressure envelope/service-well-1-0",
+          "vertexStart": 72,
+          "vertexCount": 12,
+          "faceStart": 136,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "body primary pressure envelope/service-well-2-0",
+          "vertexStart": 84,
+          "vertexCount": 12,
+          "faceStart": 156,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "body primary pressure envelope/service-well-3-0",
+          "vertexStart": 96,
+          "vertexCount": 12,
+          "faceStart": 176,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 0,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "dock lateral structural member 0",
+          "vertexStart": 108,
+          "vertexCount": 8,
+          "faceStart": 196,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "dock lateral structural member 1",
+          "vertexStart": 116,
+          "vertexCount": 8,
+          "faceStart": 208,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "dock transverse structural member 0",
+          "vertexStart": 124,
+          "vertexCount": 8,
+          "faceStart": 220,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "dock transverse structural member 1",
+          "vertexStart": 132,
+          "vertexCount": 8,
+          "faceStart": 232,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Hull.box / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "dock aperture guidance marker 0",
+          "vertexStart": 140,
+          "vertexCount": 8,
+          "faceStart": 244,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "dock aperture guidance marker 1",
+          "vertexStart": 148,
+          "vertexCount": 8,
+          "faceStart": 256,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "pods explicit member 0",
+          "vertexStart": 156,
+          "vertexCount": 60,
+          "faceStart": 268,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "pods explicit member 0/service-well-0-0",
+          "vertexStart": 216,
+          "vertexCount": 12,
+          "faceStart": 384,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "pods explicit member 0/service-well-1-0",
+          "vertexStart": 228,
+          "vertexCount": 12,
+          "faceStart": 404,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 14,
+          "name": "pods explicit member 0/service-well-2-0",
+          "vertexStart": 240,
+          "vertexCount": 12,
+          "faceStart": 424,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 15,
+          "name": "pods explicit member 0/service-well-3-0",
+          "vertexStart": 252,
+          "vertexCount": 12,
+          "faceStart": 444,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 16,
+          "name": "pods explicit member 1",
+          "vertexStart": 264,
+          "vertexCount": 60,
+          "faceStart": 464,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 17,
+          "name": "pods explicit member 1/service-well-0-0",
+          "vertexStart": 324,
+          "vertexCount": 12,
+          "faceStart": 580,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 18,
+          "name": "pods explicit member 1/service-well-1-0",
+          "vertexStart": 336,
+          "vertexCount": 12,
+          "faceStart": 600,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 19,
+          "name": "pods explicit member 1/service-well-2-0",
+          "vertexStart": 348,
+          "vertexCount": 12,
+          "faceStart": 620,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 20,
+          "name": "pods explicit member 1/service-well-3-0",
+          "vertexStart": 360,
+          "vertexCount": 12,
+          "faceStart": 640,
+          "faceCount": 20,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 16
+            },
+            {
+              "material": 3,
+              "faces": 2
+            },
+            {
+              "material": 1,
+              "faces": 2
+            }
+          ],
+          "creatorMethod": "Mesh.well",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 21,
+          "name": "boring-head structural support",
+          "vertexStart": 372,
+          "vertexCount": 8,
+          "faceStart": 660,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 22,
+          "name": "boring head",
+          "vertexStart": 380,
+          "vertexCount": 24,
+          "faceStart": 672,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 23,
+          "name": "boring-head structural support",
+          "vertexStart": 404,
+          "vertexCount": 8,
+          "faceStart": 716,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 24,
+          "name": "boring head",
+          "vertexStart": 412,
+          "vertexCount": 24,
+          "faceStart": 728,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 25,
+          "name": "cockpit glazing envelope",
+          "vertexStart": 436,
+          "vertexCount": 60,
+          "faceStart": 772,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 5,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "cockpit-glazing-stock",
+          "stockKgPerSquareMetre": 5
+        },
+        {
+          "index": 26,
+          "name": "cockpit connected structural crossmember",
+          "vertexStart": 496,
+          "vertexCount": 8,
+          "faceStart": 888,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 27,
+          "name": "engine_pair/negative side/connected support",
+          "vertexStart": 504,
+          "vertexCount": 8,
+          "faceStart": 900,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 28,
+          "name": "engine_pair/negative side/propulsion casing",
+          "vertexStart": 512,
+          "vertexCount": 24,
+          "faceStart": 912,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 29,
+          "name": "engine_pair/negative side/propulsion luminous recess",
+          "vertexStart": 536,
+          "vertexCount": 24,
+          "faceStart": 956,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 30,
+          "name": "engine_pair/positive side/connected support",
+          "vertexStart": 560,
+          "vertexCount": 8,
+          "faceStart": 1000,
+          "faceCount": 12,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 12
+            }
+          ],
+          "creatorMethod": "Mesh.strut / Hull.box",
+          "creatorForm": "drill-cradle",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 31,
+          "name": "engine_pair/positive side/propulsion casing",
+          "vertexStart": 568,
+          "vertexCount": 24,
+          "faceStart": 1012,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 1,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "creator-declared-drive-casing-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 32,
+          "name": "engine_pair/positive side/propulsion luminous recess",
+          "vertexStart": 592,
+          "vertexCount": 24,
+          "faceStart": 1056,
+          "faceCount": 44,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 44
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "drill-cradle",
+          "role": "creator-declared-drive-recess-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [
+        28,
+        31
+      ],
+      "vertices": 616,
+      "faces": 1100
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

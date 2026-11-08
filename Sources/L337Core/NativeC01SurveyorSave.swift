@@ -83,7 +83,9 @@ enum NativeC01SurveyorSave {
     _ state: borrowing NativeGlassMeridianState, mission: borrowing ScriptInstance,
     commander: borrowing Commander
   ) -> Bool {
-    guard NativeC01Surveyor.shapeValid(state) else { return false }
+    guard NativeC01Surveyor.shapeValid(state),
+      NativeC01CompletionSave.archiveHistoryValid(state, mission: mission, commander: commander)
+    else { return false }
     if case .none = state.surveyor { return false }
     let source = state.surveyor!.source
     guard source.physicalTime <= commander.flightSimulation.physicalTime,

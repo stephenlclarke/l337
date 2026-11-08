@@ -15,6 +15,7 @@ private func workInitial542Camera() -> Basis3 {
 @Test func workFramesPreserveCanonicalSpinWithoutAmplifyingCameraRoundoff() throws {
   var game = Game(executive: false)
   game.commander.system = 5
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.commander.flightSimulation.pose = .init(
     position: .init(4243.357534473111, 11238.39880282264, -15188.277543250319),

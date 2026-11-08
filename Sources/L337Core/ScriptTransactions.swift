@@ -6,10 +6,11 @@ extension GameRuntime {
   /// Captures value paths and a bounded Sendable, non-authoritative observation reference.
   /// No writer, actor or interpreter callback escapes this turn.
   func scriptPublisher(
-    requireNativeSalvage: Bool = false, diagnosticBoundary: ScriptRefusalBoundary = .publication,
+    requireNativeSalvage: Bool = false, requireNativeMainArrival: Bool = false, diagnosticBoundary: ScriptRefusalBoundary = .publication,
     navigationBinding: ScriptNavigationTradeBinding? = nil
   ) -> ScriptPublisher? {
-    guard game.requiresScriptDurability || requireNativeSalvage, let url = scriptSaveURL else {
+    guard game.requiresScriptDurability || requireNativeSalvage || requireNativeMainArrival,
+      let url = scriptSaveURL else {
       return nil
     }
     let namespace = galleryNamespace
@@ -217,5 +218,25 @@ extension Game {
       try publish(&fault)
       self = fault
     } catch { notify("MISSION SUSPENDED - SAVE UNAVAILABLE") }
+  }
+}
+
+/// Actual command writer return plus installed candidate; no caller constructor.
+struct NativeC01InquiryR2WriterACK: Sendable {
+  let intent: NativeC01InquiryR2PublicationIntent
+  fileprivate init(published intent: NativeC01InquiryR2PublicationIntent) { self.intent = intent }
+}
+
+extension GameRuntime {
+  func publishC01InquiryR2Command(_ intent: NativeC01InquiryR2PublicationIntent) throws
+    -> NativeC01InquiryR2WriterACK
+  {
+    guard game.c01InquiryR2PublicationMatches(intent), let publish = scriptPublisher() else {
+      throw NativeC01InquiryStepFailure.unavailableR2Publication
+    }
+    var candidate = game
+    try publish(&candidate)
+    game = candidate
+    return .init(published: intent)
   }
 }

@@ -43,27 +43,15 @@ extension Game {
         omega: physical.angularVelocity, delta: elapsed)
       body.rotation += body.rotationRate * elapsed
     }
-    guard var physical = body.physical, var npc = physical.npc else { return false }
-    if npc.resources?.profile == .legacyEnergyOnly, npc.resources?.legacyElectricalRecharge == nil {
-      guard let catalogue = physical.catalogueShipID,
-        let native = ShipCatalogue.ship(catalogue)?.game, native.valid
-      else { return false }
-      npc.resources?.legacyElectricalRecharge = native.recharge
-    }
-    var reserve = npc.resources?.electrical
-    // A genuine older disable episode has no separate electrical field; its
-    // current native capacity/recharge supply the explicit migration boundary.
-    if reserve == nil, let resources = npc.resources,
-      var migrated = ElectricalReserve(
-        capacity: resources.energyCapacity,
-        recharge: resources.electricalRecharge, at: record.currentCrewDisableIncident.physicalTime)
-    {
-      guard
-        migrated.drain(resources.energyCapacity, at: record.currentCrewDisableIncident.physicalTime)
-      else { return false }
-      reserve = migrated
-    }
-    guard reserve?.recover(at: now) == true else { return false }
+    guard var physical = body.physical, var npc = physical.npc,
+      let catalogue = physical.catalogueShipID, npc.resources?.valid == true,
+      NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+        catalogueShipID: catalogue, hull: body.hull, npc: npc, missiles: body.missiles),
+      var reserve = npc.resources?.electrical,
+      reserve.remaining == 0,
+      reserve.disabledAt == record.currentCrewDisableIncident.physicalTime,
+      reserve.recover(at: now)
+    else { return false }
     npc.resources?.electrical = reserve
     physical.npc = npc
     physical.empSource = nil
@@ -245,7 +233,8 @@ extension Game {
       hull: record.hull.body.hull, position: record.hull.body.position,
       orientation: record.hull.body.orientation, velocity: physical.velocity, npc: npc,
       rock: nil, payload: nil, priority: .police, catalogueShipID: physical.catalogueShipID,
-      energy: record.hull.body.energy, angularVelocity: physical.angularVelocity)
+      energy: record.hull.body.energy, angularVelocity: physical.angularVelocity,
+      recoveredSecuritySource: source)
     let receipts = admitEncounterPlan(
       .init(
         system: context.system, visit: context.visit,

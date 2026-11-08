@@ -1,0 +1,153 @@
+{
+  "schema": "l337.closed-family-native-tessellation-proposal/1",
+  "id": "griffon-three-actual-members-complete19part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH071",
+      "name": "Griffon",
+      "r3ContractSHA256": "aae0fbafceeb0adf78d050c184bdca3eb4b0a1f11240c83430aaa27e1a5c3519",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH071-design.toml",
+        "bytes": 258602,
+        "sha256": "3f1d908400f032a2a90b8a4ee486c58e93368e4c49a1fa8a742ba52b7c9a80cc"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH071.toml",
+        "bytes": 282706,
+        "sha256": "911a47c6e0044e0fc103951432f11b34bf3e2dcba83509f28c620d25e097e5c6"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH071.json",
+        "bytes": 47784,
+        "sha256": "c8feae884db573e8219147d3f638d1fde73b928dc16c52e5d9a8492d5d9ebe99"
+      },
+      "declaredOriginalNativeFaces": 596,
+      "originalComponents": 19,
+      "nativeCrew": 2,
+      "conversionCrew": 2,
+      "existingCalibrationUnevaluated": "60000/6221",
+      "status": "Own original resource remains pending, no family identity/mechanics/crew fallback"
+    },
+    {
+      "id": "SH072",
+      "name": "Griffon Mk II",
+      "r3ContractSHA256": "4be1bb6109ec00b2bb05dbba194562054f10d27ee8ff4a105a310b7aa3370498",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH072-design.toml",
+        "bytes": 263648,
+        "sha256": "8ea9b1346142ef4c31e71b802258b859d54be0cdc12ac05bf3f6a02d55733d70"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH072.toml",
+        "bytes": 287744,
+        "sha256": "376f8ee997f911c34ebd068636d9d37b9ee2c55131c38f3b3ae48fa308578ba0"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH072.json",
+        "bytes": 47784,
+        "sha256": "51564de83af450d111ee06564cb199929c3caa5de0b58c6efeb934f8d7f7fb55"
+      },
+      "declaredOriginalNativeFaces": 596,
+      "originalComponents": 19,
+      "nativeCrew": 3,
+      "conversionCrew": 3,
+      "existingCalibrationUnevaluated": "30000000/3215237",
+      "status": "Own original resource remains pending, no family identity/mechanics/crew fallback"
+    },
+    {
+      "id": "SH073",
+      "name": "Griffon Spectre",
+      "r3ContractSHA256": "0b64d1c988e9863bf08810fd36047b50626182795da99f0e2df8f5b48ad85230",
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH073-design.toml",
+        "bytes": 262268,
+        "sha256": "f132d3229d67b58a29dfda4707dcbc17537163ab31da7d20a77645c8fcc3268e"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH073.toml",
+        "bytes": 286372,
+        "sha256": "d386ff366bf2ea46931b4f6ed503f46b80d2457718dff64729465df9bac4b62f"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH073.json",
+        "bytes": 47784,
+        "sha256": "6bbd09e0121001ced743103120abbacba71cfb144b4277ba523551056fbe7328"
+      },
+      "declaredOriginalNativeFaces": 596,
+      "originalComponents": 19,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "existingCalibrationUnevaluated": "1200000/132799",
+      "status": "Own original resource remains pending, no family identity/mechanics/crew fallback"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/griffon-native-candidate-recipe.py",
+    "bytes": 9736,
+    "sha256": "d3794b192555dffe491e224a4502c16fc34aa5c565f04cacdb30a542177b2d66"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/griffon-native-candidate-tests.py",
+    "bytes": 8308,
+    "sha256": "36d65ff4a88e5153ba43a969e6abf6d621b4609b6ea9a01f19c510d06edf6a7b"
+  },
+  "baseline": {
+    "limit": 512,
+    "basis": "Each own pinned creator ownership metadata; no G4 geometry/count evaluation",
+    "allInstalledResourcesUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 6,
+    "changedOriginalPartIndices": [
+      6,
+      11,
+      14,
+      15,
+      17,
+      18
+    ],
+    "unchangedFixedOriginalPartsPerMember": 13,
+    "status": "NEW angular approximation only; all actual output counts/profile/void fidelities UNKNOWN"
+  },
+  "retained": [
+    "Every actual member keeps all19 original source components and its own mark dimensions",
+    "Both longitudinal gate envelopes and actual connected aft supports",
+    "Both forward/aft cross bridges and actual central opening",
+    "Complete five-station body AND all four original analytical recessed service wells",
+    "Complete cockpit glazing AND connected structural crossmember",
+    "Both actual drive supports, full propulsion casings AND luminous recesses",
+    "Own original source materials/texture/license/palette/emission fields; every face UV/texture assignment regenerated by genuine serializer"
+  ],
+  "coordinateRule": "Each own original axes/coordinates/origin/units retained. No rescale/recentre or calibration evaluation; source family mark dimension formula preserved.",
+  "coupledRuntime": "All own R3 mechanics, accommodation, source/actor/fitting/EMP/acquisition/current-save and mission gates unchanged. Source declares native/conversion crews2/3/1 respectively; no actual people/hardware/paid kit granted.",
+  "stopRules": [
+    "Only three explicit original IDs accepted; names/family/prefixes/unknown variants refuse",
+    "Each actual source/resource digest and identity must match its OWN member; no cross-member borrowing",
+    "Changed creator/primitive/family and per-ID inputs refuse before geometry",
+    "All19 original positive parts and material sets required for each member",
+    "Complete own candidate must satisfy512 and genuine closure/winding without omissions/waivers",
+    "Independent tests require each own13 fixed parts exact original vertices/localfaces/material sequences/UVs",
+    "Actual full curved-profile/void/material/UV fidelity/native/physical qualification remains G1 work"
+  ],
+  "blocker": {
+    "missing": "Per-member actual source-fidelity/native evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/source/native qualification; source owner actual installed/occupied inputs",
+    "next": "G1 generate each actual member once and run own19part/exact13fixed/UV/wrong-member/input tests before full source/native qualification. G4 continues other original entries independently."
+  }
+}

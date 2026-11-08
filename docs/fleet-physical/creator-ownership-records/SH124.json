@@ -1,0 +1,314 @@
+{
+  "id": "SH124",
+  "status": "SOURCE_OPERATION_CORRESPONDENCE_NOT_NATIVE_QUALIFICATION",
+  "geometrySHA256": "1715f8fc7da8e0a7e3c0c17534087477b443508c174a0a4da4eb158829438732",
+  "contractSHA256": "851502c15a6922797e9c650e8a126fd73ce7ccc76f5e1419a870625c72abe21e",
+  "creatorSHA256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "closed alien lobe",
+          "vertexStart": 0,
+          "vertexCount": 576,
+          "faceStart": 0,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "existing alien end growth",
+          "vertexStart": 576,
+          "vertexCount": 120,
+          "faceStart": 1152,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "exact reflected copy of alien end growth",
+          "vertexStart": 696,
+          "vertexCount": 120,
+          "faceStart": 1388,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "closed alien lobe",
+          "vertexStart": 816,
+          "vertexCount": 576,
+          "faceStart": 1624,
+          "faceCount": 1152,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 1152
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "existing alien end growth",
+          "vertexStart": 1392,
+          "vertexCount": 120,
+          "faceStart": 2776,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "exact reflected copy of alien end growth",
+          "vertexStart": 1512,
+          "vertexCount": 120,
+          "faceStart": 3012,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "central alien structural growth",
+          "vertexStart": 1632,
+          "vertexCount": 120,
+          "faceStart": 3248,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "alien luminous aft organ",
+          "vertexStart": 1752,
+          "vertexCount": 120,
+          "faceStart": 3484,
+          "faceCount": 236,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 236
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [],
+      "vertices": 1872,
+      "faces": 3720
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "closed alien lobe",
+          "vertexStart": 0,
+          "vertexCount": 192,
+          "faceStart": 0,
+          "faceCount": 384,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 384
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "existing alien end growth",
+          "vertexStart": 192,
+          "vertexCount": 60,
+          "faceStart": 384,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "exact reflected copy of alien end growth",
+          "vertexStart": 252,
+          "vertexCount": 60,
+          "faceStart": 500,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "closed alien lobe",
+          "vertexStart": 312,
+          "vertexCount": 192,
+          "faceStart": 616,
+          "faceCount": 384,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 384
+            }
+          ],
+          "creatorMethod": "Mesh.torus / Mesh.raw",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "existing alien end growth",
+          "vertexStart": 504,
+          "vertexCount": 60,
+          "faceStart": 1000,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "exact reflected copy of alien end growth",
+          "vertexStart": 564,
+          "vertexCount": 60,
+          "faceStart": 1116,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 0,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "central alien structural growth",
+          "vertexStart": 624,
+          "vertexCount": 60,
+          "faceStart": 1232,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 2,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "alien luminous aft organ",
+          "vertexStart": 684,
+          "vertexCount": 60,
+          "faceStart": 1348,
+          "faceCount": 116,
+          "exactMaterialRuns": [
+            {
+              "material": 6,
+              "faces": 116
+            }
+          ],
+          "creatorMethod": "Hull.loft / Hull.solid",
+          "creatorForm": "alien-lobes",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredDriveCasingPartIndices": [],
+      "vertices": 744,
+      "faces": 1464
+    }
+  },
+  "stockRoleDeclaration": "New explicit engineering stock roles from pinned creator operations, not recovered material properties or colour interpretation. Cockpit envelope allocation5 kg/m2 is a new glazing-equivalent stock choice; other named operation stock14 kg/m2. No mass is computed.",
+  "units": "Unissued; this pass never converts coordinates or adopts a frame.",
+  "hardware": "No mechanism mass or default drive count assigned. Object-specific contracts remain separate."
+}

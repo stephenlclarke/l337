@@ -150,9 +150,10 @@ private func circlePoint(_ angle: Double, radius: Double = 0.3) -> SIMD2<Double>
   #expect(whole.commandedRate == holding)
 }
 
-@Test func spinRollPreservesForwardHeadingAndUsesPilotClockwisePerspective() {
+@Test func spinRollPreservesForwardHeadingAndUsesPilotClockwisePerspective() throws {
   for (key, expectedSign) in [("]", 1.0), ("[", -1.0)] {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.speed = 0
     game.bodies = [
@@ -176,9 +177,10 @@ private func circlePoint(_ angle: Double, radius: Double = 0.3) -> SIMD2<Double>
   }
 }
 
-@Test func spinStartupAndStoppingRotateTheSameAmountAtDifferentFrameRates() {
-  func run(delta: Double, count: Int) -> Vector3 {
+@Test func spinStartupAndStoppingRotateTheSameAmountAtDifferentFrameRates() throws {
+  func run(delta: Double, count: Int) throws -> Vector3 {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.speed = 0
     game.bodies = [.init(id: 10, hull: .cargo, position: .init(100, 0, 5000))]
@@ -189,12 +191,15 @@ private func circlePoint(_ angle: Double, radius: Double = 0.3) -> SIMD2<Double>
     for _ in 0..<count { game.tick(delta: delta) }
     return game.bodies[0].position
   }
-  #expect((run(delta: 0.1, count: 20) - run(delta: 1.0 / 60, count: 120)).length < 1e-8)
+  let coarse = try run(delta: 0.1, count: 20)
+  let fine = try run(delta: 1.0 / 60, count: 120)
+  #expect((coarse - fine).length < 1e-8)
 }
 
-@Test func spinCancelsOnFocusPauseHelpDockingAndChartsButExplicitStopIsSmooth() {
+@Test func spinCancelsOnFocusPauseHelpDockingAndChartsButExplicitStopIsSmooth() throws {
   for key in ["spin-cancel", "pause", "k", "4"] {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.key("v")
     game.key("spin:cw")
@@ -205,6 +210,7 @@ private func circlePoint(_ angle: Double, radius: Double = 0.3) -> SIMD2<Double>
   var game = Game(executive: false)
   game.key("v")
   #expect(!game.spin.mode)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.key("v")
   game.key("]")
@@ -217,6 +223,7 @@ private func circlePoint(_ angle: Double, radius: Double = 0.3) -> SIMD2<Double>
   game.key("[")
   game.dock()
   #expect(!game.spin.mode)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.key("v")
   game.key("]")

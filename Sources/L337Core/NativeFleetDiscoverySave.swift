@@ -21,10 +21,10 @@ enum NativeFleetDiscoverySave {
         guard evidence.physicalTime <= commander.flightSimulation.physicalTime,
           evidence.actor.visit <= commander.flightSimulation.visit
         else { return false }
-        if evidence.actor.visit == commander.flightSimulation.visit,
-          evidence.actor.entity >= commander.flightSimulation.nextActor
-        {
-          return false
+        if evidence.actor.visit == commander.flightSimulation.visit {
+          guard evidence.actor.system == commander.flightSimulation.system,
+            evidence.actor.entity < commander.flightSimulation.nextActor
+          else { return false }
         }
         if let dock = evidence.mainDock {
           guard let world = commander.nativeStations, world.mainStations.contains(dock.station),
@@ -33,8 +33,11 @@ enum NativeFleetDiscoverySave {
         }
         if let dock = evidence.secondaryDock {
           guard let world = commander.nativeStations,
-            dock.sequence < world.ledger.nextDockSequence,
-            world.ledger.records.contains(where: { $0.identity == dock.station })
+            dock.commanderOwner == state.owner, dock.sequence < world.ledger.nextDockSequence,
+            let record = world.ledger.records.first(where: { $0.identity == dock.station }),
+            NativeStationSource.authentic(record, owner: state.owner),
+            record.revision >= dock.lifecycleRevision,
+            OriginalStationSite.site(for: dock.station, owner: state.owner)?.catalogueID == evidence.ship
           else { return false }
         }
       }

@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "auditedOldCommit": "952f0538687e8ffa77248e9ff876092f768c9a24",
+  "replacementBase": "7fdd8e79a9a01a30635db8ded148f743f2bc9696",
+  "retiredMeshes": [
+    {
+      "id": "SH023",
+      "field": "design",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH023.toml",
+      "sourceFileSHA256": "1df887e23d11ed560f59b82d1ca89025c688dc0f735fd6e518fbf48a1c7a6f7b",
+      "nativeHull": "cobra",
+      "meshSHA256": "14afc39398b9c5e401ea5a9125807b839ce996ff304ef45cffa97ddadd39dbd2"
+    },
+    {
+      "id": "SH026",
+      "field": "design",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH026.toml",
+      "sourceFileSHA256": "d2ebfd007a5bf2980094f6c37c9ee0da0fb608406ee17036b990b70cc46450f7",
+      "nativeHull": "constrictor",
+      "meshSHA256": "35c5f92c5b66329f6b94462b209d49796fa557a9b3b5bb1bea2813a97089e59a"
+    },
+    {
+      "id": "SH026",
+      "field": "nativeDesign",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH026.toml",
+      "sourceFileSHA256": "d2ebfd007a5bf2980094f6c37c9ee0da0fb608406ee17036b990b70cc46450f7",
+      "nativeHull": "constrictor",
+      "meshSHA256": "89701e01ecf16b469c8b5a17eb732cd03aeae39ad474c65edef004d4f7bc942e"
+    },
+    {
+      "id": "SH107",
+      "field": "design",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH107.toml",
+      "sourceFileSHA256": "3164d41dbfa9e9ad83b53f4c3c7756866e8d8b23eca263264c9cdaa04cdaffd1",
+      "nativeHull": "sidewinder",
+      "meshSHA256": "e8ac932386d1e842bedefbd8564b85b7bb24f1def40236d4adc401adda38eb03"
+    },
+    {
+      "id": "SH107",
+      "field": "nativeDesign",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH107.toml",
+      "sourceFileSHA256": "3164d41dbfa9e9ad83b53f4c3c7756866e8d8b23eca263264c9cdaa04cdaffd1",
+      "nativeHull": "sidewinder",
+      "meshSHA256": "df6eec85f6f0217a1b11bdd18ee1cacdcf9ea9098e4682a637bd98b941648e8f"
+    },
+    {
+      "id": "SH124",
+      "field": "design",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH124.toml",
+      "sourceFileSHA256": "6984664dcef7f819de0e3eae25fea3d24ec7a46ab3fe03ca7274cc6b9413c8a2",
+      "nativeHull": "thargoid",
+      "meshSHA256": "d924757ba034f88714827a44ff678ce377832792fafd9e2c9af0cfd73802bd85"
+    },
+    {
+      "id": "SH124",
+      "field": "nativeDesign",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH124.toml",
+      "sourceFileSHA256": "6984664dcef7f819de0e3eae25fea3d24ec7a46ab3fe03ca7274cc6b9413c8a2",
+      "nativeHull": "thargoid",
+      "meshSHA256": "55dd31074f410848bd8af85c33a1fa2042dc98813a54c64fcc278002adbbfd85"
+    },
+    {
+      "id": "SH125",
+      "field": "design",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH125.toml",
+      "sourceFileSHA256": "159f8ee5b643b32e3baf39a2e97ff0f2d93624d6bce64912d5502872bb34f569",
+      "nativeHull": "thargon",
+      "meshSHA256": "816720c15786d4583ad10580e0f93d02e440c472fb25671724de84a92fff041f"
+    },
+    {
+      "id": "SH125",
+      "field": "nativeDesign",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH125.toml",
+      "sourceFileSHA256": "159f8ee5b643b32e3baf39a2e97ff0f2d93624d6bce64912d5502872bb34f569",
+      "nativeHull": "thargon",
+      "meshSHA256": "03e24e5b7e80cbf011b9998b8776f5184bf832c94ba210d0db333e03c7d05743"
+    },
+    {
+      "id": "SH136",
+      "field": "design",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH136.toml",
+      "sourceFileSHA256": "45fbc54a02eeebeb2c76b18c9c23628e989a3f08e6477d998c5ab1b68a7dca09",
+      "nativeHull": "viper",
+      "meshSHA256": "e77b59efab588a5647e79d948dbfa3166205089e965556217caa30dcdec1de75"
+    },
+    {
+      "id": "SH136",
+      "field": "nativeDesign",
+      "sourcePath": "Sources/L337Core/Resources/Ships/SH136.toml",
+      "sourceFileSHA256": "45fbc54a02eeebeb2c76b18c9c23628e989a3f08e6477d998c5ab1b68a7dca09",
+      "nativeHull": "viper",
+      "meshSHA256": "df6eec85f6f0217a1b11bdd18ee1cacdcf9ea9098e4682a637bd98b941648e8f"
+    }
+  ],
+  "replacementIdentities": {
+    "SH023": {
+      "name": "Peregrine Mk III",
+      "family": "peregrine"
+    },
+    "SH026": {
+      "name": "Harrier",
+      "family": "harrier"
+    },
+    "SH107": {
+      "name": "Magpie",
+      "family": "magpie"
+    },
+    "SH124": {
+      "name": "Larvaal Warship",
+      "family": "larvaal-warship"
+    },
+    "SH125": {
+      "name": "Larvaal Drone",
+      "family": "larvaal-drone"
+    },
+    "SH136": {
+      "name": "Falcon Mk I",
+      "family": "falcon"
+    }
+  },
+  "nativeAllowlist": {
+    "SH028": {
+      "nativeHull": "station",
+      "meshSHA256": "818365b916796dd36c34a215694503f195a7ae1752cf412be5bd08bee0c21e8f"
+    },
+    "SH031": {
+      "nativeHull": "viper",
+      "meshSHA256": "abbef367f378bf9fd6d8728e0f98dd4ff5d28a1984ea35ec6f2fc046fbe44c7a"
+    }
+  },
+  "aegisSHA256": "85ec1a7ce589824a6b6f9c75957613d43157065ca266b243a9cb0bda4546bca0"
+}

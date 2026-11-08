@@ -1,0 +1,25 @@
+{
+  "status": "FIRST_EXACT_REVIEWED670B_ONE_ARGUMENT_BEFORE_MUTATION",
+  "beforeCommit": "55a5dc4efd51e26bfb4660d6808cc0032d3cb897",
+  "child": {
+    "path": "/tmp/elite-mc1-current-empty-emp-bank-native-save-owned-starter-child/manifest.json",
+    "bytes": 1648,
+    "sha256": "670bb0a653626f72778ff8780d46dcec807e78c9a654ee5e747bf1e25b3afb1f"
+  },
+  "review": {
+    "path": "/tmp/elite-g2-670b-current-empty-emp-native-save-source-review/review.json",
+    "bytes": 3282,
+    "sha256": "4378e684701c2eccd21817a660a51ed81e63f26f9cefcc5ce141d427d08384e8"
+  },
+  "targetBefore": {
+    "path": "Tests/L337CoreTests/EMPBankNativeCodecTests.swift",
+    "bytes": 13175,
+    "sha256": "ac580bb109d90ae350eddbc9e70b6ac6c19f5c3eeed0341b7d866fc0160c8ddb"
+  },
+  "currentHelper": {
+    "path": "Tests/L337CoreTests/EMPBankOwnershipTests.swift",
+    "bytes": 18565,
+    "sha256": "71944fcb25ac6fe94c51b82bc056c37b3d23e37b510177ef7d1c5a6b37af8258"
+  },
+  "scope": "Only existing emptyCurrentEMPBankAndBaseGradesSurviveNativeSaveWithoutRefilling constructor useOwnedStarter:true argument; actual writer/read/coldload and all original assertions unchanged."
+}

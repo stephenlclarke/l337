@@ -1,0 +1,3629 @@
+{
+  "schema": "l337.branch-cleanup-manifest/1",
+  "auditedUTC": "2026-11-01T12:45:12.064769+00:00",
+  "baseline": "0cc45dca928c7bae18a388fa775d7b53c6653d21",
+  "authorizedBy": "Direct human request reported by Root; no further user confirmation needed. G1 performs independent evidence review and sole-writer execution at safe boundary.",
+  "executed": true,
+  "candidates": [
+    {
+      "ref": "refs/heads/feat/m04-redtail-besra",
+      "scope": "local-branch-only",
+      "expectedTip": "41c69b40876e0d5e233617b1b7401b9278de8434",
+      "rawTreeSHA": "77663e7693e0a4325040216a6bcb375a3d2ca0e0",
+      "baseline": "0cc45dca928c7bae18a388fa775d7b53c6653d21",
+      "baselineRawTreeSHA": "77663e7693e0a4325040216a6bcb375a3d2ca0e0",
+      "contentProof": "Entire raw Git trees identical, not merely path normalization, ancestry, patch names, age or a partial focal-file sample.",
+      "retainedReplacementRefs": [
+        {
+          "ref": "refs/remotes/origin/main",
+          "expectedTip": "0cc45dca928c7bae18a388fa775d7b53c6653d21",
+          "meaning": "Same entire current content"
+        },
+        {
+          "ref": "refs/remotes/origin/feat/m04-redtail-besra",
+          "expectedTip": "41c69b40876e0d5e233617b1b7401b9278de8434",
+          "meaning": "Retains exact feature commit and historical object reachability; must not be pruned by this cleanup"
+        }
+      ],
+      "normalCommand": "git branch -d feat/m04-redtail-besra",
+      "preconditions": [
+        "At safe boundary G1 independently rechecks ref tip, raw-tree equivalence, configured upstream and retained tracking/main refs.",
+        "Recheck all worktrees and active sessions; branch must remain unused, unprotected, nondefault and not support current release work.",
+        "Run ordinary non-force deletion only. If it refuses or any condition changes, retain and record why; do not use -D or bypass the refusal.",
+        "Do not delete the retained tracking ref or other history needed by this inventory."
+      ],
+      "relatedItems": [
+        "M04",
+        "SH103",
+        "SH108"
+      ],
+      "evidenceCommits": [
+        "41c69b40876e0d5e233617b1b7401b9278de8434",
+        "bc1aae3c1e4c2849d8de5d46423c0fc35ad24d27"
+      ],
+      "expectedSourceAndIndexWrites": false,
+      "actualStatus": "deleted-local-pointer",
+      "actualReasons": []
+    }
+  ],
+  "remoteDeletionCandidates": [],
+  "remoteReason": "No live remote branch was proved wholly redundant without unique/uncertain work. No remote deletion, blind prune or force operation is proposed.",
+  "retainedRefs": [
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/backup/source-20261021T154939Z",
+      "tip": "41c15aed9d2684cc2708077a16f6b8aef576be31",
+      "reasons": [
+        "Release/support or explicit retained historical checkpoint; no retirement authority established"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/chore/hollow-manifest-root-source-composition",
+      "tip": "ac7670bef97d3935dfa6670c2f3bfd9093cb75bc",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/chore/hollow-manifest-seal-source-composition",
+      "tip": "f740b46fb30b6f6a983daec111dc3e56bc55764b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/ci/local-macos-runner",
+      "tip": "e10611c51e9ac38e5afd21a82fdc453ebddb1f79",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/ci/m01-recoverable-composition",
+      "tip": "b7c7295f05ef44b4d00fec377354398490e4789e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/ci/m01-sanitizer-progress",
+      "tip": "173cad534a666ef89c28da36607b753b23d359df",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m01-sanitizer-progress/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/dependency-maintenance",
+      "tip": "617b56d07f4b5ee8d59e5ed32370d86c28991d3e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/diagnostic/station-a561-retained-fault",
+      "tip": "6e426509e434aa2582e7173e50c4a8a50c4f3ebe",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/c01-motion-review-receipt",
+      "tip": "bf41b322cc4709f4e6e2f60706b6cb2ea7a23772",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/c01-timing-standard-contract",
+      "tip": "87da1d0b34a5ddffd4f6d7d5dbf3416b9379c263",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/c03-finite-seal-probe-producer",
+      "tip": "dc297ff30ee981b00ea43e9f4dddf9388f51f02f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/c03-geometry-review-receipt",
+      "tip": "be33873862c3eda926c2a92e65bd25a38d75966f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/c03-native-provider-clear",
+      "tip": "407842d9b06bc82d7f276a6c1cc8e710a2d01a0d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/c03-probe-equipment-blocker",
+      "tip": "d68de1fcec9236c54aa78f8d13f13f94db5fae69",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/c03-route-review-receipt",
+      "tip": "91a2a3640bb79811e6a4b2942bd28f885947937d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/final-game-review",
+      "tip": "c70110b292077588a0855fb48127adfb1b611c9d",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/final-game-review/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/fleet-r3-design-packet",
+      "tip": "be62a2fa259d6930a6912fa6a24501674cb27b63",
+      "reasons": [
+        "Important files equal main, but all inherited differences were not independently proved redundant; retain."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/hollow-manifest-observation-contract",
+      "tip": "2285712f657bd9baa3c9900ba9a9124bfb6aabbf",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/m02-release-1-5-1",
+      "tip": "e3a6cdcbf9e52bc0773517185998ddab08a229b4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/m02-trackpad-acceptance",
+      "tip": "1b1690871acf837dd1d642971b90debc236f7ad2",
+      "reasons": [
+        "Important files equal main, but all inherited differences were not independently proved redundant; retain."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/m03-active-guide-references",
+      "tip": "f54bfdf8152065fc31f326930d56709bb41d22ad",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m04-larvaal-warden/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/m03-current-user-guide",
+      "tip": "30ce07bcd86406d66f0bec7158a96093cde46231",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/m12-finite-source-review",
+      "tip": "1ec9c5522dce6749becfcaca2ec1a61c746a46dd",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/ordinary-trade-evidence-plan",
+      "tip": "f21966ec2493aa1514308ed1f64c4837e2278cb8",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m03-quote-composition/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/release-1-6-metadata",
+      "tip": "84298a4f62b6539ec4ea2e52470f7da8c523136b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/release-checkpoint-904",
+      "tip": "4d2ed27b03ca1d77c71b34e999a117d29976f53e",
+      "reasons": [
+        "Release/support or explicit retained historical checkpoint; no retirement authority established"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/docs/tap-status-standing-approval",
+      "tip": "a7b609b4d4842cfcdf6363f1e971aeac7f26e9f4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/evidence/m12-borrowed-dawn-pack-c329",
+      "tip": "c3291d2c18665845dc4e1ff577bdd0402bcf9b54",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c01-historical-harrier",
+      "tip": "4e046e901f036860b5f5e6fc32d79594f596e136",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c01-timing-standard-recovery",
+      "tip": "24deb39706a35f85717cc72fbf279a05503ebe77",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c01-timing-standard-wiring",
+      "tip": "03c670c822e5cf76887b77b77c89271d40c7fd9a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-attained-coherent-composition",
+      "tip": "1b3afde09f5449257cb5b75631f11bc946f12f04",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-attained-motion-data",
+      "tip": "a857e8ecd32e88ee8aaad0d3673cbb2389a9470f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-donkey-seal-geometry",
+      "tip": "0084c7b1072726fbd2bcf6ea0f635317ffd4d003",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-donkey-seal-mesh",
+      "tip": "b6b625b3d223975b035856238b8b4ae36adef9cf",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-freighter-route",
+      "tip": "1e9c59d0f0223e913f0674570c56eef15b7f3af0",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-native-admission-hooks",
+      "tip": "3445b817429b583a511b85b8d5042c5eb030c0f0",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-native-consent-contact",
+      "tip": "bae8d2fcc25835c6115e714c92ac9165eb004508",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-native-seal-effects",
+      "tip": "186cd86d7979dbd2c450a828eda0ec9401f7d362",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-retained-motion",
+      "tip": "86200f737e007bf575a60e73731595878dff49e8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-root-life-native-effects",
+      "tip": "b7b75f1a898a4ad71f19428e49b86bcda1ac4b6f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-route-consumer-candidate",
+      "tip": "1658498a33966a3d1853b3216c15b3744e4923c7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-route-consumer-composition",
+      "tip": "b2b305798653a06a9b79a32841b78f61169fb908",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c03-route-runtime-projection",
+      "tip": "1658498a33966a3d1853b3216c15b3744e4923c7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/c13-false-colours-opening",
+      "tip": "35dbdb8db3373ef0026a92444489605b4695560e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/encounters-mining",
+      "tip": "26370358b53ebb598d59204cf35b7f653d10f2e1",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/encounters-mining/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-admitted-claims",
+      "tip": "164438e22e7aa1c8577ab32c8d3e498b4da2a89a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-admitted-claims-v2",
+      "tip": "139df70322ad74de481bcbf8f6fdea81f5f2d0a9",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-admitted-claims-v3",
+      "tip": "03c4b9dc14ad3b2c92255d98d1fab46fd39a4d49",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-birth-codec",
+      "tip": "72d247a7a3189d4463a93c2c47d3d8c53ef3359b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-consent-builders",
+      "tip": "66defdb1ed1a72b2aca96e67b3d95bc2ac68bb20",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-consent-state",
+      "tip": "03c4b9dc14ad3b2c92255d98d1fab46fd39a4d49",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-declaration",
+      "tip": "90a69a57a275e13c477f204398f0945d32f07da8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-native-commission",
+      "tip": "164438e22e7aa1c8577ab32c8d3e498b4da2a89a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-pack-binding",
+      "tip": "b01d2e598bb4acfcc3933a09dc124cf867796b97",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-retained-state",
+      "tip": "7257c1c1a12f067fe4e3767022ded794f71f82ee",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-root-life",
+      "tip": "3c349d27c0fd63ea446097686e297a0ec7bb27a0",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-seal-compromise",
+      "tip": "435f198137bb1b61ccbca09920a45706d5612d4e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-seal-damage-retention",
+      "tip": "c165c179ec18dba6a43df90769659cc0b7053fe2",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-source-birth",
+      "tip": "2314150329b87ea0f24e939e045734148a3984f1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-source-contract",
+      "tip": "9802bc7a42c2670a9eb04a4a1b5c8f41d2d70f25",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/hollow-manifest-state-codec",
+      "tip": "5b3869830948d828c14ff66b82cdc3d9ecb0f49d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m01-asan-allocator-diagnostic",
+      "tip": "341c63b0cdc68f1772af597cd235fe0d1a8a254c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m01-catalogue-allocator-diagnostic",
+      "tip": "c210cd8cf1b946cde61358cce08bcadba498fd01",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m01-disabled-profile-mesh-reuse",
+      "tip": "bda5edf30f104849cc88d34b12e749891d72d4af",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m01-local-quality-bridge",
+      "tip": "90d37e718478b80300f909c371a26d6cd79d245d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m01-profile-face-projection",
+      "tip": "f456d372edd8681e35914272a3e72e142de048fc",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m01-shared-authored-mesh",
+      "tip": "1074ba16f9d4e72ee3a049101ad00e99dbc33fb8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m01-vmmap-snapshot",
+      "tip": "560a4d3ab524d2bd2a9c59dc998c687b1ec85595",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m02-controls-comparisons",
+      "tip": "7ed1c14adec1ab6f9e16e0ae3c477b29e1a6a85e",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m02-trackpad-acceptance/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m02-controls-release",
+      "tip": "45a97e3b648c2cced7c87207879cc339eaf9c7c7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m03-l337-identity",
+      "tip": "f6a79e4947ecb369c6dde971914fcebbf260fe91",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m03-market-quote-join",
+      "tip": "8003a884fa5565b1c823f5bd8c4abb9367219624",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m03-original-design-tape",
+      "tip": "ca421b27ad1aa04faebd60f0676ba47021c5ee8a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m03-original-equipment-stock-values",
+      "tip": "d7c79a81834410eda8cb32cb4b40a4e51f527124",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m03-reviewed-integration",
+      "tip": "dcd97e0ef7bda30a3e24b3db4422d54b1f1cd656",
+      "reasons": [
+        "Important files equal main, but all inherited differences were not independently proved redundant; retain."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m03-source-composition",
+      "tip": "c7aecd523bf4f9ea4d0b4000907fa6e91b792ed0",
+      "reasons": [
+        "Important files equal main, but all inherited differences were not independently proved redundant; retain."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-aplomado",
+      "tip": "c8ad8d0ac85f7ef33adb55d2f9ff18a8ed0bff58",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-arna-cutter",
+      "tip": "6bbdafe01cfdf7c99e5ad57e00402aa78861ea40",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-badger",
+      "tip": "f3e963aabc0671e287176374e5d614c6c3d1164a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-barbary",
+      "tip": "78beba1e76e69baf8d1efdc9af5dd2ff439094a3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-baza-fighter",
+      "tip": "6b7ed641cd11738c1562ead6768be99fdd0deef8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-baza-mk-ii",
+      "tip": "c81b265ea3b094ac624f09f5749f2e2702bd5f4e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-besra",
+      "tip": "79691ae3b1cbab89e9fcb42ac31f4bffec24e5a0",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-besra-current-source",
+      "tip": "5f17913d9b8d426238a4a579349fa720c450adac",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-besra-m01-composition",
+      "tip": "37a6abebdb1d650ee9368e291f3103255a106415",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-besra-post-m01",
+      "tip": "c8b0375717c53a2d0f79e35826208a5fc44ab5f8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-brabant",
+      "tip": "424d3fa1652073b0ff4fb1bd35afd221eee7d933",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-carabao-carrier",
+      "tip": "80decdcaa61e7bcd46488135aef3c6217f65b068",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-carabao-highliner",
+      "tip": "5d9136c2e0413863c6e2459ac686ca909ddfd379",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-chimango",
+      "tip": "3f65adcf1d7f1737d9c9163ba774f9e8a33b335c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-chimango-draft",
+      "tip": "27f171b8470fc3c57285dff9648c0e01d64bcc96",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-condor",
+      "tip": "3e03fa163bb1d45350c93b631c5b6565d533a833",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-dorcas-racer",
+      "tip": "21ea6ed0a77efda9b29c7fcf1ae3a6c3b35212ad",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-dzo",
+      "tip": "186d92cd7a8f83aca0d68adc5665cf4269779119",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-dzo-mk-ii",
+      "tip": "cc642af6b61aff358571d65858a1b6e3905f6478",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-eagle-cruiser",
+      "tip": "65e1faabc28a690699ab780529bb57ac896588e1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-erne-corvette",
+      "tip": "f1e59c9e76de42d64f43360b3700f983a0d2eba6",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-falconet",
+      "tip": "d618cbedad640c3acd050321ef68d3a8110981a5",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-fleet-composition",
+      "tip": "6bb037d3831caba1f4b7d915f101f7d1d4460293",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-further-cleared-source",
+      "tip": "65d0670aaa0383f690d1c8fc0424de98711db43e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-giraffe-liner",
+      "tip": "d9b5ebd55607da24e9d73156650ae9b96cfe9b69",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-gopher",
+      "tip": "621b327b4678fc340063a1bcb19799ac232eeb55",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-hare-explorer",
+      "tip": "6a49ef8b0c469ddf7691317cdea97e74e4f0d732",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-harpy-family",
+      "tip": "5dbc851399c6dfb88960af775a6c49717e7cff51",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-hawk",
+      "tip": "c13b3a33c31f7eafe8ee6210692cec563cf4da31",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-hippo",
+      "tip": "5ab7bd8d1a5daafaa2fa8244bd7d21278356a395",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-hobby-fighter",
+      "tip": "62eee9f54d8b917f3fb65ba0faa079adff52415a",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m04-hobby-fighter/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-jaguar",
+      "tip": "37db9a6120202aabd3b746530b6d786c478a6140",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-javelina",
+      "tip": "810a1c565bbc5b4621fe092ac176c3ec23949af3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-javelina-warthog8",
+      "tip": "71b4b2efb824077aa1bc7b784d60802ad10aaa91",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-kestrel",
+      "tip": "e5145971c498216407d134ba848d92bcc1bb6037",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-laggar",
+      "tip": "5c3ca377e5613da11bc01a6f816f3429cbbb9dd3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-larvaal-metre-bindings",
+      "tip": "4768d2417b260848c3bd5cdd17cda30763ee5298",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-larvaal-ravager",
+      "tip": "996645188ac2655e33b8a918877015391cd802b8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-larvaal-warden",
+      "tip": "15a8e4211bdb57dae4fa0bac011c915bcccafbd9",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-leopard-fighter",
+      "tip": "e0761e76d281ba493df9f0297cad5b870f486eac",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-llama",
+      "tip": "5c7a91f739c05027efc395f15d4df3f1f2d5e3e3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-mangalica",
+      "tip": "35c92f94089200e9c9213261729daca15fc47d83",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-mangalica-draft",
+      "tip": "e0761e76d281ba493df9f0297cad5b870f486eac",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-mangalica-final",
+      "tip": "27f171b8470fc3c57285dff9648c0e01d64bcc96",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-marmot11-prospector",
+      "tip": "65188236081aea6576fbd4cf9e4a067488df6156",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-merlin",
+      "tip": "571fe7cbf9b435e95d7a29f7a2a651c6b8bce5e9",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-merlin-draft",
+      "tip": "0a970c02ac98f0c2f46610adec35583b3389167e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-moose-clipper",
+      "tip": "a48208847a3023b574c3d130f45157ccc75eead4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-next-cleared-source",
+      "tip": "972f4697e045f8678546dd76af5a20f7e991ab3f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-oryx-voyager",
+      "tip": "59349d3eaa63f4e64b2789996fc53226acdab23d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-puma",
+      "tip": "acd46a13c217dad9cb9f6010c35ea113ce2234bd",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-puma-leopard-composition",
+      "tip": "35c92f94089200e9c9213261729daca15fc47d83",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-razorback",
+      "tip": "f33b66a6c34c71b4c3cb4039552d32ee9c9be387",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-razorback-draft",
+      "tip": "1f39d946b1f9f8a34a54f83b2a7d68a2fb8a45cb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-redtail-current-source",
+      "tip": "b949f2860063a2e3be171350ddd011fe3e4fcb12",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-redtail-m01-composition",
+      "tip": "797fe5c3c3a777e4a6f3ae302462bc829eb3a0cd",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-redtail-mk-iii",
+      "tip": "3ac952a38a1d84ecf8801354a1532491ea1b7639",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-redtail-post-m01",
+      "tip": "4d69e3d80a380565f777c37619be3b9d9cd0f7a4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-saker",
+      "tip": "b7ea00e9b6d1303a1ef64b41a78ede76269136f3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-salamander-physical-metres",
+      "tip": "7ac3e7f3a4c9415a70a0f55d64ec0180a2f6618d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-serval",
+      "tip": "75cc60c829c33446ea3e41a9392d68bc0b484635",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-sh058-archival-recorder-geometry",
+      "tip": "cc0711e90c1dcbecc90415262db7ae482efdc4cb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-sh141-archival-cradle",
+      "tip": "452f0c096f578e1b1072ab6a80ead09522d1c4ae",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-tamaraw",
+      "tip": "a6e4561f2c18f5dbddf04dee60669fa8aa2b1f19",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-vulture-raider",
+      "tip": "af591a54435f1b6bf3426a8476e9cebce1852cca",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-warden-composition",
+      "tip": "57dff39271470235783cd6cf769e8fd7fdec9171",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-warthog-10-guard",
+      "tip": "7c34e140c594935be6dfa84438231af5f0eb3919",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-warthog-6",
+      "tip": "938df1062a3a70aa2dbba14dab5ebc0644dd0f2f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-warthog-6-chimango-composition",
+      "tip": "3ce67c950eba8f1dfd0d86bd7b4c476dee528adb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-warthog-8",
+      "tip": "c9a1ebc071731db9d57bf63437589bdaec7fa7e1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-warthog-mangalica-composition",
+      "tip": "223bdbb6fb201cef476aba1765746689865393ae",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-warthog7",
+      "tip": "2cb0232bc9825c71ab900fb33c3ee5eb5161954a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-warthog9-heavy",
+      "tip": "bb3faf18fa9db78118fa61e4fc27854bfc968c52",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m04-zebu",
+      "tip": "1885c957c201854c3e587b20589eccae971d2ae0",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m05-c38-signed-passage-opening",
+      "tip": "e427a78275efb5dc59ba4323b8ead3578dc6c0b7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m05-trial-installation-current",
+      "tip": "bba2fc999f515cad222e4ae0722a0a28990487ff",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m07-c35-reference-opening",
+      "tip": "45883017b8f7b404472686b2557b04fc174a208a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m08-effective-module-readout",
+      "tip": "f8f636aadf4db5b2c84b7073aa93f93f526edb7e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m10-guiding-light-binding-composition",
+      "tip": "e4c4eb649783127f32fb81257eab727230db9ee9",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m10-guiding-light-definition",
+      "tip": "336c069a49a9b202765db4e673e94a797a894b90",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m10-guiding-light-optics-policy",
+      "tip": "8b7da4aa9d6202803145f0830a3c7ca20d3f8818",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m10-guiding-light-pack-binding",
+      "tip": "c13b3a33c31f7eafe8ee6210692cec563cf4da31",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m10-guiding-light-scene-recipe",
+      "tip": "cc2c69be59f21533a8ad543818ab353ed8f39984",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m10-guiding-light-visibility",
+      "tip": "3c3ddc76c73374fa17ed9b445a6cac103f3dcbe1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m11-c11-reference-opening",
+      "tip": "f908f1ebf30c41893270971793bf7d920d6fcd24",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m11-c19-reference-opening",
+      "tip": "8aefbeb6972636d710b798fb28f57c953b3400f9",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m11-c25-memory-atlas-opening",
+      "tip": "3bda9960c2a42ae06a0b931f3f47b94af79dc58d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m11-c37-reference-opening",
+      "tip": "c1a6231315bd0a1ed55b6ff2ef7e509ee22451df",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-borrowed-dawn-definition",
+      "tip": "305dc1155745ccb14f4cb122aa98a0119b021a73",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-borrowed-dawn-distributed-rig",
+      "tip": "53b1edafdb1a322863ca809715cfcac2b5bc268b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-borrowed-dawn-finite-source",
+      "tip": "ad6724e60af6a2101fb68f8ba80fefbcf21ace02",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-borrowed-dawn-optics-preparation",
+      "tip": "256e1f898a78354a79ea1423fb22a60ebac1bfe1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-borrowed-dawn-pack-binding",
+      "tip": "e0dd6ac12a477453d53fb59f9912f0c6b5dcf0dc",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-borrowed-dawn-rig-opacity",
+      "tip": "5143c01b2be203ab2ffd5c2394d4e9b88eb1753a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-borrowed-dawn-scene-preparation",
+      "tip": "6151379c029d7f85da608314b523972818922999",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c10-borrowed-dawn-opening",
+      "tip": "ab195142844a68754d6be153ce10c6c4d11ce700",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c12-reference-opening",
+      "tip": "8e33bb1b7ca12842c4eee21da48434ab4c8759aa",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c14-reference-opening",
+      "tip": "edc652671ecc16ae35bd262e4fde7f858807918f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c20-reference-opening",
+      "tip": "c43b380bfb49ae912bb74412d5b9762c7b359663",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c23-reference-opening",
+      "tip": "b7d98a2bc7d5ae06ed05fa39ec5f548c8875fb9c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c28-reference-opening",
+      "tip": "e043962ac670b24cf834befb8ee70f38578ffe49",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c29-reference-opening",
+      "tip": "8b286f4d6decc505aa1a0270866e82e8565af41d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c32-cold-reserve-opening",
+      "tip": "2a946ddd28c495ed0dfe547e42a419edd599605c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c33-reference-opening",
+      "tip": "abeacaa6d2d5813d1c8a9331a7a09bdf589709be",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-c34-reference-opening",
+      "tip": "8ce0ef6b3a147f189a4764dee526b8ff9df45875",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m12-rig-finite-transport",
+      "tip": "c32a2294476c230c681933d2afb556b0c6859f6a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m14-hearth-commission",
+      "tip": "b32450925f1cec546e044da9c8e69e4c13f9de75",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/m18-plugh-decoder-opening",
+      "tip": "abfa5036d60c0bacf5fffc36870dc9b2e403463d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/ordinary-purchase-evidence",
+      "tip": "799ebd589718219c1e1d44ec43626845c8f4839b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/ordinary-purchase-save-integration",
+      "tip": "b39a7718cfafcc2bd580ede1ac9e31272c29a9ae",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-burro-activation",
+      "tip": "acf6b8195bb887ae2ca2e39c426f27c55cbb9bb3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-combat-costs",
+      "tip": "669c520a380284be33b1fe9fa3af82b1d5d73c78",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m02-control-help-consistency/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-donkey-activation",
+      "tip": "5865fb74f5b336d635c59c54715fa794b84d6994",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-eagle-cruiser",
+      "tip": "f704b7a40b91098dd3898a8f108c1a38c016fd87",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-gazelle-explorer",
+      "tip": "905fbf0153711f0a85a779e9c46bec3f386abb0a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-gyrfalcon-assault",
+      "tip": "e8ec44d794fd0aeb2fea64f7b1af52b25324d49e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-gyrfalcon-family",
+      "tip": "7217832939018e9fcfa24f28f406a2d0cc00fecf",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-haflinger-activation",
+      "tip": "c771e01ee7c45173e3d09cb3f80bb272af7df676",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-ibex-activation",
+      "tip": "1ff9d322f67857de9a0cdbfd29948c9ffefa9e56",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-impala-voyager",
+      "tip": "eb3f5cb6b411233bfc8a1d5ffd86336f8770b4d4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-kite-interceptor",
+      "tip": "52599e12e2e9177789a334c3d7c409e725a5bb5d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-panther-family",
+      "tip": "dc89eccd1d498bbd0f3b009edf42369a66b0784c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-sable-liner",
+      "tip": "b2754f1155d7a8cc76d03929d9cc8528fbcec94a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-saker",
+      "tip": "72a2ded984fdf8203843c088e57930158d8c3953",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-serval-fighter",
+      "tip": "2a5853fc0c1d448f23da03ddd6bb57167ce8da04",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-sparrowhawk",
+      "tip": "f835b8f325752aceab2f3b612ae0c033e66a7129",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-stag-liner",
+      "tip": "22b11c1d2e722443a15688a3a1a2c68015377fd2",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/original-zebu-activation",
+      "tip": "5083345645e681610e14944e656ee55049979fbb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/readme-gallery-docking-media",
+      "tip": "8fcd763ff5402c63c936c65df08e618ad8c520f7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/readme-gallery-docking-media-final",
+      "tip": "9cbf4b3a9996b7694028afb44b00fcbdf3064d4f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/recoverable-parallel-quality",
+      "tip": "3b2481f4fb01f768c2b3f04e37ab4da6b2bde395",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/recoverable-quality-phases",
+      "tip": "7694808699a8531b7f1f9dd3214b86807e4fdebb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/station-context-help",
+      "tip": "7a2ff395a3cc6e5e9d17cb6aa3560e2a8813b4cf",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/status-dock-context",
+      "tip": "8380f4a90fbf0fe44ffddaef78cc9b45234e7e18",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/targeting-combat-projection",
+      "tip": "212ef18ef72ce101cddb3d6587f9e0e52c209c0d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/targeting-participant-classification",
+      "tip": "78dc4eb6692da43a732609950d139a0f0a027c87",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/targeting-combat-projection/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/targeting-view-panel",
+      "tip": "5a3ea00b73211ca3063354d592bea174e464fbd6",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/crew-log-historical-geometry/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feat/targeting-view-runtime",
+      "tip": "b5e9459c6e9e8c6666a3b8a93dc4e25c3ebaed1f",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m04-leopard-preview-require/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/alien-hyperspace-drive",
+      "tip": "bd4636674c435d4cbc25df0ccbf3358cb01ceaa3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/alien-missile-service",
+      "tip": "5095037228cda687dd7e27ad2a58ffb29018e756",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/authored-market-order",
+      "tip": "0aac86588b71477884bee10f021cd8a63e6b0ed1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/canonical-mission-composition",
+      "tip": "38ae83ec3517a1085e2d40e315a4c54260bcddac",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/defensive-flight-lesson",
+      "tip": "10849b7cfd958e8f3d4aace7b54703442cd484bb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/glass-meridian-recorder",
+      "tip": "fff52f3734aa6167128597087c55088aa3314f03",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/glass-meridian-reservation-audit",
+      "tip": "f582b63a284649e25ddab6682bbc9a59de00a5c2",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/hosted510-native-prerequisites",
+      "tip": "213fa8f1fd8ff5fb291218a2203e7fc9bf57d4cb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/hosted510-police-entry-fixture",
+      "tip": "08a73f46144c09159426eead60c74253bc0cabcd",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/inventory-property-groups",
+      "tip": "93cb9aa0fa694af7c2e57607599db1e84eebafc1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/isolation-parent",
+      "tip": "48db39be93868dcfeb0a3c96d49cdd591fa89c74",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/isolation-programmer",
+      "tip": "0f0e7db1f52468bbb08f77f74780e044c09f2723",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/m03-original-universe-completion",
+      "tip": "ad51e34776ed56c9bc58cee39f1824c1d8a4fcfe",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/native-contact-repair-delivery",
+      "tip": "d77fb1dfea26b85a2bf112cdcb1f7f027017a1eb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/native-isolation-provider",
+      "tip": "4ac8334d2976a5106f82f0551e1640a000879677",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/native-practice-provider",
+      "tip": "6ce3d42fb9923f02a04e7c7407fab500334bdb98",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/npc-resources-persistence",
+      "tip": "5ed23eb968863179068776ba3bf20454542b17d2",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/ordnance-equipment-integration",
+      "tip": "8752b10518c64292c2a41778d26edd4151c06b2d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/route-alternatives",
+      "tip": "6929d4b13206023d897452ab2258625e22da8132",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/route-alternatives/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/safe-gunnery-lesson",
+      "tip": "a32c2544a47c0df621f4e24f470b7bf24b6c6aa1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/station-clear-police-entry-fixture",
+      "tip": "62cdc9bc1e48231b9a73317538afffd10b5ddab8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/station-police-course-observation",
+      "tip": "162eadb41f6db18104bd09e93ff3646c78fd5504",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/wayfarer-accreditation",
+      "tip": "da596615e6d54d02e73c16d69dff0af1f39674fa",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/wayfarer-charter-audit",
+      "tip": "1f95e7378e7b40e5e0dc741fff73922af604ee6a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/wayfarer-network-certification",
+      "tip": "342ca8a5a9753a82d253d08836504d5f09e58434",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/feature/wayfarer-seed-service",
+      "tip": "235719f0ac4917293e53f566a2f39154fb31001e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/asset-execution",
+      "tip": "8349eecf81a3850783178e8e93ab900583b9d22a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/audio-close-lifecycle",
+      "tip": "e39f9044f16cbf787b8e9dac35faf91d2db0a2f2",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/bonded-freight-terminal-objective",
+      "tip": "eda63f9c801419cd9c582427aa148152f7cf084b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/c01-complete-scene-capture",
+      "tip": "cea11ede2a0028f4a7456e106c81f9afb040f8a0",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/c01-retained-motion-clearance",
+      "tip": "8a0e90996591f96c6a95d64b376d3d990ea72821",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/ci-explicit-macos-sdk",
+      "tip": "be8b0a9ffca0267b7a98579424957a3b382a5825",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/contract-detail-refresh-lifetime",
+      "tip": "41d3e591f4898d3c196d57c2534b6aa1899a1a59",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/front-visibility-render-borrow",
+      "tip": "e59266ccc86868d3dc6bf73f862ff3f5d5983ed1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/headquarters-attack-position",
+      "tip": "f0b1dbb04865fa3ca1ef7e938ae68eb0171b3cb4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/hollow-manifest-retained-route-revision",
+      "tip": "139df70322ad74de481bcbf8f6fdea81f5f2d0a9",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/homebrew-release-assets",
+      "tip": "eead720d1459504df8133bbe84e789cc91caa6ad",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/induction-codec-fixture-envelope",
+      "tip": "8d9e39d8ae81cf0b050dd747911b8ad7ab4e3eea",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/live-root-crash-ownership",
+      "tip": "92a60684e034247630e95c4047dee103bd9d4802",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/lua-error-control-flow",
+      "tip": "3129249906d2757411c0a9808340aa135cde6bef",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-active-job-corroboration",
+      "tip": "28c4a43818c6825cb2ecf5cb878df420923dd7cf",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m01-active-job-corroboration/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-address-before-thread",
+      "tip": "b33855fbf97cca32e17df1130ddcf52a2f8eb7d3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-asan-low-memory",
+      "tip": "c15a20b9cdba3d43e5c2b168589f7fea8edf86f1",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m01-asan-low-memory/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-asan-role-profile",
+      "tip": "6651746ff3457338496c31bf31e169c88c240032",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-asan-test-memory",
+      "tip": "2c670642e0606d282d11d3cfeafd38c254da3537",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-icon-projection-memory",
+      "tip": "eda42ea890328436697f990f76e74acfee7bad82",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-local-lease-order",
+      "tip": "cee8ccc3a73050bc5d6f471ad4d3481570b6a692",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-local-sanitizers",
+      "tip": "f4beb7a7ed33d580bcb8712feac3c7cc58a5bd81",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-local-tsan-memory",
+      "tip": "dfd4eee25f26ffa07ba4c288adb7a289ead8641b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-lua-error-contract",
+      "tip": "c103aac828b0a4af9a0a4bc798b14d332d56ce5d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-pr-execution-identity",
+      "tip": "125867a3a40377e25251cb90688b45877db9c639",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-prerequisite-raw-export",
+      "tip": "fa14755da0ee66300135be6ee72962544ef37da8",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m01-prerequisite-raw-export/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-registration-bom",
+      "tip": "9cc04fd5db23b9974ac7600cd414399e03660b64",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-release-build-scheduling",
+      "tip": "dfa4c56e98c19c4ca69e89d84d278af1dcf976e7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-resource-refusal-evidence",
+      "tip": "a787bed353d0d9b760bedd18790337ce1fa149ca",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m01-resource-refusal-evidence/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-resource-routing",
+      "tip": "d12f63216e09ae9f94083cd1a115f46ee986674a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-run-provenance-diagnostic",
+      "tip": "9a382e69dda0255ecd3417136f3e58049297825c",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m01-run-provenance-diagnostic/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-safe-hook-diagnostics",
+      "tip": "525f27cfda23da2674cd7d6c8345456ec3fe6629",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m01-step-authorization",
+      "tip": "d6017ed4b3294e603d9a1fcc7f83329cec3e461b",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/m01-step-authorization/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m02-control-help-consistency",
+      "tip": "2c55d215e9a94a93d9f46b771da2289acd5d9ebe",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m02-showroom-transactions",
+      "tip": "5a793c165c142ea0e42757920952303a4edb34e0",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m03-closed-elite-1-5-1",
+      "tip": "228d528c384ad27ab2f081aa1574b428c53726c9",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m03-market-quote-index-join",
+      "tip": "85bec18e9e4031689f90aff8890a0cd35aed9235",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m04-compact-showroom-quote",
+      "tip": "0e937de2ef13e0ac2934f2cd81d87ed0f346c06f",
+      "reasons": [
+        "Active G1 checked-out branch; exact unintegrated policy/crew/fitting work, retain."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m04-llama-npc-escort",
+      "tip": "8b6e68785ee4eac09b73f15442591e2d7419bb37",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m04-llama-npc-role",
+      "tip": "15bde81e7738fef6e0f31f492440a4d6c361b247",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m05-bonded-reception-note",
+      "tip": "d069d1a1299d630c38ea75b5db383ef9563b54c8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m05-trial-pack-installation",
+      "tip": "bc86711d84308ee6fc90f87643f3a9e7e0dd8b33",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m06-original-winter-planet-material",
+      "tip": "f06f036b0bc38d20f3948bdcaeddc16e3943a54a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m07-native-drive-fuel-fact",
+      "tip": "7a70fd36f13ef1141a98c20308c935e9c38e31e5",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m10-visibility-scene-bound",
+      "tip": "c3229fd05c9b760579e170a5a38d42269d61073d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m12-borrowed-dawn-shutter-contact",
+      "tip": "beb648d8555f242aae583b8ecebfd08984af1370",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/m12-c28-mixed-envelope-claims",
+      "tip": "ff0ac2e7bf78cade841c37f5b2e8f25c3998ca49",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/mission-acceptance-phase-lifetimes",
+      "tip": "1af6fd7d549b18bb7ce2126b6c164fa24faf7d7e",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/mission-acceptance-phase-lifetimes/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/native-fixture-stack",
+      "tip": "05fa6dfc443c624a081499538b456e62ef7e1ccb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/native-menu-test-isolation",
+      "tip": "d8cc46c1a6977e8dd513e685c6daa05a1482c07e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/navigation-availability-binding-scope",
+      "tip": "96608dc21839cac86dd6b04d78e90be3d7cbb8d6",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/navigation-availability-binding-scope/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/navigation-binding-commander-projection",
+      "tip": "f5a51f8977d8f772931b5a69761be32c18539382",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/navigation-binding-commander-projection/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/original-base-equipment-prices",
+      "tip": "c7f4581a464d7c060197972eca9598ae0a0050a5",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/original-base-equipment-technology",
+      "tip": "574743c31077affe59b533590a9e7d4f2ce5860a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/original-night-technology",
+      "tip": "fa28096334f6d55ba3dfae938d1bb7944fe4f8ee",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/original-rescue-facts-gate",
+      "tip": "5c49fe3dddbe7200a5115e7a96560b665da01dcd",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/phase-evidence-cleanup",
+      "tip": "e3d445518362b17ffaaca6800211c90bbfe88b2d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/release-draft-discovery",
+      "tip": "3ec8e00f5bfd298fd7a272368af1813de0bd22c7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/rescue-utility-validation-frames",
+      "tip": "fa516a6430786d72d1b9e5353ebeac280b1b1e73",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/reservation-audit-composition",
+      "tip": "5ee20948e0320d19f4ff3448270c004f93b01c23",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/script-output-success-path",
+      "tip": "a5b88e8c2ef6c124d4ab873d0de7da138facb38d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/seed-release-contact-fixture",
+      "tip": "e899729fe1315525ffb0d9e1162a54ae81ee7480",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/ship-media-render-dependencies",
+      "tip": "c0453386a9e837c307e642c64720c605d1ace6ab",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/showroom-comparison-tradeoffs",
+      "tip": "ac3a76b6a2be1ca5540be42616dcfbbd25993b5c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/showroom-unit-compatibility",
+      "tip": "957cd62c684972a36e9359e371f67a76f687faca",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/sonar-output-allocation-flow",
+      "tip": "fde65bde801246a6d218101ccce266dda4ce8b54",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/station-entry-value-lifetimes",
+      "tip": "9bf8af33933019d6f4ef1c605414b8200e48da03",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/station-world-addressable-read",
+      "tip": "7c10c65cf785cfa8a7c018bf10b97ec600f7b11c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/target-cargo-route",
+      "tip": "a27a8f7280749a3b85c66d294df42228800e8c00",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/target-transit-route",
+      "tip": "ac50870c39994126499ba4804f1e998fb1c46ae8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/training-source-composition",
+      "tip": "bcd75d29732ef3447a39ee26a269a353d34d5afb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/wanted-recorded-world-names",
+      "tip": "c6410d6237eb561b2c07399ca5565afe3db6a58f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/workshop-gallery-fixture",
+      "tip": "d33daaaebef910985c6d4035b088b7a40307e074",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/fix/xyzzy-current-market-save-fixtures",
+      "tip": "47654a8ad9631043ea01ec5681a16e0133491f79",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/xyzzy-current-market-save-fixtures/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/infra/local-runner-promotion",
+      "tip": "76f4ea1bb17f25cc1a3babc710d0de081ab709fd",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/integration/m04-condor",
+      "tip": "87bcfb558b6d3e3220742b5cdfb08ec7b5ad1940",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/integration/m04-giraffe-final",
+      "tip": "9c1d37d67d5f6ad6466afdc70395010091b1a45a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/integration/m04-laggar-escort",
+      "tip": "a1a007bc48ff4eb54c841e5eabbbc9976fbaa027",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/integration/m04-laggar-fixture",
+      "tip": "10506e1693d4078fe13c123d9f64d219b3735d10",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/integration/m04-later-qualified-fleet",
+      "tip": "3e2737f983e9ea585b94ce6e64850b60c163571c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/integration/m04-qualified-fleet",
+      "tip": "90b14bbc2d8f529a4f7be8a5746a2f40d806758b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/main",
+      "tip": "bba862c558530ea2d40d634f84fbd490d9cc3401",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/github/elite",
+        "Default branch or default symbolic pointer",
+        "GitHub protected branch"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/perf/measured-extraction-test-observations",
+      "tip": "3129537d5fc1a8d5aa7e708ba30651974a0c939b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/perf/multi-batch-test-overhead",
+      "tip": "2aaa0325a992e767b292ae091d91f80602d559ee",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/perf/planet-rendering",
+      "tip": "e8191dbc19f588f9c4f31c3252c2f1fca2e89453",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/planet-performance/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/perf/reuse-test-observations-m03",
+      "tip": "94966ad3b0d276cf5678d8b4aad05f7348257759",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/perf/test-observation-reuse",
+      "tip": "12adc925b7a81097db93d27101c453cf930dec4c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/release/m01",
+      "tip": "28c4a43818c6825cb2ecf5cb878df420923dd7cf",
+      "reasons": [
+        "Release/support or explicit retained historical checkpoint; no retirement authority established"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/solar-flight-gameplay",
+      "tip": "2c21ee2d59210e1af71bcc3e37200d975bdaf4cd",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/solar-flight-gameplay/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/sonar-conditions",
+      "tip": "43c7c414fc566b7485ba22fd15f763ca5f390461",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/c03-inactive-effects-composition",
+      "tip": "da71b6fdc3d3ba4e2b497d118df87559c1453071",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/c03-lifetime-composition",
+      "tip": "4bf24b7ce7cd8a2043f706082b6f2e29530a1a1f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/c03-retained-plasma-composition",
+      "tip": "302fd5636246e0da8f873ff45f97026992bc78cd",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/cabin-catalogue-preservation",
+      "tip": "dffd9106a235362663fb342c9607a29cb02794df",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/calendar-original-world-travel-witness",
+      "tip": "0ba34e10d604580b2395728f44bc4e98cf65f3ae",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/hollow-manifest-consent-cause-mission",
+      "tip": "2accb03e389f2631f476af5e4033c0e62ac6b18a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/hollow-manifest-consent-root-source",
+      "tip": "e2fbb54cad8e1d8b7454fb2988ab565ef738e742",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/hollow-manifest-consent-seal-source",
+      "tip": "a799678c88b5827a7e213f4d301472b970fb289f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/hollow-manifest-consent-source-positive",
+      "tip": "00893db22e1de3f7dcd385d98403e75b2e9929c7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/hollow-manifest-inactive-effects",
+      "tip": "e7b30608f629b0c3bc3d88e4243944b5849e8b9b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/hollow-manifest-physical-lifetime",
+      "tip": "5c1fe3bd1ddb8e77f2fc10f4f42309a383fc0aab",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/hollow-manifest-pristine-seal-claim",
+      "tip": "4a0d4103090768bae9386d3c7d335fe2e4cb11a1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/hosted-native-lifetime-diagnostic",
+      "tip": "abc7a95f3f1d8a334919eedf510df9ebe09368a2",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/leopard-preview-presence",
+      "tip": "7c34e140c594935be6dfa84438231af5f0eb3919",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/mission-stack-layout",
+      "tip": "acbb99e952157ca3564f2d82adcd4880376eb0bc",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/startup-fixes/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/painted-courier-one-hop-witness",
+      "tip": "0a5e1a3045bd0b127733a83221040ebe351e4796",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/heads/test/solar-equipment-comparison-ordering",
+      "tip": "12d00710bfc435c53cb3369a7f985bfd6ea4df61",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/ship-appearance-import/elite"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/HEAD",
+      "tip": "0cc45dca928c7bae18a388fa775d7b53c6653d21",
+      "reasons": [
+        "Default branch or default symbolic pointer"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/ci/local-macos-runner",
+      "tip": "e10611c51e9ac38e5afd21a82fdc453ebddb1f79",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/diagnostic/station-a561-retained-fault",
+      "tip": "6e426509e434aa2582e7173e50c4a8a50c4f3ebe",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/docs/developer-reviewer-workflow",
+      "tip": "08bf8fe833d5c1482e361a7cd37b211c01681e2d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/docs/final-game-review",
+      "tip": "8c899a7e0d351551498b05a7b371b84758575085",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/docs/fleet-r3-design-packet",
+      "tip": "be62a2fa259d6930a6912fa6a24501674cb27b63",
+      "reasons": [
+        "Important files equal main, but all inherited differences were not independently proved redundant; retain."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/docs/release-1-6-metadata",
+      "tip": "84298a4f62b6539ec4ea2e52470f7da8c523136b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/docs/release-checkpoint-904",
+      "tip": "4d2ed27b03ca1d77c71b34e999a117d29976f53e",
+      "reasons": [
+        "Release/support or explicit retained historical checkpoint; no retirement authority established"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/docs/tap-status-standing-approval",
+      "tip": "a7b609b4d4842cfcdf6363f1e971aeac7f26e9f4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/c01-historical-harrier",
+      "tip": "4e046e901f036860b5f5e6fc32d79594f596e136",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m02-controls-release",
+      "tip": "45a97e3b648c2cced7c87207879cc339eaf9c7c7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m03-reviewed-integration",
+      "tip": "dcd97e0ef7bda30a3e24b3db4422d54b1f1cd656",
+      "reasons": [
+        "Important files equal main, but all inherited differences were not independently proved redundant; retain."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-aplomado",
+      "tip": "c8ad8d0ac85f7ef33adb55d2f9ff18a8ed0bff58",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-arna-cutter",
+      "tip": "6bbdafe01cfdf7c99e5ad57e00402aa78861ea40",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-badger",
+      "tip": "f3e963aabc0671e287176374e5d614c6c3d1164a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-barbary",
+      "tip": "78beba1e76e69baf8d1efdc9af5dd2ff439094a3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-baza-fighter",
+      "tip": "6b7ed641cd11738c1562ead6768be99fdd0deef8",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-baza-mk-ii",
+      "tip": "c81b265ea3b094ac624f09f5749f2e2702bd5f4e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-carabao-carrier",
+      "tip": "80decdcaa61e7bcd46488135aef3c6217f65b068",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-carabao-highliner",
+      "tip": "90b14bbc2d8f529a4f7be8a5746a2f40d806758b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-condor",
+      "tip": "87bcfb558b6d3e3220742b5cdfb08ec7b5ad1940",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-dorcas-racer-composition",
+      "tip": "9d061158173cebd94ac0bf18a712c7567755a03b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-dzo",
+      "tip": "186d92cd7a8f83aca0d68adc5665cf4269779119",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-dzo-mk-ii",
+      "tip": "cc642af6b61aff358571d65858a1b6e3905f6478",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-eagle-cruiser",
+      "tip": "65e1faabc28a690699ab780529bb57ac896588e1",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-erne-corvette",
+      "tip": "f1e59c9e76de42d64f43360b3700f983a0d2eba6",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-falconet",
+      "tip": "d618cbedad640c3acd050321ef68d3a8110981a5",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-giraffe-liner",
+      "tip": "9c1d37d67d5f6ad6466afdc70395010091b1a45a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-gopher",
+      "tip": "621b327b4678fc340063a1bcb19799ac232eeb55",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-hare-explorer",
+      "tip": "6a49ef8b0c469ddf7691317cdea97e74e4f0d732",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-harpy-family",
+      "tip": "5dbc851399c6dfb88960af775a6c49717e7cff51",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-hobby-fighter",
+      "tip": "62eee9f54d8b917f3fb65ba0faa079adff52415a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-jaguar",
+      "tip": "37db9a6120202aabd3b746530b6d786c478a6140",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-laggar",
+      "tip": "3e2737f983e9ea585b94ce6e64850b60c163571c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-llama",
+      "tip": "8b6e68785ee4eac09b73f15442591e2d7419bb37",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-moose-clipper",
+      "tip": "a48208847a3023b574c3d130f45157ccc75eead4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-oryx-voyager",
+      "tip": "59349d3eaa63f4e64b2789996fc53226acdab23d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-redtail-besra",
+      "tip": "41c69b40876e0d5e233617b1b7401b9278de8434",
+      "reasons": [
+        "Retain exact41c69 commit/history for this inventory after deleting duplicate local pointer; do not prune"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-redtail-mk-iii",
+      "tip": "3ac952a38a1d84ecf8801354a1532491ea1b7639",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-saker",
+      "tip": "b7ea00e9b6d1303a1ef64b41a78ede76269136f3",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-serval",
+      "tip": "75cc60c829c33446ea3e41a9392d68bc0b484635",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-tamaraw",
+      "tip": "a6e4561f2c18f5dbddf04dee60669fa8aa2b1f19",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-vulture-raider",
+      "tip": "af591a54435f1b6bf3426a8476e9cebce1852cca",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/m04-zebu",
+      "tip": "1885c957c201854c3e587b20589eccae971d2ae0",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/original-eagle-cruiser",
+      "tip": "f704b7a40b91098dd3898a8f108c1a38c016fd87",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/original-saker",
+      "tip": "72a2ded984fdf8203843c088e57930158d8c3953",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/original-serval-fighter",
+      "tip": "2a5853fc0c1d448f23da03ddd6bb57167ce8da04",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/original-zebu-activation",
+      "tip": "5083345645e681610e14944e656ee55049979fbb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/readme-gallery-docking-media-final",
+      "tip": "9cbf4b3a9996b7694028afb44b00fcbdf3064d4f",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/recoverable-parallel-quality",
+      "tip": "3b2481f4fb01f768c2b3f04e37ab4da6b2bde395",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/recoverable-quality-phases",
+      "tip": "7694808699a8531b7f1f9dd3214b86807e4fdebb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feat/showroom-manual-view",
+      "tip": "2128b45b5da0884e02b0ead9d2a2dc42ffb198da",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feature/canonical-mission-composition",
+      "tip": "c57fc376f13d6467446fd8801e45e731b4261b53",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feature/m02-cockpit-station-completion",
+      "tip": "bc036c48b5aa14b659ca0cd68cc4177a4b5872d7",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feature/m03-original-universe-completion",
+      "tip": "ad51e34776ed56c9bc58cee39f1824c1d8a4fcfe",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/feature/native-isolation-provider",
+      "tip": "4ac8334d2976a5106f82f0551e1640a000879677",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/audio-close-lifecycle",
+      "tip": "e39f9044f16cbf787b8e9dac35faf91d2db0a2f2",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/c08-historical-loader-binding",
+      "tip": "1f011441545c26e59162661288f34830ad3d8097",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/ci-explicit-macos-sdk",
+      "tip": "be8b0a9ffca0267b7a98579424957a3b382a5825",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/crew-log-historical-geometry",
+      "tip": "38b71a28555431d52a6791bc178388f406540e79",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/headquarters-attack-position",
+      "tip": "f0b1dbb04865fa3ca1ef7e938ae68eb0171b3cb4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/l337-application-data-paths",
+      "tip": "e5eae288f71cd9ca640c416562cab73f37e21896",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/lua-error-control-flow",
+      "tip": "3129249906d2757411c0a9808340aa135cde6bef",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/m01-lua-error-contract",
+      "tip": "c103aac828b0a4af9a0a4bc798b14d332d56ce5d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/m04-compact-showroom-quote",
+      "tip": "2dbc3f9666b6d14644cfcad969509c2ecb95ae62",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/original-base-equipment-prices",
+      "tip": "c7f4581a464d7c060197972eca9598ae0a0050a5",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/original-base-equipment-technology",
+      "tip": "574743c31077affe59b533590a9e7d4f2ce5860a",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/phase-evidence-cleanup",
+      "tip": "e3d445518362b17ffaaca6800211c90bbfe88b2d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/script-output-success-path",
+      "tip": "a5b88e8c2ef6c124d4ab873d0de7da138facb38d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/showroom-context-arrow-hints",
+      "tip": "4325d144ed5aafbed4af492f24ff2b792ccd3d2e",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/fix/sonar-output-allocation-flow",
+      "tip": "fde65bde801246a6d218101ccce266dda4ce8b54",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/main",
+      "tip": "0cc45dca928c7bae18a388fa775d7b53c6653d21",
+      "reasons": [
+        "Default branch or default symbolic pointer",
+        "GitHub protected branch"
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/perf/measured-extraction-test-observations",
+      "tip": "3129537d5fc1a8d5aa7e708ba30651974a0c939b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/perf/multi-batch-test-overhead",
+      "tip": "2aaa0325a992e767b292ae091d91f80602d559ee",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/perf/test-observation-reuse",
+      "tip": "12adc925b7a81097db93d27101c453cf930dec4c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/pr232-merge",
+      "tip": "ee80b425651244c21092b988161ee3aae8765421",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/pr277-merge",
+      "tip": "f02c99c7627c316806405760c9c4ca5b8daef8b4",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "local-git-database",
+      "ref": "refs/remotes/origin/release/m01",
+      "tip": "8349eecf81a3850783178e8e93ab900583b9d22a",
+      "reasons": [
+        "Release/support or explicit retained historical checkpoint; no retirement authority established"
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/ci/local-macos-runner",
+      "tip": "e10611c51e9ac38e5afd21a82fdc453ebddb1f79",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/dependabot/github_actions/main/actions/cache-6.1.0",
+      "tip": "06a119b0746c9360c46715958ba586750d37b606",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/diagnostic/station-a561-retained-fault",
+      "tip": "6e426509e434aa2582e7173e50c4a8a50c4f3ebe",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/docs/developer-reviewer-workflow",
+      "tip": "08bf8fe833d5c1482e361a7cd37b211c01681e2d",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/docs/final-game-review",
+      "tip": "8c899a7e0d351551498b05a7b371b84758575085",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/.codex/worktrees/final-game-review/elite"
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/docs/release-checkpoint-904",
+      "tip": "4d2ed27b03ca1d77c71b34e999a117d29976f53e",
+      "reasons": [
+        "Release/support or explicit retained historical checkpoint; no retirement authority established"
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feat/m04-redtail-mk-iii",
+      "tip": "3ac952a38a1d84ecf8801354a1532491ea1b7639",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feat/original-eagle-cruiser",
+      "tip": "f704b7a40b91098dd3898a8f108c1a38c016fd87",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feat/original-saker",
+      "tip": "72a2ded984fdf8203843c088e57930158d8c3953",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feat/original-serval-fighter",
+      "tip": "2a5853fc0c1d448f23da03ddd6bb57167ce8da04",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feat/original-zebu-activation",
+      "tip": "5083345645e681610e14944e656ee55049979fbb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feat/recoverable-parallel-quality",
+      "tip": "3b2481f4fb01f768c2b3f04e37ab4da6b2bde395",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feat/recoverable-quality-phases",
+      "tip": "7694808699a8531b7f1f9dd3214b86807e4fdebb",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feature/canonical-mission-composition",
+      "tip": "c57fc376f13d6467446fd8801e45e731b4261b53",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/feature/native-isolation-provider",
+      "tip": "4ac8334d2976a5106f82f0551e1640a000879677",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/fix/m04-compact-showroom-quote",
+      "tip": "2dbc3f9666b6d14644cfcad969509c2ecb95ae62",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/Library/EliteNativeCI/execution/m01-profile-projection/elite"
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/main",
+      "tip": "0cc45dca928c7bae18a388fa775d7b53c6653d21",
+      "reasons": [
+        "Registered checked-out worktree: /Users/sclarke/github/elite",
+        "Default branch or default symbolic pointer",
+        "GitHub protected branch"
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/perf/measured-extraction-test-observations",
+      "tip": "3129537d5fc1a8d5aa7e708ba30651974a0c939b",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/perf/multi-batch-test-overhead",
+      "tip": "2aaa0325a992e767b292ae091d91f80602d559ee",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    },
+    {
+      "location": "live-origin",
+      "ref": "refs/heads/perf/test-observation-reuse",
+      "tip": "12adc925b7a81097db93d27101c453cf930dec4c",
+      "reasons": [
+        "Unique, partial or uncertain work remains; consult exact commits before reuse."
+      ]
+    }
+  ],
+  "receiptRequirement": "Mark deleted only from actual G1 execution receipts containing before/after refs, exact unchanged tips, protection/worktree checks and command outcome. Update this inventory then; no deletion claimed now.",
+  "actualReceipt": "cleanup-execution.json",
+  "executionUTC": "2026-11-01T13:42:15.780236+00:00"
+}

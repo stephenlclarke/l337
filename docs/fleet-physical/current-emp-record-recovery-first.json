@@ -1,0 +1,72 @@
+{
+  "status": "FIRST_PROPOSED_EXACT_CURRENT_RECORD_RECOVERY_NO_EDITS",
+  "beforeCommit": "7eee87dc94e448f4b24fe8250735072c6d20e4e0",
+  "pins": [
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "bytes": 18548,
+      "sha256": "693623abd1436400efd66d30316e999f08aa02569cc46c1850aff7ad989727ca"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "bytes": 13134,
+      "sha256": "7e042d3fe817b6386c7ec34794af3f823d5a4c77c65632a1faf26387deff2b7f"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 36466,
+      "sha256": "ece264d2b5f9a16b28509720f81cffa8394c11585b19db6c2da6914d1f501fed"
+    },
+    {
+      "path": "Sources/L337Core/ElectricalReserve.swift",
+      "bytes": 7364,
+      "sha256": "21841d830488be4b8e4963abae134d866b4f85d15c574a2ae76a46a73d3fafc5"
+    },
+    {
+      "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+      "bytes": 28711,
+      "sha256": "228462e782a2e60ba1b064c0a2c0d471b7ad1b70f91d4cce402ca1e93bdd6cb3"
+    },
+    {
+      "path": "Tests/L337CoreTests/EMPReleaseBoundaryFixture.swift",
+      "bytes": 30893,
+      "sha256": "8ba67e4523983a6975cb35b28f375fd642f0800308e163b47565ef20d3e4a28b"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationPoliceSourceTests.swift",
+      "bytes": 9790,
+      "sha256": "d2dd0a9b7b604af2cc09da97b0a9a14431ae4bc7607704a58e0a2639f4d4caba"
+    }
+  ],
+  "edits": [
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "old": "    guard physical.npc?.resources?.valid ?? true else { return false }\n    guard let recharge = physical.npc?.resources?.legacyElectricalRecharge else { return true }\n    return recharge == physical.catalogueShipID.flatMap { ShipCatalogue.ship($0)?.game?.recharge }",
+      "new": "    guard let npc = physical.npc else { return true }\n    guard npc.resources?.valid == true, let catalogue = physical.catalogueShipID else { return false }\n    return NPCPersistenceSnapshot.currentCatalogueSourceIsValid(\n      catalogueShipID: catalogue, hull: body.hull, npc: npc, missiles: body.missiles)"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "old": "      catalogue\n        == (custody.original.body.physical?.catalogueShipID\n          ?? ShipCatalogue.nativeShip(custody.original.body.hull)?.id),",
+      "new": "      catalogue == custody.original.body.physical?.catalogueShipID,"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "old": "        hull.body.physical?.npc != nil,\n        hull.body.physical?.npc?.resources?.electrical?.disabledAt == nil,",
+      "new": "        let reserve = hull.body.physical?.npc?.resources?.electrical,\n        reserve.disabledAt == nil,"
+    },
+    {
+      "path": "Sources/L337Core/EMPState.swift",
+      "old": "    } else {\n      guard savedOrdinaryTerminal == nil, hull.body.physical?.empSource == source,",
+      "new": "    } else {\n      if let npc = hull.body.physical?.npc {\n        guard let reserve = npc.resources?.electrical,\n          reserve.remaining == 0,\n          reserve.disabledAt == currentCrewDisableIncident.physicalTime\n        else { return false }\n      }\n      guard savedOrdinaryTerminal == nil, hull.body.physical?.empSource == source,"
+    },
+    {
+      "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+      "old": "    guard var physical = body.physical, var npc = physical.npc else { return false }\n    if npc.resources?.profile == .legacyEnergyOnly, npc.resources?.legacyElectricalRecharge == nil {\n      guard let catalogue = physical.catalogueShipID,\n        let native = ShipCatalogue.ship(catalogue)?.game, native.valid\n      else { return false }\n      npc.resources?.legacyElectricalRecharge = native.recharge\n    }\n    var reserve = npc.resources?.electrical\n    // A genuine older disable episode has no separate electrical field; its\n    // current native capacity/recharge supply the explicit migration boundary.\n    if reserve == nil, let resources = npc.resources,\n      var migrated = ElectricalReserve(\n        capacity: resources.energyCapacity,\n        recharge: resources.electricalRecharge, at: record.currentCrewDisableIncident.physicalTime)\n    {\n      guard\n        migrated.drain(resources.energyCapacity, at: record.currentCrewDisableIncident.physicalTime)\n      else { return false }\n      reserve = migrated\n    }\n    guard reserve?.recover(at: now) == true else { return false }\n",
+      "new": "    guard var physical = body.physical, var npc = physical.npc,\n      let catalogue = physical.catalogueShipID, npc.resources?.valid == true,\n      NPCPersistenceSnapshot.currentCatalogueSourceIsValid(\n        catalogueShipID: catalogue, hull: body.hull, npc: npc, missiles: body.missiles),\n      var reserve = npc.resources?.electrical,\n      reserve.remaining == 0,\n      reserve.disabledAt == record.currentCrewDisableIncident.physicalTime,\n      reserve.recover(at: now)\n    else { return false }\n"
+    }
+  ],
+  "newTestPath": "Tests/L337CoreTests/EMPCurrentRecordRecoveryTests.swift",
+  "testPlan": "Stored-object current/prehit-nil-reserve and malformed profile/fuel/ammo/ID with NPCnil control; genuine paid fixture actual disable record positive, malformed missing reserve/profile/ID, actual recovery refusal and positive spent-condition recovery. Existing actual kernel, no fabricated custody/receipt or new public hook. All UNCOMPILED UNRUN, G1 sole executor.",
+  "scope": "Five exact hunks in two source files and one new test only. Explicit current NPC source and original ID; existing reserve for NPC-present disabled and recovered hull and live recovery. Preserve original pre-hit nil reserve and NPCnil pods/empty wrecks. No schema/default/history change, migration or replacement algorithm.",
+  "limits": "SOURCE ONLY. Resolver may initialize geometry at runtime; cost unmeasured. No actual hardware/people/power/loaded-mass/125 autonomous/native/game acceptance. Broader legacy save/schema cleanup remains separate required work."
+}

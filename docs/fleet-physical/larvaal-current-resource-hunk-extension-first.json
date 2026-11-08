@@ -1,0 +1,26 @@
+{
+  "status": "BEFORE_OWNED_CURRENT_SOURCE_CLEANUP_HUNKS_NO_EXECUTION",
+  "reason": "Current Medusa source replacement makes superseded Liberator volume/cargo accommodation fallback and salvage entry obsolete; preserve positive projection/current qualified-route obligations rather than an old executable alias.",
+  "records": [
+    {
+      "path": "Sources/L337Core/ShipAccommodation.swift",
+      "bytes": 13082,
+      "sha256": "4d8461a2b726ab880be31d2dd086a01a2b8cfff2d2058c2fcc584185d9ccd4b5"
+    },
+    {
+      "path": "Sources/L337Core/SalvageCatalogue.swift",
+      "bytes": 15081,
+      "sha256": "db0959f769dd1121553b54e4507a68588dc18009204e1b6bcb68c9ff5dc7615e"
+    },
+    {
+      "path": "Tests/L337CoreTests/LiberatorTests.swift",
+      "bytes": 6689,
+      "sha256": "34420ab25099ca426e01a0e04782b552539fd03aec594baeb295610620f9ffc4"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationApproachTests.swift",
+      "bytes": 14430,
+      "sha256": "58393e0d0582ea1ec03f05e34fcac2991363722fe23c131e331acd67414c0afa"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-# Authored design proposal v2. Not installed or playtested.
+# SH040 cryostasis source successor. Bind as the current R3 row with the new asset and physical record.
 schema = "l337.fleet-design/2"
 id = "SH040"
 name = "Newt Escape Pod"
@@ -21,18 +21,18 @@ normalPurchaseRequiresCrew = false
 previousName = "Newt Escape Pod"
 statsFile = "fleet-specs/SH040.toml"
 statsSHA256 = "75c4cc44d54261be21ae459f533715b42bb48277e21f8c8c9e3a0be5c689fe9f"
-geometryFile = "replacement-hulls/SH040-design.toml"
-geometrySHA256 = "94125f9da5db004437ac784ba47be3267271fe2401cf506f9a3715f2b2e3ae3a"
+geometryFile = "docs/fleet-design-v2/successors/SH040-cryostasis.toml"
+geometrySHA256 = "5b52208ecf64228a843dc792ff4614af3ff9109034de4bedb6ddb0b7918072d9"
 nameDecision = "Retain the accepted animal stem and identity."
 
 [geometry]
-basis = "retain-original-family-and-palette; implement-listed-revisions"
-originalIntent = "Compact faceted rescue seed with a broad glazed hatch, protective end bands and recessed attitude thrusters."
-dimensionsWHLMetres = [4.0, 3.0, 6.0]
-dimensionStatus = "new-layout-target-estimate; preserve any later verified active calibration"
-scaleRule = "Verify source units and active per-ID calibration before any geometry rescale."
+basis = "retain Newt capsule identity; user-directed cylindrical cryostasis design"
+originalIntent = "Person-sized cylindrical rescue cryostasis pod with a glazed lid, recognizable frozen occupant on an opaque cradle, and enclosed local attitude hardware."
+dimensionsWHLMetres = [1.1368421052631579, 0.9631578947368421, 2.4]
+dimensionStatus = "source design envelope at retained calibration; physical qualification pending"
+scaleRule = "Retain exact 60/19 metres per source unit and original +Z/+Y frame; no recentering or fit to the historical six-metre target."
 cockpitRule = "Opaque connected structural support under all glazing; verify in every view."
-surfaceRule = "sparse-recessed-seamless-human-panels"
+surfaceRule = "opaque ceramic shell and gasket framing; one opt-in transparent visual pane over opaque cradle"
 variantFeature = "capsule"
 nativeFaceLimit = 512
 

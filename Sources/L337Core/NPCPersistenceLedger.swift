@@ -20,21 +20,49 @@ public struct NPCPersistenceSnapshot: Equatable, Codable, Sendable {
   public var catalogueShipID: String?
   public var npc: NPCState
   public var physicalTime: Double
+  public var currentNewtKitStock: CurrentNewtKitStock? = nil
   public var firstAggressorBinding: NPCReferenceBinding? = nil
   public var intentionTargetBinding: NPCReferenceBinding? = nil
 
+  /// Current resource identity is independent of an actor's persistence or EMP owner.
+  /// Callers retain their own owner guards; consumed pools are never replaced with stock.
+  static func currentCatalogueSourceIsValid(
+    catalogueShipID: String?, hull: Hull, npc: borrowing NPCState, missiles: Int
+  ) -> Bool {
+    guard let id = catalogueShipID else { return true }
+    guard let source = OriginalFleetRuntimeHullSource.source(for: id),
+      source.ship.nativeHull == nil || source.ship.nativeHull == hull,
+      let actual = npc.resources, actual.valid, missiles >= 0,
+      let expected = NPCResources.stock(source.performance)
+    else { return false }
+    var remainingTonnes = source.performance.cargo
+    for amount in npc.ordinaryCargo {
+      guard amount.valid, amount.tonnes <= remainingTonnes else { return false }
+      remainingTonnes -= amount.tonnes
+    }
+    return actual.profile == expected.profile
+      && missiles <= source.performance.missiles
+      && actual.energyCapacity == expected.energyCapacity
+      && actual.energyRecharge == expected.energyRecharge
+      && actual.frontCapacity == expected.frontCapacity && actual.rearCapacity == expected.rearCapacity
+      && actual.shieldRecharge == expected.shieldRecharge
+      && actual.fuel != nil && actual.fuelCapacity == expected.fuelCapacity
+      && actual.heatCapacity == expected.heatCapacity && actual.heatCooling == expected.heatCooling
+  }
+
   public var valid: Bool {
-    (0..<8).contains(actor.system.galaxy) && (0...256).contains(actor.system.system)
+    !(catalogueShipID.map(OriginalDetailedHullStage.blocksRuntime) ?? false)
+      && (currentNewtKitStock.map {
+        $0.validForNPC(catalogueShipID: catalogueShipID, actor: actor, physicalTime: physicalTime)
+      } ?? true)
+      && Self.currentCatalogueSourceIsValid(
+        catalogueShipID: catalogueShipID, hull: hull, npc: npc, missiles: missiles)
+      && (0..<8).contains(actor.system.galaxy) && (0...256).contains(actor.system.system)
       && actor.entity >= 2 && actor.entity < UInt64.max && actor.visit > 0
       && [.civilian, .pirate, .police].contains(population) && hull.isTargetShip
       && npc.role != .mission && (0...255).contains(npc.legal.value)
       && npc.legal.bountyTenths >= 0 && npc.ordinaryCargo.allSatisfy(\.valid)
       && (npc.resources?.valid ?? true)
-      && (npc.resources?.legacyElectricalRecharge.map {
-        $0
-          == (catalogueShipID.flatMap { ShipCatalogue.ship($0)?.game?.recharge }
-            ?? ShipCatalogue.nativeShip(hull)?.game?.recharge)
-      } ?? true)
       && (npc.resources?.electrical.map { $0.physicalTime <= physicalTime } ?? true)
       && energy.isFinite && energy > 0 && energy <= (npc.resources?.energyCapacity ?? 100000)
       && missiles >= 0 && position.finite && orientation.validRotation
@@ -45,29 +73,31 @@ public struct NPCPersistenceSnapshot: Equatable, Codable, Sendable {
         ?? true)
   }
 
+  @inline(never)
   public static func capture(
-    body: SpaceBody, pose: ShipPose, physicalTime: Double, protection: MissionProtection
+    body: borrowing SpaceBody, pose: ShipPose, physicalTime: Double, protection: MissionProtection
   ) -> Self? {
-    guard let physical = body.physical, var npc = physical.npc,
-      physical.empSource == nil, physical.empCrewPod == nil,
+    guard body.nativeGeometryHasPhysical(), var npc = body.nativeLaunchNPC(),
+      body.nativeGeometryEMPSource() == nil, body.nativeGeometryCrew() == nil,
       !body.navalTarget, body.blackjackRole == nil, body.blackjackIdentity == nil,
-      !physical.blocksNavalEncounter, physical.rock == nil, physical.payload == nil,
-      physical.ordnance == nil, physical.salvage == nil,
-      !protection.protectedActors.contains(physical.identity),
+      !body.nativeLaunchBlocksNavalEncounter()!, !body.nativeLaunchHasRock(), !body.nativeLaunchHasPayload(),
+      !body.nativeLaunchHasOrdnance(), !body.nativeLaunchHasSalvage(),
+      !protection.protectedActors.contains(body.nativeGeometryIdentity()!),
       pose.position.finite, pose.orientation.validRotation
     else { return nil }
-    if npc.intention == nil, let suspended = physical.suspendedNPCIntention {
+    if npc.intention == nil, let suspended = body.nativeLaunchSuspendedIntention() {
       npc.intention = suspended
     }
     let snapshot = Self(
-      actor: physical.identity, population: physical.population, hull: body.hull,
+      actor: body.nativeGeometryIdentity()!, population: body.nativeLaunchPopulation()!, hull: body.hull,
       position: pose.systemPoint(body.position),
       orientation: body.orientation.transformed(by: pose.orientation),
-      velocity: physical.velocity, angularVelocity: physical.angularVelocity,
+      velocity: body.nativeGeometryVelocity()!, angularVelocity: body.nativeGeometryAngularVelocity()!,
       rotation: body.rotation, rotationRate: body.rotationRate,
       energy: body.energy, missiles: body.missiles, ecmEnabled: body.ecmEnabled,
-      hostile: body.hostile, laserCooldown: physical.laserCooldown,
-      catalogueShipID: physical.catalogueShipID, npc: npc, physicalTime: physicalTime)
+      hostile: body.hostile, laserCooldown: body.nativeLaunchLaserCooldown()!,
+      catalogueShipID: body.nativeGeometryCatalogueID(), npc: npc, physicalTime: physicalTime,
+      currentNewtKitStock: body.nativeGeometryStock())
     return snapshot.valid ? snapshot : nil
   }
 }
@@ -95,7 +125,14 @@ public struct NPCRebind: Equatable, Codable, Sendable {
   public func restore(body: inout SpaceBody, pose: ShipPose) -> Bool {
     guard snapshot.valid, body.hull == snapshot.hull,
       var physical = body.physical, physical.identity == actor,
-      !body.navalTarget, body.blackjackRole == nil, physical.npc?.role != .mission,
+      CurrentNewtKitStock.permitsTransition(from: snapshot.currentNewtKitStock,
+        to: physical.currentNewtKitStock),
+      physical.catalogueShipID == snapshot.catalogueShipID,
+      physical.npc != nil, physical.empSource == nil, physical.empCrewPod == nil,
+      !physical.blocksNavalEncounter, physical.rock == nil, physical.payload == nil,
+      physical.ordnance == nil, physical.salvage == nil,
+      !body.navalTarget, body.blackjackRole == nil, body.blackjackIdentity == nil,
+      physical.npc?.role != .mission,
       pose.position.finite, pose.orientation.validRotation
     else { return false }
     body.position = pose.shipPoint(snapshot.position)
@@ -113,6 +150,7 @@ public struct NPCRebind: Equatable, Codable, Sendable {
     physical.angularVelocity = snapshot.angularVelocity
     physical.laserCooldown = snapshot.laserCooldown
     physical.catalogueShipID = snapshot.catalogueShipID
+    // Keep the constructor's actual-time observation of this same retained kit.
     body.physical = physical
     return true
   }
@@ -135,8 +173,22 @@ public struct NPCPersistenceLedger: Equatable, Codable, Sendable {
   public static let maximumEntries = 128
   public private(set) var system: SystemIdentity?
   private var entries: [ActorIdentity: PersistentNPC] = [:]
+  /// Terminal snapshots still claim original hardware and select the current save envelope.
+  var hasCurrentNewtKitClaims: Bool {
+    entries.values.contains { $0.snapshot.currentNewtKitStock != nil }
+  }
   private var highestActor: UInt64 = 1
   private var nextOffer: UInt64 = 1
+
+  /// Only an outstanding native persistence offer may recover this exact stock.
+  func currentNewtKitStock(forOffer identity: SpawnIdentity) -> CurrentNewtKitStock? {
+    guard identity.producer == .persistence,
+      let entry = entries.values.first(where: {
+        $0.offer == identity && $0.binding == nil && $0.terminal == nil
+      })
+    else { return nil }
+    return entry.snapshot.currentNewtKitStock
+  }
 
   public init() {}
 
@@ -206,6 +258,8 @@ public struct NPCPersistenceLedger: Equatable, Codable, Sendable {
       logical.system == current.actor.system, expectedTransfer.actor.system == logical.system,
       logical.visit <= current.actor.visit, current.physicalTime >= expectedTransfer.physicalTime,
       current.hull == expectedTransfer.hull, current.npc.role == expectedTransfer.npc.role,
+      CurrentNewtKitStock.permitsTransition(from: expectedTransfer.currentNewtKitStock,
+        to: current.currentNewtKitStock),
       system == nil || system == logical.system,
       !protection.protectedActors.contains(logical),
       !protection.protectedActors.contains(current.actor),
@@ -403,6 +457,7 @@ public struct NPCPersistenceLedger: Equatable, Codable, Sendable {
       && lhs.ecmEnabled == rhs.ecmEnabled && lhs.hostile == rhs.hostile
       && lhs.laserCooldown == rhs.laserCooldown && lhs.catalogueShipID == rhs.catalogueShipID
       && lhs.npc == rhs.npc && lhs.physicalTime == rhs.physicalTime
+      && lhs.currentNewtKitStock == rhs.currentNewtKitStock
   }
 
   private static func providerGeometryMatches(
@@ -440,7 +495,9 @@ public struct NPCPersistenceLedger: Equatable, Codable, Sendable {
       snapshot.actor == entry.snapshot.actor, snapshot.actor.system == system,
       snapshot.firstAggressorBinding == entry.snapshot.firstAggressorBinding,
       snapshot.intentionTargetBinding == entry.snapshot.intentionTargetBinding,
-      snapshot.physicalTime >= entry.snapshot.physicalTime
+      snapshot.physicalTime >= entry.snapshot.physicalTime,
+      CurrentNewtKitStock.permitsTransition(from: entry.snapshot.currentNewtKitStock,
+        to: snapshot.currentNewtKitStock)
     else { return false }
     entry.snapshot = snapshot
     entries[logicalIdentity] = entry
@@ -461,7 +518,10 @@ public struct NPCPersistenceLedger: Equatable, Codable, Sendable {
     guard system == nil || system == snapshot.actor.system else { return .refused(.wrongSystem) }
     if let logical = logicalIdentity(for: snapshot.actor), var entry = entries[logical] {
       guard !protection.protectedActors.contains(logical) else { return .refused(.protectedActor) }
-      guard snapshot.physicalTime >= entry.snapshot.physicalTime else {
+      guard snapshot.physicalTime >= entry.snapshot.physicalTime,
+        CurrentNewtKitStock.permitsTransition(from: entry.snapshot.currentNewtKitStock,
+          to: snapshot.currentNewtKitStock)
+      else {
         return .refused(.staleTime)
       }
       entry.snapshot = bindingReferences(snapshot, previous: entry.snapshot, protection: protection)
@@ -469,6 +529,12 @@ public struct NPCPersistenceLedger: Equatable, Codable, Sendable {
       return .updated(logical)
     }
     guard snapshot.actor.entity > highestActor else { return .refused(.staleActor) }
+    if let stock = snapshot.currentNewtKitStock {
+      guard stock.issue.birthActor == snapshot.actor,
+        stock.issue.issuedAt == snapshot.physicalTime, stock.phase == .stowed,
+        !entries.values.contains(where: { $0.snapshot.currentNewtKitStock?.issue.kitID == stock.issue.kitID })
+      else { return .refused(.invalidSnapshot) }
+    }
     guard count < Self.maximumEntries else { return .refused(.capacity) }
     system = snapshot.actor.system
     highestActor = snapshot.actor.entity

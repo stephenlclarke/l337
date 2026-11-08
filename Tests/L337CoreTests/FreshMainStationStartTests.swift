@@ -30,7 +30,8 @@ private struct FreshMainStationFixture {
   func start(afterFailedRestore: Bool = false) async throws {
     let errors = await runtime.loadDefaultScriptPacks(
       directory: files.root.appendingPathComponent("installed"))
-    try #require(errors.isEmpty)
+    try #require(errors.isEmpty,
+      "Fresh start mission-pack loading refused: \(errors.joined(separator: "; "))")
     if afterFailedRestore {
       let previous = files.root.appendingPathComponent("unrestorable.json")
       let bytes = Data("invalid previous commander".utf8)
@@ -166,8 +167,10 @@ struct FreshMainStationStartTests {
     let url = f.delegate.saves.activeURL
     try await f.runtime.save(to: url)
     let cold = GameRuntime()
-    _ = await cold.loadDefaultScriptPacks(
+    let errors = await cold.loadDefaultScriptPacks(
       directory: f.files.root.appendingPathComponent("installed"))
+    try #require(errors.isEmpty,
+      "Cold Continue mission-pack loading refused: \(errors.joined(separator: "; "))")
     try await cold.restoreStartup(from: url)
     await cold.key(" ")
     let loaded = await cold.snapshot()

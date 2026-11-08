@@ -5,7 +5,7 @@ import Testing
 
 struct OriginalHullPhysicalContractUnitTests {
   @Test func burroUsesExactAuthoredNativeMetresAndKeepsOriginalSpecificationsSeparate() throws {
-    let contract = try OriginalHullPhysicalContract.burro.get()
+    let contract = try OriginalHullPhysicalContract.okapi.get()
     #expect(contract.id == "SH029" && contract.model.coordinateUnits == "metres")
     #expect((contract.envelope.dimensions - Vector3(20, 10.04, 34.09)).length < 1e-9)
     #expect(contract.nativeTriangles == 120)

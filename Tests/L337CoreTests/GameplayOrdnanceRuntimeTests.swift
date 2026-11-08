@@ -3,12 +3,28 @@ import Testing
 
 @testable import L337Core
 
-private func missileRuntimeGame(hull: Hull = .cobra, distance: Double = 1800) -> Game {
+/// Controlled combat roles use the same authenticated geometry as an admitted Okapi.
+func exactCombatFixtureBody(
+  _ game: inout Game, id: Int, position: Vector3, hull: Hull = .cobra, hostile: Bool = false
+) throws -> SpaceBody {
+  let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
+  let allocated = game.commander.flightSimulation.allocateActor()
+  let identity = try #require(allocated)
+  var body = SpaceBody(id: id, hull: hull, position: position, hostile: hostile)
+  body.physical = game.nativePhysicalActorState(for: body, identity: identity)
+  body.physical?.catalogueShipID = source.ship.id
+  return body
+}
+
+private func missileRuntimeGame(hull: Hull = .cobra, distance: Double = 1800) throws -> Game {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   game.commander.flightSimulation.pose.position = .init(0, 0, -3000)
-  game.bodies = [.init(id: 70, hull: hull, position: .init(0, 0, distance))]
+  let target = try exactCombatFixtureBody(
+    &game, id: 70, position: .init(0, 0, distance), hull: hull)
+  game.bodies = [target]
   game.ensurePhysicalActors()
   game.weaponsTargetID = 70
   game.missileArmed = true
@@ -22,7 +38,7 @@ private func missileRuntimeAdvance(_ game: inout Game, delta: Double) {
 
 struct GameplayOrdnanceRuntimeTests {
   @Test func actualPlayerLaunchSpendsOneMissileOnlyAfterAdmissionAndNeverKillsInstantly() throws {
-    var game = missileRuntimeGame()
+    var game = try missileRuntimeGame()
     let target = game.bodies[0]
     let player = try #require(game.commander.flightSimulation.player)
     game.key("m")
@@ -48,33 +64,36 @@ struct GameplayOrdnanceRuntimeTests {
   }
 
   @Test func actualFlightTickAllowsAnOccludingMissileToBeInterceptedByTheVictimsBeam() throws {
-    var game = missileRuntimeGame(distance: 1000)
-    // Admit the defender through the native spawn path. A bare legacy body uses
-    // the separate legacy beam and cannot exercise the native front-mounted ray.
+    var game = try missileRuntimeGame(distance: 1000)
+    // A controlled parked combat role exercises actual native re-admission without
+    // declaring a natural pirate source for the Okapi.
     game.bodies.removeAll { $0.id == 70 }
+    game.commander.npcPersistence = .init()
     game.commander.cargo[CommodityIdentity.food.rawValue] = 1
-    let allocatedSequence = game.commander.flightSimulation.allocateSpawn()
-    let sequence = try #require(allocatedSequence)
+    let anchors = try #require(game.commander.flightSimulation.anchors)
+    game.commander.flightSimulation.pose.position =
+      anchors.arrival * 0.6 + anchors.station.position * 0.4
+    let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
+    let stock = try #require(NPCResources.stock(source.performance))
+    var parked = try exactCombatFixtureBody(
+      &game, id: 70, position: .init(0, 0, 1000), hull: .sidewinder, hostile: true)
+    parked.orientation.x = .init(-1, 0, 0)
+    parked.orientation.z = .init(0, 0, -1)
+    parked.energy = stock.energyCapacity
+    parked.physical?.npc?.resources = stock
     let context = try #require(game.gameplayContext())
-    var orientation = Basis3()
-    orientation.x = .init(-1, 0, 0)
-    orientation.z = .init(0, 0, -1)
-    let request = SpawnRequest(
-      identity: .init(
-        system: context.system, visit: context.visit, sequence: sequence, member: 0),
-      population: .pirate, hull: .cobra,
-      position: context.player.position + .init(0, 0, 1000), orientation: orientation,
-      velocity: .init(0, 0, 0),
-      npc: .init(role: .pirate, origin: context.system, destination: context.system),
-      rock: nil, payload: nil, priority: .ordinary)
-    let receipts = game.admitEncounterPlan(
-      .init(
-        system: context.system, visit: context.visit, revision: context.revision,
-        batches: [.init(requests: [request], atomic: true)], intents: []))
-    let defender = try #require(receipts.first?.actor)
-    try #require(receipts.count == 1 && receipts[0].refusal == nil)
-    let victim = try #require(game.bodies.first { $0.physical?.identity == defender })
-    try #require(victim.physical?.spawnIdentity == request.identity)
+    let flight = game.commander.flightSimulation
+    let snapshot = try #require(NPCPersistenceSnapshot.capture(
+      body: parked, pose: flight.pose, physicalTime: flight.physicalTime,
+      protection: context.protection))
+    let captured = game.commander.npcPersistence.capture(snapshot, protection: context.protection)
+    try #require(captured == .registered(snapshot.actor))
+    game.commander.npcPersistence.resetPhysicalBindings(system: context.system)
+    game.admitPersistentNPCs()
+    let victim = try #require(game.bodies.first { $0.physical?.spawnIdentity?.producer == .persistence })
+    let defender = try #require(victim.physical?.identity)
+    #expect(defender != snapshot.actor && victim.physical?.catalogueShipID == source.ship.id)
+    #expect(game.commander.npcPersistence.logicalIdentity(for: defender) == snapshot.actor)
     game.weaponsTargetID = victim.id
     let launched = game.fireMissile()
     #expect(launched)
@@ -123,7 +142,7 @@ struct GameplayOrdnanceRuntimeTests {
   }
 
   @Test func refusedFullProjectilePopulationPreservesAmmoIdentitiesTargetAndCrimeState() throws {
-    var game = missileRuntimeGame()
+    var game = try missileRuntimeGame()
     for id in 100..<132 {
       game.bodies.append(.init(id: id, hull: .missile, position: .init(Double(id) * 10, 0, 4000)))
     }
@@ -137,12 +156,21 @@ struct GameplayOrdnanceRuntimeTests {
   }
 
   @Test func realStationMeshOccludesPlayerMissileAndNeverDamagesTheShipBehindIt() throws {
-    var game = missileRuntimeGame(distance: 4000)
-    game.bodies.append(.init(id: 0, hull: .station, position: .init(0, 0, 2000)))
+    var game = try missileRuntimeGame(distance: 4000)
+    // Face the SH028 port toward the missile and put its solid rim on the flight line.
+    var station = SpaceBody(id: 0, hull: .station, position: .init(69, 0, 2000))
+    station.orientation.x = .init(-1, 0, 0)
+    station.orientation.z = .init(0, 0, -1)
+    game.bodies.append(station)
+    let travelTime = 5.0
+    let contact = try game.nearestMissionCollision(
+      from: .init(0, 0, NativeMissileMuzzleDescription.distance), direction: .init(0, 0, 1),
+      range: OrdnanceProfile.standardMissile.speed * travelTime, radius: 0, includePlayer: false)
+    try #require(contact?.hit.target == .body(station.id))
     let targetEnergy = game.bodies[0].energy
     let launched = game.fireMissile()
     #expect(launched)
-    missileRuntimeAdvance(&game, delta: 5)
+    missileRuntimeAdvance(&game, delta: travelTime)
     let missile = try #require(game.bodies.first { $0.physical?.ordnance != nil })
     #expect(missile.physical?.ordnance?.termination == .impact)
     #expect(game.commander.stationSecurity.phase == .alarm)
@@ -151,7 +179,7 @@ struct GameplayOrdnanceRuntimeTests {
   }
 
   @Test func nativeShieldedNPCReceivesFiniteDamageInsteadOfLegacyInstantDestruction() throws {
-    var game = missileRuntimeGame(distance: 1000)
+    var game = try missileRuntimeGame(distance: 1000)
     let resources = NPCResources(
       profile: .nativeHull, energyCapacity: 100, energyRecharge: 0,
       frontCapacity: 500, rearCapacity: 500, shieldRecharge: 0,
@@ -166,8 +194,13 @@ struct GameplayOrdnanceRuntimeTests {
     #expect(remaining.frontShield + remaining.rearShield == 840)
   }
 
-  @Test func originalConstrictorStillDiesToOneCloseMissileBeforeItCanActivateECM() throws {
-    var game = missileRuntimeGame(hull: .constrictor, distance: 100)
+  @Test func constrictorRoleStillDiesToOneCloseMissileBeforeItCanActivateECM() throws {
+    var game = try missileRuntimeGame(hull: .constrictor, distance: 90)
+    // Keep the historical combat role with the qualified Okapi fixture mesh.
+    let resources = try #require(NPCResources.legacyEnergyOnly(maximumEnergy: 252))
+    game.bodies[0].energy = resources.energyCapacity
+    game.bodies[0].physical?.npc?.resources = resources
+    game.bodies[0].ecmEnabled = true
     game.bodies[0].navalTarget = true
     let launched = game.fireMissile()
     #expect(launched && game.bodies[0].energy == 252)
@@ -177,13 +210,14 @@ struct GameplayOrdnanceRuntimeTests {
   }
 
   @Test func lostTargetCannotRetargetAnUnrelatedShipWithReusedDisplayID() throws {
-    var game = missileRuntimeGame()
+    var game = try missileRuntimeGame()
     let launched = game.fireMissile()
     #expect(launched)
     let original = try #require(game.bodies[0].physical?.identity)
     let missile = try #require(game.bodies.first { $0.physical?.ordnance != nil })
     game.bodies.removeFirst()
-    game.bodies.append(.init(id: 70, hull: .cobra, position: .init(0, 0, 1000)))
+    let newTarget = try exactCombatFixtureBody(&game, id: 70, position: .init(0, 0, 1000))
+    game.bodies.append(newTarget)
     game.ensurePhysicalActors()
     #expect(game.bodies.last?.physical?.identity != original)
     missileRuntimeAdvance(&game, delta: 2)
@@ -193,7 +227,7 @@ struct GameplayOrdnanceRuntimeTests {
   }
 
   @Test func realNPCLauncherDoesNotLoseItsMissileOwnerWhenTheCraftIsRemoved() throws {
-    var game = missileRuntimeGame(distance: 1000)
+    var game = try missileRuntimeGame(distance: 1000)
     let initialCash = game.commander.credits
     game.frontShield = 100
     let ownerIndex = try #require(game.bodies.firstIndex { $0.id == 70 })
@@ -250,7 +284,7 @@ struct GameplayOrdnanceRuntimeTests {
 
   @Test func actualECMFieldRespectsTypedPlasmaAndOneActivationSeekerResistance() throws {
     for profile in OrdnanceProfile.allCases {
-      var game = missileRuntimeGame(distance: 4000)
+      var game = try missileRuntimeGame(distance: 4000)
       let launched = game.fireMissile()
       #expect(launched)
       let index = try #require(
@@ -284,7 +318,7 @@ struct GameplayOrdnanceRuntimeTests {
   func retaliationNeverTargetsAReplacementForTheActualMissileLauncher(
     replaceAfterIdentification: Bool
   ) throws {
-    var game = missileRuntimeGame(distance: 4000)
+    var game = try missileRuntimeGame(distance: 4000)
     game.weaponsTargetID = nil
     game.bodies[0].missiles = 1
     try game.commander.grantEquipment(
@@ -297,7 +331,8 @@ struct GameplayOrdnanceRuntimeTests {
     #expect(launched)
     if replaceAfterIdentification { game.detectRetaliationSources() }
     game.bodies.removeFirst()
-    game.bodies.append(.init(id: 70, hull: .cobra, position: .init(0, 0, 4000)))
+    let newTarget = try exactCombatFixtureBody(&game, id: 70, position: .init(0, 0, 4000))
+    game.bodies.append(newTarget)
     game.ensurePhysicalActors()
     let replacement = try #require(game.bodies.last?.physical?.identity)
     #expect(owner != replacement)
@@ -322,7 +357,7 @@ struct GameplayOrdnanceRuntimeTests {
   }
 
   @Test func queuedReturnFireRechecksLauncherIdentityAfterECMConfirmation() throws {
-    var game = missileRuntimeGame(distance: 4000)
+    var game = try missileRuntimeGame(distance: 4000)
     game.weaponsTargetID = nil
     game.bodies[0].missiles = 1
     try game.commander.grantEquipment(
@@ -335,7 +370,8 @@ struct GameplayOrdnanceRuntimeTests {
     game.ecm()
     #expect(game.ecmControl.events.contains { $0.announcement == .incomingIdentified })
     game.bodies.removeFirst()
-    game.bodies.append(.init(id: 70, hull: .cobra, position: .init(0, 0, 4000)))
+    let newTarget = try exactCombatFixtureBody(&game, id: 70, position: .init(0, 0, 4000))
+    game.bodies.append(newTarget)
     game.ensurePhysicalActors()
     game.ecmFrames = 0
     game.advanceRetaliation()
@@ -347,12 +383,12 @@ struct GameplayOrdnanceRuntimeTests {
   }
 
   @Test func missileMayLaunchInScoopableCoronaWithoutSpendingAmmoInsideTheSun() throws {
-    var game = missileRuntimeGame()
+    var game = try missileRuntimeGame()
     let anchors = try #require(game.commander.flightSimulation.anchors)
     game.commander.flightSimulation.pose.position = anchors.sun.position + .init(0, 0, -3000)
     let launched = game.fireMissile()
     #expect(launched)
-    game = missileRuntimeGame()
+    game = try missileRuntimeGame()
     game.commander.flightSimulation.pose.position = anchors.sun.position
     let before = game.commander
     let unsafeLaunch = game.fireMissile()

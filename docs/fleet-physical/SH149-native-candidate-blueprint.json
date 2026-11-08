@@ -1,0 +1,94 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH149-complete30part-native-candidate-v1",
+  "ship": "SH149",
+  "name": "Owlet Mk II",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "0000721bfa356c4bf251e1cc8ef5569595f3ac5628190fdb9789e21d7c73f4f2",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH149-design.toml",
+    "bytes": 535334,
+    "sha256": "4759ef063f9c3ad2b1f733a2eb975744b3e6c34b8531a6a03bad8b1aed5fb595"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH149.toml",
+    "bytes": 559461,
+    "sha256": "b7ac93115e5fb82440e8ffb466ab29616c14265e14641aa8f1c1e3acdefb96c1"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH149.json",
+    "bytes": 112771,
+    "sha256": "616c5035bb39f6ad3eb946d30a12f9db55731322256b04de15c6b7c779240058"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH149-native-candidate-recipe.py",
+    "bytes": 8624,
+    "sha256": "c0c7c5da955ae5351f12708cf7ea38139d40f56f7b7077d2b3457047dbaa1d35"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH149-native-candidate-tests.py",
+    "bytes": 9866,
+    "sha256": "f7bd608bb4001f0c23e23eea7a3cb3ba130aeb36f9e03946e438fe0af141adaa"
+  },
+  "baseline": {
+    "declaredNativeFaces": 1000,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "allLoftSides": 3,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      13,
+      18,
+      21,
+      22,
+      24,
+      25
+    ],
+    "unchangedFixedOriginalParts": 22,
+    "status": "NEW coarse all-triangular curved components; actual output count/full continuous source-profile/void/material/UV fidelity UNKNOWN and may fail qualification"
+  },
+  "retained": [
+    "BOTH full original5station forkpod envelopes/endcaps atX+-beam*.34/Y-.10/Z0,length*.91,widthbeam*.20,heightwidth*.72",
+    "BOTH complete deep longitudinal keel boxes at own offsets/extentheight.51, full aft bridge",
+    "Complete5station centralbody/endcaps and ALL TWELVE analytical recessed wells",
+    "Full original5station cockpit/support and both complete connected drives/casings/luminous recesses at xbeam*.38/radius.23, all original stations/radii stay",
+    "ALL FOUR original bountyHunter mount structures, exact plum-gold palette/emission/material/texture/license/source and full regenerated UVs"
+  ],
+  "coordinates": "Own original length3.7/beam1.65/source axes/coordinates/origin/units retained, no recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Owlet Mk II R3/name/game remain pending and unchanged",
+    "nativeCrew": 2,
+    "conversionCrew": 2,
+    "authority": "Keel/mount labels grant no installed guns/attackorigins/hardware/power/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed own source/creator/primitive/resource hashes before geometry",
+    "Both actual packaged original geometry tables remain exact",
+    "All30 original parts/material sets remain, especially ALL12wells/BOTHdeepkeels/bridge/ALL4mounts/full pods/cockpit/drives",
+    "All FIVE original stations per pod and TWO per drive/radii remain; all3angular sampling is explicitly coarse/unqualified",
+    "Actual complete output must satisfy512 and genuine closure/winding or refuse without omission/waiver/count claim",
+    "All22 fixed parts exact own original vertices/localfaces/materialsequence/UVs, ownpod profiles/offset/radii and drive rings/radii required",
+    "Full all-triangular continuous source-profile/void/material/UV/native fidelity requires actual G1 assessment and may reject; no automatic acceptance"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run30part/exact22fixed/ALL12wells/BOTHdeepkeels/bridge/ALL4mounts/podprofiles/drive rings-radii/UV/input checks then assess full all-triangular continuous source/native fidelity. Reject unfaithful proposal without waiver. G4 continues independent originals."
+  }
+}

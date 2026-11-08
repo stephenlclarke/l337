@@ -6,11 +6,18 @@ extension Game {
   static let empHeatCost = 18.0
   static let empCooldown = 1.5
 
-  func isEMPDisabled(_ body: SpaceBody) -> Bool {
-    guard let source = body.physical?.empSource,
-      let record = commander.savedEMPState?.records[source]
-    else { return false }
-    return !record.terminal && !record.isRecovered && record.hull.binding == body.physical?.identity
+  @inline(never)
+  func isEMPDisabled(_ body: borrowing SpaceBody) -> Bool {
+    guard let source = body.nativeGeometryEMPSource() else { return false }
+    return empSourceIsDisabled(source, body: body)
+  }
+
+  @inline(never)
+  private func empSourceIsDisabled(_ source: ActorIdentity, body: borrowing SpaceBody) -> Bool {
+    guard let record = nativeMechanicalStoredEMPState()?.records[source] else { return false }
+    guard !record.terminal else { return false }
+    guard !record.isRecovered else { return false }
+    return record.hull.binding == body.nativeGeometryIdentity()
   }
 
   func empTargetStatus(_ body: SpaceBody) -> String? {

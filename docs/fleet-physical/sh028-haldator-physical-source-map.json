@@ -1,0 +1,281 @@
+{
+  "status": "CURRENT_SH028_HALDATOR_PHYSICAL_SOURCE_FRAME_CONSUMER_MAP_NO_IMPLEMENTATION",
+  "firstSHA256": "6ec74544fce8f3af43636caaebe9f73eefe9e7727b2b529cbb5dab57dc3abc30",
+  "sourcePins": [
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH028.toml",
+      "bytes": 1397484,
+      "sha256": "65d68f37ca2ad8552d35a54550651afa86ff7f60625c401bb79c7250c4167ca9"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH028.toml",
+      "bytes": 1608,
+      "sha256": "b053d76b1912881af248045b29cf29d31cb2f77214b4f1697b8d69a78afa8768"
+    },
+    {
+      "path": "Sources/L337Core/MainStationGeometry.swift",
+      "bytes": 644,
+      "sha256": "0c3b0d71d1e2c3e681192bb5d10cfa17d433aef164a27a0acc6d3ad1dd6e7710"
+    },
+    {
+      "path": "Sources/L337Core/ShipCatalogue.swift",
+      "bytes": 12862,
+      "sha256": "d6a777a426b9958bc6539bb27c2d53b3ee76e390b20039eab2a144966f5d8d03"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationInertia.swift",
+      "bytes": 29183,
+      "sha256": "5caf3dbf83e1ac103e8499b4ef9d3512a7446665a1932b8f87839fc914430a7f"
+    },
+    {
+      "path": "Sources/L337Core/AsteroidDebrisContact.swift",
+      "bytes": 62487,
+      "sha256": "d8c1e2c3294eeb5e35ad9ef0c7ab647db606f732f7023978cfc1271aafea5592"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationAdmission.swift",
+      "bytes": 17495,
+      "sha256": "224e133964404a6bb9280e5837bdd02e7c8e88111fdb70985b5252cc05f570ad"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationServices.swift",
+      "bytes": 10858,
+      "sha256": "e74815c9dca25f05da4a8d9f5664c3492760b365c8f8b51cb6408a77acbe3559"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationRuntime.swift",
+      "bytes": 88256,
+      "sha256": "8f1361edc58c175d92692f88d2efa77b476a491c446d533cf84af5412a353962"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationGeometry.swift",
+      "bytes": 4836,
+      "sha256": "141c96090f46bde041a29791cec5363a72e0adb14b7a97971750300007dbc24b"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationSnapshot.swift",
+      "bytes": 3061,
+      "sha256": "ce7fe484038074c0a6129e2f6ab4d2250773b6af9b874adc71aeeba04b2eba70"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationValidationMemo.swift",
+      "bytes": 1157,
+      "sha256": "ff0dc3835c4d9062194a60fb73aece415ed9bc6faafc02b3bdc1889f5320825b"
+    },
+    {
+      "path": "Sources/L337Core/OriginalStationPhysical.swift",
+      "bytes": 2430,
+      "sha256": "c77de9ace2ff2fd1ef9458cf02e26a78c963345238aa3add3a2106511d199ddf"
+    },
+    {
+      "path": "Sources/L337Core/OriginalStationSite.swift",
+      "bytes": 2858,
+      "sha256": "313ce7b59396efe987deb8073e3fd424c6b676079a24a469825477cbb77d3718"
+    },
+    {
+      "path": "Sources/L337Core/PassengerCabinGrades.swift",
+      "bytes": 7190,
+      "sha256": "12fac9619f733666db4cba1c9f83732ade9f1b29ff19318b17d9b04813a6334c"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetPhysicalRecord.swift",
+      "bytes": 9385,
+      "sha256": "ec6097c69c5380432df9d213a4064f3d07ed65cd13232d7e81008678134ef86f"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetPhysicalRegistrations.swift",
+      "bytes": 24586,
+      "sha256": "2b273f866c78f0662d4b81800bfdb02059325b72819ba2109cf3497c627c28b1"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+      "bytes": 283481,
+      "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+    },
+    {
+      "path": "Sources/L337Core/Resources/OriginalWorlds/catalogue.json",
+      "bytes": 1660913,
+      "sha256": "120543eedc02a705cce0e37d026125bf926ec22651cff9337ca5d943f2ffd99d"
+    }
+  ],
+  "worldMetadata": {
+    "key": "G02-S182",
+    "galaxy": 1,
+    "system": 182,
+    "name": "Haldator"
+  },
+  "resourceHeaderDeclarations": {
+    "id": "id = \"SH028\"",
+    "name": "name = \"Lion Citadel\"",
+    "modelSource": "modelSource = \"Original authored replacement-hulls/SH028-design.toml / 739d9bb076fcb0212ca48e7a00312e87f1f959d37d6ab1ff247b75ff2b39305a\"",
+    "geometryContext": "geometryContext = \"Explicit new uniform80metres/sourceunit authoring estimate; sourceunitsundeclared, +Zforward/+Yup/sourceorigin retained. Publicdimensions describefullvisiblebounds; boundednativeLODdimensions [270.71999999999997, 241.92000000000002, 248.32]metres differ bydisclosedomittedmicrogeometry/coarsecurves. Actualrectangularaperture124.64x101.6m/frontplaneZ136.32/depth53.52 sharethis exactnativeframe. Notmeasuredcalibration, fullsurfacecollisionequivalence, allhullroute, docking, structuralengineering or renderingacceptance.\""
+  },
+  "nativeDockingSourceDeclaration": "[nativeDocking]\ncenter = { x = 0.0, y = 0.0, z = 136.32 }\noutward = { x = 0.0, y = 0.0, z = 1.0 }\nup = { x = 0.0, y = 1.0, z = 0.0 }\ntunnelDepth = 53.52\naperture = [{ x = -62.32, y = -50.8, z = 0.0 }, { x = 62.32, y = -50.8, z = 0.0 }, { x = 62.32, y = 50.8, z = 0.0 }, { x = -62.32, y = 50.8, z = 0.0 }]\n",
+  "emptyRecord": "ABSENT OriginalFleetPhysical/SH028.json; no exact SH028mass/COM/tensor in strict143 inventory",
+  "missionPolicy": "Root reported researcher ward proposal28719/e4cb6fc8 and allocationFIRST073d4c; Root adopts only Standard4+Double2/six real service places, NOT actual modules installed. Mission-sidecar currentness remains researcher-owned, exact artifact not independently read in this source map. Proposed12x8x3room is not fit/interior/power/mass proof.",
+  "metadataAuthoringNote": "First draft reader stopped before writing because top-level id also appears in profile tables; corrected header-only text selection.2world metadata JSON reads total, no model parser/geometry/numeric pass or source changes.",
+  "sourceFindings": [
+    {
+      "path": "Sources/L337Core/MainStationGeometry.swift",
+      "lines": [
+        2
+      ],
+      "literal": "enum MainStationGeometry",
+      "finding": "Actual current SH028 nativeDesign and nativeDocking supply main render/collision/port. These are not interior/ward/hardware or inertial proofs."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationInertia.swift",
+      "lines": [
+        11
+      ],
+      "literal": "case .main(let id): return id.valid ? AsteroidImpactPolicy.massKg(hull: .station) : nil",
+      "finding": "Main mass comes from collision tuning, not current SH028 engineering."
+    },
+    {
+      "path": "Sources/L337Core/AsteroidDebrisContact.swift",
+      "lines": [
+        13
+      ],
+      "literal": "case .station: 1_000_000_000",
+      "finding": "Policy explicitly calls this collision tuning.1e9 is not adopted SH028 dry or occupied mass."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationInertia.swift",
+      "lines": [
+        95
+      ],
+      "literal": "currentMass == massKilograms",
+      "finding": "Validity rereads fixed scalar source mass. A real changing load needs an admitted source/load frame transition, not scalar overwrite or reset."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationInertia.swift",
+      "lines": [
+        191,
+        227
+      ],
+      "literal": "massKilograms = sourceMass",
+      "finding": "Both impact and refusal constructors reread fixed mass; no actual local COM/full tensor/occupied load."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationInertia.swift",
+      "lines": [
+        87
+      ],
+      "literal": "var velocity: Vector3 { momentum * (1 / massKilograms) }",
+      "finding": "State is linear momentum/displacement only; no off-centre torque/angular inertia response."
+    },
+    {
+      "path": "Sources/L337Core/AsteroidDebrisContact.swift",
+      "lines": [
+        172
+      ],
+      "literal": "struct StationContactTransfer",
+      "finding": "Proof carries impulse/time/velocity but not contact point, COM lever arm, tensor or angular momentum."
+    },
+    {
+      "path": "Sources/L337Core/AsteroidDebrisContact.swift",
+      "lines": [
+        916
+      ],
+      "literal": "impactTime: frame.time - delta + contact.lowerTime",
+      "finding": "The actual contact producer already has NativeHullContact.point; carry that owned witness, not a fabricated origin/contact."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationInertia.swift",
+      "lines": [
+        138
+      ],
+      "literal": "func isCapturedCoastSuccessor",
+      "finding": "Derived coast/equality lineage must retain complete real source/load frame and angular state plus refused clocks."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationInertia.swift",
+      "lines": [
+        282
+      ],
+      "literal": "func currentOrientation(for station: NativeStationIdentity",
+      "finding": "Existing secondary orientation follows source saved spin/motionTime; main anchor/coast is separate. Torque must join actual source spin and pose, not zero/reset rotation."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationValidationMemo.swift",
+      "lines": [
+        15
+      ],
+      "literal": "let stationInertia: [NativeStationInertia]",
+      "finding": "Existing semantic world memo captures value inertia. New physical/load state must join this exact equality, not a side cache or normalization."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationSnapshot.swift",
+      "lines": [
+        64
+      ],
+      "literal": "guard lhs.physical == rhs.physical",
+      "finding": "Actual actor/body physical equality stays a currentness gate."
+    },
+    {
+      "path": "Sources/L337Core/OriginalStationPhysical.swift",
+      "lines": [
+        23
+      ],
+      "literal": "guard [\"SH141\", \"SH034\", \"SH102\"].contains(blueprintID)",
+      "finding": "Secondary adopted scalar reader excludes028 and has no full COM/tensor. Otherstation2M/12M budgets cannot supply main mass."
+    },
+    {
+      "path": "Sources/L337Core/PassengerCabinGrades.swift",
+      "lines": [
+        55
+      ],
+      "literal": "public struct OwnedPassengerCabin",
+      "finding": "Only id/grade/lifeSupportWorking/stasisWorking; no material/hardware mass, local installed pose/bounds/COM/tensor/power or installation provenance.5t allocation comment is not physical installed-body source."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationAdmission.swift",
+      "lines": [
+        130
+      ],
+      "literal": "struct NativeMainStationIdentity",
+      "finding": "Join actual world/system/resource main-orbital:1:182, not generic SH028/site or arbitrary station. Identity alone grants no room/body."
+    },
+    {
+      "path": "Sources/L337Core/NativeStationRuntime.swift",
+      "lines": [
+        551
+      ],
+      "literal": "mutating func registerOriginalNativeMainStation",
+      "finding": "Existing live actor/anchor/resource registration is the minimal current identity/pose join. Keep native actual dock/entry/egress/source/damage authority."
+    }
+  ],
+  "minimalExistingMachineryJoinProposal": [
+    {
+      "stage": "Exact station source/frame",
+      "proposal": "A separately adopted currentSH028empty structural/hardware source must bind explicit80m/source-unit/current metre frame, original axes/origin, local COM and full9tensor to actual main geometry/port signature and NativeMainStationIdentity. Current028record is absent; generic ship-only contracts cannot provide one. No1e9 tuning, otherstation mass, volume/silhouette inference or default."
+    },
+    {
+      "stage": "Actual installation/occupied load",
+      "proposal": "Researcher owns six-place policy/mission state only. Module source/material/power/lifesupport/body geometry/local pose/COM/fulltensor/owned installation and actual person-body source/position/custody must exist before adding load.12x8x3room, bool health flags and2x5t allocation do not prove physical fit or10t installed dry mass. Shell/port alone is not connected interior or entry/egress."
+    },
+    {
+      "stage": "Existing rigid-body state",
+      "proposal": "Extend existing NativeStationInertia with authenticated immutable source+actual loaded mass frame/currentness, COM/fulltensor and angular momentum. Do not build parallel fallback registries. Keep renderer/collider source vertices unrecentered; transform COM/tensor through owned station pose. Commit actual custody/load changes atomically with conserved total linear/angular momentum; never reread/reset fixed source mass, zero velocity/spin or use empty inertia as loaded."
+    },
+    {
+      "stage": "Contact/coast/currentness",
+      "proposal": "Carry actual NativeHullContact.point and source/load-frame signature through existing StationContactTransfer/PreparedStationTransfers. Real lever arm/world inertia/angular effective mass/torque joins existing impulse and actual station source spin/coast/refusal clocks. NativeStationWorldContent/Snapshot/memo/Codable equality must validate every new actual frame/load field, preserving once-only proofs and existing caps/law/damage/sweeps; no stale-state or mass waiver."
+    },
+    {
+      "stage": "Required acceptance",
+      "proposal": "Separate exact source/role/unit adoption and frozen geometry/numeric scope precede physical source work. G1 later proves genuine fitted room/interior/finite stock/support/connected local-world poses/port/entry/egress, real hardware/people changes, off-centre non-diagonal tensor conservation and failed save/cold/refused-coast rollback. No future PASS is implied by this map."
+    }
+  ],
+  "frameEvidenceLimit": "Header80m/unit, original axes/origin and declared nativeDocking frame are pinned metadata only. No coordinate/model parse, shell/interior volume, containment, contact, fit, COM/tensor or geometry evaluation.",
+  "ownerBoundary": "No source code/resource/provider/ward edit. Researcher mission service/currentness and ward recipe stay disjoint. Source snapshot is authoring branch, not maintained execution/crash evidence.",
+  "notAuthorized": "No engineering/material/mass/space adoption,10t-as-drymass, boolean-as-hardware authority, fabricated people/module/custody, impulse/coast reset, nil/default tensor, legacy migration, general station mass waiver or geometry/native experiment.",
+  "operations": {
+    "worldMetadataJSONReads": 2,
+    "TOMLOrModelGeometryParses": 0,
+    "coordinateGeometryMassTensorEvaluation": 0,
+    "originalCreatorHelperExecutions": 0,
+    "nativeCompilerRendererTests": 0
+  },
+  "stageLimit": "Four baseline station routes are not four completed physical stations; actual SH028 empty/installed/occupied inertia and ward geometry remain OPEN."
+}

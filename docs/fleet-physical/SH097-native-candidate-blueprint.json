@@ -1,0 +1,96 @@
+{
+  "schema": "l337.per-id-native-tessellation-proposal/1",
+  "id": "SH097-complete26part-native-candidate-v1",
+  "ship": "SH097",
+  "name": "Wisent Mk II",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "r3ContractSHA256": "e669e500f1fa5a3ff5ee65470d2095c3d550ff75233c019f275fcb66c60baca4",
+  "originalSource": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH097-design.toml",
+    "bytes": 406396,
+    "sha256": "c5bff7a81f87ad4b6ad0a05ba8e689fc1114f1812e6e85461b09a4c15aac2b0a"
+  },
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "currentResource": {
+    "path": "Sources/L337Core/Resources/Ships/SH097.toml",
+    "bytes": 430537,
+    "sha256": "6275b430223584d94ca9d151669acc1d16cad5fd7c9e29065fdfa256daa78536"
+  },
+  "componentOwnership": {
+    "path": "docs/fleet-physical/creator-ownership-records/SH097.json",
+    "bytes": 81463,
+    "sha256": "40739377a932af8957c18604ce8beb630186be536198f3d1ed952e4a41b3bce0"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/SH097-native-candidate-recipe.py",
+    "bytes": 8762,
+    "sha256": "e3524eaf058137bf30bea2f5c37ca954b18258bcf35954e5788d91ebb8312d2b"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/SH097-native-candidate-tests.py",
+    "bytes": 8875,
+    "sha256": "eec1f02ffb6cf6d82bff3358f85e66fc0f0c128d1c0253ff9a77e480f960bf5c"
+  },
+  "baseline": {
+    "declaredNativeFaces": 816,
+    "limit": 512,
+    "basis": "Pinned original creator ownership metadata; not recomputed",
+    "installedResourceUnchanged": true
+  },
+  "sampling": {
+    "bodyLoftSides": 6,
+    "cockpitOnlySides": 4,
+    "driveLoftSides": 4,
+    "allPodLongitudinalStationsRetained": 5,
+    "allDriveLongitudinalStationsRetained": 2,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      18,
+      21,
+      22,
+      24,
+      25
+    ],
+    "unchangedFixedOriginalParts": 19,
+    "status": "NEW component-specific angular approximations only; actual output count/full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "BOTH complete original5station sidepods/endcaps atX+-beam*.32,Y-.20,length=ownmarklength,widthbeam*.24,heightwidth*.72,material0",
+    "ALL EIGHT analytical recessed wells using each own original station geometry/length/width",
+    "BOTH keel cross bridges at Z+-length*.29, full exact dimensions/material2",
+    "ALL SIX original geometric dock pieces: BOTH lateral members/BOTH transverse members/BOTH complete luminous aperture markers",
+    "Full cockpit/support and both complete connected drives/casings/luminous recesses at xbeam*.38/radius.27",
+    "Exact original ochre-charcoal palette/material/emission/textures/license/source; genuine serializer regenerates all face UVs"
+  ],
+  "coordinates": "Own original SH097 mark1 of actual family[SH096,SH097]: length4.5*(1+.035),beam2.90*(1+.025); source axes/coordinates/origin/units retained. No recenter/rescale/calibration evaluation.",
+  "coupledRuntime": {
+    "domain": "Own actual Wisent Mk II R3/name/game remain pending and unchanged",
+    "nativeCrew": 4,
+    "conversionCrew": 4,
+    "authority": "Dock/marker geometry grants no actual operational port/provider, installed guidance/hardware/power/people/paidkit/source/actor/acquisition/current-save or mission authority. Existing guards unchanged."
+  },
+  "stopRules": [
+    "Reject changed source/creator/primitive/current-resource hashes before geometry, including substituting actual SH096 mark0 source/resource",
+    "Both actual packaged original geometry tables remain exact",
+    "All26 positive original components/material sets stay, especially BOTHpods/ALL8wells/BOTHbridges/ALL6dockpieces/cockpit/drives",
+    "All FIVE original stations per pod and TWO per drive remain; explicit cockpit4/drive4 follows body6",
+    "Complete actual output must satisfy512 and genuine closure/winding without omission/waiver/count claim",
+    "Independent tests require19 fixed components exact original vertices/localfaces/material sequences/UVs and bothpod station/offsets",
+    "Full actual curved-source/profile/void/material/UV fidelity and native/occupied/installed physical qualification remain G1/source-owner work"
+  ],
+  "blocker": {
+    "missing": "Actual output/native/source-fidelity evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed input",
+    "next": "G1 generate once and run own26part/exact19fixed/all8wells/ALL6dockpieces/bothpodmark1stations-offsets/crossmark/UV/input checks then full actual source/native qualification. G4 continues independent original entries."
+  }
+}

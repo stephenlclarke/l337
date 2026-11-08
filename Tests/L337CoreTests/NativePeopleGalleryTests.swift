@@ -8,6 +8,7 @@ struct NativePeopleGalleryTests {
     let storage = try NativeStationTestStorage()
     defer { storage.clean() }
     var live = Game(executive: false)
+    try live.commander.prepareEquipment(legacy: false)
     live.screen = .status
     let runtime = GameRuntime(game: live, saveURL: storage.url)
     try await runtime.save(to: storage.url)
@@ -19,7 +20,10 @@ struct NativePeopleGalleryTests {
     defer { try? FileManager.default.removeItem(at: namespace) }
     let initial = await runtime.snapshot()
     #expect(initial.isMissionTrial && initial.trialDigest == NativePeopleGallery.digest)
-    #expect(initial.commander.valid && initial.commander.shipID == "SH023")
+    #expect(initial.commander.valid && initial.commander.shipID == "SH025")
+    #expect(initial.commander.shipID == NewCommanderDefaults.shipID)
+    #expect(initial.commander.flightSimulation.physicalTime.isFinite
+      && initial.commander.flightSimulation.physicalTime > 0)
     #expect(initial.commander.fuel == initial.commander.fuelCapacity)
     #expect(initial.commander.nativePerformance.workTools?.contains(.salvageCutter) == true)
     #expect(initial.commander.fittedEquipment(at: .utility(.salvageCutter)) != nil)
@@ -36,7 +40,35 @@ struct NativePeopleGalleryTests {
     #expect(
       initial.commander.fittedComponent(at: .energy)?.grade
         == EquipmentModuleTemplates.energy.grades[3].identity)
+    let module = try #require(initial.currentEMPPlayerModule())
+    let inventory = try #require(initial.commander.equipmentInventory)
+    let history = try #require(initial.commander.equipmentPurchaseHistory)
+    let paidBase = try #require(history.paid.first { $0.binding.request.newItem == module.id })
+    let grades = try #require(module.empGrades)
+    #expect(EMPModuleGrades.hasPaidBase(module, owner: inventory.owner, history: history))
+    #expect(module.provenance == .paid(owner: inventory.owner, transaction: paidBase.transaction))
+    #expect(paidBase.owner == inventory.owner && paidBase.node == module.node && paidBase.price == 30000)
+    #expect(grades.power == 1 && grades.capacity == 0 && grades.recharge == 1)
+    #expect(grades.paid.map(\.axis) == [.power, .recharge])
+    #expect(grades.paid.allSatisfy {
+      $0.valid && $0.owner == inventory.owner && $0.module == module.id && $0.physicalTime == 0
+    })
+    #expect(grades.paid.map(\.paidPrice) == [30000, 15000])
+    #expect(initial.commander.credits == 100000 - paidBase.price
+      - grades.paid.reduce(0) { $0 + $1.paidPrice })
     let catalogue = try #require(source.physical?.catalogueShipID)
+    let current = try #require(OriginalBisonActivation.source(for: "SH005"))
+    let context = try #require(initial.gameplayContext())
+    #expect(catalogue == current.ship.id)
+    #expect(current.requiredCrewIncludingCommander == 12)
+    #expect(try ShipAccommodationProfile(ship: current.ship).operatingCrew
+      == current.requiredCrewIncludingCommander)
+    #expect(current.ship.catalogue.galaxies.contains(context.system.galaxy))
+    for position in [context.player.position,
+      initial.commander.flightSimulation.pose.systemPoint(source.position)] {
+      #expect(current.ship.catalogue.regions.contains(
+        EncounterGeography.region(at: position, anchors: context.anchors)))
+    }
     let stock = try #require(ShipCatalogue.ship(catalogue)?.game)
     #expect(source.physical?.npc?.resources == NPCResources.stock(stock))
     #expect(source.energy == stock.energy)
@@ -68,7 +100,7 @@ extension GameRuntime {
   func nativePeopleTrialAimAndDisable() throws {
     let body = try #require(game.bodies.first { $0.id == game.weaponsTargetID })
     let actor = try #require(body.physical?.identity)
-    #expect(try EMPPulseProfile.resolve(for: game.commander).power == 80)
+    #expect(try EMPPulseProfile.resolve(for: game.commander).power == 160)
     try prepareNativePeopleTraffic(&game, source: actor)
     let remaining = try disableNativePeopleTrialActor(actor, game: &game)
     game.selectFlightTool(.salvageCutter)
@@ -98,13 +130,16 @@ private func prepareNativePeopleTraffic(_ game: inout Game, source: ActorIdentit
   try #require(
     game.isMissionTrial && game.trialDigest == NativePeopleGallery.digest
       && game.currentSystem.government == 0
-      && game.commander.flightSimulation.physicalTime == 0)
+      && game.commander.shipID == NewCommanderDefaults.shipID && game.commander.shipID == "SH025"
+      && game.commander.flightSimulation.physicalTime.isFinite
+      && game.commander.flightSimulation.physicalTime > 0)
   let context = try #require(game.gameplayContext())
   try #require(Set(context.actors.map(\.identity)).count == context.actors.count)
   try #require(
     !context.actors.contains { $0.identity == context.player.identity }
       && context.actors.filter({ $0.identity == source }).count == 1
       && game.bodies.filter({ $0.physical?.identity == source }).count == 1)
+  try #require(game.bodies.first { $0.physical?.identity == source }?.physical?.catalogueShipID == "SH005")
   for index in game.bodies.indices {
     let body = game.bodies[index]
     guard body.hull.isTargetShip else { continue }

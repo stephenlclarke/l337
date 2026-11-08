@@ -1,0 +1,14 @@
+{
+  "status": "FROZEN_SOURCE_RECOVERY_METADATA_ONLY_NO_BROAD_SEARCH",
+  "id": "SH123",
+  "acceptedSourceSHA256": "2179227760376ed17b276153cb7cb20894f4f1bad5bf48e339b7dc874f70fe69",
+  "allowedExistingInputs": [
+    "docs/FLEET-BACKLOG.json",
+    "Sources/L337Core/Resources/OriginalFleetShowroomModels/manifest.json",
+    "Sources/L337Core/Resources/OriginalFleetShowroomModels/SH123.json"
+  ],
+  "algorithm": "Authenticate exact committed bytes and inspect provenance metadata only. No external tree scan, geometry coordinate parse, creator execution or source substitution. Exact selected source/creator ownership remains unissued after known mutable-file mismatch.",
+  "maximumMetadataDocuments": 3,
+  "maximumGeometryQueriesOrNumericEvaluations": 0,
+  "actualRecovery": "NOT_RUN; known mismatch preserved separately. Independent73 human source authoring continues."
+}

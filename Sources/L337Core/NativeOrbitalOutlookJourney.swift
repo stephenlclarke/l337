@@ -109,7 +109,7 @@ struct NativeOrbitalOutlookJourneyState: Codable, Sendable, Equatable {
 enum NativeOrbitalOutlookJourney {
   static let stateID = "l337.contract/orbital-outlook"
   static let batch = "avenor-orbital-outlook-01"
-  static let digest = "cf5076adbecad912603ddd146aeb2ead31621bf698ff4a4a7071a2b66b2cf798"
+  static let digest = "0febb96b87cf703c705459cef3d20d6e2c0d485d363841aa2fe7429ba557059f"
   static let source = ContractStationIdentity(galaxy: 0, system: 7, stationClass: "main-orbital")
   static let destination = ContractStationIdentity(
     galaxy: 0, system: 7, stationClass: "main-orbital")

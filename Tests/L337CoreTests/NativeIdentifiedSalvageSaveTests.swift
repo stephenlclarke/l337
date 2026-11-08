@@ -173,7 +173,6 @@ struct NativeIdentifiedSalvageSaveTests {
         normalizedBytes, part: .missions, schema: pointer.schemaVersion)
     }
     let decoder = ScriptValueStorage.decoder(typed: pointer.valueCodec == ScriptValueStorage.codec)
-    decoder.userInfo[LegacyMissionEncounterProvenance.storageKey] = true
     var normalizedCommander = pristine
     normalizedCommander.scriptState = try expectedSuccess("normalized typed missions decode") {
       try decoder.decode(ScriptEngineState.self, from: normalizedBytes)

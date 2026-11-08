@@ -1,0 +1,133 @@
+{
+  "schema": "l337.closed-family-native-tessellation-proposal/1",
+  "id": "caracara-two-actual-members-complete21part-native-candidates-v1",
+  "status": "IMPLEMENTED_SOURCE_GENERATOR_UNEXECUTED_NOT_NATIVE_QUALIFIED",
+  "entries": [
+    {
+      "id": "SH169",
+      "name": "Caracara Mk I",
+      "r3ContractSHA256": "45ee45d2ed594bf07c527138655844269d6c8987740d8f547cc8ef4818f0a2e1",
+      "originalRecipeMark": 0,
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH169-design.toml",
+        "bytes": 603862,
+        "sha256": "6257767fbb2cd35db071004b197f8f5655251f87ca3398e176343d12c0fb7b1c"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH169.toml",
+        "bytes": 627933,
+        "sha256": "1ffb117ac1f05b759d9e06c52fdd0fdb4d7d4b7aa3cae3d1fdbe6998111f195d"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH169.json",
+        "bytes": 50261,
+        "sha256": "d2a82a8c5a9ff54e8e8691da2e058f0f03d6e66d207f5d0ce854853c5240aad8"
+      },
+      "declaredOriginalNativeFaces": 1364,
+      "originalComponents": 21,
+      "nativeCrew": 1,
+      "conversionCrew": 1,
+      "status": "Own complete original resource remains pending; no source/identity/mechanics/crew/calibration fallback"
+    },
+    {
+      "id": "SH170",
+      "name": "Caracara Mk II",
+      "r3ContractSHA256": "5a9cafeee5de8e9c7d022fbd697a05c7205653e213f106fe5f09521a14a3b799",
+      "originalRecipeMark": 1,
+      "originalSource": {
+        "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/SH170-design.toml",
+        "bytes": 620433,
+        "sha256": "db011887f67e1ae1c5f235fe2b7c4db4a65b29b37906a830433d69d9c8a5527b"
+      },
+      "currentResource": {
+        "path": "Sources/L337Core/Resources/Ships/SH170.toml",
+        "bytes": 644515,
+        "sha256": "e8412b14817fbf9035dcbc9be730f0626455fb8f66fe2655419bcfac2fef5de1"
+      },
+      "componentOwnership": {
+        "path": "docs/fleet-physical/creator-ownership-records/SH170.json",
+        "bytes": 50261,
+        "sha256": "3b56c9fb40c75f5adbaef38f793819d61d6c589abbab0e34f39d9071d4e45d77"
+      },
+      "declaredOriginalNativeFaces": 1364,
+      "originalComponents": 21,
+      "nativeCrew": 2,
+      "conversionCrew": 2,
+      "status": "Own complete original resource remains pending; no source/identity/mechanics/crew/calibration fallback"
+    }
+  ],
+  "originalCreator": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/fleet_redesign.py",
+    "bytes": 48273,
+    "sha256": "3f029d5a417dea1b787dc5f0327d72687822275cc372de79790c3531e7cba429"
+  },
+  "originalPrimitive": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/replacement-hulls/generate.py",
+    "bytes": 32122,
+    "sha256": "a80f3606edd1ca0c9e4f0133136ab97257b07b2afe3efbbeb8a46960eb836476"
+  },
+  "originalFamily": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/independent-fleet-input.json",
+    "bytes": 69958,
+    "sha256": "a792c7b4ec0665bc42a515262957bd3c6830c672379462ac2ac6145d4964f2ba"
+  },
+  "recipe": {
+    "path": "docs/fleet-physical/caracara-native-candidate-recipe.py",
+    "bytes": 10536,
+    "sha256": "559b1eaca972fef878939dabe81e90f88080f1ef704a5f0eda1f2767f743181c"
+  },
+  "tests": {
+    "path": "docs/fleet-physical/caracara-native-candidate-tests.py",
+    "bytes": 10907,
+    "sha256": "804da3f772c6b1ea927c0bc27a4dd35cf627a4e511b4973ac63fd993c8683ef5"
+  },
+  "baseline": {
+    "limit": 512,
+    "basis": "Each own pinned original creator ownership metadata; not recomputed",
+    "allInstalledResourcesUnchanged": true
+  },
+  "sampling": {
+    "loftSides": 6,
+    "collarSegments": 8,
+    "collarMinorSamples": 4,
+    "changedOriginalPartIndices": [
+      0,
+      5,
+      6,
+      9,
+      12,
+      13,
+      15,
+      16
+    ],
+    "unchangedFixedOriginalPartsPerMember": 13,
+    "status": "NEW angular approximations only; each actual output count/full profile/void/material/UV fidelity UNKNOWN"
+  },
+  "retained": [
+    "Each full original five-station body/endcaps and ALL four analytical recessed wells",
+    "BOTH full raised structural collars/tubes/central holes, no missing collar or tube sector",
+    "Original collar centres(0,0,-length*.18) and(0,0,length*.17),rxbeam*.30,rybeam*.37,tube.11,axisZ",
+    "BOTH original wing_pair(.10,beam*.45,y=-.14) structural pieces",
+    "Full cockpit/support and both complete connected drives/casings/luminous recesses at original xbeam*.42/radius.20",
+    "ALL four original military mount structures, not installed guns/paid devices",
+    "Each exact original petrol-brass material/emission/textures/license/source; genuine serializer regenerates all face UVs",
+    "Exact original two-member mark dimensions from base length3.0/beam2.15"
+  ],
+  "coordinates": "Each own source axes/coordinates/origin/units and per-ID calibration remain; no recenter/rescale/evaluation.",
+  "coupledRuntime": "Own R3 names/mechanics/fits/native and conversion crews1vs2 remain distinct declarations. No actual people/quarters/hardware/power/paid kit/source/actor/acquisition/current-save or mission grant; all existing guards unchanged.",
+  "stopRules": [
+    "Only actual IDs169/170 accepted, no names/family/prefix/unknown variants",
+    "Each own source/resource hash, canonical identity/name and original recipe/frame required",
+    "Pinned actual family169/170/military roles and genuine creator/primitive bytes required before geometry",
+    "All21 positive original parts/material sets stay, especially BOTH complete collars/tubes/holes",
+    "Complete own output<=512 and genuine closure/winding required without omissions/waivers/count claims",
+    "Independent tests require each own13fixedparts exact original vertices/localfaces/material sequence/UVs",
+    "BOTH collars per member require connected genus-one topology, full wrap join and own actual mark-specific extrema/offsets",
+    "Cross-member/malformed inputs reject before geometry; full continuous profile/void/material/UV/native/physical fidelity still requires actual G1 evidence"
+  ],
+  "blocker": {
+    "missing": "Per-member actual output/source-fidelity/native evidence and authentic occupied/installed hardware/people/power/loaded mass/COM/full tensor",
+    "responsibleOwner": "G1 actual generation/tests/native qualification; authentic source owner occupied/installed inputs",
+    "next": "G1 generate each once and run own21parts/exact13fixed/BOTH-collars topology-wrap-extrema/UV/wrong-member/input checks then full actual source/native qualification. G4 continues independent entries."
+  }
+}

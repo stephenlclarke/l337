@@ -1,5 +1,72 @@
 import Foundation
 
+/// Read-only inputs to one actual published pulse; never release or resource authority.
+struct EMPPulseBeforeResult: Sendable {
+  struct Primary: Sendable {
+    let hullEnergy: Double
+    let frontShield: Double
+    let rearShield: Double
+    let electrical: ElectricalReserve
+    let initializedReserve: Bool
+    let contactPower: Double
+    let contactOffset: Vector3
+    let modelForward: Vector3
+
+    fileprivate init(
+      hullEnergy: Double, frontShield: Double, rearShield: Double,
+      electrical: ElectricalReserve, initializedReserve: Bool, contactPower: Double,
+      contactOffset: Vector3, modelForward: Vector3
+    ) {
+      self.hullEnergy = hullEnergy
+      self.frontShield = frontShield
+      self.rearShield = rearShield
+      self.electrical = electrical
+      self.initializedReserve = initializedReserve
+      self.contactPower = contactPower
+      self.contactOffset = contactOffset
+      self.modelForward = modelForward
+    }
+  }
+
+  struct Player: Sendable {
+    let hullEnergy: Double
+    let frontShield: Double
+    let rearShield: Double
+    let electrical: ElectricalReserve
+    let contactPower: Double
+    let contactPoint: Vector3
+
+    fileprivate init(
+      hullEnergy: Double, frontShield: Double, rearShield: Double,
+      electrical: ElectricalReserve, contactPower: Double, contactPoint: Vector3
+    ) {
+      self.hullEnergy = hullEnergy
+      self.frontShield = frontShield
+      self.rearShield = rearShield
+      self.electrical = electrical
+      self.contactPower = contactPower
+      self.contactPoint = contactPoint
+    }
+  }
+
+  let charge: EMPChargeState
+  let emissionID: UInt64
+  let epoch: UUID
+  let primary: Primary
+  let player: Player?
+
+  fileprivate init(
+    charge: EMPChargeState, emissionID: UInt64, epoch: UUID,
+    primary: Primary, player: Player?
+  ) {
+    self.charge = charge
+    self.emissionID = emissionID
+    self.epoch = epoch
+    self.primary = primary
+    self.player = player
+  }
+}
+
 private struct EMPPulseContact {
   let target: GameplayHitTarget
   let point: Vector3
@@ -13,32 +80,55 @@ private final class EMPPulseAttempt {
   init(game: borrowing Game) { self.game = copy game }
 }
 
+/// One fully staged pulse. These observations grant no publication or combat authority.
+private final class PreparedEMPPulsePublication {
+  let candidate: EMPPulseAttempt
+  let charge: EMPChargeState
+  let epoch: UUID
+  let emissionID: UInt64
+  let primaryBefore: EMPPulseBeforeResult.Primary?
+  let playerBefore: EMPPulseBeforeResult.Player?
+
+  @inline(never)
+  init(candidate: EMPPulseAttempt, charge: EMPChargeState, epoch: UUID, emissionID: UInt64,
+    primaryBefore: EMPPulseBeforeResult.Primary?, playerBefore: EMPPulseBeforeResult.Player?) {
+    self.candidate = candidate
+    self.charge = charge
+    self.epoch = epoch
+    self.emissionID = emissionID
+    self.primaryBefore = primaryBefore
+    self.playerBefore = playerBefore
+  }
+}
+
 private struct EMPPulsePreparation {
   let contacts: [EMPPulseContact]
   let profile: EMPPulseProfile
   let tool: OwnedEquipmentItem
-  let reserve: ElectricalReserve
+  let inventoryRevision: UInt64
+  let bank: EMPBankState
   let origin: AttackOrigin
 }
 
 private struct EMPPulseBodyPreparation {
   let id: Int
-  let index: Int
   let remaining: Double
-  let legacyCatalogue: String?
+  let before: EMPPulseBeforeResult.Primary?
 }
 
 private enum EMPPulseVictimPreparation {
   case refused
-  case playerApplied
+  case playerApplied(EMPPulseBeforeResult.Player?)
   case body(EMPPulseBodyPreparation)
 }
 
 /// A zero-power transition finishes synchronously after application temporaries unwind.
 private enum EMPPulseApplication {
   case refused
-  case applied
-  case pendingDisable(id: Int, incident: CombatIncident, context: EncounterContext)
+  case applied(primary: EMPPulseBeforeResult.Primary?, player: EMPPulseBeforeResult.Player?)
+  case pendingDisable(
+    id: Int, incident: CombatIncident, context: EncounterContext,
+    before: EMPPulseBeforeResult.Primary?)
 }
 
 extension Game {
@@ -47,6 +137,7 @@ extension Game {
   /// Repeated held-fire requests leave the actual ten-second simulation charge intact.
   @discardableResult
   mutating func fireEMPPirateBlaster() -> Bool {
+    empPulseBeforeResultStorage = nil
     guard commander.savedEMPCharge == nil, !playerEMPDisabled,
       !docked, screen == .front, commander.valid,
       let tool = commander.fittedEquipment(at: .utility(.empPirateBlaster)),
@@ -63,7 +154,9 @@ extension Game {
       case .body(let id) = contact.hit.target,
       let body = bodies.first(where: { $0.id == id }), empPulseEligible(body),
       let target = body.physical?.identity,
-      let reserve = currentPlayerElectrical(), reserve.remaining > profile.energyCost
+      let reserve = currentPlayerElectrical(), reserve.remaining > 0,
+      reserve.disabledAt == nil, currentEMPPlayerModule() == tool,
+      let bank = tool.empBank, bank.remaining >= profile.energyCost
     else { return false }
     commander.savedEMPCharge = .init(
       player: player, target: target, owner: owner, hull: hull, weapon: tool.id,
@@ -73,20 +166,7 @@ extension Game {
   }
 
   private func currentPlayerElectrical() -> ElectricalReserve? {
-    let craft = commander.performance
-    var reserve =
-      commander.savedPlayerElectrical
-      ?? ElectricalReserve(
-        capacity: craft.energy,
-        recharge: craft.recharge * commander.energyRechargeMultiplier,
-        at: commander.flightSimulation.physicalTime)
-    guard
-      reserve?.advance(
-        to: commander.flightSimulation.physicalTime,
-        capacity: craft.energy, recharge: craft.recharge * commander.energyRechargeMultiplier)
-        == true
-    else { return nil }
-    return reserve
+    postedEMPPlayerElectrical()
   }
 
   func empPulseEligible(_ body: SpaceBody) -> Bool {
@@ -96,10 +176,12 @@ extension Game {
       !body.navalTarget, body.missionInstanceID == nil, body.blackjackRole == nil,
       let context = gameplayContext(),
       !context.protection.protectedActors.contains(physical.identity),
-      let catalogue = physical.catalogueShipID ?? ShipCatalogue.nativeShip(body.hull)?.id,
-      let ship = ShipCatalogue.ship(catalogue), EMPState.hasSupportedCrew(ship),
+      let catalogue = physical.catalogueShipID,
+      let ship = ShipCatalogue.ship(catalogue), EMPState.declaredNativeCrewCount(ship) != nil,
       SalvageCatalogue.empProfile(catalogueShipID: catalogue) != nil,
-      npc.resources?.valid == true
+      npc.resources?.valid == true,
+      NPCPersistenceSnapshot.currentCatalogueSourceIsValid(
+        catalogueShipID: catalogue, hull: body.hull, npc: npc, missiles: body.missiles)
     else { return false }
     return true
   }
@@ -118,22 +200,11 @@ extension Game {
   }
 
   mutating func advancePlayerElectrical() {
-    guard var reserve = commander.savedPlayerElectrical else { return }
-    let now = commander.flightSimulation.physicalTime
-    if reserve.recoveryAt.map({ now >= $0 }) == true {
-      guard reserve.recover(at: now) else { return }
-      notify("ELECTRICAL POWER RECOVERED")
-    }
-    let craft = commander.performance
-    guard
-      reserve.advance(
-        to: now, capacity: craft.energy,
-        recharge: craft.recharge * commander.energyRechargeMultiplier)
-    else { return }
-    commander.savedPlayerElectrical = reserve
+    postEMPPlayerElectricalInterval()
   }
 
-  mutating func advanceEMPCharge(triggerHeld: Bool) {
+  mutating func advanceEMPCharge(triggerHeld: Bool, publish: ScriptPublisher? = nil) {
+    empPulseBeforeResultStorage = nil
     guard var charge = commander.savedEMPCharge else { return }
     if charge.phase != .charging {
       if !triggerHeld { commander.savedEMPCharge = nil }
@@ -152,7 +223,7 @@ extension Game {
     charge.endedAt = now
     // Consume the request before attempting release; refusal never retries on a later frame.
     commander.savedEMPCharge = charge
-    guard emitEMPPulse(charge) else {
+    guard emitEMPPulse(charge, publish: publish) else {
       notify("EMP RELEASE REFUSED - TARGET OR EQUIPMENT CHANGED")
       return
     }
@@ -194,15 +265,42 @@ extension Game {
   }
 
   /// Cost, all actual victims, law and any zero-power custody admission publish together.
-  private mutating func emitEMPPulse(_ charge: EMPChargeState) -> Bool {
-    guard admitsEMPPulseRelease() else { return false }
+  @inline(never)
+  private mutating func emitEMPPulse(
+    _ charge: EMPChargeState, publish: ScriptPublisher?
+  ) -> Bool {
+    guard let publish, admitsEMPPulseRelease(),
+      let publication = prepareEMPPulsePublication(charge)
+    else { return false }
+    do { try publish(&publication.candidate.game) } catch { return false }
+    return finishEMPPulsePublication(publication)
+  }
+
+  @inline(never)
+  private func prepareEMPPulsePublication(_ charge: EMPChargeState) -> PreparedEMPPulsePublication? {
     let candidate = EMPPulseAttempt(game: self)
+    let epoch = nativeStationRuntimeEpoch
+    var primaryBefore: EMPPulseBeforeResult.Primary?
+    var playerBefore: EMPPulseBeforeResult.Player?
     guard let preparation = candidate.game.prepareEMPPulseEffects(charge),
-      candidate.game.applyEMPPulseEffects(preparation),
+      candidate.game.applyEMPPulseEffects(
+        preparation, primaryBefore: &primaryBefore, playerBefore: &playerBefore),
       candidate.game.persistEMPState(), candidate.game.persistNPCStates().isEmpty,
       candidate.game.empPulseCommanderIsValid()
-    else { return false }
+    else { return nil }
     candidate.game.notify("EMP PULSE RELEASED")
+    return .init(candidate: candidate, charge: charge, epoch: epoch,
+      emissionID: preparation.origin.emissionID, primaryBefore: primaryBefore, playerBefore: playerBefore)
+  }
+
+  @inline(never)
+  private mutating func finishEMPPulsePublication(_ publication: PreparedEMPPulsePublication) -> Bool {
+    let candidate = publication.candidate
+    if let primaryBefore = publication.primaryBefore {
+      candidate.game.empPulseBeforeResultStorage = .init(
+        charge: publication.charge, emissionID: publication.emissionID, epoch: publication.epoch,
+        primary: primaryBefore, player: publication.playerBefore)
+    }
     publishEMPPulse(candidate)
     return true
   }
@@ -221,6 +319,25 @@ extension Game {
     self = candidate.game
   }
 
+  /// Current actual publication evidence only. A successful zero/custody target stays readable.
+  func currentEMPPulseBeforeResult() -> EMPPulseBeforeResult? {
+    guard let result = empPulseBeforeResultStorage,
+      let charge = commander.savedEMPCharge, charge == result.charge, charge.valid,
+      charge.phase == .released, charge.endedAt == commander.flightSimulation.physicalTime,
+      commander.flightSimulation.player == charge.player,
+      commander.equipmentOwnerID == charge.owner, commander.hullInstanceID == charge.hull,
+      result.epoch == nativeStationRuntimeEpoch,
+      result.emissionID > 0, result.emissionID < commander.flightSimulation.nextEmission,
+      let tool = commander.fittedEquipment(at: .utility(.empPirateBlaster)),
+      tool.node == EMPModuleGradePolicy.node, tool.id == charge.weapon,
+      tool.empBank?.lastDischarge == charge,
+      bodies.contains(where: { $0.physical?.identity == charge.target }),
+      result.primary.electrical.valid, result.primary.contactPower.isFinite,
+      result.primary.contactOffset.finite, result.primary.modelForward.finite
+    else { return nil }
+    return result
+  }
+
   /// Complete full-body and equipment queries before victim application enters native combat.
   /// Only the caller's private candidate is changed; refusal discards every staged effect.
   @inline(never)
@@ -236,34 +353,53 @@ extension Game {
       case .body(let id) = contact.hit.target,
       let primary = bodies.first(where: { $0.id == id }),
       primary.physical?.identity == charge.target,
-      empPulseEligible(primary), var reserve = currentPlayerElectrical(),
-      reserve.remaining > profile.energyCost, fireCooldown <= 0,
+      empPulseEligible(primary), let reserve = currentPlayerElectrical(),
+      reserve.remaining > 0, reserve.disabledAt == nil,
+      currentEMPPlayerModule() == tool,
+      let inventory = commander.equipmentInventory,
+      let bank = tool.empBank,
+      let discharge = bank.stagingDischarge(charge, cost: profile.energyCost),
+      fireCooldown <= 0,
       laserHeat.isFinite, laserHeat + profile.heatCost < 240
     else { return nil }
     let contacts = pulseContacts(primary: contact.hit, profile: profile)
     guard !contacts.isEmpty else { return nil }
-    let now = commander.flightSimulation.physicalTime
-    guard reserve.drain(profile.energyCost, at: now),
-      let origin = makeAttackOrigin(
+    guard let origin = makeAttackOrigin(
         owner: charge.player, sourcePart: "emp:" + tool.id.uuidString)
     else { return nil }
-    return .init(contacts: contacts, profile: profile, tool: tool, reserve: reserve, origin: origin)
+    return .init(
+      contacts: contacts, profile: profile, tool: tool,
+      inventoryRevision: inventory.revision, bank: discharge.bank, origin: origin)
   }
 
   @inline(never)
-  private mutating func applyEMPPulseEffects(_ preparation: borrowing EMPPulsePreparation) -> Bool {
-    commander.savedPlayerElectrical = preparation.reserve
-    for hit in preparation.contacts {
-      switch applyElectricalPulse(hit, origin: preparation.origin) {
+  private mutating func applyEMPPulseEffects(
+    _ preparation: borrowing EMPPulsePreparation,
+    primaryBefore: inout EMPPulseBeforeResult.Primary?,
+    playerBefore: inout EMPPulseBeforeResult.Player?
+  ) -> Bool {
+    guard var inventory = commander.equipmentInventory else { return false }
+    let context = EquipmentRuntimeCatalog.context(
+      owner: inventory.owner, hull: inventory.activeHull, performance: commander.performance)
+    do {
+      try inventory.replaceEMPBank(
+        expected: preparation.tool, with: preparation.bank,
+        expectedRevision: preparation.inventoryRevision, context: context)
+    } catch { return false }
+    commander.savedEquipmentInventory = inventory
+    for (index, hit) in preparation.contacts.enumerated() {
+      switch applyElectricalPulse(hit, origin: preparation.origin, capturePrimary: index == 0) {
       case .refused:
         return false
-      case .applied:
-        break
-      case .pendingDisable(let id, let incident, let context):
+      case .applied(let primary, let player):
+        if let primary { primaryBefore = primary }
+        if let player { playerBefore = player }
+      case .pendingDisable(let id, let incident, let context, let before):
         // Finish this victim before any next contact, after the pulse-application frame unwinds.
         guard disableEMPHull(id: id, incident: incident, tool: preparation.tool, context: context),
           empPulseCommanderIsValid()
         else { return false }
+        if let before { primaryBefore = before }
       }
     }
     laserHeat += preparation.profile.heatCost
@@ -275,13 +411,13 @@ extension Game {
   }
 
   private mutating func applyElectricalPulse(
-    _ hit: EMPPulseContact, origin: AttackOrigin
+    _ hit: EMPPulseContact, origin: AttackOrigin, capturePrimary: Bool
   ) -> EMPPulseApplication {
-    switch prepareElectricalPulseVictim(hit) {
+    switch prepareElectricalPulseVictim(hit, capturePrimary: capturePrimary) {
     case .refused:
       return .refused
-    case .playerApplied:
-      return .applied
+    case .playerApplied(let before):
+      return .applied(primary: nil, player: before)
     case .body(let preparation):
       let positions = electricalPulseWorldPositions(hit.point)
       guard
@@ -290,14 +426,11 @@ extension Game {
           worldPosition: positions.hit, emissionPosition: positions.emission)
       else { return .refused }
       if preparation.remaining == 0 {
-        // A positive partial hit retains its existing native mesh; custody already pins on zero.
-        if let catalogue = preparation.legacyCatalogue {
-          bodies[preparation.index].physical?.catalogueShipID = catalogue
-        }
         guard let context = gameplayContext() else { return .refused }
-        return .pendingDisable(id: preparation.id, incident: incident, context: context)
+        return .pendingDisable(
+          id: preparation.id, incident: incident, context: context, before: preparation.before)
       }
-      return .applied
+      return .applied(primary: preparation.before, player: nil)
     }
   }
 
@@ -312,18 +445,24 @@ extension Game {
 
   /// Finish the existing drain and its queries before opening combat-recording frames.
   @inline(never)
-  private mutating func prepareElectricalPulseVictim(_ hit: EMPPulseContact)
-    -> EMPPulseVictimPreparation
+  private mutating func prepareElectricalPulseVictim(
+    _ hit: EMPPulseContact, capturePrimary: Bool
+  ) -> EMPPulseVictimPreparation
   {
     let now = commander.flightSimulation.physicalTime
     if hit.target == .player {
       guard var reserve = commander.savedPlayerElectrical else { return .refused }
+      let beforeElectrical = reserve
+      let before = EMPPulseBeforeResult.Player(
+        hullEnergy: energy, frontShield: frontShield, rearShield: rearShield,
+        electrical: reserve, contactPower: hit.power, contactPoint: hit.point)
       let front = hit.point.z >= 0
       let shield = front ? frontShield : rearShield
       let absorbed = min(shield, hit.power)
       if front { frontShield -= absorbed } else { rearShield -= absorbed }
       guard reserve.drain(hit.power - absorbed, at: now) else { return .refused }
       commander.savedPlayerElectrical = reserve
+      recordEMPPlayerElectricalDebit(before: beforeElectrical, after: reserve)
       if reserve.disabledAt != nil {
         let momentum = flightWorldVelocity
         releaseWorkGuidance()
@@ -335,24 +474,12 @@ extension Game {
         jumpCountdown = nil
         notify("ELECTRICAL POWER LOST - EMERGENCY BOMB OR ESCAPE POD AVAILABLE")
       }
-      return .playerApplied
+      return .playerApplied(before)
     }
     guard case .body(let id) = hit.target,
       let index = bodies.firstIndex(where: { $0.id == id }), empPulseEligible(bodies[index]),
       var resources = bodies[index].physical?.npc?.resources
     else { return .refused }
-    var legacyCatalogue: String?
-    if resources.profile == .legacyEnergyOnly {
-      guard
-        let catalogue = bodies[index].physical?.catalogueShipID
-          ?? ShipCatalogue.nativeShip(bodies[index].hull)?.id,
-        let native = ShipCatalogue.ship(catalogue)?.game, native.valid,
-        resources.legacyElectricalRecharge == nil
-          || resources.legacyElectricalRecharge == native.recharge
-      else { return .refused }
-      resources.legacyElectricalRecharge = native.recharge
-      legacyCatalogue = catalogue
-    }
     guard
       var reserve = resources.electrical
         ?? ElectricalReserve(
@@ -361,6 +488,13 @@ extension Game {
       reserve.advance(
         to: now, capacity: resources.energyCapacity, recharge: resources.electricalRecharge)
     else { return .refused }
+    let before: EMPPulseBeforeResult.Primary? = capturePrimary
+      ? .init(
+        hullEnergy: bodies[index].energy,
+        frontShield: resources.frontShield, rearShield: resources.rearShield,
+        electrical: reserve, initializedReserve: resources.electrical == nil,
+        contactPower: hit.power, contactOffset: hit.point - bodies[index].position,
+        modelForward: bodies[index].modelVector(.init(0, 0, 1))) : nil
     let facing =
       (hit.point - bodies[index].position).dot(bodies[index].modelVector(.init(0, 0, 1))) >= 0
     let overflow = resources.absorb(hit.power, front: facing)
@@ -368,7 +502,7 @@ extension Game {
     resources.electrical = reserve
     bodies[index].physical?.npc?.resources = resources
     return .body(
-      .init(id: id, index: index, remaining: reserve.remaining, legacyCatalogue: legacyCatalogue))
+      .init(id: id, remaining: reserve.remaining, before: before))
   }
 
   /// Only an actual zero electrical reserve can transfer the live hull and people.
@@ -394,7 +528,14 @@ extension Game {
     state.records[record.source] = record
     if preparation.previousSource == nil { state.nextSequence += 1 }
     commander.savedEMPState = state
-    notify("ENGINES AND WEAPONS DISABLED - CREW EJECTION PENDING")
+    if record.crewTotal == 0 {
+      guard let body = bodies.first(where: { $0.id == id }),
+        retainNativeSalvageWreck(body)
+      else { return false }
+      notify("ENGINES AND WEAPONS DISABLED - UNOCCUPIED SALVAGE")
+    } else {
+      notify("ENGINES AND WEAPONS DISABLED - CREW EJECTION PENDING")
+    }
     return true
   }
 
@@ -414,11 +555,10 @@ extension Game {
       bodies[index].blackjackRole == nil, npc.role != .mission, physical.salvage == nil,
       physical.empCrewPod == nil,
       !context.protection.protectedActors.contains(physical.identity),
-      let catalogue = physical.catalogueShipID ?? ShipCatalogue.nativeShip(bodies[index].hull)?.id,
+      let catalogue = StationPoliceSource.empCatalogueID(for: bodies[index]),
       let ship = ShipCatalogue.ship(catalogue),
-      EMPState.hasSupportedCrew(ship),
-      let profile = SalvageCatalogue.empProfile(catalogueShipID: catalogue),
-      let crew = try? ShipAccommodationProfile(ship: ship).operatingCrew, crew > 0
+      let crew = EMPState.declaredNativeCrewCount(ship),
+      let profile = SalvageCatalogue.empProfile(catalogueShipID: catalogue)
     else { return nil }
     // A repeated hit has no new disable/ejection/loot transition or additional cost.
     guard physical.empSource == nil else { return nil }
@@ -468,8 +608,17 @@ extension Game {
       system: context.system, visit: context.visit, sequence: sequence, member: 0, producer: .emp)
     bodies[current].physical?.empSource = logical
     bodies[current].physical?.salvage = .init(
-      category: .wreck, ownership: .occupied, claimant: nil, wreck: wreck, section: nil, lot: nil,
+      category: .wreck, ownership: preparation.crew == 0 ? .abandoned : .occupied,
+      claimant: nil, wreck: wreck, section: nil, lot: nil,
       bounds: preparation.profile.bounds, workSurfaces: preparation.profile.surfaces(wreck: wreck))
+    if preparation.crew == 0 {
+      // The original custody snapshot retains the actual depleted NPC resources and cargo.
+      // No person or ejection is created for a declared autonomous native craft.
+      bodies[current].physical?.npc = nil
+      bodies[current].physical?.blocksNavalEncounter = false
+      bodies[current].physical?.population = .wreck
+      bodies[current].hostile = false
+    }
     var record: EMPHullRecord
     if var retained = previous {
       retained.hull = .init(

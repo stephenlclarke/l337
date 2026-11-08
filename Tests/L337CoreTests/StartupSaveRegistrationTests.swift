@@ -151,11 +151,14 @@ struct StartupSaveRegistrationTests {
     var game = Game(executive: false)
     game.screen = .status
     let runtime = GameRuntime(game: game)
+    try await runtime.startNewCommander()
+    await runtime.key(" ")
     _ = try await runtime.registerNewCommanderDestination(at: url)
     // Another valid native save arrives after registration, before this commander's first write.
     var other = Game(executive: false)
     other.screen = .status
     other.commander.name = "EXISTING"
+    try other.commander.prepareEquipment(legacy: false)
     let otherRuntime = GameRuntime(game: other, saveURL: url)
     await otherRuntime.key("0")
     let bytes = try Data(contentsOf: url)
@@ -191,6 +194,8 @@ struct StartupSaveRegistrationTests {
     var game = Game(executive: false)
     game.screen = .status
     let runtime = GameRuntime(game: game)
+    try await runtime.startNewCommander()
+    await runtime.key(" ")
     _ = try await runtime.registerNewCommanderDestination(at: url)
     try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
     let original = Data("blocks the writer".utf8)
@@ -211,11 +216,15 @@ struct StartupSaveRegistrationTests {
     let a = directory.appendingPathComponent("A.json")
     let b = directory.appendingPathComponent("B.json")
     let runtime = GameRuntime(game: Game(executive: false))
+    try await runtime.startNewCommander()
+    await runtime.key(" ")
     _ = try await runtime.registerNewCommanderDestination(at: a)
     try await runtime.save(to: a)
     let original = try Data(contentsOf: a)
     if open {
-      try JSONEncoder().encode(Commander()).write(to: b)
+      let writer = GameRuntime(game: Game(executive: false))
+      try await writer.startNewCommander()
+      try await writer.save(to: b)
       try await runtime.load(from: b, persistMigrations: false)
     } else {
       try await runtime.save(to: b)
@@ -262,6 +271,7 @@ struct StartupSaveRegistrationTests {
     let url = directory.appendingPathComponent("commander.json")
     var game = Game(executive: false)
     game.screen = .gameOver
+    try game.commander.prepareEquipment(legacy: false)
     let runtime = GameRuntime(game: game)
     _ = try await runtime.registerNewCommanderDestination(at: url)
     if published { try await runtime.save(to: url) }
@@ -330,7 +340,9 @@ struct StartupSaveRegistrationTests {
     #expect(try Data(contentsOf: blocker) == original)
     let recovery = directory.appendingPathComponent("recovered.json")
     if open {
-      try JSONEncoder().encode(Commander()).write(to: recovery)
+      let writer = GameRuntime(game: Game(executive: false))
+      try await writer.startNewCommander()
+      try await writer.save(to: recovery)
       delegate.queueCommanderFile(.open(recovery))
     } else {
       delegate.queueCommanderFile(.saveAs(recovery))
@@ -366,4 +378,87 @@ struct StartupSaveRegistrationTests {
     #expect(try Data(contentsOf: blocker) == original)
   }
 
+}
+
+@Suite struct IsolatedApplicationDataTests {
+  private func makeRoot() throws -> URL {
+    let directory = registrationDirectory()
+    try FileManager.default.createDirectory(
+      at: directory, withIntermediateDirectories: false,
+      attributes: [.posixPermissions: 0o700])
+    return directory.deletingLastPathComponent().resolvingSymlinksInPath()
+      .appendingPathComponent(directory.lastPathComponent, isDirectory: true)
+  }
+
+  @Test func explicitRootRejectsLivePathsAliasesAndSaveSidecars() throws {
+    let root = try makeRoot()
+    let live = try makeRoot()
+    defer {
+      try? FileManager.default.removeItem(at: root)
+      try? FileManager.default.removeItem(at: live)
+    }
+    #expect(try IsolatedApplicationData.parse([], liveDirectory: live) == nil)
+    for arguments in [
+      ["--data-directory"], ["--data-directory", "relative"], ["--data-directory=" + root.path],
+      ["--data-directory", root.path, "--data-directory", root.path],
+      ["--data-directory", live.path], ["--data-directory", live.deletingLastPathComponent().path],
+    ] {
+      #expect(throws: (any Error).self) {
+        _ = try IsolatedApplicationData.parse(arguments, liveDirectory: live)
+      }
+    }
+    let packAlias = root.appendingPathComponent("script-packs")
+    try FileManager.default.createSymbolicLink(at: packAlias, withDestinationURL: live)
+    #expect(throws: (any Error).self) {
+      _ = try IsolatedApplicationData.parse(
+        ["--data-directory", packAlias.path], liveDirectory: live)
+    }
+    let parsed = try IsolatedApplicationData.parse(
+      ["--data-directory", root.path], liveDirectory: live)
+    let data = try #require(parsed)
+    #expect(throws: (any Error).self) { _ = try data.packDirectories() }
+    #expect(throws: (any Error).self) {
+      _ = try data.checkedSave(live.appendingPathComponent("commander.json"))
+    }
+    let sidecar = data.defaultSave.appendingPathExtension("missions")
+    try FileManager.default.createSymbolicLink(at: sidecar, withDestinationURL: live)
+    #expect(throws: (any Error).self) { _ = try data.checkedSave(data.defaultSave) }
+    try Data("../commander.json".utf8).write(to: root.appendingPathComponent(".last-commander"))
+    #expect(throws: (any Error).self) { _ = try data.rememberedSave() }
+  }
+
+  @MainActor @Test func ordinaryRuntimeRestoresTheSamePrivateFallbackSave() async throws {
+    let root = try makeRoot()
+    defer { try? FileManager.default.removeItem(at: root) }
+    let live = root.deletingLastPathComponent().appendingPathComponent(UUID().uuidString)
+    let parsed = try IsolatedApplicationData.parse(
+      ["--data-directory", root.path], liveDirectory: live)
+    let data = try #require(parsed)
+    let directories = try data.packDirectories()
+    #expect(directories.legacy.deletingLastPathComponent().path == root.path)
+    #expect(directories.script.deletingLastPathComponent().path == root.path)
+    let saves = try CommanderSaveSession(isolatedData: data)
+    #expect(saves.startupURL == nil)
+    let failed = Data("damaged save".utf8)
+    try failed.write(to: saves.defaultURL)
+    let delegate = AppDelegate(saves: saves)
+    await #expect(throws: (any Error).self) {
+      try await delegate.runtime.restoreStartup(from: saves.checkedSave(saves.defaultURL))
+    }
+    try await delegate.bindNewCommanderSaveIfNeeded(afterFailedRestore: true)
+    let destination = try saves.checkedSave(saves.activeURL)
+    #expect(destination != saves.defaultURL)
+    try await delegate.runtime.save(to: destination)
+    await delegate.acknowledgeNewCommanderSave()
+    #expect(try Data(contentsOf: saves.defaultURL) == failed)
+    let reopened = try CommanderSaveSession(isolatedData: data)
+    let startup = try #require(reopened.startupURL)
+    #expect(startup.path == destination.path)
+    let restored = AppDelegate(saves: reopened)
+    try await restored.runtime.restoreStartup(from: reopened.checkedSave(startup))
+    let before = await delegate.runtime.snapshot()
+    let after = await restored.runtime.snapshot()
+    #expect(after.commander.name == before.commander.name)
+    #expect(after.commander.equipmentOwnerID == before.commander.equipmentOwnerID)
+  }
 }

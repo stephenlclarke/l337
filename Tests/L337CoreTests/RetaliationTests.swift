@@ -176,7 +176,7 @@ private func stowThreatMissiles(_ game: inout Game) throws {
   #expect(queue.pending.count == 2 && queue.next() == "ENERGY LOW,SIR" && queue.next() == "DOCKED")
 }
 
-@Test func sharedSpeechFeedHonoursPreferencesBusyQueuesReloadsAndActualRankCongratulations() {
+@Test func sharedSpeechFeedHonoursPreferencesBusyQueuesReloadsAndActualRankCongratulations() throws {
   var game = Game(executive: false)
   game.screen = .status
   var feed = SpeechFeed()
@@ -193,6 +193,7 @@ private func stowThreatMissiles(_ game: inout Game) throws {
   game.ecmControl = ECMControl()
   game.notify("DOCKED")
   #expect(feed.update(game, busy: false) == "DOCKED")
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.speed = 0
   game.commander.kills = 7

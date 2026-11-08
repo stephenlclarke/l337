@@ -4,7 +4,7 @@ import Testing
 @testable import L337Core
 
 struct NativeWayfarerInductionArkSourceUnitTests {
-  @Test func sourceUsesOnlyTheAuthenticatedCalibratedHaflingerAndExistingFlightUnitConversions()
+  @Test func sourceUsesOnlyTheAuthenticatedCalibratedSaigaAndExistingFlightUnitConversions()
     throws
   {
     let f = try InductionVaultKeyFixture()

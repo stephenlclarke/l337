@@ -1,0 +1,31 @@
+{
+  "status": "FIRST_REVIEWED_ONE_METHOD_TWO_CONSTRUCTOR_TWO_HUNK_COMPOSITION_BEFORE_MUTATION",
+  "beforeCommit": "dd41ccb17cbaea88452581e90e42663c7ac7376a",
+  "child": {
+    "path": "/tmp/elite-mc1-original-emp-mass-owned-starter-child/manifest.json",
+    "bytes": 1859,
+    "sha256": "2baac9d8b09c07d689fe2391c2f2e59ecbdd01fa6c103c79baaac4409879dd9b"
+  },
+  "review": {
+    "path": "/tmp/elite-g2-2baac-original-emp-mass-source-review/review.json",
+    "bytes": 3732,
+    "sha256": "f77a8006cb25d43f7cb003d2415a32d9dd5a5d4e5162976df4ed104089965aa2"
+  },
+  "target": {
+    "path": "Tests/L337CoreTests/EMPModulePurchaseUnitTests.swift",
+    "before": {
+      "bytes": 18389,
+      "sha256": "785ab328117815fdf31a8685003f4ba38ba3f84417d429517e983a1619b43a7e"
+    },
+    "after": {
+      "bytes": 18417,
+      "sha256": "0f9d68a6361e8017cca345bbd5710c4c3f4acae6e117380ddea9183ea4326c3f"
+    }
+  },
+  "helper": {
+    "path": "Tests/L337CoreTests/EMPBankOwnershipTests.swift",
+    "bytes": 18459,
+    "sha256": "604b4082bd362f49926c4268773c89ab6bc66d987f742d95204166dc1da2530f"
+  },
+  "scope": "Only reviewed2calls/2hunks/1method, all0cargo/ten100kg/fullhold/wholeCommanderrollback source oracles exact. No helper/production/othermethods/G1overlay/native/model/mass computation, allSwiftUNRUN."
+}

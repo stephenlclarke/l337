@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct NativeMeasuredExtractionFixture {
   let flight: OriginalSealedDispatchFixture
@@ -14,7 +15,15 @@ struct NativeMeasuredExtractionFixture {
   }
 
   func runtime(freeTonnes: Int = 12, excessHardware: Bool = false) async throws -> GameRuntime {
-    var game = try ScriptProcurementFixture.freshG03FlightGame()
+    let origin = try Universe.originalWorlds.world(key: "G01-S007")
+    var game = Game(executive: false)
+    game.screen = .status
+    game.commander.galaxy = origin.galaxy
+    game.commander.system = origin.system
+    game.systems = Universe.systemsIncludingPlugh(number: origin.galaxy)
+    game.selectedSystem = origin.system
+    game.market = MarketItem.at(game.currentSystem)
+    game.commander.credits = 164875
     // Initial owned fit is a fixture; source bodies, all mining, docking and custody remain native.
     game.commander.shipID = "SH023"
     // Match the selected hull tank before any native equipment transaction validates it.
@@ -226,8 +235,8 @@ struct NativeMeasuredExtractionFixture {
     // native ready state with the trigger released, then extraction presses it.
     await runtime.setControls(Controls())
     for _ in 0..<400 {
-      _ = await runtime.advance(delta: 0.05)
-      if await runtime.snapshot().workGuidance?.holding == true { break }
+      let frame = await runtime.advance(delta: 0.05)
+      if frame.workGuidance?.holding == true { break }
     }
     let ready = await runtime.snapshot()
     let selected = try #require(ready.informationTargetBody)
@@ -247,8 +256,8 @@ struct NativeMeasuredExtractionFixture {
     controls.fire = true
     await runtime.setControls(controls)
     for _ in 0..<1000 {
-      _ = await runtime.advance(delta: 0.05)
-      if await runtime.snapshot().commander.miningLedger.isDepleted(NativeMeasuredExtraction.root) {
+      let frame = await runtime.advance(delta: 0.05)
+      if frame.commander.miningLedger.isDepleted(NativeMeasuredExtraction.root) {
         break
       }
     }

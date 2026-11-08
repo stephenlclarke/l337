@@ -61,21 +61,55 @@ extension NativeStationPassengerJourney {
     commander: borrowing Commander
   ) -> Bool {
     var missions: [UUID] = []
-    for mission in commander.scriptState.instances.values {
-      if mission.definition == stateID || mission.digest == digest { missions.append(mission.id) }
+    for index in commander.scriptState.instances.indices {
+      let matches: Bool
+      if commander.scriptState.instances.values[index].definition == stateID {
+        matches = true
+      } else {
+        matches = commander.scriptState.instances.values[index].digest == digest
+      }
+      if matches { missions.append(commander.scriptState.instances.values[index].id) }
     }
     var boards: [String] = []
-    for (key, board) in commander.contracts.boards {
-      if (board.provider == "l337.contract" && board.id == boardID)
-        || board.digest == digest || board.group == stateID
-      {
-        boards.append(key)
+    for index in commander.contracts.boards.indices {
+      let providerAndIDMatch: Bool
+      if commander.contracts.boards.values[index].provider == "l337.contract" {
+        providerAndIDMatch = commander.contracts.boards.values[index].id == boardID
+      } else {
+        providerAndIDMatch = false
       }
+      let matches: Bool
+      if providerAndIDMatch {
+        matches = true
+      } else if commander.contracts.boards.values[index].digest == digest {
+        matches = true
+      } else {
+        matches = commander.contracts.boards.values[index].group == stateID
+      }
+      if matches { boards.append(commander.contracts.boards.keys[index]) }
     }
     guard let state = optional else {
       guard missions.isEmpty, boards.isEmpty else { return false }
       return custody.admissions.allSatisfy { $0.person.station?.batch != batch }
     }
+    guard sourcePeopleValid(state, custody: custody, commander: commander) else { return false }
+    guard sourceOffersValid(state, commander: commander) else { return false }
+    guard sourceRepliesValid(state, commander: commander) else { return false }
+    guard let boarding = state.boarding else {
+      guard state.terminalOperation == nil, missions.isEmpty, boards.isEmpty,
+        !custody.admissions.contains(where: { $0.person.station?.batch == batch })
+      else { return false }
+      return true
+    }
+    return sourceBoardingValid(
+      boarding, state: state, missions: missions, boards: boards,
+      custody: custody, commander: commander)
+  }
+
+  private static func sourcePeopleValid(
+    _ state: NativeStationPassengerJourneyState, custody: NativePeopleCustodyState,
+    commander: borrowing Commander
+  ) -> Bool {
     guard state.owner == custody.owner, state.owner == commander.equipmentOwnerID,
       state.definition.valid, state.version == "1.0.0", state.digest == digest,
       state.source == state.registration.station, sourceMatches(state.registration),
@@ -99,6 +133,12 @@ extension NativeStationPassengerJourney {
         else { return false }
       }
     }
+    return true
+  }
+
+  private static func sourceOffersValid(
+    _ state: NativeStationPassengerJourneyState, commander: borrowing Commander
+  ) -> Bool {
     for (index, offer) in state.offers.enumerated() {
       guard offer.revision == UInt64(index + 1),
         offer.id
@@ -126,6 +166,12 @@ extension NativeStationPassengerJourney {
         else { return false }
       }
     }
+    return true
+  }
+
+  private static func sourceRepliesValid(
+    _ state: NativeStationPassengerJourneyState, commander: borrowing Commander
+  ) -> Bool {
     for (index, reply) in state.replies.enumerated() {
       guard reply.sequence == UInt64(index + 1),
         let personIndex = state.people.firstIndex(where: { $0.identity == reply.person }),
@@ -155,12 +201,14 @@ extension NativeStationPassengerJourney {
       case .withdraw: if !withdrawn { return false }
       }
     }
-    guard let boarding = state.boarding else {
-      guard state.terminalOperation == nil, missions.isEmpty, boards.isEmpty,
-        !custody.admissions.contains(where: { $0.person.station?.batch == batch })
-      else { return false }
-      return true
-    }
+    return true
+  }
+
+  private static func sourceBoardingValid(
+    _ boarding: NativeStationPassengerBoarding, state: NativeStationPassengerJourneyState,
+    missions: [UUID], boards: [String], custody: NativePeopleCustodyState,
+    commander: borrowing Commander
+  ) -> Bool {
     let boardKey = digest + "/" + boardID + "/" + source.key
     guard missions == [boarding.mission], boards == [boardKey],
       boarding.replyOrdinals.count == 2, Set(boarding.replyOrdinals).count == 2,

@@ -89,8 +89,9 @@ extension Game {
       return contractRevision(definition)
     }
     if OriginalServiceReservationPolicy.isContractDefinition(pack.manifest.stateID) {
+      guard let origin = contractBoardStation(for: pack) else { throw SaveError.invalidCommander }
       return try OriginalContractOfferPolicy.revision(
-        pack: pack, station: contractStation, commander: commander)
+        pack: pack, station: origin, commander: commander)
     }
     return contractRevision(definition)
   }

@@ -181,6 +181,7 @@ struct NativeCrimboRuntimeTests {
     game.systems = Universe.systemsIncludingPlugh(number: 7)
     // Source boundary fixture injection, not native save/durability readiness evidence.
     game.nativeCrimboLifecycleAvailable = true
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let first = try #require(game.commander.savedCrimboState)
     #expect(!game.docked && CrimboFixture.convoyBodies(game).count == 7)
@@ -190,6 +191,7 @@ struct NativeCrimboRuntimeTests {
     game.bodies[index].energy = 37
     game.bodies[index].physical?.npc?.resources?.frontShield = 7
     game.dock()
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let again = try #require(game.commander.savedCrimboState)
     #expect(CrimboFixture.convoyBodies(game).count == 7)
@@ -212,6 +214,7 @@ struct NativeCrimboRuntimeTests {
     game.commander.system = 8
     game.systems = Universe.systemsIncludingPlugh(number: 7)
     game.nativeCrimboLifecycleAvailable = true
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let first = try #require(game.commander.savedCrimboState)
     game.selectedSystem = 9
@@ -293,6 +296,7 @@ struct NativeCrimboRuntimeTests {
     game.commander.system = 8
     game.systems = Universe.systemsIncludingPlugh(number: 6)
     game.nativeCrimboLifecycleAvailable = true
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let owner = try #require(game.commander.equipmentOwnerID)
     let registry = try CrimboFixture.registry(owner: owner)
@@ -332,6 +336,7 @@ struct NativeCrimboRuntimeTests {
     game.commander.system = 8
     game.systems = Universe.systemsIncludingPlugh(number: 7)
     game.nativeCrimboLifecycleAvailable = true
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     let actors = Set(CrimboFixture.convoyBodies(game).compactMap { $0.physical?.identity })
     try game.parkNativeCrimboBeforeDeparture()
@@ -361,6 +366,7 @@ private func nativeArrivalWreckFixture() throws -> (Game, SalvageSite) {
   for system in 0..<256 {
     var game = Game(executive: false)
     game.commander.system = system
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.speed = 0
     game.bodies = []
@@ -462,6 +468,7 @@ extension NativeCrimboRuntimeTests {
 
   @Test func successfulGalacticJumpCommitsRealArrivalActorsAnchorsAndVisit() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     #expect(!game.docked)
     try game.commander.grantEquipment(

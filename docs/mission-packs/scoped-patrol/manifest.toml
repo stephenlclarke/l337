@@ -59,7 +59,7 @@ id = "debrief"
 text = "This campaign's actual patrol report is recorded. Confirm to close its debrief. No extra payment is due."
 
 [trial]
-ship = "SH023"
+ship = "SH025"
 galaxy = 0
 system = 7
 credits = 1000

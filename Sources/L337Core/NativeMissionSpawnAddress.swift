@@ -8,6 +8,9 @@ enum NativeMissionSpawnAddress {
     switch spawn.producer {
     case .mission, .ordnance:
       return spawn.sequence > 0 && spawn.sequence < nextFlightSpawn
+    case .c01Inquiry:
+      // The native Inquiry producer has not installed a current namespace yet.
+      return false
     default:
       return true
     }

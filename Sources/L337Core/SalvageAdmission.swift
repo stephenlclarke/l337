@@ -66,7 +66,10 @@ extension Game {
       profile.sections.contains(where: { $0.index == lot.identity.section.section }),
       salvageCuttingIsAllowed(body, metadata: metadata, context: context),
       !nativeClaim || nativeSalvageOfferParentMatches(body, lot: lot)
-    else { return false }
+    else {
+      recordNativeSalvageAdmissionRefusal(request: request, stage: "parent.sourceJoin", reason: "false")
+      return false
+    }
     let fragmentMetadata = SalvageTargetMetadata(
       category: lot.category, ownership: lot.loot?.legality.ownership ?? .abandoned,
       claimant: nil, wreck: lot.identity.section.wreck, section: lot.identity.section,
@@ -77,14 +80,23 @@ extension Game {
       position: lot.position, orientation: .init(), velocity: lot.velocity, npc: nil,
       rock: nil, payload: .salvage(lot.identity), priority: .ordinary,
       salvage: fragmentMetadata)
-    guard request == expected else { return false }
-    let mesh = gameplayMesh(for: body)
-    guard let prepared = preparedSalvageAdmissionHull(mesh: mesh, catalogue: catalogue) else {
+    guard request == expected else {
+      recordNativeSalvageAdmissionRefusal(request: request, stage: "parent.requestJoin", reason: "false")
       return false
     }
-    return HullSweepSafety.validatePlacement(
+    let mesh = gameplayMesh(for: body)
+    guard let prepared = preparedSalvageAdmissionHull(mesh: mesh, catalogue: catalogue) else {
+      recordNativeSalvageAdmissionRefusal(request: request, stage: "parent.geometry", reason: "unprepared")
+      return false
+    }
+    let placement = HullSweepSafety.validatePlacement(
       center: lot.position, radius: lot.halfExtents.length,
       hull: prepared, pose: modelPose(of: body), requiredClearance: 8
-    ).safe
+    )
+    if !placement.safe {
+      recordNativeSalvageAdmissionRefusal(request: request, stage: "parent.placement",
+        reason: String(describing: placement.failure))
+    }
+    return placement.safe
   }
 }

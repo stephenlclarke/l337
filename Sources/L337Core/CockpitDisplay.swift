@@ -39,7 +39,7 @@ public struct CockpitLayout: Sendable {
     extraLines =
       (game.autoHUDLines + game.electricalHUDLines + game.salvageHUDLines
       + game.solarHUDLines + retaliationLines
-      + game.spin.hudLines)
+      + game.spin.hudLines + game.assemblyCalibrationHUDLines)
       .flatMap {
         MissionNotice.wrap($0, width: textColumns)
       }
@@ -91,6 +91,12 @@ extension Display {
       targetMarker(game, layout: layout, into: &frame)
       targetPanel(game, layout: layout, into: &frame)
       inductionUtilityWorkPanel(game, layout: layout, into: &frame)
+      isolationWorkPanel(game, layout: layout, into: &frame)
+      if game.glassMeridianMission?.savedGlassMeridian?.clinicEscort != nil {
+        c01ClinicEscortPanel(game, layout: layout, into: &frame)
+      } else {
+        c01LaneRepairWorkPanel(game, layout: layout, into: &frame)
+      }
       if game.messageTime > 0 {
         let x = max(12, (layout.width - Double(game.message.count) * 6 * layout.font) / 2)
         frame.label(

@@ -68,6 +68,7 @@ import Testing
     game.systems.first { $0.technology >= miningLaser.requiredTechnologyLevel }?.id)
   try #require(!game.atPlugh && game.equipmentAvailable(miningLaser))
   try #require(game.shopPrice(miningLaser) == 33000 && game.commander.valid)
+  try game.commander.prepareEquipment(legacy: false)
   game.key("return")
   #expect(game.commander.equipment.contains("Mining Laser") && game.commander.credits == 967_000)
   for name in [
@@ -82,23 +83,13 @@ import Testing
   }
 }
 
-@Test func legacyDockingMigratesToTargetingWithoutDowngradingOrDuplicating() {
-  for tier in TargetingTier.allCases {
-    var saved = Commander()
-    saved.equipment.insert(Equipment.legacyDockingComputer)
-    saved.equipment.insert(tier.equipmentName)
-    var game = Game(executive: false)
-    #expect(game.load(saved) == true)
-    #expect(game.commander.targetingTier == max(tier, .docking))
-    #expect(!game.commander.equipment.contains(Equipment.legacyDockingComputer))
-    game.launch()
-    game.bodies = [.init(id: 0, hull: .station, position: .init(0, 0, 1500))]
-    game.key("tab")
-    #expect(game.dockingComputer)
-  }
+@Test func basicAndAdvancedCurrentTargetingDoNotSupplyDocking() throws {
   for tier in [TargetingTier.basic, .advanced] {
     var game = Game(executive: false)
-    game.commander.installTargetingComputer(tier)
+    try game.commander.prepareEquipment(legacy: false)
+    try game.commander.grantEquipment(
+      tier.equipmentName, at: .targetingCore,
+      provenance: .grant("current targeting unit fixture"))
     game.launch()
     game.bodies = [.init(id: 0, hull: .station, position: .init(0, 0, 1500))]
     game.key("tab")
@@ -106,7 +97,7 @@ import Testing
   }
 }
 
-@Test func xyzzyCashStartsOnceAccountsNormallyAndMigratesOnlyLegacyXYZzy() async throws {
+@Test func xyzzyCashStartsOnceAndKeepsCurrentAccountingAcrossSaveAndLoad() async throws {
   let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
   defer { try? FileManager.default.removeItem(at: directory) }
   func roundTrip(_ value: Game, name: String) async throws -> Game {
@@ -148,6 +139,7 @@ import Testing
     return loaded
   }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   for key in "xyzzy" { game.key(String(key)) }
   #expect(
@@ -168,48 +160,11 @@ import Testing
   #expect(!rawLoaded && rawProbe.commander == rawBefore)
   var restored = try await roundTrip(game, name: "current.json")
   #expect(restored.commander.credits == 1234)
-  var old = Commander()
-  old.name = "CLARKE"
-  old.unlimitedCash = true
-  old.unlimitedCargo = true
-  old.unlimitedJumps = true
-  let loadedOld = restored.load(old)
-  try #require(loadedOld)
-  #expect(
-    restored.commander.credits == 10_000_000 && !restored.commander.unlimitedCash
-      && !restored.commander.unlimitedJumps && restored.commander.xyzzyCashGranted)
   restored.commander.credits = 25
   restored = try await roundTrip(restored, name: "accounted.json")
   #expect(restored.commander.credits == 25)
   restored.commander.startXYZzyCash()
   #expect(restored.commander.credits == 25 && restored.commander.xyzzyCashGranted)
-  old.unlimitedCash = false
-  old.credits = 456
-  let loadedFiniteOld = restored.load(old)
-  try #require(loadedFiniteOld)
-  #expect(restored.commander.credits == 456)
-  old.name = "JAMESON"
-  old.unlimitedCash = true
-  old.credits = 789
-  let loadedOrdinary = restored.load(old)
-  try #require(loadedOrdinary)
-  #expect(restored.commander.credits == 789 && restored.commander.unlimitedCash)
-  var finiteSeed = Commander()
-  finiteSeed.name = "CLARKE"
-  finiteSeed.unlimitedCargo = true
-  finiteSeed.unlimitedJumps = true
-  finiteSeed.unlimitedCash = false
-  finiteSeed.credits = 1234
-  let encoded = try JSONEncoder().encode(finiteSeed)
-  let object = try JSONSerialization.jsonObject(with: encoded)
-  var data = try #require(object as? [String: Any])
-  data.removeValue(forKey: "finiteXYZzyCash")
-  let finiteBytes = try JSONSerialization.data(withJSONObject: data)
-  let finiteLegacy = try JSONDecoder().decode(Commander.self, from: finiteBytes)
-  #expect(finiteLegacy.equipmentInventory == nil && finiteLegacy.savedEquipmentVersion == nil)
-  let loadedFiniteLegacy = restored.load(finiteLegacy)
-  try #require(loadedFiniteLegacy)
-  #expect(restored.commander.credits == 1234 && restored.commander.xyzzyCashGranted)
 }
 
 private func selectActualMainStationWithTab(_ game: inout Game, stage: String) throws {
@@ -339,6 +294,7 @@ private func stationTabEligibilityFailureFacts(_ game: borrowing Game, mainActor
 
 @Test func tabEngagesFullStationDockingWhenXYZzyAssistanceIsOffAndCIsRemoved() throws {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   try #require(!game.docked && game.commander.valid)
   game.key("tab")

@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 private func reactivePilotPolicyFacts() -> ScriptProcurementPreflightFacts {
   // Pure policy inputs; no Game, hit/origin factory or weapon consumer accepts this fixture.

@@ -145,9 +145,11 @@ struct AsteroidImpactReceipt: Sendable {
   let damage: Double
   let incident: UInt64
   let contactPhysicalTime: Double
+  let clockEffect: NativeDebrisImpactClockEffect?
   fileprivate init(
     source: ActorIdentity, target: ActorIdentity, point: Vector3,
-    transferredMomentum: Vector3, damage: Double, incident: UInt64, contactPhysicalTime: Double
+    transferredMomentum: Vector3, damage: Double, incident: UInt64, contactPhysicalTime: Double,
+    clockEffect: NativeDebrisImpactClockEffect? = nil
   ) {
     self.source = source
     self.target = target
@@ -156,6 +158,30 @@ struct AsteroidImpactReceipt: Sendable {
     self.damage = damage
     self.incident = incident
     self.contactPhysicalTime = contactPhysicalTime
+    self.clockEffect = clockEffect
+  }
+}
+
+final class NativeDebrisImpactClockEffect: Sendable {
+  private let opening: FlightSimulationState
+  private let playerPose: ShipPose
+  private let hit: NativeCombatHitClockEffect
+
+  fileprivate init(
+    opening: FlightSimulationState, playerPose: ShipPose,
+    hit: NativeCombatHitClockEffect
+  ) {
+    self.opening = opening
+    self.playerPose = playerPose
+    self.hit = hit
+  }
+
+  func applying(to before: FlightSimulationState) -> FlightSimulationState? {
+    guard before == opening else { return nil }
+    var expected = before
+    expected.pose = playerPose
+    guard expected.allocateEmission() == hit.incident.origin.emissionID else { return nil }
+    return hit.applying(to: expected)
   }
 }
 
@@ -259,6 +285,233 @@ private struct DebrisBodyMotion {
   let shotViewVelocity: Vector3?
 }
 
+/// Captured only by this source file from the actual pre-movement owner state.
+/// No decoder or caller-created expected set can construct this value.
+struct NativeStationRefusalCohort {
+  enum Source: Equatable {
+    case original(NativeStationRecord, NativeStationSavedPose, NativeStationSourceBinding)
+    case main(NativeMainStationIdentity, ScriptStationResource)
+  }
+  struct Member {
+    let station: StationInertialIdentity
+    let actor: ActorIdentity
+    let bodyID: Int
+    let pose: ShipPose
+    let velocity: Vector3
+    let prior: NativeStationInertia?
+    let source: Source
+    fileprivate init(station: StationInertialIdentity, actor: ActorIdentity, bodyID: Int,
+      pose: ShipPose, velocity: Vector3, prior: NativeStationInertia?, source: Source)
+    {
+      self.station = station
+      self.actor = actor
+      self.bodyID = bodyID
+      self.pose = pose
+      self.velocity = velocity
+      self.prior = prior
+      self.source = source
+    }
+  }
+  let owner: UUID
+  let world: UUID?
+  let adapterRevision: String?
+  let geometryRevision: String?
+  let system: SystemIdentity
+  let visit: UInt64
+  let player: ActorIdentity
+  let playerPose: ShipPose
+  let epoch: UUID
+  let captureRevision: UInt64
+  let start: Double
+  let end: Double
+  let usedDuration: Double
+  let members: [Member]
+  private let mainHadInertia: Bool
+
+  fileprivate init?(capturing game: borrowing Game, start: Double, end: Double,
+    usedDuration: Double, stationReady: Bool)
+  {
+    guard stationReady, usedDuration.isFinite, usedDuration > 0, usedDuration <= 0.1,
+      start.isFinite, end.isFinite, start >= 0, end > start,
+      start == end - usedDuration, end == game.storedFlightSimulation().physicalTime,
+      let owner = game.commander.equipmentOwnerID,
+      let player = game.storedFlightSimulation().player,
+      player.system == game.systemIdentity, player.visit == game.storedFlightSimulation().visit,
+      !game.docked, game.pendingNativeStationDock == nil
+    else { return nil }
+    self.owner = owner
+    let system = game.systemIdentity
+    self.system = system
+    visit = game.storedFlightSimulation().visit
+    self.player = player
+    playerPose = game.storedFlightSimulation().pose
+    epoch = game.nativeStationRuntimeEpoch
+    captureRevision = game.gameplayRevision
+    self.start = start
+    self.end = end
+    self.usedDuration = usedDuration
+    var captured: [Member] = []
+    guard let sourceWorld = game.storedNativeStationWorld() else {
+      // A missing required original world is not an empty cohort.
+      guard !OriginalStationSite.allCases.contains(where: { $0.system == system }),
+        !game.bodies.contains(where: { $0.nativeStationIdentity != nil }),
+        game.nativeStationDockEvidence == nil, game.nativeMainStationDockEvidence == nil,
+        game.commander.nativeUtility == nil, game.commander.nativePeople?.utilityEngineer == nil,
+        Self.hasNoWorldClaims(game),
+        game.commander.valid
+      else { return nil }
+      world = nil
+      adapterRevision = nil
+      geometryRevision = nil
+      mainHadInertia = false
+      members = []
+      return
+    }
+    guard sourceWorld.valid, sourceWorld.ledger.world == owner else { return nil }
+    world = sourceWorld.ledger.world
+    adapterRevision = sourceWorld.adapterRevision
+    geometryRevision = sourceWorld.geometryRevision
+    let expected = sourceWorld.ledger.records.filter {
+      $0.identity.system == system && $0.tombstone == nil
+    }
+    let actual = game.bodies.filter { $0.nativeStationIdentity != nil }
+    guard actual.count == expected.count,
+      Set(actual.compactMap(\.nativeStationIdentity)) == Set(expected.map(\.identity))
+    else { return nil }
+    for record in expected {
+      guard NativeStationSource.authentic(record, owner: owner),
+        let source = NativeStationSource.binding(for: record.identity),
+        let saved = sourceWorld.pose(for: record.identity),
+        let body = actual.first(where: { $0.nativeStationIdentity == record.identity }),
+        let physical = body.physical, body.energy == saved.energy, body.energy > 0,
+        record.binding == .init(actor: physical.identity, bodyID: body.id),
+        physical.identity.system == system, physical.identity.visit == visit,
+        physical.catalogueShipID == source.catalogueShipID,
+        physical.ordnance == nil, body.scriptShot == nil,
+        sourceWorld.bodyRigidPoseIsConsistent(body, flight: game.storedFlightSimulation(), at: start)
+      else { return nil }
+      let station = StationInertialIdentity.originalStation(record.identity)
+      let prior = sourceWorld.inertia(for: station)
+      guard prior == nil || (prior?.valid == true && prior!.physicalTime <= start) else { return nil }
+      captured.append(.init(station: station, actor: physical.identity, bodyID: body.id,
+        pose: game.modelPose(of: body), velocity: physical.velocity, prior: prior,
+        source: .original(record, saved, source)))
+    }
+    if let identity = sourceWorld.mainStations.first(where: { $0.system == system }),
+      let prior = sourceWorld.inertia(for: .main(identity))
+    {
+      guard identity.world == owner, prior.valid, prior.physicalTime <= start,
+        let body = game.bodies.first(where: { $0.id == 0 }),
+        game.bodies.filter({ $0.id == 0 }).count == 1,
+        let physical = body.physical, let anchors = game.storedFlightSimulation().anchors,
+        physical.identity == anchors.station.identity, physical.identity.system == system,
+        physical.identity.visit == visit, body.hull == .station, body.energy > 0,
+        let resource = game.storedNativeStationResource(for: identity.key),
+        resource.identity == identity.resource, !resource.destroyed,
+        let position = sourceWorld.currentPosition(for: .main(identity), at: start),
+        (playerPose.systemPoint(body.position) - position).length < 1e-5,
+        (physical.velocity - prior.velocity).length < 1e-7
+      else { return nil }
+      mainHadInertia = true
+      captured.append(.init(station: .main(identity), actor: physical.identity, bodyID: body.id,
+        pose: game.modelPose(of: body), velocity: physical.velocity, prior: prior,
+        source: .main(identity, resource)))
+    } else {
+      mainHadInertia = false
+    }
+    guard Set(captured.map(\.station)).count == captured.count,
+      Set(captured.map(\.actor)).count == captured.count,
+      Set(captured.map(\.bodyID)).count == captured.count
+    else { return nil }
+    members = captured
+  }
+
+  /// Validate restored bindings against the independently captured complete membership.
+  func matchesRestored(_ game: borrowing Game) -> Bool {
+    guard owner == game.commander.equipmentOwnerID, system == game.systemIdentity,
+      visit == game.storedFlightSimulation().visit, player == game.storedFlightSimulation().player,
+      epoch == game.nativeStationRuntimeEpoch, captureRevision == game.gameplayRevision,
+      end == game.storedFlightSimulation().physicalTime,
+      playerPose == game.storedFlightSimulation().pose, start == end - usedDuration,
+      usedDuration.isFinite, usedDuration > 0, usedDuration <= 0.1, end > start
+    else { return false }
+    guard let expectedWorld = world else {
+      return members.isEmpty && !mainHadInertia && game.storedNativeStationWorld() == nil
+        && !OriginalStationSite.allCases.contains(where: { $0.system == system })
+        && !game.bodies.contains(where: { $0.nativeStationIdentity != nil })
+        && game.nativeStationDockEvidence == nil && game.nativeMainStationDockEvidence == nil
+        && game.commander.nativeUtility == nil && game.commander.nativePeople?.utilityEngineer == nil
+        && Self.hasNoWorldClaims(game)
+        && game.commander.valid
+    }
+    guard let current = game.storedNativeStationWorld(), current.valid,
+      current.ledger.world == expectedWorld, current.adapterRevision == adapterRevision,
+      current.geometryRevision == geometryRevision
+    else { return false }
+    let currentOriginals = current.ledger.records.filter { $0.identity.system == system && $0.tombstone == nil }
+    let capturedOriginals = members.compactMap { member -> NativeStationIdentity? in
+      if case .originalStation(let id) = member.station { return id }
+      return nil
+    }
+    let actual = game.bodies.filter { $0.nativeStationIdentity != nil }
+    guard Set(currentOriginals.map(\.identity)) == Set(capturedOriginals),
+      actual.count == capturedOriginals.count,
+      Set(actual.compactMap(\.nativeStationIdentity)) == Set(capturedOriginals)
+    else { return false }
+    let currentMain = current.mainStations.first(where: { $0.system == system })
+    let nowHasMain = currentMain.map { current.inertia(for: .main($0)) != nil } ?? false
+    guard nowHasMain == mainHadInertia else { return false }
+    for member in members {
+      guard let body = game.bodies.first(where: { $0.id == member.bodyID }),
+        game.bodies.filter({ $0.id == member.bodyID }).count == 1,
+        let physical = body.physical, physical.identity == member.actor,
+        physical.identity.system == system, physical.identity.visit == visit,
+        body.energy > 0, physical.ordnance == nil,
+        (playerPose.systemPoint(body.position) - member.pose.position).length < 1e-5,
+        (physical.velocity - member.velocity).length < 1e-7
+      else { return false }
+      switch member.source {
+      case .original(let record, let saved, let binding):
+        guard current.ledger.records.first(where: { $0.identity == record.identity }) == record,
+          current.pose(for: record.identity) == saved,
+          NativeStationSource.binding(for: record.identity) == binding,
+          body.nativeStationIdentity == record.identity,
+          current.bodyRigidPoseIsConsistent(body, flight: game.storedFlightSimulation(), at: start)
+        else { return false }
+      case .main(let id, let resource):
+        guard currentMain == id, current.mainStations.contains(id), body.id == 0,
+          game.storedNativeStationResource(for: id.key) == resource, !resource.destroyed,
+          game.storedFlightSimulation().anchors?.station.identity == physical.identity,
+          let point = current.currentPosition(for: .main(id), at: start),
+          (playerPose.systemPoint(body.position) - point).length < 1e-5
+        else { return false }
+      }
+      let fresh = current.inertia(for: member.station)
+      if fresh != member.prior {
+        guard let fresh, let prior = member.prior,
+          fresh.isCapturedCoastSuccessor(of: prior, through: end)
+        else { return false }
+      }
+    }
+    return true
+  }
+
+  private static func hasNoWorldClaims(_ game: borrowing Game) -> Bool {
+    game.storedNativeStationResourcesAreEmpty()
+      && game.commander.contracts.boards.values.allSatisfy {
+        $0.station.stationClass == "main-orbital"
+      }
+      && game.commander.scriptState.instances.values.allSatisfy {
+        $0.contract == nil || $0.contract?.station.stationClass == "main-orbital"
+      }
+  }
+}
+
+private enum NativeStationRefusalCapture {
+  case unavailable
+  case authenticated(NativeStationRefusalCohort)
+}
+
 /// Synchronous, acyclic, non-Sendable ownership of actual pre-movement facts.
 final class AsteroidContactFrame {
   fileprivate let system: SystemIdentity
@@ -280,12 +533,21 @@ final class AsteroidContactFrame {
   fileprivate let startTime: Double
   fileprivate let stepDuration: Double
   fileprivate let stationReady: Bool
+  private let stationRefusalCapture: NativeStationRefusalCapture
   private var consumed = false
   func identifiedSalvageSnapshot(_ actor: ActorIdentity)
     -> (mesh: Mesh, massKg: Double, debris: Bool, asteroid: Bool)?
   {
     guard let frame = actors.first(where: { $0.identity == actor }) else { return nil }
     return (frame.mesh, frame.mass, frame.debris, frame.asteroid)
+  }
+  fileprivate func capturedStationRefusalCohortAfterTake() -> NativeStationRefusalCohort? {
+    guard consumed, case .authenticated(let value) = stationRefusalCapture else { return nil }
+    return value
+  }
+  fileprivate var stationCaptureIsAuthenticated: Bool {
+    if case .authenticated = stationRefusalCapture { return true }
+    return false
   }
   fileprivate func take() -> Bool {
     guard !consumed else { return false }
@@ -294,15 +556,16 @@ final class AsteroidContactFrame {
   }
   @inline(never)
   fileprivate init(
-    game: borrowing Game, startTime: Double, stepDuration: Double, stationReady: Bool
+    game: borrowing Game, startTime: Double, stepDuration: Double, stationReady: Bool,
+    excluding actorsBornAtEnd: Set<ActorIdentity> = []
   ) {
     self.startTime = startTime
     self.stepDuration = stepDuration
     self.stationReady = stationReady
     system = game.systemIdentity
-    visit = game.commander.flightSimulation.visit
-    time = game.commander.flightSimulation.physicalTime
-    playerPose = game.commander.flightSimulation.pose
+    visit = game.storedFlightSimulation().visit
+    time = game.storedFlightSimulation().physicalTime
+    playerPose = game.storedFlightSimulation().pose
     playerVelocity = game.flightWorldVelocity
     celestials = game.celestials
     pilot = game.autoPilot
@@ -320,7 +583,7 @@ final class AsteroidContactFrame {
         npcViewVelocity: $0.scriptNPC?.velocity, shotViewVelocity: $0.scriptShot?.velocity)
     }
     var snapshots: [DebrisActorFrame] = []
-    if let player = game.commander.flightSimulation.player {
+    if let player = game.storedFlightSimulation().player {
       snapshots.append(
         .init(
           identity: player, bodyID: nil, pose: playerPose,
@@ -333,10 +596,12 @@ final class AsteroidContactFrame {
       guard let physical = body.physical, physical.identity.system == system,
         physical.identity.visit == visit, physical.ordnance == nil, body.scriptShot == nil
       else { continue }
+      if actorsBornAtEnd.contains(physical.identity) { continue }
       let mass = game.asteroidDebrisMassKg(body)
       let mesh: Mesh
       let collisionMass: Double
-      let surveyor = game.c01SurveyorCollision(body)
+      let surveyor = game.c01SurveyorCollision(body) ?? game.c01TimingStandardCollision(body)
+        ?? game.c01LaneRepairCollision(body) ?? game.c01ClinicCollision(body)
       if let surveyor {
         mesh = surveyor.mesh
         collisionMass = surveyor.mass
@@ -346,14 +611,26 @@ final class AsteroidContactFrame {
       } else if let original = game.identifiedSalvageCollision(body) {
         mesh = original.mesh
         collisionMass = original.mass
+      } else if let identity = body.nativeStationIdentity {
+        guard let source = NativeStationSource.binding(for: identity),
+          let world = game.storedNativeStationWorld(),
+          let record = world.ledger.records.first(where: { $0.identity == identity }),
+          NativeStationSource.authentic(record, owner: world.ledger.world)
+        else {
+          actors = []
+          stationRefusalCapture = .unavailable
+          return
+        }
+        mesh = source.geometry.mesh
+        collisionMass = source.physical.dryMassKilograms
       } else {
         mesh = game.gameplayMesh(for: body)
         collisionMass = mass ?? AsteroidImpactPolicy.massKg(hull: body.hull)
       }
-      let station = game.stationInertialIdentity(for: body)
+      let station = game.stationInertialIdentity(for: body, at: startTime)
       let movingStation: Bool
       if let station {
-        movingStation = game.commander.nativeStations?.inertia(for: station) != nil
+        movingStation = game.storedNativeStationWorld()?.inertia(for: station) != nil
       } else {
         movingStation = false
       }
@@ -369,6 +646,22 @@ final class AsteroidContactFrame {
           rotation: body.rotation))
     }
     actors = snapshots
+    if let cohort = NativeStationRefusalCohort(capturing: game, start: startTime, end: time,
+      usedDuration: stepDuration, stationReady: stationReady),
+      Set(snapshots.compactMap(\.station)) == Set(cohort.members.map(\.station)).union(
+        snapshots.compactMap { actor -> StationInertialIdentity? in
+          guard let station = actor.station, case .main = station,
+            !cohort.members.contains(where: { $0.station == station }) else { return nil }
+          return station
+        }),
+      cohort.members.allSatisfy({ member in snapshots.filter {
+        $0.station == member.station && $0.identity == member.actor && $0.bodyID == member.bodyID
+      }.count == 1 })
+    {
+      stationRefusalCapture = .authenticated(cohort)
+    } else {
+      stationRefusalCapture = .unavailable
+    }
   }
 }
 
@@ -411,13 +704,15 @@ private struct DebrisPlannedImpact {
 
 extension Game {
   @inline(never)
-  mutating func beginAsteroidContactStep(delta: Double = 0) -> AsteroidContactFrame? {
+  mutating func beginAsteroidContactStep(
+    delta: Double = 0, excluding actorsBornAtEnd: Set<ActorIdentity> = []
+  ) -> AsteroidContactFrame? {
     guard !docked else { return nil }
-    let start = max(0, commander.flightSimulation.physicalTime - delta)
+    let start = max(0, storedFlightSimulation().physicalTime - delta)
     let ready = synchronizeNativeStationInertia(at: start)
     let moving = bodies.contains {
-      guard let id = stationInertialIdentity(for: $0) else { return false }
-      return commander.nativeStations?.inertia(for: id) != nil
+      guard let id = stationInertialIdentity(for: $0, at: start) else { return false }
+      return storedNativeStationWorld()?.inertia(for: id) != nil
     }
     var requiresFrame = moving || !ready
     if !requiresFrame {
@@ -432,9 +727,18 @@ extension Game {
     if !requiresFrame, glassMeridianMission?.savedGlassMeridian?.surveyor != nil {
       requiresFrame = bodies.contains(where: { c01SurveyorCollision($0) != nil })
     }
+    if !requiresFrame, glassMeridianMission?.savedGlassMeridian?.timingStandard != nil {
+      requiresFrame = bodies.contains(where: { c01TimingStandardCollision($0) != nil })
+    }
+    if !requiresFrame, glassMeridianMission?.savedGlassMeridian?.laneRepair != nil {
+      requiresFrame = bodies.contains(where: {
+        c01LaneRepairCollision($0) != nil || c01ClinicCollision($0) != nil
+      })
+    }
     guard requiresFrame else { return nil }
     return AsteroidContactFrame(
-      game: self, startTime: start, stepDuration: delta, stationReady: ready)
+      game: self, startTime: start, stepDuration: delta, stationReady: ready,
+      excluding: actorsBornAtEnd)
   }
 
   /// Planning is pure with respect to resources and motion. Unsupported or unproven
@@ -444,7 +748,7 @@ extension Game {
     _ frame: AsteroidContactFrame?, delta: Double
   ) -> AsteroidContactStepResult {
     guard let frame else {
-      return synchronizeNativeStationInertia(at: commander.flightSimulation.physicalTime)
+      return synchronizeNativeStationInertia(at: storedFlightSimulation().physicalTime)
         ? .advanced(nil) : .refused("STATION COAST UNPROVEN")
     }
     return completeCapturedAsteroidContactStep(frame, delta: delta)
@@ -454,15 +758,15 @@ extension Game {
   private mutating func completeCapturedAsteroidContactStep(
     _ frame: AsteroidContactFrame, delta: Double
   ) -> AsteroidContactStepResult {
-    guard frame.system == systemIdentity, frame.visit == commander.flightSimulation.visit,
-      frame.time == commander.flightSimulation.physicalTime, frame.take()
+    guard frame.system == systemIdentity, frame.visit == storedFlightSimulation().visit,
+      frame.time == storedFlightSimulation().physicalTime, frame.take()
     else { return .refused("STALE STEP") }
     guard delta.isFinite, delta > 0, delta <= 0.1, frame.time >= delta,
       frame.actors.count <= 129
     else { return refuseDebrisStep(frame, reason: "INVALID STEP") }
-    guard frame.stationReady,
+    guard frame.stationReady, frame.stationCaptureIsAuthenticated,
       synchronizeNativeStationInertia(
-        at: commander.flightSimulation.physicalTime,
+        at: storedFlightSimulation().physicalTime,
         advancingFrom: frame.startTime)
     else { return refuseDebrisStep(frame, reason: "STATION COAST UNPROVEN") }
     var trajectories: [DebrisTrajectory] = []
@@ -476,7 +780,9 @@ extension Game {
           body.energy > 0
         else { return refuseDebrisStep(frame, reason: "ACTOR CHANGED") }
         let currentMesh: Mesh
-        if let surveyor = c01SurveyorCollision(body) {
+        if let surveyor = c01SurveyorCollision(body) ?? c01TimingStandardCollision(body)
+          ?? c01LaneRepairCollision(body) ?? c01ClinicCollision(body)
+        {
           currentMesh = surveyor.mesh
         } else if let recorder = recordRecoveryCollision(body) {
           currentMesh = recorder.mesh
@@ -491,7 +797,7 @@ extension Game {
         end = modelPose(of: body)
         velocity = body.physical?.velocity ?? .init(0, 0, 0)
       } else {
-        end = commander.flightSimulation.pose
+        end = storedFlightSimulation().pose
         velocity = flightWorldVelocity
       }
       guard let hull = preparedWorkHull(mesh: actor.mesh, key: "debris:\(actor.identity.entity)"),
@@ -546,7 +852,8 @@ extension Game {
     guard let (source, target, contact) = selected else { return .advanced(nil) }
     if let id = trajectories[target].frame.bodyID,
       let body = bodies.first(where: { $0.id == id }), body.scriptNPC != nil,
-      c01SurveyorCollision(body) == nil
+      c01SurveyorCollision(body) == nil, c01TimingStandardCollision(body) == nil,
+      c01LaneRepairCollision(body) == nil, c01ClinicCollision(body) == nil
     {
       return refuseDebrisStep(frame, reason: "MISSION INERTIA AUTHORITY UNAVAILABLE")
     }
@@ -574,7 +881,7 @@ extension Game {
     // Do not advance a new post-impact path without proving its entire remaining interval.
     let contactPlayerPose =
       trajectories.first { $0.frame.bodyID == nil }
-      .map { debrisPose($0.motion, at: contact.upperTime) } ?? commander.flightSimulation.pose
+      .map { debrisPose($0.motion, at: contact.upperTime) } ?? storedFlightSimulation().pose
     let contactSourcePose = debrisPose(trajectories[source].motion, at: contact.upperTime)
     let contactTargetPose = debrisPose(trajectories[target].motion, at: contact.upperTime)
     let remainder = delta - contact.lowerTime
@@ -635,8 +942,8 @@ extension Game {
       stationTransfers.append(
         .init(
           station: station, actor: actor.identity, bodyID: id,
-          system: systemIdentity, visit: commander.flightSimulation.visit,
-          physicalTime: commander.flightSimulation.physicalTime,
+          system: systemIdentity, visit: storedFlightSimulation().visit,
+          physicalTime: storedFlightSimulation().physicalTime,
           impactTime: frame.time - delta + contact.lowerTime, previousVelocity: actor.velocity,
           finalPosition: trajectories[index].motion.end.position,
           finalVelocity: index == source ? impulse.source : impulse.target,
@@ -652,7 +959,7 @@ extension Game {
       }
       stationPlan = prepared
     }
-    let simulation = commander.flightSimulation
+    let simulation = storedFlightSimulation()
     guard simulation.nextEmission < UInt64.max - 1, simulation.nextIncident < UInt64.max - 3 else {
       return refuseDebrisStep(frame, reason: "INCIDENT CAPACITY")
     }
@@ -689,7 +996,7 @@ extension Game {
     let targetHit: GameplayHitTarget = targetActor.bodyID.map { .body($0) } ?? .player
     let hit = GameplayHit(
       target: targetHit, distance: 0,
-      point: commander.flightSimulation.pose.shipPoint(contact.point))
+      point: storedFlightSimulation().pose.shipPoint(contact.point))
     // Native collision incidents bypass attack/bounty law but use the ordinary real damage
     // and destruction authorities. No weapon discharge or mission success is synthesized.
     let incident: CombatIncident?
@@ -701,7 +1008,7 @@ extension Game {
       incident = applyCombatHit(hit, origin: origin, kind: .collision, damage: impulse.damage)
     }
     guard let incident else {
-      let effectPose = commander.flightSimulation.pose
+      let effectPose = storedFlightSimulation().pose
       commander.flightSimulation = simulation
       commander.flightSimulation.pose = effectPose
       return refuseDebrisStep(frame, reason: "DAMAGE REFUSED")
@@ -780,7 +1087,7 @@ extension Game {
       else { return .refused("CONTINUATION UNPROVEN") }
       let playerPose =
         trajectories.first { $0.frame.bodyID == nil }
-        .map { debrisPose($0.motion, at: contact.upperTime) } ?? commander.flightSimulation.pose
+        .map { debrisPose($0.motion, at: contact.upperTime) } ?? storedFlightSimulation().pose
       impacts.append(
         .init(
           contact: contact, impulse: impulse, offset: offset,
@@ -870,7 +1177,7 @@ extension Game {
       guard let next else { break }
       contact = next
     }
-    let simulation = commander.flightSimulation
+    let simulation = storedFlightSimulation()
     let reserved = UInt64(impacts.count)
     guard simulation.nextEmission < UInt64.max - reserved,
       simulation.nextIncident < UInt64.max - reserved * 3,
@@ -893,29 +1200,15 @@ extension Game {
         alive = energy > 0
       }
       guard alive else { continue }
-      mapDebrisEffectToContact(
-        player: impact.player, sourceID: sourceID, source: impact.source,
-        targetID: targetActor.bodyID, target: impact.target)
-      guard let origin = makeAttackOrigin(owner: trajectories[source].frame.identity) else {
-        return .refused("INCIDENT REFUSED")
-      }
-      let targetHit: GameplayHitTarget = targetActor.bodyID.map { .body($0) } ?? .player
-      let hit = GameplayHit(
-        target: targetHit, distance: 0,
-        point: commander.flightSimulation.pose.shipPoint(impact.contact.point))
       guard
-        let incident = applyCombatHit(
-          hit, origin: origin, kind: .collision,
-          damage: impact.impulse.damage)
-      else { return .refused("DAMAGE REFUSED") }
-      commander.crimeLedger.finishEmission(origin.emissionID)
-      if receipt == nil {
-        receipt = .init(
-          source: trajectories[source].frame.identity, target: targetActor.identity,
-          point: impact.contact.point, transferredMomentum: impact.impulse.transferred,
-          damage: impact.impulse.damage, incident: incident.id,
+        let effect = applyNativeDebrisContactEffect(
+          contact: impact.contact, impulse: impact.impulse,
+          sourceID: sourceID, sourceActor: trajectories[source].frame.identity,
+          targetID: targetActor.bodyID, targetActor: targetActor.identity,
+          playerPose: impact.player, sourcePose: impact.source, targetPose: impact.target,
           contactPhysicalTime: frame.time - delta + impact.offset + impact.contact.upperTime)
-      }
+      else { return .refused("DAMAGE REFUSED") }
+      if receipt == nil { receipt = effect }
     }
     guard let receipt, let last = impacts.last else { return .refused("DAMAGE REFUSED") }
     commitDebrisMotion(trajectories, source: source, target: target, impulse: last.impulse)
@@ -924,10 +1217,68 @@ extension Game {
     return .advanced(receipt)
   }
 
+  /// Shared native consequence kernel. The curved contact owner first invokes
+  /// this on its inert prepared candidate, then once on actual retention. It
+  /// must retain the selected endpoints after this impact-frame health pass.
+  /// NativeHullContact has no caller or save constructor.
+  mutating func applyNativeDebrisContactEffect(
+    contact: NativeHullContact, impulse: AsteroidImpulse,
+    sourceID: Int, sourceActor: ActorIdentity,
+    targetID: Int?, targetActor: ActorIdentity,
+    playerPose: ShipPose, sourcePose: ShipPose, targetPose: ShipPose,
+    contactPhysicalTime: Double, captureClockEffect: Bool = false
+  ) -> AsteroidImpactReceipt? {
+    guard contactPhysicalTime.isFinite, contactPhysicalTime >= 0,
+      contactPhysicalTime <= commander.flightSimulation.physicalTime + 1e-9,
+      let source = bodies.first(where: { $0.id == sourceID }),
+      source.physical?.identity == sourceActor, source.energy > 0,
+      impulse.damage.isFinite, impulse.damage >= 0, impulse.transferred.finite
+    else { return nil }
+    if let targetID {
+      guard let target = bodies.first(where: { $0.id == targetID }),
+        target.physical?.identity == targetActor, target.energy > 0
+      else { return nil }
+    } else {
+      guard commander.flightSimulation.player == targetActor, energy > 0 else { return nil }
+    }
+    let opening = commander.flightSimulation
+    mapDebrisEffectToContact(
+      player: playerPose, sourceID: sourceID, source: sourcePose,
+      targetID: targetID, target: targetPose)
+    guard let origin = makeAttackOrigin(owner: sourceActor) else { return nil }
+    let hit = GameplayHit(
+      target: targetID.map { .body($0) } ?? .player,
+      distance: 0, point: storedFlightSimulation().pose.shipPoint(contact.point))
+    let incident: CombatIncident
+    let clockEffect: NativeDebrisImpactClockEffect?
+    if captureClockEffect {
+      guard let effect = applyNativeCollisionHit(hit, origin: origin, damage: impulse.damage)
+      else { return nil }
+      let proof = NativeDebrisImpactClockEffect(
+        opening: opening, playerPose: playerPose, hit: effect)
+      guard proof.applying(to: opening) == commander.flightSimulation else { return nil }
+      incident = effect.incident
+      clockEffect = proof
+    } else {
+      guard
+        let accepted = applyCombatHit(
+          hit, origin: origin, kind: .collision,
+          damage: impulse.damage)
+      else { return nil }
+      incident = accepted
+      clockEffect = nil
+    }
+    commander.crimeLedger.finishEmission(origin.emissionID)
+    return .init(
+      source: sourceActor, target: targetActor, point: contact.point,
+      transferredMomentum: impulse.transferred, damage: impulse.damage, incident: incident.id,
+      contactPhysicalTime: contactPhysicalTime, clockEffect: clockEffect)
+  }
+
   private mutating func refuseDebrisStep(_ frame: AsteroidContactFrame, reason: String)
     -> AsteroidContactStepResult
   {
-    let previous = commander.flightSimulation.pose
+    let previous = storedFlightSimulation().pose
     rotateScriptNPCVelocities(from: previous, to: frame.playerPose)
     commander.flightSimulation.pose = frame.playerPose
     for index in bodies.indices {
@@ -958,20 +1309,17 @@ extension Game {
     workRecoveryRock = frame.recovery
     speed = frame.speed
     celestials = frame.celestials
-    var stationRefusals: [StationMotionRefusal] = []
-    if frame.stationReady, frame.startTime < frame.time {
-      for actor in frame.actors {
-        guard let station = actor.station, let bodyID = actor.bodyID else { continue }
-        if case .main = station, commander.nativeStations?.inertia(for: station) == nil { continue }
-        stationRefusals.append(
-          .init(
-            station: station, actor: actor.identity, bodyID: bodyID,
-            system: frame.system, visit: frame.visit,
-            fromTime: frame.startTime, toTime: frame.time, duration: frame.stepDuration,
-            position: actor.pose.position, velocity: actor.velocity))
+    let retained: Bool
+    if let cohort = frame.capturedStationRefusalCohortAfterTake() {
+      let stationRefusals = cohort.members.map { member in
+        StationMotionRefusal(station: member.station, actor: member.actor, bodyID: member.bodyID,
+          system: cohort.system, visit: cohort.visit, fromTime: cohort.start, toTime: cohort.end,
+          duration: cohort.usedDuration, position: member.pose.position, velocity: member.velocity)
       }
+      retained = retainNativeStationRefusal(stationRefusals, captured: cohort)
+    } else {
+      retained = false
     }
-    let retained = retainNativeStationRefusal(stationRefusals)
     paused = true
     notify(
       "DEBRIS CONTACT DEFERRED: " + reason
@@ -984,7 +1332,7 @@ extension Game {
   private mutating func mapDebrisEffectToContact(
     player: ShipPose, sourceID: Int, source: ShipPose, targetID: Int?, target: ShipPose
   ) {
-    let previous = commander.flightSimulation.pose
+    let previous = storedFlightSimulation().pose
     rotateScriptNPCVelocities(from: previous, to: player)
     for index in bodies.indices {
       let body = bodies[index]
@@ -1016,7 +1364,7 @@ extension Game {
     _ trajectories: [DebrisTrajectory], source: Int,
     target: Int, impulse: AsteroidImpulse
   ) {
-    let previous = commander.flightSimulation.pose
+    let previous = storedFlightSimulation().pose
     let player = trajectories.first { $0.frame.bodyID == nil }
     let end = player?.motion.end ?? previous
     rotateScriptNPCVelocities(from: previous, to: end)
@@ -1053,18 +1401,22 @@ extension Game {
       celestials[index].position = end.shipPoint(previous.systemPoint(celestials[index].position))
     }
     if trajectories[target].frame.bodyID == nil {
-      cancelAutoTarget()
-      workGuidance = nil
-      workBraking = nil
-      approvedWorkMotion = nil
-      speed = 0
-      manualResidualFlight = true
-      autoPilot.setApproachVelocity(end.shipVector(impulse.target))
+      retainNativePlayerCollisionControls(outgoingVelocity: impulse.target, pose: end)
     }
+  }
+
+  mutating func retainNativePlayerCollisionControls(outgoingVelocity: Vector3, pose: ShipPose) {
+    cancelAutoTarget()
+    workGuidance = nil
+    workBraking = nil
+    approvedWorkMotion = nil
+    speed = 0
+    manualResidualFlight = true
+    autoPilot.setApproachVelocity(pose.shipVector(outgoingVelocity))
   }
 }
 
-private func debrisRigidMotion(
+func debrisRigidMotion(
   from start: ShipPose, to end: ShipPose, duration: Double,
   radius: Double
 ) -> HullSceneMotion? {

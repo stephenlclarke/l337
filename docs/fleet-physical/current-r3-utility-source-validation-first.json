@@ -1,0 +1,39 @@
+{
+  "status": "FIRST_G4_OWNED_CURRENT_FITTING_VALIDATION_SOURCE_FIX_BEFORE_MUTATION",
+  "beforeCommit": "364f6574ad6093449950cf299fd3af2fe60a5125",
+  "pins": [
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Fitting.swift",
+      "bytes": 4525,
+      "sha256": "cf6692c4fa3f37518c524af5f9615cc54c761d082c751925fa7c30a54a4880e8"
+    },
+    {
+      "path": "Sources/L337Core/CommanderEquipment.swift",
+      "bytes": 10039,
+      "sha256": "f1eccbf55a41e097de8f5990cee4a18408c1eb6470c0d7d1bb8a6eb031462bc8"
+    },
+    {
+      "path": "Sources/L337Core/ShipAccommodation.swift",
+      "bytes": 11494,
+      "sha256": "13bf2d7e2c2d2513372535bf255d67ed1b9244e7dbd110733f6ecd98db003c38"
+    },
+    {
+      "path": "Sources/L337Core/OwnedEquipmentInventory.swift",
+      "bytes": 23031,
+      "sha256": "83009fdd488c170fff421cff398858acc77836d6668308ae69a743e8a1a7544f"
+    },
+    {
+      "path": "Tests/L337CoreTests/OriginalFleetR3FittingUnitTests.swift",
+      "bytes": 5540,
+      "sha256": "888c44883387b7a1022518b7ab2df1a0e168e9a5379d61b45f529dd34de65125"
+    }
+  ],
+  "sourcePath": "Sources/L337Core/OriginalFleetR3Fitting.swift",
+  "before": "    guard let source = contract(for: ship), let fitting = source.fitting else { return }",
+  "after": "    guard let source = contract(for: ship), let fitting = source.fitting else {\n      guard !matchesCurrentMechanics(ship) else {\n        throw CommanderEquipmentError.invalidRuntimeStatistics\n      }\n      return\n    }",
+  "finding": "validateUtilities returns successfully whenever contract(for:) is nil, including a canonical-current-mechanics hull with malformed empty-fit declarations. ShipAccommodation already treats matchesCurrentMechanics-with-invalid-current-fit as invalid rather than legacy fallback. This validator must reject the same current-source disagreement even if the actual owned inventory itself is valid. No claim of executed malformed shipping input/runtimefailure.",
+  "testPath": "Tests/L337CoreTests/OriginalFleetR3UtilitySourceValidationTests.swift",
+  "testScope": "One parameterized new method using actual Commander.prepareEquipment(legacy:false) owned inventory and current SH025 catalogue source; validate actual inventory/runtime context and correct utility source first. Clone only project-refit-v1 metadata to absent/duplicate profile/missing or duplicate required-count field/wrong-count. Require unchanged current mechanics and nil fitting contract, then validateUtilities throws invalidRuntimeStatistics. Real owner/hull/items/context retained; no fake equipment, source model/geometry/unit/rate/slot/kit mutation. Existing fitting tests unchanged.",
+  "ownership": "Existing Root full-fleet NPC/fitting/material/source implementation scope; this unreserved fitting-helper hunk/new test does not intersect C01 Game/GameRuntime/MissionNativeBridge/Weapons/StationAutoDefence or MC1 EMP test paths. No new permission gate/framework/issuer/admission change.",
+  "limits": "Source-authoring only UNCOMPILED UNRUN; same current Source25 data, no native geometry/runtime readiness/crew/loaded physics/journey claim. G1 sole executor."
+}

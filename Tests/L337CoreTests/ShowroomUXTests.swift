@@ -49,6 +49,53 @@ struct ShowroomComparisonUnitTests {
     }
   }
 
+  @Test func quotedHullRowsDoNotOverlapTheBrowseHeadingAtCompactAndWideSizes() throws {
+    let fresh = Game(executive: false)
+    for width in [512.0, 768, 1000, 1512] {
+      for height in [518.0, 540, 900] {
+        for ship in ["SH103", "SH108"] {
+          for credits in [0, 10_000_000] {
+            var game = fresh
+            game.viewportWidth = width
+            game.viewportHeight = height
+            game.screen = .showroom
+            game.showroom.selection = ship
+            game.commander.credits = credits
+            let before = game.commander
+            let quote = try #require(game.shipTradeQuote)
+            let layout = ShowroomLayout(width: width, height: height, detail: false)
+            // Use the same label emitters as the screen; preview meshes cannot affect these bounds.
+            var frame = Frame()
+            Display.showroomTradeAction(game, layout: layout, into: &frame)
+            Display.showroomListHeading(game, layout: layout, into: &frame)
+            let heading = try #require(frame.labels.first { $0.text == "> Ships" })
+            let rows = frame.labels.filter {
+              $0.text.hasPrefix("Price ") || $0.text.hasPrefix("Pay ")
+                || $0.text.hasPrefix("Credit ") || $0.text.hasPrefix("Trade blocked")
+                || $0.text.hasPrefix("Review fit, then")
+            }
+            try #require(rows.count == 3)
+            #expect(
+              rows.contains {
+                $0.text.hasPrefix(quote.allowed ? "Review fit, then" : "Trade blocked")
+              })
+            for row in rows {
+              let a = row.bounds
+              let b = heading.bounds
+              #expect(a.maxX <= b.x || b.maxX <= a.x || a.maxY <= b.y || b.maxY <= a.y)
+              #expect(a.x >= 0 && a.maxX <= width && a.maxY < height - 42)
+            }
+            #expect(heading.bounds.maxY < height - 42)
+            #expect(layout.list.maxY < height - 42)
+            #expect(layout.model.maxY < height - 42)
+            if !layout.wide { #expect(layout.list.maxY < layout.model.y) }
+            #expect(game.commander == before)
+          }
+        }
+      }
+    }
+  }
+
   @Test func bothRenderedPreviewsKeepTheSamePitchRollAndYawThroughRotationAndPause() throws {
     for width in [512.0, 768, 1000, 1512] {
       var game = game(width: width)
@@ -163,7 +210,8 @@ struct ShowroomComparisonUnitTests {
 
   @Test func comparisonMatchesQuotedPriceAndActualTransferredFitWithHonestRatings() throws {
     var game = game()
-    try game.commander.prepareEquipment()
+    game.showroom.selection = "SH029"
+    try game.commander.prepareEquipment(legacy: false)
     let before = game.commander
     let quote = try #require(game.shipTradeQuote)
     try #require(quote.allowed)
@@ -188,7 +236,7 @@ struct ShowroomComparisonUnitTests {
 @Test func showroomPrimaryTradeWorksWithClickOrKeyboardAndNeverBuysOnOpening() throws {
   for width in [512.0, 768, 1000, 1512] {
     var game = Game(executive: false)
-    // This confirmation flow trades a compatible carried fit from Cobra to Boa.
+    // This confirmation flow trades a compatible carried fit from the declared stock hull to the current original Okapi.
     game.commander.shipID = "SH023"
     game.commander.fuel = game.commander.fuelCapacity
     game.energy = game.commander.performance.energy
@@ -199,7 +247,7 @@ struct ShowroomComparisonUnitTests {
     game.commander.credits = 10_000_000
     game.screen = .status
     game.key("6")
-    game.showroom.selection = "SH013"
+    game.showroom.selection = "SH029"
     let quote = try #require(game.shipTradeQuote)
     try #require(quote.allowed)
     let before = game.commander
@@ -218,7 +266,7 @@ struct ShowroomComparisonUnitTests {
     #expect(game.showroom.trading && game.commander == before)
     game.key("right")
     game.key("return")
-    #expect(game.commander.shipID == "SH013" && game.showroomBaseline?.id == "SH013")
+    #expect(game.commander.shipID == "SH029" && game.showroomBaseline?.id == "SH029")
     #expect(game.commander.credits == quote.balance)
     let owned = Display.presentation(game, width: width, height: 518)
     #expect(owned.labels.contains { $0.text == "Currently flying" })
@@ -251,24 +299,24 @@ struct ShowroomComparisonUnitTests {
   }
 }
 
-@Test func xyzzyCobraRestorePreservesPropertyProgressAndUniqueShipsWithoutMintingCash() throws {
+@Test func xyzzyStarterRefitPreservesPropertyProgressAndUniqueShipsWithoutMintingCash() throws {
   var game = Game(executive: false)
   game.screen = .status
   game.commander.shipID = "SH013"
+  game.commander.fuel = game.commander.fuelCapacity
+  try game.commander.prepareEquipment(legacy: false)
   for key in "xyzzy" { game.key(String(key)) }
-  #expect(game.commander.name == "CLARKE" && game.commander.shipID == "SH023")
-  #expect(game.secretChoices.contains { $0.hasPrefix("C SWITCH TO COBRA MK III") })
+  #expect(game.commander.name == "CLARKE" && game.commander.shipID == "SH025")
+  #expect(game.secretChoices.contains { $0.hasPrefix("C REFIT STARTER HULL") })
   game.commander.autoTrade = false
   game.commander.cargo = Array(repeating: 0, count: 17)
   let owner = game.commander.equipmentOwnerID
-  for slot in [ComponentFittingSlot.utility(.miningLaser), .utility(.salvageCutter)] {
-    let item = try #require(game.commander.fittedEquipment(at: slot))
-    let revision = try #require(game.commander.equipmentInventory?.revision)
-    try game.commander.storeEquipment(item, expectedRevision: revision)
-  }
+  let cutter = try #require(game.commander.fittedEquipment(at: .utility(.salvageCutter)))
+  let revision = try #require(game.commander.equipmentInventory?.revision)
+  try game.commander.storeEquipment(cutter, expectedRevision: revision)
   try game.commander.transferEquipment(to: "SH013", hullID: UUID())
   game.commander.unlimitedCargo = false
-  game.commander.cargo[0] = 40
+  game.commander.cargo[0] = 140
   game.commander.credits = 12345
   game.commander.legal = 17
   game.commander.kills = 42
@@ -283,8 +331,10 @@ struct ShowroomComparisonUnitTests {
   let inventory = try #require(game.commander.equipmentInventory)
   let portable = Set(inventory.items.filter { $0.boundHull == nil }.map(\.id))
   #expect(game.commander.valid && game.commander.shipID == "SH013")
+  game.commander.name = "CUSTOM"
   game.key("c")
-  #expect(game.commander.shipID == "SH023" && game.commander.credits == 12345)
+  #expect(game.commander.name == "CUSTOM")
+  #expect(game.commander.shipID == "SH025" && game.commander.credits == 12345)
   #expect(game.commander.equipmentOwnerID == owner)
   #expect(game.commander.hullInstanceID != inventory.activeHull)
   #expect(portable.isSubset(of: Set(game.commander.equipmentInventory?.items.map(\.id) ?? [])))
@@ -301,7 +351,9 @@ struct ShowroomComparisonUnitTests {
   #expect(game.commander == restored)
   game.key("escape")
   for key in "xyzzy" { game.key(String(key)) }
-  #expect(game.commander == restored && game.bodies == bodies)
-  let loaded = try JSONDecoder().decode(Commander.self, from: JSONEncoder().encode(restored))
-  #expect(loaded == restored && loaded.shipID == "SH023" && loaded.valid)
+  var expectedReentry = restored
+  expectedReentry.name = "CLARKE"
+  #expect(game.commander == expectedReentry && game.bodies == bodies)
+  let loaded = try JSONDecoder().decode(Commander.self, from: JSONEncoder().encode(expectedReentry))
+  #expect(loaded == expectedReentry && loaded.shipID == "SH025" && loaded.valid)
 }

@@ -13,6 +13,7 @@ private func passengerGame() throws -> (Game, ScriptPack) {
   game.screen = .status
   game.scriptPacks = [pack]
   game.commander.credits = 1_000_000
+  try game.commander.prepareEquipment(legacy: false)
   try game.confirmPassengerBerth(game.passengerBerthQuote)
   return (game, pack)
 }
@@ -20,6 +21,7 @@ private func passengerGame() throws -> (Game, ScriptPack) {
   var game = Game(executive: false)
   game.screen = .equipment
   #expect(!game.passengerBerthQuote.allowed)
+  try game.commander.prepareEquipment(legacy: false)
   game.commander.credits = 1_000_000
   let quote = game.passengerBerthQuote
   #expect(quote.allowed)
@@ -49,6 +51,7 @@ private func passengerGame() throws -> (Game, ScriptPack) {
   game.screen = .status
   game.scriptPacks = [pack]
   game.commander.credits = 1_000_000
+  try game.commander.prepareEquipment(legacy: false)
   try game.confirmPassengerBerth(game.passengerBerthQuote)
   game.selection = try #require(
     Equipment.all.firstIndex { $0.name == PassengerCabin.equipmentName })
@@ -344,6 +347,7 @@ private func passengerGame() throws -> (Game, ScriptPack) {
   game.selectedSystem = game.commander.system
   game.market = MarketItem.at(game.currentSystem)
   try #require(!game.equipmentAvailable(drive) && game.equipmentAvailable(storage))
+  try game.commander.prepareEquipment(legacy: false)
   try game.confirmPassengerBerth(game.passengerBerthQuote)
   let profile = try ShipAccommodationProfile(ship: game.commander.ship)
   try #require(profile.equipmentUnits == 12 && game.commander.accommodation.fittedBerths.count == 1)
@@ -418,6 +422,7 @@ private func passengerGame() throws -> (Game, ScriptPack) {
   var game = Game(executive: false)
   game.screen = .equipment
   game.commander.credits = 1_000_000
+  try game.commander.prepareEquipment(legacy: false)
   let directory = FileManager.default.temporaryDirectory.appendingPathComponent(
     "actor-cabin-save-" + UUID().uuidString)
   defer { try? FileManager.default.removeItem(at: directory) }

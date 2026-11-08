@@ -34,6 +34,7 @@ struct OriginalWorldProductionTests {
   @Test func actualRuntimeSaveAndColdLoadRetainPaidStockAndOriginalWorld() async throws {
     var game = Game(executive: false)
     game.commander.credits = 1_000_000
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .buy
     game.selection = try #require(game.market.indices.first { game.market[$0].quantity > 0 })
     let folder = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -169,7 +170,8 @@ struct OriginalWorldProductionTests {
     if name == TargetingTier.basic.equipmentName {
       let quote = try game.quoteEquipmentPurchase(item)
       #expect(quote.item.name == name)
-      #expect(try game.applyEquipmentPurchase(quote))
+      let equipmentPurchased = try game.applyEquipmentPurchase(quote)
+      #expect(equipmentPurchased)
       #expect(game.commander.fittedEquipment(at: .targetingCore)?.node.key == name)
     }
   }

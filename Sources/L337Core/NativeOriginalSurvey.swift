@@ -47,7 +47,7 @@ struct NativeOriginalSurveyState: Codable, Sendable, Equatable {
 
 enum NativeOriginalSurvey {
   static let stateID = "l337.contract/consented-survey"
-  static let digest = "ff7b87f92b2896a17a7e4047b64c5ab6461e4e743cddb1ee3594998b67a1fdd6"
+  static let digest = "c4557e1df26fede2be365cc308756043a803bfe26e9ff2d90f05ea9ab5bfe8e6"
   static let batch = "avenor-consented-survey-01"
   static let boardID = "consented-survey"
   static let encounterID = "survey-points"

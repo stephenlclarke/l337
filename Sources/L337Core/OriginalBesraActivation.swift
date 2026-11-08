@@ -4,7 +4,7 @@ import Foundation
 enum OriginalBesraActivation {
   static let id = "SH108"
   static let specificationSHA256 =
-    "6618c94a78caafe83aabe1e2fd5761b0f16849307e4af82f44cb609cd4d420fe"
+    "e6dd044e8985abfeb14b7a23296389c5acbb210e901bebe64aa4cbbdc49c4de8"
 
   enum Failure: Error { case unsupportedDefinition }
 
@@ -27,39 +27,7 @@ enum OriginalBesraActivation {
       physical.metresPerSourceUnit == 1,
       physical.model.coordinateUnits == "metres"
     else { throw Failure.unsupportedDefinition }
-    let ship = try OriginalPlayerHullActivation.resolve(
+    return try OriginalPlayerHullActivation.resolve(
       retained, definition: definition, physical: physical)
-    return .init(
-      id: ship.id, name: ship.name, shipClass: ship.shipClass, appearances: ship.appearances,
-      evidence: ship.evidence, refit: ship.refit, model: ship.model, modelSource: ship.modelSource,
-      dimensions: ship.dimensions, geometryContext: ship.geometryContext,
-      profiles: ship.profiles.map(originalAccommodation), game: ship.game,
-      catalogue: ship.catalogue, design: ship.design, nativeHull: ship.nativeHull,
-      nativeDesign: ship.nativeDesign, nativeCombat: ship.nativeCombat)
-  }
-
-  private static func originalAccommodation(_ profile: ShipProfile) -> ShipProfile {
-    guard profile.group == "project-refit-v1" else { return profile }
-    return .init(
-      id: profile.id, title: profile.title, group: profile.group,
-      context: profile.context
-        + " SH108 accommodation and fitting estimates follow original-fleet E01.",
-      fields: profile.fields.map { field in
-        let value: Double
-        let unit: String
-        switch field.key {
-        case "required_crew_including_commander", "reserved_crew_accommodation":
-          value = 1
-          unit = "people"
-        default: return field
-        }
-        return .init(
-          key: field.key, label: field.label, text: String(Int(value)) + " " + unit,
-          number: value, unit: unit, status: "original-fleet design estimate",
-          basis:
-            "Meridian 8c899a7e0d351551498b05a7b371b84758575085 / "
-            + "docs/meridian/SHIP-REFERENCE.md SH108 E01: cargo20, size tier2, equipment12, operating crew1 and intrinsic places1; "
-            + "capacity estimates; no people or equipment are issued.")
-      })
   }
 }

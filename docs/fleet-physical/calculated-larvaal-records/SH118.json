@@ -1,0 +1,731 @@
+{
+  "schemaVersion": 1,
+  "id": "SH118",
+  "status": "NEW_AUTHORED_SOURCE_BUDGET_NOT_NATIVE_QUALIFICATION",
+  "contractSHA256": "960a541ea826d2cb8634794e52772874570d4d9e7dc5dc949527ec1db41d80f7",
+  "detailedSourceSHA256": "65a9c46ec8547b76bc94aa261668b05f6a651bd39ee735c671d90f338be6f0e6",
+  "componentSourceSHA256": "93637233a52a586243e7f998c435e12a2d01a9d0f1ea2b3d112ee05cd1272820",
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "policyProposalSHA256": "8f864a534d96733218e126a480353441ac77d7f169936db9a7f4df821a2a2044",
+  "coordinateUnits": "metres",
+  "metresPerSourceUnit": 1,
+  "sourceOriginUnchanged": true,
+  "sourceStockAreaSquareMetres": 3335.457325233583,
+  "stockMassKg": 46696.40255327009,
+  "intrinsicHardwareMassKg": 5160.0,
+  "unroundedMassKg": 51856.40255327009,
+  "roundingReserveKg": 0.5974467299092794,
+  "dryMassKilograms": 51857,
+  "centreOfMassMetres": [
+    6.680357531720688e-16,
+    -0.05716652390632085,
+    -0.39646987378829585
+  ],
+  "inertiaAboutCentreOfMassKgM2": [
+    3604878.194714312,
+    -8.950269971776086,
+    -5.734054778781064e-11,
+    -8.950269971774267,
+    4518173.391308161,
+    24890.917436937885,
+    -5.734054778781064e-11,
+    24890.917436937878,
+    1978140.4255081597
+  ],
+  "sourceOriginInertiaBeforeReserveKgM2": [
+    3613198.8849473577,
+    -8.950269971774105,
+    -4.3606065801646395e-11,
+    -8.950269971772286,
+    4526324.614223621,
+    23715.60221005847,
+    -4.3606065801646395e-11,
+    23715.602210058463,
+    1978309.8928257464
+  ],
+  "reserveLocationMetres": [
+    6.680357531720688e-16,
+    -0.05716652390632085,
+    -0.39646987378829585
+  ],
+  "positiveLeadingPrincipalMinors": [
+    3604878.194714312,
+    16287464738185.098,
+    3.221665899734411e+19
+  ],
+  "zeroAreaSourceFaces": 0,
+  "stockComponents": [
+    {
+      "name": "thin central jade blade",
+      "areaSquareMetres": 830.6734684711629,
+      "stockMassKg": 11629.42855859628,
+      "areaCentroidMetres": [
+        5.200786480545473e-17,
+        5.586710565674289e-17,
+        -0.6123319858718524
+      ],
+      "massFirst": [
+        1.7830181775480014e-13,
+        -2.236752449924495e-13,
+        -7121.071083840134
+      ],
+      "massSecond": [
+        81960.42879312359,
+        5.84893496961382,
+        3.126388037344441e-13,
+        5.84893496961382,
+        61770.84161631422,
+        -1.5837997580092633e-11,
+        3.126388037344441e-13,
+        -1.5837997580092633e-11,
+        1237590.6747149653
+      ],
+      "verificationSecond": [
+        81960.4287931236,
+        5.848934969613913,
+        5.352163157112955e-12,
+        5.848934969613047,
+        61770.84161631402,
+        -2.061600890002069e-12,
+        8.357758929378178e-13,
+        -2.7367275112766265e-12,
+        1237590.674714967
+      ]
+    },
+    {
+      "name": "separate smooth diagonal leaf",
+      "areaSquareMetres": 328.60088427780465,
+      "stockMassKg": 4600.412379889254,
+      "areaCentroidMetres": [
+        -6.999999999999977,
+        -3.999999999999989,
+        -2.402202742128379
+      ],
+      "massFirst": [
+        -32202.886659224794,
+        -18401.64951955703,
+        -11051.123233891336
+      ],
+      "massSecond": [
+        234145.02063354023,
+        128812.32197064962,
+        77357.86263723922,
+        128812.32197064962,
+        83767.17586825971,
+        44204.4929355654,
+        77357.86263723922,
+        44204.4929355654,
+        258355.08159350467
+      ],
+      "verificationSecond": [
+        234145.02063354015,
+        128812.32197064969,
+        77357.86263723933,
+        128812.32197064969,
+        83767.17586825977,
+        44204.49293556535,
+        77357.86263723933,
+        44204.49293556535,
+        258355.08159350473
+      ]
+    },
+    {
+      "name": "curved leaf root",
+      "areaSquareMetres": 211.6904143814594,
+      "stockMassKg": 2963.6658013404244,
+      "areaCentroidMetres": [
+        -4.0000000000000036,
+        -2.000000000000001,
+        -2.9999999999999982
+      ],
+      "massFirst": [
+        -11854.66320536169,
+        -5927.331602680855,
+        -8890.997404021302
+      ],
+      "massSecond": [
+        62987.65547364088,
+        23709.326410723465,
+        35563.98961608523,
+        23709.326410723465,
+        18618.877856634135,
+        17781.994808042546,
+        35563.98961608523,
+        17781.994808042546,
+        56846.70614385766
+      ],
+      "verificationSecond": [
+        62987.655473641076,
+        23709.32641072348,
+        35563.98961608528,
+        23709.32641072348,
+        18618.877856634117,
+        17781.994808042582,
+        35563.98961608528,
+        17781.99480804258,
+        56846.706143857584
+      ]
+    },
+    {
+      "name": "inward leaf glow",
+      "areaSquareMetres": 32.96805345531752,
+      "stockMassKg": 461.55274837444523,
+      "areaCentroidMetres": [
+        -5.500000000000003,
+        -3.0000000000000018,
+        8.000000000000009
+      ],
+      "massFirst": [
+        -2538.540116059452,
+        -1384.6582451233385,
+        3692.4219869955614
+      ],
+      "massSecond": [
+        14229.152422138202,
+        7615.620348178353,
+        -20308.320928475605,
+        7615.620348178353,
+        4360.789189345082,
+        -11077.265960986702,
+        -20308.320928475605,
+        -11077.265960986702,
+        30408.974418137954
+      ],
+      "verificationSecond": [
+        14229.152422138124,
+        7615.620348178355,
+        -20308.32092847559,
+        7615.620348178354,
+        4360.789189345073,
+        -11077.265960986684,
+        -20308.32092847559,
+        -11077.265960986684,
+        30408.974418138
+      ]
+    },
+    {
+      "name": "separate smooth diagonal leaf",
+      "areaSquareMetres": 328.60088427780477,
+      "stockMassKg": 4600.412379889254,
+      "areaCentroidMetres": [
+        -6.999999999999974,
+        3.999999999999985,
+        -2.402202742128378
+      ],
+      "massFirst": [
+        -32202.886659224787,
+        18401.649519557024,
+        -11051.123233891336
+      ],
+      "massSecond": [
+        234145.02063354032,
+        -128810.7713031485,
+        77357.86263723926,
+        -128810.7713031485,
+        83767.17586825964,
+        -44204.492935565366,
+        77357.86263723926,
+        -44204.492935565366,
+        258355.08159350464
+      ],
+      "verificationSecond": [
+        234145.0206335402,
+        -128810.77130314874,
+        77357.8626372393,
+        -128810.77130314874,
+        83767.17586825979,
+        -44204.49293556535,
+        77357.8626372393,
+        -44204.49293556535,
+        258355.08159350476
+      ]
+    },
+    {
+      "name": "curved leaf root",
+      "areaSquareMetres": 211.69041438145936,
+      "stockMassKg": 2963.6658013404244,
+      "areaCentroidMetres": [
+        -4.000000000000004,
+        2.000000000000002,
+        -2.9999999999999982
+      ],
+      "massFirst": [
+        -11854.663205361692,
+        5927.33160268086,
+        -8890.997404021302
+      ],
+      "massSecond": [
+        62987.65547364089,
+        -23709.326410723486,
+        35563.98961608523,
+        -23709.326410723486,
+        18618.87785663414,
+        -17781.994808042553,
+        35563.98961608523,
+        -17781.994808042553,
+        56846.70614385766
+      ],
+      "verificationSecond": [
+        62987.655473641076,
+        -23709.326410723454,
+        35563.98961608528,
+        -23709.326410723457,
+        18618.87785663414,
+        -17781.994808042586,
+        35563.98961608528,
+        -17781.99480804259,
+        56846.706143857584
+      ]
+    },
+    {
+      "name": "inward leaf glow",
+      "areaSquareMetres": 32.96805345531752,
+      "stockMassKg": 461.55274837444523,
+      "areaCentroidMetres": [
+        -5.500000000000003,
+        3.000000000000001,
+        8.000000000000009
+      ],
+      "massFirst": [
+        -2538.5401160594515,
+        1384.658245123338,
+        3692.4219869955614
+      ],
+      "massSecond": [
+        14229.152422138202,
+        -7615.62034817835,
+        -20308.320928475605,
+        -7615.62034817835,
+        4360.789189345086,
+        11077.265960986702,
+        -20308.320928475605,
+        11077.265960986702,
+        30408.974418137954
+      ],
+      "verificationSecond": [
+        14229.152422138124,
+        -7615.620348178364,
+        -20308.32092847559,
+        -7615.620348178364,
+        4360.789189345072,
+        11077.265960986677,
+        -20308.32092847559,
+        11077.265960986677,
+        30408.974418138
+      ]
+    },
+    {
+      "name": "separate smooth diagonal leaf",
+      "areaSquareMetres": 328.6008842778046,
+      "stockMassKg": 4600.412379889255,
+      "areaCentroidMetres": [
+        6.999999999999978,
+        -3.9999999999999902,
+        -2.40220274212838
+      ],
+      "massFirst": [
+        32202.886659224794,
+        -18401.649519557024,
+        -11051.123233891338
+      ],
+      "massSecond": [
+        234145.02063354047,
+        -128810.77130314853,
+        -77357.86263723929,
+        -128810.77130314853,
+        83767.17586825968,
+        44204.4929355654,
+        -77357.86263723929,
+        44204.4929355654,
+        258355.0815935046
+      ],
+      "verificationSecond": [
+        234145.02063354015,
+        -128810.77130314882,
+        -77357.86263723932,
+        -128810.77130314882,
+        83767.17586825974,
+        44204.492935565315,
+        -77357.86263723929,
+        44204.4929355653,
+        258355.0815935048
+      ]
+    },
+    {
+      "name": "curved leaf root",
+      "areaSquareMetres": 211.6904143814594,
+      "stockMassKg": 2963.6658013404244,
+      "areaCentroidMetres": [
+        4.000000000000003,
+        -2.0000000000000018,
+        -2.9999999999999982
+      ],
+      "massFirst": [
+        11854.663205361698,
+        -5927.331602680857,
+        -8890.997404021302
+      ],
+      "massSecond": [
+        62987.655473640894,
+        -23709.326410723475,
+        -35563.98961608524,
+        -23709.326410723475,
+        18618.87785663413,
+        17781.994808042542,
+        -35563.98961608524,
+        17781.994808042542,
+        56846.70614385766
+      ],
+      "verificationSecond": [
+        62987.65547364103,
+        -23709.326410723428,
+        -35563.98961608527,
+        -23709.326410723428,
+        18618.877856634124,
+        17781.99480804258,
+        -35563.98961608527,
+        17781.99480804258,
+        56846.70614385759
+      ]
+    },
+    {
+      "name": "inward leaf glow",
+      "areaSquareMetres": 32.96805345531752,
+      "stockMassKg": 461.55274837444523,
+      "areaCentroidMetres": [
+        5.500000000000007,
+        -3.0000000000000018,
+        8.000000000000009
+      ],
+      "massFirst": [
+        2538.5401160594506,
+        -1384.6582451233385,
+        3692.4219869955614
+      ],
+      "massSecond": [
+        14229.152422138199,
+        -7615.62034817835,
+        20308.320928475616,
+        -7615.62034817835,
+        4360.789189345082,
+        -11077.265960986702,
+        20308.320928475616,
+        -11077.265960986702,
+        30408.974418137954
+      ],
+      "verificationSecond": [
+        14229.152422138135,
+        -7615.620348178368,
+        20308.32092847558,
+        -7615.620348178367,
+        4360.789189345073,
+        -11077.265960986684,
+        20308.32092847558,
+        -11077.265960986684,
+        30408.974418138
+      ]
+    },
+    {
+      "name": "separate smooth diagonal leaf",
+      "areaSquareMetres": 328.60088427780465,
+      "stockMassKg": 4600.412379889255,
+      "areaCentroidMetres": [
+        6.9999999999999805,
+        3.9999999999999862,
+        -2.4022027421283783
+      ],
+      "massFirst": [
+        32202.8866592248,
+        18401.649519557028,
+        -11051.123233891341
+      ],
+      "massSecond": [
+        234145.0206335403,
+        128812.32197064962,
+        -77357.86263723922,
+        128812.32197064962,
+        83767.1758682597,
+        -44204.4929355654,
+        -77357.86263723922,
+        -44204.4929355654,
+        258355.08159350464
+      ],
+      "verificationSecond": [
+        234145.02063354012,
+        128812.32197064962,
+        -77357.86263723929,
+        128812.32197064962,
+        83767.17586825979,
+        -44204.49293556538,
+        -77357.86263723932,
+        -44204.49293556538,
+        258355.08159350473
+      ]
+    },
+    {
+      "name": "curved leaf root",
+      "areaSquareMetres": 211.6904143814594,
+      "stockMassKg": 2963.6658013404244,
+      "areaCentroidMetres": [
+        4.000000000000003,
+        2.000000000000001,
+        -2.9999999999999982
+      ],
+      "massFirst": [
+        11854.663205361698,
+        5927.331602680858,
+        -8890.997404021302
+      ],
+      "massSecond": [
+        62987.65547364089,
+        23709.326410723454,
+        -35563.98961608523,
+        23709.326410723454,
+        18618.87785663414,
+        -17781.994808042557,
+        -35563.98961608523,
+        -17781.994808042557,
+        56846.70614385766
+      ],
+      "verificationSecond": [
+        62987.65547364104,
+        23709.32641072346,
+        -35563.98961608527,
+        23709.32641072346,
+        18618.877856634135,
+        -17781.99480804259,
+        -35563.98961608527,
+        -17781.99480804259,
+        56846.70614385759
+      ]
+    },
+    {
+      "name": "inward leaf glow",
+      "areaSquareMetres": 32.96805345531752,
+      "stockMassKg": 461.55274837444523,
+      "areaCentroidMetres": [
+        5.500000000000007,
+        3.000000000000001,
+        8.000000000000009
+      ],
+      "massFirst": [
+        2538.5401160594515,
+        1384.658245123338,
+        3692.4219869955614
+      ],
+      "massSecond": [
+        14229.152422138199,
+        7615.620348178353,
+        20308.320928475616,
+        7615.620348178353,
+        4360.789189345086,
+        11077.265960986702,
+        20308.320928475616,
+        11077.265960986702,
+        30408.974418137954
+      ],
+      "verificationSecond": [
+        14229.152422138133,
+        7615.620348178355,
+        20308.32092847558,
+        7615.620348178353,
+        4360.789189345072,
+        11077.265960986677,
+        20308.32092847558,
+        11077.265960986677,
+        30408.974418138
+      ]
+    },
+    {
+      "name": "long gold central organ",
+      "areaSquareMetres": 211.74644830409383,
+      "stockMassKg": 2964.45027625731,
+      "areaCentroidMetres": [
+        -1.4852922857196022e-17,
+        -0.9999999999999968,
+        7.9999999999999885
+      ],
+      "massFirst": [
+        2.954581024283698e-14,
+        -2964.4502762573106,
+        23715.60221005845
+      ],
+      "massSecond": [
+        9410.068140603657,
+        1.1445011605104582e-13,
+        -4.629630012686903e-13,
+        1.1445011605104582e-13,
+        11433.86850147162,
+        -23715.602210058456,
+        -4.629630012686903e-13,
+        -23715.602210058456,
+        229588.15711661155
+      ],
+      "verificationSecond": [
+        9410.068140603658,
+        -9.718614801812464e-14,
+        -3.8480330033507926e-13,
+        5.224987109642143e-14,
+        11433.868501471614,
+        -23715.60221005844,
+        -8.347766922156552e-13,
+        -23715.60221005844,
+        229588.15711661123
+      ]
+    }
+  ],
+  "intrinsicHardware": [
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 3,
+      "anchorName": "inward leaf glow",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -5.500000000000003,
+        -3.0000000000000018,
+        8.000000000000009
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 6,
+      "anchorName": "inward leaf glow",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        -5.500000000000003,
+        3.000000000000001,
+        8.000000000000009
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 9,
+      "anchorName": "inward leaf glow",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        5.500000000000007,
+        -3.0000000000000018,
+        8.000000000000009
+      ]
+    },
+    {
+      "name": "One explicitly proposed intrinsic field-propulsion mechanism allocated inside this named component; not a recovered biological function.",
+      "count": 1,
+      "eachKg": 900,
+      "anchorComponent": 12,
+      "anchorName": "inward leaf glow",
+      "anchorRule": "Uncomputed area centroid of this exact component, original source origin retained.",
+      "massKg": 900,
+      "anchorMetres": [
+        5.500000000000007,
+        3.000000000000001,
+        8.000000000000009
+      ]
+    },
+    {
+      "name": "Empty intrinsic power system",
+      "count": 1,
+      "eachKg": 750,
+      "anchorComponent": 0,
+      "anchorName": "thin central jade blade",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 750,
+      "anchorMetres": [
+        5.200786480545473e-17,
+        5.586710565674289e-17,
+        -0.6123319858718524
+      ]
+    },
+    {
+      "name": "Empty fuel-containment and transfer system",
+      "count": 1,
+      "eachKg": 180,
+      "anchorComponent": 0,
+      "anchorName": "thin central jade blade",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 180,
+      "anchorMetres": [
+        5.200786480545473e-17,
+        5.586710565674289e-17,
+        -0.6123319858718524
+      ]
+    },
+    {
+      "name": "Empty intrinsic crew environment/place system; R3 explicitly declares staffed native operation",
+      "count": 2,
+      "eachKg": 120,
+      "anchorComponent": 0,
+      "anchorName": "thin central jade blade",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 240,
+      "anchorMetres": [
+        5.200786480545473e-17,
+        5.586710565674289e-17,
+        -0.6123319858718524
+      ]
+    },
+    {
+      "name": "Control and sensing system",
+      "count": 1,
+      "eachKg": 90,
+      "anchorComponent": 0,
+      "anchorName": "thin central jade blade",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 90,
+      "anchorMetres": [
+        5.200786480545473e-17,
+        5.586710565674289e-17,
+        -0.6123319858718524
+      ]
+    },
+    {
+      "name": "Empty carried-equipment interfaces",
+      "count": 1,
+      "eachKg": 140,
+      "anchorComponent": 0,
+      "anchorName": "thin central jade blade",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 140,
+      "anchorMetres": [
+        5.200786480545473e-17,
+        5.586710565674289e-17,
+        -0.6123319858718524
+      ]
+    },
+    {
+      "name": "Empty launcher system, no ammunition",
+      "count": 1,
+      "eachKg": 160,
+      "anchorComponent": 0,
+      "anchorName": "thin central jade blade",
+      "anchorRule": "Uncomputed exact primary-component area centroid; no occupied volume or paid devices invented.",
+      "massKg": 160,
+      "anchorMetres": [
+        5.200786480545473e-17,
+        5.586710565674289e-17,
+        -0.6123319858718524
+      ]
+    }
+  ],
+  "operations": {
+    "coordinateConversions": 23124,
+    "faceIndexChecks": 46080,
+    "triangleAreaEvaluations": 15360,
+    "analyticMomentEvaluations": 15360,
+    "quadratureMomentEvaluations": 46080,
+    "hardwareAllocations": 10,
+    "sourceParses": 1,
+    "resultRecords": 1
+  },
+  "sourceGeometryNotEdited": true,
+  "nativeQualification": "UNRUN; source budget never activates a hull"
+}

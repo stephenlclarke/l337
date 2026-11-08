@@ -1,0 +1,38 @@
+{
+  "status": "FIRST_FROZEN_BEFORE_ACTUAL_NONTRADER_AMBIENT_CURRENT_SOURCE_JOIN",
+  "beforeCommit": "6623d035380277e4b15fa901cc41bcbb1015dd0a",
+  "beforePins": [
+    {
+      "path": "Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 3456,
+      "sha256": "7eb4c569fe188a89607aa07c9f7db9715a4f73fe2ddc84e176a62f31c69d9859"
+    },
+    {
+      "path": "Sources/L337Core/EncounterDirector.swift",
+      "bytes": 10686,
+      "sha256": "1ee96bb9186e8bd960d0742941222f4e248ec65f0c47100d878844244e5bdea4"
+    },
+    {
+      "path": "Sources/L337Core/GameplayAdmission.swift",
+      "bytes": 27739,
+      "sha256": "c7282757e6bc76c791d45930f3101f7b7a175cde54dca1a86089ead6b0a893ff"
+    },
+    {
+      "path": "Tests/L337CoreTests/EncounterDirectorTests.swift",
+      "bytes": 8652,
+      "sha256": "3cedc01873fffc5aa144922732e7a6cf169ca3654e3faf27602d580f6bd90afe"
+    }
+  ],
+  "actualCaller": "EncounterDirector.spawn pirate/miner branch -> existing published current source weighted choice -> actual native SpawnRequest.catalogueShipID/NPCResources.stock -> existing admission -> source-specific mesh/performance/radius",
+  "scope": "Remove nativeShip(Hull) fallback for these actual director requests; require exact current published role weight/ready metadata/galaxy/both player and birth regions. Habitat remains refused without actual technology evidence. Zero eligible sources refuses decision; never invent a source, new weight or role capability.",
+  "frozenBehavior": "Preserve all existing 8 decision draws, draws7 selection input, random state/decision deadlines, opportunity/pressure/population/cargo/legal/fuel-scoop/route generators, 16 pirate position attempts, count/cohort limits, strict Bison trader pool and original generated cargo. Hull remains existing control archetype only, never actual geometry/stats selector.",
+  "caps": {
+    "sourceCandidates": 171,
+    "additionalRNGDraws": 0,
+    "additionalPositionAttempts": 0,
+    "newNativeOrPopulationGrants": 0
+  },
+  "tests": "Append one test to existing EncounterDirectorTests using existing fixed ecologyContext seed1/time120. Require real pirate requests with exact source/current stock and published pirate permission; every nontrader request has exact allowed source; reject nil/mismatched current stock. No seed search or retry.",
+  "nativeExecution": "UNCOMPILED_UNRUN; no G4 geometry/model/numeric/native/helper/compiler/tests.",
+  "remaining": "No currently published qualified miner may exist; explicit refusal remains unfinished miner-source qualification work. Other producers and full loaded-mass/physics/native-fleet acceptance still unfinished. Source route never counts as completed fleet entry."
+}

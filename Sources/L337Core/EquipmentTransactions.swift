@@ -37,11 +37,21 @@ final class EquipmentRuntimePurchaseQuote: Sendable {
 
 extension Commander {
   func fittedEquipment(at slot: ComponentFittingSlot) -> OwnedEquipmentItem? {
-    equipmentInventory?.items.first { $0.location?.slot == slot }
+    Self.fittedEquipment(in: equipmentInventory, at: slot)
+  }
+
+  @inline(never)
+  static func fittedEquipment(in inventory: OwnedEquipmentInventory?, at slot: ComponentFittingSlot) -> OwnedEquipmentItem? {
+    inventory?.items.first { $0.location?.slot == slot }
   }
 
   func fittedComponent(at slot: ComponentFittingSlot) -> ComponentInstance? {
-    guard let inventory = equipmentInventory else { return nil }
+    Self.fittedComponent(in: equipmentInventory, at: slot)
+  }
+
+  @inline(never)
+  static func fittedComponent(in inventory: OwnedEquipmentInventory?, at slot: ComponentFittingSlot) -> ComponentInstance? {
+    guard let inventory else { return nil }
     for index in inventory.items.indices {
       if Self.item(inventory.items[index], fits: slot) {
         return Self.component(of: inventory.items[index])
@@ -63,35 +73,24 @@ extension Commander {
   }
 
   mutating func prepareEquipment(legacy: Bool = true) throws {
+    try OriginalDetailedHullStage.requireRuntime(shipID)
     if legacyOwnedEquipment == nil, savedEquipmentVersion == 3 {
       try validateEquipmentState()
       return
     }
-    try prepareEquipmentMigration(legacy: legacy)
+    guard !legacy, legacyOwnedEquipment == nil,
+      savedEquipmentInventory == nil, savedEquipmentPurchaseHistory == nil,
+      savedEquipmentVersion == nil
+    else { throw CommanderEquipmentError.incompleteState }
+    try prepareFreshEquipment()
   }
 
-  /// Current commanders never enter this owned candidate frame; migrations still publish atomically.
+  /// Keep fresh ownership allocation off the current commander's validation frame.
   @inline(never)
-  private mutating func prepareEquipmentMigration(legacy: Bool) throws {
+  private mutating func prepareFreshEquipment() throws {
     var candidate = self
-    try candidate.prepareEquipmentCandidate(legacy: legacy)
+    try candidate.initializeEquipment(owner: UUID(), hull: UUID(), legacy: false) { UUID() }
     self = candidate
-  }
-
-  /// All migration stages publish together, including finite ammunition and the stock drive.
-  private mutating func prepareEquipmentCandidate(legacy: Bool) throws {
-    if legacyOwnedEquipment != nil {
-      try migrateLegacyOwnedEquipment(owner: UUID(), hull: UUID()) { UUID() }
-      try migrateStockHyperspaceDrive { UUID() }
-      return
-    }
-    guard equipmentInventory == nil else {
-      try validateEquipmentState()
-      if savedEquipmentVersion == 1 { try migrateFiniteAmmunition { UUID() } }
-      try migrateStockHyperspaceDrive { UUID() }
-      return
-    }
-    try initializeEquipment(owner: UUID(), hull: UUID(), legacy: legacy) { UUID() }
   }
 
   func purchaseSnapshot() throws -> EquipmentPurchaseSnapshot {
@@ -135,6 +134,22 @@ extension Commander {
   }
 
   mutating func acceptEquipmentPurchase(_ quote: EquipmentRuntimePurchaseQuote) throws -> Bool {
+    if quote.request.offer.node == EMPModuleGradePolicy.node {
+      guard let bank = EMPBankState(
+        module: quote.request.newItem, capacity: EMPModuleGradePolicy.capacities[0], remaining: 0,
+        at: flightSimulation.physicalTime)
+      else { throw EquipmentRuntimeError.incompatibleFit }
+      return try acceptEquipmentPurchase(quote, initialEMPBank: bank, initialEMPGrades: .base)
+    }
+    return try acceptEquipmentPurchase(quote, initialEMPBank: nil, initialEMPGrades: nil)
+  }
+
+  /// Explicit initial state is supplied by the purchase owner, never inferred from an old item
+  /// or elapsed time. Production bank policy/callers remain separate from this internal entry.
+  mutating func acceptEquipmentPurchase(
+    _ quote: EquipmentRuntimePurchaseQuote, initialEMPBank: EMPBankState?,
+    initialEMPGrades: EMPModuleGrades?
+  ) throws -> Bool {
     guard self == quote.prepared, let inventory = equipmentInventory,
       let history = equipmentPurchaseHistory
     else { throw EquipmentRuntimeError.staleCommander }
@@ -143,11 +158,21 @@ extension Commander {
       graph: EquipmentRuntimeCatalog.graph)
     let context = EquipmentRuntimeCatalog.context(
       owner: inventory.owner, hull: inventory.activeHull, performance: performance)
+    if application.item.node == EMPModuleGradePolicy.node {
+      guard let bank = initialEMPBank, initialEMPGrades == .base, bank.valid,
+        bank.module == quote.request.newItem, bank.module == application.item.id,
+        bank.capacity == EMPModuleGradePolicy.capacities[0], bank.remaining == 0,
+        bank.lastDischarge == nil, bank.physicalTime == flightSimulation.physicalTime
+      else { throw EquipmentRuntimeError.incompatibleFit }
+    } else if initialEMPBank != nil || initialEMPGrades != nil {
+      throw EquipmentRuntimeError.incompatibleFit
+    }
     let item = OwnedEquipmentItem(
       id: application.item.id, node: application.item.node, provenance: application.item.provenance,
       component: EquipmentRuntimeCatalog.stockComponent(
         for: application.item.node, id: application.item.id),
-      boundHull: quote.location?.slot == .utility(.cargoExpansion) ? inventory.activeHull : nil)
+      boundHull: quote.location?.slot == .utility(.cargoExpansion) ? inventory.activeHull : nil,
+      empBank: initialEMPBank, empGrades: initialEMPGrades)
     var items = inventory.items
     if let location = quote.location {
       items = items.map { $0.location == location ? $0.moved(to: nil) : $0 }
@@ -194,10 +219,13 @@ extension Game {
     let purchase = try EquipmentPurchaseProgression.quote(
       request: request, snapshot: prepared.purchaseSnapshot(), history: history,
       graph: EquipmentRuntimeCatalog.graph)
-    return .init(
+    let quote = EquipmentRuntimePurchaseQuote(
       source: commander, prepared: prepared, item: item, mount: equipmentMount,
       workTool: equipmentWorkTool, shop: shop,
       location: location, request: request, purchase: purchase)
+    var candidate = prepared
+    _ = try candidate.acceptEquipmentPurchase(quote)
+    return quote
   }
 
   func equipmentPurchaseRequirement(_ item: Equipment) -> String? {
@@ -211,22 +239,18 @@ extension Game {
       return Equipment.isReward(item.name)
         ? Equipment.rewardLabel(item.name) : "Requires TL\(item.requiredTechnologyLevel)"
     }
-    guard commander.equipmentInventory != nil, let history = commander.equipmentPurchaseHistory,
-      let node = EquipmentRuntimeCatalog.node(for: item.name)
+    guard commander.equipmentInventory != nil,
+      EquipmentRuntimeCatalog.node(for: item.name) != nil
     else { return nil }
     do {
-      _ = try equipmentPurchaseLocation(node, commander: commander)
-      try EquipmentPurchaseProgression.validateEligibility(
-        offer: .init(
-          node: node, price: shopPrice(item),
-          shop: "galaxy:\(commander.galaxy)/system:\(commander.system)", revision: 1),
-        snapshot: commander.purchaseSnapshot(), history: history,
-        graph: EquipmentRuntimeCatalog.graph)
+      _ = try quoteEquipmentPurchase(item)
       return nil
     } catch EquipmentRuntimeError.alreadyOwned {
       return "Already owned"
     } catch EquipmentRuntimeError.noSlot {
       return "Cannot fit selected destination"
+    } catch EquipmentRuntimeError.incompatibleFit {
+      return "Cannot fit selected equipment"
     } catch EquipmentPurchaseError.missingPrerequisite(let required) {
       return "Buy " + required.key + " first"
     } catch EquipmentPurchaseError.missingFittedPrerequisite(let required) {

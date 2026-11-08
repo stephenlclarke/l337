@@ -1,0 +1,453 @@
+{
+  "id": "SH123",
+  "geometrySHA256": "a430c5e8946db1d2f27d5030ae3f245f0838e52f2dadf1409323a16fc1c67499",
+  "contractSHA256": "113645d823bf6ad3e81a10fad4e854a0e64363cc6454fc23332cded47a203d6a",
+  "status": "EXACT_SOURCE_OWNERSHIP_NEW_STOCK_DECLARATIONS_NOT_PHYSICAL_QUALIFICATION",
+  "models": {
+    "design": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "negative side/longitudinal crescent carapace",
+          "vertexStart": 0,
+          "vertexCount": 3456,
+          "faceStart": 0,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "negative side/smooth inset crescent fold",
+          "vertexStart": 3456,
+          "vertexCount": 3456,
+          "faceStart": 6912,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "negative side/end growth",
+          "vertexStart": 6912,
+          "vertexCount": 3746,
+          "faceStart": 13824,
+          "faceCount": 7488,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "positive side/longitudinal crescent carapace",
+          "vertexStart": 10658,
+          "vertexCount": 3456,
+          "faceStart": 21312,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "positive side/smooth inset crescent fold",
+          "vertexStart": 14114,
+          "vertexCount": 3456,
+          "faceStart": 28224,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "positive side/end growth",
+          "vertexStart": 17570,
+          "vertexCount": 3746,
+          "faceStart": 35136,
+          "faceCount": 7488,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "arched oval vault",
+          "vertexStart": 21316,
+          "vertexCount": 3456,
+          "faceStart": 42624,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "raised oval vault lip",
+          "vertexStart": 24772,
+          "vertexCount": 3456,
+          "faceStart": 49536,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            4
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "central living core",
+          "vertexStart": 28228,
+          "vertexCount": 3746,
+          "faceStart": 56448,
+          "faceCount": 7488,
+          "allowedSourceMaterials": [
+            5
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "central reserve structural collar 0",
+          "vertexStart": 31974,
+          "vertexCount": 3456,
+          "faceStart": 63936,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "central reserve structural collar 1",
+          "vertexStart": 35430,
+          "vertexCount": 3456,
+          "faceStart": 70848,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "central reserve structural collar 2",
+          "vertexStart": 38886,
+          "vertexCount": 3456,
+          "faceStart": 77760,
+          "faceCount": 6912,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "negative side/recessed rear sensory organ",
+          "vertexStart": 42342,
+          "vertexCount": 3746,
+          "faceStart": 84672,
+          "faceCount": 7488,
+          "allowedSourceMaterials": [
+            5
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "positive side/recessed rear sensory organ",
+          "vertexStart": 46088,
+          "vertexCount": 3746,
+          "faceStart": 92160,
+          "faceCount": 7488,
+          "allowedSourceMaterials": [
+            5
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredPropulsionPartIndices": [],
+      "creatorDeclaredSensoryPartIndices": [
+        12,
+        13
+      ],
+      "vertices": 49834,
+      "faces": 99648
+    },
+    "nativeDesign": {
+      "parts": [
+        {
+          "index": 0,
+          "name": "negative side/longitudinal crescent carapace",
+          "vertexStart": 0,
+          "vertexCount": 480,
+          "faceStart": 0,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 1,
+          "name": "negative side/smooth inset crescent fold",
+          "vertexStart": 480,
+          "vertexCount": 480,
+          "faceStart": 960,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 2,
+          "name": "negative side/end growth",
+          "vertexStart": 960,
+          "vertexCount": 602,
+          "faceStart": 1920,
+          "faceCount": 1200,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 3,
+          "name": "positive side/longitudinal crescent carapace",
+          "vertexStart": 1562,
+          "vertexCount": 480,
+          "faceStart": 3120,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 4,
+          "name": "positive side/smooth inset crescent fold",
+          "vertexStart": 2042,
+          "vertexCount": 480,
+          "faceStart": 4080,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 5,
+          "name": "positive side/end growth",
+          "vertexStart": 2522,
+          "vertexCount": 602,
+          "faceStart": 5040,
+          "faceCount": 1200,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 6,
+          "name": "arched oval vault",
+          "vertexStart": 3124,
+          "vertexCount": 480,
+          "faceStart": 6240,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            0
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 7,
+          "name": "raised oval vault lip",
+          "vertexStart": 3604,
+          "vertexCount": 480,
+          "faceStart": 7200,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            4
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 8,
+          "name": "central living core",
+          "vertexStart": 4084,
+          "vertexCount": 602,
+          "faceStart": 8160,
+          "faceCount": 1200,
+          "allowedSourceMaterials": [
+            5
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 9,
+          "name": "central reserve structural collar 0",
+          "vertexStart": 4686,
+          "vertexCount": 480,
+          "faceStart": 9360,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 10,
+          "name": "central reserve structural collar 1",
+          "vertexStart": 5166,
+          "vertexCount": 480,
+          "faceStart": 10320,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 11,
+          "name": "central reserve structural collar 2",
+          "vertexStart": 5646,
+          "vertexCount": 480,
+          "faceStart": 11280,
+          "faceCount": 960,
+          "allowedSourceMaterials": [
+            1
+          ],
+          "creatorMethod": "Hull.sweep / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 12,
+          "name": "negative side/recessed rear sensory organ",
+          "vertexStart": 6126,
+          "vertexCount": 602,
+          "faceStart": 12240,
+          "faceCount": 1200,
+          "allowedSourceMaterials": [
+            5
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        },
+        {
+          "index": 13,
+          "name": "positive side/recessed rear sensory organ",
+          "vertexStart": 6728,
+          "vertexCount": 602,
+          "faceStart": 13440,
+          "faceCount": 1200,
+          "allowedSourceMaterials": [
+            5
+          ],
+          "creatorMethod": "Hull.ellipsoid / Hull.raw",
+          "creatorDomain": "sovereign_design.py build(native)",
+          "role": "opaque-stock",
+          "stockKgPerSquareMetre": 14
+        }
+      ],
+      "creatorDeclaredPropulsionPartIndices": [],
+      "creatorDeclaredSensoryPartIndices": [
+        12,
+        13
+      ],
+      "vertices": 7330,
+      "faces": 14640
+    }
+  },
+  "proposedStock": "New explicit structural/organ-envelope stock equivalent14kg/m2; named Vulture glass equivalent5kg/m2 only. No recovered tissue/density or mechanism mass.",
+  "units": "Exact frame evidence is separate; no source scale or coordinates evaluated.",
+  "hardware": "Source organ/casing function recorded where explicit; no human system defaults or mass granted."
+}

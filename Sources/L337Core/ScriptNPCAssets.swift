@@ -23,16 +23,56 @@ extension ScriptPackLibrary {
         [$0.model] + ($0.components ?? []).map(\.model)
       })
     for reference in references where reference.hasPrefix("catalogue:") {
-      guard let design = ShipCatalogue.ship(String(reference.dropFirst(10)))?.design,
-        scriptGeometryValid(design)
-      else { throw MissionPackError("The NPC catalogue geometry is unavailable or too large.") }
-      designs[reference] = design
+      designs[reference] = try currentCatalogueNPCDesign(String(reference.dropFirst(10)))
     }
     guard references.isSubset(of: Set(designs.keys)) else {
       throw MissionPackError("Declare every NPC component model before using it.")
     }
     return (designs, resources)
   }
+
+  /// The content-addressed mission model retains the same physical native hull as other actors.
+  /// Environment objects retain their separate model owners; this grants no mission population.
+  static func currentCatalogueNPCDesign(_ id: String) throws -> ShipDesign {
+    if id == OriginalCryostasisCapsule.id, let source = OriginalCryostasisCapsule.source {
+      return source.collisionDesign
+    }
+    if let design = OriginalScopedScriptedHull(rawValue: id)?.design {
+      return design
+    }
+    try OriginalDetailedHullStage.requireRuntime(id)
+    guard let ship = ShipCatalogue.ship(id) else {
+      throw MissionPackError("The NPC catalogue source is unavailable.")
+    }
+    let design: ShipDesign
+    if OriginalFleetR3Data.contract(for: id)?.objectKind == .ship {
+      guard let source = OriginalFleetRuntimeHullSource.source(for: id),
+        let native = ship.nativeDesign, source.mesh.faces == native.faces,
+        source.mesh.details == (native.details ?? []),
+        source.mesh.materials == (native.materials ?? []),
+        source.mesh.faceMaterials == (native.faceMaterials ?? []),
+        source.mesh.faceTextures == native.rawMesh.faceTextures
+      else { throw MissionPackError("The current native NPC hull is not qualified.") }
+      design = ShipDesign(
+        vertices: source.mesh.vertices.map { [$0.x, $0.y, $0.z] }, faces: native.faces,
+        license: native.license,
+        source: "Current calibrated native catalogue " + id + " / R3 "
+          + source.contract.sourceSHA256 + ". " + native.source,
+        details: native.details, materials: native.materials, faceMaterials: native.faceMaterials,
+        paletteName: native.paletteName, appearanceSource: native.appearanceSource,
+        appearanceLicense: native.appearanceLicense, appearanceBasis: native.appearanceBasis,
+        sourceFaceColours: native.sourceFaceColours, sourceTextures: native.sourceTextures,
+        sourceFaceTextures: native.sourceFaceTextures, resolvedTextures: native.resolvedTextures,
+        textures: native.textures, faceTextures: native.faceTextures)
+    } else {
+      design = ship.design
+    }
+    guard scriptGeometryValid(design) else {
+      throw MissionPackError("The NPC catalogue geometry is unavailable or too large.")
+    }
+    return design
+  }
+
   static func scriptGeometryValid(_ design: ShipDesign) -> Bool {
     design.vertices.count <= 4096 && design.faces.count <= 8192
       && design.faces.allSatisfy { $0.count <= 64 }
@@ -52,6 +92,16 @@ extension Game {
     throws
     -> ScriptNPCState
   {
+    let scoped = OriginalScopedScriptedHull.referenced(by: definition)
+    if let scoped {
+      let fit = ScriptNPCFit(definition: definition, models: [scoped.reference: scoped.geometrySHA256])
+      guard scoped.permits(pack), scoped.permits(fit), pack.manifest.npcs?.contains(definition) == true
+      else { throw MissionPackError("The pending hull is restricted to its original mission roles.") }
+    }
+    for reference in [definition.model] + (definition.components ?? []).map(\.model)
+    where reference != scoped?.reference {
+      try OriginalDetailedHullStage.requireRuntime(modelReference: reference)
+    }
     var hashes: [String: String] = [:]
     for reference in Set([definition.model] + (definition.components ?? []).map(\.model)) {
       guard let design = pack.models[reference] else {
@@ -82,8 +132,17 @@ extension Game {
         }), components: components)
   }
   func scriptModel(_ reference: String, fit: ScriptNPCFit) -> Mesh? {
-    guard let hash = fit.models[reference], let design = commander.scriptState.geometry[hash] else {
+    guard let hash = fit.models[reference], let design = nativeQueryStoredDesign(hash) else {
       return nil
+    }
+    if reference == OriginalCryostasisCapsule.reference {
+      guard let source = OriginalCryostasisCapsule.source, hash == source.collisionSHA256,
+        design == source.collisionDesign
+      else { return nil }
+    }
+    if let scoped = OriginalScopedScriptedHull(reference: reference) {
+      guard scoped.permits(fit), design == scoped.design
+      else { return nil }
     }
     return design.rawMesh
   }
@@ -92,7 +151,7 @@ extension Game {
   }
   func scriptNPCRadius(_ body: SpaceBody) -> Double {
     guard let npc = body.scriptNPC else {
-      return Mesh.hull(body.hull).vertices.map(\.length).max() ?? 100
+      return gameplayMesh(for: body).vertices.map(\.length).max() ?? .infinity
     }
     let definition = npc.fit.definition
     var radius = scriptModelRadius(definition.model, fit: npc.fit, scale: definition.scale)

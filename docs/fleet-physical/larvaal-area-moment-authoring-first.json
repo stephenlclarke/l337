@@ -1,0 +1,61 @@
+{
+  "status": "EXACT_OWN_ELEVEN_SOURCE_CODE_INPUT_OUTPUT_CAPS_FROZEN_BEFORE_ONE_NUMERIC_PASS",
+  "source": "docs/fleet-physical/larvaal-area-moment-authoring.py",
+  "sourceBytes": 10591,
+  "sourceSHA256": "210e575d8c4d75c069917384b08331e6ce9c54a177bca59343bcdd6548199899",
+  "roleMapPath": "docs/fleet-physical/larvaal-area-moment-role-maps-adopted-first.json",
+  "roleMapBytes": 101296,
+  "roleMapSHA256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9",
+  "originalOwnCode": {
+    "path": "docs/fleet-physical/area-moment-authoring.py",
+    "bytes": 10553,
+    "sha256": "70728675da99b0652b03eda9f1e777c6b24dfeae706337deb984e70f297ee9fd"
+  },
+  "numericalAlgorithmByteExact": true,
+  "configOnlyReplacements": [
+    {
+      "before": "MAP = ROOT / \"area-moment-role-maps.json\"",
+      "after": "MAP = ROOT / \"larvaal-area-moment-role-maps-adopted-first.json\""
+    },
+    {
+      "before": "EXPECTED_MAP = \"c70c7d725480d8dd346a5b13799c53b966a50fe32312071cd808f8a4f94baf80\"",
+      "after": "EXPECTED_MAP = \"59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9\""
+    },
+    {
+      "before": "output = ROOT / \"calculated-records\"",
+      "after": "output = ROOT / \"calculated-larvaal-records\""
+    },
+    {
+      "before": "(ROOT/'area-moment-results.json')",
+      "after": "(ROOT/'larvaal-area-moment-results.json')"
+    }
+  ],
+  "rootDisposition": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a134a1-be40-77d0-9e11-64a775729232/fleet-completion-batch/LARVAAL-11-ENGINEERING-DISPOSITION.json",
+    "bytes": 1795,
+    "sha256": "a49916e76b1379f4f06ebb5d8283e81bd08d483e52cd16a7d9d82db6f6021e02",
+    "basis": "Exact Root disposition in G4 chat2026-11-02; NEW engineering choices, not biology/source material density or native/loaded mass authority."
+  },
+  "units": "Declaredmetres scale1; original+Z/+Y and origin retained; no geometry transformations",
+  "algorithm": "Unchanged own49-source analytic triangular area first/second moments, independent three-point triangle quadrature identity1e-9, exactnamedcomponent area-centroid point hardware, parallel-axis full9tensor/SPD, one ceilkg reserve at COM.",
+  "operationCaps": {
+    "coordinateConversions": 140502,
+    "faceIndexChecks": 280116,
+    "triangleAreaEvaluations": 93372,
+    "analyticMomentEvaluations": 93372,
+    "quadratureMomentEvaluations": 280116,
+    "hardwareAllocations": 87,
+    "sourceParses": 11,
+    "resultRecords": 11
+  },
+  "rows": 11,
+  "outputDirectory": "calculated-larvaal-records",
+  "result": "larvaal-area-moment-results.json",
+  "maximumRecordBytes": 1048576,
+  "maximumRecordBytesNote": "Same production reader bound; unchanged authoring algorithm outputs remain checked at integration before shipping.",
+  "retries": 0,
+  "sourceGeometryWrites": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "nativeCompilerRendererTestsHelpers": 0,
+  "execution": "ONE authorized own stdlib source-engineering calculation only. Any stopped row remains stopped; no overwrite/rerun/cap raise."
+}

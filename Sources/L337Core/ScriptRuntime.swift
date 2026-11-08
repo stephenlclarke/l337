@@ -39,6 +39,9 @@ extension GameRuntime {
       game.scriptUnavailable(pack) == nil,
       state.outcome != .active || game.campaignExecutionIssue(state) == nil
     else { throw MissionPackError("Restore the exact saved pack and its requirements.") }
+    guard let publish = scriptPublisher() else {
+      throw MissionPackError("Choose a writable commander save before resuming a mission.")
+    }
     var candidate = game
     if state.outcome == .active { candidate.commander.scriptState.instances[id]?.suspension = nil }
     for jobID in candidate.commander.scriptState.worldJobs.keys {
@@ -46,7 +49,7 @@ extension GameRuntime {
         candidate.commander.scriptState.worldJobs[jobID]?.suspension = nil
       }
     }
-    try scriptPublisher()?(&candidate)
+    try publish(&candidate)
     game = candidate
     game.drainScriptEvents(publish: scriptPublisher())
     game.retryPendingWorldJobs(origin: id, publish: scriptPublisher())

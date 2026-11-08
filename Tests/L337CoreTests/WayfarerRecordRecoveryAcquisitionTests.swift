@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct WayfarerRecordRecoveryAcquisitionTests {
   @Test func realIdentificationLeavesRecorderAtCradleAndCannotCollectInItsFrame() async throws {

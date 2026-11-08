@@ -1,0 +1,9 @@
+# Test a real later director birth across ordered legacy beams
+
+Add one bounded owning regression after the genuinely equipped first SH029 fixture. Advance actual writer-backed ticks until the genuine deadline following decision 3. Conditional fixed-stream arithmetic selects an inbound equipped SH029 at decision 4, but the test separately requires actual qualified admission and authentic current actor/spawn/stock lineage. It never writes a seed, clock, deadline, decision count or birth token.
+
+The existing controlled ordinary-source fixture uses real physical allocation and keeps source IDs throughout the continuation. Observer and emitter setup finishes before the measured T0 capture. The real final tick must produce a damageable parent, two ordered source incidents at actual T1 and exactly two ordinary beams of native shield loss. Hull energy remains full because the unchanged source issues full shields. Arrival pose, orientation, velocity, stock and cooldown prove no preceding lifetime or newborn weapon turn. A stale birth body after the first accepted mutation prevents the second actual query/incident and fails this regression.
+
+Only this new test and paired criteria are changed. No production API, qualification, model, role, resources or existing regression is replaced. The framing uses the current SH029 carrier solid and actual player surface aims; native ray hits and source eligibility remain hard assertions, never fabricated contacts. Source arithmetic is conditional evidence only; this is controlled unit coverage, not a flown actual-game journey result.
+
+Status: UNCOMPILED / UNRUN. Python text/hash and isolated patch replay, scoped Markdown and whitespace checks only. G1's coherent source review and existing native/CI gates remain in force. [Issue](ISSUE-selected-beam-later-director-birth.md).

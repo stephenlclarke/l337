@@ -33,6 +33,7 @@ private struct CalendarFixture {
   func clean() { try? FileManager.default.removeItem(at: root) }
   func game(system: Int = 7) throws -> (Game, UUID) {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.screen = .status
     game.commander.system = system
     game.selectedSystem = system
@@ -69,10 +70,47 @@ private func clearTravelArea(_ game: inout Game) {
   game.celestials = []
 }
 
+@Test func attainedNativePrefixProjectsClocksAfterContactPauseWithoutFiringTimers() throws {
+  let fixture = try CalendarFixture()
+  defer { fixture.clean() }
+  var (game, instance) = try fixture.game()
+  let projection = try #require(
+    CurrentNewtScriptClockProjection(
+      game: game, flight: true, local: true, calendar: game.calendarActive))
+  let dataBefore = game.commander.scriptState.instances[instance]?.data
+  var ordinary = game
+  let clockAdvanced = ordinary.advanceScriptClockValues(
+    delta: 0.04, flight: true, local: true, calendar: game.calendarActive,
+    missionCalendar: game.missionCalendarActive)
+  try #require(clockAdvanced)
+  // Pause is an attained contact consequence. It must not erase the preceding
+  // real interval or credit the unconsumed remainder of the outer 0.1 seconds.
+  game.paused = true
+  #expect(projection.apply(attained: 0.04, to: &game))
+  #expect(game.commander.scriptState == ordinary.commander.scriptState)
+  #expect(game.commander.scriptState.instances[instance]?.data == dataBefore)
+  #expect(game.commander.scriptState.localSeconds == 0.04)
+  #expect(game.commander.scriptState.flightSeconds == 0.04)
+}
+
+@Test(arguments: [0.0, -0.01, 0.1001, Double.infinity, Double.nan])
+func unattainedNativePrefixCannotCreditScriptTime(delta: Double) throws {
+  let fixture = try CalendarFixture()
+  defer { fixture.clean() }
+  var (game, _) = try fixture.game()
+  let projection = try #require(
+    CurrentNewtScriptClockProjection(
+      game: game, flight: true, local: true, calendar: game.calendarActive))
+  let before = game.commander
+  #expect(!projection.apply(attained: delta, to: &game))
+  #expect(game.commander == before)
+}
+
 @Test func passengerBerthActivatesCalendarOnceBeforeMissionsAndFreezesReadOnlyAndPausedTime()
   async throws
 {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.commander.credits = 1_000_000
   try game.commander.prepareEquipment(legacy: false)
@@ -137,10 +175,10 @@ func activatedMissionAdmittedJumpPinsActualDestinationAndNativeFuelWhileCalendar
   var (game, _) = try fixture.game()
   game.launch()
   clearTravelArea(&game)
-  let destination = try #require(
-    game.knownSystems.first {
-      $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
-    })
+  let destinationCandidate = game.knownSystems.first {
+    $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
+  }
+  let destination = try #require(destinationCandidate)
   let source = game.currentSystem
   game.selectedSystem = destination.id
   let fuel = game.commander.fuel
@@ -177,10 +215,10 @@ func
       try #require(game.commander.navigationTier == .basic)
       try #require(game.commander.fittedComponent(at: .navigation) != nil)
     }
-    let destination = try #require(
-      game.knownSystems.first {
-        $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
-      })
+    let destinationCandidate2 = game.knownSystems.first {
+      $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
+    }
+    let destination = try #require(destinationCandidate2)
     game.selectedSystem = destination.id
     game.beginHyperspace()
     let admission = try #require(game.commander.scriptState.calendarLedger?.pendingJourney)
@@ -259,10 +297,10 @@ private func actualCalendarFrameSeconds(_ runtime: GameRuntime, instanceID: UUID
   var (game, id) = try fixture.game()
   game.launch()
   clearTravelArea(&game)
-  let destination = try #require(
-    game.knownSystems.first {
-      $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
-    })
+  let destinationCandidate3 = game.knownSystems.first {
+    $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
+  }
+  let destination = try #require(destinationCandidate3)
   game.selectedSystem = destination.id
   game.beginHyperspace()
   let journey = try #require(game.commander.scriptState.calendarLedger?.pendingJourney)
@@ -316,10 +354,10 @@ func
   var (game, _) = try fixture.game()
   game.launch()
   clearTravelArea(&game)
-  let destination = try #require(
-    game.knownSystems.first {
-      $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
-    })
+  let destinationCandidate4 = game.knownSystems.first {
+    $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
+  }
+  let destination = try #require(destinationCandidate4)
   game.selectedSystem = destination.id
   game.beginHyperspace()
   game.resetCelestialFlight()
@@ -335,40 +373,6 @@ func
   encoder.outputFormatting = .sortedKeys
   #expect(try encoder.encode(game.scriptSimulationSave) == encoder.encode(physical))
   #expect(game.celestials == scene && game.time == time)
-}
-
-@Test func retainedLegacyMissionActivatesCalendarMigrationOnceWithoutOfflineTimeOrReset()
-  async throws
-{
-  let fixture = try CalendarFixture()
-  defer { fixture.clean() }
-  try FileManager.default.createDirectory(
-    at: fixture.save.deletingLastPathComponent(), withIntermediateDirectories: true)
-  let (active, id) = try fixture.game()
-  var original = active.commander
-  original.credits = 12345
-  // Preserve the actual accepted mission in an archive from before the optional calendar ledger.
-  original.scriptState.calendarLedger = nil
-  try #require(original.scriptState.instances[id] != nil)
-  let bytes = try JSONEncoder().encode(original)
-  try bytes.write(to: fixture.save)
-  var host = Game(executive: false)
-  host.scriptPacks = [fixture.pack]
-  let runtime = GameRuntime(game: host)
-  try await runtime.load(from: fixture.save, persistMigrations: false)
-  let imported = await runtime.snapshot()
-  #expect(imported.commander.credits == 12345)
-  #expect(imported.commander.scriptState.instances[id]?.definition == fixture.pack.manifest.stateID)
-  #expect(imported.commander.scriptState.instances[id]?.suspension == nil)
-  #expect(imported.commander.scriptState.calendarLedger?.origin == .inactiveLegacyMigration)
-  #expect(imported.commander.scriptState.calendarSeconds == 0)
-  #expect(try Data(contentsOf: fixture.save) == bytes)
-  _ = await runtime.advance(delta: 0.1)
-  try await runtime.save(to: fixture.save)
-  let saved = await runtime.snapshot().commander
-  try await runtime.load(from: fixture.save)
-  #expect(await runtime.snapshot().commander == saved)
-  #expect(saved.scriptState.calendarSeconds == 0.1)
 }
 
 @Test func calendarTimersObserveRealTravelBeforeFiringAndDoNotFastForwardPhysicalClocks()
@@ -392,12 +396,12 @@ func
   try #require(game.currentSystem.original?.key == "G01-S000")
   game.launch()
   clearTravelArea(&game)
-  let destination = try #require(
-    game.knownSystems.first {
-      let distance = game.currentSystem.distance(to: $0)
-      return $0.id != game.commander.system && distance <= 7
-        && game.currentSystem.scriptCalendarDistance(to: $0) > 5
-    })
+  let destinationCandidate5 = game.knownSystems.first {
+    let distance = game.currentSystem.distance(to: $0)
+    return $0.id != game.commander.system && distance <= 7
+      && game.currentSystem.scriptCalendarDistance(to: $0) > 5
+  }
+  let destination = try #require(destinationCandidate5)
   try #require(destination.original?.key == "G01-S069")
   game.selectedSystem = destination.id
   game.beginHyperspace()
@@ -446,6 +450,7 @@ func
   let fixture = try CalendarFixture(source: source)
   defer { fixture.clean() }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.scriptPacks = [fixture.pack]
   let before = game.commander
   #expect(throws: (any Error).self) { try game.acceptScriptMission(fixture.pack) }
@@ -474,6 +479,7 @@ private func calendarContractPack() throws -> ScriptPack {
   let fixture = try CalendarFixture()
   defer { fixture.clean() }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [pack]
   let runtime = GameRuntime(game: game, saveURL: fixture.save)
@@ -532,6 +538,7 @@ private func calendarContractPack() throws -> ScriptPack {
   throws
 {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.ensureScriptCalendar(origin: .newCommander)
   game.commander.scriptState.calendarSeconds = 1e12 - 599
@@ -546,10 +553,10 @@ private func calendarContractPack() throws -> ScriptPack {
   game.commander.scriptState.calendarLedger = .init(origin: .newCommander)
   game.launch()
   clearTravelArea(&game)
-  let destination = try #require(
-    game.knownSystems.first {
-      $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
-    })
+  let destinationCandidate6 = game.knownSystems.first {
+    $0.id != game.commander.system && game.currentSystem.distance(to: $0) <= 7
+  }
+  let destination = try #require(destinationCandidate6)
   game.selectedSystem = destination.id
   game.beginHyperspace()
   let admitted = try #require(game.commander.scriptState.calendarLedger?.pendingJourney)
@@ -572,6 +579,7 @@ private func calendarContractPack() throws -> ScriptPack {
       of: "domain='local'", with: "domain='calendar'"))
   defer { fixture.clean() }
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.screen = .status
   game.scriptPacks = [fixture.pack]
   game.ensureScriptCalendar(origin: .newCommander)

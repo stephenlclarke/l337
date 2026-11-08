@@ -1,0 +1,30 @@
+{
+  "status": "FIRST_FROZEN_ORDINARY_NPC_REBIND_OWNER_GUARDS_BEFORE_MUTATION",
+  "beforeCommit": "43d3bc6573d61fe42c96991c7f9907ea17e2792f",
+  "pins": [
+    {
+      "path": "Sources/L337Core/NPCPersistenceLedger.swift",
+      "bytes": 35873,
+      "sha256": "6f655ec1b9984a95fb2ce7a2a6959eb55535f1bb10877d637c0498b33eb00a1c"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCPersistenceLedgerTests.swift",
+      "bytes": 36092,
+      "sha256": "b3dfc69174ecf2f401f81639775314df65a8b66609c5feecb20c75844a3a4049"
+    },
+    {
+      "path": "Sources/L337Core/NPCPersistenceRuntime.swift",
+      "bytes": 13079,
+      "sha256": "7dbd08a3c723ce7267dab90648bf8ded04ee8a687ddb5115719b654ab9f5f94a"
+    },
+    {
+      "path": "Sources/L337Core/FlightSimulationState.swift",
+      "bytes": 5051,
+      "sha256": "c11a0ba32437c9e4e1a949e4d714c78ae2cfcd8f6b659856f63d92fd05ba3927"
+    }
+  ],
+  "productionScope": "Only NPCRebind.restore guard: require actual physical.npc exists, and capture-equivalent source-owner exclusions empSource/empCrewPod/blocksNavalEncounter/rock/payload/ordnance/salvage before any body write. Retain existing identity/hull/catalogue/mission/naval/blackjack/pose guards and all restoration assignments exact. Do not alter capture, snapshot/ledger validity, acknowledge or Game admission behavior.",
+  "reason": "Capture refuses distinct source/custody actors; restore currently accepts same actor/hull/catalogue with those owner fields. Restoring ordinary NPC state would produce mixed ownership. Current Game caller selects freshly admitted identity, but public restore boundary itself must refuse protected/mixed target before mutation. No claim of observed gameplay exploit.",
+  "testScope": "Add one independent current031 strictsource/native stock body and real capture/cull/request/receipt flow. Legitimate newly admitted target restores exactly. Each same identity/hull/catalogue target variant npc nil, empSource set, blocksNavalEncounter true, rock identity set, payload wreck identity set must refuse without any body write. All original methods/helpers retained exact; no blocked025 helper.",
+  "boundaries": "No current Game/provider/station/Gallery/EMP/MC1 scope edits, no source geometry/native/mass/count/fit/custody grant. All Swift UNCOMPILED UNRUN, G1 sole executor."
+}

@@ -116,8 +116,14 @@ extension Game {
   }
 
   mutating func departOrdinarySimulation() throws {
+    let hasCurrentNewt = bodies.contains {
+      $0.physical?.currentNewtKitStock != nil || $0.physical?.currentNewtKitReceipt != nil
+    }
+    guard prepareCurrentNewtForActorRemoval(Set(bodies.compactMap { $0.physical?.identity }))
+    else { throw SaveError.invalidCommander }
     _ = persistNPCStates()
-    _ = persistEMPState()
+    let retainedEMP = persistEMPState()
+    guard !hasCurrentNewt || retainedEMP else { throw SaveError.invalidCommander }
     persistOrePoses()
     if nativeCrimboLifecycleAvailable { try parkNativeCrimboBeforeDeparture() }
     commander.cargoDebrisLedger.depart(system: systemIdentity)

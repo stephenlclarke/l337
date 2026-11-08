@@ -11,6 +11,52 @@ public enum CargoDeathRegistration: Equatable, Codable, Sendable {
   case refused(CargoDeathRefusal)
 }
 
+/// Native ordinary-cargo birth geometry. No ledger state or issuance is advanced here.
+struct CargoDebrisBirthDescription {
+  private static let lotSpacing = 2 * (Mesh.hull(.cargo).vertices.map(\.length).max() ?? 48) + 16
+  static let ejectionSpeed = 8.0
+  let position: Vector3
+  let velocity: Vector3
+
+  static func offset(slot: Int) -> Vector3 {
+    .init(
+      Double(slot % 8 - 4) * lotSpacing, Double(slot / 8 % 8 - 4) * lotSpacing,
+      Double(slot / 64 + 1) * lotSpacing)
+  }
+
+  static let maximumOffsetL1 = (0..<CargoDebrisLedger.maximumPending).map {
+    ManualControlPairEnvelope.l1(offset(slot: $0))
+  }.max() ?? 0
+
+  /// Includes every native slot and all possible native ejection directions.
+  static func envelope(
+    position: Vector3, orientation: Basis3, velocity: Vector3, elapsed: Double
+  ) -> ManualControlPairEnvelope? {
+    typealias Bound = ManualControlPairEnvelope
+    guard position.finite, orientation.finite, velocity.finite,
+      elapsed.isFinite, elapsed >= 0 else { return nil }
+    let transform = max(Bound.l1(orientation.x), Bound.l1(orientation.y), Bound.l1(orientation.z))
+    let offset = Bound.product(transform, maximumOffsetL1)
+    // Native unit vectors are zero below the native threshold; otherwise their L1 norm is < 2.
+    let speed = Bound.sum(Bound.l1(velocity), Bound.product(transform, 2 * ejectionSpeed))
+    let extent = Bound.sum(offset, Bound.product(speed, elapsed))
+    let result = Bound(position: position,
+      radius: Bound.sum(extent, Bound.roundoff(Bound.sum(Bound.l1(position), extent))))
+    return result.valid ? result : nil
+  }
+
+  init(
+    sourcePosition: Vector3, sourceOrientation: Basis3, sourceVelocity: Vector3,
+    sourceTime: Double, physicalTime: Double, slot: Int
+  ) {
+    let offset = Self.offset(slot: slot)
+    velocity = sourceVelocity + sourceOrientation.apply(offset.unit * Self.ejectionSpeed)
+    position =
+      sourcePosition + sourceOrientation.apply(offset) + velocity
+      * max(0, physicalTime - sourceTime)
+  }
+}
+
 private struct DebrisSource: Equatable, Codable, Sendable {
   let actor: ActorIdentity
   let settlementID: UInt64
@@ -39,7 +85,6 @@ public struct CargoDebrisLedger: Equatable, Codable, Sendable {
   public static let maximumPending = 256
   public static let maximumSources = 256
   public static let maximumRecentDeaths = 256
-  private static let lotSpacing = 2 * (Mesh.hull(.cargo).vertices.map(\.length).max() ?? 48) + 16
   private var sources: [ActorIdentity: DebrisSource] = [:]
   private var pending: [PayloadIdentity: DebrisLot] = [:]
   private var offers: [SpawnIdentity: PayloadIdentity] = [:]
@@ -79,6 +124,39 @@ public struct CargoDebrisLedger: Equatable, Codable, Sendable {
 
   public func unissuedManifest(for actor: ActorIdentity) -> [CommodityAmount] {
     sources[actor]?.remaining ?? []
+  }
+
+  /// The owner encloses retained pending and unissued lots without advancing their queues.
+  func manualControlPairEnvelopes(
+    from startTime: Double, through endTime: Double, horizon: Double
+  ) -> [ManualControlPairEnvelope]? {
+    typealias Bound = ManualControlPairEnvelope
+    guard sources.count <= Self.maximumSources, pending.count <= Self.maximumPending,
+      sources.values.allSatisfy({
+        $0.manifest.count <= CommodityIdentity.allCases.count
+          && $0.remaining.count <= CommodityIdentity.allCases.count
+      }) else { return nil }
+    guard valid, startTime.isFinite, startTime >= 0, endTime.isFinite, endTime >= startTime,
+      horizon.isFinite, horizon >= endTime - startTime else { return nil }
+    var result: [Bound] = []
+    for source in sources.values where !source.remaining.isEmpty {
+      guard source.physicalTime <= startTime else { return nil }
+      guard let envelope = CargoDebrisBirthDescription.envelope(
+        position: source.position, orientation: source.orientation, velocity: source.velocity,
+        elapsed: Bound.sum(max(0, endTime - source.physicalTime), 4 * horizon)) else { return nil }
+      result.append(envelope)
+    }
+    for lot in pending.values {
+      guard lot.updatedAt <= startTime else { return nil }
+      // Canonical refresh and ensuing view-body translation are separate native owners.
+      let elapsed = Bound.sum(max(0, endTime - lot.updatedAt), 4 * horizon)
+      let travel = Bound.product(Bound.l1(lot.payload.velocity), elapsed)
+      let envelope = Bound(position: lot.payload.position,
+        radius: Bound.sum(travel, Bound.roundoff(Bound.sum(Bound.l1(lot.payload.position), travel))))
+      guard elapsed.isFinite, envelope.valid else { return nil }
+      result.append(envelope)
+    }
+    return result
   }
 
   /// Root processes destruction IDs in order and retains the same ID across capacity retries.
@@ -272,18 +350,15 @@ public struct CargoDebrisLedger: Equatable, Codable, Sendable {
       let quantity = min(amount.quantity, Self.chunkLimit(amount.commodity))
       let identity = PayloadIdentity.wreck(next.actor, lot: UInt16(next.nextLot))
       let slot = next.nextLot % Self.maximumPending
-      let offset = Vector3(
-        Double(slot % 8 - 4) * Self.lotSpacing, Double(slot / 8 % 8 - 4) * Self.lotSpacing,
-        Double(slot / 64 + 1) * Self.lotSpacing)
-      let velocity = next.velocity + next.orientation.apply(offset.unit * 8)
-      let position =
-        next.position + next.orientation.apply(offset) + velocity
-        * max(0, physicalTime - next.physicalTime)
-      guard position.finite, velocity.finite else { return }
+      let birth = CargoDebrisBirthDescription(
+        sourcePosition: next.position, sourceOrientation: next.orientation,
+        sourceVelocity: next.velocity, sourceTime: next.physicalTime,
+        physicalTime: physicalTime, slot: slot)
+      guard birth.position.finite, birth.velocity.finite else { return }
       pending[identity] = .init(
         payload: .init(
           identity: identity, amount: .init(commodity: amount.commodity, quantity: quantity),
-          position: position, velocity: velocity), updatedAt: physicalTime)
+          position: birth.position, velocity: birth.velocity), updatedAt: physicalTime)
       sources[next.actor]?.nextLot += 1
       sources[next.actor]?.remaining.removeFirst()
       if quantity < amount.quantity {

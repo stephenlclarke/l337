@@ -1,0 +1,31 @@
+{
+  "status": "FIRST_SELF_SOURCE_FINDING_PARTIAL_ACK_RETRY_GUARD_BEFORE_MUTATION_PENDING_ROOT_SAME_METHOD_RESERVATION",
+  "parentFIRSTSHA256": "91f1ed8288d7c8f7dd4120700a7c459fd9dd6829deb774b2ce929f5186815d99",
+  "finding": "Existing acknowledge removes admitted members but retains original request keys for refused members. New pending guard incorrectly compared retained member to compacted array index, rejecting a remaining member1 after acknowledged member0. Actual atomic producer normally admits all/no members; public existing partial ACK/retry contract must still remain valid. No observed native failure.",
+  "changes": [
+    {
+      "path": "Sources/L337Core/StationSecurity.swift",
+      "before": "        && batch.requests.contains(request)\n        && batch.requests.enumerated().allSatisfy { index, member in\n          member.identity.sequence == request.identity.sequence\n            && member.identity.member == UInt16(index)\n",
+      "after": "        && batch.requests.contains(request)\n        && Set(batch.requests.map(\\.identity)).count == batch.requests.count\n        && batch.requests.allSatisfy { member in\n          member.identity.sequence == request.identity.sequence\n            && member.identity.member < 8\n"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationPoliceSourceTests.swift",
+      "before": "    #expect(!game.securitySpawnSourceIsValid(request, context: context))\n  }\n\n  @Test func explicitPoliceBinding",
+      "after": "    #expect(!game.securitySpawnSourceIsValid(request, context: context))\n    for remaining in requests.dropFirst() {\n      #expect(game.securitySpawnSourceIsValid(remaining, context: context))\n    }\n  }\n\n  @Test func explicitPoliceBinding"
+    }
+  ],
+  "pins": [
+    {
+      "path": "Sources/L337Core/StationSecurity.swift",
+      "bytes": 19198,
+      "sha256": "d471c568e42ec6f6ea3e763b50c5e4fdcde814a19aafb804340b1adad65c4f7f"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationPoliceSourceTests.swift",
+      "bytes": 9664,
+      "sha256": "ec635dfa08bf2c1be336f0de1878658f7f2224830cb33555d58b384d5de65382"
+    }
+  ],
+  "scope": "Only new owned ownsPendingLaunch: retain unique original request identity and member<8, same epoch/wave/current source/stock. Never renumber keys. Extend same new suite first method with leftover original request retry positives after controlled partial ACK. All old production/tests and rest of new source unchanged.",
+  "execution": "Source review only, no tests/compiler/native/geometry run. No outside reserved method/file scope."
+}

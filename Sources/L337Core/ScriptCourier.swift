@@ -65,14 +65,20 @@ final class ScriptCourierAdmission: Sendable {
   let item: UUID
   let proof: ScriptCourierActionProof
   let job: ScriptContractJob
+  let originalOrigin: NativeOriginalSealedDispatchOrigin?
+  let originalReceiver: NativeMainStationArrivalContext?
   init(
-    kind: Kind, instance: UUID, item: UUID, proof: ScriptCourierActionProof, job: ScriptContractJob
+    kind: Kind, instance: UUID, item: UUID, proof: ScriptCourierActionProof, job: ScriptContractJob,
+    originalOrigin: NativeOriginalSealedDispatchOrigin? = nil,
+    originalReceiver: NativeMainStationArrivalContext? = nil
   ) {
     self.kind = kind
     self.instance = instance
     self.item = item
     self.proof = proof
     self.job = job
+    self.originalOrigin = originalOrigin
+    self.originalReceiver = originalReceiver
   }
 }
 
@@ -89,7 +95,9 @@ extension Game {
     return .init(terms: terms)
   }
   func requireCourierResources(_ terms: ScriptCourierTerms) throws {
-    guard commander.valid, terms.valid, terms.generation.origin == contractStation else {
+    guard commander.valid, terms.valid,
+      courierOriginIsCurrent(terms.generation.origin, declaration: terms.declaration)
+    else {
       throw MissionPackError("Courier acceptance requires its actual origin and valid native fit.")
     }
     guard OriginalSealedDispatch.hasHeadroom(terms) else {
@@ -116,11 +124,13 @@ extension Game {
       throw MissionPackError("Courier deadline exceeds the persistent game-clock limit.")
     }
   }
-  func courierProof(token: String, revision: UInt64) -> ScriptCourierActionProof {
+  func courierProof(
+    token: String, revision: UInt64, origin: NativeOriginalSealedDispatchOrigin? = nil
+  ) -> ScriptCourierActionProof {
     .init(
       sequence: commander.scriptState.nextEvent + 1, token: token, revision: revision,
       epoch: ecmControl.epoch, clock: commander.scriptState.clock(.missionCalendar),
-      station: contractStation)
+      station: origin?.station ?? contractStation, originalOrigin: origin?.facts)
   }
   func courierActionComplete(_ admission: ScriptCourierAdmission) -> Bool {
     guard let state = commander.scriptState.instances[admission.instance],
@@ -153,9 +163,17 @@ extension Game {
       event.instance == state.id, state.outcome == .active, state.contract == admission.job,
       let terms = state.contract?.offer.courier, terms.declaration == pack.manifest.courier,
       state.digest == pack.digest, state.version == pack.manifest.version,
-      docked, dockedAtMainStation, !paused, contractStation == admission.proof.station,
+      docked, !paused, courierAdmissionOriginIsCurrent(admission, pack: pack),
       event.context == scriptEventContext(state), !state.receipts.contains(receiptID)
     else { throw MissionPackError("Courier action requires its original native confirmation.") }
+    if admission.kind == .deliver, OriginalSealedDispatch.matches(terms.declaration) {
+      guard let receiver = admission.originalReceiver,
+        acceptsNativeMainStationArrivalContext(receiver),
+        originalSealedDispatchReceiver(for: admission.job) == receiver,
+        let context = event.context,
+        context.nativeMainDock == receiver.receipt
+      else { throw MissionPackError("Original dispatch requires its actual native receiving arrival.") }
+    }
     let op = command["op"]?.string
     switch admission.kind {
     case .issue:
@@ -181,7 +199,7 @@ extension Game {
         event.kind == "dialogue.confirmed", event.values["token"]?.string == admission.proof.token,
         event.values["dialogue_id"]?.string == contact, state.dialogue?.id == contact,
         state.dialogue?.token == admission.proof.token, state.dialogue?.revision == state.revision,
-        target == contractStation, state.courier?.terminal == nil,
+        target == admission.proof.station, state.courier?.terminal == nil,
         state.courier?.pendingLoss == nil, state.courier?.item == admission.item,
         !delivering
           || OriginalSealedDispatch.deliveryAllowed(admission.job, at: admission.proof.clock)
@@ -247,7 +265,6 @@ extension Game {
   @inline(never)
   mutating func resolveCourierTerminals(escape: Bool = false, publish: ScriptPublisher? = nil) {
     resolveProcurementTerminals(publish: publish)
-    resolveRRSCourierTerminals(publish: publish)
     guard
       !withReadOnlyStoredGame({ game in
         game.withReadOnlyCommander { $0.scriptInstancesAreEmpty() }
@@ -332,11 +349,21 @@ extension Game {
     } else {
       throw MissionPackError("Use the actual courier receiving or dispatch officer.")
     }
+    let origin = kind == .abandon ? nativeOriginalSealedDispatchOrigin(for: pack) : nil
+    guard courierDialogueStationIsCurrent(state, contact: dialogue.id) else {
+      throw MissionPackError("Return to the consignment's actual named contact.")
+    }
+    let requiresReceiver = kind == .deliver && OriginalSealedDispatch.matches(terms.declaration)
+    let receiver = requiresReceiver ? originalSealedDispatchReceiver(for: job) : nil
+    guard !requiresReceiver || receiver != nil else {
+      throw MissionPackError("Original dispatch requires its actual native receiving arrival.")
+    }
     var candidate = self
     let admission = ScriptCourierAdmission(
       kind: kind, instance: id,
       item: ScriptCourierCustody.itemIdentity(id),
-      proof: courierProof(token: dialogue.token, revision: state.revision), job: job)
+      proof: courierProof(token: dialogue.token, revision: state.revision, origin: origin),
+      job: job, originalOrigin: origin, originalReceiver: receiver)
     candidate.scriptCourierAdmission = admission
     candidate.emitScriptEvent(
       "dialogue.confirmed",
@@ -410,7 +437,8 @@ extension Game {
       let shown = scriptPresentedDialogue, state.dialogue == shown,
       shown.revision == state.revision,
       shown.galaxy == commander.galaxy, shown.system == commander.system,
-      docked, dockedAtMainStation, let terms = state.contract?.offer.courier,
+      docked, courierDialogueStationIsCurrent(state, contact: shown.id),
+      let terms = state.contract?.offer.courier,
       let pack = scriptPack(for: state),
       (try? ScriptPackLibrary.validateCourier(pack.manifest)) != nil,
       pack.manifest.courier == terms.declaration, state.courier != nil
@@ -429,7 +457,7 @@ extension Game {
       return "Deliver"
     }
     if scriptPresentedDialogue?.id == terms.declaration.abandonContact,
-      contractStation == job.station
+      courierOriginIsCurrent(job.station, declaration: terms.declaration)
     {
       return "Abandon"
     }

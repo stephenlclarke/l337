@@ -35,6 +35,10 @@ extension Game {
         continue
       }
       for request in batch.requests {
+        if let id = request.catalogueShipID, OriginalDetailedHullStage.blocksRuntime(id) {
+          receipts.append(.init(request: request.identity, actor: nil, refusal: .unqualifiedOriginalHull))
+          continue
+        }
         if let existing = bodies.first(where: { $0.physical?.spawnIdentity == request.identity }) {
           receipts.append(
             .init(request: request.identity, actor: existing.physical?.identity, refusal: nil))
@@ -106,6 +110,22 @@ extension Game {
     if request.identity.producer == .derelicts || nativeOreMotion {
       body.physical?.canonicalSpin = true
     }
+    if request.currentNewtKitConfiguration != nil {
+      guard let stock = issueCurrentNewtKit(request: request, body: body, actor: actor, context: context) else {
+        return .init(request: request.identity, actor: nil, refusal: .staleContext)
+      }
+      body.physical?.currentNewtKitStock = stock
+      body.physical?.canonicalSpin = true
+      body.rotationRate = 0
+    } else if let retained = retainedCurrentNewtKitStock(for: request) {
+      // Restoration copies the existing issue/depletion; it never calls the birth issuer.
+      guard let observed = retained.observedForRestoration(at: context.physicalTime) else {
+        return .init(request: request.identity, actor: nil, refusal: .staleContext)
+      }
+      body.physical?.currentNewtKitStock = observed
+      body.physical?.canonicalSpin = true
+      body.rotationRate = 0
+    }
     if request.identity.producer != .persistence && request.identity.producer != .emp,
       let snapshot = NPCPersistenceSnapshot.capture(
         body: body, pose: pose, physicalTime: context.physicalTime,
@@ -116,6 +136,153 @@ extension Game {
     }
     bodies.append(body)
     return .init(request: request.identity, actor: actor, refusal: nil)
+  }
+
+  /// A single currently installed kit supplies the physical proposal. The actual
+  /// producer commits its stock debit/person receipt in the same candidate turn.
+  @inline(never)
+  mutating func admitCurrentOccupiedNewtPod(
+    _ release: CurrentNewtPodReleaseRequest
+  ) -> SpawnReceipt {
+    let ordinal = release.issue.person.ordinal
+    let member: UInt16 = (0..<EMPState.maximumPeople).contains(ordinal) ? UInt16(ordinal) + 1 : 0
+    let spawn = SpawnIdentity(
+      system: release.system, visit: release.visit, sequence: release.actuation.sequence,
+      member: member, producer: .emp)
+    guard let context = gameplayContext(),
+      release.system == context.system, release.visit == context.visit,
+      release.revision == context.revision, release.physicalTime == context.physicalTime,
+      release.issue.structurallyValid,
+      release.issue.person.ordinal >= 0, release.issue.person.ordinal < EMPState.maximumPeople,
+      let state = commander.savedEMPState, state.valid,
+      let record = state.records[release.issue.person.source],
+      record.valid, !record.terminal, !record.isRecovered, record.crewAboard > 0,
+      record.source == release.actuation.source,
+      record.sequence == release.actuation.sequence,
+      record.hull.binding == release.actuation.parent,
+      record.nextDueCrew(at: context.physicalTime) == release.issue.person.ordinal,
+      context.physicalTime < (record.crewDeadline ?? -1),
+      let parentIndex = bodies.firstIndex(where: {
+        $0.physical?.identity == release.actuation.parent
+      }),
+      bodies.filter({ $0.physical?.identity == release.actuation.parent }).count == 1,
+      isEMPDisabled(bodies[parentIndex]),
+      let parent = bodies[parentIndex].physical,
+      parent.catalogueShipID == release.issue.birthLoad.catalogueShipID,
+      parent.empSource == record.source,
+      let stock = parent.currentNewtKitStock,
+      stock == record.hull.body.physical?.currentNewtKitStock,
+      stock.issue == record.custody.original.body.physical?.currentNewtKitStock?.issue,
+      CurrentOccupiedNewtValidation.releaseRequest(release, matches: stock),
+      CurrentOccupiedNewtValidation.currentLoad(
+        release.loadAtRelease, body: bodies[parentIndex], record: record),
+      let source = CurrentNewtKitSource.current, source.matches(release.issue),
+      source.matches(stock, at: context.physicalTime)
+    else { return .init(request: spawn, actor: nil, refusal: .staleContext) }
+    let liveParent = CurrentNewtKitReceipt.BodyState(
+      pose: modelPose(of: bodies[parentIndex]), velocity: parent.velocity,
+      angularVelocity: parent.angularVelocity)
+    // The current source must prove actual timed travel, work, full mass/tensor,
+    // live pre-release motion and the installed bay corridor before parent exclusion.
+    guard source.matches(release, liveParent: liveParent),
+      let capsule = ShipCatalogue.ship("SH040"),
+      capsule.catalogue.objectKind == .capsule,
+      let performance = OriginalFleetR3Data.contract(for: capsule.id)?.performance,
+      capsule.game == performance, performance.energy.isFinite, performance.energy > 0,
+      let geometry = Self.currentNewtPodCollisionMesh(source: source),
+      let radius = geometry.vertices.map(\.length).max(),
+      radius.isFinite, radius > 0,
+      !bodies.contains(where: { $0.physical?.spawnIdentity == spawn }),
+      !state.records.values.contains(where: { other in
+        other.pods.contains { $0.body.physical?.currentNewtKitReceipt?.issue.kitID == release.issue.kitID }
+      })
+    else { return .init(request: spawn, actor: nil, refusal: .unqualifiedOriginalHull) }
+    let request = SpawnRequest(
+      identity: spawn, population: .cargo, hull: .cargo,
+      position: release.pod.pose.position, orientation: release.pod.pose.orientation,
+      velocity: release.pod.velocity, npc: nil, rock: nil, payload: nil,
+      priority: .ordinary, catalogueShipID: capsule.id, energy: performance.energy,
+      angularVelocity: release.pod.angularVelocity,
+      salvage: .init(
+        category: .occupiedPod, ownership: .occupied, claimant: record.source,
+        wreck: nil, section: nil, lot: nil,
+        bounds: .init(center: .init(0, 0, 0), radius: radius), workSurfaces: []))
+    guard let releaseBudget = currentNewtReleaseBudget(
+      stock: stock, parent: release.actuation.parent, context: context)
+    else { return .init(request: spawn, actor: nil, refusal: .reservedCapacity) }
+    if let refusal = admissionCapacityRefusal(request, context: context, budget: releaseBudget) {
+      return .init(request: spawn, actor: nil, refusal: refusal)
+    }
+    guard spawnParametersSafe(
+      request, context: context, measuredRadius: radius,
+      measuredMaximumEnergy: performance.energy),
+      spawnSeparationIsSafe(
+        position: request.position, radius: radius, context: context,
+        excludedActor: release.actuation.parent, fragmentRequest: request)
+    else { return .init(request: spawn, actor: nil, refusal: .unsafePosition) }
+    var candidate = self
+    guard candidate.nextBodyID < Int.max,
+      let actor = candidate.commander.flightSimulation.allocateActor()
+    else { return .init(request: spawn, actor: nil, refusal: .reservedCapacity) }
+    let receipt = candidate.constructAdmittedEncounterBody(request, actor: actor, context: context)
+    guard receipt.actor == actor, receipt.refusal == nil,
+      let podIndex = candidate.bodies.firstIndex(where: { $0.physical?.identity == actor })
+    else { return receipt }
+    let delivery = CurrentNewtKitReceipt(
+      issue: release.issue, actuation: release.actuation,
+      podActor: actor, podSpawn: spawn, releasedAt: release.physicalTime,
+      loadAtRelease: release.loadAtRelease,
+      parent: release.parent, pod: release.pod,
+      parentMass: release.parentMass, podMass: release.podMass,
+      energyJoules: release.energyJoules, remainingCharges: release.remainingCharges)
+    guard delivery.structurallyValid,
+      source.matches(delivery, observedAt: release.physicalTime)
+    else {
+      return .init(request: spawn, actor: nil, refusal: .unqualifiedOriginalHull)
+    }
+    candidate.bodies[podIndex].physical?.empCrewPod = release.issue.person
+    candidate.bodies[podIndex].physical?.currentNewtKitReceipt = delivery
+    candidate.bodies[podIndex].physical?.canonicalSpin = true
+    candidate.bodies[podIndex].rotationRate = 0
+    self = candidate
+    return receipt
+  }
+
+  /// Only the actual installed subject can consume its already counted pod slot.
+  /// Reconcile the complete live budget so a foreign cargo count cannot stand in for it.
+  @inline(never)
+  func currentNewtReleaseBudget(
+    stock: CurrentNewtKitStock, parent: ActorIdentity, context: EncounterContext
+  ) -> AdmissionBudget? {
+    let reserved = bodies.compactMap { body -> (ActorIdentity, CurrentNewtKitStock)? in
+      guard let physical = body.physical, let installed = physical.currentNewtKitStock,
+        installed.phase != .released
+      else { return nil }
+      return (physical.identity, installed)
+    }
+    guard reserved.allSatisfy({ $0.1.structurallyValid }),
+      Set(reserved.map({ $0.1.issue.kitID })).count == reserved.count,
+      reserved.filter({ $0.0 == parent && $0.1 == stock }).count == 1,
+      reserved.filter({ $0.1.issue.kitID == stock.issue.kitID }).count == 1,
+      bodies.count <= Int.max - reserved.count
+    else { return nil }
+    var expected: [PopulationClass: Int] = [:]
+    for body in bodies where body.id != 0 {
+      if let population = body.physical?.population { expected[population, default: 0] += 1 }
+    }
+    expected[.cargo, default: 0] += reserved.count
+    guard context.budget.total == bodies.count + reserved.count,
+      context.budget.active.values.allSatisfy({ $0 >= 0 }),
+      context.budget.active.filter({ $0.value > 0 }) == expected.filter({ $0.value > 0 }),
+      context.budget.maximum == AdmissionBudget().maximum,
+      context.budget.policeReserve == AdmissionBudget().policeReserve,
+      context.budget.missionReserve == AdmissionBudget().missionReserve,
+      context.budget.active[.cargo, default: 0] > 0, context.budget.total > 0
+    else { return nil }
+    var budget = context.budget
+    budget.total -= 1
+    budget.active[.cargo, default: 0] -= 1
+    return budget
   }
 
   /// Practice uses the native reserve and measured geometry policy for the whole volume.
@@ -135,7 +302,10 @@ extension Game {
     }
     var meshes: [Int: Mesh] = [:]
     for body in bodies where body.energy > 0 {
-      meshes[body.id] = scriptNPCMesh(body) ?? gameplayMesh(for: body)
+      if body.physical?.currentNewtKitStock != nil || body.physical?.currentNewtKitReceipt != nil {
+        guard let envelope = currentNewtBroadPhaseEnvelope(for: body) else { return .unsafePosition }
+        meshes[body.id] = envelope
+      } else { meshes[body.id] = scriptNPCMesh(body) ?? gameplayMesh(for: body) }
     }
     let playerRadius = commander.playerMesh.vertices.map(\.length).max() ?? 80
     guard
@@ -186,6 +356,13 @@ extension Game {
   private mutating func preparedBatchRefusal(
     _ requests: [SpawnRequest], context: EncounterContext
   ) -> AdmissionRefusal? {
+    if requests.contains(where: { request in
+      if request.currentNewtKitConfiguration != nil,
+        CurrentNewtKitSource.current?.permitsBirth(request, context: context) != true
+      { return true }
+      if let id = request.catalogueShipID { return OriginalDetailedHullStage.blocksRuntime(id) }
+      return request.hull.isTargetShip && ShipCatalogue.nativeShip(request.hull) == nil
+    }) { return .unqualifiedOriginalHull }
     let fresh = requests.filter { request in
       !bodies.contains { $0.physical?.spawnIdentity == request.identity }
     }
@@ -201,13 +378,35 @@ extension Game {
       return .reservedCapacity
     }
     var budget = context.budget
+    var recoveredSecuritySources = Set<ActorIdentity>()
     for request in fresh {
+      guard OriginalBisonActivation.matchesRequest(request, context: context) else {
+        return .staleContext
+      }
+      guard OriginalFleetRuntimeHullSource.matchesAmbientTrader(request, context: context) else {
+        return .staleContext
+      }
+      guard OriginalFleetRuntimeHullSource.matchesAmbientNonTrader(request, context: context) else {
+        return .staleContext
+      }
+      guard securitySpawnSourceIsValid(request, context: context) else { return .staleContext }
+      if let source = request.recoveredSecuritySource,
+        !recoveredSecuritySources.insert(source).inserted
+      { return .staleContext }
+      let kitReserve = request.currentNewtKitConfiguration != nil
+        || retainedCurrentNewtKitStock(for: request)?.remaining == 1
+      if kitReserve {
+        guard budget.ordinaryRemaining >= 2,
+          budget.active[.cargo, default: 0] < PopulationClass.cargo.maximum
+        else { return .reservedCapacity }
+      }
       if let refusal = admissionCapacityRefusal(request, context: context, budget: budget) {
         return refusal
       }
       guard safeSpawn(request, context: context) else { return .unsafePosition }
-      budget.total += 1
+      budget.total += kitReserve ? 2 : 1
       budget.active[request.population, default: 0] += 1
+      if kitReserve { budget.active[.cargo, default: 0] += 1 }
     }
     for (index, request) in fresh.enumerated() {
       for other in fresh.dropFirst(index + 1) {
@@ -394,7 +593,7 @@ extension Game {
     return nil
   }
 
-  /// Borrow the selected scene records; only a downstream body API receives an owned copy.
+  /// Borrow selected scene records and explicitly copy owned component values.
   @inline(never)
   private static func gameplayMissionActorSceneBodyRefusal(
     original: borrowing Game, center: Vector3, radius: Double,
@@ -407,8 +606,14 @@ extension Game {
         center: center, radius: radius, body: body) ? nil : .unsafePosition
     }
     let rockIdentity = actor.rock
+    let physical = (copy body).physical
     let otherRadius: Double
-    if let bounds = actor.salvage?.bounds {
+    if physical?.currentNewtKitStock != nil || physical?.currentNewtKitReceipt != nil {
+      guard let envelope = original.currentNewtBroadPhaseEnvelope(for: copy body),
+        let radius = envelope.vertices.map(\.length).max()
+      else { return .unsafePosition }
+      otherRadius = radius
+    } else if let bounds = actor.salvage?.bounds {
       otherRadius = bounds.radius + bounds.center.length
     } else if body.scriptNPC != nil {
       otherRadius = original.scriptNPCRadius(copy body)
@@ -417,7 +622,9 @@ extension Game {
     }) {
       otherRadius = rock.radius
     } else {
-      otherRadius = original.gameplayMesh(for: copy body).vertices.map(\.length).max() ?? 80
+      guard let sourceRadius = original.gameplayMesh(for: copy body).vertices.map(\.length).max()
+      else { return .unsafePosition }
+      otherRadius = sourceRadius
     }
     guard otherRadius.isFinite, otherRadius > 0,
       (center - actor.position).length >= radius + otherRadius + 64
@@ -546,40 +753,120 @@ extension Game {
     guard request.position.finite, request.velocity.finite,
       request.orientation.x.finite, request.orientation.y.finite, request.orientation.z.finite,
       request.angularVelocity.finite
-    else { return false }
+    else {
+      recordNativeSalvageAdmissionRefusal(request: request, stage: "spawn.finite", reason: "false")
+      return false
+    }
     let radius = measuredRadius ?? spawnRadius(request)
     let maximumEnergy = measuredMaximumEnergy ?? request.npc?.resources?.energyCapacity ?? 100000
     guard request.npc?.resources?.valid ?? true,
       maximumEnergy.isFinite, maximumEnergy > 0,
-      request.energy.map({ $0.isFinite && $0 >= 0 && $0 <= maximumEnergy }) ?? true,
-      radius.isFinite, radius > 0,
-      (request.position - context.anchors.planet.position).length > context.anchors.planet.radius
-        + radius,
-      (request.position - context.anchors.sun.position).length > context.anchors.sun.radius
-        * (request.population == .projectile ? 1 : 4)
-        + radius
-    else { return false }
+      request.energy.map({ $0.isFinite && $0 >= 0 && $0 <= maximumEnergy }) ?? true
+    else {
+      recordNativeSalvageAdmissionRefusal(request: request, stage: "spawn.resources", reason: "false")
+      return false
+    }
+    guard Self.nativeAdmissionCelestialEnvelopeSafe(
+      center: request.position, radius: radius, projectile: request.population == .projectile,
+      context: context)
+    else {
+      recordNativeSalvageAdmissionRefusal(request: request, stage: "spawn.celestial", reason: "false")
+      return false
+    }
     return true
   }
 
   private mutating func safeSpawn(_ request: SpawnRequest, context: EncounterContext) -> Bool {
-    guard spawnParametersSafe(request, context: context) else { return false }
-    let radius = spawnRadius(request)
-    // An emitted projectile starts at its owner's muzzle; its collision resolver
-    // excludes that owner. Other admissions must be separated from live hulls.
-    if request.population == .projectile { return true }
-    let playerRadius = commander.playerMesh.vertices.map(\.length).max() ?? 80
-    guard (request.position - context.player.position).length > radius + playerRadius + 8 else {
+    guard spawnParametersSafe(request, context: context) else {
+      recordNativeSalvageAdmissionRefusal(request: request, stage: "spawn.parametersOrCelestial",
+        reason: "false")
       return false
     }
-    for actor in context.actors {
-      let otherRadius =
-        actor.salvage.map { $0.bounds.radius + $0.bounds.center.length }
-        ?? (Mesh.hull(actor.hull).vertices.map(\.length).max() ?? 80)
-      if actor.energy > 0,
-        (request.position - actor.position).length < radius + otherRadius + 8,
-        !releasedFragmentClearsParent(request, parent: actor, context: context)
+    let radius = spawnRadius(request)
+    // An emitted projectile starts at its owner's muzzle; its collision resolver excludes it.
+    if request.population == .projectile { return true }
+    return spawnSeparationIsSafe(
+      position: request.position, radius: radius, context: context,
+      excludedActor: nil, fragmentRequest: request)
+  }
+
+  /// The native cohort already owns an actor; no fabricated SpawnIdentity is used for clearance.
+  mutating func nativeLaunchGeometryIsSafe(
+    source: OriginalFleetRuntimeHullSource.Source, actor: ActorIdentity,
+    position: Vector3, context: EncounterContext
+  ) -> Bool {
+    let radius = source.envelope.clearanceRadius
+    guard position.finite, radius.isFinite, radius > 0,
+      (position - context.anchors.planet.position).length > context.anchors.planet.radius + radius,
+      (position - context.anchors.sun.position).length > context.anchors.sun.radius * 4 + radius
+    else { return false }
+    return spawnSeparationIsSafe(
+      position: position, radius: radius, context: context,
+      excludedActor: actor, fragmentRequest: nil)
+  }
+
+  private mutating func spawnSeparationIsSafe(
+    position: Vector3, radius: Double, context: EncounterContext,
+    excludedActor: ActorIdentity?, fragmentRequest: SpawnRequest?
+  ) -> Bool {
+    let playerRadius = commander.playerMesh.vertices.map(\.length).max() ?? 80
+    guard (position - context.player.position).length > radius + playerRadius + 8 else {
+      recordNativeSalvageAdmissionRefusal(request: fragmentRequest, stage: "separation.player",
+        reason: "distance=\((position - context.player.position).length) required=\(radius + playerRadius + 8)")
+      return false
+    }
+    for actor in context.actors where actor.identity != excludedActor && actor.energy > 0 {
+      let otherRadius: Double
+      if let salvage = actor.salvage {
+        otherRadius = salvage.bounds.radius + salvage.bounds.center.length
+      } else if let id = actor.catalogueShipID, OriginalBisonActivation.contains(id) {
+        guard let radius = OriginalBisonActivation.collisionRadius(for: id) else {
+          recordNativeSalvageAdmissionRefusal(request: fragmentRequest, stage: "separation.geometry",
+            reason: "missing Bison collider entity=\(actor.identity.entity)")
+          return false
+        }
+        otherRadius = radius
+      } else if let id = actor.catalogueShipID, actor.hull != .station,
+        OriginalFleetR3Data.contract(for: id)?.objectKind == .ship
       {
+        guard let source = OriginalFleetRuntimeHullSource.source(for: id) else {
+          recordNativeSalvageAdmissionRefusal(request: fragmentRequest, stage: "separation.geometry",
+            reason: "missing fleet collider entity=\(actor.identity.entity)")
+          return false
+        }
+        otherRadius = source.envelope.clearanceRadius
+      } else if actor.hull == .cobra {
+        guard let body = bodies.first(where: { $0.physical?.identity == actor.identity }) else {
+          recordNativeSalvageAdmissionRefusal(request: fragmentRequest, stage: "separation.geometry",
+            reason: "missing body entity=\(actor.identity.entity)")
+          return false
+        }
+        if body.scriptNPC != nil {
+          otherRadius = scriptNPCRadius(body)
+        } else {
+          guard !OriginalDetailedHullStage.blocksRuntime(body) else {
+            recordNativeSalvageAdmissionRefusal(request: fragmentRequest, stage: "separation.geometry",
+              reason: "blocked runtime hull entity=\(actor.identity.entity)")
+            return false
+          }
+          // A source-less marker has no collider. Restored markers are removed before adoption.
+          guard let radius = gameplayMesh(for: body).vertices.map(\.length).max() else { continue }
+          otherRadius = radius
+        }
+        guard otherRadius.isFinite, otherRadius > 0 else {
+          recordNativeSalvageAdmissionRefusal(request: fragmentRequest, stage: "separation.geometry",
+            reason: "invalid radius entity=\(actor.identity.entity)")
+          return false
+        }
+      } else {
+        otherRadius = Mesh.hull(actor.hull).vertices.map(\.length).max() ?? 80
+      }
+      if (position - actor.position).length < radius + otherRadius + 8,
+        !(fragmentRequest.map { releasedFragmentClearsParent($0, parent: actor, context: context) }
+          ?? false)
+      {
+        recordNativeSalvageAdmissionRefusal(request: fragmentRequest, stage: "separation.actor",
+          reason: "entity=\(actor.identity.entity) distance=\((position - actor.position).length) required=\(radius + otherRadius + 8)")
         return false
       }
     }
@@ -591,6 +878,125 @@ extension Game {
     if let rock = miningFields.flatMap(\.rocks).first(where: { $0.identity == request.rock }) {
       return rock.radius
     }
+    if let id = request.catalogueShipID, OriginalBisonActivation.contains(id) {
+      return OriginalBisonActivation.collisionRadius(for: id) ?? .nan
+    }
+    if let id = request.catalogueShipID, request.hull != .station,
+      OriginalFleetR3Data.contract(for: id)?.objectKind == .ship
+    {
+      return OriginalFleetRuntimeHullSource.source(for: id)?.envelope.clearanceRadius ?? .nan
+    }
+    guard request.hull != .cobra else { return .nan }
     return Mesh.hull(request.hull).vertices.map(\.length).max() ?? 80
+  }
+}
+
+extension Game {
+  // Same celestial inequalities used by ordinary native spawn policy.
+  private static func nativeAdmissionCelestialEnvelopeSafe(
+    center: Vector3, radius: Double, projectile: Bool, context: EncounterContext
+  ) -> Bool {
+    radius.isFinite && radius > 0
+      && (center - context.anchors.planet.position).length > context.anchors.planet.radius + radius
+      && (center - context.anchors.sun.position).length > context.anchors.sun.radius
+        * (projectile ? 1 : 4) + radius
+  }
+
+  /// Read-only conservative C01 envelope screening; no full-solid/joint,
+  /// protected-corridor, mass installation, model or allocation permission.
+  func c01InquiryPlacementEnvelopeRefusal(
+    center: Vector3, radius: Double, context: EncounterContext
+  ) -> AdmissionRefusal? {
+    guard center.finite, center.length.isFinite, radius.isFinite, radius > 0,
+      gameplayContext() == context, context.system == systemIdentity,
+      context.visit == commander.flightSimulation.visit,
+      context.physicalTime == commander.flightSimulation.physicalTime,
+      Set(bodies.map(\.id)).count == bodies.count,
+      Set(bodies.compactMap { $0.physical?.identity }).count == bodies.count,
+      bodies.allSatisfy({ $0.energy.isFinite }),
+      Set(context.actors.map(\.identity)) == Set(bodies.compactMap { $0.physical?.identity })
+    else { return .staleContext }
+    guard Self.nativeAdmissionCelestialEnvelopeSafe(
+      center: center, radius: radius, projectile: false, context: context)
+    else { return .unsafePosition }
+    let playerVertices = commander.playerMesh.vertices
+    guard !playerVertices.isEmpty, playerVertices.allSatisfy({ $0.finite }),
+      let playerRadius = playerVertices.map(\.length).max(),
+      playerRadius.isFinite, playerRadius > 0,
+      (center - context.player.position).length > radius + playerRadius + 64
+    else { return .unsafePosition }
+    let stations = Set(commander.nativeStations?.ledger.records.compactMap {
+      $0.identity.system == context.system ? $0.binding?.bodyID : nil
+    } ?? [])
+    return Self.gameplayMissionActorSceneClearanceRefusal(
+      original: self, center: center, radius: radius, context: context,
+      registeredStationBodies: stations)
+  }
+}
+
+extension Game {
+  /// Only the existing atomic EMP archive producer calls this admission seam.
+  /// It binds an already owned object; no release, person or kit is reissued.
+  mutating func admitCurrentOccupiedNewtPodReadmission(
+    _ object: EMPStoredObject, source logical: ActorIdentity, sequence: UInt64, member: UInt16
+  ) -> SpawnReceipt {
+    let spawn = SpawnIdentity(system: systemIdentity, visit: commander.flightSimulation.visit,
+      sequence: sequence, member: member, producer: .emp)
+    guard member > 0, let context = gameplayContext(),
+      context.system == logical.system, context.visit >= logical.visit,
+      context.revision == gameplayRevision, object.binding == nil,
+      object.physicalTime == context.physicalTime,
+      let state = commander.savedEMPState, state.valid,
+      let record = state.records[logical], record.valid, record.sequence == sequence,
+      let saved = object.body.physical, let person = saved.empCrewPod,
+      person.source == logical, person.ordinal == Int(member) - 1,
+      let index = record.podIndex(for: person.ordinal), record.pods[index] == object,
+      object.validCurrentOccupiedNewt(in: record), commander.worldOwnedPod(person),
+      commander.currentNewtCapturedServiceCustodyValid,
+      let receipt = saved.currentNewtKitReceipt,
+      let stock = record.hull.body.physical?.currentNewtKitStock,
+      stock.receipt == receipt, stock.serviceCapturedAt == nil,
+      receipt.issue == stock.issue, receipt.issue.person == person,
+      record.custody.original.body.physical?.currentNewtKitStock?.issue == stock.issue,
+      !bodies.contains(where: {
+        $0.physical?.empCrewPod == person
+          || $0.physical?.currentNewtKitReceipt?.issue.kitID == receipt.issue.kitID
+          || $0.physical?.spawnIdentity == spawn
+      }),
+      let physical = CurrentNewtKitSource.current,
+      physical.matches(receipt, observedAt: context.physicalTime),
+      let geometry = Self.currentNewtPodCollisionMesh(source: physical),
+      let radius = geometry.vertices.map(\.length).max(), radius.isFinite, radius > 0,
+      let performance = OriginalFleetR3Data.contract(for: "SH040")?.performance,
+      object.body.energy > 0, object.body.energy <= performance.energy
+    else { return .init(request: spawn, actor: nil, refusal: .staleContext) }
+    let request = SpawnRequest(identity: spawn, population: .cargo, hull: .cargo,
+      position: object.body.position, orientation: object.body.orientation, velocity: saved.velocity,
+      npc: nil, rock: nil, payload: nil, priority: .ordinary, catalogueShipID: "SH040",
+      energy: object.body.energy, angularVelocity: saved.angularVelocity, salvage: saved.salvage)
+    if let refusal = admissionCapacityRefusal(request, context: context, budget: context.budget) {
+      return .init(request: spawn, actor: nil, refusal: refusal)
+    }
+    guard spawnParametersSafe(request, context: context, measuredRadius: radius,
+      measuredMaximumEnergy: performance.energy),
+      spawnSeparationIsSafe(position: request.position, radius: radius, context: context,
+        excludedActor: nil, fragmentRequest: request),
+      (request.position - context.player.position).length <= context.perceptionRadius
+    else { return .init(request: spawn, actor: nil, refusal: .unsafePosition) }
+    var candidate = self
+    guard candidate.nextBodyID < Int.max, let actor = candidate.commander.flightSimulation.allocateActor()
+    else { return .init(request: spawn, actor: nil, refusal: .reservedCapacity) }
+    let admitted = candidate.constructAdmittedEncounterBody(request, actor: actor, context: context)
+    guard admitted.actor == actor, admitted.refusal == nil,
+      let body = candidate.bodies.firstIndex(where: { $0.physical?.identity == actor })
+    else { return admitted }
+    candidate.bodies[body].physical?.empCrewPod = person
+    candidate.bodies[body].physical?.currentNewtKitReceipt = receipt
+    candidate.bodies[body].physical?.canonicalSpin = saved.canonicalSpin
+    candidate.bodies[body].rotationRate = object.body.rotationRate
+    // The outer existing producer restores the remaining physical/archive and
+    // legal bindings in its same private candidate before publication.
+    self = candidate
+    return admitted
   }
 }

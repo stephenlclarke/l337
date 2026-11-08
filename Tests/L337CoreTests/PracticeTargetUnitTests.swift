@@ -96,7 +96,7 @@ struct PracticeTargetUnitTests {
     let beforeBodies = game.bodies
     let revision = game.gameplayRevision
     var supplied = before
-    try supplied.prepareEquipment()
+    try supplied.prepareEquipment(legacy: false)
     let owner = try #require(supplied.equipmentOwnerID)
     let ownerPermission = try replacing(
       f.state.permission, key: "owner", with: owner.uuidString)
@@ -122,7 +122,7 @@ struct PracticeTargetUnitTests {
   @Test func reservationMembershipRequiresOriginalActorAndCompleteRetainedProof() throws {
     let f = try fixture()
     let game = ReservationGame()
-    try game.value.commander.prepareEquipment()
+    try game.value.commander.prepareEquipment(legacy: false)
     let owner = try #require(game.value.commander.equipmentOwnerID)
     let owned = try replacing(f.state.permission, key: "owner", with: owner.uuidString)
     let permission = try replacing(

@@ -4,7 +4,7 @@ import Foundation
 enum OriginalStagLinerActivation {
   static let id = "SH035"
   static let specificationSHA256 =
-    "cebf4ffeceac7b4df4b5fb971a04c08cfc61eb8e45ed5224de99b703bc9ebd59"
+    "dff26cfb4027b272cb7e82c1fd967ec5aa8e27e4a74d2cdfd28a5a01a5836dae"
 
   enum Failure: Error { case unsupportedDefinition }
 

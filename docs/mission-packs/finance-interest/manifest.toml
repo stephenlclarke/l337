@@ -41,7 +41,7 @@ rounding = "up"
 maximumInterest = 1000
 
 [trial]
-ship = "SH023"
+ship = "SH025"
 galaxy = 0
 system = 237
 credits = 1000

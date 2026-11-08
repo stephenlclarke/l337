@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 struct WayfarerRecordRecoverySaveTests {
   @Test(arguments: [false, true], ["allocated", "identified", "held", "failed", "received"])

@@ -4,10 +4,10 @@ import L337Core
 import UniformTypeIdentifiers
 
 @MainActor
-func exportRouteReadmeMedia(at root: URL = URL(fileURLWithPath: ".")) throws {
+func exportRouteReadmeMedia(at root: URL = URL(fileURLWithPath: ".")) async throws {
   let directory = root.appendingPathComponent("docs/images")
   try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-  var game = try makeRouteReadmeMediaGame()
+  var game = try await makeRouteReadmeMediaGame()
   try writeRoutePNG(game, to: directory.appendingPathComponent("route-alternatives-galaxy.png"))
   game.key("5")
   guard game.navigationReturn == .shortChart else { throw SaveError.invalidCommander }
@@ -16,8 +16,10 @@ func exportRouteReadmeMedia(at root: URL = URL(fileURLWithPath: ".")) throws {
 
 /// Shared native planner scene for README exports and their pixel regression.
 @MainActor
-func makeRouteReadmeMediaGame() throws -> Game {
-  var game = Game(executive: false)
+func makeRouteReadmeMediaGame() async throws -> Game {
+  let runtime = GameRuntime()
+  try await runtime.startNewCommander()
+  var game = await runtime.snapshot()
   // Prepare a real current fit through the ordinary shop's paid predecessor chain.
   game.commander.credits = 1_000_000
   game.screen = .equipment

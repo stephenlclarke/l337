@@ -3,8 +3,9 @@ import Testing
 
 @testable import L337Core
 
-private func admissionGame() -> Game {
+private func admissionGame() throws -> Game {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.bodies.removeAll { $0.id != 0 }
   return game
@@ -43,7 +44,7 @@ private func preparedAdmissionBodies(_ game: inout Game) -> [SpaceBody] {
 
 struct GameplayAdmissionTests {
   @Test func admittedBodiesUseOneAllocatorAndWorldToViewTransform() throws {
-    var game = admissionGame()
+    var game = try admissionGame()
     let before = preparedAdmissionBodies(&game)
     let request = admissionRequest(game)
     let receipts = game.admitEncounterPlan(admissionPlan(game, requests: [request]))
@@ -59,8 +60,8 @@ struct GameplayAdmissionTests {
     #expect(Array(game.bodies.prefix(before.count)) == before)
   }
 
-  @Test func stalePlanCannotMutateTheSceneOrAllocator() {
-    var game = admissionGame()
+  @Test func stalePlanCannotMutateTheSceneOrAllocator() throws {
+    var game = try admissionGame()
     let before = preparedAdmissionBodies(&game)
     let plan = admissionPlan(game, requests: [admissionRequest(game)])
     let actor = game.commander.flightSimulation.nextActor
@@ -71,8 +72,8 @@ struct GameplayAdmissionTests {
     #expect(game.commander.flightSimulation.nextActor == actor)
   }
 
-  @Test func atomicPackCannotBePartiallyAdmittedOnPopulationLimit() {
-    var game = admissionGame()
+  @Test func atomicPackCannotBePartiallyAdmittedOnPopulationLimit() throws {
+    var game = try admissionGame()
     let before = preparedAdmissionBodies(&game)
     let actor = game.commander.flightSimulation.nextActor
     let requests = (0..<9).map {
@@ -87,8 +88,8 @@ struct GameplayAdmissionTests {
     #expect(Array(game.bodies.prefix(before.count)) == before)
   }
 
-  @Test func atomicPackRejectsDuplicateIdentityAndIntersectingMembers() {
-    var game = admissionGame()
+  @Test func atomicPackRejectsDuplicateIdentityAndIntersectingMembers() throws {
+    var game = try admissionGame()
     let before = preparedAdmissionBodies(&game)
     let actor = game.commander.flightSimulation.nextActor
     let request = admissionRequest(game)
@@ -104,7 +105,7 @@ struct GameplayAdmissionTests {
   }
 
   @Test func unsafePlanetSunPlayerAndNonfiniteSpawnsAreRefused() throws {
-    var game = admissionGame()
+    var game = try admissionGame()
     let before = preparedAdmissionBodies(&game)
     let actor = game.commander.flightSimulation.nextActor
     let context = try #require(game.gameplayContext())
@@ -121,7 +122,7 @@ struct GameplayAdmissionTests {
   }
 
   @Test func projectileCanStartAtOwnerMuzzleWithoutBypassingCelestialSafety() throws {
-    var game = admissionGame()
+    var game = try admissionGame()
     let context = try #require(game.gameplayContext())
     let muzzle = admissionRequest(game, population: .projectile, position: context.player.position)
     let receipts = game.admitEncounterPlan(admissionPlan(game, requests: [muzzle]))
@@ -132,8 +133,8 @@ struct GameplayAdmissionTests {
     #expect(refused.first?.refusal == .unsafePosition)
   }
 
-  @Test func totalCapPreservesPoliceAndMissionReserves() {
-    var game = admissionGame()
+  @Test func totalCapPreservesPoliceAndMissionReserves() throws {
+    var game = try admissionGame()
     // Existing mission bodies exercise total capacity without exhausting a smaller class.
     for id in 1..<116 {
       let actor = game.commander.flightSimulation.allocateActor()!

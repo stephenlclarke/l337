@@ -20,6 +20,27 @@ struct FlightWorkGuidance: Sendable {
   var status = "APPROACHING"
   var holding = false
   var manualToolOverride = false
+  var attemptedSurfaceNormalApproach = false
+
+  /// A selected oblique ray can require an unreachable stand-off on an adjacent face.
+  /// Changing steering intent still requires the same actual face ray and full motion proof.
+  mutating func stepHold(
+    _ input: RelativeWorkInput, surfaceNormalRayIsClear: () -> Bool,
+    validate: (RelativeWorkSweep) -> RelativeWorkClearance
+  ) -> RelativeWorkOutput {
+    let output = controller.step(input, validate: validate)
+    guard output.status == .blocked(.toolRange), !attemptedSurfaceNormalApproach else {
+      return output
+    }
+    attemptedSurfaceNormalApproach = true
+    guard surfaceNormalRayIsClear() else { return output }
+    var normalController = RelativeWorkController(
+      parent: controller.parent, wreck: controller.wreck, category: controller.category)
+    let normalOutput = normalController.step(input, validate: validate)
+    guard normalOutput.validatedSweep?.purpose == .work else { return output }
+    controller = normalController
+    return normalOutput
+  }
 }
 
 struct FlightWorkBraking: Sendable {
@@ -214,11 +235,12 @@ extension Game {
         kind: $0.kind, position: hypothetical.shipPoint(old.systemPoint($0.position)),
         radius: $0.radius)
     }
-    guard
+    guard let components = try? currentNewtCompoundCollisionMeshes(),
       let hit = GameplayRaycast.nearest(
         origin: .init(0, 0, 0), direction: .init(0, 0, 1),
         maxDistance: 6000, bodies: scene.filter { $0.energy > 0 }, celestials: stars,
-        meshOverrides: gameplayMeshOverrides), case .body(let id) = hit.target, id == body.id
+        meshOverrides: gameplayMeshOverrides, compoundMeshOverrides: components),
+      case .body(let id) = hit.target, id == body.id
     else { return false }
     if surface.section != nil {
       let point = pose.systemPoint(surface.point)
@@ -231,7 +253,10 @@ extension Game {
     return true
   }
 
-  mutating func advanceWorkGuidance(delta: Double) {
+  mutating func advanceWorkGuidance(
+    delta: Double, deferThrustDebit: Bool = false,
+    bornAtEnd: CurrentNewtEndBirths? = nil
+  ) {
     approvedWorkMotion = nil
     guard !playerEMPDisabled else {
       releaseWorkGuidance()
@@ -246,7 +271,7 @@ extension Game {
     }
     guard var state = workGuidance else {
       if workBraking != nil {
-        advanceWorkBraking(delta: delta)
+        advanceWorkBraking(delta: delta, deferThrustDebit: deferThrustDebit, bornAtEnd: bornAtEnd)
       } else if workRecoveryRock != nil {
         selectNextMinedOre()
       }
@@ -264,7 +289,8 @@ extension Game {
       let targetMesh = recordRecoveryCompatibleMesh(body, context: context),
       let targetHull = preparedWorkHull(mesh: targetMesh, key: "target:\(body.id)"),
       let playerHull = preparedWorkHull(mesh: commander.playerMesh, key: "player"),
-      let obstacles = workObstacles(excluding: state.parent, delta: delta)
+      let obstacles = workObstacles(
+        excluding: state.parent, delta: delta, bornAtEnd: bornAtEnd?.actors ?? [])
     else {
       cancelAutoTarget()
       weaponsTargetID = nil
@@ -285,12 +311,18 @@ extension Game {
         pose: targetPose, velocity: physical.velocity, angularVelocity: physical.angularVelocity,
         surfacePoint: state.surface.point, surfaceNormal: state.surface.normal,
         depleted: state.surface.section.map(salvageSectionIsDepleted) ?? false)
-      let output = state.controller.step(
+      let selectedSurface = state.surface
+      let collectionOffset = state.collectionOffset
+      let output = state.stepHold(
         .init(
           ship: pose, velocity: state.velocity,
           angularVelocity: state.angularVelocity, target: target, playerRadius: playerHull.radius,
           limits: workLimits, cutterRange: state.surface.section == nil ? 6000 : 300,
-          delta: delta, collectionOffset: state.collectionOffset), validate: validate)
+          delta: delta, collectionOffset: state.collectionOffset),
+        surfaceNormalRayIsClear: {
+          workRayReachesSurface(
+            body: body, surface: selectedSurface, lateralOffset: collectionOffset)
+        }, validate: validate)
       let wasHolding = state.holding
       state.holding = output.status == .holding
       if state.holding && !wasHolding { interruptFlightTool() }
@@ -321,7 +353,7 @@ extension Game {
       return
     }
     workGuidance = state
-    authorizeWorkThrust(delta: delta)
+    authorizeWorkThrust(delta: delta, deferDebit: deferThrustDebit, bornAtEnd: bornAtEnd)
     if previousStatus != state.status { notify("WORK: " + state.status) }
   }
 
@@ -340,6 +372,13 @@ extension Game {
         && commander.fittedEquipment(at: .targetingSalvage) != nil
         && commander.fittedEquipment(at: .utility(.fuelScoops)) != nil
         && inductionCrewLogFacts(body)?.fits == true
+        && automaticScoopShapeCompatible(body, context: context)
+    }
+    if c01TimingStandardPart(body) == .standard {
+      return state.mode == .autoScoop(.salvage) && commander.targetingTier != nil
+        && commander.fittedEquipment(at: .targetingSalvage) != nil
+        && commander.fittedEquipment(at: .utility(.fuelScoops)) != nil
+        && c01TimingStandardFacts(body, context: context)?.fits == true
         && automaticScoopShapeCompatible(body, context: context)
     }
     if WayfarerRecordRecovery.marker(body, commander: commander) {
@@ -384,12 +423,21 @@ extension Game {
     }
   }
 
-  mutating func authorizeWorkThrust(delta: Double) {
+  mutating func authorizeWorkThrust(
+    delta: Double, deferDebit: Bool = false,
+    bornAtEnd: CurrentNewtEndBirths? = nil
+  ) {
     guard !playerEMPDisabled else {
       approvedWorkMotion = nil
       return
     }
     guard let motion = approvedWorkMotion else { return }
+    guard workBirthEndpointIsClear(motion, bornAtEnd: bornAtEnd) else {
+      approvedWorkMotion = nil
+      if workGuidance != nil { workGuidance?.status = "BIRTH ENDPOINT BLOCKED" }
+      notify("WORK: BIRTH ENDPOINT BLOCKED")
+      return
+    }
     let cost = delta * 2 * min(1, motion.acceleration.length / workLimits.acceleration)
     guard energy.isFinite, energy > cost else {
       approvedWorkMotion = nil
@@ -397,7 +445,7 @@ extension Game {
       notify("WORK: INSUFFICIENT THRUST ENERGY")
       return
     }
-    energy -= cost
+    if !deferDebit { energy -= cost }
   }
 
   mutating func workTargetCollected(_ body: SpaceBody) {
@@ -414,11 +462,15 @@ extension Game {
     workBraking = .init(velocity: velocity, angularVelocity: omega)
   }
 
-  mutating func advanceWorkBraking(delta: Double) {
+  mutating func advanceWorkBraking(
+    delta: Double, deferThrustDebit: Bool = false,
+    bornAtEnd: CurrentNewtEndBirths? = nil
+  ) {
     guard !playerEMPDisabled else { return }
     guard let state = workBraking,
       let player = preparedWorkHull(mesh: commander.playerMesh, key: "player"),
-      let obstacles = workObstacles(excluding: nil, delta: delta)
+      let obstacles = workObstacles(
+        excluding: nil, delta: delta, bornAtEnd: bornAtEnd?.actors ?? [])
     else { return }
     let acceleration =
       state.velocity.unit * -min(workLimits.acceleration, state.velocity.length / delta)
@@ -432,7 +484,7 @@ extension Game {
       playerRadius: player.radius)
     if HullSweepSafety.validateSceneMotion(motion, player: player, obstacles: obstacles).safe {
       approvedWorkMotion = motion
-      authorizeWorkThrust(delta: delta)
+      authorizeWorkThrust(delta: delta, deferDebit: deferThrustDebit, bornAtEnd: bornAtEnd)
     } else if message != "BRAKING BLOCKED - COASTING" || messageTime <= 0 {
       notify("BRAKING BLOCKED - COASTING")
     }

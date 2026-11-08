@@ -90,6 +90,23 @@ struct NativeStationValidationMemoTests {
     let decoded = try JSONDecoder().decode(NativeStationWorld.self, from: bytes)
     #expect(decoded == world && decoded.valid)
     var object = try #require(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
+    let requiredKeys: Set<String> = [
+      "adapterRevision", "geometryRevision", "clockOrigin", "ledger", "poses", "mainStations",
+      "mainObservations", "nextMainDockSequence", "stationInertia",
+    ]
+    #expect(Set(object.keys) == requiredKeys)
+    // Retained optional-parent and owned child snapshots must survive nested writeback.
+    var parent = Commander()
+    parent.nativeStations = decoded
+    let retained = parent
+    let ownedPoses = decoded.poses
+    parent.nativeStations?.poses[0].energy *= 0.5
+    let changedWorld = try #require(parent.nativeStations)
+    let retainedWorld = try #require(retained.nativeStations)
+    #expect(changedWorld.valid && changedWorld != decoded)
+    #expect(retainedWorld == decoded && ownedPoses == decoded.poses)
+    #expect(try encoder.encode(retainedWorld) == bytes)
+    #expect(try encoder.encode(decoded) == bytes)
     #expect(object["validationMemo"] == nil)
     object["validationMemo"] = ["valid": true]
     var poses = try #require(object["poses"] as? [[String: Any]])

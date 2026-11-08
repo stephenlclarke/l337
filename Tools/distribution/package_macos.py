@@ -22,6 +22,7 @@ COPIED_RESOURCE_DIRECTORIES = (
     "OriginalWorlds",
     "OriginalShipTextures",
     "OriginalFleetShowroomModels",
+    "OriginalFleetPhysical",
     "OriginalMarkets",
 )
 
@@ -103,15 +104,23 @@ def create_bundle(directory, binary_directory, version, revision):
     return app
 
 
-def verify_resources(app):
-    """Verify maintained resources using SwiftPM's copied/processed layouts."""
+def bundle_resources(app):
+    """Resolve SwiftPM's flat or nested macOS resource bundle."""
     bundle = app / "Contents/Resources/L337_L337Core.bundle"
-    if (bundle / "Contents/Resources").is_dir():
-        bundle = bundle / "Contents/Resources"
-    for source in (ROOT / "Sources/L337Core/Resources").rglob("*"):
+    return bundle / "Contents/Resources" if (bundle / "Contents/Resources").is_dir() else bundle
+
+
+def verify_resources(app, source_root=None):
+    """Verify maintained resources using SwiftPM's copied/processed layouts."""
+    from retired_hull_resources import verify_resource_tree
+
+    root = ROOT if source_root is None else source_root
+    source_provenance = verify_resource_tree(root / "Sources/L337Core/Resources")
+    bundle = bundle_resources(app)
+    for source in (root / "Sources/L337Core/Resources").rglob("*"):
         if not source.is_file():
             continue
-        relative = source.relative_to(ROOT / "Sources/L337Core/Resources")
+        relative = source.relative_to(root / "Sources/L337Core/Resources")
         target = (
             bundle / relative
             if relative.parts[0] in COPIED_RESOURCE_DIRECTORIES
@@ -119,6 +128,7 @@ def verify_resources(app):
         )
         if not target.is_file() or source.read_bytes() != target.read_bytes():
             raise RuntimeError(f"Missing/changed packaged resource: {relative}")
+    return {"source": source_provenance, "bundle": verify_resource_tree(bundle)}
 
 
 def package(options):

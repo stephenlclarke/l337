@@ -1,0 +1,23 @@
+{
+  "status": "BEFORE_GUARDED_CURRENT_LOADER_MUTATION_HUNK",
+  "testFile": {
+    "path": "Tests/L337CoreTests/ShipTradeTests.swift",
+    "bytes": 19207,
+    "sha256": "51df4323f269baffbf3d72b22bfc974ff1326ba7623ae68bba61eee9075fcadc"
+  },
+  "validCurrentSource": {
+    "path": "Sources/L337Core/Resources/Ships/SH025.toml",
+    "bytes": 690857,
+    "sha256": "aa8fd7b22b8881d6c4bb1017d981fe8a29907ee8243e4bfe0dfd9215a5c80883"
+  },
+  "vectors": [
+    "invalid syntax",
+    "exactlyone currentgame speed token changed to negative, separatelydecoded rangeinvalid",
+    "exactlyone first detailedface index changed to Int.max inside boundeddesign table, separatelydecoded geometryinvalid",
+    "restoredexactvalidcurrent025load",
+    "renamed001filenamewithunchanged025identityrefuses"
+  ],
+  "noHashOnlyClaim": true,
+  "maximumMutatedInputs": 3,
+  "SwiftNativeTests": "UNRUN"
+}

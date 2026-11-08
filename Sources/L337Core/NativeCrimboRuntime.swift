@@ -511,13 +511,13 @@ extension Game {
     var limits: [OrbitFormationLimits] = []
     for slot in 0..<7 {
       let catalogue = slot == 6 ? "SH150" : "SH151"
-      guard let ship = ShipCatalogue.ship(catalogue), let performance = ship.game,
-        let radius = ship.design.rawMesh.vertices.map(\.length).max(), radius.isFinite, radius > 0
+      guard let source = OriginalFleetRuntimeHullSource.source(for: catalogue),
+        source.ship.id == catalogue, source.contract.id == catalogue
       else { throw NativeCrimboError.unavailable }
-      // Ordinary admission still uses its native hull proxy; satisfy that and the actual model.
-      let proxy = Mesh.hull(slot == 6 ? .cobra : .viper).vertices.map(\.length).max() ?? .infinity
-      guard proxy.isFinite, proxy > 0 else { throw NativeCrimboError.unavailable }
-      radii.append(max(radius, proxy))
+      let performance = source.performance
+      let radius = source.envelope.clearanceRadius
+      guard radius.isFinite, radius > 0 else { throw NativeCrimboError.unavailable }
+      radii.append(radius)
       limits.append(
         .init(
           speed: performance.speed * 18, acceleration: performance.acceleration * 18,

@@ -36,7 +36,7 @@ extension Game {
         nativeStationBodyIsCurrent(body), let saved = world.pose(for: identity),
         let source = NativeStationSource.binding(for: identity),
         let end = world.currentOrientation(for: saved.station, at: flight.physicalTime),
-        let currentPosition = world.currentPosition(for: .rrs(identity), at: flight.physicalTime)
+        let currentPosition = world.currentPosition(for: .originalStation(identity), at: flight.physicalTime)
       else { return nil }
       let geometry = source.geometry
       let radius = geometry.mesh.vertices.map(\.length).max() ?? .infinity
@@ -46,10 +46,10 @@ extension Game {
         let start = world.currentOrientation(
           for: saved.station, at: max(0, flight.physicalTime - delta)),
         let oldPosition = world.currentPosition(
-          for: .rrs(identity), at: max(0, flight.physicalTime - delta))
+          for: .originalStation(identity), at: max(0, flight.physicalTime - delta))
       {
         let translationMargin = world.stationSweepMargin(
-          .rrs(identity), from: max(0, flight.physicalTime - delta), to: flight.physicalTime)
+          .originalStation(identity), from: max(0, flight.physicalTime - delta), to: flight.physicalTime)
         let displacement =
           (flight.pose.position - before.position).length
           + (currentPosition - oldPosition).length + translationMargin

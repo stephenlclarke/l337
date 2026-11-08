@@ -10,7 +10,15 @@ struct NativeStationFlightObservationTests {
     let message = game.message
     let observations = game.nativeStationFlightObservations(
       from: game.commander.flightSimulation.pose, delta: 0.02)
-    #expect(observations.count == 2)
+    let world = try #require(game.commander.nativeStations)
+    let expected = Set([OriginalStationSite.salamander, .frog, .dhole].map {
+      $0.identity(world: world.ledger.world)
+    })
+    #expect(observations.count == expected.count)
+    #expect(Set(bodies.compactMap(\.nativeStationIdentity)) == expected)
+    #expect(Set(observations.compactMap { observation in
+      bodies.first { $0.id == observation.bodyID }?.nativeStationIdentity
+    }) == expected)
     for observation in observations {
       let body = try #require(bodies.first { $0.id == observation.bodyID })
       let identity = try #require(body.nativeStationIdentity)

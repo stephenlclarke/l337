@@ -31,6 +31,7 @@ private struct EMPArchiveTimerFixture {
   }
   func game(accepted: Bool = true, destination: Bool = true, archive: Bool = false) throws -> Game {
     var game = archive ? try empFixture() : Game(executive: false)
+    if !archive { try game.commander.prepareEquipment(legacy: false) }
     if archive {
       let released = try releaseDamagedEMPBoundary(&game)
       try #require(released)

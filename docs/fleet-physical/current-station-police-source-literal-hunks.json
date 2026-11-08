@@ -1,0 +1,77 @@
+[
+  {
+    "path": "Sources/L337Core/Resources/Ships/SH031.toml",
+    "before": "name = \"Kite Interceptor\"\n",
+    "after": "name = \"Kite Interceptor\"\nnativeHull = \"viper\"\n"
+  },
+  {
+    "path": "Sources/L337Core/OriginalPlayerHullActivation.swift",
+    "before": "\"SH031\": \"c4cefcf0cd8cfb1c80dfcb3780ec8d1a62f0489d3561c99d5946f4215c57cbba\"",
+    "after": "\"SH031\": \"13e4d6b94a801c84dd89b9f4af9c8ba21151a33782b7e9a98c03ef503302772f\""
+  },
+  {
+    "path": "Sources/L337Core/GameplayContracts.swift",
+    "before": "\n  public var energy: Double?\n  public var angularVelocity = Vector3(0, 0, 0)\n  public var salvage: SalvageTargetMetadata?\n",
+    "after": "\n  public var energy: Double?\n  public var angularVelocity = Vector3(0, 0, 0)\n  public var salvage: SalvageTargetMetadata?\n  /// Actual recovered custody identity; this key alone never authorizes admission.\n  public var recoveredSecuritySource: ActorIdentity? = nil\n"
+  },
+  {
+    "path": "Sources/L337Core/StationSecurity.swift",
+    "before": "\n  private mutating func queueLaunch(count: Int, context: EncounterContext, activePolice: Int) {\n    let queued = pending.reduce(0) { $0 + $1.requests.count }\n    let count = min(count, max(0, 8 - activePolice - queued))\n    guard count > 0 else { return }\n    let station = context.anchors.station\n    let direction = station.exitDirection.unit\n    let requests = (0..<count).map { member -> SpawnRequest in\n      let slot = activePolice + queued + member\n      let position =\n        station.exitPosition + direction * Double(200 + slot * 220)\n        + station.orientation.x * (slot % 2 == 0 ? -90 : 90)\n      return .init(\n        identity: .init(\n          system: context.system, visit: context.visit, sequence: sequence,\n          member: UInt16(member), producer: .security),\n        population: .police, hull: .viper, position: position, orientation: station.orientation,\n        velocity: direction * 180,\n        npc: .init(role: .police, origin: context.system, destination: context.system),\n        rock: nil, payload: nil, priority: .police)\n    }\n    sequence &+= 1\n    pending.append(.init(requests: requests, atomic: true))\n  }\n",
+    "after": "\n  private mutating func queueLaunch(count: Int, context: EncounterContext, activePolice: Int) -> Bool {\n    let queued = pending.reduce(0) { $0 + $1.requests.count }\n    let count = min(count, max(0, 8 - activePolice - queued))\n    guard count > 0 else { return true }\n    guard let deployment = StationPoliceSource.current() else { return false }\n    let station = context.anchors.station\n    let direction = station.exitDirection.unit\n    let requests = (0..<count).map { member -> SpawnRequest in\n      let slot = activePolice + queued + member\n      let position =\n        station.exitPosition + direction * Double(200 + slot * 220)\n        + station.orientation.x * (slot % 2 == 0 ? -90 : 90)\n      return .init(\n        identity: .init(\n          system: context.system, visit: context.visit, sequence: sequence,\n          member: UInt16(member), producer: .security),\n        population: .police, hull: .viper, position: position, orientation: station.orientation,\n        velocity: direction * 180,\n        npc: .init(\n          role: .police, origin: context.system, destination: context.system,\n          legalProvenance: .generated, cargoProvenance: .generated,\n          routeProvenance: .generated, resources: deployment.stock),\n        rock: nil, payload: nil, priority: .police, catalogueShipID: deployment.source.ship.id)\n    }\n    sequence &+= 1\n    pending.append(.init(requests: requests, atomic: true))\n    return true\n  }\n"
+  },
+  {
+    "path": "Sources/L337Core/StationSecurity.swift",
+    "before": "\n      queueLaunch(count: firstStationWave ? 3 : 2, context: context, activePolice: police)\n",
+    "after": "\n      guard queueLaunch(count: firstStationWave ? 3 : 2, context: context, activePolice: police)\n      else { break }\n"
+  },
+  {
+    "path": "Sources/L337Core/StationSecurity.swift",
+    "before": "\n      queueLaunch(count: max(0, 2 - police), context: context, activePolice: police)\n      ordinaryWaveSent = true\n",
+    "after": "\n      ordinaryWaveSent = queueLaunch(\n        count: max(0, 2 - police), context: context, activePolice: police)\n"
+  },
+  {
+    "path": "Sources/L337Core/StationSecurity.swift",
+    "before": "\n      queueLaunch(count: max(0, desired - police), context: context, activePolice: police)\n",
+    "after": "\n      _ = queueLaunch(count: max(0, desired - police), context: context, activePolice: police)\n"
+  },
+  {
+    "path": "Sources/L337Core/StationSecurity.swift",
+    "before": "\n  /// Admission refusal leaves a queued launch intact; no launch is assumed successful.\n",
+    "after": "\n  /// Exact current wave ownership is checked again before the atomic admission transaction.\n  func ownsPendingLaunch(_ request: SpawnRequest, context: EncounterContext) -> Bool {\n    guard system == context.system, visit == context.visit,\n      request.identity.system == context.system, request.identity.visit == context.visit,\n      request.identity.producer == .security, request.identity.sequence < sequence\n    else { return false }\n    return pending.contains { batch in\n      batch.atomic && !batch.requests.isEmpty && batch.requests.count <= 8\n        && batch.requests.contains(request)\n        && batch.requests.enumerated().allSatisfy { index, member in\n          member.identity.sequence == request.identity.sequence\n            && member.identity.member == UInt16(index)\n            && StationPoliceSource.matchesFresh(member, context: context)\n        }\n    }\n  }\n\n  /// Admission refusal leaves a queued launch intact; no launch is assumed successful.\n"
+  },
+  {
+    "path": "Sources/L337Core/GameplayAdmission.swift",
+    "before": "\n    var budget = context.budget\n    for request in fresh {\n",
+    "after": "\n    var budget = context.budget\n    var recoveredSecuritySources = Set<ActorIdentity>()\n    for request in fresh {\n"
+  },
+  {
+    "path": "Sources/L337Core/GameplayAdmission.swift",
+    "before": "\n      guard OriginalFleetRuntimeHullSource.matchesAmbientNonTrader(request, context: context) else {\n        return .staleContext\n      }\n",
+    "after": "\n      guard OriginalFleetRuntimeHullSource.matchesAmbientNonTrader(request, context: context) else {\n        return .staleContext\n      }\n      guard securitySpawnSourceIsValid(request, context: context) else { return .staleContext }\n      if let source = request.recoveredSecuritySource,\n        !recoveredSecuritySources.insert(source).inserted\n      { return .staleContext }\n"
+  },
+  {
+    "path": "Sources/L337Core/EMPRecoveryRuntime.swift",
+    "before": "\n      energy: record.hull.body.energy, angularVelocity: physical.angularVelocity)\n",
+    "after": "\n      energy: record.hull.body.energy, angularVelocity: physical.angularVelocity,\n      recoveredSecuritySource: source)\n"
+  },
+  {
+    "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+    "before": "\n      let catalogue = physical.catalogueShipID ?? ShipCatalogue.nativeShip(body.hull)?.id,",
+    "after": "\n      let catalogue = StationPoliceSource.empCatalogueID(for: body),"
+  },
+  {
+    "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+    "before": "\n        let catalogue = bodies[index].physical?.catalogueShipID\n          ?? ShipCatalogue.nativeShip(bodies[index].hull)?.id,",
+    "after": "\n        let catalogue = StationPoliceSource.empCatalogueID(for: bodies[index]),"
+  },
+  {
+    "path": "Sources/L337Core/EMPElectricalRuntime.swift",
+    "before": "\n      let catalogue = physical.catalogueShipID ?? ShipCatalogue.nativeShip(bodies[index].hull)?.id,",
+    "after": "\n      let catalogue = StationPoliceSource.empCatalogueID(for: bodies[index]),"
+  },
+  {
+    "path": "Tests/L337CoreTests/OriginalKiteInterceptorUnitTests.swift",
+    "before": "\n    for mesh in [commander.playerMesh, try #require(ShipCatalogue.rawMesh(ship.id))] {",
+    "after": "\n    #expect(ship.nativeHull == .viper && ShipCatalogue.nativeShip(.viper)?.id == ship.id)\n    for mesh in [commander.playerMesh, try #require(ShipCatalogue.rawMesh(ship.id)), Mesh.hull(.viper)] {"
+  }
+]

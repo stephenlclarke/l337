@@ -4,7 +4,7 @@ import Foundation
 enum OriginalRedtailMkIIIActivation {
   static let id = "SH103"
   static let specificationSHA256 =
-    "902ed193390f5fa4dd4fabf3099717b91a67fb1d09ea95a93d80b654822cdf34"
+    "a867f71cdc9693f245c54a8c63d15a657a00c6ba7db782cfa384b6f6ee41ccdf"
 
   enum Failure: Error { case unsupportedDefinition }
 
@@ -27,31 +27,7 @@ enum OriginalRedtailMkIIIActivation {
       physical.metresPerSourceUnit == 1,
       physical.model.coordinateUnits == "metres"
     else { throw Failure.unsupportedDefinition }
-    let ship = try OriginalPlayerHullActivation.resolve(
+    return try OriginalPlayerHullActivation.resolve(
       retained, definition: definition, physical: physical)
-    return .init(
-      id: ship.id, name: ship.name, shipClass: ship.shipClass, appearances: ship.appearances,
-      evidence: ship.evidence, refit: ship.refit, model: ship.model, modelSource: ship.modelSource,
-      dimensions: ship.dimensions, geometryContext: ship.geometryContext,
-      profiles: ship.profiles.map(originalEquipmentBudget), game: ship.game,
-      catalogue: ship.catalogue, design: ship.design, nativeHull: ship.nativeHull,
-      nativeDesign: ship.nativeDesign, nativeCombat: ship.nativeCombat)
-  }
-
-  private static func originalEquipmentBudget(_ profile: ShipProfile) -> ShipProfile {
-    guard profile.group == "project-refit-v1" else { return profile }
-    return .init(
-      id: profile.id, title: profile.title, group: profile.group,
-      context: profile.context + " SH103 equipment budget follows original-fleet E01.",
-      fields: profile.fields.map { field in
-        guard field.key == "equipment_capacity_units" else { return field }
-        return .init(
-          key: field.key, label: field.label, text: "13 equipment-budget units", number: 13,
-          unit: "equipment-budget units", status: "original-fleet design estimate",
-          basis:
-            "Meridian 8c899a7e0d351551498b05a7b371b84758575085 / "
-            + "docs/meridian/SHIP-REFERENCE.md SH103 E01: 8 + ceil(22 / 5) = 13; "
-            + "original-hull capacity estimate; no equipment is issued.")
-      })
   }
 }

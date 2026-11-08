@@ -12,7 +12,13 @@ enum FleetCataloguePreview: Sendable, Equatable {
     guard let owner, let discovery, discovery.owner == owner,
       let entry = discovery.entries[ship.id], entry.encounter.owner == owner, entry.valid
     else { return .silhouette }
-    return .recordedWireframe
+    switch ship.catalogue.collectionMilestone {
+    case .docking where entry.milestone?.kind == .stationDocking,
+      .destruction where entry.milestone?.kind == .playerDestruction:
+      return .shaded
+    default:
+      return .recordedWireframe
+    }
   }
 
   var caption: String? {

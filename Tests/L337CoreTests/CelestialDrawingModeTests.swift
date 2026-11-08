@@ -71,6 +71,7 @@ private func modeCelestials(_ style: ShipDisplayStyle, position: Vector3 = .init
   let directory = URL(fileURLWithPath: output, isDirectory: true)
   try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.screen = .front
   game.speed = 0

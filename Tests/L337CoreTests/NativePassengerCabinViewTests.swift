@@ -378,13 +378,9 @@ extension NativeViewTests {
   #expect(!forged.valid)
   #expect(throws: CommanderEquipmentError.self) { try forged.prepareEquipment() }
   var maximum = Commander()
+  try maximum.prepareEquipment(legacy: false)
   maximum.xyzzyActive = true
-  maximum.equipment = Equipment.maximumHardware
-  maximum.fuelStorageUnits = FuelStorage.maximumCount
-  try maximum.initializeEquipment(owner: UUID(), hull: UUID(), legacy: false, xyzzyGrant: true) {
-    UUID()
-  }
-  maximum.mirrorFittedEquipment()
+  try maximum.grantMaximumHardware()
   #expect(maximum.valid && maximum.fuelStorageUnits == 4)
   #expect(maximum.equipmentInventory?.items.isEmpty == false)
   #expect(
@@ -393,9 +389,12 @@ extension NativeViewTests {
         && ($0.provenance == .standard || $0.provenance == .xyzzy)
     } == true)
   #expect(maximum.accommodation.ownedBerths.isEmpty)
+  let emp = try #require(maximum.fittedEquipment(at: .utility(.empPirateBlaster)))
+  #expect(emp.provenance == .xyzzy && emp.empBank?.module == emp.id && emp.empGrades == .base)
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.enableXYZzy()
-  game.restoreXYZzyCobra()
+  game.restoreXYZzyStarter()
   #expect(game.commander.xyzzyActive && game.commander.valid)
   #expect(game.commander.equipment.contains("Energy Bomb"))
   #expect(game.commander.accommodation.ownedBerths.isEmpty)

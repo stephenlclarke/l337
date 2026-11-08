@@ -29,6 +29,7 @@ private func makeBridgeLaserProofFixture() throws -> BridgeLaserProofFixture {
   game.screen = .status
   game.scriptPacks = [pack]
   let instance = try game.acceptScriptMission(pack)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.emitScriptEvent("station.undocked")
   game.drainScriptEvents()
@@ -172,6 +173,7 @@ private func makeBridgeLegacyPlasmaFixture() throws -> BridgeLegacyPlasmaFixture
   game.screen = .status
   game.scriptPacks = [pack]
   let instance = try game.acceptScriptMission(pack)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.emitScriptEvent("station.undocked")
   game.drainScriptEvents()
@@ -478,6 +480,7 @@ private func makeBridgeArchivedPlasmaFixture() throws -> BridgeArchivedPlasmaFix
   game.screen = .status
   game.scriptPacks = [pack]
   let instance = try game.acceptScriptMission(pack)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.emitScriptEvent("station.undocked")
   game.drainScriptEvents()
@@ -707,6 +710,7 @@ private func makeBridgeLaserFireFixture() throws -> BridgeLaserFireFixture {
   game.screen = .status
   game.scriptPacks = [pack]
   let instance = try game.acceptScriptMission(pack)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.emitScriptEvent("station.undocked")
   game.drainScriptEvents()
@@ -791,6 +795,7 @@ private func assertBridgeLaserFireAndReplay(_ fixture: BridgeLaserFireFixture) t
 
 private func bridgeFixture() throws -> (SpaceBody, EncounterContext) {
   var game = Game(executive: false)
+  try game.commander.prepareEquipment(legacy: false)
   game.launch()
   game.bodies = [.init(id: 42, hull: .constrictor, position: .init(0, 0, 2000))]
   game.bodies[0].missionActorID = bridgeActor
@@ -1136,6 +1141,7 @@ struct MissionNativeBridgeTests {
     game.screen = .status
     game.scriptPacks = [pack]
     let instance = try game.acceptScriptMission(pack)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     game.emitScriptEvent("station.undocked")
     game.drainScriptEvents()
@@ -1165,6 +1171,7 @@ struct MissionNativeBridgeTests {
 
   @Test func fabricatedNativeBodyCannotPassActualResolverWithoutRetainedMissionAuthority() throws {
     var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
     game.launch()
     var body = SpaceBody(id: 42, hull: .constrictor, position: .init(0, 0, 2000))
     body.missionActorID = bridgeActor
@@ -1329,6 +1336,7 @@ struct MissionNativeBridgeTests {
     for id in ["SH043", "SH171", "SH041"] {
       let ship = try #require(ShipCatalogue.ship(id))
       var game = Game(executive: false)
+      try game.commander.prepareEquipment(legacy: false)
       game.launch()
       game.celestials = []
       game.bodies = [.init(id: 42, hull: ship.nativeHull ?? .cobra, position: .init(0, 0, 5000))]
@@ -1391,6 +1399,7 @@ struct MissionNativeBridgeTests {
     var nativeHulls: Set<Hull> = []
     for ship in ShipCatalogue.all {
       var game = Game(executive: false)
+      try game.commander.prepareEquipment(legacy: false)
       game.launch()
       game.celestials = []
       game.bodies = [.init(id: 42, hull: ship.nativeHull ?? .cobra, position: .init(0, 0, 5000))]

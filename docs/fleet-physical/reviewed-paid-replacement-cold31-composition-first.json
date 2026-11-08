@@ -1,0 +1,141 @@
+{
+  "status": "FIRST_EXACT_REVIEWED_NEW_PAID_REPLACEMENT_SUCCESSOR_FILE_BEFORE_CREATION",
+  "beforeCommit": "3ec7e6d0b734bfa746befdef24fca8a8355e3235",
+  "child": {
+    "path": "/tmp/elite-mc1-paid-laser-displacement-cold31-constructor-child/manifest.json",
+    "bytes": 1542,
+    "sha256": "0a19254d4841d3d0ea05b9d5e08e86860dfd7438412973bef6cdac4a64c18c78"
+  },
+  "parent": {
+    "path": "/tmp/elite-mc1-paid-laser-displacement-writer-retry-child/manifest.json",
+    "bytes": 1680,
+    "sha256": "29e2b429006585c6679b142c1e5f14063b08f948283e68a20ceedfe5304b49ce"
+  },
+  "originalFinding": {
+    "path": "/tmp/elite-g2-29e2-paid-laser-writer-retry-source-review/review.json",
+    "bytes": 4170,
+    "sha256": "eb8438d16c0c951011896b6309002c8762fcfa54e6822be20ca0a3c07f729eca"
+  },
+  "successorReview": {
+    "path": "/tmp/elite-g2-0a192-paid-laser-cold31-successor-review/review.json",
+    "bytes": 3048,
+    "sha256": "17dcb017812ee0ef47307fc0abb9bd405157fb623d3f1522e28908f6a932bf45"
+  },
+  "newTarget": "Tests/L337CoreTests/PaidEquipmentReplacementPersistenceTests.swift",
+  "preimageExists": false,
+  "sourceInputsVerified": [
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/CommanderEquipment.swift",
+      "bytes": 10039,
+      "sha256": "f1eccbf55a41e097de8f5990cee4a18408c1eb6470c0d7d1bb8a6eb031462bc8"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/EquipmentTransactions.swift",
+      "bytes": 15828,
+      "sha256": "9faeac3f76d897ae94dfaf2fd2b61d073b5386bcddaf8d48c68b9df53de41c18"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/EquipmentActorTransactions.swift",
+      "bytes": 10255,
+      "sha256": "b81db1e1f95ff5e214d4e0104aae1340af3096b00c69a65d2ce037527af8962a"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/OriginalFleetRuntimeHullSource.swift",
+      "bytes": 5757,
+      "sha256": "b1ce80181b273966879087c810b9713cbafd1fcb77f246f737c345ce771595cd"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/OriginalKiteInterceptorActivation.swift",
+      "bytes": 1462,
+      "sha256": "ec7984ed153d142d5420c709c9deea69dd3653140063f7de34023b99cfc6d50b"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/Game.swift",
+      "bytes": 179788,
+      "sha256": "4deeccae23639e71125f46fb3d13008aac7959bd4894eba3bb845563bc29cf09"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Tests/L337CoreTests/NativeStationIntegrationTests.swift",
+      "bytes": 32108,
+      "sha256": "1f2d5852c3db2b5f72e217c144ccb5ba3618d8ceae92d7182710fa7bd8351511"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Tests/L337CoreTests/ScriptFinanceTests.swift",
+      "bytes": 17174,
+      "sha256": "fc9301f53f99969722d0504615dc4150406616092cdd5d3c45e13ff9d3cd1673"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Tests/L337CoreTests/NativeSaveTestFixture.swift",
+      "bytes": 625,
+      "sha256": "78314ebc44b90f614f94afc17945d02140a4427d1e1bc946519e6f05e365ea9c"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Tests/L337CoreTests/EquipmentActorBoundaryTests.swift",
+      "bytes": 18573,
+      "sha256": "1c806bec1ff7b47afa811e9041e59bd88978ecab5a870b38293be6a43b37fbbb"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Tests/L337CoreTests/InventoryCommandTests.swift",
+      "bytes": 12792,
+      "sha256": "615cfc6243f2104d28d853611aceb3c428a2be5fb7e79a36ada92126d35fffa7"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/LaserSpecification.swift",
+      "bytes": 2653,
+      "sha256": "7ef4750ec3c25ad224131dc52a145baa901fb1dac6b5b33a17c15d8cb00043e3"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/EquipmentRuntimeCatalog.swift",
+      "bytes": 8108,
+      "sha256": "bb9b6d95f357c38021f20177fa1d0d357a33892937ee27000f161266c17f900c"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/OwnedEquipmentInventory.swift",
+      "bytes": 23031,
+      "sha256": "83009fdd488c170fff421cff398858acc77836d6668308ae69a743e8a1a7544f"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/EquipmentPurchaseProgression.swift",
+      "bytes": 24305,
+      "sha256": "770618fcbb38330f568dbb862fc471762552cc17b55edfd407a1eb7462b0460c"
+    },
+    {
+      "path": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/Sources/L337Core/ComponentFittingSlot.swift",
+      "bytes": 1172,
+      "sha256": "61a0381d142d0ed683de8cb7029ea6c7967a0653cc82d71d0ce3070c1f2361c7"
+    }
+  ],
+  "protectedCurrentG4Files": [
+    {
+      "path": "Sources/L337Core/NPCResourceRuntime.swift",
+      "bytes": 3320,
+      "sha256": "dc45a5957cf3be717c7f6e81eb8aebf56d5464a4e0571e8a9f1eaa0c78c082be"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCCurrentResourceAdvanceTests.swift",
+      "bytes": 3353,
+      "sha256": "1f009670de37fcf3cf76b380f7120c74347e567ad08ee29ed3355fcdd7558fdc"
+    },
+    {
+      "path": "Sources/L337Core/GameplayEncounters.swift",
+      "bytes": 20459,
+      "sha256": "56452e405ac0bc8612694e85188fde4ff364f0574ae56e1823074805d2e4235c"
+    },
+    {
+      "path": "Tests/L337CoreTests/NPCBeamCurrentSourceTests.swift",
+      "bytes": 3774,
+      "sha256": "1e76801c994ae54a152ddd403478ff94c06092651ed583cbe947303897e71b15"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Fitting.swift",
+      "bytes": 4656,
+      "sha256": "4e458baacd4d309dbd1eb9db63407cce24c294b2e2342fe043480ab8aa370e26"
+    },
+    {
+      "path": "Tests/L337CoreTests/StationAutoDefenceTests.swift",
+      "bytes": 162476,
+      "sha256": "efdca609e257b8b2ff1ed445b2d2b42a5181f4f457258f2e861ff340e448abfd"
+    }
+  ],
+  "scope": "Only exact corrected9345/8cde29ca new test file; current resource/beam/fitting/P2/station changes preserved. Original29e2/eb8438 history retained. Controlled PREpurchase31 cold seed, genuine disk load/oracles unchanged. No helper/production edits or earned/native/crew/rollback PASS."
+}

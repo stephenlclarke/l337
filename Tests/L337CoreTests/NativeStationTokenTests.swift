@@ -8,29 +8,36 @@ import Testing
   let world = UUID()
   func identity(_ key: String) -> NativeStationIdentity {
     .init(
-      world: world, system: source.system, definition: source.kind.sourceDefinition,
-      version: "1.5.4", key: key)
+      world: world, system: source.system, definition: source.descriptor.definition,
+      version: source.descriptor.version, key: key)
   }
   let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._"
-  let allowed = Set(alphabet.unicodeScalars.map(\.value))
   for value in UInt32(0)...255 {
     let character = String(try #require(UnicodeScalar(value)))
-    #expect(identity(character).valid == allowed.contains(value))
+    let candidate = identity(character)
+    #expect(!candidate.valid && NativeStationSource.binding(for: candidate) == nil)
+    #expect(throws: SaveError.invalidCommander) {
+      _ = try JSONDecoder().decode(NativeStationIdentity.self, from: JSONEncoder().encode(candidate))
+    }
   }
-  #expect(identity(alphabet).valid)
-  #expect(identity(String(repeating: "A", count: 80)).valid)
+  // Valid station identities are exact adopted sites, not arbitrary well-formed ASCII tokens.
   for key in [
+    alphabet, String(repeating: "A", count: 80),
     "", String(repeating: "A", count: 81), "A B", "A/B", "A:B", "A\nB", "A\0B",
     "A\u{200D}B", "e\u{301}", "\u{FF21}", String(repeating: "\u{E9}", count: 40),
   ] {
-    #expect(!identity(key).valid)
+    let candidate = identity(key)
+    #expect(!candidate.valid && NativeStationSource.binding(for: candidate) == nil)
+    #expect(throws: SaveError.invalidCommander) {
+      _ = try JSONDecoder().decode(NativeStationIdentity.self, from: JSONEncoder().encode(candidate))
+    }
   }
   let actual = source.identity(world: world)
   #expect(actual.valid && NativeStationSource.binding(for: actual) == source)
   let alias = identity(actual.key + ".")
-  #expect(alias.valid && NativeStationSource.binding(for: alias) == nil)
+  #expect(!alias.valid && NativeStationSource.binding(for: alias) == nil)
   let outsideLocalSource = NativeStationIdentity(
     world: world, system: .init(galaxy: source.system.galaxy, system: 256),
-    definition: source.kind.sourceDefinition, version: "1.5.4", key: actual.key)
+    definition: source.descriptor.definition, version: source.descriptor.version, key: actual.key)
   #expect(!outsideLocalSource.valid && NativeStationSource.binding(for: outsideLocalSource) == nil)
 }

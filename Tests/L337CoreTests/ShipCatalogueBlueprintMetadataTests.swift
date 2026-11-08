@@ -10,12 +10,12 @@ struct ShipCatalogueBlueprintMetadataTests {
     let expected = Set((112...125).map { String(format: "SH%03d", $0) } + ["SH171"])
     let alien = ShipCatalogue.all.filter { $0.catalogue.primaryType == .alien }
     #expect(Set(alien.map(\.id)) == expected)
-    #expect(alien.allSatisfy { $0.catalogue.primaryRole == .military })
-    let liberator = try #require(ShipCatalogue.ship("SH171"))
+    #expect(alien.allSatisfy { $0.catalogue.primaryRole == nil && $0.catalogue.roleWeights.isEmpty })
+    let medusa = try #require(ShipCatalogue.ship("SH171"))
     #expect(
-      liberator.catalogue.access == .xyzzyOnly && liberator.catalogue.purchasePolicy == .xyzzyOnly)
+      medusa.catalogue.access == .normal && medusa.catalogue.purchasePolicy == .never)
     #expect(
-      liberator.catalogue.collectionMilestone == .none && !liberator.catalogue.discoveryEligible)
+      medusa.catalogue.collectionMilestone == .none && !medusa.catalogue.discoveryEligible)
   }
 
   @Test func everyFabricationTierIsDisplayedAndHasAReachableSourceSystem() throws {
@@ -33,7 +33,9 @@ struct ShipCatalogueBlueprintMetadataTests {
     }
     for ship in ShipCatalogue.all {
       let metadata = ship.catalogue
-      if metadata.purchasePolicy == .blueprintFabrication
+      if metadata.purchasePolicy == .pendingFabrication && metadata.minimumBuildTechLevel == nil {
+        #expect(!metadata.normalPurchaseEligible && metadata.mechanicsStatus == .pending)
+      } else if metadata.purchasePolicy == .blueprintFabrication
         || metadata.purchasePolicy == .pendingFabrication
       {
         let level = try #require(metadata.minimumBuildTechLevel)
@@ -69,7 +71,7 @@ struct ShipCatalogueBlueprintMetadataTests {
     let redback = try #require(ShipCatalogue.ship("SH153"))
     #expect(redback.catalogue.minimumBuildTechLevel == 13)
     #expect(redback.catalogue.habitat?.permits(government: 7, displayedTechLevel: 12) == true)
-    for id in ["SH157", "SH158", "SH159", "SH160", "SH161", "SH170"] {
+    for id in ["SH157", "SH158", "SH159", "SH160", "SH170"] {
       let metadata = try #require(ShipCatalogue.ship(id)?.catalogue)
       #expect(metadata.primaryRole == .military && metadata.habitat == nil)
       #expect(Set(metadata.galaxies) == Set(0..<8))
@@ -88,17 +90,41 @@ struct ShipCatalogueBlueprintMetadataTests {
           && ship.catalogue.damagePolicy == .destructible)
       #expect(ship.game != nil && ship.catalogue.playerFlyable)
     }
-    for id in ["SH028", "SH034", "SH102", "SH141", "SH156", "SH161", "SH164"] {
+    let expectedStationDamagePolicies: [String: ShipCatalogueDamagePolicy] = [
+      "SH028": .activeStationIndestructible,
+      "SH034": .destructible,
+      "SH102": .destructible,
+      "SH141": .destructible,
+      "SH161": .destructible,
+      "SH164": .destructible,
+    ]
+    for id in ["SH028", "SH034", "SH102", "SH141", "SH161", "SH164"] {
       let metadata = try #require(ShipCatalogue.ship(id)?.catalogue)
       #expect(metadata.isCapital && metadata.capitalSubtype == .station)
       #expect(metadata.purchasePolicy == .never && metadata.discoveryEligible)
-      #expect(
-        metadata.collectionMilestone == .docking
-          && metadata.damagePolicy == .activeStationIndestructible)
+      // Damage policy is per source; station collection still requires docking.
+      let expectedDamagePolicy = try #require(expectedStationDamagePolicies[id])
+      #expect(metadata.collectionMilestone == .docking)
+      #expect(metadata.damagePolicy == expectedDamagePolicy)
+      // Native geometry/service binding does not declare an authored placement policy.
+      // Pending station declarations alone provide no native site, port or docking receipt.
       #expect(metadata.placementStatus == .pending)
     }
-    // Active station policy does not turn an abandoned SH156 wreck into a live station.
-    for id in ["SH005", "SH006", "SH045", "SH078", "SH079", "SH080", "SH096", "SH097", "SH155"] {
+    let platform = try #require(ShipCatalogue.ship("SH156"))
+    #expect(platform.catalogue.capitalSubtype == .platform && platform.catalogue.objectKind == .platform)
+    #expect(platform.catalogue.collectionMilestone == .none && !platform.catalogue.discoveryEligible)
+    #expect(platform.game == nil && platform.nativeDocking == nil)
+    let station = try #require(ShipCatalogue.ship("SH161"))
+    #expect(station.catalogue.primaryRole == nil && station.catalogue.roleWeights.isEmpty)
+    #expect(station.catalogue.galaxies.isEmpty && station.catalogue.habitat == nil)
+    #expect(OriginalDetailedHullStage.blocksRuntime(platform.id))
+    // Source declarations do not turn an unqualified original environment into an active service.
+    for id in ["SH005", "SH006"] {
+      let metadata = try #require(ShipCatalogue.ship(id)?.catalogue)
+      #expect(!metadata.isCapital && metadata.purchasePolicy == .blueprintFabrication)
+      #expect(metadata.normalPurchaseEligible && metadata.mechanicsStatus == .ready)
+    }
+    for id in ["SH045", "SH078", "SH079", "SH080", "SH096", "SH097", "SH155"] {
       let metadata = try #require(ShipCatalogue.ship(id)?.catalogue)
       #expect(!metadata.isCapital && metadata.purchasePolicy == .blueprintFabrication)
     }

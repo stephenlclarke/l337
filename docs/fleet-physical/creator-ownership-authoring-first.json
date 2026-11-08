@@ -1,0 +1,15 @@
+{
+  "status": "OWN_INTEGER_SOURCE_OPERATION_RANGE_RECORDER_FROZEN_BEFORE_EXECUTION",
+  "authoringSourceSHA256": "366a8b63aad9610d9ca6bd8a69613c4c50e10e0b5c21077dc9499f65da51b093",
+  "correspondenceFirstSHA256": "172b369ea70c5fe9835983b48ee5fe177970f0f22764fc3b7020acea6108a6f1",
+  "maximumSourceParses": 76,
+  "maximumPartRecords": 20000,
+  "maximumFaceIndexChecks": 1039704,
+  "maximumFaceMaterialChecks": 346568,
+  "coordinateConversions": 0,
+  "spanAreaMassTensorEvaluations": 0,
+  "originalCreatorImportsOrExecutions": 0,
+  "geometryWrites": 0,
+  "nativeCompilerRendererTests": 0,
+  "stockRoleStatus": "Explicit new engineering declarations, not recovered material data; no mass computed."
+}

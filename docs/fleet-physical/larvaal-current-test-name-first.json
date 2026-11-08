@@ -1,0 +1,7 @@
+{
+  "status": "BEFORE_TEST_FILENAME_REFERENCE_HUNK",
+  "path": "Package.swift",
+  "bytes": 11178,
+  "sha256": "5ed4c39cf26b19af5034f3debbe7b9b1160e26f1ca5737eda9361f6c5b3f7a74",
+  "scope": "Rename obsolete LiberatorTests source to MedusaCurrentSourceTests in same existing test target; positive geometry/projection/material validation retained."
+}

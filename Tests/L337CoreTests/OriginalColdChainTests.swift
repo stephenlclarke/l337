@@ -2,6 +2,7 @@ import Foundation
 import Testing
 
 @testable import L337Core
+@testable import L337TestSupport
 
 private let originalColdChainDigest =
   "28d0072262956e974bc2033f8b0e984e1b35780a98b6861a1a81b4ca43c7487f"
@@ -37,7 +38,8 @@ private struct OriginalColdChainFixture {
     if escapeReady {
       let pod = try #require(Equipment.all.first { $0.name == "Escape Pod" })
       let quote = try game.quoteEquipmentPurchase(pod)
-      try #require(try game.applyEquipmentPurchase(quote))
+      let equipmentPurchased = try game.applyEquipmentPurchase(quote)
+      try #require(equipmentPurchased)
     }
     let runtime = GameRuntime(game: game, saveURL: save)
     try await runtime.save(to: save)

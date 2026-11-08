@@ -1,0 +1,9 @@
+# feat(fleet): complete the original fleet batch
+
+Development branch; not ready for integration. This batch replaces the original fleet in one coherent implementation and acceptance pass. The governing scope is all 171 entries in FLEET-BACKLOG.json.
+
+Current authored changes stage two detailed Goshawk resources behind explicit native-qualification refusal, compose the Bison runtime, replace kill-based fabrication with retained native EMP/cut/scoop intake, and align the starter's R3 recovery-tool capability and equipment budget. The current 171-entry R3 table governs per-ID requirements; 49 additional source-only mass/COM/inertia budgets follow Root's newly adopted engineering policy and exact named source maps. Geometry, crew, kit and physical mass are not inferred from cargo or bounding boxes. Blueprint knowledge reads retained structural receiving history and survives sample sale; no compatibility reader, backfill, saved token or schema is added.
+
+New source covers pending-hull refusals, starter R3 capability without free kit, genuine controlled kill-alone refusal, and a paid EMP acquisition/fabrication/crew/writer/cold journey. These and the modified tests are uncompiled and UNRUN. G4 performed source/pin/context checks and git whitespace checks only. G1 must compile, execute focused and full required checks, close findings and record actual game acceptance after the whole batch is coherent. Source review of the final composition remains required.
+
+The remaining fleet resources/runtime routes, older exchange-test transitions, full negative proof coverage, source/physical blockers and actual game verification remain open. FLEET-IMPLEMENTATION.md separates authored, reviewed, integrated, tested and accepted status. This document must be rewritten around the final completed implementation before a real PR is opened.

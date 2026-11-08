@@ -1,0 +1,438 @@
+{
+  "schema": "l337.per-id-physical-input-layout-proposal/1",
+  "id": "SH112",
+  "name": "Larvaal Warden",
+  "status": "NEW_AUTHORED_LAYOUT_AND_REQUIRED_INPUT_PLAN_NOT_INSTALLED_NOT_QUALIFIED",
+  "owner": "G4 original fleet authoring; Root coordinates actual blueprint producer and G1 numerical/native execution",
+  "purpose": "A concrete native two-cell/shared-corridor/service-spine arrangement to be built from real physical source inputs, never an empty record filled with invented success.",
+  "currentSources": {
+    "r3": {
+      "path": "docs/fleet-design-v2/ships/SH112.toml",
+      "sha256": "cbcdc5e45436d78d490b00f76b8e3f430e963fb5204cd6162f51fc802ad8674b"
+    },
+    "geometry": {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-design.toml",
+      "bytes": 880289,
+      "sha256": "32f71d1edac325cffe3299c12c89d87ade907c42f81986820622127ca6f716e1"
+    },
+    "components": {
+      "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-05/SH112-components.json",
+      "bytes": 1849,
+      "sha256": "8e92b8b5b65efa8bbd8544e7270d980c9d4b39d2033ca1e32a39a4b652d10bc3"
+    },
+    "installedResource": {
+      "path": "Sources/L337Core/Resources/Ships/SH112.toml",
+      "bytes": 904610,
+      "sha256": "549133779c63fa4e3f27e35a2e337107a7211ca9bbc910352af58a3e99bedab5",
+      "owned": false
+    },
+    "emptyBudget": {
+      "path": "Sources/L337Core/Resources/OriginalFleetPhysical/SH112.json",
+      "bytes": 11770,
+      "sha256": "56d9bfb85c9970767561b8a65fb89c6970a9485d1227caf0d1c2384212cc56fa",
+      "owned": false
+    },
+    "pinnedMachinery": [
+      {
+        "path": "Sources/L337Core/Resources/Ships/SH112.toml",
+        "bytes": 904610,
+        "sha256": "549133779c63fa4e3f27e35a2e337107a7211ca9bbc910352af58a3e99bedab5"
+      },
+      {
+        "path": "Sources/L337Core/Resources/OriginalFleetPhysical/SH112.json",
+        "bytes": 11770,
+        "sha256": "56d9bfb85c9970767561b8a65fb89c6970a9485d1227caf0d1c2384212cc56fa"
+      },
+      {
+        "path": "Sources/L337Core/OriginalFleetLarvaalPhysicalRegistrations.swift",
+        "bytes": 6525,
+        "sha256": "560232d01d8954477df164531b0ed3595caca3657d77c0e99cc6bd65353d8001"
+      },
+      {
+        "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+        "bytes": 283481,
+        "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+      },
+      {
+        "path": "Sources/L337Core/OriginalFleetR3Contract.swift",
+        "bytes": 2474,
+        "sha256": "a8d3a1afc767b068fc6c97ec1230a1100a94969b5b4a7a7adf3220418cf43ce6"
+      },
+      {
+        "path": "Sources/L337Core/OriginalFleetCurrentHullSource.swift",
+        "bytes": 2914,
+        "sha256": "2303fc8489b0c1f70b3e481cfb943be3703a54f7f523dc35866401490b587248"
+      },
+      {
+        "path": "Sources/L337Core/OriginalDetailedHullStage.swift",
+        "bytes": 16038,
+        "sha256": "3ca268acf238f57b665e4eb53f6fbcff271610f124786c032607c74e2c861ef6"
+      },
+      {
+        "path": "Sources/L337Core/EquipmentModuleTemplates.swift",
+        "bytes": 6099,
+        "sha256": "387f5623bc0a390864b29ca5f2662c52bd091c54b024f8761bf8b098610a566f"
+      },
+      {
+        "path": "Sources/L337Core/ComponentProgression.swift",
+        "bytes": 19288,
+        "sha256": "991ae40bdd0e26631db055aea741c500ca8b76320f282898f1ad4ea11f9391b2"
+      },
+      {
+        "path": "Sources/L337Core/AlienModuleDefinition.swift",
+        "bytes": 4860,
+        "sha256": "65eb4c9f73a0a846723abb2d36514148bc186bb3ab907f63e4339591936a47d6"
+      },
+      {
+        "path": "Sources/L337Core/PassengerCabinGrades.swift",
+        "bytes": 7190,
+        "sha256": "12fac9619f733666db4cba1c9f83732ade9f1b29ff19318b17d9b04813a6334c"
+      },
+      {
+        "path": "Sources/L337Core/ShipAccommodation.swift",
+        "bytes": 11494,
+        "sha256": "13bf2d7e2c2d2513372535bf255d67ed1b9244e7dbd110733f6ecd98db003c38"
+      },
+      {
+        "path": "Sources/L337Core/NativePeopleState.swift",
+        "bytes": 32164,
+        "sha256": "e7677446562caa09f1747db4b4335a1d30f20e1da56c52abf399d1a403fd8886"
+      },
+      {
+        "path": "Sources/L337Core/NativeCrewService.swift",
+        "bytes": 13352,
+        "sha256": "c7370fc177cf353580113bd36718457cd9be34e0e946528cb27e1761adfd8606"
+      },
+      {
+        "path": "docs/fleet-design-v2/ships/SH112.toml",
+        "bytes": 3552,
+        "sha256": "cbcdc5e45436d78d490b00f76b8e3f430e963fb5204cd6162f51fc802ad8674b"
+      },
+      {
+        "path": "docs/fleet-physical/larvaal-area-moment-role-maps-prepared.json",
+        "bytes": 97629,
+        "sha256": "727b41dcdb23dc72ba980ea5d59f77d06ae842f55e64b7cc43779647c7085fe1"
+      },
+      {
+        "path": "docs/fleet-physical/larvaal-area-moment-role-maps-adopted-first.json",
+        "bytes": 101296,
+        "sha256": "59a0480f4c6a092fbd2bd6ae772a6c8cac8e73aca9d0965280d0b45f6110d8f9"
+      },
+      {
+        "path": "docs/fleet-physical/larvaal-area-moment-authoring.py",
+        "bytes": 10591,
+        "sha256": "210e575d8c4d75c069917384b08331e6ce9c54a177bca59343bcdd6548199899"
+      }
+    ]
+  },
+  "sourceFrame": {
+    "units": "metres",
+    "forward": "+Z",
+    "up": "+Y",
+    "origin": "Exact authored source origin; no recentering or showroom normalization",
+    "originalDesignEdits": false,
+    "nativeSourceDeclaration": "Existing192-face source is a candidate, not native/material/void/occupied qualification"
+  },
+  "currentRequirements": {
+    "nativeStaffing": {
+      "autonomous": false,
+      "declaredPlaces": 2,
+      "actualPeopleIssuedByPlan": false,
+      "phenotypeOrHumanEnvironmentInferredFromOrigin": false
+    },
+    "playerConversion": {
+      "declaredCrew": 2,
+      "separateLayoutRequired": true,
+      "nativeLayoutDoesNotApproveConversion": true
+    },
+    "initialPurchasedCabins": 0,
+    "roleKitIncludedInBareHull": false,
+    "performanceRequirements": {
+      "cargoTonnes": 28,
+      "maxSpeed": 45.0,
+      "acceleration": 17.0,
+      "energyCapacity": 470,
+      "energyRecharge": 6.4,
+      "roll": 1.3,
+      "pitch": 1.14,
+      "yaw": 1.07,
+      "shieldCapacityPerBank": 310,
+      "shieldRechargePerBank": 2.1,
+      "fuelTankLY": 13.0,
+      "maxJumpLY": 10.0,
+      "jumpChargeSeconds": 12,
+      "missileCapacity": 5,
+      "laserFacingMask": 7,
+      "cargoExpansionTonnes": 10,
+      "hullPriceCR": 408000
+    },
+    "mechanicalUnits": "Exact R3 game mechanics, not a joule/watt/fuel-density conversion or actual installed power source"
+  },
+  "ownedSourceParts": [
+    {
+      "index": 0,
+      "name": "broad closed protective mantle",
+      "vertexStart": 0,
+      "vertexCount": 768,
+      "faceStart": 0,
+      "faceCount": 1536
+    },
+    {
+      "index": 1,
+      "name": "exposed gold nucleus",
+      "vertexStart": 768,
+      "vertexCount": 722,
+      "faceStart": 1536,
+      "faceCount": 1440
+    },
+    {
+      "index": 2,
+      "name": "long curved mantle lobe",
+      "vertexStart": 1490,
+      "vertexCount": 242,
+      "faceStart": 2976,
+      "faceCount": 480
+    },
+    {
+      "index": 3,
+      "name": "small inner organ",
+      "vertexStart": 1732,
+      "vertexCount": 722,
+      "faceStart": 3456,
+      "faceCount": 1440
+    },
+    {
+      "index": 4,
+      "name": "long curved mantle lobe",
+      "vertexStart": 2454,
+      "vertexCount": 242,
+      "faceStart": 4896,
+      "faceCount": 480
+    },
+    {
+      "index": 5,
+      "name": "small inner organ",
+      "vertexStart": 2696,
+      "vertexCount": 722,
+      "faceStart": 5376,
+      "faceCount": 1440
+    }
+  ],
+  "newLayoutChoices": {
+    "meaning": "Explicit NEW per-ID arrangement choices. They are not recovered rooms, clear volumes, biological functions or physical acceptance.",
+    "nativeCells": [
+      {
+        "id": "native-cell-negative-X",
+        "candidateParentComponent": 0,
+        "side": "-X",
+        "axisAlignment": "Native source+Y up/+Z forward",
+        "placementRule": "Candidate cell centre is primary component area centroid minus(source+X times actual habitat lateral half-extent plus actual corridor half-width). Use actual habitat assembly floor datum; no default person/cabin dimensions.",
+        "doorDirectionToSharedCorridor": "+X"
+      },
+      {
+        "id": "native-cell-positive-X",
+        "candidateParentComponent": 0,
+        "side": "+X",
+        "axisAlignment": "Native source+Y up/+Z forward",
+        "placementRule": "Mirror the negative-X cell across the plane through the actual primary component area centroid with normal source+X, using the SAME actual habitat assembly and corridor dimensions. No arbitrary scale or automatic fit.",
+        "doorDirectionToSharedCorridor": "-X"
+      }
+    ],
+    "sharedCorridor": {
+      "id": "native-longitudinal-corridor",
+      "candidateParentComponent": 0,
+      "longitudinalDirection": "+Z",
+      "centrePlane": "Source primary-component centroid plane; actual floor/clearance dimensions come only from habitat blueprint",
+      "connects": [
+        "native-cell-negative-X",
+        "native-cell-positive-X",
+        "native-control-bay",
+        "declared-egress-interface"
+      ],
+      "exteriorInterface": "UNISSUED actual source portal, not an assumed opening through the closed mantle"
+    },
+    "serviceSpine": {
+      "id": "native-underfloor-service-spine",
+      "candidateParentComponent": 0,
+      "side": "-Y of the real habitat floor",
+      "roles": [
+        "intrinsic power bay",
+        "fuel containment/transfer bay",
+        "control-and-sensing interfaces",
+        "existing empty carried-equipment/launcher interface roles"
+      ],
+      "placementRule": "Keep service body volumes below the actual shared corridor and outside occupied clearance. Derive each body pose from its real installed assembly/connector geometry, not a point mass at the candidate centroid.",
+      "connectivity": [
+        "power-to-native-habitat",
+        "power-to-controls",
+        "power-to-component3-mechanism",
+        "power-to-component5-mechanism",
+        "fuel-to-component3-mechanism",
+        "fuel-to-component5-mechanism"
+      ]
+    },
+    "nativeControlBay": {
+      "id": "native-control-bay",
+      "candidateParentComponent": 0,
+      "orderingChoice": "Forward(+Z) of the two-cell junction, connected to shared corridor",
+      "physicalModel": "Required actual installed control/sensing hardware and compatible occupied operating envelope; none issued by this plan"
+    },
+    "propulsionBays": [
+      {
+        "sourceComponent": 3,
+        "sourceName": "small inner organ",
+        "roleBasis": "Existing explicitly proposed field-propulsion role, not a biological inference",
+        "input": "Actual mechanism body/material/power/mount geometry must join this named source component"
+      },
+      {
+        "sourceComponent": 5,
+        "sourceName": "small inner organ",
+        "roleBasis": "Same explicit engineering-role basis as the opposite mechanism",
+        "input": "Actual mechanism body/material/power/mount geometry must join this named source component"
+      }
+    ],
+    "materialExclusionParts": [
+      {
+        "index": 1,
+        "name": "exposed gold nucleus",
+        "rule": "Retain every original material surface. This material is not free void or an inferred reactor/habitat/egress route."
+      },
+      {
+        "index": 2,
+        "name": "long curved mantle lobe",
+        "rule": "Retain every original material surface. This material is not free void or an inferred reactor/habitat/egress route."
+      },
+      {
+        "index": 4,
+        "name": "long curved mantle lobe",
+        "rule": "Retain every original material surface. This material is not free void or an inferred reactor/habitat/egress route."
+      }
+    ],
+    "closedMantleRule": "Inside an AABB or a visually closed mantle is NOT a certified room. Actual material thickness/solid/void/door geometry must permit both cells, corridor and services without deleting source materials. Refuse if it cannot."
+  },
+  "firstMissingSourceDatum": {
+    "id": "SH112-native-two-place-habitat-assembly-blueprint",
+    "status": "UNISSUED_INPUT_REQUIRED",
+    "exactRequest": "One physical assembly source for the two declared SH112 native crew places: real occupied/pressure boundaries, actual internal door and egress interfaces, native environmental requirements, material recipe and power connector/demand definition.",
+    "responsibleOwner": "G4 owns original geometry/hardware blueprint PROPOSAL authoring; Root routes genuine unavailable source/operating inputs; G1 derives and qualifies actual geometry/physics/native joins.",
+    "whyFirst": "The plan cannot derive native-cell size, floor/aisle clearance, source void, real door routes or habitat power from grade/health flags, source colour/name or crew counts.",
+    "notSubstitutes": [
+      "Player conversion crew count2",
+      "OwnedPassengerCabin grade/lifeSupportWorking/stasisWorking flags",
+      "The5t cabin allocation",
+      "The120kg-per-place empty source budget",
+      "C01 clinic people/mass definitions outside their own source",
+      "A debug/private person receipt, fresh UUID, operator flag or a zero-person census"
+    ],
+    "authoredGeometryCandidate": {
+      "path": "docs/fleet-physical/SH112-native-habitat-blueprint.json",
+      "bytes": 6171,
+      "sha256": "b73b7af5341d19bb7ae0bbd11a36f45a49ad2bf134a74f399fef83847fac11ca",
+      "recipe": "docs/fleet-physical/SH112-native-habitat-recipe.py",
+      "status": "GEOMETRY_RECIPE_UNEXECUTED_ACTUAL_PHYSICAL_ENVIRONMENT_INPUTS_UNISSUED"
+    },
+    "nextExactMissingFact": "Native occupied/operating environment specification and actual material/door/life-support/power source: new geometric dimensions do not establish native body size, pressure compatibility, structural material, actuator or power."
+  },
+  "otherRealInputsStillRequired": [
+    {
+      "id": "intrinsic-power-assembly",
+      "required": "Real body/material/installation/energy calibration and power network, including actual demand of every connected system",
+      "notAllowed": "Treat750kg empty source coefficient or R3 recharge as an installed reactor or watt rating"
+    },
+    {
+      "id": "intrinsic-mechanism-and-fuel-assemblies",
+      "required": "Actual component3/5 mechanism bodies/mounts/power/fuel/material sources and real filled fuel-density/state records",
+      "notAllowed": "Treat900kg role estimates, surface glow, artist organ names or zeroed fuel as success"
+    },
+    {
+      "id": "real-native-person-inputs",
+      "required": "Actual existing person/crew provider identities and physical/environmental sources bound to the admitted body, without generating people from two places",
+      "notAllowed": "Borrow conversion/human cabin assumptions or local C01 pilot masses/identities"
+    },
+    {
+      "id": "actual-portable-equipment-and-payload",
+      "required": "Actual owned item/source/installed physical body and current amount/pose for any portable equipment, ammunition, cargo or purchased cabin",
+      "notAllowed": "Mint recommended role kit, paid purchase history, cabin, ammunition, cargo or default hardware"
+    }
+  ],
+  "existingDataAndDomainLimits": [
+    {
+      "source": "EquipmentModuleTemplates/ComponentProgression",
+      "reusable": "Actual component family/grade/version/statistics and ownership/fitting validation",
+      "notEstablished": "Body dimensions, material distribution, installed power network or a physical joule/watt calibration"
+    },
+    {
+      "source": "AlienModuleDefinition",
+      "reusable": "Actual planned/recovered transport lot contract massKg8 and halfExtents(2,2,2), with existing source/ownership custody when genuinely acquired",
+      "notEstablished": "Intrinsic SH112 reactor/habitat geometry, solid casing, pressure void, installation or free attachment; transport bounds are not an installed body"
+    },
+    {
+      "source": "PassengerCabinGrades/ShipAccommodation",
+      "reusable": "Actual owned cabin/place identities, fitting/cargo allocations, health and compatibility predicates",
+      "notEstablished": "A native two-place habitat body/material/door/route/power model or actual people"
+    },
+    {
+      "source": "OriginalFleetCurrentHullSource/empty engineering",
+      "reusable": "Exact source/R3/native/empty-budget identity and authored frame/calibration",
+      "notEstablished": "Loaded/occupied mass/COM/full tensor, installed hardware or native acceptance"
+    }
+  ],
+  "massAndGeometryJoin": {
+    "existingEmptyRoleTerms": "The existing per-ID empty budget and its explicit source-role map remain unchanged and separate.",
+    "replacementRule": "Each real intrinsic assembly must name the exact existing empty role it supersedes. G1 must derive a new whole structural+installed input model; do not add real hardware on top of the same provisional role mass or overwrite the old record with invented populated fields.",
+    "materialOwnership": "Count each actual material/body once with an explicit source owner. Do not silently double-count or subtract overlapping source stock.",
+    "loadedRule": "Actual people, all real fuel/cargo/ammunition/portable equipment and installed habitat state join after real sources and poses exist. Never zero/omit a term to fit a budget.",
+    "derivedOutputs": "Mass, COM, full local tensor, material/void and clearance results must be derived by G1 from actual sources. This plan provides no such values or result records."
+  },
+  "laterExecutionAndValidation": [
+    {
+      "phase": "source identity",
+      "existingMachinery": [
+        "OriginalFleetCurrentHullSource(id:SH112)",
+        "OriginalFleetPhysicalData.record(for:SH112)",
+        "existing pinned source/component/R3/role-map hashes"
+      ],
+      "requiredResult": "Exact source identity only; this is not actor or installed/occupied approval"
+    },
+    {
+      "phase": "real blueprint input",
+      "requiredResult": "Obtain and authenticate the first missing native habitat assembly and subsequent actual system/person/item sources; refuse absent/unknown/foreign data"
+    },
+    {
+      "phase": "candidate geometry and network",
+      "requiredResult": "G1 derives actual source-frame body poses, closed/material/void/door/egress and corridor/service clearances, actual connected power/fuel network and full material ownership. This new installed/occupied join is not implemented by the existing empty-only area-moment script."
+    },
+    {
+      "phase": "physical derivation",
+      "existingMachinery": [
+        "docs/fleet-physical/larvaal-area-moment-authoring.py (existing HULL/EMPTY source integration only)"
+      ],
+      "requiredResult": "Reuse its exact stock-source math where valid; implement/derive the actual new assembly and loaded join without relabelling old estimates as measured hardware"
+    },
+    {
+      "phase": "native admission",
+      "existingMachinery": [
+        "OriginalDetailedHullStage.requireRuntime",
+        "existing512-face/material/closed collision gates"
+      ],
+      "requiredResult": "Qualify the actual full required collision/material/void representation under the unchanged cap. Source192 faces alone is insufficient. No cap waiver, material omission or new private permission flag"
+    },
+    {
+      "phase": "actual runtime and save",
+      "existingMachinery": [
+        "current native producer/custody and NativePeopleState/NativeCrewService",
+        "current equipment ownership/fitting/purchase and current save publication/rollback"
+      ],
+      "requiredResult": "Genuine actual crew/equipment/actor births, source-qualified physical behavior, current cold save/load, failure conservation and actual game journey. The plan cannot issue a person, receipt, body or positive fixture"
+    }
+  ],
+  "prohibitions": [
+    "No original model/material/texture edits or source recentering",
+    "No handfilled mass/COM/tensor/power/success or evidence records",
+    "No biological/humanoid function inferred from origin, artist colour or organ name",
+    "No actual source rooms/doors/cabins/provider/people created by a proposal slot",
+    "No native/compiler/renderer/engineering calculation executed by G4",
+    "No normal/current paid prerequisite, custody, law, physics or private approval bypass"
+  ],
+  "stageMeaning": "Authored per-ID design/input proposal only. Current SH112 resource, model, empty engineering, mechanics, actor admission and every runtime validator remain byte exact; no qualification or actual hull acceptance is promoted. A concrete native two-cell shell/door/corridor recipe is now authored as a NEW geometric proposal; no geometry generated or actual physical datum promoted."
+}

@@ -1,0 +1,27 @@
+# Preserve the current original dispatch clue, earned history and gallery controls
+
+## Observed failures
+
+The actual 10362 native run at e8bd42dbfd5964f903f0dd060694a337071746be recorded historyChanged in dispatchWrongContactStaleTokenAndCurrentSaveCorruptionCannotConsumeOriginal, a missing sealed-dispatch-family-trace after actual delivery in the station and native issuance consumers, and an unchanged gallery entry plus missing clue after the actual receiving handoff. The pinned partial log records these failures; it does not establish the final suite result. It reports no preceding cargo-baseline failure. Root retains the complete execution disposition.
+
+## Source causes
+
+The production clue trust pin still identifies the Lua bytes before 14bed3a7. That change authorizes contact presentation at the actual original secondary source while preserving a main-station destination. It did not update the exact execution digest in ScriptBaseClueCatalog. The protected terminal path still pays and completes the actual original consignment, then awardScriptClue returns because the current completion receipt has no exact approved pin. Reproducing the existing ScriptWire name/byte-count framing from immutable bytes yields old 93289d5daf873d0cf878b37fa55178e4ab91cf6fa1947f379a54c3bc04267ae7 and current 8cd3f7b667d3842cbe2c0f4a6acb9d304fc4bede2fce66573169569e2ed4fcb3. The manifest is unchanged. The source record includes the actual historical Lua delta and both byte bindings; no runtime/project parser is executed to produce that evidence.
+
+The dispatchCurrentEnvelopes test helper attempts to replace real purchased-hull salvage history with an empty revision-zero Alien snapshot. AlienCommanderStorage.changing calls validateTransition, which correctly rejects deleting earlier world records or reducing world revision. This is a bad test setup; production history preservation must remain strict. A current save round trip must retain the actual earned snapshot and all current commander/world facts.
+
+The gallery's saved-entry hash deliberately identifies the stable instance, definition, version and content digest. Its targets hash separately includes current revision, outcome and courier status. Delivery changes the controls and full page proof while retaining the selected mission. Requiring the entry itself to change contradicts that contract and would break stable selection if implemented in production.
+
+The later pinned actual10362 log also records a forged packet for which commander.valid is false but contractsValid is true. originalSealedOriginHistoryValid checks original source and receiving history but does not join custody.item to the current instance's deterministic original item. Add that exact join without relaxing the existing conjunction requiring both invalidity results.
+
+Its fatal-loss argument has no terminal cause and retains the protected tonne. The test stages heating inside nativeCommand after deleting all bodies. At the genuine secondary source, sceneIsConsistent requires all live current-system station records to retain their physical bodies. The invalid deletion triggers publication and nativeCommand rolls the staging command back. Preserve those bodies and require the actual thermal setup before advancing. This is a source-grounded cause, not a captured intermediate diagnostic from the failed run; the corrected owning test must prove attainment and the resulting fatal outcome.
+
+## Required correction and acceptance
+
+Update only the exact original dispatch production digest. Preserve its source ID, definition, version and dialogue-confirmed event restriction. In the existing genuine receiving-doorway journey, use the actual completed receipt to prove the current pin and refuse an independently copied pack with a Lua byte change, plus foreign definition, version and cause-kind inputs. These are trust refusal inputs only; never install them as completed missions or award sources.
+
+Retain both existing forged-packet invalidity assertions. In the fatal-loss argument retain all actual source bodies, require the staged commander and bodies to be unchanged, require the staged sun and temperature, then require actual overheat, zero energy and game over. Keep the exact original terminal item, shipDestroyed cause, zero amount, released protected hold, unchanged cash/property, no clue and repeated-resolution equality.
+
+Keep the actual earned-history save envelope, require empty-history replacement to fail without mutation, and compare the complete published commander, complete world and full retained storage snapshot after a real current-format write/read. Preserve the later existing rehashed custody/payload corruption refusals. For the gallery require the same selected saved entry, changed targets and full page proof, and all existing milestone, outcome, native arrival, payment, cargo, clue and read-only assertions.
+
+Scope is one production pin, the original consignment identity join and four existing owning test files, plus issue/PR/FIRST/source records. The frozen UI decline packet remains unchanged. Do not edit runtime history validation, generic publication, gallery identity, mission resources, physical admission, cargo/fitting rules, other frozen packets or the main work ledger. This is source-only development with independent review and G1 native qualification pending, not an implementation PASS or merge-ready claim.

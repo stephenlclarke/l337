@@ -116,37 +116,102 @@ class ShipReferenceTests(unittest.TestCase):
             root=Path(folder);spec_a=root/'SH001.toml';spec_b=root/'SH002.toml';gif=root/'SH001.gif'
             spec_a.write_text('name = "Adder"\n');spec_b.write_text('name = "Other"\n');gif.write_bytes(b'GIF89a')
             previous={'input':reference.fingerprint(spec_a.read_bytes(),'renderer1'),'output':reference.digest(gif.read_bytes())}
-            self.assertFalse(reference.needs_render(spec_a,'renderer1',previous,gif))
+            self.assertFalse(reference.needs_render(reference.fingerprint(spec_a.read_bytes(), 'renderer1'), previous, gif))
             spec_b.write_text('name = "Changed other ship"\n')
-            self.assertFalse(reference.needs_render(spec_a,'renderer1',previous,gif))
+            self.assertFalse(reference.needs_render(reference.fingerprint(spec_a.read_bytes(), 'renderer1'), previous, gif))
             spec_a.write_text('name = "Adder"\n[game]\nspeed = 99\n')
-            self.assertTrue(reference.needs_render(spec_a,'renderer1',previous,gif))
+            self.assertTrue(reference.needs_render(reference.fingerprint(spec_a.read_bytes(), 'renderer1'), previous, gif))
             previous['input']=reference.fingerprint(spec_a.read_bytes(),'renderer1')
             spec_a.write_text(spec_a.read_text()+'[design]\nvertices = [[1,2,3]]\n')
-            self.assertTrue(reference.needs_render(spec_a,'renderer1',previous,gif))
+            self.assertTrue(reference.needs_render(reference.fingerprint(spec_a.read_bytes(), 'renderer1'), previous, gif))
             previous['input']=reference.fingerprint(spec_a.read_bytes(),'renderer1')
-            self.assertTrue(reference.needs_render(spec_a,'renderer2',previous,gif))
+            self.assertTrue(reference.needs_render(reference.fingerprint(spec_a.read_bytes(), 'renderer2'), previous, gif))
             gif.write_bytes(b'corrupted')
-            self.assertTrue(reference.needs_render(spec_a,'renderer1',previous,gif))
+            self.assertTrue(reference.needs_render(reference.fingerprint(spec_a.read_bytes(), 'renderer1'), previous, gif))
             gif.unlink()
-            self.assertTrue(reference.needs_render(spec_a,'renderer1',previous,gif))
+            self.assertTrue(reference.needs_render(reference.fingerprint(spec_a.read_bytes(), 'renderer1'), previous, gif))
+
+    def test_renderer_publication_refuses_drift_or_incomplete_output(self):
+        for drift in (False, True):
+            with self.subTest(drift=drift), tempfile.TemporaryDirectory() as directory:
+                media = Path(directory)
+                manifest = media / 'manifest.json'
+                manifest.write_text('{}')
+                (media / 'SH005.gif').write_bytes(b'old GIF')
+                (media / 'overview.png').write_bytes(b'old overview')
+                staged = media / 'staged'
+                staged.mkdir()
+                steps = []
+
+                def plan():
+                    steps.append('plan')
+                    return {'SH005': 'before'}
+
+                def render(ids):
+                    steps.append('render')
+                    self.assertEqual(ids, ['SH005'])
+                    (staged / 'SH005.gif').write_bytes(b'new GIF')
+                    if drift:
+                        (staged / 'overview.png').write_bytes(b'new overview')
+                    return staged
+
+                def scan():
+                    steps.append('scan')
+                    return [], {'SH005': 'changed' if drift else 'before'}
+
+                with patch.object(reference, 'MEDIA', media), \
+                        patch.object(reference.sys, 'argv', ['ship-reference.py']), \
+                        patch.object(reference, 'isolated_media_plan', side_effect=plan), \
+                        patch.object(reference, 'render_media', side_effect=render), \
+                        patch.object(reference, 'scan_media_inputs', side_effect=scan), \
+                        patch.object(reference, 'references') as references:
+                    error = 'inputs changed after planning' if drift else 'every staged output'
+                    with self.assertRaisesRegex(RuntimeError, error):
+                        reference.main()
+                self.assertEqual(steps, ['plan', 'render', 'scan'])
+                self.assertEqual(manifest.read_text(), '{}')
+                self.assertEqual((media / 'SH005.gif').read_bytes(), b'old GIF')
+                self.assertEqual((media / 'overview.png').read_bytes(), b'old overview')
+                references.assert_not_called()
+
+    def test_destination_or_reused_output_failure_preserves_all_staged_destinations(self):
+        for invalid_destination in (False, True):
+            with self.subTest(invalid_destination=invalid_destination), tempfile.TemporaryDirectory() as directory:
+                media = Path(directory)
+                manifest = media / 'manifest.json'
+                manifest.write_text('{}')
+                old = media / 'SH005.gif'
+                old.write_bytes(b'old GIF')
+                if invalid_destination:
+                    (media / 'overview.png').mkdir()
+                staged = media / 'staged'
+                staged.mkdir()
+                (staged / 'SH005.gif').write_bytes(b'new GIF')
+                (staged / 'overview.png').write_bytes(b'new overview')
+                inputs = {'SH005': 'input-5', 'SH058': 'input-58'}
+
+                with patch.object(reference, 'MEDIA', media), \
+                        patch.object(reference.sys, 'argv', ['ship-reference.py']), \
+                        patch.object(reference, 'isolated_media_plan', return_value=inputs), \
+                        patch.object(reference, 'pending_media', return_value=['SH005']), \
+                        patch.object(reference, 'render_media', return_value=staged), \
+                        patch.object(reference, 'scan_media_inputs', return_value=([], inputs)), \
+                        patch.object(reference, 'references') as references:
+                    error = RuntimeError if invalid_destination else FileNotFoundError
+                    with self.assertRaises(error):
+                        reference.main()
+                self.assertEqual(old.read_bytes(), b'old GIF')
+                self.assertEqual(manifest.read_text(), '{}')
+                self.assertEqual((staged / 'SH005.gif').read_bytes(), b'new GIF')
+                references.assert_not_called()
 
     def test_all_runtime_definitions_include_geometry_and_preserve_source_profiles(self):
         ships=reference.ship_files.read_ships()
         self.assertEqual(len(ships),171)
-        self.assertEqual(sum('game' in s for s in ships),162)
-        self.assertEqual(sum(ship['id'] == 'SH025' for ship in ships), 1)
-        original = next(ship for ship in ships if ship['id'] == 'SH025')
-        self.assertEqual(original['name'], 'Peregrine Mk V')
-        self.assertEqual(original['catalogue']['family'], 'peregrine')
-        self.assertEqual([profile['id'] for profile in original['profiles']], ['L337-PLAYER-SH025'])
-        self.assertEqual((original['game']['cargo'], original['game']['cargoExpansion']), (92, 35))
-        self.assertNotIn('recipe', original['design'])
-        self.assertEqual(
-            hashlib.sha256((reference.ship_files.SHIP_FOLDER / 'SH025.toml').read_bytes()).hexdigest(),
-            '794c19f74e633c5837ad78705398cf74f349b1ca4854b22bb3257d23bcb4059a',
-        )
-        self.assertEqual(sum('recipe' in s['design'] for s in ships),93)
+        self.assertEqual(sum('game' in ship for ship in ships), 163)
+        reference.ship_files.fleet_source_contract.require_current_fleet(ships)
+        bison = next(ship for ship in ships if ship['id'] == 'SH005')
+        self.assertEqual(bison['catalogue']['family'], 'bison')
         originals=[]
         for ship in ships:
             design=ship['design'];vertices=design['vertices']

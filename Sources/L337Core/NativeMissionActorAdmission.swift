@@ -187,7 +187,13 @@ extension Game {
       if withReadOnlyCommander({ NativeOriginalRescueJourney.consumed(actorID, commander: $0) }) {
         continue
       }
+      if withReadOnlyCommander({ NativeC01TimingStandard.consumed(actorID, commander: $0) }) {
+        continue
+      }
       if withReadOnlyCommander({ NativeC01Surveyor.consumed(actorID, commander: $0) }) {
+        continue
+      }
+      if withReadOnlyCommander({ NativeC01ClinicEscort.consumed(actorID, commander: $0) }) {
         continue
       }
       let template = source.actors[index]
@@ -254,7 +260,10 @@ extension Game {
         member: UInt16(index), producer: .mission)
       prepared[index].id = nextBodyID + index
       let velocity: Vector3
-      if NativeC01Surveyor.passiveFit(prepared[index]),
+      if NativeC01Surveyor.passiveFit(prepared[index])
+        || c01TimingStandardPart(prepared[index]) != nil
+        || c01LaneRepairTarget(prepared[index]) != nil
+        || c01ClinicCradleDeclared(prepared[index]),
         let retained = template.retainedNativeVelocity
       {
         velocity = retained
@@ -276,6 +285,12 @@ extension Game {
           condition.intention, template: template, context: context)
         condition.resources = condition.resources ?? physical.npc?.resources
         physical.npc = condition
+      }
+      if c01TimingStandardPart(prepared[index]) != nil
+        || c01LaneRepairTarget(prepared[index]) != nil
+        || c01ClinicCradleDeclared(prepared[index])
+      {
+        physical.canonicalSpin = true
       }
       physical.laserCooldown = template.retainedNativeLaserCooldown ?? 0
       let measuredEnergyCapacityValid: Bool

@@ -1,0 +1,8 @@
+{
+  "status": "AUTHORING_SOURCE_AND_ROLE_CAPS_FROZEN_BEFORE_EVALUATION",
+  "source": "docs/fleet-physical/area-moment-authoring.py",
+  "sourceBytes": 10553,
+  "sourceSHA256": "70728675da99b0652b03eda9f1e777c6b24dfeae706337deb984e70f297ee9fd",
+  "roleMapSHA256": "c70c7d725480d8dd346a5b13799c53b966a50fe32312071cd808f8a4f94baf80",
+  "execution": "One bounded stdlib source-area/moment authoring pass authorized by Root; no native/query/probe/compiler/renderer/test/helper framework; no source geometry edits or retries."
+}

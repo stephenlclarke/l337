@@ -5,15 +5,18 @@ import Testing
 
 private func ordnanceRequire<T>(_ value: T?) throws -> T { try #require(value) }
 
-private func ordnanceGame() -> Game {
+private func ordnanceGame() throws -> Game {
   var game = Game(executive: false)
-  // Declare the classic initial hull and resources used by the physical ordnance oracles.
-  game.commander.shipID = "SH023"
+  // Keep the current admitted starting hull and its real native collision geometry.
+  try OriginalDetailedHullStage.requireRuntime(game.commander.shipID)
+  // These ordnance oracles start with a partially charged ship at the classic levels.
+  try #require(game.commander.performance.energy >= 256)
+  try #require(game.commander.shieldCapacity >= 255 && game.commander.rearShieldCapacity >= 255)
   game.commander.fuel = game.commander.fuelCapacity
   game.commander.credits = 1000
-  game.energy = game.commander.performance.energy
-  game.frontShield = game.commander.shieldCapacity
-  game.rearShield = game.commander.rearShieldCapacity
+  game.energy = 256
+  game.frontShield = 255
+  game.rearShield = 255
   game.docked = false
   game.screen = .front
   game.commander.flightSimulation.enter(game.systemIdentity, arriving: true)
@@ -26,6 +29,7 @@ private func ordnanceActor(
   _ game: inout Game, id: Int = 10, hull: Hull = .cobra,
   position: Vector3 = .init(0, 0, 10000), legal: LegalRecord = .init()
 ) throws -> ActorIdentity {
+  let source = try ordnanceRequire(OriginalFleetRuntimeHullSource.source(for: "SH029"))
   let identity = try ordnanceRequire(game.commander.flightSimulation.allocateActor())
   var body = SpaceBody(id: id, hull: hull, position: position)
   body.energy = 100
@@ -33,6 +37,9 @@ private func ordnanceActor(
     identity: identity, population: .civilian,
     npc: .init(
       role: .trader, legal: legal, origin: game.systemIdentity, destination: game.systemIdentity))
+  // Only the controlled collider source is added; all declared role, resource,
+  // damage, identity and motion inputs still come from this arithmetic fixture.
+  body.physical?.catalogueShipID = source.ship.id
   game.bodies.append(body)
   return identity
 }
@@ -70,7 +77,7 @@ private func ordnanceAdvance(
 
 struct GameplayOrdnanceTests {
   @Test func finiteStandardMissileMovesAtNativeSpeedAndDoesNotTunnelThroughNearestHull() throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     let target = try ordnanceActor(
       &game, position: .init(0, 0, 2000), legal: .init(value: 64, bountyTenths: 1000))
     try ordnanceActor(&game, id: 11, position: .init(0, 0, 1000))
@@ -92,7 +99,7 @@ struct GameplayOrdnanceTests {
   func actualMissileImpactUsesProfileDamageOnceWithoutDestroyingSurvivingHull(
     profile: OrdnanceProfile
   ) throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     let target = try ordnanceActor(&game, position: .init(0, 0, 1000))
     game.bodies[0].energy = 1000
     var state = try ordnanceShot(&game, profile: profile, target: target)
@@ -110,7 +117,7 @@ struct GameplayOrdnanceTests {
   }
 
   @Test func actualStationOccludesTargetAndRecordsAttackDespiteItsInvulnerability() throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     let target = try ordnanceActor(&game, position: .init(0, 0, 5000))
     game.bodies.append(.init(id: 0, hull: .station, position: .init(0, 0, 3000)))
     game.ensurePhysicalActors()
@@ -124,7 +131,7 @@ struct GameplayOrdnanceTests {
   }
 
   @Test func celestialBlocksBallisticPlasmaWithoutDamagingTheShipBehindIt() throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     try ordnanceActor(&game, position: .init(0, 0, 1000))
     game.celestials = [.init(kind: .planet, position: .init(0, 0, 400), radius: 100)]
     var state = try ordnanceShot(&game, profile: .plasma)
@@ -137,7 +144,7 @@ struct GameplayOrdnanceTests {
 
   @Test func plasmaInheritsLauncherVelocityButRangeCountsOnlyItsOwnPropulsion() throws {
     for inherited in [0.0, 10000] {
-      var game = ordnanceGame()
+      var game = try ordnanceGame()
       var state = try ordnanceShot(
         &game, profile: .plasma, launcherVelocity: .init(0, 0, inherited))
       let expired = try ordnanceAdvance(&game, state: &state, time: 1_000_000)
@@ -153,8 +160,8 @@ struct GameplayOrdnanceTests {
   }
 
   @Test func constantWorldFlightIsIndependentOfCameraAndTickPartition() throws {
-    var one = ordnanceGame()
-    var split = ordnanceGame()
+    var one = try ordnanceGame()
+    var split = try ordnanceGame()
     var stateOne = try ordnanceShot(&one, profile: .plasma, launcherVelocity: .init(25, 0, 20))
     var stateSplit = try ordnanceShot(&split, profile: .plasma, launcherVelocity: .init(25, 0, 20))
     _ = try ordnanceAdvance(&one, state: &stateOne, time: 1)
@@ -175,7 +182,7 @@ struct GameplayOrdnanceTests {
 
   @Test func alienSeekerTurnsAtMostThreeRadiansPerSecondIncludingAntipodalTargets() throws {
     for targetPosition in [Vector3(10000, 0, 0), .init(0, 0, -10000)] {
-      var game = ordnanceGame()
+      var game = try ordnanceGame()
       let target = try ordnanceActor(&game, position: targetPosition)
       var state = try ordnanceShot(&game, profile: .alienSeeker, target: target)
       _ = try ordnanceAdvance(&game, state: &state, time: 0.1)
@@ -186,7 +193,7 @@ struct GameplayOrdnanceTests {
   }
 
   @Test func alienSeekerSurvivesOneUniqueECMActivationAcrossTicksAndPersistence() throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     let target = try ordnanceActor(&game)
     var state = try ordnanceShot(&game, profile: .alienSeeker, target: target)
     let emitter = try ordnanceRequire(game.commander.flightSimulation.player)
@@ -208,7 +215,7 @@ struct GameplayOrdnanceTests {
 
   @Test func simultaneousDistinctEmittersAreUniqueAndPulseOrderIsDeterministic() throws {
     for reversed in [false, true] {
-      var game = ordnanceGame()
+      var game = try ordnanceGame()
       let target = try ordnanceActor(&game)
       let player = try ordnanceRequire(game.commander.flightSimulation.player)
       var state = try ordnanceShot(&game, profile: .alienSeeker, target: target)
@@ -224,7 +231,7 @@ struct GameplayOrdnanceTests {
 
   @Test(arguments: [OrdnanceProfile.standardMissile, .plasma])
   func standardMissileIsECMVulnerableWhilePlasmaIsImmune(_ profile: OrdnanceProfile) throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     let target = try ordnanceActor(&game)
     var state = try ordnanceShot(&game, profile: profile, target: target)
     let pulse = ECMActivationIdentity(
@@ -236,7 +243,7 @@ struct GameplayOrdnanceTests {
   }
 
   @Test func missileRetainsOriginalNPCOwnerAfterEmitterDisappearsAndHitsPlayerShields() throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     let shooter = try ordnanceActor(
       &game, id: 11, position: .init(0, 0, 1000), legal: .init(value: 64, bountyTenths: 1000))
     let player = try ordnanceRequire(game.commander.flightSimulation.player)
@@ -252,7 +259,7 @@ struct GameplayOrdnanceTests {
   }
 
   @Test func muzzleProtectionEndsBeforeALaterPathCrossesTheEmitter() throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     let target = try ordnanceActor(&game, position: .init(0, 0, 1000))
     var state = try ordnanceShot(&game, target: target)
     _ = try ordnanceAdvance(&game, state: &state, time: 0.2)
@@ -265,7 +272,7 @@ struct GameplayOrdnanceTests {
 
   @Test func lostTargetsCullAndInterceptionHaveSeparateTerminalReasonsAndNoShipCredit() throws {
     for reason in [OrdnanceEnd.targetLost, .culled, .destroyed] {
-      var game = ordnanceGame()
+      var game = try ordnanceGame()
       let target = try ordnanceActor(&game)
       var state = try ordnanceShot(&game, target: target)
       switch reason {
@@ -286,7 +293,7 @@ struct GameplayOrdnanceTests {
   }
 
   @Test func missingBodyIdentityCannotKillARecycledBodyAndMalformedStateIsRejected() throws {
-    var game = ordnanceGame()
+    var game = try ordnanceGame()
     let target = try ordnanceActor(&game)
     var state = try ordnanceShot(&game, target: target)
     game.bodies.removeLast()
@@ -311,5 +318,89 @@ struct GameplayOrdnanceTests {
       OrdnanceState.self, from: JSONSerialization.data(withJSONObject: corrupt))
     let rejected = game.advanceOrdnance(bodyID: 20, state: &invalid, context: context)
     #expect(rejected.termination == .invalidState && game.bodies.last?.energy == 100)
+  }
+}
+
+/// Reuse the existing ordnance kernel fixtures as declared arithmetic inputs.
+/// This is not source qualification or a positive original-hull admission journey.
+extension GameplayOrdnanceTests {
+  @Test(arguments: [OrdnanceProfile.standardMissile, .alienSeeker, .plasma])
+  func pureOuterPreparationMatchesExistingMotionWithoutCommittingEffects(_ profile: OrdnanceProfile)
+    throws
+  {
+    var game = try ordnanceGame()
+    try verifyPureOuterPreparation(&game, profile: profile)
+  }
+
+  @inline(never)
+  private func verifyPureOuterPreparation(_ game: inout Game, profile: OrdnanceProfile) throws {
+    let target = try ordnanceActor(&game)
+    let state = try ordnanceShot(&game, profile: profile, target: target)
+    let before = (game: game, bodies: game.bodies, world: game.scriptWorldSave)
+    let context = try ordnanceRequire(game.gameplayContext())
+    let plan = try ordnanceRequire(state.prepareOuterTrajectory(until: 0.1, context: context))
+    #expect(plan.before == state && !plan.legs.isEmpty)
+    let capturedOwnerCheck11 = game.currentNewtNativeCommanderMatches(before.game) && game.bodies == before.bodies
+    #expect(capturedOwnerCheck11)
+    let capturedOwnerCheck12 = game.scriptWorldSave == before.world && plan.proposed.muzzleCleared == state.muzzleCleared
+    #expect(capturedOwnerCheck12)
+    #expect(plan.proposed.resistedECM == state.resistedECM)
+    #expect(plan.position(at: -0.01) == nil && plan.position(at: 0.11) == nil)
+    let sample = try ordnanceRequire(plan.position(at: 0.025))
+    #expect(abs((sample - state.position).length - profile.speed * 0.025) < 1e-8)
+    if profile == .alienSeeker {
+      let allSatisfied = plan.legs.allSatisfy { $0.endTime - $0.startTime <= 1.0 / 120 + 1e-10 }
+      #expect(allSatisfied)
+    }
+    // The existing actual kernel is the control, not a duplicate of its formula.
+    var reference = game
+    var referenceState = state
+    let result = try ordnanceAdvance(&reference, state: &referenceState, time: 0.1)
+    #expect(result.hit == nil && result.termination == nil)
+    #expect(plan.proposed.position == referenceState.position)
+    #expect(plan.proposed.direction == referenceState.direction)
+    #expect(plan.proposed.propulsionTravel == referenceState.propulsionTravel)
+    #expect(plan.proposed.lastUpdatedAt == referenceState.lastUpdatedAt)
+    let capturedOwnerCheck13 = game.currentNewtNativeCommanderMatches(before.game) && game.bodies == before.bodies
+    #expect(capturedOwnerCheck13)
+  }
+
+  @Test func pureLostTargetProposalDoesNotCommitNativeCleanup() throws {
+    var game = try ordnanceGame()
+    let target = try ordnanceActor(&game)
+    let state = try ordnanceShot(&game, target: target)
+    game.bodies[0].energy = 0
+    let before = (commander: game.commander, bodies: game.bodies)
+    let context = try ordnanceRequire(game.gameplayContext())
+    let plan = try ordnanceRequire(state.prepareOuterTrajectory(until: 0.1, context: context))
+    #expect(plan.proposed.termination == .targetLost && plan.legs.isEmpty)
+    #expect(state.termination == nil && game.commander == before.commander)
+    #expect(game.bodies == before.bodies && game.bodies.last?.energy == 100)
+  }
+
+  @Test func pureOrdnanceTrajectoryStartsAtActualEmissionAndRefusesStaleCursor() throws {
+    var game = try ordnanceGame()
+    game.commander.flightSimulation.advancePhysicalTime(0.05)
+    let state = try ordnanceShot(&game, profile: .plasma)
+    let context = try ordnanceRequire(game.gameplayContext())
+    let plan = try ordnanceRequire(state.prepareOuterTrajectory(until: 0.1, context: context))
+    #expect(state.origin.emittedAt == 0.05 && plan.position(at: 0.025) == nil)
+    #expect(abs(plan.proposed.propulsionTravel - OrdnanceProfile.plasma.speed * 0.05) < 1e-8)
+    game.commander.flightSimulation.advancePhysicalTime(0.01)
+    let stale = try ordnanceRequire(game.gameplayContext())
+    #expect(state.prepareOuterTrajectory(until: 0.1, context: stale) == nil)
+  }
+
+  @Test func purePreparationStopsAtFiniteExpiryWithoutRemovingTheLiveBody() throws {
+    var game = try ordnanceGame()
+    var state = try ordnanceShot(&game, profile: .plasma)
+    _ = try ordnanceAdvance(&game, state: &state, time: 1.95)
+    let before = (commander: game.commander, bodies: game.bodies)
+    let context = try ordnanceRequire(game.gameplayContext())
+    let plan = try ordnanceRequire(state.prepareOuterTrajectory(until: 2.05, context: context))
+    #expect(plan.proposed.termination == .rangeExpired)
+    #expect(abs(plan.proposed.lastUpdatedAt - 2) < 1e-8)
+    #expect(plan.position(at: 2.025) == nil && state.termination == nil)
+    #expect(game.commander == before.commander && game.bodies == before.bodies)
   }
 }

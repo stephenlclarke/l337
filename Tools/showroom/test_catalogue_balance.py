@@ -76,44 +76,30 @@ class CatalogueBalanceTests(unittest.TestCase):
         files_spec = importlib.util.spec_from_file_location("ship_files", Path(__file__).with_name("ship-files.py"))
         files = importlib.util.module_from_spec(files_spec)
         files_spec.loader.exec_module(files)
-        rows = balance.load_balances()
         ships = files.read_ships()
-        self.assertEqual({s["id"] for s in ships}, set(rows))
-        for ship in ships:
-            balance.require_consistent(ship, rows)
-            row = rows[ship["id"]]
-            if "game" in ship:
-                self.assertGreaterEqual(ship["game"]["cargo"], row["originalGame"]["cargo"])
-                if ship["id"] == "SH025":
-                    # F01 replaces the historical profile; keep its archive independently intact.
-                    self.assertEqual(ship["name"], "Peregrine Mk V")
-                    self.assertEqual(ship["catalogue"]["family"], "peregrine")
-                    self.assertEqual([profile["id"] for profile in ship["profiles"]], ["L337-PLAYER-SH025"])
-                    self.assertEqual(row["originalGame"], {"cargo": 12, "cargoExpansion": 0})
-                    self.assertEqual(row["game"], {"cargo": 92, "cargoExpansion": 35})
-                    self.assertEqual({key: ship["game"][key] for key in row["game"]}, row["game"])
-                else:
-                    self.assertEqual(ship["game"]["cargoExpansion"], row["originalGame"]["cargoExpansion"])
-            # Overlay idempotence preserves unrelated authored fields.
-            self.assertEqual(balance.apply_balance(ship, rows), ship)
+        before = copy.deepcopy(ships)
+        # Remaining noncurrent objects must fail until their source owners replace them.
+        # There is no old balance exception or native-readiness inference here.
+        files.fleet_source_contract.require_current_fleet(ships)
+        self.assertEqual(ships, before)
 
-    def test_shared_refinement_and_liberator_writer_keeps_reviewed_values(self):
+    def test_current_writer_keeps_reviewed_values_without_an_old_balance_overlay(self):
         files_spec = importlib.util.spec_from_file_location("ship_files", Path(__file__).with_name("ship-files.py"))
         files = importlib.util.module_from_spec(files_spec)
         files_spec.loader.exec_module(files)
         ships = {s["id"]: s for s in files.read_ships()}
         with tempfile.TemporaryDirectory() as directory:
-            for identity in ["SH100", "SH171", "SH153", "SH028"]:
+            for identity in ["SH100", "SH171", "SH153", "SH025"]:
                 ship = ships[identity]
                 output = Path(directory) / (identity + ".toml")
                 files.write_ship(output, ship)
-                regenerated = tomllib.loads(output.read_text())
-                self.assertEqual(regenerated, ship)
-                staged = copy.deepcopy(ship)
-                staged.pop("game", None)
-                projected = balance.apply_record_balance(staged, balance.load_balances())
-                self.assertEqual(projected["profiles"], regenerated["profiles"])
-                self.assertEqual(projected["catalogue"], regenerated["catalogue"])
+                expected = output.read_bytes()
+                self.assertEqual(tomllib.loads(expected.decode()), ship)
+                altered = copy.deepcopy(ship)
+                altered["name"] = "obsolete-source-name"
+                with self.assertRaises(ValueError):
+                    files.write_ship(output, altered)
+                self.assertEqual(output.read_bytes(), expected)
 
 
 if __name__ == "__main__":

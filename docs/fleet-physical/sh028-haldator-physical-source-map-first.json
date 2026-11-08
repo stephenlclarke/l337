@@ -1,0 +1,110 @@
+{
+  "status": "FROZEN_CURRENT_SH028_HALDATOR_SOURCE_DEPENDENCY_MAP_BEFORE_AUTHORING_NO_RESOURCE_EDITS",
+  "beforeCommit": "3a571605f42e19ae032e5cf8c5c6e8bfafe3c6be",
+  "sourcePins": [
+    {
+      "path": "Sources/L337Core/Resources/Ships/SH028.toml",
+      "bytes": 1397484,
+      "sha256": "65d68f37ca2ad8552d35a54550651afa86ff7f60625c401bb79c7250c4167ca9"
+    },
+    {
+      "path": "docs/fleet-design-v2/ships/SH028.toml",
+      "bytes": 1608,
+      "sha256": "b053d76b1912881af248045b29cf29d31cb2f77214b4f1697b8d69a78afa8768"
+    },
+    {
+      "path": "Sources/L337Core/MainStationGeometry.swift",
+      "bytes": 644,
+      "sha256": "0c3b0d71d1e2c3e681192bb5d10cfa17d433aef164a27a0acc6d3ad1dd6e7710"
+    },
+    {
+      "path": "Sources/L337Core/ShipCatalogue.swift",
+      "bytes": 12862,
+      "sha256": "d6a777a426b9958bc6539bb27c2d53b3ee76e390b20039eab2a144966f5d8d03"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationInertia.swift",
+      "bytes": 29183,
+      "sha256": "5caf3dbf83e1ac103e8499b4ef9d3512a7446665a1932b8f87839fc914430a7f"
+    },
+    {
+      "path": "Sources/L337Core/AsteroidDebrisContact.swift",
+      "bytes": 62487,
+      "sha256": "d8c1e2c3294eeb5e35ad9ef0c7ab647db606f732f7023978cfc1271aafea5592"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationAdmission.swift",
+      "bytes": 17495,
+      "sha256": "224e133964404a6bb9280e5837bdd02e7c8e88111fdb70985b5252cc05f570ad"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationServices.swift",
+      "bytes": 10858,
+      "sha256": "e74815c9dca25f05da4a8d9f5664c3492760b365c8f8b51cb6408a77acbe3559"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationRuntime.swift",
+      "bytes": 88256,
+      "sha256": "8f1361edc58c175d92692f88d2efa77b476a491c446d533cf84af5412a353962"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationGeometry.swift",
+      "bytes": 4836,
+      "sha256": "141c96090f46bde041a29791cec5363a72e0adb14b7a97971750300007dbc24b"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationSnapshot.swift",
+      "bytes": 3061,
+      "sha256": "ce7fe484038074c0a6129e2f6ab4d2250773b6af9b874adc71aeeba04b2eba70"
+    },
+    {
+      "path": "Sources/L337Core/NativeStationValidationMemo.swift",
+      "bytes": 1157,
+      "sha256": "ff0dc3835c4d9062194a60fb73aece415ed9bc6faafc02b3bdc1889f5320825b"
+    },
+    {
+      "path": "Sources/L337Core/OriginalStationPhysical.swift",
+      "bytes": 2430,
+      "sha256": "c77de9ace2ff2fd1ef9458cf02e26a78c963345238aa3add3a2106511d199ddf"
+    },
+    {
+      "path": "Sources/L337Core/OriginalStationSite.swift",
+      "bytes": 2858,
+      "sha256": "313ce7b59396efe987deb8073e3fd424c6b676079a24a469825477cbb77d3718"
+    },
+    {
+      "path": "Sources/L337Core/PassengerCabinGrades.swift",
+      "bytes": 7190,
+      "sha256": "12fac9619f733666db4cba1c9f83732ade9f1b29ff19318b17d9b04813a6334c"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetPhysicalRecord.swift",
+      "bytes": 9385,
+      "sha256": "ec6097c69c5380432df9d213a4064f3d07ed65cd13232d7e81008678134ef86f"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetPhysicalRegistrations.swift",
+      "bytes": 24586,
+      "sha256": "2b273f866c78f0662d4b81800bfdb02059325b72819ba2109cf3497c627c28b1"
+    },
+    {
+      "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+      "bytes": 283481,
+      "sha256": "749a36752285a0edbc1ada51bb1cf6d550c632c66baecbff66183e5e7164dfcd"
+    },
+    {
+      "path": "Sources/L337Core/Resources/OriginalWorlds/catalogue.json",
+      "bytes": 1660913,
+      "sha256": "120543eedc02a705cce0e37d026125bf926ec22651cff9337ca5d943f2ffd99d"
+    }
+  ],
+  "scope": "Source inspection/JSON metadata/hash/text map ONLY currentSH028resource/R3/frame/nativeMain identity/inertia/contact/coast/constructor/equality/cabin-module source. No model decode, coordinate/geometry/numeric pass, source/provider/mission/physics code edits, station installation or mass adoption.",
+  "station": "G02-S182 Haldator / galaxy1 system182 / main-orbital:1:182 / SH028 Lion Citadel geometry source",
+  "missionBoundary": "Root reported researcher ward proposal28719/e4cb6fc8 and allocationFIRST073d4c; Root adopts only Standard4+Double2/six real service places, NOT actual modules installed. Mission-sidecar currentness remains researcher-owned, exact artifact not independently read in this source map. Proposed12x8x3room is not fit/interior/power/mass proof.",
+  "physicalRecordPresenceCheck": "Check only exact shipping OriginalFleetPhysical/SH028.json filename absence; no other mass data interpreted/recomputed.",
+  "sourceMapOutputs": [
+    "docs/fleet-physical/sh028-haldator-physical-source-map-first.json",
+    "docs/fleet-physical/sh028-haldator-physical-source-map.json"
+  ],
+  "nonClaims": "4station baseline routes are not completed physical bodies.1e9 collisiontuning is notengineering mass;10t two-cabin allocation is not actual installed hardware/drymass/COM/tensor. No nil/defaultloaded body, fake module/people/resources, impulse/spin/reset/equality waiver or native/crash inference."
+}

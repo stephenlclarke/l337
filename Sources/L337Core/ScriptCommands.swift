@@ -8,6 +8,12 @@ extension Game {
     guard let fields = command.object, let op = fields["op"]?.string else {
       throw MissionPackError("Invalid script command.")
     }
+    try validateUnderTowScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
+    try validateBorrowedVoiceScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
+    try validateQuietChoirScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
+    try validateMemoryAtlasScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
+    try validateSignedPassageOpeningScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
+    try validateAssemblyOfOrbitsScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
     if try applyScriptCommandAuthority1(
       fields, op: op, event: event, pack: pack, state: &state, candidate: &candidate)
     {
@@ -353,7 +359,7 @@ extension Game {
   ) throws {
     let id = try Self.scriptCommandIdentifier(fields, "id")
     guard pack.manifest.dialogs?.contains(where: { $0.id == id }) == true,
-      docked, dockedAtMainStation
+      docked, scriptDialogueStationIsCurrent(pack: pack, state: state, contact: id)
     else {
       throw MissionPackError("Dialogue requires a declared contact at the orbital station.")
     }
@@ -396,7 +402,7 @@ extension Game {
       event.values["dialogue_id"]?.string == id, state.dialogue?.id == id,
       state.dialogue?.token == token, state.dialogue?.revision == state.revision,
       state.dialogue?.galaxy == candidate.galaxy, state.dialogue?.system == candidate.system,
-      docked, dockedAtMainStation
+      docked, scriptDialogueStationIsCurrent(pack: pack, state: state, contact: id)
     else { throw MissionPackError("Stale or invalid dialogue confirmation.") }
     guard let dialogue = pack.manifest.dialogs?.first(where: { $0.id == id }) else {
       throw MissionPackError("The confirmed dialogue is not declared.")

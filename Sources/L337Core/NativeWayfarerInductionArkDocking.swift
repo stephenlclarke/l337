@@ -11,13 +11,13 @@ extension Game {
     _ body: SpaceBody, profile: ScriptNPCDefinition, delta: Double
   ) -> NativeArkDockGuidance? {
     guard let job = body.missionInstanceID, let identity = body.missionActorID,
-      let state = commander.scriptState.instances[job]?.savedNativeArk,
+      let state = nativeGuidanceStoredMission(id: job)?.savedNativeArk,
       state.authorization.actor == identity, state.admission != nil, state.loss == nil,
       state.dockedContact == nil,
       let station = bodies.first(where: { $0.id == 0 && $0.hull == .station && $0.energy > 0 }),
       case .living = nativeOriginalMainStationDestination,
       needsInductionArkDock(state, body: body), delta.isFinite, delta > 0, delta <= 0.1,
-      let physical = try? OriginalHullPhysicalContract.haflinger.get()
+      let physical = try? OriginalHullPhysicalContract.saiga.get()
     else { return nil }
     return nativeCustodianDockGuidance(
       body, profile: profile, delta: delta, station: station, physical: physical)
@@ -75,7 +75,7 @@ extension Game {
       return fuel < state.authorization.route.legDistancesLY[hop.hop]
     }
     guard let last = state.legs.last,
-      commander.scriptState.wormholeTransit?.legs[last.leg]?.phase == .arrived
+      nativeTransitStoredLedger()?.legs[last.leg]?.phase == .arrived
     else { return false }
     return last.hop == state.authorization.route.legDistancesLY.count - 1
       && systemIdentity == NativeWayfarerInduction.seedReceiver
@@ -126,11 +126,11 @@ extension Game {
       else { continue }
       let physical: OriginalHullPhysicalContract
       if inductionArkDockGuidance(body, profile: profile, delta: delta) != nil,
-        let source = try? OriginalHullPhysicalContract.haflinger.get()
+        let source = try? OriginalHullPhysicalContract.saiga.get()
       {
         physical = source
       } else if inductionRescueDockGuidance(body, profile: profile, delta: delta) != nil,
-        let source = try? OriginalHullPhysicalContract.burro.get()
+        let source = try? OriginalHullPhysicalContract.okapi.get()
       {
         physical = source
       } else {
