@@ -1097,3 +1097,63 @@ extension NativeC01TimingStandardUnitTests {
     #expect(negative.body.position.x.sign == .minus)
   }
 }
+
+
+extension NativeC01TimingStandardUnitTests {
+  @Test(arguments: ["valid", "alias", "actor-identity", "position-finite", "position-bound",
+    "orientation", "energy-finite", "energy-bound", "npc", "rotation", "rotation-rate",
+    "missiles", "body-id", "destroyed-presence", "mission-binding", "hull", "hostility", "ecm",
+    "profile", "models"])
+  func completeBorrowedActorReadPreservesEveryTimingPredicateAndOriginalValue(_ change: String)
+    throws
+  {
+    // Component facts are not an authenticated mission or a live native capability.
+    let facts = try C01TimingStandardFacts()
+    let originalBytes = try JSONEncoder().encode(facts.marker)
+    var candidate = facts.marker
+    switch change {
+    case "valid": break
+    case "alias":
+      candidate = .init(identity: candidate.identity, alias: "invalid alias",
+        body: candidate.body, presence: candidate.presence)
+    case "actor-identity": candidate.body.missionActorID = UUID()
+    case "position-finite": candidate.body.position.x = .nan
+    case "position-bound": candidate.body.position = .init(1_000_000_001, 0, 0)
+    case "orientation": candidate.body.orientation.x = .init(0, 0, 0)
+    case "energy-finite": candidate.body.energy = .nan
+    case "energy-bound": candidate.body.energy = 10_000_001
+    case "npc": candidate.body.scriptNPC?.fuel = .nan
+    case "rotation": candidate.body.rotation = .infinity
+    case "rotation-rate": candidate.body.rotationRate = .infinity
+    case "missiles": candidate.body.missiles = 33
+    case "body-id": candidate.body.id = -2
+    case "destroyed-presence": candidate.presence = .destroyed
+    case "mission-binding": candidate.body.missionInstanceID = UUID()
+    case "hull": candidate.body.hull = .station
+    case "hostility": candidate.body.hostile = true
+    case "ecm": candidate.body.ecmEnabled = true
+    case "profile": candidate.body.scriptNPC = nil
+    case "models":
+      candidate.body.scriptNPC = .init(
+        fit: .init(definition: NativeC01TimingStandard.Part.standard.profile, models: [:]),
+        fuel: 0, guns: [:], components: [:])
+    default: Issue.record("Unknown actor validation case"); return
+    }
+    let accepted = NativeC01TimingStandard.original(candidate, source: facts.source, part: .standard)
+    #expect(accepted == (change == "valid"))
+    if ["alias", "actor-identity", "position-finite", "position-bound", "orientation",
+      "energy-finite", "energy-bound", "npc", "rotation", "rotation-rate", "missiles", "body-id",
+      "destroyed-presence"].contains(change)
+    {
+      let generallyValid = candidate.valid
+      #expect(!generallyValid)
+    }
+    let originalStillValid = NativeC01TimingStandard.original(
+      facts.marker, source: facts.source, part: .standard)
+    #expect(originalStillValid)
+    let retainedBytes = try JSONEncoder().encode(facts.marker)
+    #expect(retainedBytes == originalBytes)
+    let decoded = try JSONDecoder().decode(ScriptOwnedActor.self, from: originalBytes)
+    #expect(decoded == facts.marker)
+  }
+}

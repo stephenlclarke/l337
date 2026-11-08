@@ -14,7 +14,8 @@ struct SelectedLegacyNPCBeamDirectorBirthTests {
     let ownedBeamRequired1 = game.commander.encounterDirector
     let initialDirector = try #require(ownedBeamRequired1)
     try #require(initialDirector.decisionCount == 2)
-    let ownedBeamRequired2 = game.commander.galaxy == 0 && game.commander.system == 2
+    let ownedBeamRequired2 = game.commander.galaxy == NativeNewtOrdinaryBirthScenario.galaxy
+      && game.commander.system == NativeNewtOrdinaryBirthScenario.system
     try #require(ownedBeamRequired2)
     let ownedBeamRequired3 = game.commander.flightSimulation.visit == 1
     try #require(ownedBeamRequired3)
@@ -36,7 +37,7 @@ struct SelectedLegacyNPCBeamDirectorBirthTests {
     game.autoPilot.setApproachVelocity(.init(0, 0, 0))
     let ownedBeamRequired5 = game.gameplayContext()
     let context = try #require(ownedBeamRequired5)
-    try #require(context.seed == 268890839879961 && context.government == 6)
+    try #require(context.seed == NativeNewtOrdinaryBirthScenario.gameplaySeed && context.government == 6)
     try #require(EncounterGeography.region(
       at: context.player.position, anchors: context.anchors) == .tradeLane)
     try #require(EncounterGeography.safe(
@@ -114,6 +115,8 @@ struct SelectedLegacyNPCBeamDirectorBirthTests {
       try #require(ownedBeamRequired15)
       let ownedBeamRequired16 = scene.hasCurrentNewtNativeScene && openingDirector.decisionCount == 3
       try #require(ownedBeamRequired16)
+      try #require(abs(openingDirector.nextDecisionTime
+        - NativeNewtOrdinaryBirthScenario.fourthDeadline) < 1e-11)
       try #require(opening.physicalTime < openingDirector.nextDecisionTime)
       try #require(opening.physicalTime + 0.1 >= openingDirector.nextDecisionTime)
       let ownedBeamRequired17 = scene.gameplayContext()

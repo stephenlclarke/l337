@@ -4,6 +4,28 @@ import Testing
 
 @testable import L337Core
 
+/// Fixed real-world input derived from the current authored world seed and
+/// ordinary director draws. It grants no actor, equipment, stock or custody.
+/// Source arithmetic predicts inbound SH029 at decisions 2 and 4; actual
+/// fixtures still require the original producer, writer, receipt and issued kit.
+/// The calculation's complete input/draw evidence is retained with the handoff.
+enum NativeNewtOrdinaryBirthScenario {
+  static let galaxy = 2
+  static let system = 49
+  static let worldKey = "G03-S049"
+  static let worldName = "Elaseith"
+  static let authoringSeed = "lanterns-between-the-tides-2026"
+  static let seedA: UInt16 = 62093
+  static let seedB: UInt16 = 27497
+  static let seedC: UInt16 = 10730
+  static let gameplaySeed: UInt64 = 266689206364650
+  static let firstDeadline = 8.406566373599553
+  static let secondDeadline = 18.960933973761776
+  static let thirdDeadline = 27.19518349088841
+  static let fourthDeadline = 36.87149100884258
+  static var systemIdentity: SystemIdentity { .init(galaxy: galaxy, system: system) }
+}
+
 enum NativePagedSalvageFixture {
   static var firingControls: Controls {
     var controls = Controls()
@@ -147,13 +169,17 @@ enum NativePagedSalvageFixture {
     try #require(fitting.utilityMounts == 3)
     let ownedStartupCheck8 = game.nativeStartupNativePerformance().workTools?.contains(.salvageCutter) == true
     try #require(ownedStartupCheck8)
-    // One fixed ordinary unit input, derived from actual catalogue/director source arithmetic.
-    game.commander.system = 2
-    game.selectedSystem = 2
+    // Use the actual original world and its derived seed together. Published
+    // Bison habitat excludes this galaxy; no ordinary source is suppressed.
+    game.commander.galaxy = NativeNewtOrdinaryBirthScenario.galaxy
+    game.systems = Universe.systemsIncludingPlugh(number: NativeNewtOrdinaryBirthScenario.galaxy)
+    game.commander.system = NativeNewtOrdinaryBirthScenario.system
+    game.selectedSystem = NativeNewtOrdinaryBirthScenario.system
     game.market = MarketItem.at(game.currentSystem)
-    let ownedStartupCheck9 = game.commanderGalaxy == 0 && game.currentSystem.name == "Aetaria"
+    let ownedStartupCheck9 = game.commanderGalaxy == NativeNewtOrdinaryBirthScenario.galaxy
+      && game.currentSystem.name == NativeNewtOrdinaryBirthScenario.worldName
     try #require(ownedStartupCheck9)
-    let ownedStartupCheck10 = game.gameplaySeed == 268890839879961
+    let ownedStartupCheck10 = game.gameplaySeed == NativeNewtOrdinaryBirthScenario.gameplaySeed
     try #require(ownedStartupCheck10)
     game.energy = game.nativeStartupEnergy()
     game.frontShield = game.nativeStartupFrontShield()
@@ -384,7 +410,7 @@ enum NativePagedSalvageFixture {
     let nativeLaunchOwnedCheck6 = scene.commander.encounterDirector
     let director = try #require(nativeLaunchOwnedCheck6)
     try #require(spawn.producer == .ambient && spawn.member == 0)
-    try #require(spawn.system == .init(galaxy: 0, system: 2) && spawn.visit == 1)
+    try #require(spawn.system == NativeNewtOrdinaryBirthScenario.systemIdentity && spawn.visit == 1)
     try #require(spawn.sequence == 2 && director.decisionCount == 2 && director.admittedCount > 0)
     try #require(!director.pendingRequests.contains { $0.identity == spawn })
     try #require(stock.issue.birthActor == physical.identity && stock.issue.birthSpawn == spawn)

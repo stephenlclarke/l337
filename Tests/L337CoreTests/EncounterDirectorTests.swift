@@ -281,3 +281,75 @@ func ecologyContext(
   #expect(director.decisionCount == 2 && director.nextDecisionTime == 32.0028885295538)
   #expect(director.admittedCount == 0 && director.pendingRequests.contains(request))
 }
+
+
+@Test func fixedNewtWorldProvenanceKeepsTheActualOrdinaryDrawAndSourcePool() throws {
+  let scenario = NativeNewtOrdinaryBirthScenario.self
+  let world = try Universe.originalWorld(galaxy: scenario.galaxy, system: scenario.system)
+  #expect(world.key == scenario.worldKey && world.name == scenario.worldName)
+  #expect(world.governmentID == 6)
+  #expect(Universe.originalWorlds.authoring.seed == scenario.authoringSeed)
+  let native = Universe.galaxy(number: scenario.galaxy)[scenario.system]
+  #expect(native.original == world)
+  #expect(native.seed.a == scenario.seedA && native.seed.b == scenario.seedB
+    && native.seed.c == scenario.seedC)
+  let realSeed = UInt64(native.seed.a) << 32 | UInt64(native.seed.b) << 16 | UInt64(native.seed.c)
+  #expect(realSeed == scenario.gameplaySeed)
+
+  var flight = FlightSimulationState()
+  let system = SystemIdentity(galaxy: scenario.galaxy, system: scenario.system)
+  flight.enter(system, arriving: false)
+  let anchors = try #require(flight.anchors)
+  let player = ActorSnapshot(
+    identity: .init(system: system, visit: 1, entity: 0), hull: .cobra,
+    position: (anchors.arrival + anchors.station.position) * 0.5,
+    orientation: .init(), velocity: .init(0, 0, 0), energy: 100, maximumEnergy: 100,
+    maximumSpeedUnitsPerSecond: 144, legal: .init(), npc: nil, rock: nil, payload: nil)
+  func context(_ time: Double) -> EncounterContext {
+    .init(system: system, seed: realSeed, government: world.governmentID,
+      visit: flight.visit, revision: 1, physicalTime: time, anchors: anchors,
+      player: player, actors: [], protection: .init(), budget: .init(), perceptionRadius: 6000)
+  }
+  let opening = context(0)
+  try #require(EncounterGeography.region(at: player.position, anchors: anchors) == .tradeLane)
+  try #require(EncounterGeography.safe(anchors.arrival, context: opening, civilianEntry: true))
+  // This is the pinned current pool, not a suppression knob. A later source or
+  // habitat change must re-derive the fixed input instead of forcing this birth.
+  #expect(OriginalFleetRuntimeHullSource.source(for: "SH025") == nil)
+  #expect(OriginalBisonActivation.naturalSources(
+    context: opening, position: anchors.arrival, decisionRegion: .tradeLane).isEmpty)
+  let parent = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
+  let kit = try #require(CurrentNewtKitSource.current)
+  try #require(kit.sourceQualifiedForBirth)
+  #expect(parent.ship.catalogue.encounterWeight(for: .trader) == 1)
+  #expect(parent.permitsAmbientTrader(context: opening, position: anchors.arrival))
+
+  // Golden deadlines and source predicates come from the independent, hash-bound
+  // original-world calculation. Exercise the real director rather than a copied RNG.
+  var director = EncounterDirector(context: opening)
+  #expect(abs(director.nextDecisionTime - scenario.firstDeadline) < 1e-11)
+  let first = director.advance(context: context(scenario.firstDeadline))
+  #expect(first.batches.isEmpty && director.pendingRequests.isEmpty)
+  #expect(director.decisionCount == 1 && director.admittedCount == 0)
+  #expect(abs(director.nextDecisionTime - scenario.secondDeadline) < 1e-11)
+  let second = director.advance(context: context(scenario.secondDeadline))
+  try #require(second.batches.count == 1 && second.batches[0].requests.count == 1)
+  let request = second.batches[0].requests[0]
+  #expect(!second.batches[0].atomic)
+  #expect(request.identity == .init(system: system, visit: 1, sequence: 2, member: 0, producer: .ambient))
+  #expect(request.catalogueShipID == "SH029" && request.currentNewtKitConfiguration == kit.configuration)
+  #expect(request.position == anchors.arrival && request.hull == .cobra)
+  #expect(request.population == .civilian && request.priority == .ordinary)
+  #expect(request.npc?.role == .trader && request.npc?.legalProvenance == .generated)
+  #expect(request.npc?.cargoProvenance == .generated && request.npc?.routeProvenance == .generated)
+  #expect(request.npc?.resources == NPCResources.stock(parent.performance))
+  #expect(request.npc?.intention == .dock(anchors.station.identity))
+  #expect(kit.permitsBirth(request, context: context(scenario.secondDeadline)))
+  #expect(director.decisionCount == 2 && director.admittedCount == 0)
+  #expect(director.pendingRequests == [request])
+  #expect(abs(director.nextDecisionTime - scenario.thirdDeadline) < 1e-11)
+  #expect(scenario.secondDeadline <= 25.6 && scenario.thirdDeadline > 25.6)
+  #expect(scenario.fourthDeadline - scenario.secondDeadline <= 21.3)
+  // A proposal and pending request confer no admitted actor or installed stock.
+  // Existing actual fixtures retain the independent request/receipt/issue checks.
+}
