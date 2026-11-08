@@ -1,0 +1,72 @@
+{
+  "id": "SH043",
+  "scope": "R3 opaque connected canopy support geometry/material prerequisite; not native admission",
+  "base": "8535f354d7ee7bf64addec16102443117c7af3b9",
+  "sourceRequirement": "Opaque connected structural support under all glazing, verify every view",
+  "newEngineeringChoice": "Lower half of existing canopy using existing skin material0/opaque texture0, upper material5 unchanged. Exact source-authored centreY13m. No surface movement or cap change.",
+  "proofs": {
+    "detailed": {
+      "changedFaces": 480,
+      "remainingGlazingFaces": 480,
+      "sharedPerimeterEdges": 32
+    },
+    "native": {
+      "changedFaces": 4,
+      "remainingGlazingFaces": 4,
+      "sharedPerimeterEdges": 4,
+      "vertices": 148,
+      "triangles": 248,
+      "limit": 512
+    },
+    "connection": "Lower opaque join at[0,9.59,22] inside actual backbone with winding1 for BOTH models",
+    "boundary": "One connected degree2 opaque/glazing perimeter; connected opaque lowerregion; original allglass and missingopaqueface controls refuse",
+    "contact": "Entire source vertices/faces/component geometry/palette and every unrelated material/UV remain exact"
+  },
+  "physical": {
+    "stockCoefficientsKgPerSquareMetre": {
+      "opaque": 14,
+      "glazing": 5
+    },
+    "newOpaqueAreaSquareMetres": 173.2378241761237,
+    "addedStockMassKg": 1559.1404175851133,
+    "adoptedDryMassKgUnchanged": 295038,
+    "proposedDryMassKg": 296597,
+    "intrinsicHardwareKgUnchanged": 6480,
+    "originalAllocations": 8,
+    "originalFiniteDistributions": 35,
+    "references": "Independent degree2 surface quadrature on only changed faces; unchanged authenticated stock/point/finitehardware reused; both full tensors and newroundingreserve recomputed",
+    "rawMomentAbsoluteTolerance": 1e-06,
+    "fullInertiaAbsoluteToleranceKgM2": 1e-06,
+    "centreAbsoluteToleranceMetres": 1e-09,
+    "massAbsoluteToleranceKg": 1e-08
+  },
+  "actualExecution": {
+    "host": "SteveMBA",
+    "methods": 5,
+    "exit": 0,
+    "suiteSeconds": 0.804,
+    "elapsedSeconds": 0.9701119160745293,
+    "peakRSSBytes": 61161472,
+    "retries": 0,
+    "nativeCompilerRendererOrGame": false
+  },
+  "externalDependencies": [
+    {
+      "required": "Issued original capital placement and population/producer/role authority",
+      "missingSource": "authoredencounter metadata has no roleWeights,galaxies,regions,authoredSystems; no SH043 script encounter",
+      "responsible": "Root/human source decision; G4+G1 population/placement implementation; MC1 actualruntime"
+    },
+    {
+      "required": "28 genuine personnel and nonC01 crew-role grant; actual occupied/loaded physical source",
+      "missingSource": "28required/28empty hardware places are not people. No current occupied ship/load/operator record; recommendedkit not included.",
+      "responsible": "Root/human source decision; G4physical/load; MC1runtime; G3custody"
+    },
+    {
+      "required": "Review/adopt proposed source and changedstock, actual native/renderer/collision/operating validation",
+      "missingSource": "Pendingregistration and existing295038kg source remain intact",
+      "responsible": "G2independent review; Root/G1 adoption; G1sole compiler/native/renderer executor"
+    }
+  ],
+  "nextUsefulImplementation": "Once actual placement/personnel/load authority is issued, connect its typed nonplayer-capital producer, currentphysical/native source and realdeath/custody path, then run unchanged positive capital test throughG1. Do not synthesize a roster, borrowC01authority or remove pending to exercise policy.",
+  "positiveCapitalAcceptance": "OPEN. Five source checks are not an admitted/tested capital or a closed milestone."
+}

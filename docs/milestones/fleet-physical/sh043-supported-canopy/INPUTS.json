@@ -1,0 +1,52 @@
+{
+  "resource.toml": {
+    "path": "Sources/L337Core/Resources/Ships/SH043.toml",
+    "bytes": 505101,
+    "sha256": "421e58d9de72ea55ae6762c5ec1918b114dec57d3f5aee4d69f7722cf93a9a7a"
+  },
+  "R3.toml": {
+    "path": "docs/fleet-design-v2/ships/SH043.toml",
+    "bytes": 2807,
+    "sha256": "be5d22e65550f8420a4f61ce6c784b1161fcc645d3e542c671dd864e9e736368"
+  },
+  "engineering.json": {
+    "path": "Sources/L337Core/Resources/OriginalFleetPhysical/SH043.json",
+    "bytes": 34351,
+    "sha256": "8cf7dc3345f41175856ef1a571e7aebc709901fd9f186b4e454b0e81e7ce90a5"
+  },
+  "finite.json": {
+    "path": "Sources/L337Core/Resources/EaglePhysical/SH043-finite-dry-source.json",
+    "bytes": 34663,
+    "sha256": "bf891c958e485c53f5fa941d79ed23ec0780e3a68a71089e5ed5c07006733dce"
+  },
+  "model.json": {
+    "path": "Sources/L337Core/Resources/OriginalFleetShowroomModels/SH043.json",
+    "bytes": 22809,
+    "sha256": "c3c285005b6d3a3f9cb04f0c744126af009bd2469c2ff2ec731f8452fd409d73"
+  },
+  "roles.json": {
+    "path": "docs/milestones/fleet-physical/area-moment-role-maps.json",
+    "bytes": 624198,
+    "sha256": "c70c7d725480d8dd346a5b13799c53b966a50fe32312071cd808f8a4f94baf80"
+  },
+  "detailed-components.json": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02/SH043-components.json",
+    "bytes": 8748,
+    "sha256": "46b502a0062771db70b13f108ca68c4dbc106b46af6da267f54b4367f4c5d336"
+  },
+  "native-components.json": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02-native-lod/SH043-components.json",
+    "bytes": 1862,
+    "sha256": "42c85a43ff9941f89a68328eee43524522b0d13062731d140c41456252f33e23"
+  },
+  "creator.py": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02/source/generate.py",
+    "bytes": 29627,
+    "sha256": "4439c4358f29bc34b29bdfb66aac83657469e9ccc23f7d583c76641c14bb02fe"
+  },
+  "native-creator.py": {
+    "path": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02-native-lod/source/native_lod.py",
+    "bytes": 7179,
+    "sha256": "18c3cb53df02f3e602b6c607d887ff729099ff90c2f350f6e2f0d699751dca94"
+  }
+}
