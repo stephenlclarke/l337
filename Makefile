@@ -3,17 +3,19 @@ SHELL := /bin/bash
 RELEASE_PLAN ?= dist/release-plan.json
 ELITE_SANITIZERS ?= 0
 .PHONY: release-plan publish-release release-readme release
-.PHONY: sanitizer-checkpoints-check native-runner-check instance-equality-check ci-capture-check help build run test unit-ci local-runner-check coverage coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check package-macos homebrew-cask homebrew-cask-check sonar ci
+.PHONY: sanitizer-checkpoints-check native-runner-check instance-equality-check ci-capture-check change-scope-check help build run test unit-ci local-runner-check coverage coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check package-macos homebrew-cask homebrew-cask-check sonar ci
 help:
-	@printf '%s\n' 'build run test unit-ci sanitizer-checkpoints-check instance-equality-check local-runner-check ci-capture-check coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check release-plan package-macos publish-release release-readme release homebrew-cask homebrew-cask-check sonar ci'
+	@printf '%s\n' 'build run test unit-ci sanitizer-checkpoints-check instance-equality-check local-runner-check ci-capture-check change-scope-check coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check release-plan package-macos publish-release release-readme release homebrew-cask homebrew-cask-check sonar ci'
 build:
 	swift build
 run:
 	./script/build_and_run.sh
 test:
 	swift test
-unit-ci: instance-equality-check
+unit-ci: instance-equality-check change-scope-check
 	python3 Tools/CI/isolated_units.py
+change-scope-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_change_scope.py'
 local-runner-check:
 	python3 -m unittest discover -s Tools/CI -p 'test_local_runner.py'
 coverage coverage-check: sanitizer-checkpoints-check
@@ -85,7 +87,7 @@ ci-capture-check:
 native-runner-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_native_runner.py'
 
-ci: sanitizers-check native-runner-check instance-equality-check ci-capture-check flight-controls-check homebrew-cask-check ships-check showroom-check mission-packs-check coverage-check leaks
+ci: change-scope-check sanitizers-check native-runner-check instance-equality-check ci-capture-check flight-controls-check homebrew-cask-check ships-check showroom-check mission-packs-check coverage-check leaks
 
 ifeq ($(ELITE_SANITIZERS),1)
 ci:
