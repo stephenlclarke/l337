@@ -143,7 +143,7 @@ def reviewed_build_profile(path, checksum, phase, environment):
     if profile is None:
         raise ValueError('Both reviewed normal/leaks resource profiles are required')
     return {'kind': 'owned-phase-build-v1', 'phase': phase, 'profile': profile['build_profile'],
-            'policy_sha256': native_runner.policy_digest(policy), 'admission': profile['admission'],
+            'policy_sha256': native_runner.policy_digest(policy), 'admission': native_runner.phase_resource_admission(profile),
             'flags': ['--jobs', '1', '-Xswiftc', '-disable-batch-mode']}
 
 

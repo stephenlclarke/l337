@@ -326,6 +326,18 @@ class ShipReferenceGuardTests(unittest.TestCase):
         self.assertEqual(reference.normal_ci_sample_rss_limit(
             leader, set(indirect), indirect, observer), reference.NORMAL_RSS)
 
+    def test_hosted_leak_build_and_native_monitor_sampler_are_closed_commands(self):
+        command = ['/bound/toolchain/swift', 'build', '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
+        self.assertEqual(reference.execution_rss_limit(command, 'normal-compiler'), reference.NORMAL_COMPILER_RSS)
+        with self.assertRaises(ValueError):
+            reference.execution_rss_limit(command + ['--jobs', '2'], 'normal-compiler')
+        observer,leader,worker,frontend,rows=self.ci_rows()
+        rows[104]={'parent':observer,'group':55,'start':'unit-ps','rss':1,
+                   'command':'ps -ww -axo pid=,ppid=,pgid=,stat=,lstart=,rss=,command='}
+        self.assertEqual(reference.normal_ci_sample_rss_limit(leader,set(rows),rows,observer),reference.NORMAL_COMPILER_RSS)
+        rows[104]['command'] += ' extra'
+        self.assertEqual(reference.normal_ci_sample_rss_limit(leader,set(rows),rows,observer),reference.NORMAL_RSS)
+
     def test_full_make_ci_keeps_the_same_normal_bound_and_exact_entry_point(self):
         command = ['/usr/bin/make', 'ci']
         self.assertEqual(reference.execution_admission_peak(command, 'normal-ci'),

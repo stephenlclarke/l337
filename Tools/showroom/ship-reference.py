@@ -296,6 +296,8 @@ def execution_rss_limit(command, profile):
     focused_build = build + [
         '-Xlinker','-O0','-Xswiftc','-driver-batch-size-limit','-Xswiftc','1','--disable-index-store']
     if profile == 'normal-compiler':
+        if not explicit_native and arguments == ['build','--jobs','1','-Xswiftc','-disable-batch-mode']:
+            return NORMAL_COMPILER_RSS  # Exact hosted leak-phase pure build.
         if arguments == focused_build:return NORMAL_COMPILER_RSS
         if explicit_native and arguments in (
             # Existing local leak-phase build, which never starts the diagnostic app.
@@ -382,10 +384,12 @@ def normal_ci_sample_rss_limit(leader, selected, rows, observer):
     if sum(rows[pid]['rss'] for pid in selected - compiler_tree if pid in rows) > NORMAL_RSS:return NORMAL_RSS
     allowed = compiler_tree | {pid for pid in selected if under(compiler, pid)}
     allowed.add(observer)
-    sampler = ['/bin/ps', '-ww', '-axo', 'pid=,ppid=,pgid=,lstart=,rss=,command=']
+    samplers = (['/bin/ps', '-ww', '-axo', 'pid=,ppid=,pgid=,lstart=,rss=,command='],
+                ['ps', '-ww', '-axo', 'pid=,ppid=,pgid=,stat=,lstart=,rss=,command='],
+                ['/bin/ps', '-ww', '-axo', 'pid=,ppid=,pgid=,stat=,lstart=,rss=,command='])
     for pid in selected:
         try:
-            if rows[pid]['parent'] == observer and shlex.split(rows[pid].get('command', '')) == sampler:
+            if rows[pid]['parent'] == observer and shlex.split(rows[pid].get('command', '')) in samplers:
                 allowed.add(pid)
         except (KeyError, ValueError):
             pass

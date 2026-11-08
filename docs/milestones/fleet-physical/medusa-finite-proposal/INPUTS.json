@@ -1,0 +1,37 @@
+[
+  {
+    "file": "SH171-resource.toml",
+    "sourceCommit": "4b43586ea1dc6a78143a7aebcdc39ae66378bb67",
+    "sourcePath": "Sources/L337Core/Resources/Ships/SH171.toml",
+    "bytes": 22221124,
+    "sha256": "701c1512262e64bd11b2d9ef57c7fa573cc246aa2b13015543e9792ae23d6525"
+  },
+  {
+    "file": "SH171-engineering.json",
+    "sourceCommit": "4b43586ea1dc6a78143a7aebcdc39ae66378bb67",
+    "sourcePath": "Sources/L337Core/Resources/OriginalFleetPhysical/SH171.json",
+    "bytes": 431492,
+    "sha256": "3a251b2433d907425bf0ad1d2cff150095195b185669a8addfb6fa7443f7ac38"
+  },
+  {
+    "file": "SH171-model.json",
+    "sourceCommit": "4b43586ea1dc6a78143a7aebcdc39ae66378bb67",
+    "sourcePath": "Sources/L337Core/Resources/OriginalFleetShowroomModels/SH171.json",
+    "bytes": 6845725,
+    "sha256": "fca6afbaba0fd4f1f3b41dd0fc587c80d06724ab84440cdff1b6620b89431f8c"
+  },
+  {
+    "file": "SH171-ownership.json",
+    "sourceCommit": "4b43586ea1dc6a78143a7aebcdc39ae66378bb67",
+    "sourcePath": "docs/milestones/fleet-physical/distinct-creator-ownership-records/SH171.json",
+    "bytes": 649334,
+    "sha256": "0fab4ca06ec2a1224287086de2cb7be86e52e5ae60e366de78da3d2dc031f9cc"
+  },
+  {
+    "file": "SH171-R3.toml",
+    "sourceArchive": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-design-v2-20261030-r3.zip",
+    "archiveMember": "fleet-design-v2/ships/SH171.toml",
+    "bytes": 5397,
+    "sha256": "f1e1365586a3723bed5a87f1041d086ab7a7dd3c4ce9d665c6fedce1b39eb48f"
+  }
+]
