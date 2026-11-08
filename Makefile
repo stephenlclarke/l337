@@ -70,7 +70,8 @@ showroom-check:
 sonar:
 	./script/sonar.sh
 mission-packs-check:
-	swift run --build-system native --jobs 1 -Xswiftc -disable-batch-mode L337 --validate-mission-pack docs/mission-packs/courier.toml
+	swift build --build-system native --jobs 1 -Xswiftc -disable-batch-mode --product L337
+	swift run --build-system native --jobs 1 -Xswiftc -disable-batch-mode --skip-build L337 --validate-mission-pack docs/mission-packs/courier.toml
 flight-controls-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 Tools/generate-flight-controls.py --repo-root . --check
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/tests -p 'test_flight_controls.py'

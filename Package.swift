@@ -2,6 +2,7 @@
 import PackageDescription
 
 let domainTestSources = [
+  "NativeMemoryAtlasFinitePupilReferenceUnitTests.swift",
   "OriginalZebuPhysicalSourceUnitTests.swift",
   "OriginalServalPhysicalSourceUnitTests.swift",
   "OriginalSakerPhysicalSourceUnitTests.swift",

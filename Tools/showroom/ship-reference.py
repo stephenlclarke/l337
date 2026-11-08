@@ -7,6 +7,7 @@ import json
 import os
 import shutil
 import signal
+import shlex
 import sys
 import tempfile
 import time
@@ -286,12 +287,23 @@ def execution_rss_limit(command, profile):
         raise ValueError('Unknown execution profile or unsupported normal command')
     explicit_native = command[2:4] == ['--build-system', 'native']
     arguments = command[1:2] + command[4:] if explicit_native else command[1:]
+    # quality_phase's real normal command places --build-tests before its backend.
+    if command[1:5] == ['build', '--build-tests', '--build-system', 'native']:
+        explicit_native = True
+        arguments = command[1:3] + command[5:]
     build = ['build','--build-tests','--enable-code-coverage','--jobs','1',
              '-Xswiftc','-disable-batch-mode']
     focused_build = build + [
         '-Xlinker','-O0','-Xswiftc','-driver-batch-size-limit','-Xswiftc','1','--disable-index-store']
     if profile == 'normal-compiler':
         if arguments == focused_build:return NORMAL_COMPILER_RSS
+        if explicit_native and arguments in (
+            # Existing local leak-phase build, which never starts the diagnostic app.
+            ['build','--jobs','1','-Xswiftc','-disable-batch-mode','-Xlinker','-O0',
+             '-Xswiftc','-driver-batch-size-limit','-Xswiftc','1','--disable-index-store'],
+            # The mission gate builds first, then validates separately with --skip-build.
+            ['build','--jobs','1','-Xswiftc','-disable-batch-mode','--product','L337'],
+        ):return NORMAL_COMPILER_RSS
         if not explicit_native and arguments in (
             build,
             build + ['-Xlinker','-O0'],
@@ -312,6 +324,74 @@ def execution_rss_limit(command, profile):
                     and selector == '--filter' and isinstance(expression,str) and expression):
                 return NORMAL_RSS
     raise ValueError('Unknown execution profile or unsupported normal command')
+
+
+def execution_admission_peak(command, profile):
+    """Reserve the maximum phase before mixed CI; never use its 3 GiB idle cap for admission."""
+    limit = execution_rss_limit(command, profile)
+    return NORMAL_COMPILER_RSS if profile == 'normal-ci' else limit
+
+
+def normal_ci_sample_rss_limit(leader, selected, rows, observer):
+    """Compiler allowance only for one exclusive, closed pure-build branch; count all RSS."""
+    def under(pid, ancestor):
+        seen = set()
+        while pid in selected and pid in rows and pid not in seen:
+            if pid == ancestor:return True
+            seen.add(pid)
+            pid = rows[pid]['parent']
+        return False
+
+    compilers = {}
+    executables = {}
+    for pid in selected:
+        try:
+            lexer = shlex.shlex(rows[pid].get('command', ''), posix=True)
+            lexer.whitespace_split = True
+            lexer.commenters = ''
+            executable = next(lexer, '')
+            executables[pid] = Path(executable)
+            if Path(executable).name not in {'swift', 'swift-build'}:continue
+            command = [executable, *lexer]
+            if Path(executable).name == 'swift-build':
+                command = [str(Path(command[0]).with_name('swift')), 'build', *command[1:]]
+            if execution_rss_limit(command, 'normal-compiler') == NORMAL_COMPILER_RSS:
+                compilers[pid] = command
+        except (ValueError, KeyError):
+            continue
+    roots = [pid for pid in compilers if not any(other != pid and under(pid, other) for other in compilers)]
+    if len(roots) != 1 or not under(roots[0], leader):return NORMAL_RSS
+    compiler = roots[0]
+    # Only swift -> its direct, matching swift-build child is dispatcher duplication.
+    # A second swift-build is a second build even when nested under the first.
+    for pid in compilers.keys() - {compiler}:
+        if (len(compilers) != 2 or executables[compiler].name != 'swift'
+                or executables[pid].name != 'swift-build' or rows[pid]['parent'] != compiler
+                or compilers[pid] != compilers[compiler]):return NORMAL_RSS
+    compiler_tree = {pid for pid in selected if under(pid, compiler)}
+    # Pure-build argv does not grant arbitrary descendants a compiler allowance.
+    # Only toolchain sibling compiler/linker tools are known compilation processes;
+    # runtime, test, game, plugin and unknown descendants retain the safe 3 GiB cap.
+    tools = {'swiftc', 'swift-frontend', 'swift-autolink-extract', 'clang', 'ld'}
+    toolchain = executables[compiler].parent
+    for pid in compiler_tree - compilers.keys():
+        executable = executables.get(pid)
+        if executable is None or executable.parent != toolchain or executable.name not in tools:
+            return NORMAL_RSS
+    # CI/observer ancestors retain their own 3 GiB ceiling even during compilation.
+    if sum(rows[pid]['rss'] for pid in selected - compiler_tree if pid in rows) > NORMAL_RSS:return NORMAL_RSS
+    allowed = compiler_tree | {pid for pid in selected if under(compiler, pid)}
+    allowed.add(observer)
+    sampler = ['/bin/ps', '-ww', '-axo', 'pid=,ppid=,pgid=,lstart=,rss=,command=']
+    for pid in selected:
+        try:
+            if rows[pid]['parent'] == observer and shlex.split(rows[pid].get('command', '')) == sampler:
+                allowed.add(pid)
+        except (KeyError, ValueError):
+            pass
+    # An overlapping runtime, second build, unknown sibling or malformed sample never
+    # receives a compiler allowance. The original 3 GiB whole-tree guard still applies.
+    return NORMAL_COMPILER_RSS if selected <= allowed else NORMAL_RSS
 
 
 def write_rss_refusal(rows, selected, aggregate, limit, profile):
@@ -373,7 +453,7 @@ def run_renderer(command,root,log,descriptors,deadline,*,profile='asset',failure
             if time.monotonic()>=deadline-ASSET_CLEANUP:raise TimeoutError('Renderer deadline')
             if log.tell()>ASSET_OUTPUT:raise RuntimeError('Renderer output limit')
             sample_timeout=min(1,max(.001,deadline-ASSET_CLEANUP-time.monotonic()))
-            rows=process_memory(sample_timeout,include_command=True) if evidence_active else process_memory(sample_timeout)
+            rows=process_memory(sample_timeout,include_command=True) if evidence_active or profile=='normal-ci' else process_memory(sample_timeout)
             selected=owned_processes(process.pid,known,rows,process.returncode is None)
             if evidence_active:
                 try:evidence.observe(rows,selected,process.pid)
@@ -384,6 +464,8 @@ def run_renderer(command,root,log,descriptors,deadline,*,profile='asset',failure
                     retain_capture_unknown()
             selected.update(pid for pid,row in rows.items() if pid==os.getpid() or row['parent']==os.getpid())
             aggregate = sum(rows[pid]['rss'] for pid in selected)
+            if profile=='normal-ci':
+                rss_limit=normal_ci_sample_rss_limit(process.pid,selected,rows,os.getpid())
             if aggregate > rss_limit:
                 try:write_rss_refusal(rows, selected, aggregate, rss_limit, profile)
                 except BaseException:pass  # Diagnostics must not bypass the existing refusal.
