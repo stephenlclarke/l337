@@ -1109,7 +1109,9 @@ extension NativeC01TimingStandardUnitTests {
   {
     // Component facts are not an authenticated mission or a live native capability.
     let facts = try C01TimingStandardFacts()
-    let originalBytes = try JSONEncoder().encode(facts.marker)
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.sortedKeys]
+    let originalBytes = try encoder.encode(facts.marker)
     var candidate = facts.marker
     switch change {
     case "valid": break
@@ -1151,7 +1153,7 @@ extension NativeC01TimingStandardUnitTests {
     let originalStillValid = NativeC01TimingStandard.original(
       facts.marker, source: facts.source, part: .standard)
     #expect(originalStillValid)
-    let retainedBytes = try JSONEncoder().encode(facts.marker)
+    let retainedBytes = try encoder.encode(facts.marker)
     #expect(retainedBytes == originalBytes)
     let decoded = try JSONDecoder().decode(ScriptOwnedActor.self, from: originalBytes)
     #expect(decoded == facts.marker)
