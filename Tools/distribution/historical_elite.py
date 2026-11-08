@@ -92,7 +92,7 @@ def verify_historical(cask: Path, download: bool = False, root: Path = ROOT, ope
     _, prefix, _ = pinned_release(version)
     if download:
         opener = opener or urllib.request.urlopen
-        with opener(f"{RELEASES}/v{version}/{prefix}.zip", timeout=60) as response:
+        with opener(f"{RELEASES}/v{version}/{prefix}.zip") as response:
             archive = response.read(manifest["archiveBytes"] + 1)
         if (len(archive) != manifest["archiveBytes"]
                 or hashlib.sha256(archive).hexdigest() != manifest["sha256"]):

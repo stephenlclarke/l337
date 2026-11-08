@@ -196,36 +196,23 @@ LEGACY_VALIDATION_INPUTS = {
 
 
 def opt_in_policy(root, environment):
-    """Bind only six existing, source-declared opt-ins; never allow a general skip."""
+    """Bind the five current source-declared GPU opt-ins; no general skip."""
     gpu_path = 'Tests/L337CoreTests/PlanetGPUShaderTests.swift'
-    diagnostic_path = 'Tests/L337CoreTests/NativeMultiBatchRuntimeTests.swift'
     gpu = (root / gpu_path).read_text()
-    diagnostic = (root / diagnostic_path).read_text()
     compact = lambda value: re.sub(r'\s+', '', value)
     gpu_guard = '@Suite(\n  .enabled(if: ProcessInfo.processInfo.environment["ELITE_PLANET_GPU_EXPERIMENT"] == "1"),\n  .serialized)\nstruct PlanetGPUShaderTests'
-    diagnostic_guard = '@Test(\n    .enabled(\n      if: ProcessInfo.processInfo.environment["ELITE_NATIVE_WORK_CONTINUATION"] == "1"\n        && ProcessInfo.processInfo.environment["ELITE_NATIVE_WORK_CONTINUATION_SOURCE"]?.isEmpty\n          == false,\n      "Requires explicit diagnostic opt-in and the private retained run 542 directory")\n  )\n  func retained542SecondCycleContinuationDiagnostic()'
-    names = set(re.findall(r'@MainActor\s+@Test\s+func\s+(\w+)\s*\(', gpu))
-    if (compact(gpu_guard) not in compact(gpu) or names != {name[:-2] for name in GPU_OPT_IN}
-            or compact(diagnostic_guard) not in compact(diagnostic)
-            or DIAGNOSTIC_REASON not in diagnostic):
+    names = re.findall(r'@MainActor\s+@Test\s+func\s+(\w+)\s*\(', gpu)
+    if (compact(gpu_guard) not in compact(gpu)
+            or Counter(names) != Counter(name[:-2] for name in GPU_OPT_IN)
+            or len(re.findall(r'@Test\b', gpu)) != len(GPU_OPT_IN)):
         raise ValueError('Source-declared opt-in guards changed; policy review required')
-    source = environment.get('ELITE_NATIVE_WORK_CONTINUATION_SOURCE')
-    controls = {
-        'ELITE_PLANET_GPU_EXPERIMENT': environment.get('ELITE_PLANET_GPU_EXPERIMENT'),
-        'ELITE_NATIVE_WORK_CONTINUATION': environment.get('ELITE_NATIVE_WORK_CONTINUATION'),
-        'continuation_source_is_set': source is not None,
-        'continuation_source_nonempty': bool(source),
-        'continuation_source_sha256': hashlib.sha256(source.encode()).hexdigest() if source is not None else None,
-    }
+    controls = {'ELITE_PLANET_GPU_EXPERIMENT': environment.get('ELITE_PLANET_GPU_EXPERIMENT')}
     skipped = []
     if controls['ELITE_PLANET_GPU_EXPERIMENT'] != '1':
         skipped.extend({'classname': 'L337CoreTests.PlanetGPUShaderTests', 'name': name,
                         'reason': None} for name in GPU_OPT_IN)
-    if not (controls['ELITE_NATIVE_WORK_CONTINUATION'] == '1' and bool(source)):
-        skipped.append({'classname': 'L337CoreTests.NativeMultiBatchRuntimeTests',
-                        'name': DIAGNOSTIC_METHOD, 'reason': DIAGNOSTIC_REASON})
-    return {'controls': controls, 'declarations': {name: digest(root / name)
-            for name in (gpu_path, diagnostic_path)}, 'expected_skips': skipped}
+    return {'controls': controls, 'declarations': {gpu_path: digest(root / gpu_path)},
+            'expected_skips': skipped}
 
 
 def selected_opt_in_skips(identity, methods):
@@ -450,8 +437,6 @@ def output(command, root, environment, lock):
 def batch_command(swift, flags, mode, attempt, methods, full_concurrent=False):
     """Keep TSAN parallel internally; only explicit full-concurrent mode is unfiltered."""
     command = [swift, 'test', *flags, '--skip-build']
-    if mode == 'address':
-        command.append('--no-parallel')
     command += ['--xunit-output', str(attempt / 'tests.xml')]
     if not full_concurrent:
         patterns = set()

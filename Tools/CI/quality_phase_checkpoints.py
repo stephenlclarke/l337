@@ -22,8 +22,7 @@ from sanitizer_checkpoints import (ERRORS, atomic_json, copy_report, digest, ens
                                    output, owned_directory, runtime_identity, selected_opt_in_skips)
 
 ROOT = Path(__file__).resolve().parents[2]
-LOCAL_NATIVE_BUILD_FLAGS = ['--jobs', '1', '-Xswiftc', '-disable-batch-mode', '-Xlinker', '-O0',
-                            '-Xswiftc', '-driver-batch-size-limit', '-Xswiftc', '1', '--disable-index-store']
+LOCAL_NATIVE_BUILD_FLAGS = []  # Use the toolchain defaults, without project job/batch caps.
 
 NORMAL_OUTPUTS = {'phase.log', 'tests-swift-testing.xml', 'coverage.xml', 'coverage.lcov', 'default.profdata'}
 
@@ -144,7 +143,7 @@ def reviewed_build_profile(path, checksum, phase, environment):
         raise ValueError('Both reviewed normal/leaks resource profiles are required')
     return {'kind': 'owned-phase-build-v1', 'phase': phase, 'profile': profile['build_profile'],
             'policy_sha256': native_runner.policy_digest(policy), 'admission': native_runner.phase_resource_admission(profile),
-            'flags': ['--jobs', '1', '-Xswiftc', '-disable-batch-mode']}
+            'flags': []}
 
 
 def run_phase(phase, cache, profile_policy=None, profile_sha256=None, build_system=None):
@@ -393,7 +392,7 @@ def run_hosted_phase(phase):
                '--profile-policy-sha256', digest(policy), '--monitor-parent', str(os.getpid()),
                '--monitor-parent-start', native_runner.custody_digest(row['start']),
                '--monitor-parent-command', native_runner.custody_digest(row['command'])]
-    code = execute_process(command, ROOT, report, 19800, (), dict(os.environ),
+    code = execute_process(command, ROOT, report, None, (), dict(os.environ),
                            NativeMonitor(authority, report, ROOT, phase=phase), isolate_environment=False)
     if code:
         raise subprocess.CalledProcessError(code, command)

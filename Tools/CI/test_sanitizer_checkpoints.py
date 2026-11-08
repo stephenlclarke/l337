@@ -103,7 +103,7 @@ class SanitizerCheckpointTests(unittest.TestCase):
         self.assertNotIn('--no-parallel', thread)
         self.assertNotIn('--filter', batch_command('/swift', [], 'thread', self.root, self.methods, True))
         address = batch_command('/swift', ['--sanitize=address'], 'address', self.root, self.methods)
-        self.assertIn('--no-parallel', address)
+        self.assertNotIn('--no-parallel', address)
         pattern = address[address.index('--filter') + 1]
         self.assertTrue(__import__('re').search(pattern, self.methods[1]))
         self.assertFalse(__import__('re').search(pattern, 'L337CoreTests.FirstOther/plain()'))
@@ -343,7 +343,7 @@ class SanitizerExecutionBoundaryTests(unittest.TestCase):
                 self.assertTrue(options['start_new_session'])
                 if '--filter' not in command:
                     return subprocess.CompletedProcess(command, 0)
-                self.assertIn('--no-parallel', command)
+                self.assertNotIn('--no-parallel', command)
                 self.assertEqual(options['env']['ASAN_OPTIONS'], 'detect_leaks=0')
                 selected = [method for method in methods if __import__('re').search(command[-1], method)]
                 executions.append(selected)
@@ -471,7 +471,7 @@ class SanitizerExecutionBoundaryTests(unittest.TestCase):
                 self.assertEqual(len([path for path in (root / 'cache').iterdir() if path.is_dir()]), 2)
 
 
-class DeclaredOptInPolicyTests(unittest.TestCase):
+class HistoricalOptInRequalificationTests(unittest.TestCase):
     def setUp(self):
         import shutil
         import sanitizer_checkpoints as runner
@@ -482,8 +482,10 @@ class DeclaredOptInPolicyTests(unittest.TestCase):
         for name in ['PlanetGPUShaderTests.swift', 'NativeMultiBatchRuntimeTests.swift']:
             target = self.root / 'Tests/L337CoreTests' / name
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(runner.ROOT / 'Tests/L337CoreTests' / name, target)
-        self.policy = runner.opt_in_policy(self.root, {})
+            historical=Path(__file__).parent/'fixtures/legacy-opt-ins/NativeMultiBatchRuntimeTests.swift.txt'
+            original=historical if name=='NativeMultiBatchRuntimeTests.swift' else runner.ROOT/'Tests/L337CoreTests'/name
+            shutil.copyfile(original,target)
+        self.policy = self.historical_policy( {})
         self.methods = ['L337CoreTests.Required/plain()'] + [
             entry['classname'] + '/' + entry['name'] for entry in self.policy['expected_skips']]
         self.old = self.root / 'legacy'
@@ -512,6 +514,24 @@ class DeclaredOptInPolicyTests(unittest.TestCase):
         (self.old / 'test.log').write_text('✔ Test run with 7 tests in 1 suite passed after 100 seconds.\n')
         self.write_xml()
 
+    def historical_policy(self, environment):
+        """Build only the exact six-skip historical attestation fixture, not current policy."""
+        runner=self.runner
+        policy=runner.opt_in_policy(self.root,environment)
+        path='Tests/L337CoreTests/NativeMultiBatchRuntimeTests.swift'
+        if runner.digest(self.root/path)!='5e080c6ee4735c873d24ffd3b80156e513f9296f704237698df6e0327768c460':
+            raise ValueError('Historical diagnostic declaration source changed')
+        source=environment.get('ELITE_NATIVE_WORK_CONTINUATION_SOURCE')
+        import hashlib
+        policy['controls'].update(ELITE_NATIVE_WORK_CONTINUATION=environment.get('ELITE_NATIVE_WORK_CONTINUATION'),
+            continuation_source_is_set=source is not None,continuation_source_nonempty=bool(source),
+            continuation_source_sha256=hashlib.sha256(source.encode()).hexdigest() if source is not None else None)
+        policy['declarations'][path]=runner.digest(self.root/path)
+        if not (environment.get('ELITE_NATIVE_WORK_CONTINUATION')=='1' and bool(source)):
+            policy['expected_skips'].append({'classname':'L337CoreTests.NativeMultiBatchRuntimeTests',
+                'name':runner.DIAGNOSTIC_METHOD,'reason':runner.DIAGNOSTIC_REASON})
+        return policy
+
     def write_xml(self, policy=None):
         policy = self.policy if policy is None else policy
         expected = self.runner.selected_opt_in_skips({'opt_in_policy': policy}, self.methods)
@@ -532,10 +552,10 @@ class DeclaredOptInPolicyTests(unittest.TestCase):
     def test_only_six_exact_source_declared_inactive_opt_ins_are_expected(self):
         runner = self.runner
         self.assertEqual(len(self.policy['expected_skips']), 6)
-        self.assertEqual(len(runner.opt_in_policy(self.root, {'ELITE_PLANET_GPU_EXPERIMENT': '1'})['expected_skips']), 1)
+        self.assertEqual(len(self.historical_policy( {'ELITE_PLANET_GPU_EXPERIMENT': '1'})['expected_skips']), 1)
         enabled = {'ELITE_PLANET_GPU_EXPERIMENT': '1', 'ELITE_NATIVE_WORK_CONTINUATION': '1',
                    'ELITE_NATIVE_WORK_CONTINUATION_SOURCE': '/private/source'}
-        policy = runner.opt_in_policy(self.root, enabled)
+        policy = self.historical_policy( enabled)
         self.assertEqual(policy['expected_skips'], [])
         self.assertNotIn('/private/source', json.dumps(policy))
         self.assertTrue(policy['controls']['continuation_source_nonempty'])
@@ -550,16 +570,16 @@ class DeclaredOptInPolicyTests(unittest.TestCase):
                         original + '\n@MainActor @Test func newOptionalTest() {}\n']:
             path.write_text(changed)
             with self.assertRaises(ValueError):
-                self.runner.opt_in_policy(self.root, {})
+                self.historical_policy( {})
         path.write_text(original)
         path = self.root / 'Tests/L337CoreTests/NativeMultiBatchRuntimeTests.swift'
         path.write_text(path.read_text().replace('== false,', '== true,', 1))
         with self.assertRaises(ValueError):
-            self.runner.opt_in_policy(self.root, {})
+            self.historical_policy( {})
 
     def test_enabled_or_unexpected_skip_and_changed_reason_are_refused(self):
         runner = self.runner
-        enabled = runner.opt_in_policy(self.root, {'ELITE_PLANET_GPU_EXPERIMENT': '1'})
+        enabled = self.historical_policy( {'ELITE_PLANET_GPU_EXPERIMENT': '1'})
         with self.assertRaises(ValueError):
             runner.inspect_xml(self.old / 'tests-swift-testing.xml', self.methods,
                                runner.selected_opt_in_skips({'opt_in_policy': enabled}, self.methods))
@@ -606,7 +626,7 @@ class DeclaredOptInPolicyTests(unittest.TestCase):
             with self.subTest(input=key), self.assertRaises(ValueError):
                 self.runner.legacy_requalification(self.old, changed, self.methods)
         changed = json.loads(json.dumps(self.identity))
-        changed['opt_in_policy'] = self.runner.opt_in_policy(self.root, {'ELITE_PLANET_GPU_EXPERIMENT': '1'})
+        changed['opt_in_policy'] = self.historical_policy( {'ELITE_PLANET_GPU_EXPERIMENT': '1'})
         with self.assertRaises(ValueError):
             self.runner.legacy_requalification(self.old, changed, self.methods)
 
@@ -651,7 +671,7 @@ class DeclaredOptInPolicyTests(unittest.TestCase):
         target.mkdir(parents=True)
         attempt = runner.requalify_completed(self.old, target, self.identity, self.methods, 'b' * 40)
         changed = json.loads(json.dumps(self.identity))
-        changed['opt_in_policy'] = runner.opt_in_policy(self.root, {'ELITE_PLANET_GPU_EXPERIMENT': '1'})
+        changed['opt_in_policy'] = self.historical_policy( {'ELITE_PLANET_GPU_EXPERIMENT': '1'})
         self.assertIsNone(runner.successful_attempt(attempt, changed, self.methods))
         (self.old / 'test.log').write_text('Changed historical evidence')
         self.assertIsNone(runner.successful_attempt(attempt, self.identity, self.methods))
@@ -682,6 +702,95 @@ class DeclaredOptInPolicyTests(unittest.TestCase):
         (self.old / 'result.json').write_text(json.dumps(changed))
         with self.assertRaises(ValueError):
             self.runner.legacy_requalification(self.old, self.identity, self.methods)
+
+
+class CurrentDeclaredOptInPolicyTests(unittest.TestCase):
+    def setUp(self):
+        import shutil
+        import sanitizer_checkpoints as runner
+        self.runner=runner
+        temporary=tempfile.TemporaryDirectory();self.addCleanup(temporary.cleanup)
+        self.root=Path(temporary.name).resolve()
+        self.gpu=self.root/'Tests/L337CoreTests/PlanetGPUShaderTests.swift'
+        self.gpu.parent.mkdir(parents=True)
+        shutil.copyfile(runner.ROOT/'Tests/L337CoreTests/PlanetGPUShaderTests.swift',self.gpu)
+        self.policy=runner.opt_in_policy(self.root,{})
+        self.methods=['L337CoreTests.Required/plain()']+[
+            'L337CoreTests.PlanetGPUShaderTests/'+name for name in runner.GPU_OPT_IN]
+
+    def xml(self, policy=None):
+        policy=self.policy if policy is None else policy
+        allowed=self.runner.selected_opt_in_skips({'opt_in_policy':policy},self.methods)
+        document=ET.Element('testsuites')
+        suite=ET.SubElement(document,'testsuite',tests=str(len(self.methods)-len(allowed)),
+            failures='0',errors='0',skipped=str(len(allowed)))
+        for method in self.methods:
+            classname,name=self.runner.xml_identity(method)
+            case=ET.SubElement(suite,'testcase',classname=classname,name=name)
+            if (classname,name) in allowed:ET.SubElement(case,'skipped').text=allowed[(classname,name)]
+            else:case.set('time','1')
+        path=self.root/'tests.xml';ET.ElementTree(document).write(path);return path
+
+    def test_current_policy_reads_only_existing_gpu_source_and_accepts_exact_five_or_zero(self):
+        retired=self.gpu.with_name('NativeMultiBatchRuntimeTests.swift')
+        self.assertFalse(retired.exists())
+        self.assertEqual(set(self.policy['declarations']),{'Tests/L337CoreTests/PlanetGPUShaderTests.swift'})
+        self.assertEqual(len(self.policy['expected_skips']),5)
+        self.assertEqual(self.policy['controls'],{'ELITE_PLANET_GPU_EXPERIMENT':None})
+        enabled=self.runner.opt_in_policy(self.root,{'ELITE_PLANET_GPU_EXPERIMENT':'1'})
+        self.assertEqual(enabled['expected_skips'],[])
+        self.assertEqual(self.runner.inspect_xml(self.xml(),self.methods,
+            self.runner.selected_opt_in_skips({'opt_in_policy':self.policy},self.methods)),self.methods)
+        self.assertEqual(self.runner.inspect_xml(self.xml(enabled),self.methods),self.methods)
+
+    def test_missing_gpu_changed_guard_and_changed_declared_names_fail_closed(self):
+        original=self.gpu.read_text()
+        changes=[original.replace('== "1"','== "2"',1),
+            original+'\n@MainActor @Test func unknownOptionalTest() {}\n',
+            original+'\n@Test func unknownWithoutMainActor() {}\n',
+            original+'\n@MainActor @Test func '+self.runner.GPU_OPT_IN[0][:-2]+'() {}\n',
+            original.replace(self.runner.GPU_OPT_IN[0][:-2],'renamedOptionalTest',1)]
+        for changed in changes:
+            with self.subTest(source=changed[-50:]):
+                self.gpu.write_text(changed)
+                with self.assertRaises(ValueError):self.runner.opt_in_policy(self.root,{})
+        self.gpu.unlink()
+        with self.assertRaises(FileNotFoundError):self.runner.opt_in_policy(self.root,{})
+
+    def test_source_hash_and_generic_elite_environment_drift_refuse_cached_reuse(self):
+        identity={'schema':3,'mode':'thread','opt_in_policy':self.policy,
+                  'environment':self.runner.runtime_identity({})}
+        report=self.xml();(self.root/'test.log').write_text('Complete fixture log')
+        receipt={'identity':identity,'methods':self.methods,'exit_code':0,'status':'passed',
+            'tested_head':'a'*40,'report':'tests.xml',
+            'outputs':{name:self.runner.digest(self.root/name) for name in ('test.log','tests.xml')}}
+        self.runner.atomic_json(self.root/'result.json',receipt)
+        self.assertIsNotNone(self.runner.successful_attempt(self.root,identity,self.methods))
+        self.gpu.write_text(self.gpu.read_text()+'\n// changed current source identity\n')
+        changed={**identity,'opt_in_policy':self.runner.opt_in_policy(self.root,{})}
+        self.assertNotEqual(changed['opt_in_policy']['declarations'],self.policy['declarations'])
+        self.assertIsNone(self.runner.successful_attempt(self.root,changed,self.methods))
+        environment={'ELITE_NATIVE_WORK_CONTINUATION':'1','ELITE_NATIVE_WORK_CONTINUATION_SOURCE':'/private/source'}
+        changed={**identity,'environment':self.runner.runtime_identity(environment)}
+        self.assertNotEqual(changed['environment'],identity['environment'])
+        self.assertIsNone(self.runner.successful_attempt(self.root,changed,self.methods))
+        self.assertNotIn('/private/source',json.dumps(self.runner.opt_in_policy(self.root,environment)))
+
+    def test_enabled_unknown_and_retired_diagnostic_skips_never_qualify_current_policy(self):
+        path=self.xml()
+        enabled=self.runner.opt_in_policy(self.root,{'ELITE_PLANET_GPU_EXPERIMENT':'1'})
+        with self.assertRaises(ValueError):self.runner.inspect_xml(path,self.methods,
+            self.runner.selected_opt_in_skips({'opt_in_policy':enabled},self.methods))
+        tree=ET.parse(self.xml());ET.SubElement(next(tree.getroot().iter('testcase')),'skipped');tree.write(path)
+        with self.assertRaises(ValueError):self.runner.inspect_xml(path,self.methods,
+            self.runner.selected_opt_in_skips({'opt_in_policy':self.policy},self.methods))
+        tree=ET.parse(self.xml());suite=next(tree.getroot().iter('testsuite'))
+        ghost='L337CoreTests.NativeMultiBatchRuntimeTests/'+self.runner.DIAGNOSTIC_METHOD
+        classname,name=self.runner.xml_identity(ghost)
+        ET.SubElement(ET.SubElement(suite,'testcase',classname=classname,name=name),'skipped').text=self.runner.DIAGNOSTIC_REASON
+        tree.write(path)
+        with self.assertRaises(ValueError):self.runner.inspect_xml(path,self.methods+[ghost],
+            self.runner.selected_opt_in_skips({'opt_in_policy':self.policy},self.methods+[ghost]))
 
 
 if __name__ == '__main__':

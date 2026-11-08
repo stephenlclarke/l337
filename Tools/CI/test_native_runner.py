@@ -141,7 +141,7 @@ class RecoverableAuthorizationTests(unittest.TestCase):
             "manifest_sha256": "d" * 64, "runners": {"owned-one": {
                 "workspace": env["GITHUB_WORKSPACE"], "jobs": ["native_shards"]}},
             "assignment_root": str(assignment_root)}}
-        policy["recoverable_shards"] = {"host": "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA"}
+        policy["recoverable_shards"] = {"host": "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA","workers":{"one":env["GITHUB_WORKSPACE"]+"/one"}}
         activation = policy["recoverable_activation"]
         manifest = {name: activation[name] for name in ("schema", "enabled", "revoked", "expires_at", "head",
                                                        "workflow_sha256", "runners", "assignment_root")}
@@ -647,7 +647,6 @@ class RecoverableAuthorizationTests(unittest.TestCase):
                 lambda value: value['recoverable_shards'].pop('phase_profiles'),
                 lambda value: value['recoverable_shards']['phase_profiles'].pop('leaks'),
                 lambda value: value['recoverable_shards']['phase_profiles']['normal'].update(build_profile='unknown'),
-                lambda value: value['recoverable_shards']['phase_profiles']['leaks']['admission'].update(explicit=2),
                 lambda value: value['recoverable_activation']['runners']['elite-mbp-native'].update(jobs=['native_checks', 'native_checks']),
                 lambda value: value['recoverable_activation']['runners']['elite-mbp-native'].update(jobs=['native_checks', 'quality']),
             ):
@@ -758,7 +757,7 @@ class RecoverableAuthorizationTests(unittest.TestCase):
                   lambda p: p["recoverable_activation"].update(expires_at=99),
                   lambda p: p["recoverable_activation"]["guard_files"].pop("crash_artifacts.py"),
                   lambda p: p["recoverable_activation"]["runners"]["elite-mbp-native"].update(jobs=["quality"]),
-                  lambda p: p["recoverable_shards"].update(workers={"two": "/unapproved"}),
+                  lambda p: p["recoverable_shards"].update(workers={"two": p["recoverable_shards"]["cache"]}),
                   lambda p: p["recoverable_shards"].update(cache=p["recoverable_shards"]["legacy_cache"]))
         for mutate in faults:
             stack, home, archive, archive_hash, reviewed, checksum, policy = self.recoverable_installation_fixture()
@@ -1608,7 +1607,7 @@ class MaintainedMakeTargetsTests(unittest.TestCase):
                 test = checkpoints.batch_command(
                     "/toolchain/swift", flags, mode, fixture, ["L337CoreTests.Smoke/always()"])
                 self.assertIn("--sanitize=" + mode, test)
-                self.assertEqual("--no-parallel" in test, mode == "address")
+                self.assertNotIn("--no-parallel",test)
                 self.assertIn("--filter", test)
 
 
@@ -1881,7 +1880,7 @@ class OwnedQualityAuthorizationTests(unittest.TestCase):
         import native_runner as native
         stack, home, reviewed, policy, path, binding = self.selected()
         with stack:
-            self.assertEqual(native.phase_profile(policy, 'leaks')['admission']['peak_per_worker'], 4)
+            self.assertEqual(native.phase_profile(policy,'leaks')['admission'],{})
             env = dict(GITHUB_RUN_ID='123', GITHUB_RUN_ATTEMPT='1', GITHUB_JOB='native_aggregate',
                        RUNNER_NAME='elite-mbp-native', GITHUB_WORKSPACE='/owned/work', PLAN_DIGEST='e' * 64,
                        ELITE_NATIVE_POLICY=str(reviewed))
@@ -1893,12 +1892,17 @@ class OwnedQualityAuthorizationTests(unittest.TestCase):
                              lambda p: p['recoverable_activation']['local_components'].update(path=str(path.parent / 'other.json')),
                              lambda p: p['recoverable_shards']['phase_profiles'].pop('leaks'),
                              lambda p: p['recoverable_shards']['phase_profiles']['normal'].update(build_profile='unreviewed'),
-                             lambda p: p['recoverable_shards']['phase_profiles']['normal']['admission'].update(explicit=2),
-                             lambda p: p['recoverable_shards']['phase_profiles']['normal']['admission'].update(peak_per_worker=100)]:
+                             lambda p: p['recoverable_shards']['phase_profiles']['normal'].update(admission=[])]:
                 changed = copy.deepcopy(policy)
                 mutation(changed)
                 with self.assertRaises(ValueError):
                     native.phase_profile(changed, 'normal')
+            for changes in ({'explicit':0,'cpu_budget':0,'ram_available':0},
+                            {'peak_per_worker':10**30,'ram_reserve':10**30}):
+                changed=copy.deepcopy(policy)
+                changed['recoverable_shards']['phase_profiles']['normal']['admission'].update(changes)
+                self.assertEqual(native.phase_profile(changed,'normal'),
+                                 {'build_profile':native.PHASE_BUILD_PROFILE,'admission':{}})
             default = copy.deepcopy(policy)
             default['recoverable_activation'].pop('sanitizer_backend')
             default['recoverable_activation'].pop('local_components')

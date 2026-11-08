@@ -12,22 +12,29 @@ import subprocess
 import time
 import threading
 
-ARTIFACT_LIMIT = 512 * 1024 * 1024
+ARTIFACT_LIMIT = None
 REPORT_SUFFIXES = {'.ips', '.crash'}
 # The optional printer can outlive its timeout; OS and owned debugger evidence remain separate.
 RUNTIME_BACKTRACE = ('enable=no,interactive=no,color=no,output-to=stderr,'
                      'threads=crashed,registers=crashed,images=mentioned')
 
 
+RESOURCE_ENVIRONMENT = (
+    'SWIFTPM_MAXIMUM_CONCURRENT_OPERATIONS', 'SWIFT_MAXIMUM_CONCURRENT_OPERATIONS',
+    'CMAKE_BUILD_PARALLEL_LEVEL', 'CTEST_PARALLEL_LEVEL', 'MAKEFLAGS', 'MFLAGS',
+    'OMP_NUM_THREADS', 'OPENBLAS_NUM_THREADS', 'VECLIB_MAXIMUM_THREADS', 'NUMEXPR_MAX_THREADS',
+)
+
+
 def runtime_child_environment(parent):
     """Disable the optional runtime printer only for the owned CI child."""
-    child = dict(parent)
+    child = {key: value for key, value in parent.items() if key not in RESOURCE_ENVIRONMENT}
     child['SWIFT_BACKTRACE'] = RUNTIME_BACKTRACE
     return child
 
 
 
-FAULT_LOG_LIMIT = 1024 * 1024
+FAULT_LOG_LIMIT = None
 
 
 def same_process(identity, row):
@@ -169,11 +176,11 @@ class OwnedFaultStack:
 
     def _interrupt(self, reason):
         self.result.update(status='DIAGNOSTICALLY_INTERRUPTED', diagnosticallyInterrupted=True,
-                           detail=str(reason)[:2048])
+                           detail=str(reason))
         try:
             rows = self.snapshot()
         except Exception as error:
-            self.result['cleanupError'] = str(error)[:2048]
+            self.result['cleanupError'] = str(error)
             self.result['remainingMatchedOwned'] = 'UNKNOWN: identity observation failed'
             return
         for identity in [self.identity, *reversed(list(self.observer_owned.values()))]:
@@ -182,11 +189,11 @@ class OwnedFaultStack:
                 try:
                     self.cleanup(identity)
                 except Exception as error:
-                    self.result['cleanupError'] = str(error)[:2048]
+                    self.result['cleanupError'] = str(error)
         try:
             remaining = self.snapshot()
         except Exception as error:
-            self.result['cleanupError'] = str(error)[:2048]
+            self.result['cleanupError'] = str(error)
             self.result['remainingMatchedOwned'] = 'UNKNOWN: identity observation failed'
             return
         self.result['remainingMatchedOwned'] = [
@@ -201,13 +208,10 @@ class OwnedFaultStack:
                     block = self.observer.stdout.read1(65536)
                     if not block:
                         break
-                    available = max(0, FAULT_LOG_LIMIT - retained)
-                    stream.write(block[:available])
-                    retained += min(len(block), available)
-                    if len(block) > available:
-                        self.result['logTruncated'] = True
+                    stream.write(block)
+                    retained += len(block)
         except Exception as error:
-            self.result['readerError'] = str(error)[:2048]
+            self.result['readerError'] = str(error)
 
     def consider(self, owned):
         if self.attempted:
@@ -217,14 +221,10 @@ class OwnedFaultStack:
             if identity is None:
                 continue
             self.attempted, self.identity = True, identity
+            self.reserved = True
             if not same_process(identity, self.snapshot().get(pid)):
                 self.result['status'] = 'identity-changed-or-exited'
                 return
-            if not self.budget.permits(FAULT_LOG_LIMIT):
-                self.result['status'] = 'diagnostic-budget-refused'
-                return
-            self.budget.used += FAULT_LOG_LIMIT
-            self.reserved = True
             identity_path = self.evidence / 'owned-fault-stack-identity.json'
             identity_path.write_text(json.dumps(identity) + '\n')
             script = ('script import sys,lldb; sys.path.insert(0, ' + repr(str(self.workspace / 'Tools/CI'))
@@ -242,7 +242,7 @@ class OwnedFaultStack:
             except Exception as error:
                 if self.observer is None:
                     self.result.update(status='observer-start-failed', diagnosticallyInterrupted=True,
-                                       detail=str(error)[:2048])
+                                       detail=str(error))
                 else:
                     self._interrupt(error)
             return
@@ -256,7 +256,7 @@ class OwnedFaultStack:
             return
         code = self.observer.poll()
         if code is None:
-            if self.session.is_file() and self.session.stat().st_size <= 8192:
+            if self.session.is_file():
                 session = json.loads(self.session.read_text())
                 if session.get('pid') == self.identity['pid'] and not session.get('handedBack'):
                     self.result['session'] = session
@@ -264,8 +264,8 @@ class OwnedFaultStack:
             return
         self.result['observerExitCode'] = code
         try:
-            if not self.session.is_file() or self.session.stat().st_size > 8192:
-                raise ValueError('Missing or oversized debugger session result.')
+            if not self.session.is_file():
+                raise ValueError('Missing debugger session result.')
             session = json.loads(self.session.read_text())
             if session.get('pid') != self.identity['pid']:
                 raise ValueError('Debugger session identity mismatch.')
@@ -294,7 +294,6 @@ class OwnedFaultStack:
                 if self.reader.is_alive() or 'readerError' in self.result:
                     self._interrupt('Observer output did not close cleanly.')
         if self.reserved:
-            self.budget.used -= FAULT_LOG_LIMIT
             self.budget.used += self.log.stat().st_size if self.log.exists() else 0
             self.reserved = False
         self.result['attempted'] = self.attempted
@@ -304,13 +303,10 @@ class OwnedFaultStack:
 
 
 def fault_text(value, limit):
-    """Bound JSON-encoded diagnostic text within the existing session byte limit."""
+    """Retain complete diagnostic text; no project log quota."""
     if value is None:
         return None
-    text = str(value)
-    while len(json.dumps(text).encode('utf-8')) > limit:
-        text = text[:len(text) // 2]
-    return text
+    return str(value)
 
 
 def fault_memory_region(process, lldb, address):
@@ -331,18 +327,23 @@ def fault_memory_region(process, lldb, address):
 
 
 def fault_thread_details(thread, process, lldb):
-    """Retain primitive fault facts separately from a bounded textual backtrace."""
+    """Retain complete fault facts and debugger output."""
     details = {}
     try:
         details.update(thread=thread.GetIndexID(), tid=thread.GetThreadID())
-        description = thread.GetStopDescription(2048) or ''
+        capacity = 2048
+        while True:
+            description = thread.GetStopDescription(capacity) or ''
+            if len(description.encode('utf-8')) < capacity - 1:
+                break
+            capacity *= 2
         count = thread.GetStopReasonDataCount()
         details.update(stopReason=thread.GetStopReason(),
                        stopDescription=fault_text(description, 512),
                        stopDescriptionTruncated=fault_text(description, 512) != description,
                        stopReasonData=[hex(thread.GetStopReasonDataAtIndex(i))
-                                       for i in range(min(count, 16))],
-                       stopReasonDataTruncated=count > 16)
+                                       for i in range(count)],
+                       stopReasonDataTruncated=False)
         frame = thread.GetFrameAtIndex(0)
         if not frame.IsValid():
             details['frameStatus'] = 'unavailable'
@@ -397,14 +398,14 @@ def run_owned_fault_session(debugger, identity_path, session_path, cancel_path):
             debugger.GetCommandInterpreter().HandleCommand(command, output)
             if not output.Succeeded():
                 raise RuntimeError('Unable to configure minimal fault format: '
-                                   + (output.GetError() or '')[:512])
+                                   + (output.GetError() or ''))
         debugger.SetAsync(False)
         target = debugger.CreateTarget(identity['arguments'][0])
         error = lldb.SBError()
         process = target.AttachToProcessWithID(debugger.GetListener(), identity['pid'], error)
         if error.Fail():
             result['status'] = 'attach-denied'
-            result['error'] = str(error)[:2048]
+            result['error'] = str(error)
             # A partial attachment still needs the explicit finally detach.
             result['handedBack'] = not process.IsValid()
             return
@@ -434,16 +435,16 @@ def run_owned_fault_session(debugger, identity_path, session_path, cancel_path):
                 fatal = bool(fault_threads)
                 result['status'] = 'fault-captured' if fatal else 'unexpected-stop'
                 if fatal:
-                    # Full primary facts plus bounded thread IDs fit the unchanged8KiB session.
-                    result['faultThreads'] = [fault_thread_details(fault_threads[0], process, lldb)]
-                    result['faultThreadsTruncated'] = len(fault_threads) > 1
+                    # Preserve every observed fault thread; primary register selection remains exact.
+                    result['faultThreads'] = [fault_thread_details(thread, process, lldb) for thread in fault_threads]
+                    result['faultThreadsTruncated'] = False
                     result['otherFaultThreads'] = [
                         {'thread': thread.GetIndexID(), 'tid': thread.GetThreadID()}
-                        for thread in fault_threads[1:16]]
-                    result['otherFaultThreadsTruncated'] = len(fault_threads) > 16
+                        for thread in fault_threads[1:]]
+                    result['otherFaultThreadsTruncated'] = False
                     result['registerThreadSelected'] = process.SetSelectedThread(fault_threads[0])
                     print('fault-thread-facts ' + json.dumps(result['faultThreads']), flush=True)
-                    commands = ('thread backtrace all -c 160', 'image list -o -u -f')
+                    commands = ('thread backtrace all', 'image list -o -u -f')
                     if result['registerThreadSelected']:
                         commands = ('register read', 'register read far esr') + commands
                     else:
@@ -452,15 +453,15 @@ def run_owned_fault_session(debugger, identity_path, session_path, cancel_path):
                         output = lldb.SBCommandReturnObject()
                         debugger.GetCommandInterpreter().HandleCommand(command, output)
                         print(command, flush=True)
-                        print((output.GetOutput() or '')[:FAULT_LOG_LIMIT], flush=True)
-                        print((output.GetError() or '')[:4096], flush=True)
+                        print((output.GetOutput() or ''), flush=True)
+                        print((output.GetError() or ''), flush=True)
                 return
             time.sleep(0.1)
         result['status'] = 'observer-cancelled'
     except subprocess.CalledProcessError:
         result.update(status='identity-changed-or-exited', handedBack=True)
     except Exception as error:
-        result.update(status='observer-error', error=str(error)[:2048])
+        result.update(status='observer-error', error=str(error))
     finally:
         if process is not None and process.IsValid():
             if process.GetState() in (lldb.eStateExited, lldb.eStateDetached):
@@ -472,7 +473,7 @@ def run_owned_fault_session(debugger, identity_path, session_path, cancel_path):
                 result['handedBack'] = (error.Success() and process.GetState()
                                         in (lldb.eStateExited, lldb.eStateDetached))
                 if error.Fail():
-                    result['detachError'] = str(error)[:2048]
+                    result['detachError'] = str(error)
         elif not attached and result['status'] == 'attach-denied':
             result['handedBack'] = True
         destination = Path(session_path)
@@ -571,7 +572,7 @@ def image_uuids(path):
     """Read existing Mach-O metadata; this never executes the test image."""
     command = ['xcrun', 'dwarfdump', '--uuid', str(path)]
     try:
-        output = subprocess.run(command, capture_output=True, text=True, timeout=10, check=False)
+        output = subprocess.run(command, capture_output=True, text=True, check=False)
         uuids = {}
         for line in output.stdout.splitlines():
             match = re.fullmatch(r'UUID: ([0-9A-Fa-f-]{36}) \(([A-Za-z0-9_+-]+)\) .+', line)
@@ -580,20 +581,20 @@ def image_uuids(path):
                     raise ValueError('Duplicate image architecture.')
                 uuids[match[2]] = match[1].upper()
         return {'command': command, 'exitCode': output.returncode,
-                'stdout': output.stdout[:4096], 'stderr': output.stderr[:4096],
+                'stdout': output.stdout, 'stderr': output.stderr,
                 'uuids': uuids if output.returncode == 0 else {}}
     except (OSError, subprocess.TimeoutExpired, ValueError) as error:
         return {'command': command, 'uuids': {}, 'error': str(error)}
 
 
 class ArtifactBudget:
-    """Bound retained bytes explicitly; refusal never truncates an original."""
+    """Track retained bytes without a project quota; physical storage errors remain real errors."""
     def __init__(self, limit=ARTIFACT_LIMIT):
-        self.limit = limit
+        self.limit = None
         self.used = 0
 
     def permits(self, size):
-        return 0 <= size <= self.limit - self.used
+        return type(size) is int and size >= 0
 
 
 def retain_symbols(observed, record, destination, metadata, build, evidence, budget, uuid_reader):
@@ -875,7 +876,7 @@ def collect_reports(roots, baseline, history, evidence, budget, window=3.5, inte
                     detail['reason'] = 'artifact-size-cap'
                     continue
                 with original.open('rb') as stream:
-                    raw = stream.read(budget.limit - budget.used + 1)
+                    raw = stream.read()
                 detail['bytes'] = len(raw)
                 if not budget.permits(len(raw)):
                     detail['reason'] = 'artifact-size-cap'

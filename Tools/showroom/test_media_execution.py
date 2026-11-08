@@ -46,19 +46,18 @@ class ExecutionTests(unittest.TestCase):
         self.assertTrue(spawn.call_args.kwargs['start_new_session'])
         self.assertEqual(spawn.call_args.kwargs['pass_fds'],(3,4))
 
-    def test_timeout_reserves_cleanup_within_original_deadline(self):
-        times=iter([1,9])
-        code,_,stop=self.run_case(Process(),clock=lambda:next(times,9))
-        self.assertEqual(code,124);self.assertEqual(stop.call_args.args[-1],10)
+    def test_expired_legacy_deadline_does_not_stop_a_natural_exit(self):
+        code,_,stop=self.run_case(Process(0),clock=1000000)
+        self.assertEqual(code,0);stop.assert_called_once()
 
-    def test_rss_breach_is_failure_and_always_cleans(self):
-        code,_,stop=self.run_case(Process(),{10:row(rss=media.ASSET_RSS+1)})
-        self.assertEqual(code,1);stop.assert_called_once()
+    def test_large_rss_does_not_stop_a_natural_exit(self):
+        code,_,stop=self.run_case(Process(0),{10:row(rss=100*1024**3)})
+        self.assertEqual(code,0);stop.assert_called_once()
 
-    def test_output_limit_applies_even_when_child_exits_before_first_sample(self):
-        log=io.BytesIO();log.seek(media.ASSET_OUTPUT+1)
+    def test_complete_output_above_old_quota_does_not_change_real_exit(self):
+        log=io.BytesIO();log.seek(100*1024**2+1)
         code,_,stop=self.run_case(Process(0),log=log)
-        self.assertEqual(code,1);stop.assert_called_once()
+        self.assertEqual(code,0);stop.assert_called_once()
 
     def test_forced_cleanup_of_leftover_children_cannot_report_success(self):
         with patch.object(media.subprocess,'Popen',return_value=Process(0)),\
@@ -98,7 +97,7 @@ class OwnershipTests(unittest.TestCase):
         self.assertEqual(rows[10]['rss'],256*1024)
         self.assertNotIn('command',query.call_args.args[0][-1])
         self.assertNotIn('args',query.call_args.args[0][-1])
-        self.assertEqual(query.call_args.kwargs['timeout'],1)
+        self.assertNotIn('timeout',query.call_args.kwargs)
 
 
 class CleanupTests(unittest.TestCase):
@@ -174,14 +173,15 @@ class EntryPointTests(unittest.TestCase):
                 'native_runner':SimpleNamespace(diagnostic_custody_root=lambda:custody,
                     require_diagnostic_custody_clear=guard or (lambda:None))}
 
-    def test_insufficient_ram_refuses_before_renderer_or_asset_directory(self):
+    def test_resource_metadata_is_not_probed_before_default_renderer_commands(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
             with patch.dict(sys.modules,self.setup_entry(root)),patch.object(media.Path,'cwd',return_value=root),\
-                 patch.object(media.subprocess,'check_output',return_value=b'page size of 16384 bytes\nPages free: 1.\nPages inactive: 1.\nPages speculative: 1.'),\
-                 patch.object(media,'run_renderer') as run:
-                with self.assertRaisesRegex(ValueError,'RAM'):media.render_media(['SH001'])
-            run.assert_not_called();self.assertFalse((root/'.build').exists())
+                 patch.object(media.subprocess,'check_output',side_effect=AssertionError('No RAM probe')) as query,\
+                 patch.object(media.shutil,'disk_usage',side_effect=AssertionError('No disk admission')) as disk,\
+                 patch.object(media,'run_renderer',return_value=0) as run:
+                media.render_media(['SH001'])
+            query.assert_not_called();disk.assert_not_called();self.assertEqual(run.call_count,2)
 
     def test_historical_hold_is_still_respected_before_any_probe(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -200,7 +200,7 @@ class EntryPointTests(unittest.TestCase):
                  patch.object(media.shutil,'disk_usage',return_value=SimpleNamespace(free=200*1024**3)),\
                  patch.object(media,'run_renderer',return_value=0) as run:
                 staged = media.render_media(['SH001'])
-            flags = ['--build-system', 'native', '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
+            flags = []
             self.assertEqual([call.args[0] for call in run.call_args_list], [
                 ['swift', 'build', *flags, '--product', 'L337'],
                 ['swift', 'run', *flags, '--skip-build', 'L337', '--ship-media-directory', str(staged),
@@ -210,28 +210,18 @@ class EntryPointTests(unittest.TestCase):
             self.assertEqual(len(list((root/'.build').glob('ship-media-*/render.log'))),1)
             self.assertEqual(list(root.rglob('policy.json')),[]);self.assertEqual(list(root.rglob('state.json')),[])
 
-    def test_medusa_header_uses_existing_guard_and_admission(self):
+    def test_medusa_header_preserves_guard_and_uses_default_resource_commands(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
-            for available, permitted in [(1,False),(1000000,True)]:
-                with self.subTest(available=available),\
-                     patch.dict(sys.modules,self.setup_entry(root)),patch.object(media.Path,'cwd',return_value=root),\
-                     patch.object(media.subprocess,'check_output',return_value=(
-                         f'page size of 16384 bytes\nPages free: {available}.\nPages inactive: {available}.\nPages speculative: {available}.').encode()),\
-                     patch.object(media.shutil,'disk_usage',return_value=SimpleNamespace(free=200*1024**3)),\
-                     patch.object(media,'run_renderer',return_value=0) as run:
-                    if permitted:
-                        media.render_media([],readme_medusa=True)
-                        flags = ['--build-system', 'native', '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
-                        self.assertEqual([call.args[0] for call in run.call_args_list], [
-                            ['swift', 'build', *flags, '--product', 'L337'],
-                            ['swift', 'run', *flags, '--skip-build', 'L337', '--readme-media', '--medusa-only'],
-                        ])
-                        self.assertEqual(run.call_args.args[3],[3,3])
-                    else:
-                        with self.assertRaisesRegex(ValueError,'RAM'):
-                            media.render_media([],readme_medusa=True)
-                        run.assert_not_called()
+            with patch.dict(sys.modules,self.setup_entry(root)),patch.object(media.Path,'cwd',return_value=root),\
+                 patch.object(media.subprocess,'check_output',side_effect=AssertionError('No RAM probe')),\
+                 patch.object(media.shutil,'disk_usage',side_effect=AssertionError('No disk probe')),\
+                 patch.object(media,'run_renderer',return_value=0) as run:
+                media.render_media([],readme_medusa=True)
+            self.assertEqual([call.args[0] for call in run.call_args_list],[
+                ['swift','build','--product','L337'],
+                ['swift','run','--skip-build','L337','--readme-media','--medusa-only']])
+            self.assertEqual(run.call_args.args[3],[3,3])
 
 
 
@@ -266,11 +256,11 @@ class CancellationCorrectionTests(unittest.TestCase):
     def test_sigterm_during_child_startup_still_reaches_cleanup(self):self.run_cancel('startup')
     def test_first_sigterm_during_cleanup_cannot_interrupt_or_report_success(self):self.run_cancel('cleanup')
 
-    def test_expired_budget_refuses_before_spawning(self):
-        with patch.object(media.time,'monotonic',return_value=9),patch.object(media.subprocess,'Popen') as spawn,\
-             patch.object(media,'stop_renderer') as stop,patch('sys.stderr',io.StringIO()):
-            self.assertEqual(media.run_renderer(['swift'],Path('/workspace'),io.BytesIO(),[],10),124)
-        spawn.assert_not_called();stop.assert_not_called()
+    def test_expired_legacy_budget_does_not_refuse_an_authorized_child(self):
+        with patch.object(media.time,'monotonic',return_value=1000000),patch.object(media.subprocess,'Popen',return_value=Process(0)) as spawn,\
+             patch.object(media,'process_memory',return_value={}),patch.object(media,'stop_renderer',return_value=(True,False)) as stop:
+            self.assertEqual(media.run_renderer(['swift'],Path('/workspace'),io.BytesIO(),[],10),0)
+        spawn.assert_called_once();stop.assert_called_once()
 
 
 class GroupSurvivorCorrectionTests(unittest.TestCase):

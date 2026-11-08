@@ -110,27 +110,20 @@ class PassiveFailureEvidenceTests(unittest.TestCase):
         result = capture.finish(True, 10)
         self.assertFalse(any(row['name'] == link.name for row in result['reports']))
 
-    def test_byte_and_cleanup_deadline_caps_preserve_unknown_without_body_or_process_probes(self):
-        capture = self.capture()
+    def test_large_exact_report_is_retained_after_legacy_deadline_without_process_probes(self):
+        capture=self.capture()
         self.observe(capture)
-        path = self.reports / 'swiftpm-testing-helper-2026-11-04-233000.ips'
-        path.write_bytes(b'x' * (evidence.REPORT_LIMIT + 1))
-        with patch.object(evidence, 'report_identity') as decode:
-            result = capture.finish(True, 10)
-            self.assertEqual(result['reports'][0]['status'], 'report-byte-cap')
-            decode.assert_not_called()
-        preparation = evidence.PassiveFailureEvidence(self.root / 'before-launch-deadline', IMAGE,
-            roots=[self.reports], clock=lambda: 1, deadline=0)
-        self.assertIn('report-inventory-deadline', preparation.errors)
-        other = self.capture('deadline')
-        self.observe(other)
-        with patch.object(evidence, 'report_identity') as decode:
-            result = other.finish(True, 0)
-            self.assertEqual(result['matchedReports'], 0)
-            self.assertIn('report-inventory-deadline', result['errors'])
-            decode.assert_not_called()
+        path,raw=self.report()
+        raw+=b' '*(1024*1024+1)
+        path.write_bytes(raw)
+        result=capture.finish(True,0)
+        self.assertEqual(result['matchedReports'],1)
+        self.assertEqual((capture.directory/result['reports'][0]['retained']).read_bytes(),raw)
+        preparation=evidence.PassiveFailureEvidence(self.root/'expired-legacy-deadline',IMAGE,
+            roots=[self.reports],clock=lambda:1,deadline=0)
+        self.assertNotIn('report-inventory-deadline',preparation.errors)
 
-    def test_expiration_during_validation_or_hashing_retains_no_report_body(self):
+    def test_elapsed_legacy_deadline_during_validation_or_hashing_keeps_verified_report(self):
         for index, phase in enumerate(['validation', 'hashing']):
             with self.subTest(phase=phase):
                 capture = self.capture(phase)
@@ -156,21 +149,40 @@ class PassiveFailureEvidenceTests(unittest.TestCase):
                         result = capture.finish(True, 10)
                     digest.assert_called_once()
                     expected_status = 'report-persist-deadline'
-                self.assertEqual(result['matchedReports'], 0)
-                self.assertEqual(result['reports'][0]['status'], expected_status)
-                self.assertFalse(any(p.suffix in {'.ips', '.crash'} for p in capture.directory.iterdir()))
+                self.assertEqual(result['matchedReports'],1)
+                self.assertEqual((capture.directory/result['reports'][0]['retained']).read_bytes(),raw)
                 self.assertEqual(source.read_bytes(), raw)
 
-    def test_command_record_caps_do_not_truncate_identity_into_false_attribution(self):
-        capture = self.capture()
-        capture.observe({11: owned('/tool/swiftpm-testing-helper ' + 'x' * evidence.COMMAND_LIMIT)}, {11}, 10)
-        self.assertTrue(capture.truncated)
-        self.assertNotIn('11', capture.history)
-        rows = {pid: owned() for pid in range(100, 100 + evidence.RECORD_LIMIT + 10)}
-        capture.observe(rows, set(rows), 10)
-        self.assertEqual(sum(map(len, capture.history.values())), evidence.RECORD_LIMIT)
-        self.assertEqual(len(capture.history), evidence.RECORD_LIMIT)
-        self.assertLessEqual((capture.directory / 'observed-processes.json').stat().st_size, evidence.HISTORY_LIMIT)
+    def test_long_commands_and_all_selected_records_are_retained_with_exact_identity(self):
+        capture=self.capture()
+        command='/tool/swiftpm-testing-helper '+'x'*9000
+        capture.observe({11:owned(command)},{11},10)
+        self.assertFalse(capture.truncated)
+        self.assertEqual(capture.history['11'][0]['command'],command)
+        rows={pid:owned() for pid in range(100,200)}
+        capture.observe(rows,set(rows),10)
+        self.assertEqual(sum(map(len,capture.history.values())),101)
+        self.assertEqual(len(capture.history),101)
+        self.assertEqual(json.loads((capture.directory/'observed-processes.json').read_text())['processes'],capture.history)
+
+    def test_all_inventory_errors_survive_owned_observation_and_raw_capture(self):
+        capture=self.capture()
+        # Feed real inventory failures through the existing source, rather than
+        # directly testing a list slice or inventing a successful capture.
+        with patch.object(evidence.os,'scandir',side_effect=PermissionError('fixture denied')):
+            for _ in range(24):capture.report_inventory()
+        expected=['PermissionError']*24
+        self.assertEqual(capture.errors,expected)
+        self.observe(capture)
+        observed=json.loads((capture.directory/'observed-processes.json').read_text())
+        self.assertEqual(observed['errors'],expected)
+        self.assertEqual(set(observed['processes']),{'10','11'})
+        result=capture.finish(False)
+        self.assertEqual(result['errors'],expected)
+        self.assertEqual(json.loads((capture.directory/'capture.json').read_text())['errors'],expected)
+        self.assertEqual(result['reports'],[])
+        self.assertTrue(result['noDebugger'])
+        self.assertTrue(result['noExtraProcessSamples'])
 
     def test_same_pid_start_exec_versions_remain_exact_but_unselected_rows_never_enter_history(self):
         capture = self.capture()

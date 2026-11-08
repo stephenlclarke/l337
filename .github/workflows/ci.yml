@@ -15,7 +15,6 @@ jobs:
   scope:
     name: Classify changed paths
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     outputs:
       requires_build: ${{ steps.scope.outputs.requires_build }}
     steps:
@@ -43,12 +42,12 @@ jobs:
               if re.fullmatch('[0-9a-f]{40}', base) and base != '0' * 40:
                   source = subprocess.check_output(
                       ['git', 'show', base + ':Tools/CI/change_scope.py'],
-                      stderr=subprocess.DEVNULL, timeout=30)
+                      stderr=subprocess.DEVNULL)
                   with tempfile.TemporaryDirectory() as directory:
                       script = Path(directory) / 'change_scope.py'
                       script.write_bytes(source)
                       result = subprocess.check_output(
-                          ['python3', '-I', str(script)], timeout=90).decode().strip()
+                          ['python3', '-I', str(script)]).decode().strip()
                       if result == 'false':
                           needed = 'false'
           except (KeyError, TypeError, ValueError, OSError, subprocess.SubprocessError):
@@ -72,7 +71,6 @@ jobs:
     needs: [scope, phases]
     if: always()
     runs-on: ubuntu-latest
-    timeout-minutes: 2
     steps:
       - name: Require all native and prerequisite results
         env:

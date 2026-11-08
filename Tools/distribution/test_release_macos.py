@@ -154,8 +154,7 @@ class ReleaseArtifactTests(unittest.TestCase):
                 package_macos.package(SimpleNamespace(release_plan=Path("plan.json"), version="99.0.0"))
             self.assertEqual(bundle.call_args.args[2:], (self.plan["version"], self.plan["sourceRevision"]))
             expected = ("swift", "build", "--configuration", "release", "--scratch-path",
-                        str(self.root / ".build/distribution"), "--arch", "arm64", "--arch", "x86_64",
-                        "--jobs", "1", "-Xswiftc", "-disable-batch-mode")
+                        str(self.root / ".build/distribution"), "--arch", "arm64", "--arch", "x86_64")
             self.assertEqual([call.args for call in build_tool.call_args_list],
                              [expected, (*expected, "--show-bin-path")])
             self.assertEqual([call.kwargs for call in build_tool.call_args_list], [{}, {"capture": True}])

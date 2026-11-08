@@ -30,9 +30,9 @@ sanitizer-checkpoints-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_hosted_quality_evidence.py'
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_m01_normal_attestation.py'
 threads:
-	swift test --scratch-path .build/tsan --sanitize=thread --jobs 1 -Xswiftc -disable-batch-mode
+	swift test --scratch-path .build/tsan --sanitize=thread
 address:
-	ASAN_OPTIONS=detect_leaks=0 swift test --scratch-path .build/asan --sanitize=address --jobs 1 -Xswiftc -disable-batch-mode --no-parallel
+	ASAN_OPTIONS=detect_leaks=0 swift test --scratch-path .build/asan --sanitize=address
 threads-full: threads
 sanitizers:
 	$(MAKE) threads
@@ -43,11 +43,11 @@ leaks: sanitizer-checkpoints-check
 	python3 Tools/CI/quality_phase_checkpoints.py leaks
 # Uses the same real capture scene and imageForGame path; no published media is replaced.
 readme-screenshot-preview:
-	swift run --jobs 1 -Xswiftc -disable-batch-mode L337 --readme-screenshot-preview
+	swift run L337 --readme-screenshot-preview
 
 readme-media:
 ifeq ($(filter --medusa-only,$(README_MEDIA_ARGS)),)
-	swift run --jobs 1 -Xswiftc -disable-batch-mode L337 --readme-media $(README_MEDIA_ARGS)
+	swift run L337 --readme-media $(README_MEDIA_ARGS)
 	mkdir -p Resources
 	iconutil -c icns .build/L337.iconset -o Resources/L337.icns
 else
@@ -70,8 +70,8 @@ showroom-check:
 sonar:
 	./script/sonar.sh
 mission-packs-check:
-	swift build --build-system native --jobs 1 -Xswiftc -disable-batch-mode --product L337
-	swift run --build-system native --jobs 1 -Xswiftc -disable-batch-mode --skip-build L337 --validate-mission-pack docs/mission-packs/courier.toml
+	swift build --product L337
+	swift run --skip-build L337 --validate-mission-pack docs/mission-packs/courier.toml
 flight-controls-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 Tools/generate-flight-controls.py --repo-root . --check
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/tests -p 'test_flight_controls.py'
@@ -96,6 +96,8 @@ ci-capture-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_passive_failure_evidence.py'
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_sh058_operation_journal.py'
 native-runner-check:
+	PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=Tools/CI python3 -m unittest test_recoverable_shards.LegacyWorkspaceReservationTests
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_execution_resource_defaults.py'
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_native_runner.py'
 
 retired-hulls-check:

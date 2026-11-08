@@ -386,12 +386,9 @@ class OwnedPhaseBuildTests(unittest.TestCase):
     fake_run = QualityPhaseTests.fake_run
 
     def profile(self, phase):
-        return dict(kind='owned-phase-build-v1', phase=phase, profile='jobs1-nonbatch-v1',
+        return dict(kind='owned-phase-build-v1', phase=phase, profile='toolchain-defaults-v1',
                     policy_sha256='c' * 64,
-                    admission=dict(explicit=1, cpu_budget=1, ram_capacity=8, ram_reserve=2,
-                                   peak_per_worker=2 if phase == 'normal' else 3,
-                                   disk_capacity=100, disk_reserve=10, disk_per_worker=20),
-                    flags=['--jobs', '1', '-Xswiftc', '-disable-batch-mode'])
+                    admission={},flags=[])
 
     def test_explicit_sdk_queries_bind_each_actual_phase_identity_with_broken_defaults(self):
         self.fail_leaks = False
@@ -495,7 +492,7 @@ class OwnedPhaseBuildTests(unittest.TestCase):
         checksum = runner.digest(path)
         environment = dict(GITHUB_JOB='native_phase', GITHUB_SHA=self.head,
                            ELITE_NATIVE_APPROVED_HEAD=self.head, ELITE_NATIVE_POLICY=str(path))
-        profile = dict(build_profile='jobs1-nonbatch-v1', admission=self.profile('normal')['admission'])
+        profile = dict(build_profile='toolchain-defaults-v1', admission=self.profile('normal')['admission'])
         with patch.object(native_runner, 'read_local_components_binding') as binding, \
                 patch.object(native_runner, 'phase_profile', return_value=profile):
             actual = runner.reviewed_build_profile(path, checksum, 'normal', environment)
@@ -538,7 +535,7 @@ class NormalLeaksOnlyCITests(unittest.TestCase):
         import native_runner
         path = self.root / 'normal-leaks-policy.json'
         policy = dict(approved_head=self.head, recoverable_activation={}, recoverable_shards={
-            'phase_profiles': {phase: dict(build_profile='jobs1-nonbatch-v1',
+            'phase_profiles': {phase: dict(build_profile='toolchain-defaults-v1',
                                            admission=self.profile(phase)['admission'])
                                for phase in ('normal', 'leaks')}})
         def save():
@@ -605,7 +602,7 @@ class NormalLeaksOnlyCITests(unittest.TestCase):
         from types import SimpleNamespace
         import recoverable_shards
         gib=1024**3
-        profile=dict(build_profile='jobs1-nonbatch-v1',admission=dict(peak_per_worker=3*gib))
+        profile=dict(build_profile='toolchain-defaults-v1',admission={})
         admitted=[]
         row=dict(start='fixed-start',command='python phase normal')
         authority=SimpleNamespace(root=self.root,phase_profile=lambda phase:profile,
@@ -613,9 +610,10 @@ class NormalLeaksOnlyCITests(unittest.TestCase):
         policy=self.root/'policy.json';policy.write_text('{}')
         def execute(command,workspace,attempt,timeout,descriptors,environment,monitor,isolate_environment):
             self.assertIsInstance(monitor,recoverable_shards.NativeMonitor)
-            self.assertEqual(monitor.memory['budget_bytes'],3*gib)
-            self.assertEqual(monitor.memory['compiler_budget_bytes'],6*gib)
-            self.assertEqual(monitor.memory['admission_peak_bytes'],6*gib)
+            self.assertIsNone(monitor.memory)
+            self.assertEqual(monitor.phase,'normal')
+            self.assertEqual(monitor.profile,profile)
+            self.assertIsNone(timeout)
             self.assertFalse(isolate_environment)
             return 0
         with patch.dict(os.environ,dict(GITHUB_ACTIONS='true',GITHUB_JOB='native_checks',ELITE_NATIVE_POLICY=str(policy)),clear=True), \

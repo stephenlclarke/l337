@@ -286,10 +286,6 @@ def package(options):
         "arm64",
         "--arch",
         "x86_64",
-        "--jobs",
-        "1",
-        "-Xswiftc",
-        "-disable-batch-mode",
     ]
     run(*build)
     binary_directory = Path(run(*build, "--show-bin-path", capture=True).stdout.strip())

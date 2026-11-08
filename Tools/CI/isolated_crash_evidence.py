@@ -13,7 +13,7 @@ from crash_artifacts import (ArtifactBudget, collect_reports, report_snapshot,
 def snapshot():
     """Read process identities, including full start second and command, without attaching."""
     raw = subprocess.check_output(
-        ['ps', '-axo', 'pid=,ppid=,lstart=,command='], text=True, timeout=2)
+        ['ps', '-axo', 'pid=,ppid=,lstart=,command='], text=True)
     rows = {}
     for line in raw.splitlines():
         fields = line.split(None, 7)
@@ -97,7 +97,7 @@ class IsolatedCrashEvidence:
                     # Recheck Popen liveness after every snapshot, including a known root.
                     self.observe(rows, process.pid, root_alive=process.poll() is None)
             except (OSError, ValueError, subprocess.SubprocessError) as error:
-                self.errors.append({'type': type(error).__name__, 'detail': str(error)[:2048]})
+                self.errors.append({'type': type(error).__name__, 'detail': str(error)})
         self.watcher = threading.Thread(target=observe, daemon=True)
         self.watcher.start()
 
@@ -130,6 +130,6 @@ class IsolatedCrashEvidence:
             result['matchedReports'] = sum(record.get('matchedActualProcess', False)
                                            for record in records)
         except (OSError, ValueError, subprocess.SubprocessError) as error:
-            result['captureError'] = {'type': type(error).__name__, 'detail': str(error)[:2048]}
+            result['captureError'] = {'type': type(error).__name__, 'detail': str(error)}
         write('capture.json', result)
         return result
