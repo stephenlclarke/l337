@@ -1,0 +1,13 @@
+{
+  "id": "SH043",
+  "base": "8535f354d7ee7bf64addec16102443117c7af3b9",
+  "sourceRequirement": "R3 opaque connected structural support under all glazing, every view",
+  "canopyName": "capital bridge pressure canopy",
+  "detailedCanopyIndex": 15,
+  "nativeCanopyIndex": 11,
+  "backboneIndex": 0,
+  "sourceCanopyCentreYMetres": 13,
+  "change": "Retag only lower canopy faces from existing glazing5 to existing opaque skin0; existing source opaque texture mapping. No vertex,face,component,contact orcap changes.",
+  "stockRoles": "Existing14kg/m2 opaque and5kg/m2 glazing; separately recompute proposed stock+unchanged hardware moments. No adopted source changes.",
+  "admission": "Remain pending. Native/renderer executionG1; actual placement/population/28crew/loads/function source unissued. No admission or positive acceptance credit."
+}
