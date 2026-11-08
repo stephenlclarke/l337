@@ -15,7 +15,8 @@ func empUnitFailureContext(_ game: Game, phase: String) -> Comment {
     + " screen=\(game.screen) valid=\(game.commander.valid) crewMissing=\(missing)"
     + " peopleValid=\(game.commander.nativePeopleStateValid)"
     + " stations=\(actualStations)/\(expectedStations) message=\(game.message.prefix(160)) "
-    + (diagnostic.detail() ?? "scene=current"))
+    + (diagnostic.detail() ?? "scene=current")
+    + " endpointRefusal=\(game.nativeEncounterBirthDiagnostic?.endpointRefusal ?? "not-observed")")
 }
 
 /// Prepare one fresh controlled unit scene without discarding current station custody.

@@ -321,7 +321,10 @@ func ecologyContext(
   let parent = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
   let kit = try #require(CurrentNewtKitSource.current)
   try #require(kit.sourceQualifiedForBirth)
-  #expect(parent.ship.catalogue.encounterWeight(for: .trader) == 1)
+  // Authored role preference and rarity-scaled population weight are distinct.
+  #expect(parent.ship.catalogue.roleWeights == [.init(role: .trader, weight: 1)])
+  #expect(parent.ship.catalogue.rarity == .common)
+  #expect(parent.ship.catalogue.encounterWeight(for: .trader) == 100)
   #expect(parent.permitsAmbientTrader(context: opening, position: anchors.arrival))
 
   // Golden deadlines and source predicates come from the independent, hash-bound

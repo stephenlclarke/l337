@@ -52,6 +52,14 @@ final class GameplayEncounterBirthDiagnostic: Sendable {
     let receipts: [SpawnReceipt]
   }
   private let state = OSAllocatedUnfairLock(initialState: [Observation]())
+  private let endpointRefusalState = OSAllocatedUnfairLock(initialState: String?.none)
+
+  /// The actual refused query only; this observation grants no clearance or retry authority.
+  func recordEndpointRefusal(_ detail: String) {
+    endpointRefusalState.withLock { $0 = detail }
+  }
+
+  var endpointRefusal: String? { endpointRefusalState.withLock { $0 } }
 
   @inline(never)
   func record(openingDecision: UInt64, director: borrowing EncounterDirector,

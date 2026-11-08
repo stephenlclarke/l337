@@ -45,6 +45,11 @@ extension SpaceBody {
   }
 
   @inline(never)
+  func nativeLaunchNPCRole() -> NPCRole? {
+    withUnsafePointer(to: physical) { stored in stored.pointee?.npc?.role }
+  }
+
+  @inline(never)
   func nativeLaunchPopulation() -> PopulationClass? {
     withUnsafePointer(to: physical) { stored in stored.pointee?.population }
   }
@@ -544,29 +549,52 @@ extension Game {
   {
     var protection = MissionProtection()
     for index in bodies.indices {
-      if !bodies[index].gameplayProtectionReasons.isEmpty,
-        let identity = bodies[index].physical?.identity
-      {
+      if let identity = gameplayProtectedActor(bodies[index]) {
         protection.protectedActors.insert(identity)
       }
     }
     for index in bodies.indices {
-      if bodies[index].physical?.blocksNavalEncounter == true {
+      if gameplayNavalEncounterIsBlocked(bodies[index]) {
         protection.blocksNavalEncounter = true
         break
       }
     }
     var budget = AdmissionBudget(total: bodies.count)
-    for index in bodies.indices where bodies[index].id != 0 {
-      if let population = bodies[index].physical?.population {
+    for index in bodies.indices {
+      if let population = gameplayBudgetPopulation(bodies[index]) {
         budget.active[population, default: 0] += 1
       }
-      if let stock = bodies[index].physical?.currentNewtKitStock, stock.remaining == 1 {
+      if gameplayBudgetHasRemainingKit(bodies[index]) {
         budget.total += 1
         budget.active[.cargo, default: 0] += 1
       }
     }
     return (protection, budget)
+  }
+
+  // Keep array element and optional physical payload temporaries out of the
+  // shared context frame. Borrow one actual body and return only each needed fact.
+  @inline(never)
+  private static func gameplayProtectedActor(_ body: borrowing SpaceBody) -> ActorIdentity? {
+    guard !body.gameplayProtectionReasons.isEmpty else { return nil }
+    return body.nativeGeometryIdentity()
+  }
+
+  @inline(never)
+  private static func gameplayNavalEncounterIsBlocked(_ body: borrowing SpaceBody) -> Bool {
+    body.nativeLaunchBlocksNavalEncounter() == true
+  }
+
+  @inline(never)
+  private static func gameplayBudgetPopulation(_ body: borrowing SpaceBody) -> PopulationClass? {
+    guard body.id != 0 else { return nil }
+    return body.nativeLaunchPopulation()
+  }
+
+  @inline(never)
+  private static func gameplayBudgetHasRemainingKit(_ body: borrowing SpaceBody) -> Bool {
+    guard body.id != 0 else { return false }
+    return body.nativeGeometryStock()?.remaining == 1
   }
 
   @inline(never)

@@ -723,22 +723,58 @@ extension Game {
     bornAtEnd: CurrentNewtEndBirths?
   ) -> Bool {
     guard let bornAtEnd, !bornAtEnd.actors.isEmpty else { return true }
-    guard bornAtEnd.matchesNewtBirths(self) else { return false }
+    guard bornAtEnd.matchesNewtBirths(self) else {
+      nativeEncounterBirthDiagnostic?.recordEndpointRefusal("stage=birth-identity-or-clock")
+      return false
+    }
     guard let player = preparedWorkHull(mesh: commander.playerMesh, key: "player") else {
+      nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+        "stage=player-preparation ship=\(commander.shipID) endpoint=\(motion.end)"
+        + " vertices=\(commander.playerMesh.vertices.count) faces=\(commander.playerMesh.faces.count)")
       return false
     }
     var remaining = HullSweepBudget.standard
     for actor in bornAtEnd.actors {
-      guard let body = bodies.first(where: { $0.physical?.identity == actor }),
-        let parts = try? currentNewtGeometryComponents(for: body)
-      else { return false }
+      guard let body = bodies.first(where: { $0.physical?.identity == actor }) else {
+        nativeEncounterBirthDiagnostic?.recordEndpointRefusal("stage=missing-birth actor=\(actor)")
+        return false
+      }
+      let parts: [CurrentNewtKitComponent]
+      do {
+        guard let actual = try currentNewtGeometryComponents(for: body) else {
+          nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+            "stage=component-source-nil actor=\(actor)")
+          return false
+        }
+        parts = actual
+      } catch {
+        nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+          "stage=component-source actor=\(actor) error=\(error)")
+        return false
+      }
       for part in parts {
         guard let mesh = part.collisionMesh else { continue }
-        guard let hull = try? PreparedHull(mesh: mesh, maximumTriangles: 512) else { return false }
+        let hull: PreparedHull
+        do { hull = try PreparedHull(mesh: mesh, maximumTriangles: 512) } catch {
+          nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+            "stage=component-preparation actor=\(actor) component=\(part.id) error=\(error)"
+            + " vertices=\(mesh.vertices.count) faces=\(mesh.faces.count)"
+            + " sourcePose=\(motion.end) targetPose=\(part.pose)")
+          return false
+        }
         let result = HullSweepSafety.currentNewtEndpointPairClearance(
           source: player,
           sourcePose: motion.end, target: hull, targetPose: part.pose, budget: remaining)
-        guard result.safe else { return false }
+        guard result.safe else {
+          nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+            "stage=endpoint-query actor=\(actor) component=\(part.id)"
+            + " sourcePose=\(motion.end) targetPose=\(part.pose)"
+            + " sourceRadius=\(player.radius) sourceTriangles=\(player.triangleCount)"
+            + " targetRadius=\(hull.radius) targetTriangles=\(hull.triangleCount)"
+            + " targetVelocity=\(part.velocity) targetSpin=\(part.angularVelocity)"
+            + " budget=\(remaining) result=\(result)")
+          return false
+        }
         remaining.distanceQueries -= result.distanceQueries
         remaining.triangleTests -= result.triangleTests
         remaining.nodeVisits -= result.nodeVisits
