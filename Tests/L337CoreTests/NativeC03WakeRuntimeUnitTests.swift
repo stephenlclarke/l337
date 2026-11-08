@@ -39,7 +39,8 @@ func actualHollowWakeRuntime() async throws -> (
     game.speed = 0
     game.screen = .front
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     try #require(try game.hollowManifestWakeAdmissionContext()?.initial == true)
@@ -94,7 +95,7 @@ private func aimAtActualHollowWake(_ game: inout Game, mark: NativeC03WakeGeomet
   })
   let previous = game.commander.flightSimulation.pose
   let normal = body.modelVector(.init(0, 0, 1))
-  let centre = body.modelPoint(.init(0, 0, NativeC03WakeGeometry.plateHeight + 0.16))
+  let centre = body.position + body.modelVector(.init(0, 0, NativeC03WakeGeometry.plateHeight + 0.16))
   var pose = ShipPose(position: previous.systemPoint(centre + normal * 400))
   pose.orientation.z = previous.orientation.apply(normal * -1)
   pose.orientation.y = previous.orientation.apply(body.modelVector(.init(0, 1, 0)))
@@ -116,8 +117,10 @@ func selectActualHollowWake(
 ) async throws -> Game {
   try await runtime.scriptCommand { try aimAtActualHollowWake(&$0, mark: mark) }
   let selected = await runtime.snapshot()
-  _ = try #require(try NativeC03WakeProbe.measure(
-    in: selected, bodyID: try #require(selected.weaponsTargetID), mark: mark, origin: .init(0, 0, 0)))
+  let selectedBodyID = try #require(selected.weaponsTargetID)
+  let selectedReading = try NativeC03WakeProbe.measure(
+    in: selected, bodyID: selectedBodyID, mark: mark, origin: .init(0, 0, 0))
+  _ = try #require(selectedReading)
   return selected
 }
 
@@ -268,12 +271,14 @@ struct NativeC03WakeRuntimeUnitTests {
       var broken = selected
       // Negative-only removal from a genuine inventory. No issue, custody or positive proof
       // is constructed; the real original case and actual visible object stay unchanged.
-      broken.commander.equipmentInventory = try .init(
+      broken.commander.savedEquipmentInventory = try .init(
         owner: inventory.owner, activeHull: inventory.activeHull,
         revision: inventory.revision + 1, items: inventory.items.filter { $0.id != missing })
       let before = broken.commander
-      _ = try #require(try NativeC03WakeProbe.measure(
-        in: broken, bodyID: try #require(broken.weaponsTargetID), mark: .first, origin: .init(0, 0, 0)))
+      let brokenBodyID = try #require(broken.weaponsTargetID)
+      let brokenReading = try NativeC03WakeProbe.measure(
+        in: broken, bodyID: brokenBodyID, mark: .first, origin: .init(0, 0, 0))
+      _ = try #require(brokenReading)
       #expect(broken.hollowManifestWakeTarget == nil)
       #expect(throws: (any Error).self) { try broken.recordHollowManifestWakeObservation() }
       #expect(broken.commander == before)
@@ -295,7 +300,8 @@ struct NativeC03WakeRuntimeUnitTests {
     game.bodies = [.init(id: 0, hull: .station, position: .init(0, 0, 16000))]
     game.speed = 0
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     let flight = game.commander.flightSimulation

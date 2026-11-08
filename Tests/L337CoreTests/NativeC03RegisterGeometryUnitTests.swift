@@ -33,9 +33,9 @@ struct NativeC03RegisterGeometryUnitTests {
     game.bodies = [body]
     game.celestials = []
     game.speed = 0
-    game.autoPilot.velocity = .init(0, 0, 0)
+    game.autoPilot.setApproachVelocity(.init(0, 0, 0))
     let previous = game.commander.flightSimulation.pose
-    let centre = body.modelPoint(NativeC03RegisterGeometry.componentPosition
+    let centre = body.position + body.modelVector(NativeC03RegisterGeometry.componentPosition
       + .init(0, 0, NativeC03RegisterGeometry.plateHeight + 0.035))
     let normal = body.modelVector(.init(0, 0, 1))
     var pose = ShipPose(position: previous.systemPoint(centre + normal * distance))
