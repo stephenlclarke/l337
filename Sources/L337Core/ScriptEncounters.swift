@@ -394,16 +394,18 @@ struct MissionActorRetentionPatch: Sendable {
   fileprivate let c03Install: C03PreparedActorInstall?
 
   fileprivate init(
-    source: MissionActorAdmissionSource, updated: ScriptOwnedEncounter,
+    source: borrowing MissionActorAdmissionSource, updated: ScriptOwnedEncounter,
     c03Install: C03PreparedActorInstall? = nil
   ) {
     instanceID = source.instanceID
     instanceRevision = source.instanceRevision
     packDigest = source.packDigest
     encounterID = source.encounterID
-    expectedEncounter = (source.c03Context?.initial == true || source.c03WakeContext?.initial == true
-      || source.c03RegisterContext?.initial == true)
-      ? nil : source.retention
+    let initial: Bool
+    if source.c03Context?.initial == true { initial = true }
+    else if source.c03WakeContext?.initial == true { initial = true }
+    else { initial = source.c03RegisterContext?.initial == true }
+    expectedEncounter = initial ? nil : source.retention
     self.c03Install = c03Install
     updatedEncounter = updated
     definition = source.definition
