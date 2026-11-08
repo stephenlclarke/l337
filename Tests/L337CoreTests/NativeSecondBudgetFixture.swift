@@ -14,7 +14,7 @@ enum NativeSecondBudgetFixture {
   // temporaries in one async AppKit regression frame.
   final class Snapshot: Sendable {
     let game: Game
-    @inline(never) init(_ value: borrowing Game) { game = value }
+    @inline(never) init(_ value: borrowing Game) { game = copy value }
   }
 
   struct Source: Sendable {
