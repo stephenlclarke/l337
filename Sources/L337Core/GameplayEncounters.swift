@@ -53,6 +53,21 @@ final class GameplayEncounterBirthDiagnostic: Sendable {
   }
   private let state = OSAllocatedUnfairLock(initialState: [Observation]())
   private let endpointRefusalState = OSAllocatedUnfairLock(initialState: String?.none)
+  private let componentSourceState = OSAllocatedUnfairLock(
+    initialState: [ActorIdentity: String]())
+
+  /// Evidence from the original failed predicate only; never a validation result.
+  func recordComponentSourceRefusal(actor: ActorIdentity, detail: String) {
+    componentSourceState.withLock { $0[actor] = detail }
+  }
+
+  func clearComponentSourceRefusal(actor: ActorIdentity) {
+    _ = componentSourceState.withLock { $0.removeValue(forKey: actor) }
+  }
+
+  func componentSourceRefusal(actor: ActorIdentity) -> String? {
+    componentSourceState.withLock { $0[actor] }
+  }
 
   /// The actual refused query only; this observation grants no clearance or retry authority.
   func recordEndpointRefusal(_ detail: String) {

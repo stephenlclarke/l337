@@ -749,7 +749,10 @@ extension Game {
         parts = actual
       } catch {
         nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
-          "stage=component-source actor=\(actor) error=\(error)")
+          "stage=component-source actor=\(actor) error=\(error)"
+          + " actualPlayerPose=\(storedFlightSimulation().pose) proposedEndpoint=\(motion.end)"
+          + " predicateEvidence=[\(nativeEncounterBirthDiagnostic?.componentSourceRefusal(actor: actor) ?? "not-observed")]"
+          + " producerEvidence=[\(nativeEncounterBirthDiagnostic?.detail() ?? "not-observed")]")
         return false
       }
       for part in parts {

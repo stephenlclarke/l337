@@ -120,10 +120,25 @@ extension Game {
       + omega * Vector3(0, -45, 55).length + physical.angularVelocity.length * radius
     return speed.isFinite && speed <= ScoopApproachController.maximumRelativeSpeed
   }
+  @inline(never)
   fileprivate func nativePeopleCaptureSeal(fire: Bool) -> NativePeopleCaptureSeal? {
     guard !docked, !paused, screen != .gameOver, energy.isFinite, energy > 0,
       jumpCountdown == nil, pendingNativeStationDock == nil, hasNativeRescueTools,
-      commander.valid, let context = gameplayContext(),
+      Self.nativePeopleCaptureCommanderIsValid(commander)
+    else { return nil }
+    return nativePeopleCaptureSelection(fire: fire)
+  }
+
+  // Finish full custody validation before reserving target/geometry/selection values.
+  // This borrows the actual commander; the owning publication candidate stays below.
+  @inline(never)
+  private static func nativePeopleCaptureCommanderIsValid(_ commander: borrowing Commander) -> Bool {
+    commander.valid
+  }
+
+  @inline(never)
+  private func nativePeopleCaptureSelection(fire: Bool) -> NativePeopleCaptureSeal? {
+    guard let context = gameplayContext(),
       let owner = commander.equipmentOwnerID, let hull = commander.hullInstanceID,
       let inventory = commander.equipmentInventory,
       let scoops = commander.fittedEquipment(at: .utility(.fuelScoops)),

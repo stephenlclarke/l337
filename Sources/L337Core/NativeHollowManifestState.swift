@@ -831,17 +831,23 @@ extension NativeHollowManifestState {
   }
 
   private var lastRetainedEffectTime: Double {
-    let times =
-      [birth.input.physicalTime]
-      + admissions.map { $0.original.issuedTime }
-      + (terminals.map(\.effect) + withdrawals.map(\.effect)).map { $0.incident.physicalTime }
-      + (firstCompromises + [latestSealDamage].compactMap { $0 }).map {
-        $0.facts.cause.physicalTime
-      }
-      + consents.flatMap {
-        [$0.request.physicalTime]
-          + [$0.reply?.physicalTime, $0.revocation?.physicalTime].compactMap { $0 }
-      }
+    let birthTimes: [Double] = [birth.input.physicalTime]
+    let admissionTimes: [Double] = admissions.map { $0.original.issuedTime }
+    let terminalEffects: [RootEffect] = terminals.map(\.effect)
+    let withdrawalEffects: [RootEffect] = withdrawals.map(\.effect)
+    let rootEffects: [RootEffect] = terminalEffects + withdrawalEffects
+    let rootTimes: [Double] = rootEffects.map { $0.incident.physicalTime }
+    let latestSealEffects: [SealEffect] = [latestSealDamage].compactMap { $0 }
+    let sealEffects: [SealEffect] = firstCompromises + latestSealEffects
+    let sealTimes: [Double] = sealEffects.map { $0.facts.cause.physicalTime }
+    let consentTimes: [Double] = consents.flatMap { (consent: Consent) -> [Double] in
+      let requestTimes: [Double] = [consent.request.physicalTime]
+      let optionalReplyTimes: [Double?] =
+        [consent.reply?.physicalTime, consent.revocation?.physicalTime]
+      let replyTimes: [Double] = optionalReplyTimes.compactMap { $0 }
+      return requestTimes + replyTimes
+    }
+    let times: [Double] = birthTimes + admissionTimes + rootTimes + sealTimes + consentTimes
     return times.max() ?? birth.input.physicalTime
   }
 
