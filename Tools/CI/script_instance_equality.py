@@ -289,6 +289,19 @@ def inspect_instance_storage(source: str) -> list[str]:
           set { values[0] = newValue }
           _modify { yield &values[0] }
         }
+        @inline(never)
+        func hasValue() -> Bool {
+          values.withUnsafeBufferPointer { storage in
+            Self.isPresent(storage.baseAddress!.pointee)
+          }
+        }
+        @inline(never)
+        private static func isPresent(_ value: borrowing Value?) -> Bool {
+          switch value {
+          case .none: false
+          case .some: true
+          }
+        }
     """
     if compact(field) != compact(expected):
         raise ValueError("Field storage must retain typed Array COW and bounded direct nil initialization")
