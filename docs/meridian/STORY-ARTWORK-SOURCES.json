@@ -1,0 +1,1383 @@
+{
+  "schema": "l337.intended-story-artwork/1",
+  "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d",
+  "originalMissionArtManifest": {
+    "path": "docs/meridian/assets/missions/manifest.json",
+    "sha256": "32889670db307d85e3ae08580ca901606b8bb7f1ef87f073294ca321e227c96b"
+  },
+  "use": "Existing authored mission illustrations, contract/stage reference art and original new-L337 ship views in the intended commander story",
+  "transformation": "None; exact original PNG bytes",
+  "notRuntimeEvidence": true,
+  "missionSources": 64,
+  "finaleStages": 7,
+  "uniqueFiles": 78,
+  "files": [
+    {
+      "scene": "C23",
+      "title": "An Assembly of Orbits",
+      "path": "docs/meridian/assets/missions/illustrations/assembly-of-orbits.png",
+      "sha256": "40c4bcd9d9fc18077529a152745207baa3875eb7671bdfbc79533a89142520a4",
+      "kind": "mission-illustration",
+      "bytes": 2540195,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C20",
+      "title": "The Blue Reservoir",
+      "path": "docs/meridian/assets/missions/illustrations/blue-reservoir.png",
+      "sha256": "48fe6051e964bc2d92e8b3561bbc6defaa6070050720d7f76613560a6768104d",
+      "kind": "mission-illustration",
+      "bytes": 3079414,
+      "width": 1536,
+      "height": 1024,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C10",
+      "title": "Borrowed Dawn",
+      "path": "docs/meridian/assets/missions/illustrations/borrowed-dawn.png",
+      "sha256": "24e5ad2fc47f8c344acc817bb4ab0c5801ea8cef5dcb8c5acce162c6273464bb",
+      "kind": "mission-illustration",
+      "bytes": 2357977,
+      "width": 1536,
+      "height": 1024,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C04",
+      "title": "The Borrowed Voice",
+      "path": "docs/meridian/assets/missions/illustrations/borrowed-voice.png",
+      "sha256": "d4959240f337052f560b6da2e90975a7299103b99dbd6d27a31e588aba21baba",
+      "kind": "mission-illustration",
+      "bytes": 2007712,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C32",
+      "title": "Cold Reserve",
+      "path": "docs/meridian/assets/missions/illustrations/cold-reserve.png",
+      "sha256": "e2c671a584d16a3aaa1cb5fef0cee89ba36de0e76a4e0c55ebfa10d2b152b293",
+      "kind": "mission-illustration",
+      "bytes": 2282997,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C38",
+      "title": "Signed Passage",
+      "path": "docs/meridian/assets/missions/illustrations/courier.png",
+      "sha256": "2f0408ecf6181b3c738e39fe8df663fa937dcf146f38d37211549ff070584b06",
+      "kind": "mission-illustration",
+      "bytes": 2417851,
+      "width": 1536,
+      "height": 1024,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C13",
+      "title": "False Colours",
+      "path": "docs/meridian/assets/missions/illustrations/false-colours.png",
+      "sha256": "63faddd4e59d8908c9699e8bcdc9c814c6b0d8b8a0ece5e71609453f158bfdbf",
+      "kind": "mission-illustration",
+      "bytes": 2163774,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C26",
+      "title": "A Fleet of Neighbours",
+      "path": "docs/meridian/assets/missions/illustrations/fleet-of-neighbours.png",
+      "sha256": "47bac3dfc2aa83a3f692a96f7caa12ce1004a523a81ce16c09ee23e52ff979b7",
+      "kind": "mission-illustration",
+      "bytes": 2379457,
+      "width": 1774,
+      "height": 887,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C15",
+      "title": "A Garden in Transit",
+      "path": "docs/meridian/assets/missions/illustrations/garden-in-transit.png",
+      "sha256": "86242b101449f487965e026d13187b6e17b519ef1fd09bc56c9a442446329bee",
+      "kind": "mission-illustration",
+      "bytes": 2372389,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C01",
+      "title": "The Glass Meridian",
+      "path": "docs/meridian/assets/missions/illustrations/glass-meridian.png",
+      "sha256": "0851aead76da6e001a450bcfe29e0c1f548eed12bc3923f8619486590b7e0fca",
+      "kind": "mission-illustration",
+      "bytes": 2085226,
+      "width": 1536,
+      "height": 1024,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C39",
+      "title": "The Guiding Light",
+      "path": "docs/meridian/assets/missions/illustrations/guiding-light.png",
+      "sha256": "051bcd0a0da3ae61581257d955640972f2b441971980c3568ef70513e2e20f54",
+      "kind": "mission-illustration",
+      "bytes": 2533117,
+      "width": 1774,
+      "height": 887,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C12",
+      "title": "Harbour Without Orders",
+      "path": "docs/meridian/assets/missions/illustrations/harbour-without-orders.png",
+      "sha256": "4cecd58d3c68b1f209b0acf55563cea666e875a3c174087dba3b9b37edcabffe",
+      "kind": "mission-illustration",
+      "bytes": 2235801,
+      "width": 1774,
+      "height": 887,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C03",
+      "title": "The Hollow Manifest",
+      "path": "docs/meridian/assets/missions/illustrations/hollow-manifest.png",
+      "sha256": "49bbec2ae34b48ab6c1af85651a11d6cef7fe3689736ecc8b04bad9229dc5978",
+      "kind": "mission-illustration",
+      "bytes": 2463103,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C28",
+      "title": "The Honest Circuit",
+      "path": "docs/meridian/assets/missions/illustrations/honest-circuit.png",
+      "sha256": "d146e53e73405c9cfb055a74a8e646c629dd3356f0a258d5e4c11d8329537633",
+      "kind": "mission-illustration",
+      "bytes": 2286672,
+      "width": 1774,
+      "height": 887,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C31",
+      "title": "The Kind Distance",
+      "path": "docs/meridian/assets/missions/illustrations/kind-distance.png",
+      "sha256": "0fd28cbb627f8e4a595fca2b8d9f4bcf3927208a56bfce806cfc6231233d0ca4",
+      "kind": "mission-illustration",
+      "bytes": 2291358,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C22",
+      "title": "The Listening Frontier",
+      "path": "docs/meridian/assets/missions/illustrations/listening-frontier.png",
+      "sha256": "4ee2d818143d6678fb4c7b10f08620504fe1838b0df0fa564e827530aff06345",
+      "kind": "mission-illustration",
+      "bytes": 2365872,
+      "width": 1672,
+      "height": 940,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C18",
+      "title": "The Long Return",
+      "path": "docs/meridian/assets/missions/illustrations/long-return.png",
+      "sha256": "c72e2bf5ee293a04ddfb13348e94d889011ae261408bb3b251b1f1871f333b6f",
+      "kind": "mission-illustration",
+      "bytes": 2255605,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C33",
+      "title": "The Magnetic Orchard",
+      "path": "docs/meridian/assets/missions/illustrations/magnetic-orchard.png",
+      "sha256": "d3d51bce7605cb250350770af3f0208dd8b97bca5445441642257eea81a8f673",
+      "kind": "mission-illustration",
+      "bytes": 2424517,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C17",
+      "title": "The Measure of Care",
+      "path": "docs/meridian/assets/missions/illustrations/measure-of-care.png",
+      "sha256": "02661e4a4e8511db2dc10766cd5be2d29cfe0fcca24a7ad248086b1bf5236965",
+      "kind": "mission-illustration",
+      "bytes": 2178300,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C25",
+      "title": "The Memory Atlas",
+      "path": "docs/meridian/assets/missions/illustrations/memory-atlas.png",
+      "sha256": "39cec0d7bc10375c22925301c3edf313c93ae1334654528ab1cf9455a0f39990",
+      "kind": "mission-illustration",
+      "bytes": 2230296,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C21",
+      "title": "Mutual Shelter",
+      "path": "docs/meridian/assets/missions/illustrations/mutual-shelter.png",
+      "sha256": "8f8c92859a7f1f4295ba777b6405ca4a59ec5686de5b55e528f46e2e4dbeba24",
+      "kind": "mission-illustration",
+      "bytes": 2600943,
+      "width": 1536,
+      "height": 1024,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C34",
+      "title": "Open Measure",
+      "path": "docs/meridian/assets/missions/illustrations/open-measure.png",
+      "sha256": "114c424090e56c06a6f2425efedc26778b8a0fffdf6aca8308a81f9320a46726",
+      "kind": "mission-illustration",
+      "bytes": 2103213,
+      "width": 1774,
+      "height": 887,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C11",
+      "title": "The Open Shadow",
+      "path": "docs/meridian/assets/missions/illustrations/open-shadow.png",
+      "sha256": "f2e384047622bad9c78f4382ae3d15ed305bbb78afec830f5dce7fae43e5fea8",
+      "kind": "mission-illustration",
+      "bytes": 2400780,
+      "width": 1774,
+      "height": 887,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C30",
+      "title": "The Passenger's Horizon",
+      "path": "docs/meridian/assets/missions/illustrations/passengers-horizon.png",
+      "sha256": "97ca6629f9682e681164b1f2a575bcb887d7684b772705eb814c531551aee922",
+      "kind": "mission-illustration",
+      "bytes": 2344636,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C37",
+      "title": "Public Record",
+      "path": "docs/meridian/assets/missions/illustrations/public-record.png",
+      "sha256": "4c220c7bd2be1bd7e6d577bfaf093352f876c861129e8533ac1d05bb678d8a13",
+      "kind": "mission-illustration",
+      "bytes": 2077591,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C02",
+      "title": "A Choir Beneath the Static",
+      "path": "docs/meridian/assets/missions/illustrations/quiet-choir.png",
+      "sha256": "236de413ec5051d497ae82295ff42387a5c6f543feba327d9f7b28e1105ec451",
+      "kind": "mission-illustration",
+      "bytes": 2609676,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C09",
+      "title": "The Quiet Nursery",
+      "path": "docs/meridian/assets/missions/illustrations/quiet-nursery.png",
+      "sha256": "421f88fb49323cfbbfe1a6ed886194950eb67c50de5b53fa0bfbcd1a504fd056",
+      "kind": "mission-illustration",
+      "bytes": 2568496,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C14",
+      "title": "The Rubble Covenant",
+      "path": "docs/meridian/assets/missions/illustrations/rubble-covenant.png",
+      "sha256": "bf84e13a2758c632527d9dd789078d74474df06e588abbccfafd0ca85a649ddd",
+      "kind": "mission-illustration",
+      "bytes": 2288001,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C35",
+      "title": "The Shared Pulse",
+      "path": "docs/meridian/assets/missions/illustrations/shared-pulse.png",
+      "sha256": "d1698be3afbac044bb183cadabfd13507477581204be4a2df67ca3d2b86f048b",
+      "kind": "mission-illustration",
+      "bytes": 2244601,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C05",
+      "title": "The Shattered Wake",
+      "path": "docs/meridian/assets/missions/illustrations/shattered-wake.png",
+      "sha256": "8dba3816b6f5f8de0812ad1ad3014a7882a20ae5dbf7a98b8eea05cef6d39d8f",
+      "kind": "mission-illustration",
+      "bytes": 2413831,
+      "width": 1536,
+      "height": 1024,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C29",
+      "title": "Small Lights",
+      "path": "docs/meridian/assets/missions/illustrations/small-lights.png",
+      "sha256": "6b3302d161f0f1a552f9d58300fce7d664dfd0e3e98dabf973c726caab6120b2",
+      "kind": "mission-illustration",
+      "bytes": 2223563,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C07",
+      "title": "The Still Current",
+      "path": "docs/meridian/assets/missions/illustrations/still-current.png",
+      "sha256": "b1e4cd058f36e62a5dc9b031cec8378f8c3def32f7be2cb9ba8b176df7ac91b4",
+      "kind": "mission-illustration",
+      "bytes": 2199968,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C06",
+      "title": "The Tithe of Worlds",
+      "path": "docs/meridian/assets/missions/illustrations/tithe-of-worlds.png",
+      "sha256": "bdb48447a8cf0af6cbbf983e8551967aecc8423aa1f60c6df313acfb5ca3e602",
+      "kind": "mission-illustration",
+      "bytes": 2550478,
+      "width": 1536,
+      "height": 1024,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C27",
+      "title": "Uncounted Names",
+      "path": "docs/meridian/assets/missions/illustrations/uncounted-names.png",
+      "sha256": "9744fc2cc063be69aea04355ee790aba46da2025d3de67caadde1c166de9c114",
+      "kind": "mission-illustration",
+      "bytes": 2068423,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C24",
+      "title": "Under Tow",
+      "path": "docs/meridian/assets/missions/illustrations/under-tow.png",
+      "sha256": "33fd39b56a8ddd92ac12d228435826a21d94c66698dcaaaeb8cb1049ef8c3480",
+      "kind": "mission-illustration",
+      "bytes": 2127248,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C19",
+      "title": "The Unfinished Map",
+      "path": "docs/meridian/assets/missions/illustrations/unfinished-map.png",
+      "sha256": "97048c0075ee0570ed9939008d32098a43a6d05c0b39da01c45f6df6defd241a",
+      "kind": "mission-illustration",
+      "bytes": 2283112,
+      "width": 1536,
+      "height": 1024,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "Q01",
+      "title": "The Unwritten Route",
+      "path": "docs/meridian/assets/missions/illustrations/unwritten-route.png",
+      "sha256": "2279ec2602258e11798e469c6b8ce78e8cfd6c4aacdb00320670068f05600c23",
+      "kind": "quest-illustration",
+      "bytes": 2292828,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d",
+      "width": 1672,
+      "height": 941
+    },
+    {
+      "scene": "C16",
+      "title": "The Warrant Ledger",
+      "path": "docs/meridian/assets/missions/illustrations/warrant-ledger.png",
+      "sha256": "61040a85464dd4ca59dd316ebc8a4a170097707c1fb6326cc7988b36ffb60c33",
+      "kind": "mission-illustration",
+      "bytes": 2131732,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C08",
+      "title": "Wayfarer Exchange",
+      "path": "docs/meridian/assets/missions/illustrations/wayfarer-exchange.png",
+      "sha256": "81f7d04ffd22660b94a2d59c68de6fc9d32e3ef5af60a5f34376ff5d94bde557",
+      "kind": "mission-illustration",
+      "bytes": 2534377,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "C36",
+      "title": "The Witness Window",
+      "path": "docs/meridian/assets/missions/illustrations/witness-window.png",
+      "sha256": "41fb6a369adfdca836fe51ba4c4e354f715b667c951c5ff6ad31524ec616a14f",
+      "kind": "mission-illustration",
+      "bytes": 2371081,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "revision/continuity-orbital-desk",
+      "title": "A new inquiry, not an erased failure",
+      "path": "docs/meridian/assets/missions/revisions/continuity-orbital-desk.png",
+      "sha256": "3eea0c7e0d813265a3010f28f2fef603b7a61a65792945b09184b01be0f03b58",
+      "kind": "continuity-illustration",
+      "bytes": 2326964,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "revision/continuity-reference-field",
+      "title": "Independent reference measurements",
+      "path": "docs/meridian/assets/missions/revisions/continuity-reference-field.png",
+      "sha256": "c4b7e57b9a81ca9233998204aa828725bdeff86bd69c0f9c219123396eeb1d18",
+      "kind": "continuity-illustration",
+      "bytes": 2243039,
+      "width": 1672,
+      "height": 941,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "salvage-medusa",
+      "title": "Disable the revealed Medusa with EMP after overcoming its shields by your chosen weapons/EMP. Activate the qualified Salvage Beam; physically recover its original 50 kg reconstruction lattice with the automatic salvage laser and Fuel Scoops.",
+      "path": "docs/meridian/assets/missions/revisions/medusa-emp-salvage.png",
+      "sha256": "9151982ac5ad7928383812b1817ca6d29c71936e25924bf763005181efa729df",
+      "kind": "finale-stage",
+      "bytes": 159006,
+      "width": 1600,
+      "height": 900,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G03",
+      "title": "Bonded freight passage",
+      "path": "docs/meridian/assets/missions/services/bonded-freight-perform.png",
+      "sha256": "ed1fe0b29f0895bf0418477ff806fad8a677cbad22d4fdbb3b7604756c12c04d",
+      "kind": "contract-stage",
+      "bytes": 184729,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G04",
+      "title": "Consented cabin journey",
+      "path": "docs/meridian/assets/missions/services/cabin-journey-perform.png",
+      "sha256": "d69378adda828d4911ef963e95af126d8fc239c7aa823873d461f7f309b772b7",
+      "kind": "contract-stage",
+      "bytes": 168046,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "W01",
+      "title": "Cold-chain clinic service",
+      "path": "docs/meridian/assets/missions/services/cold-chain-deliver.png",
+      "sha256": "a9a2e9119a9496b597aad398276d8dc51f3b3f45e464d3dae7243628cd0e0859",
+      "kind": "contract-stage",
+      "bytes": 219075,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G02",
+      "title": "Consented freight supply",
+      "path": "docs/meridian/assets/missions/services/consented-freight-perform.png",
+      "sha256": "8c147b699c09773f666abb9560e2c2d60b5974740f3471bf83d00263efb5cdd6",
+      "kind": "contract-stage",
+      "bytes": 201646,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G10",
+      "title": "Consented orbital survey",
+      "path": "docs/meridian/assets/missions/services/consented-survey-perform.png",
+      "sha256": "76cc66ef3c061c4be66150d4dac63d4c2ad00cbdbd254f7d5cf7f99104b25a58",
+      "kind": "contract-stage",
+      "bytes": 222431,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "W06",
+      "title": "Registered convoy watch",
+      "path": "docs/meridian/assets/missions/services/convoy-watch-escort.png",
+      "sha256": "7810d1ed47cefddfc8a6df56f0712f38ce2bb85aedaf2e099de7c3261c4b5016",
+      "kind": "contract-stage",
+      "bytes": 217821,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G07",
+      "title": "Registered corridor defence",
+      "path": "docs/meridian/assets/missions/services/corridor-defence-perform.png",
+      "sha256": "edb5d1a58b31bd19d0ecde64070cf3775055ce164dd9d16b2cb387b56b530b07",
+      "kind": "contract-stage",
+      "bytes": 218174,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G08",
+      "title": "Consented custody rescue",
+      "path": "docs/meridian/assets/missions/services/custody-rescue-perform.png",
+      "sha256": "34913fe2fdeff47f2b128d7b5f21acd96bed8b4b62a50ef7aeb5eadc13a981b0",
+      "kind": "contract-stage",
+      "bytes": 270174,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "T03",
+      "title": "Defensive flight practice",
+      "path": "docs/meridian/assets/missions/services/defensive-flight-perform.png",
+      "sha256": "06a8c75d259c27bcc64a64c02ff67dacf4a590735af72c7e05aec511aca9646a",
+      "kind": "contract-stage",
+      "bytes": 135215,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "W04",
+      "title": "Remote utility relief",
+      "path": "docs/meridian/assets/missions/services/field-relief-install.png",
+      "sha256": "07dbee570198f303c9cfa807c554458f38986839e0c5b859ddf1afb7707cb438",
+      "kind": "contract-stage",
+      "bytes": 201521,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "T01",
+      "title": "Flight and reception practice",
+      "path": "docs/meridian/assets/missions/services/flight-reception-perform.png",
+      "sha256": "d4a9e3f99cf559bfebaa394b13ca5b19858a19ada60730482226ca13bd1649d0",
+      "kind": "contract-stage",
+      "bytes": 208097,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G15",
+      "title": "Designated hostile Larvaal defence",
+      "path": "docs/meridian/assets/missions/services/hostile-larvaal-defence-perform.png",
+      "sha256": "c80de11aba32893aeadd1657ce5e046978578cb4eaebe7d8b0e708b89ed3f6ec",
+      "kind": "contract-stage",
+      "bytes": 303157,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G09",
+      "title": "Identified salvage return",
+      "path": "docs/meridian/assets/missions/services/identified-salvage-perform.png",
+      "sha256": "39c7b758c861de8d2d47aaca86feabff9fff4bf1b4794ae11d0742805691aefd",
+      "kind": "contract-stage",
+      "bytes": 185328,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G11",
+      "title": "External isolation work",
+      "path": "docs/meridian/assets/missions/services/isolation-work-perform.png",
+      "sha256": "34759e428c167263ae1c77100d9014ee40d41a52b3ac5ed270d4bf63e0ceba40",
+      "kind": "contract-stage",
+      "bytes": 181598,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G12",
+      "title": "Measured asteroid extraction",
+      "path": "docs/meridian/assets/missions/services/measured-extraction-perform.png",
+      "sha256": "db574068a831698b75700963306ff4d646c0b34589bba5efbca2267a307caaaf",
+      "kind": "contract-stage",
+      "bytes": 180528,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G13",
+      "title": "Mutual relief contribution",
+      "path": "docs/meridian/assets/missions/services/mutual-contribution-perform.png",
+      "sha256": "aa090ffc8c3bf6232fe061d5a64c3e2bb25bd91e08967a61bd8e247b165c2bda",
+      "kind": "contract-stage",
+      "bytes": 180950,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "T04",
+      "title": "Navigation and trade practice",
+      "path": "docs/meridian/assets/missions/services/navigation-trade-perform.png",
+      "sha256": "5a2c42099fa3319ac4784e6e171785c96e0bd0ac3d116fe8c88d1863771ad430",
+      "kind": "contract-stage",
+      "bytes": 190020,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G14",
+      "title": "Registered orbital evacuation",
+      "path": "docs/meridian/assets/missions/services/orbital-evacuation-perform.png",
+      "sha256": "fcf1d636b295acccb8dc514bd147faeb248619a53608053ca71e45b14dac6eec",
+      "kind": "contract-stage",
+      "bytes": 270175,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G05",
+      "title": "Orbital outlook journey",
+      "path": "docs/meridian/assets/missions/services/orbital-outlook-perform.png",
+      "sha256": "f8041e04c623cf229ddeaf788c788fa0e2bd3eb43c78e3054f57a441ea8e6da6",
+      "kind": "contract-stage",
+      "bytes": 263696,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "W05",
+      "title": "Crew record recovery",
+      "path": "docs/meridian/assets/missions/services/record-recovery-recover.png",
+      "sha256": "0552e8cb61d6b285438d54da943e262199083d45b948dbb0fc15b158aead55fe",
+      "kind": "contract-stage",
+      "bytes": 185575,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "W02",
+      "title": "Closed repair exchange",
+      "path": "docs/meridian/assets/missions/services/repair-loop-service.png",
+      "sha256": "0c725f41070a77367ff3c0bbe064a07cdf23aec7bdf6c8da7c683b5f681922c2",
+      "kind": "contract-stage",
+      "bytes": 184927,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "T02",
+      "title": "Safe gunnery practice",
+      "path": "docs/meridian/assets/missions/services/safe-gunnery-perform.png",
+      "sha256": "eac0196aed87cae62321b33d70ed751f69f1e13fd4d6038421f27e6cc613ec11",
+      "kind": "contract-stage",
+      "bytes": 264195,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G01",
+      "title": "Sealed dispatch",
+      "path": "docs/meridian/assets/missions/services/sealed-dispatch-perform.png",
+      "sha256": "ae58a6f2657cbf72c5e314dd3324261925baf4f5456f7a4c33bc3ca50b752a14",
+      "kind": "contract-stage",
+      "bytes": 189617,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "W03",
+      "title": "Seed-bank transfer",
+      "path": "docs/meridian/assets/missions/services/seed-transfer-deliver.png",
+      "sha256": "6bfea58f3bfd35219914790003b9a77360b45139362b058acf13fb871cd1e03e",
+      "kind": "contract-stage",
+      "bytes": 220152,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "G06",
+      "title": "Verified hostile warrant",
+      "path": "docs/meridian/assets/missions/services/verified-warrant-perform.png",
+      "sha256": "e674dc32515f7cf89ae1a0461e39a86e799d18a910015dcad53f604ff2d4ff1b",
+      "kind": "contract-stage",
+      "bytes": 168548,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "align-the-lanterns",
+      "title": "At Ranenor, align the two orbital lanterns from the marked observation waypoint. Confirm each alignment when its reflected trace meets the inward mark.",
+      "path": "docs/meridian/assets/missions/stages/unwritten-route/align-the-lanterns.png",
+      "sha256": "9170c83b5b66b7916a6dfd8ef20dad9375306f5265072862d05d28e0c7e9718b",
+      "kind": "finale-stage",
+      "bytes": 225074,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "decode-at-plugh",
+      "title": "Take the complete clue collection to the AI at any PLUGH station and choose Decode the collected traces.",
+      "path": "docs/meridian/assets/missions/stages/unwritten-route/decode-at-plugh.png",
+      "sha256": "7b91cfb6df0af0acb87913a2d4c3c6e2dc1412f18bc9447dac00e28b25c06114",
+      "kind": "finale-stage",
+      "bytes": 187880,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "fabricate-at-plugh",
+      "title": "Return to any PLUGH station with the same intact reconstruction lattice. Authorise its actual receiving and ask the AI to reconstruct the Medusa.",
+      "path": "docs/meridian/assets/missions/stages/unwritten-route/fabricate-at-plugh.png",
+      "sha256": "fb32ce9eebe64e7efbb851e6624e1c9f073e6fa9b5fe78e82fef3fe89b77133d",
+      "kind": "finale-stage",
+      "bytes": 183247,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "open-the-cradle",
+      "title": "Reach the marked outer-cradle waypoint at Ashor and transmit the complete decoded pattern.",
+      "path": "docs/meridian/assets/missions/stages/unwritten-route/open-the-cradle.png",
+      "sha256": "2a2a3fbdbdc6e5d16698b20c2c8d29857c3c103fec868cb5ca01168883dbb066",
+      "kind": "finale-stage",
+      "bytes": 197055,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "read-the-ring",
+      "title": "At Berilir, scan three marked echoes along the asteroid ring to complete the listener's pattern.",
+      "path": "docs/meridian/assets/missions/stages/unwritten-route/read-the-ring.png",
+      "sha256": "ee00d3805e15cbaa7211a72f22718e2cae1db21a9ef3c343be6d8326f0ccff4f",
+      "kind": "finale-stage",
+      "bytes": 137334,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "wake-the-listener",
+      "title": "At Corur, scan the dormant listener above the planet's dark hemisphere.",
+      "path": "docs/meridian/assets/missions/stages/unwritten-route/wake-the-listener.png",
+      "sha256": "51a3d740114ca74aee96bd98319f62b2ea20b2394ab7a2f142cea92164b52de5",
+      "kind": "finale-stage",
+      "bytes": 236200,
+      "width": 1280,
+      "height": 720,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "SH025",
+      "title": "Peregrine Mk V",
+      "path": "docs/meridian/assets/ships/SH025.png",
+      "sha256": "51b69efbe713adad2b4a8e361f00987e8aea73d0b460fc9e3829eab68163135b",
+      "kind": "new-L337-ship-reference",
+      "bytes": 113986,
+      "width": 1080,
+      "height": 390,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "SH026",
+      "title": "Harrier",
+      "path": "docs/meridian/assets/ships/SH026.png",
+      "sha256": "7186ffb1732e0859833dfbdcea7c03eb1907b61f4c487f7dabaae9ebb90cb01a",
+      "kind": "new-L337-ship-reference",
+      "bytes": 157941,
+      "width": 1080,
+      "height": 390,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "SH162",
+      "title": "Larvaal Probe",
+      "path": "docs/meridian/assets/ships/SH162.png",
+      "sha256": "53c6e737e0bf6d392744d308d1479bfbfb90bd2df5aeb37bf6acfbd9a12b9205",
+      "kind": "new-L337-ship-reference",
+      "bytes": 131371,
+      "width": 1080,
+      "height": 390,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    },
+    {
+      "scene": "SH171",
+      "title": "Medusa",
+      "path": "docs/meridian/assets/ships/SH171.png",
+      "sha256": "1e29cb24b10c537c6d696464570693da31913572dced45f519661015eab2caa1",
+      "kind": "new-L337-ship-reference",
+      "bytes": 235870,
+      "width": 1080,
+      "height": 390,
+      "sourceCommit": "c70110b292077588a0855fb48127adfb1b611c9d"
+    }
+  ],
+  "placements": [
+    {
+      "scene": "The Glass Meridian",
+      "image": "docs/meridian/assets/missions/illustrations/glass-meridian.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "A Choir Beneath the Static",
+      "image": "docs/meridian/assets/missions/illustrations/quiet-choir.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Hollow Manifest",
+      "image": "docs/meridian/assets/missions/illustrations/hollow-manifest.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Borrowed Voice",
+      "image": "docs/meridian/assets/missions/illustrations/borrowed-voice.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Shattered Wake",
+      "image": "docs/meridian/assets/missions/illustrations/shattered-wake.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Tithe of Worlds",
+      "image": "docs/meridian/assets/missions/illustrations/tithe-of-worlds.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Still Current",
+      "image": "docs/meridian/assets/missions/illustrations/still-current.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Wayfarer Exchange",
+      "image": "docs/meridian/assets/missions/illustrations/wayfarer-exchange.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Quiet Nursery",
+      "image": "docs/meridian/assets/missions/illustrations/quiet-nursery.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Borrowed Dawn",
+      "image": "docs/meridian/assets/missions/illustrations/borrowed-dawn.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Open Shadow",
+      "image": "docs/meridian/assets/missions/illustrations/open-shadow.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Harbour Without Orders",
+      "image": "docs/meridian/assets/missions/illustrations/harbour-without-orders.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "False Colours",
+      "image": "docs/meridian/assets/missions/illustrations/false-colours.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Rubble Covenant",
+      "image": "docs/meridian/assets/missions/illustrations/rubble-covenant.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "A Garden in Transit",
+      "image": "docs/meridian/assets/missions/illustrations/garden-in-transit.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Warrant Ledger",
+      "image": "docs/meridian/assets/missions/illustrations/warrant-ledger.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Measure of Care",
+      "image": "docs/meridian/assets/missions/illustrations/measure-of-care.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Long Return",
+      "image": "docs/meridian/assets/missions/illustrations/long-return.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Unfinished Map",
+      "image": "docs/meridian/assets/missions/illustrations/unfinished-map.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Blue Reservoir",
+      "image": "docs/meridian/assets/missions/illustrations/blue-reservoir.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Mutual Shelter",
+      "image": "docs/meridian/assets/missions/illustrations/mutual-shelter.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Listening Frontier",
+      "image": "docs/meridian/assets/missions/illustrations/listening-frontier.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "An Assembly of Orbits",
+      "image": "docs/meridian/assets/missions/illustrations/assembly-of-orbits.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Under Tow",
+      "image": "docs/meridian/assets/missions/illustrations/under-tow.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Memory Atlas",
+      "image": "docs/meridian/assets/missions/illustrations/memory-atlas.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "A Fleet of Neighbours",
+      "image": "docs/meridian/assets/missions/illustrations/fleet-of-neighbours.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Uncounted Names",
+      "image": "docs/meridian/assets/missions/illustrations/uncounted-names.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Honest Circuit",
+      "image": "docs/meridian/assets/missions/illustrations/honest-circuit.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Small Lights",
+      "image": "docs/meridian/assets/missions/illustrations/small-lights.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Passenger's Horizon",
+      "image": "docs/meridian/assets/missions/illustrations/passengers-horizon.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Kind Distance",
+      "image": "docs/meridian/assets/missions/illustrations/kind-distance.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Cold Reserve",
+      "image": "docs/meridian/assets/missions/illustrations/cold-reserve.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Magnetic Orchard",
+      "image": "docs/meridian/assets/missions/illustrations/magnetic-orchard.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Open Measure",
+      "image": "docs/meridian/assets/missions/illustrations/open-measure.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Shared Pulse",
+      "image": "docs/meridian/assets/missions/illustrations/shared-pulse.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Witness Window",
+      "image": "docs/meridian/assets/missions/illustrations/witness-window.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Public Record",
+      "image": "docs/meridian/assets/missions/illustrations/public-record.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Signed Passage",
+      "image": "docs/meridian/assets/missions/illustrations/courier.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Guiding Light",
+      "image": "docs/meridian/assets/missions/illustrations/guiding-light.png",
+      "role": "mission-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Sealed dispatch",
+      "image": "docs/meridian/assets/missions/services/sealed-dispatch-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Consented freight supply",
+      "image": "docs/meridian/assets/missions/services/consented-freight-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Bonded freight passage",
+      "image": "docs/meridian/assets/missions/services/bonded-freight-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Consented cabin journey",
+      "image": "docs/meridian/assets/missions/services/cabin-journey-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Orbital outlook journey",
+      "image": "docs/meridian/assets/missions/services/orbital-outlook-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Verified hostile warrant",
+      "image": "docs/meridian/assets/missions/services/verified-warrant-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Registered corridor defence",
+      "image": "docs/meridian/assets/missions/services/corridor-defence-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Consented custody rescue",
+      "image": "docs/meridian/assets/missions/services/custody-rescue-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Identified salvage return",
+      "image": "docs/meridian/assets/missions/services/identified-salvage-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Consented orbital survey",
+      "image": "docs/meridian/assets/missions/services/consented-survey-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "External isolation work",
+      "image": "docs/meridian/assets/missions/services/isolation-work-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Measured asteroid extraction",
+      "image": "docs/meridian/assets/missions/services/measured-extraction-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Mutual relief contribution",
+      "image": "docs/meridian/assets/missions/services/mutual-contribution-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Registered orbital evacuation",
+      "image": "docs/meridian/assets/missions/services/orbital-evacuation-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Designated hostile Larvaal defence",
+      "image": "docs/meridian/assets/missions/services/hostile-larvaal-defence-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Flight and reception practice",
+      "image": "docs/meridian/assets/missions/services/flight-reception-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Safe gunnery practice",
+      "image": "docs/meridian/assets/missions/services/safe-gunnery-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Defensive flight practice",
+      "image": "docs/meridian/assets/missions/services/defensive-flight-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Navigation and trade practice",
+      "image": "docs/meridian/assets/missions/services/navigation-trade-perform.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Cold-chain clinic service",
+      "image": "docs/meridian/assets/missions/services/cold-chain-deliver.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Closed repair exchange",
+      "image": "docs/meridian/assets/missions/services/repair-loop-service.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Seed-bank transfer",
+      "image": "docs/meridian/assets/missions/services/seed-transfer-deliver.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Remote utility relief",
+      "image": "docs/meridian/assets/missions/services/field-relief-install.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Crew record recovery",
+      "image": "docs/meridian/assets/missions/services/record-recovery-recover.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Registered convoy watch",
+      "image": "docs/meridian/assets/missions/services/convoy-watch-escort.png",
+      "role": "contract-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Introductory delivery",
+      "image": "docs/meridian/assets/missions/services/consented-freight-perform.png",
+      "role": "same original G02 artwork",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Decode at PLUGH",
+      "image": "docs/meridian/assets/missions/stages/unwritten-route/decode-at-plugh.png",
+      "role": "finale-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Wake the listener",
+      "image": "docs/meridian/assets/missions/stages/unwritten-route/wake-the-listener.png",
+      "role": "finale-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Read the ring",
+      "image": "docs/meridian/assets/missions/stages/unwritten-route/read-the-ring.png",
+      "role": "finale-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Align the lanterns",
+      "image": "docs/meridian/assets/missions/stages/unwritten-route/align-the-lanterns.png",
+      "role": "finale-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Open the cradle",
+      "image": "docs/meridian/assets/missions/stages/unwritten-route/open-the-cradle.png",
+      "role": "finale-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "Recover Medusa's original lattice",
+      "image": "docs/meridian/assets/missions/revisions/medusa-emp-salvage.png",
+      "role": "companion-specification-diagram",
+      "document": "docs/meridian/INTENDED-GAME-STORY-NOTES.md"
+    },
+    {
+      "scene": "Return to PLUGH",
+      "image": "docs/meridian/assets/missions/stages/unwritten-route/fabricate-at-plugh.png",
+      "role": "finale-stage",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "The Unwritten Route",
+      "image": "docs/meridian/assets/missions/illustrations/unwritten-route.png",
+      "role": "quest-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "revision/continuity-orbital-desk",
+      "image": "docs/meridian/assets/missions/revisions/continuity-orbital-desk.png",
+      "role": "continuity-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "revision/continuity-reference-field",
+      "image": "docs/meridian/assets/missions/revisions/continuity-reference-field.png",
+      "role": "continuity-illustration",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "first mention of Peregrine Mk V",
+      "image": "docs/meridian/assets/ships/SH025.png",
+      "role": "first-mention ship reference",
+      "shipID": "SH025",
+      "name": "Peregrine Mk V",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "first mention of Harrier",
+      "image": "docs/meridian/assets/ships/SH026.png",
+      "role": "first-mention ship reference",
+      "shipID": "SH026",
+      "name": "Harrier",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "first mention of Larvaal Probe",
+      "image": "docs/meridian/assets/ships/SH162.png",
+      "role": "first-mention ship reference",
+      "shipID": "SH162",
+      "name": "Larvaal Probe",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    },
+    {
+      "scene": "first mention of Medusa",
+      "image": "docs/meridian/assets/ships/SH171.png",
+      "role": "first-mention ship reference",
+      "shipID": "SH171",
+      "name": "Medusa",
+      "document": "docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md"
+    }
+  ],
+  "shipIdentityBasis": {
+    "commit": "a5ce21614777e327be835a54ab8650f18b959e3d",
+    "path": "Sources/L337Core/OriginalFleetR3Data.swift",
+    "ships": [
+      {
+        "id": "SH025",
+        "name": "Peregrine Mk V"
+      },
+      {
+        "id": "SH026",
+        "name": "Harrier"
+      },
+      {
+        "id": "SH162",
+        "name": "Larvaal Probe"
+      },
+      {
+        "id": "SH171",
+        "name": "Medusa"
+      }
+    ]
+  },
+  "visibility": "Spoiler-marked authoring story; scene art stays at matching scenes and Medusa ship view appears only at the first named cradle reveal. The text-only EMP/salvage diagram stays in companion notes. This does not change player gallery visibility.",
+  "storyImageEmbeds": 78,
+  "companionImageEmbeds": 1
+}

@@ -12,23 +12,80 @@ concurrency:
   group: elite-${{ github.ref }}
   cancel-in-progress: false
 jobs:
+  scope:
+    name: Classify changed paths
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      requires_build: ${{ steps.scope.outputs.requires_build }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          sparse-checkout: |
+            Tools/CI
+            .github/workflows
+      - id: scope
+        name: Require the build unless the complete diff is documentation
+        run: |
+          python3 - <<'PY'
+          import json, os, re, subprocess, tempfile
+          from pathlib import Path
+
+          # Use the classifier from the trusted base, never executable PR changes.
+          needed = 'true'
+          try:
+              event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+              name = os.environ['GITHUB_EVENT_NAME']
+              base = (event['pull_request']['base']['sha'] if name == 'pull_request'
+                      else event['before'] if name == 'push' else '')
+              if re.fullmatch('[0-9a-f]{40}', base) and base != '0' * 40:
+                  source = subprocess.check_output(
+                      ['git', 'show', base + ':Tools/CI/change_scope.py'],
+                      stderr=subprocess.DEVNULL, timeout=30)
+                  with tempfile.TemporaryDirectory() as directory:
+                      script = Path(directory) / 'change_scope.py'
+                      script.write_bytes(source)
+                      result = subprocess.check_output(
+                          ['python3', '-I', str(script)], timeout=90).decode().strip()
+                      if result == 'false':
+                          needed = 'false'
+          except (KeyError, TypeError, ValueError, OSError, subprocess.SubprocessError):
+              pass
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('requires_build=' + needed + '\n')
+          PY
+      - name: Check documentation routing contracts
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_change_scope.py'
   phases:
     name: Native quality components
+    needs: scope
+    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.requires_build != 'false') }}
     uses: ./.github/workflows/recoverable-quality.yml
     with:
       enable_native: true
     secrets: inherit
   quality:
-    # Preserve the required check name. Only the real component workflow can qualify it.
+    # Documentation success is explicit; only real components qualify a game build.
     name: quality
-    needs: phases
+    needs: [scope, phases]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
       - name: Require all native and prerequisite results
         env:
+          SCOPE: ${{ needs.scope.result }}
+          REQUIRES_BUILD: ${{ needs.scope.outputs.requires_build }}
           COMPONENTS: ${{ needs.phases.result }}
         run: |
-          test "$COMPONENTS" = success
-          echo 'All required exact-head quality components passed.' >> "$GITHUB_STEP_SUMMARY"
+          test "$SCOPE" = success
+          if [ "$REQUIRES_BUILD" = false ]; then
+            test "$COMPONENTS" = skipped
+            echo 'Documentation-only change: no game build, native tests, coverage, leaks or Sonar ran.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            test "$REQUIRES_BUILD" = true
+            test "$COMPONENTS" = success
+            echo 'All required exact-head quality components passed.' >> "$GITHUB_STEP_SUMMARY"
+          fi

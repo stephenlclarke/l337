@@ -2,25 +2,6 @@ name: Isolated Unit Tests
 on:
   push:
     branches: [main]
-    paths:
-      - 'Sources/**'
-      - 'Tests/**'
-      - 'Package.swift'
-      - 'Package.resolved'
-      - 'Tools/CI/isolated_units.py'
-      - 'Tools/CI/test_isolated_units.py'
-      - 'Tools/CI/script_instance_equality.py'
-      - 'Tools/CI/test_script_instance_equality.py'
-      - 'Tools/CI/isolated_crash_evidence.py'
-      - 'Tools/CI/test_isolated_crash_evidence.py'
-      - 'Tools/CI/local_runner.py'
-      - 'Tools/CI/test_local_runner.py'
-      - 'Tools/CI/crash_artifacts.py'
-      - '.github/workflows/unit-tests.yml'
-      - 'Makefile'
-      - 'config/flight-controls.json'
-      - 'Tools/generate-flight-controls.py'
-      - 'Tools/tests/test_flight_controls.py'
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -30,7 +11,55 @@ concurrency:
   group: isolated-units-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
+  scope:
+    name: Classify changed paths
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      requires_build: ${{ steps.scope.outputs.requires_build }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          sparse-checkout: |
+            Tools/CI
+            .github/workflows
+      - id: scope
+        name: Require the build unless the complete diff is documentation
+        run: |
+          python3 - <<'PY'
+          import json, os, re, subprocess, tempfile
+          from pathlib import Path
+
+          # Use the classifier from the trusted base, never executable PR changes.
+          needed = 'true'
+          try:
+              event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text())
+              name = os.environ['GITHUB_EVENT_NAME']
+              base = (event['pull_request']['base']['sha'] if name == 'pull_request'
+                      else event['before'] if name == 'push' else '')
+              if re.fullmatch('[0-9a-f]{40}', base) and base != '0' * 40:
+                  source = subprocess.check_output(
+                      ['git', 'show', base + ':Tools/CI/change_scope.py'],
+                      stderr=subprocess.DEVNULL, timeout=30)
+                  with tempfile.TemporaryDirectory() as directory:
+                      script = Path(directory) / 'change_scope.py'
+                      script.write_bytes(source)
+                      result = subprocess.check_output(
+                          ['python3', '-I', str(script)], timeout=90).decode().strip()
+                      if result == 'false':
+                          needed = 'false'
+          except (KeyError, TypeError, ValueError, OSError, subprocess.SubprocessError):
+              pass
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('requires_build=' + needed + '\n')
+          PY
+      - name: Check documentation routing contracts
+        run: PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_change_scope.py'
   isolated-units:
+    needs: scope
+    if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.requires_build != 'false') }}
     # External PRs remain hosted. Enable the isolated VM only after provisioning.
     runs-on: ${{ github.event_name == 'push' && github.repository == 'stephenlclarke/l337' && github.actor_id == '22142777' && vars.ELITE_LOCAL_RUNNER_ENABLED == 'true' && fromJSON('["self-hosted", "macOS", "ARM64", "elite-ci"]') || 'macos-15' }}
     timeout-minutes: 45

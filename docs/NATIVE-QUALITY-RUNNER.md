@@ -32,6 +32,8 @@ Keep the console session available for the existing AppKit window and actual-ren
 
 ## Current CI scope
 
+Changes confined to `docs/meridian/**` use a hosted Python documentation-scope check and keep the required `quality` result without starting a game build or Swift unit build. The exact single README story-link insertion may accompany them; every other README change requires the build. The classifier reads the complete Git diff, including both sides of renames, and uses its trusted base version. Mixed changes, workflow/helper changes, missing history, classification errors and manual dispatch retain the full existing checks and exact-head native authorization. Use `make change-scope-check` for its offline Git and routing tests. The workflow change that introduces this route also requires full validation once. A documentation result does not claim native tests, coverage, leak or Sonar acceptance.
+
 ASAN and TSAN are optional manual diagnostics. The active reusable workflow runs the real `make ci` command in its authorized `native_checks` job after the hosted fake checks. Normal tests, full inventory and coverage validation, zero leaks, static checks, raw runtime evidence and committed-main-only SonarQube analysis remain required. No sanitizer preparation, shard, local-proof verification or sanitizer-plan aggregate job is part of CI. Normal and leak phases require their own reviewed resource profiles and retain the existing shared executor lease, admission and RSS monitoring. New source and workflow bytes require fresh exact-head runner authorization; old policies and proof files are preserved as historical evidence.
 
 ## Ordinary ship-media generation

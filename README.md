@@ -48,6 +48,8 @@ ASAN and TSAN are optional manual diagnostics and are no longer required CI or r
 
 The screenshot shows the real station entrance aligned for docking while four admitted hostile ships fire their native lasers. The tape includes all 171 gallery ships, each with its canonical name and one and a half rotations. Both are development exports from the game renderer; the [full-fleet media receipt](docs/evidence/M03-full-fleet-readme-media.json) records the verified output. Browse [all 171 ship animations and specifications](docs/SHIP-CATALOGUE.md) and [Showroom](docs/SHIP-SHOWROOM.md) for authored designs and in-game exchange rules. Earlier [M03 media](docs/evidence/M03-renderer-media.json) and [gallery regeneration](docs/evidence/M03-ship-gallery-regeneration.json) receipts remain historical evidence. README media uses `make readme-media`; individual ship animations use `make ships`.
 
+Read [the commander's story](docs/meridian/INTENDED-GAME-STORY-WALKTHROUGH.md) for Rowan Calder's intended complete journey, with compact status badges and a full mission map.
+
 ## Build and run
 
 Requires macOS 14 or newer and Swift 6.0 or newer (Xcode or the Command Line Tools).
