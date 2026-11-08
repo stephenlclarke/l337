@@ -18,7 +18,7 @@ The inventory records 4,304 locally available branch-exclusive commits, two base
 
 ## How to use it
 
-Find the work packet in the main [completion ledger](COMPLETION-LEDGER.md), then search the index. Read the exact source at the named commit and compare its listed hunks with current main. Keep useful partial implementations; do not blindly merge an older branch with unrelated history. Reconcile current original worlds, r3 hull/fitting, actor isolation, trusted mission events/rewards and the latest human rules before use.
+Find the work packet in the main [completion ledger](../COMPLETION-LEDGER.md), then search the index. Read the exact source at the named commit and compare its listed hunks with current main. Keep useful partial implementations; do not blindly merge an older branch with unrelated history. Reconcile current original worlds, r3 hull/fitting, actor isolation, trusted mission events/rewards and the latest human rules before use.
 
 A status describes the inspected work with its stated scope. `already-integrated-equivalent` means the important inspected files match main; only a separately documented whole-tree proof makes a cleanup candidate. `partially-integrated` means some inspected work matches and other parts differ or are missing. `useful-unintegrated` identifies actual source absent/different from main. `superseded` identifies a specific later replacement. `uncertain` needs owner semantic review. Branch names and squash ancestry never establish completion.
 

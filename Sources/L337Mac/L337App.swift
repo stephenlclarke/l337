@@ -21,6 +21,7 @@ final class GameView: NSView {
         held.removeAll()
         pressedKeys.removeAll()
         trackpad.reset()
+        showroomDragPoint = nil
       }
       if !acceptsTrackpadFlight {
         trackpad.reset()
@@ -45,6 +46,7 @@ final class GameView: NSView {
       modelInventoryInputGeneration = processedInventoryInputGeneration
     }
   }
+  private var showroomDragPoint: NSPoint?
   private var displayedScriptPage: ScriptPagePresentation?
   private var displayedScriptPageSize: NSSize?
   var paintedMissionMenuPresentation: ScriptPagePresentation? {
@@ -434,6 +436,7 @@ final class GameView: NSView {
     held.remove(pressedKeys.removeValue(forKey: event.keyCode) ?? Self.key(event))
   }
   override func mouseDown(with event: NSEvent) {
+    showroomDragPoint = nil
     if game.screen == .inventory {
       let point = convert(event.locationInWindow, from: nil)
       queuePaintedInventoryCommand(at: .init(point.x, point.y))
@@ -459,6 +462,11 @@ final class GameView: NSView {
       pending.append("showroom-click:\(point.x):\(point.y)")
       let layout = ShowroomLayout(
         width: bounds.width, height: bounds.height, detail: game.showroom.detail)
+      if !game.showroom.trading && !game.showroom.searching
+        && layout.model.contains(.init(point.x, point.y))
+      {
+        showroomDragPoint = point
+      }
       if !game.showroom.trading && layout.list.contains(.init(point.x, point.y))
         && event.clickCount >= 2
       {
@@ -499,6 +507,25 @@ final class GameView: NSView {
     let point = convert(event.locationInWindow, from: nil)
     pending.append("map-click:\(point.x):\(point.y)")
   }
+  override func mouseDragged(with event: NSEvent) {
+    guard let previous = showroomDragPoint, game.screen == .showroom,
+      !game.paused, !game.showroom.trading, !game.showroom.searching
+    else {
+      showroomDragPoint = nil
+      return
+    }
+    let point = convert(event.locationInWindow, from: nil)
+    let layout = ShowroomLayout(
+      width: bounds.width, height: bounds.height, detail: game.showroom.detail)
+    guard layout.model.contains(.init(point.x, point.y)) else {
+      showroomDragPoint = nil
+      return
+    }
+    let roll = event.modifierFlags.contains(.shift) ? 1 : 0
+    pending.append("showroom-drag:\(previous.x):\(previous.y):\(point.x):\(point.y):\(roll)")
+    showroomDragPoint = point
+  }
+  override func mouseUp(with _: NSEvent) { showroomDragPoint = nil }
   override func scrollWheel(with event: NSEvent) {
     if game.screen == .contracts || game.screen == .journal {
       enqueueKey(event.scrollingDeltaY > 0 ? "up" : "down")
@@ -903,6 +930,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
           Double($0)
         }
         if values.count == 2 { await runtime.wantedBoardClick(x: values[0], y: values[1]) }
+      } else if event.hasPrefix("showroom-drag:") {
+        let values = event.dropFirst("showroom-drag:".count).split(separator: ":").compactMap {
+          Double($0)
+        }
+        if values.count == 5 {
+          await runtime.showroomDrag(
+            fromX: values[0], fromY: values[1], toX: values[2], toY: values[3], roll: values[4] == 1
+          )
+        }
       } else if event.hasPrefix("showroom-click:") {
         let values = event.dropFirst(15).split(separator: ":").compactMap { Double($0) }
         if values.count == 2 { await runtime.showroomClick(x: values[0], y: values[1]) }
@@ -1435,7 +1471,7 @@ public struct L337App {
     try gif.finish()
 
     let continuation = try ReadmeGIFStream(
-      destination: URL(fileURLWithPath: "docs/ship-gallery-reel-2.gif"), width: 1024, height: 768,
+      destination: URL(fileURLWithPath: "docs/images/ship-gallery-reel-2.gif"), width: 1024, height: 768,
       frameCount: secondReel.count * anglesPerShip)
     try appendGallery(secondReel, game: game, to: continuation)
     try continuation.finish()

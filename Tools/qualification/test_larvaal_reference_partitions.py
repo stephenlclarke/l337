@@ -16,7 +16,7 @@ spec.loader.exec_module(partitions)
 class OriginalLarvaalReferencePartitionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.path = ROOT / "docs/fleet-physical/larvaal-original-reference-partitions.json"
+        cls.path = ROOT / "docs/milestones/fleet-physical/larvaal-original-reference-partitions.json"
         cls.catalogue = partitions.load_catalogue(cls.path)
         cls.inputs = []
         for row in cls.catalogue["rows"]:

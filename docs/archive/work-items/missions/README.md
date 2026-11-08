@@ -323,3 +323,5 @@
 | [PR-153-workshop-claim-lifetimes](PR-153-workshop-claim-lifetimes.md) | unresolved | Bound empty workshop validation before full claim policy |
 | [ISSUE-xyzzy-current-market-save-fixtures](ISSUE-xyzzy-current-market-save-fixtures.md) | unresolved | XYZzy transaction/save fixtures violate current market and binding contracts |
 | [PR-xyzzy-current-market-save-fixtures](PR-xyzzy-current-market-save-fixtures.md) | unresolved | Align the two XYZzy fixture expectations with current native contracts |
+
+- [Current integration requirements and UNRUN work records](current-integration/)

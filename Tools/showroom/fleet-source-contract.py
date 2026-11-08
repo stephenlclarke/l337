@@ -35,7 +35,7 @@ def bounded_bytes(path, maximum):
 def contracts():
     """Resolve one exact 171-record R3 set once per authoring process."""
     root = Path(__file__).resolve().parents[2]
-    data = bounded_bytes(root / "docs/FLEET-BACKLOG.json", 1_500_000)
+    data = bounded_bytes(root / "docs/milestones/FLEET-BACKLOG.json", 1_500_000)
     if hashlib.sha256(data).hexdigest() != BACKLOG_SHA256:
         raise ValueError("Current fleet source manifest changed; review its authority explicitly")
     rows = json.loads(data)["entries"]

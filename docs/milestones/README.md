@@ -15,3 +15,5 @@ The [completion ledger](../COMPLETION-LEDGER.md) is the sole current assignment,
 The documents above preserve accepted requirements and dated source progress. Their old owner tables, test counts and “pending” statements do not override the ledger. Neither a frozen approved journey nor a prepared fleet design is playable acceptance. [Historical research](../research/README.md), [approved journey snapshots](../gameplay-design/approved/README.md), [mission specifications](../mission-specifications) and [outstanding/unresolved work records](WORK-ITEMS.md) retain requirements and unique evidence even when implementation remains outstanding. Current mission guidance must use original fleet bindings rather than superseded Cobra/Constrictor names.
 
 [Documentation home](../README.md).
+
+- [Original fleet implementation](FLEET-IMPLEMENTATION.md), [backlog](FLEET-BACKLOG.md), and [physical requirements](fleet-physical/) remain preparation and open acceptance.

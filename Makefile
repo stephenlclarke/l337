@@ -4,9 +4,9 @@ RELEASE_PLAN ?= dist/release-plan.json
 ELITE_SANITIZERS ?= 0
 README_MEDIA_ARGS ?=
 .PHONY: release-plan publish-release release-readme release
-.PHONY: sanitizer-checkpoints-check native-runner-check instance-equality-check ci-capture-check change-scope-check help build run test unit-ci local-runner-check coverage coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media readme-screenshot-preview induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check package-macos homebrew-cask homebrew-cask-check sonar ci retired-hulls-check
+.PHONY: tutorial-readme-check sanitizer-checkpoints-check native-runner-check instance-equality-check ci-capture-check change-scope-check help build run test unit-ci local-runner-check coverage coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media readme-screenshot-preview induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check package-macos homebrew-cask homebrew-cask-check sonar ci retired-hulls-check
 help:
-	@printf '%s\n' 'build run test unit-ci sanitizer-checkpoints-check instance-equality-check local-runner-check ci-capture-check change-scope-check coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media readme-screenshot-preview induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check release-plan package-macos publish-release release-readme release homebrew-cask homebrew-cask-check sonar ci retired-hulls-check'
+	@printf '%s\n' 'build run test unit-ci tutorial-readme-check sanitizer-checkpoints-check instance-equality-check local-runner-check ci-capture-check change-scope-check coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media readme-screenshot-preview induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check release-plan package-macos publish-release release-readme release homebrew-cask homebrew-cask-check sonar ci retired-hulls-check'
 build:
 	swift build
 run:
@@ -15,6 +15,9 @@ test:
 	swift test
 unit-ci: instance-equality-check change-scope-check
 	python3 Tools/CI/isolated_units.py
+tutorial-readme-check:
+	PYTHONDONTWRITEBYTECODE=1 python3 Tools/CI/tutorial_readme_parity.py
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_tutorial_readme_parity.py'
 change-scope-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tools/CI -p 'test_change_scope.py'
 local-runner-check:
@@ -97,7 +100,12 @@ native-runner-check:
 retired-hulls-check:
 	PYTHONDONTWRITEBYTECODE=1 python3 Tools/distribution/retired_hull_resources.py
 
-ci: change-scope-check retired-hulls-check sanitizers-check native-runner-check instance-equality-check ci-capture-check flight-controls-check homebrew-cask-check ships-check showroom-check liberator-design hull-designs mission-packs-check coverage-check leaks
+ci: change-scope-check retired-hulls-check sanitizers-check native-runner-check instance-equality-check ci-capture-check flight-controls-check homebrew-cask-check ships-check showroom-check mission-packs-check coverage-check leaks
+
+# Gate all CI work before any build, including parallel make. Standalone targets stay unchanged.
+ifneq ($(filter ci,$(MAKECMDGOALS)),)
+change-scope-check retired-hulls-check sanitizers-check native-runner-check instance-equality-check ci-capture-check flight-controls-check homebrew-cask-check ships-check showroom-check mission-packs-check coverage-check leaks sanitizer-checkpoints-check: | tutorial-readme-check
+endif
 
 ifeq ($(ELITE_SANITIZERS),1)
 ci:
