@@ -5,7 +5,7 @@ import Testing
 
 /// All preceding mission/kit/data producers are genuine. The return scene is controlled,
 /// not earned travel. No crew source, person, native admission or accepted receipt is injected.
-private func actualHollowEvacuationContextGame() async throws -> (
+func actualHollowEvacuationContextGame() async throws -> (
   game: Game, commission: HollowManifestCommissionFixture
 ) {
   let (runtime, commission) = try await actualHollowRegisterRuntime()

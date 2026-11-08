@@ -6,6 +6,7 @@ enum NativeC03PublicationPreflight {
   enum Failure: Error, Equatable {
     case invalidJSON, resourceLimit, duplicateField, unknownField
     case misplacedClaim, invalidInstance, wrongSchema, missingOwner
+    case invalidCrewCompanion
   }
 
   struct Publication: Sendable {
@@ -14,32 +15,72 @@ enum NativeC03PublicationPreflight {
     let state: NativeHollowManifestState
   }
 
-  /// Call BEFORE Foundation decodes the enclosing chunk. A nil trusted schema or
-  /// owner never permits a claim; it is useful when rejecting non-mission chunks.
+  struct CrewCompanion: Sendable {
+    let bytes: Data
+    let state: NativeC03CrewSourceState
+  }
+
+  struct CheckedChunk: Sendable {
+    let publications: [Publication]
+    let crew: CrewCompanion?
+  }
+
+  /// Call BEFORE Foundation decodes the enclosing chunk. A claim needs the trusted
+  /// C03 schema; mission DATA also needs its root owner. A checked crew shape still
+  /// needs the enclosing root's complete owner/source/custody/history validation.
   /// Never obtain currentSchema by echoing the untrusted pointer's schema.
   static func validate(
     _ data: Data, part: ScriptFreightVersionedSave.Part, schema: Int?,
     currentSchema: Int?, owner: UUID?
   ) throws -> [Publication] {
-    var scanner = Scanner(data: data)
+    try validateChunk(data, part: part, schema: schema, currentSchema: currentSchema,
+      owner: owner).publications
+  }
+
+  /// The crew companion is persisted under savedNativePeopleCustody, not under
+  /// mission DATA. Keep its original slice until the closed decoder has checked it.
+  /// The full typed root still owes all reciprocal owner/source/history joins.
+  static func validateChunk(
+    _ data: Data, part: ScriptFreightVersionedSave.Part, schema: Int?,
+    currentSchema: Int?, owner: UUID?
+  ) throws -> CheckedChunk {
+    var scanner = Scanner(data: data, part: part)
     let leaves = try scanner.scan()
     guard leaves.isEmpty || part == .missions else { throw Failure.misplacedClaim }
-    guard leaves.isEmpty || (schema != nil && schema == currentSchema) else {
+    let claimed = !leaves.isEmpty || scanner.crewRange != nil
+    guard !claimed || (schema != nil && schema == currentSchema
+      && NativeC03PublicationNamespace.contains(currentSchema)) else {
       throw Failure.wrongSchema
     }
-    guard !leaves.isEmpty else { return [] }
+    let crew: CrewCompanion?
+    if let range = scanner.crewRange {
+      let bytes = slice(data, range: range)
+      do {
+        crew = .init(bytes: bytes, state: try NativeC03CrewSourceSave.decodeClosed(bytes))
+      } catch { throw Failure.invalidCrewCompanion }
+    } else { crew = nil }
+    guard !leaves.isEmpty else { return .init(publications: [], crew: crew) }
     guard let owner else { throw Failure.missingOwner }
     // Finish the entire raw scan before ANY leaf enters Foundation decoding.
-    return try leaves.map { leaf in
-      let bytes = Data(data[
-        (data.startIndex + leaf.range.lowerBound)..<(data.startIndex + leaf.range.upperBound)])
+    let publications = try leaves.map { leaf -> Publication in
+      let bytes = slice(data, range: leaf.range)
       let state = try NativeHollowManifestSave.decodePublication(
         bytes, owner: owner, mission: leaf.mission)
       return .init(mission: leaf.mission, bytes: bytes, state: state)
     }
+    return .init(publications: publications, crew: crew)
   }
 
-  /// The raw codec authenticates DATA only. The full candidate still needs these
+  private static func slice(_ data: Data, range: Range<Int>) -> Data {
+    Data(data[(data.startIndex + range.lowerBound)..<(data.startIndex + range.upperBound)])
+  }
+
+  static func matchesCrew(_ crew: CrewCompanion?, commander: borrowing Commander) -> Bool {
+    guard let crew else { return commander.nativePeople?.hollowManifestCrew == nil }
+    return commander.nativePeople?.hollowManifestCrew == crew.state
+  }
+
+  /// The raw codecs check DATA shapes only. The full candidate still needs these
   /// unchanged reciprocal joins, plus G1's ordinary custody/history/root checks.
   static func validateClaims(_ commander: borrowing Commander) -> Bool {
     guard NativeHollowManifestSave.validateClaims(commander) else { return false }
@@ -57,12 +98,15 @@ enum NativeC03PublicationPreflight {
 
   private struct Scanner {
     let data: Data
+    let part: ScriptFreightVersionedSave.Part
     var index = 0
     var leaves: [Leaf] = []
     var missions: Set<UUID> = []
     var leafStart: Int?
     var leafDepth = 0
     var leafContainers = 0
+    var crewRange: Range<Int>?
+    var crewStart: Int?
 
     // Same current chunk ceilings as ScriptSaveStore. G1 retains the stricter
     // pointer/header/world limits and all current chunk hash/namespace checks.
@@ -85,7 +129,9 @@ enum NativeC03PublicationPreflight {
       try object(depth: 0) { scanner, key in
         guard key != NativeHollowManifestSave.field else { throw Failure.misplacedClaim }
         guard !key.lowercased().contains("hollowmanifest") else { throw Failure.unknownField }
-        if key == "instances" { try scanner.instances(depth: 1) }
+        if key == "savedNativePeopleCustody", scanner.part == .commander {
+          try scanner.custody(depth: 1)
+        } else if key == "instances" { try scanner.instances(depth: 1) }
         else { try scanner.value(depth: 1) }
       }
       try whitespace()
@@ -100,6 +146,9 @@ enum NativeC03PublicationPreflight {
     private mutating func take() throws -> UInt8 {
       guard let byte = next else { throw Failure.invalidJSON }
       if let leafStart, index - leafStart >= NativeHollowManifestSave.maximumBytes {
+        throw Failure.resourceLimit
+      }
+      if let crewStart, index - crewStart >= NativeC03CrewSourceSave.maximumBytes {
         throw Failure.resourceLimit
       }
       index += 1
@@ -177,6 +226,53 @@ enum NativeC03PublicationPreflight {
       }
     }
 
+    private mutating func custody(depth: Int) throws {
+      if next == 110 { try literal("null"); return }
+      try object(depth: depth) { scanner, key in
+        if key == "hollowManifestCrew" {
+          let start = scanner.index
+          scanner.crewStart = start
+          defer { scanner.crewStart = nil }
+          if scanner.next == 110 { try scanner.literal("null") }
+          else {
+            try scanner.value(depth: depth + 1)
+            scanner.crewRange = start..<scanner.index
+          }
+        } else {
+          guard !key.lowercased().contains("hollowmanifest") else { throw Failure.unknownField }
+          try scanner.value(depth: depth + 1)
+        }
+      }
+    }
+
+    /// This spelling also names a Codable NativePersonReference case. Outside
+    /// the one custody slot it may only carry that exact address wrapper, never
+    /// a source companion hidden in another enclosing field/chunk.
+    private mutating func crewReference(depth: Int) throws {
+      var wrapped = false
+      try object(depth: depth) { scanner, key in
+        guard key == "_0" else { throw Failure.misplacedClaim }
+        wrapped = true
+        var fields: Set<String> = []
+        try scanner.object(depth: depth + 1) { scanner, key in
+          guard ["owner", "mission", "ordinal"].contains(key) else { throw Failure.misplacedClaim }
+          fields.insert(key)
+          if key == "ordinal" {
+            guard let byte = scanner.next, byte == 45 || (48...57).contains(byte) else {
+              throw Failure.invalidJSON
+            }
+            try scanner.number()
+          } else {
+            guard UUID(uuidString: try scanner.string(capture: true)) != nil else {
+              throw Failure.invalidJSON
+            }
+          }
+        }
+        guard fields == ["owner", "mission", "ordinal"] else { throw Failure.invalidJSON }
+      }
+      guard wrapped else { throw Failure.misplacedClaim }
+    }
+
     private mutating func instance(_ mission: UUID, depth: Int) throws {
       guard missions.count < 128, missions.insert(mission).inserted else {
         throw Failure.invalidInstance
@@ -243,7 +339,8 @@ enum NativeC03PublicationPreflight {
       case 123:
         try object(depth: depth) { scanner, child in
           guard child != NativeHollowManifestSave.field else { throw Failure.misplacedClaim }
-          try scanner.value(depth: depth + 1, key: child)
+          if child == "hollowManifestCrew" { try scanner.crewReference(depth: depth + 1) }
+          else { try scanner.value(depth: depth + 1, key: child) }
         }
       case 91:
         try container(depth: depth)

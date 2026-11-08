@@ -9004,3 +9004,12 @@ Genuine operational blockers remain missing actual Haldator installed/powered fi
 
 
 Current C03 development now retains actual main fd6b4508b033eb37342e2bc0731e31a6d88fff01 and the reviewed sorted-JSON correction. The source-only borrowed-capture follow-up remains a child of immutable13d739a3. Native compilation, tests and independent whole-source review remain pending; no gameplay or capability grant follows.
+
+
+### C03 companion raw-shape and AppKit review corrections — 8 November 2026
+
+Root routes the two actual G2 findings to the existing G1 composition owner. Scope is the exact four-path companion delta from SOURCE a6fc0961034190fb394ab3aed5eacf4e94f676a450e342d52ee77a412cdbc2ba and the single sanitizer_groups.json AppKit registration, on frozen68b7ceb5f42074292103d317153f8a5b6c2536bd. G1 verified every preimage and applied COMPLETE-COMPOSITION.patch80ea94212292c15213c94d3ba22a42383de2210531bf069d134b76a72b29956f once, including the shared early-root hunk. G2 companion source closure cd5b55115f71de0f92abf81d756f0adbbbed7ecf47e53ea2bb1c02e11b89fd7b is reused. Raw companion grammar/duplicate/closed-shape checks precede typed decode; actual root retains and compares the receipt before unchanged reciprocal custody validation. Original preflight bytes remain; the genuine positive issuer/physical prerequisite assertion remains hard and UNRUN.
+
+The actual NativeC03ArchiveReaderUIMacUnitTests source6133080bf14f9a42f2b7d02697873c857f73b87115497084f5f7aa0cffd5cec4 and its one actual menu/paint/click method are added to the existing appkit-shared-process group. Every existing source/member/group and serialization/partition rule is preserved; resulting metadata SHA256d82a7a05be2655d16f5cc4b0bf2f651ce41d46d9dc366de50ff7e56f33267516. No additional resource policy is introduced.
+
+Status is corrected development source, still uncompiled/unrun and not ready for integration. Next handoff is the coherent child to G2 to close AppKit registration and resume the checkpointed whole review; prior unchanged source proofs are reused. Existing preparingAdmission lacks a production caller and physical evacuation/care/source, ward-log permission, office filing, institutional original evidence/kit intake and duplicate-claim resolution remain genuine gameplay blockers. No authority issuance, mission acceptance or playable completion is claimed. Native execution remains separate from the current M01 compiler correction. Historical playable release remains1.6.0.

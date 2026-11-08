@@ -945,6 +945,7 @@ struct NativeC01InquiryArchiveComposition {
     var chunks: [String: Data] = [:]
     var c03Owner: UUID?
     var c03Publications: [NativeC03PublicationPreflight.Publication] = []
+    var c03Crew: NativeC03PublicationPreflight.CrewCompanion?
     for (name, limit) in limits {
       let location = directory.appendingPathComponent(name)
       let properties = try location.resourceValues(forKeys: [
@@ -961,11 +962,12 @@ struct NativeC01InquiryArchiveComposition {
       // Scan exact hash-pinned raw bytes before any enclosing Foundation decode.
       let c03Part: ScriptFreightVersionedSave.Part = name == "missions.json" ? .missions
         : name == "commander.json" ? .commander : .contracts
-      let publications = try NativeC03PublicationPreflight.validate(
+      let checkedC03 = try NativeC03PublicationPreflight.validateChunk(
         data, part: c03Part, schema: pointer.schemaVersion,
         currentSchema: alien ? NativeC03PublicationNamespace.alienVersion
           : NativeC03PublicationNamespace.version, owner: c03Owner)
-      c03Publications.append(contentsOf: publications)
+      c03Publications.append(contentsOf: checkedC03.publications)
+      if name == "commander.json" { c03Crew = checkedC03.crew }
       let inquiryLocation: ScriptSaveJSONPreflight.InquiryArchiveLocation =
         name == "missions.json" ? .missions
         : name == "commander.json" ? .commander
@@ -1053,7 +1055,8 @@ struct NativeC01InquiryArchiveComposition {
     else { throw SaveError.invalidCommander }
     var commander = try ScriptValueStorage.decoder(typed: true).decode(Commander.self, from: header)
     guard alien == commander.usesAlienStorageSaveVersion,
-      c03Owner == nil || c03Owner == commander.equipmentOwnerID
+      c03Owner == nil || c03Owner == commander.equipmentOwnerID,
+      NativeC03PublicationPreflight.matchesCrew(c03Crew, commander: commander)
     else { throw SaveError.invalidCommander }
     if alien {
       guard let rootHash = pointer.hashes[AlienStorageVersionedSave.rootName] else {

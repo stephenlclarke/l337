@@ -233,3 +233,206 @@ struct NativeC03PublicationPreflightTests {
     }
   }
 }
+
+extension NativeC03PublicationPreflightTests {
+  private func confirmedRoot() async throws -> HollowManifestCommissionFixture {
+    let fixture = try await HollowManifestCommissionFixture()
+    do {
+      _ = try await fixture.review()
+      await fixture.selectConfirm()
+      await fixture.runtime.key("return")
+      let accepted = await fixture.runtime.snapshot()
+      try #require(accepted.hollowManifestMission?.savedHollowManifest != nil)
+      try #require(accepted.commander.nativePeople == nil)
+      return fixture
+    } catch { fixture.clean(); throw error }
+  }
+
+  private func addingCustody(_ custody: Data, to header: Data) throws -> Data {
+    try #require(header.last == 125)
+    try #require(header.range(of: Data("\"savedNativePeopleCustody\":".utf8)) == nil)
+    var bytes = Data(header.dropLast())
+    bytes.append(Data(",\"savedNativePeopleCustody\":".utf8))
+    bytes.append(custody)
+    bytes.append(125)
+    return bytes
+  }
+
+  private func custody(_ companion: Data, owner: UUID, extra: String = "") -> Data {
+    var bytes = Data("{\"owner\":\"\(owner.uuidString)\",\"revision\":0,\"admissions\":[],\"transfers\":[],\"hollowManifestCrew\":".utf8)
+    bytes.append(companion)
+    bytes.append(Data((extra + "}").utf8))
+    return bytes
+  }
+
+  /// Exercise the real current reader, including its pointer/hash/namespace and
+  /// enclosing Commander decode. Mutate exact bytes; never normalize the leaf.
+  private func readingHeader(
+    _ header: Data, pointer: ScriptSavePointer, from url: URL, schema: Int? = nil
+  ) throws -> (Commander, ScriptWorldSave) {
+    let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: url)
+    let file = directory.appendingPathComponent("commander.json")
+    let original = try Data(contentsOf: file)
+    defer { try? original.write(to: file, options: .atomic) }
+    try header.write(to: file, options: .atomic)
+    var hashes = pointer.hashes
+    hashes["commander.json"] = ScriptPackLibrary.hash(header)
+    let rebound = ScriptSavePointer(
+      format: pointer.format, schemaVersion: schema ?? pointer.schemaVersion,
+      generation: pointer.generation, hashes: hashes, scope: pointer.scope,
+      valueCodec: pointer.valueCodec, bisonUnitJournalCheckpoint: pointer.bisonUnitJournalCheckpoint)
+    return try ScriptSaveStore.read(ScriptValueStorage.encoder().encode(rebound), from: url)
+  }
+
+  @Test func actualRootMissingAndNullCrewCompanionsKeepTheOriginalMissionAndNoSource() async throws {
+    let fixture = try await confirmedRoot()
+    defer { fixture.clean() }
+    let pointerBytes = try Data(contentsOf: fixture.files.save)
+    let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: pointerBytes)
+    try #require(NativeC03PublicationNamespace.contains(pointer.schemaVersion))
+    let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: fixture.files.save)
+    let header = try Data(contentsOf: directory.appendingPathComponent("commander.json"))
+    let (original, world) = try ScriptSaveStore.read(pointerBytes, from: fixture.files.save)
+    let owner = try #require(original.equipmentOwnerID)
+    let files = try ScriptFinanceTestFixture.files(fixture.files.root)
+    let rootNull = try addingCustody(Data("null".utf8), to: header)
+    let (unchanged, unchangedWorld) = try readingHeader(rootNull, pointer: pointer, from: fixture.files.save)
+    #expect(unchanged == original && unchangedWorld == world)
+    let nestedNull = try addingCustody(custody(Data("null".utf8), owner: owner), to: header)
+    let (empty, emptyWorld) = try readingHeader(nestedNull, pointer: pointer, from: fixture.files.save)
+    #expect(empty.nativePeople?.hollowManifestCrew == nil)
+    #expect(empty.nativePeople?.owner == owner && empty.nativePeople?.admissions.isEmpty == true)
+    #expect(empty.scriptState == original.scriptState && emptyWorld == world)
+    #expect(NativeC03PublicationPreflight.validateClaims(empty))
+    // A descriptive NativePersonReference tag shares this spelling. Its valid
+    // wrapper must not be mistaken for a misplaced companion or issue a person.
+    let mission = try #require(original.scriptState.instances.values.first {
+      $0.definition == NativeHollowManifestCommission.stateID
+    }?.id)
+    let address = NativePersonReference.hollowManifestCrew(.init(owner: owner, mission: mission, ordinal: 0))
+    let reference = try ScriptValueStorage.encoder().encode(address)
+    var referencedCustody = Data(custody(Data("null".utf8), owner: owner).dropLast())
+    referencedCustody.append(Data(",\"referenceProbe\":".utf8))
+    referencedCustody.append(reference)
+    referencedCustody.append(125)
+    let withReference = try addingCustody(referencedCustody, to: header)
+    let (unissued, _) = try readingHeader(withReference, pointer: pointer, from: fixture.files.save)
+    #expect(unissued == empty && unissued.nativePeople?.hollowManifestCrew == nil)
+    #expect(try ScriptFinanceTestFixture.files(fixture.files.root) == files)
+  }
+
+  @Test func actualRootRejectsUnknownMalformedDuplicateAndMisplacedCrewBytesBeforeTypedDecode()
+    async throws
+  {
+    let fixture = try await confirmedRoot()
+    defer { fixture.clean() }
+    let pointerBytes = try Data(contentsOf: fixture.files.save)
+    let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: pointerBytes)
+    let (original, world) = try ScriptSaveStore.read(pointerBytes, from: fixture.files.save)
+    let owner = try #require(original.equipmentOwnerID)
+    let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: fixture.files.save)
+    let header = try Data(contentsOf: directory.appendingPathComponent("commander.json"))
+    let files = try ScriptFinanceTestFixture.files(fixture.files.root)
+    let cases: [(Data, NativeC03PublicationPreflight.Failure)] = [
+      (custody(Data("{}".utf8), owner: owner), .invalidCrewCompanion),
+      (custody(Data("[]".utf8), owner: owner), .invalidCrewCompanion),
+      (custody(Data("false".utf8), owner: owner), .invalidCrewCompanion),
+      (custody(Data(#"{"registration":{},"unknownCompanionField":true}"#.utf8), owner: owner),
+        .invalidCrewCompanion),
+      (custody(Data("null".utf8), owner: owner,
+        extra: #", "hollowManifestCrewExtra":{"ignoredAuthority":true}"#), .unknownField),
+      (custody(Data("null".utf8), owner: owner,
+        extra: #", "hollowManifestCr\u0065w":null"#), .duplicateField),
+      // Foundation could erase this purported source by taking the later nil.
+      // The complete raw duplicate scan must win before either value is decoded.
+      (custody(Data(#"{"registration":{},"unknownCompanionField":true}"#.utf8), owner: owner,
+        extra: #", "hollowManifestCr\u0065w":null"#), .duplicateField),
+      (custody(Data("null".utf8), owner: owner,
+        extra: #", "nested":{"hollowManifestCrew":{"registration":{}}}"#), .misplacedClaim),
+      (custody(Data(#"{"x":1,"\u0078":2}"#.utf8), owner: owner), .duplicateField),
+      (custody(Data(#"{"x":[,]}"#.utf8), owner: owner), .invalidJSON),
+      (custody(Data([123, 34, 120, 34, 58, 34, 0xC0, 0xAF, 34, 125]), owner: owner), .invalidJSON),
+      (custody(Data(("{" + String(repeating: " ", count: NativeC03CrewSourceSave.maximumBytes)
+        + "}").utf8), owner: owner), .resourceLimit),
+    ]
+    for (rawCustody, failure) in cases {
+      let altered = try addingCustody(rawCustody, to: header)
+      // Distinct raw failures prove this reached preflight, rather than merely
+      // failing much later on this deliberately unissued typed source/history.
+      #expect(throws: failure) { try readingHeader(altered, pointer: pointer, from: fixture.files.save) }
+    }
+    let claimed = try addingCustody(custody(Data("{}".utf8), owner: owner), to: header)
+    #expect(throws: NativeC03PublicationPreflight.Failure.wrongSchema) {
+      try readingHeader(claimed, pointer: pointer, from: fixture.files.save,
+        schema: pointer.schemaVersion == NativeC03PublicationNamespace.alienVersion
+          ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version)
+    }
+    let (after, afterWorld) = try ScriptSaveStore.read(pointerBytes, from: fixture.files.save)
+    #expect(after == original && afterWorld == world)
+    #expect(try ScriptFinanceTestFixture.files(fixture.files.root) == files)
+  }
+
+  /// A positive companion comes only from actual paired native issuance. This
+  /// retains the real source qualification/admission prerequisite; an unwired or
+  /// unsupported source must fail here, never be replaced by invented save DATA.
+  @Test func genuineIssuedCrewCompanionKeepsExactRootBytesAndRejectsAnUnknownNestedField()
+    async throws
+  {
+    let actual = try await actualHollowEvacuationContextGame()
+    defer { actual.commission.clean() }
+    var game = actual.game
+    try game.restoreScriptActors()
+    let source = try #require(game.commander.nativePeople?.hollowManifestCrew)
+    let people = try #require(game.commander.nativePeople)
+    try #require(NativeC03CrewSourceSave.validSource(source, custody: people, commander: game.commander))
+    let runtime = GameRuntime(game: game, saveURL: actual.commission.files.save)
+    try await runtime.save(to: actual.commission.files.save)
+    let pointerBytes = try Data(contentsOf: actual.commission.files.save)
+    let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: pointerBytes)
+    let directory = try ScriptSaveStore.generationDirectory(pointer.generation, from: actual.commission.files.save)
+    let header = try Data(contentsOf: directory.appendingPathComponent("commander.json"))
+    let owner = try #require(game.commander.equipmentOwnerID)
+    let leaf = try ScriptValueStorage.encoder().encode(source)
+    let checked = try NativeC03PublicationPreflight.validateChunk(
+      header, part: .commander, schema: pointer.schemaVersion,
+      currentSchema: pointer.schemaVersion == NativeC03PublicationNamespace.alienVersion
+        ? NativeC03PublicationNamespace.alienVersion : NativeC03PublicationNamespace.version,
+      owner: owner)
+    #expect(checked.crew?.bytes == leaf && checked.crew?.state == source)
+    let (original, world) = try ScriptSaveStore.read(pointerBytes, from: actual.commission.files.save)
+    #expect(original.nativePeople?.hollowManifestCrew == source)
+    let spaced = try replacing(leaf, Data("{".utf8), with: Data("{ \n".utf8))
+    let spacedHeader = try replacing(header, leaf, with: spaced)
+    let spacedCheck = try NativeC03PublicationPreflight.validateChunk(
+      spacedHeader, part: .commander, schema: pointer.schemaVersion,
+      currentSchema: pointer.schemaVersion, owner: owner)
+    #expect(spacedCheck.crew?.bytes == spaced)
+    let (restored, restoredWorld) = try readingHeader(
+      spacedHeader, pointer: pointer, from: actual.commission.files.save)
+    #expect(restored == original && restoredWorld == world)
+    let escapedHeader = try replacing(spacedHeader, Data("\"hollowManifestCrew\":".utf8),
+      with: Data("\"hollowManifestCr\\u0065w\":".utf8))
+    let (escaped, escapedWorld) = try readingHeader(
+      escapedHeader, pointer: pointer, from: actual.commission.files.save)
+    #expect(escaped == original && escapedWorld == world)
+    var framed = Data([0])
+    framed.append(escapedHeader)
+    let sliced = framed[(framed.startIndex + 1)..<framed.endIndex]
+    let slicedCheck = try NativeC03PublicationPreflight.validateChunk(
+      sliced, part: .commander, schema: pointer.schemaVersion,
+      currentSchema: pointer.schemaVersion, owner: owner)
+    #expect(slicedCheck.crew?.bytes == spaced && slicedCheck.crew?.state == source)
+    let unknown = try replacing(leaf, Data("\"registration\":{".utf8),
+      with: Data("\"registration\":{\"unknownCompanionField\":true,".utf8))
+    let unknownHeader = try replacing(header, leaf, with: unknown)
+    #expect(throws: NativeC03PublicationPreflight.Failure.invalidCrewCompanion) {
+      try readingHeader(unknownHeader, pointer: pointer, from: actual.commission.files.save)
+    }
+    let missing = try replacing(header, leaf, with: Data("null".utf8))
+    #expect(throws: (any Error).self) {
+      try readingHeader(missing, pointer: pointer, from: actual.commission.files.save)
+    }
+    let (after, afterWorld) = try ScriptSaveStore.read(pointerBytes, from: actual.commission.files.save)
+    #expect(after == original && afterWorld == world)
+  }
+}
