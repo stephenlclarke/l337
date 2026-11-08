@@ -106,7 +106,8 @@ enum NativeC03CrewSourceSave {
     let admissions = custody.admissions.filter { $0.person.hollowManifestCrew != nil }
     let transfers = custody.transfers.filter { $0.members.contains { $0.hollowManifestCrew != nil } }
     guard let source else {
-      return admissions.isEmpty && transfers.isEmpty && !sourceRequired(commander)
+      guard admissions.isEmpty, transfers.isEmpty else { return false }
+      return !sourceRequired(commander)
     }
     let r = source.registration
     guard shapeValid(source), source.owner == custody.owner,
