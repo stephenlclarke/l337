@@ -64,7 +64,9 @@ extension Game {
     guard let instance = hollowManifestMission, let record = pin.state.custodyRegister,
       let recovery = record.recovery
     else { throw SaveError.invalidCommander }
-    let kit = try NativeHollowManifestKitCustody.resolve(instance: instance, commander: commander)
+    let kit = try withReadOnlyCommander {
+      try NativeHollowManifestKitCustody.resolve(instance: instance, commander: $0)
+    }
     guard record.holder == .originalInspectionKit(kit.serial), record.sourceContents == nil,
       kit.serial == recovery.facts.originalKit, kit.issueCommand == recovery.facts.issueCommand,
       acceptsHollowManifestInstalledCase(pin)
@@ -98,26 +100,29 @@ extension Game {
       body.scriptNPC?.fit == owned.body.scriptNPC?.fit,
       let component = body.scriptNPC?.components[NativeC03RegisterGeometry.component],
       component.identity == admission.component, component.energy > 0,
-      let inventory = commander.equipmentInventory,
-      let instrument = commander.fittedEquipment(at: .targetingCore),
+      let inventory = withReadOnlyCommander({ $0.equipmentInventory }),
+      let instrument = withReadOnlyCommander({ $0.fittedEquipment(at: .targetingCore) }),
       inventory.items.filter({ $0.id == instrument.id }) == [instrument],
       instrument.location == .init(hullInstanceID: inventory.activeHull, slot: .targetingCore),
-      TargetingTier.from(instrument.node.key) != nil, commander.hullInstanceID == inventory.activeHull,
-      let player = commander.flightSimulation.player, player.entity == 0,
+      TargetingTier.from(instrument.node.key) != nil,
+      withReadOnlyCommander({ $0.hullInstanceID == inventory.activeHull }),
+      let player = withReadOnlyCommander({ $0.flightSimulation.player }), player.entity == 0,
       player.system == admission.actor.system, player.visit == admission.actor.visit
     else { throw SaveError.invalidCommander }
     let point = (body.position + body.modelVector(NativeC03RegisterGeometry.componentPosition))
     guard point.z > 0, atan2(hypot(point.x, point.y), point.z) <= NativeC03RegisterGeometry.maximumTargetAngle
     else { throw SaveError.invalidCommander }
     let pin = try hollowManifestInstalledCase()
-    let kit = try NativeHollowManifestKitCustody.resolve(instance: instance, commander: commander)
+    let kit = try withReadOnlyCommander {
+      try NativeHollowManifestKitCustody.resolve(instance: instance, commander: $0)
+    }
     guard kit.serial == state.laboratory?.facts.originalKit, kit.owner == record.origin.owner,
       kit.carrier == inventory.activeHull, kit.inventoryRevision == inventory.revision,
       acceptsHollowManifestInstalledCase(pin)
     else { throw EquipmentIssueError.staleObligation }
     return .init(
       pin: pin, record: record, admission: admission, kit: kit, body: body,
-      player: player, instrument: instrument, flight: commander.flightSimulation,
+      player: player, instrument: instrument, flight: withReadOnlyCommander({ $0.flightSimulation }),
       epoch: nativeStationRuntimeEpoch, frame: gameplayRevision)
   }
 
@@ -130,12 +135,15 @@ extension Game {
       in: self, bodyID: source.body.id, component: source.admission.component),
       reading.actor == source.admission.actor, reading.archivePose == modelPose(of: source.body),
       reading.observerPose == source.flight.pose, reading.physicalTime == source.flight.physicalTime,
-      acceptsHollowManifestInstalledCase(source.pin), commander.flightSimulation == source.flight,
+      acceptsHollowManifestInstalledCase(source.pin),
+      withReadOnlyCommander({ $0.flightSimulation == source.flight }),
       nativeStationRuntimeEpoch == source.epoch, gameplayRevision == source.frame,
       bodies.filter({ $0.id == source.body.id }) == [source.body],
-      commander.fittedEquipment(at: .targetingCore) == source.instrument,
+      withReadOnlyCommander({ $0.fittedEquipment(at: .targetingCore) == source.instrument }),
       let instance = hollowManifestMission,
-      try NativeHollowManifestKitCustody.resolve(instance: instance, commander: commander) == source.kit,
+      try withReadOnlyCommander({
+        try NativeHollowManifestKitCustody.resolve(instance: instance, commander: $0) == source.kit
+      }),
       source.record.sourceContents == source.record.origin.contents,
       source.pin.state.nextSourceSequence < UInt64(Int64.max) - 1,
       instance.revision < UInt64(Int64.max) - 1
@@ -170,7 +178,9 @@ extension Game {
     let receiver = try NativeHollowManifestKitCustody.resolve(instance: selected, commander: candidate)
     guard record.sourceContents == nil, record.holder == .originalInspectionKit(receiver.serial),
       receiver == source.kit, record.origin.contents == source.record.origin.contents,
-      candidate.equipmentInventory == commander.equipmentInventory, candidate.credits == commander.credits,
+      withReadOnlyCommander({
+        candidate.equipmentInventory == $0.equipmentInventory && candidate.credits == $0.credits
+      }),
       NativeHollowManifestSave.validateClaims(candidate)
     else { throw SaveError.invalidCommander }
     commander = candidate

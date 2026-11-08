@@ -70,7 +70,9 @@ extension Game {
       guard instance.outcome == .active, instance.suspension == nil,
         instance.milestones == [0, 1, 2, 3], pin.state.phase == .admitted,
         pin.state.terminals.isEmpty, pin.state.withdrawals.isEmpty, pin.state.firstCompromises.isEmpty,
-        (try? NativeHollowManifestKitCustody.resolve(instance: instance, commander: commander)) != nil
+        (try? withReadOnlyCommander {
+          try NativeHollowManifestKitCustody.resolve(instance: instance, commander: $0)
+        }) != nil
       else { return nil }
     }
     let flight = withReadOnlyCommander { $0.flightSimulation }
@@ -168,7 +170,9 @@ extension Game {
     else { return false }
     if context.initial {
       guard let instance = hollowManifestMission,
-        (try? NativeHollowManifestKitCustody.resolve(instance: instance, commander: commander)) != nil
+        (try? withReadOnlyCommander {
+          try NativeHollowManifestKitCustody.resolve(instance: instance, commander: $0)
+        }) != nil
       else { return false }
     }
     return true
