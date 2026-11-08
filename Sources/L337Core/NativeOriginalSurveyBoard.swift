@@ -81,7 +81,7 @@ extension Game {
         source.terminalOperation == nil,
         commander.scriptState.instances[permission.mission]?.outcome == .active
       {
-        if commander.hullInstanceID != permission.carrier {
+        if action == .receive, commander.hullInstanceID != permission.carrier {
           issues.append("Return with the same survey carrier.")
         }
         if action == .receive,
@@ -209,7 +209,9 @@ extension Game {
       "Each reading: 12 continuous native seconds, front view, 2 degree aim, 250-1500 surface units and clear nearest-hit sight.",
       "Pause freezes observation. Interruption or load resets unfinished dwell; completed readings persist.",
       "The third reading alone pays nothing. Return all measurements to actual Avenor reception.",
+      "Cancellation at the Avenor office follows the commander after a hull exchange; completion requires the original carrier.",
       "Back changes no permission, cash, measurement or clue.",
-    ] + (contractBoard.surveyQuote ?? originalSurveyReview(action)).issues
+    ] + (originalSurveyMarkerLossNotice.map { [$0] } ?? [])
+      + (contractBoard.surveyQuote ?? originalSurveyReview(action)).issues
   }
 }

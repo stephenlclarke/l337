@@ -1,0 +1,73 @@
+{
+  "schema": "l337.fleet.source-collision-candidates/1",
+  "scope": "Seven existing authored source candidates only. Not loaded by game; source review does not qualify source/native/physical/game authority.",
+  "candidates": [
+    {
+      "id": "SH010",
+      "file": "SH010-collision-candidate.json",
+      "bytes": 74249,
+      "sha256": "78b9a5695685770ae355af8a01206e2862fadc7e3bc80191f23c2c39fa38d3d0",
+      "status": "SOURCE_GEOMETRY_ONLY",
+      "runtimeAdmission": false,
+      "acceptedHullIncrement": 0
+    },
+    {
+      "id": "SH063",
+      "file": "SH063-collision-candidate.json",
+      "bytes": 65916,
+      "sha256": "01fe5a05526d0380715e7187992f447c66277d3ed708daf3655204a5d10a394d",
+      "status": "SOURCE_GEOMETRY_ONLY",
+      "runtimeAdmission": false,
+      "acceptedHullIncrement": 0
+    },
+    {
+      "id": "SH071",
+      "file": "SH071-collision-candidate.json",
+      "bytes": 68400,
+      "sha256": "58422ae55aed68fad39c2a510afecae5b3d0a6c5568941a4639ec648a5109fb4",
+      "status": "SOURCE_GEOMETRY_ONLY",
+      "runtimeAdmission": false,
+      "acceptedHullIncrement": 0
+    },
+    {
+      "id": "SH107",
+      "file": "SH107-collision-candidate.json",
+      "bytes": 73122,
+      "sha256": "14bd0b0b60ec183d862c9d58707fb78cfe87a5c7dbbc8dedd7dcc8806b048f28",
+      "status": "SOURCE_GEOMETRY_ONLY",
+      "runtimeAdmission": false,
+      "acceptedHullIncrement": 0
+    },
+    {
+      "id": "SH124",
+      "file": "SH124-collision-candidate.json",
+      "bytes": 64093,
+      "sha256": "461a765e977406c4887055894045d46b7970facc2c4a1b6bda53cd78b7c04fcb",
+      "status": "SOURCE_GEOMETRY_ONLY",
+      "runtimeAdmission": false,
+      "acceptedHullIncrement": 0
+    },
+    {
+      "id": "SH125",
+      "file": "SH125-collision-candidate.json",
+      "bytes": 21785,
+      "sha256": "aca15fcaed31e2baa4806940235b37588f848a7d4f632b7d4fc71e44b6c45409",
+      "status": "SOURCE_GEOMETRY_ONLY",
+      "runtimeAdmission": false,
+      "acceptedHullIncrement": 0
+    },
+    {
+      "id": "SH169",
+      "file": "SH169-collision-candidate.json",
+      "bytes": 66797,
+      "sha256": "2e46708eb44ebff70855adf3a314408dfd74855955339da4795c6c5503169beb",
+      "status": "SOURCE_GEOMETRY_ONLY",
+      "runtimeAdmission": false,
+      "acceptedHullIncrement": 0
+    }
+  ],
+  "originalAppearanceResourcesRetained": true,
+  "sourceCountAdmissionLimit": 512,
+  "acceptedHullIncrement": 0,
+  "plansDeployment": "Exact frozen mount-clearance exclusion retained. No mount, release path, stock form, crew identity/mass or deployment authority issued."
+}

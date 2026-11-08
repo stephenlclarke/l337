@@ -242,6 +242,7 @@ extension Game {
       source.terminalOperation == nil
     else { return nil }
     if source.readings.count == 3 { return "OUTLOOK 3/3 - return both people to Avenor care" }
+    if let loss = orbitalOutlookMarkerLossNotice { return loss }
     let elapsed = nativeOrbitalOutlookRuntime.observation?.seconds ?? 0
     return
       "OUTLOOK \(source.readings.count)/3: \(NativeOrbitalOutlookJourney.views[source.readings.count]) \(String(format: "%.1f", elapsed))/12s - \(nativeOrbitalOutlookRuntime.reason)"

@@ -240,6 +240,7 @@ extension Game {
       source.terminalOperation == nil
     else { return nil }
     if source.readings.count == 3 { return "SURVEY 3/3 - return measurements to Avenor" }
+    if let loss = originalSurveyMarkerLossNotice { return loss }
     let elapsed = nativeOriginalSurveyRuntime?.observation?.seconds ?? 0
     return
       "SURVEY \(source.readings.count)/3: \(NativeOriginalSurvey.targets[source.readings.count]) \(String(format: "%.1f", elapsed))/12s - \(nativeOriginalSurveyRuntime?.reason ?? "Lock the next marker.")"

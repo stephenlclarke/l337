@@ -409,6 +409,7 @@ extension Game {
         )
       }
     }
+    if let loss = orbitalOutlookMarkerLossNotice { lines.append(loss) }
     return lines + quote.issues
   }
 }

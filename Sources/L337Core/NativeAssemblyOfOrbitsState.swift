@@ -93,6 +93,8 @@ struct NativeAssemblyOfOrbitsState: Codable, Equatable, Sendable {
   let acceptance: NativeAssemblyAcceptanceFacts
   let acceptanceOperation: UUID
   var collection: NativeAssemblyReferenceCollection?
+  /// Player proposals only. These labels never authenticate registers, crews or work.
+  var capacityDrafts: [String: NativeAssemblyCapacityDraft]?
 
   init(acceptance: NativeAssemblyAcceptanceFacts) throws {
     guard acceptance.shapeValid else { throw SaveError.invalidCommander }
@@ -107,5 +109,16 @@ struct NativeAssemblyOfOrbitsState: Codable, Equatable, Sendable {
   var shapeValid: Bool {
     acceptance.shapeValid && acceptanceOperation == (try? Self.identity(acceptance))
       && (collection?.shapeValid(acceptance: acceptance) ?? true)
+      && capacityDraftsValid
+  }
+
+  private var capacityDraftsValid: Bool {
+    guard let capacityDrafts else { return true }
+    guard collection != nil, !capacityDrafts.isEmpty,
+      capacityDrafts.count <= NativeAssemblyCapacityDraft.Side.allCases.count
+    else { return false }
+    return capacityDrafts.allSatisfy { key, draft in
+      key == draft.side.rawValue && draft.shapeValid && draft.register.mission == acceptance.mission
+    }
   }
 }

@@ -32,15 +32,19 @@ def read(path, digest):
 
 def ring_loft(rings):
     """Zip cyclic original azimuths without inventing a new station or vertex."""
+    common = [angle for angle in rings[0] if all(angle in ring for ring in rings[1:])]
+    if not common:
+        raise ValueError("Source rings must share the loft seam")
+    seam = 3 if 3 in common else common[0]
     offsets = []
     original_vertices = []
     for i, ring in enumerate(rings):
         offsets.append(len(original_vertices))
-        original_vertices.extend(i * 12 + angle for angle in sorted(ring, key=lambda a: (a - 3) % 12))
+        original_vertices.extend(i * 12 + angle for angle in sorted(ring, key=lambda a: (a - seam) % 12))
     faces = [[0, k + 1, k] for k in range(1, len(rings[0]) - 1)]
     for s, (lower, upper) in enumerate(zip(rings, rings[1:])):
-        a = sorted((angle - 3) % 12 for angle in lower) + [12]
-        b = sorted((angle - 3) % 12 for angle in upper) + [12]
+        a = sorted((angle - seam) % 12 for angle in lower) + [12]
+        b = sorted((angle - seam) % 12 for angle in upper) + [12]
         i = j = 0
         while i < len(lower) or j < len(upper):
             low = offsets[s] + i % len(lower)

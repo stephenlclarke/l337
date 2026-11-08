@@ -44,10 +44,12 @@ enum NativeTitheCommissionSave {
       grant.acceptance.calendarSeconds <= commander.scriptState.calendarSeconds,
       grant.acceptance.sequence <= commander.scriptState.nextEvent,
       NativeStationPassengerJourney.historicalDock(grant.acceptance.dock, commander: commander),
-      let world = commander.nativeStations,
-      grant.acceptance.visited.allSatisfy({
-        world.mainStations.contains($0.station) && $0.actor.visit <= commander.flightSimulation.visit
-      }),
+      let world = commander.nativeStations
+    else { return false }
+    let currentVisit = commander.flightSimulation.visit
+    guard grant.acceptance.visited.allSatisfy({
+      world.mainStations.contains($0.station) && $0.actor.visit <= currentVisit
+    }),
       NativeTitheCommissionContactSource.recognizesHistorical(grant.acceptance.desk, commander: commander)
     else { return false }
     return true

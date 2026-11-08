@@ -13,7 +13,9 @@ enum NativeTitheCommissionDefinition {
     ScriptIdentity.uuid("tithe-original-commission-v1:\(owner)")
   }
   static func marked(_ instance: borrowing ScriptInstance) -> Bool {
-    instance.definition == stateID || instance.digest == digest || instance.savedTitheCommission != nil
+    if instance.definition == stateID { return true }
+    if instance.digest == digest { return true }
+    return instance.savedTitheCommission != nil
   }
 }
 

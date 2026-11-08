@@ -8,21 +8,24 @@ extension NativeTitheCommissionDefinition {
   static let moduleSHA256 = "8279601c2528e2ef16ecc3da55d0b19a733d6b31450d9d92f39f86a60aeb7f54"
 
   static func applies(_ pack: borrowing ScriptPack) -> Bool {
-    pack.manifest.stateID == stateID || pack.digest == digest
+    if pack.manifest.stateID == stateID { return true }
+    return pack.digest == digest
   }
 
   /// Exact content identity only. A valid pack issues no native desk, person or apparatus.
   static func matches(_ pack: borrowing ScriptPack) -> Bool {
-    pack.manifest.stateID == stateID && pack.manifest.version == version && pack.digest == digest
-      && ScriptPackLibrary.hash(pack.manifestBytes) == manifestSHA256
-      && ScriptPackLibrary.hash(pack.source) == moduleSHA256 && pack.entryBytes == pack.source
-      && pack.models.isEmpty && pack.resourceBytes.isEmpty
-      && pack.manifest.mission.title == "The Tithe of Worlds"
-      && pack.manifest.mission.milestones == NativeTitheOriginalStage.allCases.map(\.objective)
-      && pack.manifest.handlers.count == 1
-      && pack.manifest.handlers.first?.event == "mission.accepted"
-      && pack.manifest.handlers.first?.function == "accepted"
-      && Set(pack.manifest.capabilities) == Set(["script-lua-v1", "story-v2", "durable-commands-v2", nativeCapability])
+    guard pack.manifest.stateID == stateID, pack.manifest.version == version, pack.digest == digest,
+      ScriptPackLibrary.hash(pack.manifestBytes) == manifestSHA256,
+      ScriptPackLibrary.hash(pack.source) == moduleSHA256, pack.entryBytes == pack.source,
+      pack.models.isEmpty, pack.resourceBytes.isEmpty,
+      pack.manifest.mission.title == "The Tithe of Worlds",
+      pack.manifest.mission.milestones == NativeTitheOriginalStage.allCases.map(\.objective),
+      pack.manifest.handlers.count == 1,
+      pack.manifest.handlers.first?.event == "mission.accepted",
+      pack.manifest.handlers.first?.function == "accepted",
+      Set(pack.manifest.capabilities) == Set(["script-lua-v1", "story-v2", "durable-commands-v2", nativeCapability])
+    else { return false }
+    return true
   }
 
   static func validateDeclaration(_ manifest: ScriptManifest) throws {

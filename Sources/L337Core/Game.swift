@@ -2633,6 +2633,7 @@ public struct Game: Sendable {
     var nativeOriginalUtilityFatalTransition: NativeOriginalUtilityFatalTransition?
     var nativeOrbitalOutlookRuntime = NativeOrbitalOutlookRuntime()
     var nativeAssemblyCalibrationDisplay: NativeAssemblySurveyInstrumentControls.Readout?
+    var nativeAssemblyCapacityEditorDisplay: NativeAssemblyCapacityEditorDisplay?
     var nativeOriginalSurveyRuntime: NativeOriginalSurveyRuntime?
     var nativeGlassMeridianRuntime: NativeGlassMeridianRuntime?
     var nativeFlightReceptionPending: NativeFlightReceptionPending?
@@ -3786,6 +3787,15 @@ public struct Game: Sendable {
       yield stored
     }
     _modify { yield &valueStorage[0].nativeAssemblyCalibrationDisplay }
+  }
+  var nativeAssemblyCapacityEditorDisplay: NativeAssemblyCapacityEditorDisplay? {
+    _read {
+      let stored: NativeAssemblyCapacityEditorDisplay? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeAssemblyCapacityEditorDisplay)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeAssemblyCapacityEditorDisplay }
   }
   var nativeOriginalSurveyRuntime: NativeOriginalSurveyRuntime? {
     _read {
@@ -7073,6 +7083,7 @@ public actor GameRuntime {
   var game: Game
   var controls = Controls()
   var assemblyCalibrationControls = NativeAssemblySurveyInstrumentControls()
+  var assemblyCapacityEditor: NativeAssemblyCapacityEditorSession?
   var galleryNamespace: URL?
   var galleryParent: GalleryParentState?
   var scriptSaveURL: URL?
@@ -7134,9 +7145,11 @@ public actor GameRuntime {
   public func snapshot() -> Game {
     game.prepareFlightWeaponDisplay()
     refreshAssemblyCalibrationProjection()
+    refreshAssemblyCapacityEditorProjection()
     return game
   }
   public func key(_ key: String) {
+    if handleAssemblyCapacityEditorKey(key) { return }
     if galleryAction(key) { return }
     keyAfterGallery(key)
   }

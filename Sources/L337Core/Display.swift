@@ -193,7 +193,11 @@ public enum Display {
     case .showroom: return showroomScreen(game, width: 768, height: 768)
     case .equipment: equipment(game, into: &frame)
     case .status: status(game, into: &frame)
-    case .inventory: inventory(game, into: &frame)
+    case .inventory:
+      if game.nativeAssemblyCapacityEditorDisplay != nil {
+        return assemblyCapacityConsole(game, width: 768, height: 768)
+      }
+      inventory(game, into: &frame)
     case .handoff: return blackjackHandoff(game, width: 768, height: 768)
     case .secret: secret(game, into: &frame)
     case .help: help(game, into: &frame)

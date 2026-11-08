@@ -398,7 +398,7 @@ final class GameView: NSView {
       }
       return
     }
-    if game.screen == .inventory, key == "return" {
+    if game.screen == .inventory, key == "return", game.scriptPagePresentation.page == nil {
       if !event.isARepeat { queuePaintedInventoryCommand() }
       return
     }
