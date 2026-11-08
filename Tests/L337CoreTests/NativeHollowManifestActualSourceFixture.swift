@@ -40,7 +40,8 @@ final class HollowManifestCommissionFixture {
     game.speed = 0
     game.bodies = [.init(id: 0, hull: .station, position: .init(0, 0, 16000))]
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     let station = try #require(game.bodies.first { $0.id == 0 })
@@ -152,7 +153,8 @@ func actualHollowManifestFreighterRootFixture(targeting: TargetingTier? = nil) a
     game.commander.nativeStations?.currentMainDock = nil
     game.nativeMainStationDockEvidence = nil
     game.resetCelestialFlight()
-    try #require(game.beginGameplayVisit(arriving: true))
+    let beganVisit = game.beginGameplayVisit(arriving: true)
+    try #require(beganVisit)
     game.applyScriptStationResources()
     try game.registerOriginalNativeMainStation()
     try game.restoreScriptActors()
@@ -186,7 +188,7 @@ func aimAtActualHollowManifestSeal(_ game: inout Game, slot: NativeHollowManifes
   let body = try #require(game.bodies.first { $0.missionActorID == admission.logicalActor })
   try #require(game.acceptsHollowManifestOriginalLife(life))
   let previous = game.commander.flightSimulation.pose
-  let centre = body.modelPoint(
+  let centre = body.position + body.modelVector(
     NativeC03SealGeometry.componentPosition
       + NativeC03SealGeometry.componentOrientation.apply(.init(0, 0, 0.03)))
   let normal = body.modelVector(NativeC03SealGeometry.componentOrientation.z)
