@@ -160,3 +160,11 @@ The original authority commit is available in the local mission-authoring Git re
 | Paid catalogue and compatible content delivery | `docs/meridian/missions/gameplay/MISSION-CATALOGUE.md` - player purchase/download/update/activation flow |
 
 Individual campaign definition filenames appear in the 64-source table. Their `offer`, `story`, ordered `stages` (including `choices` and locations), `items`, `completionBenefit`, `rewardCR` and mission-specific custody/recovery fields are the authority for each narrated case. The final mystery is resolved only by the original lattice and later AI receiving; the ship purchase is optional afterwards.
+
+## Illustrations in the story
+
+The story embeds matched reference artwork for all 64 original mission scenes, six finale stages and the continuity inquiry. The Medusa recovery specification diagram stays below in these companion notes so its engineering text does not interrupt the narrative. Ship views appear once, at the first named mention of the new L337 Peregrine Mk V (SH025), Harrier (SH026), Larvaal Probe (SH162) and Medusa (SH171). The last is placed at the named cradle reveal; the preceding journal text keeps the craft unnamed. Harrier and Larvaal Probe names retain the original mission's exact SH identity and match the current R3 catalogue.
+
+[Artwork provenance](STORY-ARTWORK-SOURCES.json) records every local image, exact source commit/hash and narrative placement. All PNGs are restored byte-for-byte from the original authored assets, without new generation, editing or runtime rendering. Cinematic briefings, simpler contract/stage objects and technical ship views keep their distinct reference roles. They are not gameplay screenshots, accepted physical measurements, issued characters, consent or completed objectives. The revised Medusa EMP-salvage specification diagram is retained here; the obsolete destruction card is excluded. Reusing the introductory freight image does not add another mission or duplicate its asset.
+
+![Medusa EMP-salvage recovery specification diagram](assets/missions/revisions/medusa-emp-salvage.png)
