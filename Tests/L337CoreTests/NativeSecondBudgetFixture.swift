@@ -427,7 +427,8 @@ extension GameRuntime {
     try #require(physical.catalogueShipID == NativeSecondBudgetFixture.shipID)
     try #require(physical.salvage?.wreck == record.wreck && record.hull.binding == parent)
     try #require(physical.velocity.length > 0)
-    try #require(game.retainNativeSalvageWreck(body))
+    let retainedWreck = game.retainNativeSalvageWreck(body)
+    try #require(retainedWreck)
     let retained = try #require(
       game.commander.alienStorageState?.current.salvage.native.wrecks[record.wreck])
     try #require(retained.source == .emp(actor: actor, sequence: record.sequence))
