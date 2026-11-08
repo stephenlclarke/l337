@@ -54,7 +54,12 @@ struct CurrentNewtKitLoadPhysicsTests {
       .appendingPathComponent(CurrentNewtKitPhysicalSource.resourceFileName)
     let data = try Data(contentsOf: file)
     let source = try #require(JSONSerialization.jsonObject(with: data) as? [String: Any])
-    let model = try #require(CurrentNewtKitLoadModel.decode(source["ordinaryLoadModel"]))
+    let personProfile = CurrentNewtKitIssue.PersonProfile(
+      id: CurrentNewtKitPhysicalSource.personProfileID,
+      sourceSHA256: CurrentNewtKitPhysicalSource.sourceSHA256, massKilograms: 100,
+      dimensionsMetres: .init(0.56, 0.38, 1.72))
+    let model = try #require(CurrentNewtKitLoadModel.decode(
+      source["ordinaryLoadModel"], people: [0: personProfile]))
     let performance = try #require(ShipCatalogue.ship("SH029")?.game)
     var readings = try #require(NPCResources.stock(performance))
     readings.fuel = fuel
@@ -68,9 +73,7 @@ struct CurrentNewtKitLoadPhysicsTests {
     let load = CurrentNewtKitLoad(catalogueShipID: "SH029", r3SHA256: model.r3SHA256,
       cargo: cargo, cargoProvenance: .generated, resources: readings, missiles: missiles,
       ecmEnabled: ecm, hasFuelScoops: scoops,
-      people: [.init(identity: identity, profile: .init(id: CurrentNewtKitPhysicalSource.personProfileID,
-        sourceSHA256: CurrentNewtKitPhysicalSource.sourceSHA256, massKilograms: 100,
-        dimensionsMetres: .init(0.56, 0.38, 1.72)))])
+      people: [.init(identity: identity, profile: personProfile)])
     return (model, load)
   }
 }

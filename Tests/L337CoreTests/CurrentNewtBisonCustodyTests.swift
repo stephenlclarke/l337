@@ -27,8 +27,9 @@ struct CurrentNewtBisonCustodyTests {
     #expect(partial.crewOutcome(ordinal: 7) == .aboard && partial.crewOutcome(ordinal: 2) == .aboard)
     try expectMass(captured, logical: logical,
       reference: CurrentBisonWideShoePhysicalSource.captured01Person7StillAboard)
+    let capturedLoad = try #require(captured.currentNewtKitLoad(for: partial.hull.body))
     let cells = try #require(source.carrierCells(issue: born.issue,
-      load: try #require(captured.currentNewtKitLoad(for: partial.hull.body)),
+      load: capturedLoad,
       at: captured.commander.flightSimulation.physicalTime))
     #expect(cells[0].originalOccupant == nil && cells[1].originalOccupant == nil)
     #expect(cells[2].originalOccupant?.ordinal == 2 && cells[7].originalOccupant == nil)
@@ -140,7 +141,8 @@ struct CurrentNewtBisonCustodyTests {
     let stock = try #require(body.physical?.currentNewtKitStock)
     let source = try #require(CurrentNewtKitSource.source(for: stock.issue))
     let player = try #require(game.commander.flightSimulation.player)
-    let origin = try #require(game.makeAttackOrigin(owner: player))
+    let proposedOrigin = game.makeAttackOrigin(owner: player)
+    let origin = try #require(proposedOrigin)
     _ = game.applyCombatHit(.init(target: .body(body.id), distance: body.position.length,
       point: body.position), origin: origin, kind: .laser, damage: 10000)
     game.resolveDestroyed()
@@ -161,10 +163,12 @@ struct CurrentNewtBisonCustodyTests {
         inertiaKgM2: reference.inertiaKgM2),
     ] + inventory))
     #expect(source.matchesMass(actual, expected))
+    let componentVelocity = try #require(dead.hull.body.physical?.velocity)
+    let componentAngularVelocity = try #require(dead.hull.body.physical?.angularVelocity)
     let parts = try #require(source.components(stock: retained, at: dead.hull.physicalTime,
       parent: .init(pose: .init(position: dead.hull.body.position, orientation: dead.hull.body.orientation),
-        velocity: try #require(dead.hull.body.physical?.velocity),
-        angularVelocity: try #require(dead.hull.body.physical?.angularVelocity)), load: load, cell: cell))
+        velocity: componentVelocity,
+        angularVelocity: componentAngularVelocity), load: load, cell: cell))
     #expect(parts.contains { $0.id == "original-person-ordinal-2" && $0.massProperties.massKilograms == 100 })
     #expect(!parts.contains { $0.id == "original-person-ordinal-0" || $0.id == "original-person-ordinal-7" })
     #expect(dead.valid && retained.issue == stock.issue && retained.receipt == stock.receipt)
