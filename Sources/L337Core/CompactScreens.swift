@@ -15,7 +15,7 @@ extension Display {
     case .journal: c01InquiryJournal(game, width: width, height: height)
     case .gallery: gallery(game, width: width, height: height)
     case .contracts: contractBoard(game, width: width, height: height)
-    case .handoff: blackjackHandoff(game, width: width, height: height)
+    case .handoff: hollowManifestConsentHandoff(game, width: width, height: height)
     case .demo, .title: startupScreen(game, width: width, height: height)
     case .help: helpScreen(game, width: width, height: height)
     case .rumour: wantedBoard(game, width: width, height: height)

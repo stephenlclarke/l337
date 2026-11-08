@@ -71,6 +71,28 @@ struct CurrentNewtNativeSegmentPlan: Sendable {
   }
 }
 
+/// Actual applied segment data. Only the native retention owner in this file constructs it,
+/// after publishing its selected endpoint. It is not an accepted clock leg or mission authority.
+final class NativeC03NewtAppliedSegment: Sendable {
+  let opening: CurrentNewtNativeSegmentOpening
+  let beforeBodies: [SpaceBody]
+  let afterFlight: FlightSimulationState
+  let afterBodies: [SpaceBody]
+  let afterCelestials: [CelestialBody]
+  let epoch: UUID
+
+  fileprivate init(opening: CurrentNewtNativeSegmentOpening, beforeBodies: [SpaceBody],
+    retained game: borrowing Game)
+  {
+    self.opening = opening
+    self.beforeBodies = beforeBodies
+    afterFlight = game.storedFlightSimulation()
+    afterBodies = game.bodies
+    afterCelestials = game.celestials
+    epoch = game.nativeStationRuntimeEpoch
+  }
+}
+
 /// Contact retains actual endpoints for affected actors and the player. Other
 /// actors consume their one prepared kinematic subrange.
 struct CurrentNewtNativeContactResolution: Sendable {
@@ -190,6 +212,7 @@ extension Game {
       }),
       resolution.impacts.count <= AsteroidImpactPolicy.maximumCandidatePairs
     else { return .init(admitted: false, stoppedAt: [:], drives: []) }
+    let c03BeforeBodies = nativeC03MotionPending == nil ? nil : bodies
     var retained = plan.proposed
     let thrustEnd =
       retained.commander.flightSimulation.player.flatMap { resolution.stoppedAt[$0] }
@@ -244,6 +267,11 @@ extension Game {
       retained.autoPilot.setApproachVelocity(local - Vector3(0, 0, retained.speed * 18))
     }
     self = retained
+    if let c03BeforeBodies {
+      let applied = NativeC03NewtAppliedSegment(opening: plan.opening,
+        beforeBodies: c03BeforeBodies, retained: self)
+      captureC03NativeAppliedSegment(applied)
+    }
     clockEffects = effects
     return result
   }
@@ -425,9 +453,19 @@ extension Game {
         report?(.init(phase: .npcFrame, checkpoint: 2, bodyID: refusalBodyID, component: nil))
         return nil
       }
+      let recognizedC03 = c03RecognizedBodyIDs().contains(body.id)
+      var selectedNPC = projectedNPC
+      if recognizedC03 {
+        guard let intent = c03NativeProjectedIntent(body, path: path, station: station) else {
+          report?(.init(phase: .npcFrame, checkpoint: 2, bodyID: refusalBodyID, component: nil))
+          return nil
+        }
+        selectedNPC.intent = intent
+      }
       let decision = scriptNPCFlightDecision(
-        projected, npc: projectedNPC, owned: owned, station: station,
-        guidance: nil, delta: path.motion.duration, allowNativeTransit: false)
+        projected, npc: selectedNPC, owned: owned, station: station,
+        guidance: nil, delta: path.motion.duration, allowNativeTransit: false,
+        allowGenericArrival: !recognizedC03)
       let before = currentNewtBodyState(body)
       var endpointBody = projected
       endpointBody.position = decision.translation.end

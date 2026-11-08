@@ -39,6 +39,7 @@ enum EquipmentRuntimeCatalog {
       nodes: modular.nodes + HyperspaceDriveDefinition.purchaseGraph.nodes + lasers + utilityNodes
         + [
           storage, ammunition, NativeIsolationProgrammerDefinition.purchaseNode,
+          NativeHollowManifestKitDefinition.purchaseNode,
           NativeUnderTowReferenceDefinition.purchaseNode,
           NativeAssemblyReferenceDefinition.purchaseNode,
           NativeMemoryAtlasWatcherSource.purchaseNode,

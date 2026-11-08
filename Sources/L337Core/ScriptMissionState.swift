@@ -96,6 +96,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     var savedNavigationTrade: Field<ScriptNavigationTradeState>?
     var savedOriginalSurvey: Field<NativeOriginalSurveyState>?
     var savedGlassMeridian: Field<NativeGlassMeridianState>?
+    var savedHollowManifest: Field<NativeHollowManifestState>?
     var savedUnderTow: Field<NativeUnderTowState>?
     var savedBorrowedVoice: Field<NativeBorrowedVoiceState>?
     var savedTitheCommission: Field<NativeTitheCommissionState>?
@@ -156,6 +157,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       initializeSavedNavigationTrade()
       initializeSavedOriginalSurvey()
       initializeSavedGlassMeridian()
+      initializeSavedHollowManifest()
       initializeSavedUnderTow()
       initializeSavedBorrowedVoice()
       initializeSavedTitheCommission()
@@ -214,6 +216,11 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func initializeSavedGlassMeridian() {
       savedGlassMeridian = Field<NativeGlassMeridianState>()
+    }
+
+    @inline(never)
+    private func initializeSavedHollowManifest() {
+      savedHollowManifest = Field<NativeHollowManifestState>()
     }
 
     @inline(never)
@@ -348,6 +355,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       copySavedNavigationTrade(from: source)
       copySavedOriginalSurvey(from: source)
       copySavedGlassMeridian(from: source)
+      copySavedHollowManifest(from: source)
       copySavedUnderTow(from: source)
       copySavedBorrowedVoice(from: source)
       copySavedTitheCommission(from: source)
@@ -471,6 +479,11 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func copySavedGlassMeridian(from source: Storage) {
       savedGlassMeridian = source.savedGlassMeridian
+    }
+
+    @inline(never)
+    private func copySavedHollowManifest(from source: Storage) {
+      savedHollowManifest = source.savedHollowManifest
     }
 
     @inline(never)
@@ -704,6 +717,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       try decodeSavedNavigationTrade(from: values)
       try decodeSavedOriginalSurvey(from: values)
       try decodeSavedGlassMeridian(from: values)
+      try decodeSavedHollowManifest(from: values)
       try decodeSavedUnderTow(from: values)
       try decodeSavedBorrowedVoice(from: values)
       try decodeSavedTitheCommission(from: values)
@@ -859,6 +873,13 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       savedGlassMeridian = Field(
         try values.decodeIfPresent(
           NativeGlassMeridianState.self, forKey: .savedGlassMeridian))
+    }
+
+    @inline(never)
+    private func decodeSavedHollowManifest(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedHollowManifest = Field(
+        try values.decodeIfPresent(
+          NativeHollowManifestState.self, forKey: .savedHollowManifest))
     }
 
     @inline(never)
@@ -1146,6 +1167,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       try encodeSavedNavigationTrade(to: &values)
       try encodeSavedOriginalSurvey(to: &values)
       try encodeSavedGlassMeridian(to: &values)
+      try encodeSavedHollowManifest(to: &values)
       try encodeSavedUnderTow(to: &values)
       try encodeSavedBorrowedVoice(to: &values)
       try encodeSavedTitheCommission(to: &values)
@@ -1312,6 +1334,13 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       throws
     {
       try values.encodeIfPresent(savedGlassMeridian!.value, forKey: .savedGlassMeridian)
+    }
+
+    @inline(never)
+    private func encodeSavedHollowManifest(to values: inout KeyedEncodingContainer<CodingKeys>)
+      throws
+    {
+      try values.encodeIfPresent(savedHollowManifest!.value, forKey: .savedHollowManifest)
     }
 
     @inline(never)
@@ -1862,6 +1891,18 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     }
   }
 
+  var savedHollowManifest: NativeHollowManifestState? {
+    _read { yield payload.savedHollowManifest!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedHollowManifest!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedHollowManifest!.value
+    }
+  }
+
   var savedArkReserve: NativeInductionArkReserve? {
     _read { yield payload.savedArkReserve!.value }
     set {
@@ -2314,6 +2355,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     guard equalSavedNavigationTrade(lhs.payload, rhs.payload) else { return false }
     guard equalSavedOriginalSurvey(lhs.payload, rhs.payload) else { return false }
     guard equalSavedGlassMeridian(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedHollowManifest(lhs.payload, rhs.payload) else { return false }
     guard equalSavedUnderTow(lhs.payload, rhs.payload) else { return false }
     guard equalSavedBorrowedVoice(lhs.payload, rhs.payload) else { return false }
     guard equalSavedTitheCommission(lhs.payload, rhs.payload) else { return false }
@@ -2501,6 +2543,11 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
   @inline(never)
   private static func equalSavedGlassMeridian(_ lhs: Storage, _ rhs: Storage) -> Bool {
     lhs.savedGlassMeridian!.value == rhs.savedGlassMeridian!.value
+  }
+
+  @inline(never)
+  private static func equalSavedHollowManifest(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedHollowManifest!.value == rhs.savedHollowManifest!.value
   }
 
   @inline(never)
@@ -2729,6 +2776,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     case savedNavigationTrade
     case savedOriginalSurvey
     case savedGlassMeridian
+    case savedHollowManifest
     case savedUnderTow
     case savedBorrowedVoice
     case savedTitheCommission
@@ -2918,6 +2966,11 @@ public struct ScriptInstance: Codable, Sendable, Equatable, Identifiable {
   var savedGlassMeridian: NativeGlassMeridianState? {
     _read { yield storage[0].savedGlassMeridian }
     _modify { yield &storage[0].savedGlassMeridian }
+  }
+
+  var savedHollowManifest: NativeHollowManifestState? {
+    _read { yield storage[0].savedHollowManifest }
+    _modify { yield &storage[0].savedHollowManifest }
   }
   @inline(never)
   var hasHeldGlassMeridianRecorder: Bool {
@@ -3533,6 +3586,7 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     guard instanceArkPrefixValid(instance) else { return false }
     guard instanceInductionPrefixValid(instance) else { return false }
     guard instanceMeridianPrefixValid(instance) else { return false }
+    guard NativeHollowManifestCommission.prefixValid(instance) else { return false }
     guard NativeUnderTowSave.prefixValid(instance) else { return false }
     guard NativeBorrowedVoiceSave.prefixValid(instance) else { return false }
     guard NativeTitheCommissionSave.prefixValid(instance) else { return false }

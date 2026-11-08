@@ -51,7 +51,7 @@ extension Game {
           actor.location(in: encounter) == .init(galaxy: galaxy, system: system),
           actor.body.id == bodyID, actor.body.missionActorID == actorID,
           actor.body.missionInstanceID == instanceID, actor.body.hull == body.hull,
-          let definition = NativeC01Surveyor.encounterDefinition(
+          let definition = NativeHollowManifestCommission.encounterDefinition(
             pack: pack, state: instance, id: encounterID),
           definition.galaxy == encounter.galaxy, definition.system == encounter.system,
           let declared = definition.actors.first(where: { $0.id == alias }),
@@ -88,7 +88,7 @@ extension Game {
     guard let npc = body.scriptNPC, npc.valid,
       npc.fit == retained.body.scriptNPC?.fit,
       missionActorComponentsMatch(npc.components, retained: retained),
-      let definition = NativeC01Surveyor.profiles(pack: pack, state: instance).first(
+      let definition = NativeHollowManifestCommission.profiles(pack: pack, state: instance).first(
         where: {
           $0.id == npcID
         }),
@@ -119,7 +119,7 @@ extension Game {
   ) -> Bool {
     for (reference, digest) in copy models {
       guard
-        let installed = NativeC01Surveyor.designs(pack: pack, state: instance)[reference],
+        let installed = NativeHollowManifestCommission.designs(pack: pack, state: instance)[reference],
         let retained = geometry[digest]
       else { return false }
       guard installed == retained else { return false }

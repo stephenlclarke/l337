@@ -83,6 +83,11 @@ extension ScriptPackLibrary {
     bundledCourierDirectory.deletingLastPathComponent().appendingPathComponent(
       "l337-glass-meridian")
   }
+
+  static var bundledHollowManifestDirectory: URL {
+    bundledCourierDirectory.deletingLastPathComponent().appendingPathComponent(
+      "l337-hollow-manifest")
+  }
   static var bundledDefensiveFlightDirectory: URL {
     bundledCourierDirectory.deletingLastPathComponent().appendingPathComponent(
       "l337-defensive-flight")
@@ -216,6 +221,9 @@ extension ScriptPackLibrary {
       to: &library)
     appendBundledPack(
       bundledIsolationWorkDirectory, errorPrefix: "Bundled original isolation source: ",
+      to: &library)
+    appendBundledPack(
+      bundledHollowManifestDirectory, errorPrefix: "Bundled original Hollow Manifest: ",
       to: &library)
     return library
   }

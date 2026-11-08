@@ -905,16 +905,24 @@ struct NativeC01InquiryArchiveComposition {
   let hasTradeClaims: Bool
   let hasWatcherClaims: Bool
   let hasNewtClaims: Bool
+  let hasSecondClaims: Bool
+
+  private struct C03HeaderOwner: Decodable {
+    struct Inventory: Decodable { let owner: UUID }
+    let savedEquipmentInventory: Inventory?
+  }
 
   static func prepare(_ pointer: ScriptSavePointer, from url: URL) throws -> Self? {
+    let c03Envelope = NativeC03PublicationNamespace.contains(pointer.schemaVersion)
     let secondEnvelope = NativeSecondCommoditySaleSave.contains(pointer.schemaVersion)
     let newtEnvelope = CurrentNewtKitSave.contains(pointer.schemaVersion)
     let tradeEnvelope = NativeFirstCommodityTradeSave.contains(pointer.schemaVersion)
     let watcherEnvelope = NativeMemoryAtlasWatcherEnvelope.contains(pointer.schemaVersion)
     guard NativeC01InquirySave.contains(pointer.schemaVersion) || tradeEnvelope || watcherEnvelope
-      || newtEnvelope || secondEnvelope
+      || newtEnvelope || secondEnvelope || c03Envelope
     else { return nil }
-    let alien = pointer.schemaVersion == NativeSecondCommoditySaleSave.alienVersion
+    let alien = pointer.schemaVersion == NativeC03PublicationNamespace.alienVersion
+      || pointer.schemaVersion == NativeSecondCommoditySaleSave.alienVersion
       || pointer.schemaVersion == CurrentNewtKitSave.alienVersion
       || pointer.schemaVersion == NativeC01InquirySave.alienVersion
       || pointer.schemaVersion == NativeFirstCommodityTradeSave.alienVersion
@@ -935,6 +943,8 @@ struct NativeC01InquiryArchiveComposition {
       limits.append((AlienStorageVersionedSave.rootName, AlienStoragePageCodec.maximumRootBytes))
     }
     var chunks: [String: Data] = [:]
+    var c03Owner: UUID?
+    var c03Publications: [NativeC03PublicationPreflight.Publication] = []
     for (name, limit) in limits {
       let location = directory.appendingPathComponent(name)
       let properties = try location.resourceValues(forKeys: [
@@ -948,24 +958,41 @@ struct NativeC01InquiryArchiveComposition {
       guard data.count <= limit, ScriptPackLibrary.hash(data) == pointer.hashes[name] else {
         throw SaveError.invalidCommander
       }
+      // Scan exact hash-pinned raw bytes before any enclosing Foundation decode.
+      let c03Part: ScriptFreightVersionedSave.Part = name == "missions.json" ? .missions
+        : name == "commander.json" ? .commander : .contracts
+      let publications = try NativeC03PublicationPreflight.validate(
+        data, part: c03Part, schema: pointer.schemaVersion,
+        currentSchema: alien ? NativeC03PublicationNamespace.alienVersion
+          : NativeC03PublicationNamespace.version, owner: c03Owner)
+      c03Publications.append(contentsOf: publications)
       let inquiryLocation: ScriptSaveJSONPreflight.InquiryArchiveLocation =
         name == "missions.json" ? .missions
         : name == "commander.json" ? .commander
         : name == "contracts.json" ? .contracts : .world
+      let secondSchema: Int?
+      if c03Envelope {
+        let found = try ScriptSaveJSONPreflight.validateCommodityTradeArchive(
+          data, location: inquiryLocation, permitsRoot: inquiryLocation == .missions,
+          field: NativeSecondCommoditySaleSave.field)
+        secondSchema = found
+          ? (alien ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version)
+          : nil
+      } else { secondSchema = pointer.schemaVersion }
       try NativeSecondCommoditySaleSave.validateFields(
-        data, location: inquiryLocation, schema: pointer.schemaVersion)
+        data, location: inquiryLocation, schema: secondSchema)
       try CurrentNewtKitSave.validateFields(
         data, location: inquiryLocation,
-        schema: secondEnvelope
+        schema: secondEnvelope || c03Envelope
           ? (alien ? CurrentNewtKitSave.alienVersion : CurrentNewtKitSave.version)
           : pointer.schemaVersion)
       try NativeMemoryAtlasWatcherEnvelope.validateFields(
         data, location: inquiryLocation,
-        schema: newtEnvelope || secondEnvelope
+        schema: newtEnvelope || secondEnvelope || c03Envelope
           ? (alien ? NativeMemoryAtlasWatcherEnvelope.alienVersion : NativeMemoryAtlasWatcherEnvelope.version)
           : pointer.schemaVersion,
-        requireClaims: !newtEnvelope && !secondEnvelope)
-      if watcherEnvelope || newtEnvelope || secondEnvelope {
+        requireClaims: !newtEnvelope && !secondEnvelope && !c03Envelope)
+      if watcherEnvelope || newtEnvelope || secondEnvelope || c03Envelope {
         let found = try ScriptSaveJSONPreflight.validateCommodityTradeArchive(
           data, location: inquiryLocation, permitsRoot: inquiryLocation == .missions)
         if found {
@@ -976,7 +1003,7 @@ struct NativeC01InquiryArchiveComposition {
         try NativeFirstCommodityTradeSave.validateFields(
           data, location: inquiryLocation, schema: pointer.schemaVersion)
       }
-      if tradeEnvelope || watcherEnvelope || newtEnvelope || secondEnvelope {
+      if tradeEnvelope || watcherEnvelope || newtEnvelope || secondEnvelope || c03Envelope {
         let inquiry = try ScriptSaveJSONPreflight.extractInquiryData(
           data, location: inquiryLocation, permitsRoot: inquiryLocation == .missions)
         if let inquiry { _ = try NativeC01InquirySave.decodeData(inquiry) }
@@ -1015,13 +1042,19 @@ struct NativeC01InquiryArchiveComposition {
         try NativeIsolationWorkParentSave.validateFields(data, part: .contracts)
         try NativeIsolationWorkSave.validateFields(data, part: .contracts)
       }
+      if name == "commander.json" {
+        c03Owner = try ScriptValueStorage.decoder(typed: true)
+          .decode(C03HeaderOwner.self, from: data).savedEquipmentInventory?.owner
+      }
       chunks[name] = data
     }
     guard let header = chunks["commander.json"], let missions = chunks["missions.json"],
       let contracts = chunks["contracts.json"]
     else { throw SaveError.invalidCommander }
     var commander = try ScriptValueStorage.decoder(typed: true).decode(Commander.self, from: header)
-    guard alien == commander.usesAlienStorageSaveVersion else { throw SaveError.invalidCommander }
+    guard alien == commander.usesAlienStorageSaveVersion,
+      c03Owner == nil || c03Owner == commander.equipmentOwnerID
+    else { throw SaveError.invalidCommander }
     if alien {
       guard let rootHash = pointer.hashes[AlienStorageVersionedSave.rootName] else {
         throw SaveError.invalidCommander
@@ -1032,9 +1065,21 @@ struct NativeC01InquiryArchiveComposition {
     commander.scriptState = try missionsDecoder.decode(ScriptEngineState.self, from: missions)
     commander.contracts = try ScriptValueStorage.decoder(typed: true).decode(
       ScriptContractState.self, from: contracts)
+    guard c03Envelope == NativeHollowManifestSave.hasClaims(commander) else {
+      throw SaveError.invalidCommander
+    }
+    for publication in c03Publications {
+      guard NativeC03PublicationNamespace.matches(publication, commander: commander) else {
+        throw SaveError.invalidCommander
+      }
+    }
+    guard c03Publications.count == (c03Envelope ? 1 : 0),
+      NativeC03PublicationPreflight.validateClaims(commander)
+    else { throw SaveError.invalidCommander }
     let semantic = JSONEncoder()
     let hasInquiry = NativeC01InquirySave.hasClaims(commander)
-    guard (secondEnvelope ? NativeSecondCommoditySaleSave.hasClaims(commander)
+    guard (c03Envelope ? NativeHollowManifestSave.hasClaims(commander)
+      : secondEnvelope ? NativeSecondCommoditySaleSave.hasClaims(commander)
       : newtEnvelope ? CurrentNewtKitSave.hasClaims(commander)
       : watcherEnvelope ? NativeMemoryAtlasWatcherEnvelope.hasClaims(commander)
       : tradeEnvelope ? NativeFirstCommodityTradeSave.hasClaims(commander) : hasInquiry),
@@ -1048,6 +1093,7 @@ struct NativeC01InquiryArchiveComposition {
       hasInquiryClaims: hasInquiry,
       hasTradeClaims: NativeFirstCommodityTradeSave.hasClaims(commander),
       hasWatcherClaims: NativeMemoryAtlasWatcherEnvelope.hasClaims(commander),
-      hasNewtClaims: CurrentNewtKitSave.hasClaims(commander))
+      hasNewtClaims: CurrentNewtKitSave.hasClaims(commander),
+      hasSecondClaims: NativeSecondCommoditySaleSave.hasClaims(commander))
   }
 }

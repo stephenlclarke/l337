@@ -69,7 +69,9 @@ public struct ScriptCompletionReceipt: Codable, Sendable, Equatable {
         ? NativeInductionAccreditationSave.validCompletion(self, state: state, engine: engine)
         : definition == NativeGlassMeridian.stateID
           ? NativeC01CompletionSave.validCompletion(self, state: state, engine: engine)
-          : revision == state.revision)
+          : definition == NativeHollowManifestCommission.stateID
+            ? NativeC03CaseClosureSave.validCompletion(self, state: state, engine: engine)
+            : revision == state.revision)
       && committed.revision == revision
       && (cause.map { $0.valid && $0.revision < revision } ?? true)
       && committed.localSeconds <= engine.localSeconds

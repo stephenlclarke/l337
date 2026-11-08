@@ -113,6 +113,7 @@ extension Game {
     guard pack.manifest.wayfarerInduction == nil,
       pack.manifest.stateID != NativeWayfarerInduction.stateID
     else { return false }
+    guard !NativeHollowManifestCommission.applies(pack) else { return false }
     guard pack.manifest.glassMeridian == nil, pack.manifest.stateID != NativeGlassMeridian.stateID
     else { return false }
     guard pack.manifest.stateID != NativeSafeGunnery.stateID else { return false }

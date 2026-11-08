@@ -85,6 +85,9 @@ extension Game {
         definition.name != NativeMemoryAtlasWatcherSource.name,
         definition.kind?.canonicalNode != NativeMemoryAtlasWatcherSource.node
       else { throw MissionPackError("Use the actual Reris atlas reference loan and same-original return.") }
+    guard definition.kind?.canonicalNode != NativeHollowManifestKitDefinition.node else {
+        throw MissionPackError("Use the original Torenran laboratory issue and Narargan return.")
+      }
       let allowed: Set<String>
       switch op {
       case "gear.issue": allowed = ["op", "id", "gear", "fit"]

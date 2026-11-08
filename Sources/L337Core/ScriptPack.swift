@@ -59,6 +59,7 @@ public struct ScriptManifest: Codable, Sendable {
   var orbitalOutlook: NativeOrbitalOutlookJourneyDefinition? = nil
   var originalSurvey: NativeOriginalSurveyDefinition? = nil
   var glassMeridian: NativeGlassMeridianDefinition? = nil
+  var hollowManifest: NativeHollowManifestDefinition? = nil
   var wayfarerInduction: NativeWayfarerInductionDefinition? = nil
   var flightReception: NativeFlightReceptionDefinition? = nil
   var measuredExtraction: NativeMeasuredExtractionDefinition? = nil
@@ -171,7 +172,7 @@ public enum ScriptPackLibrary {
     let root = try TOMLTable(source: bytes)
     try keys(
       root,
-      "schemaVersion missionAPI id version minimumEngine capabilities dependencies priority source license environments module mission handlers dialogs encounters passengerParties trial equipment board pledge courier procurement freight coldChain repairLoop fieldRelief stationJourney orbitalOutlook originalSurvey glassMeridian wayfarerInduction flightReception measuredExtraction recordRecovery identifiedSalvage originalRescue orbitalEvacuation npcs models modules worldJobs receiptRequirements answerRequirements books collections loans children providerContract"
+      "schemaVersion missionAPI id version minimumEngine capabilities dependencies priority source license environments module mission handlers dialogs encounters passengerParties trial equipment board pledge courier procurement freight coldChain repairLoop fieldRelief stationJourney orbitalOutlook originalSurvey glassMeridian hollowManifest wayfarerInduction flightReception measuredExtraction recordRecovery identifiedSalvage originalRescue orbitalEvacuation npcs models modules worldJobs receiptRequirements answerRequirements books collections loans children providerContract"
     )
     try keys(
       root.table(forKey: "mission"),
@@ -225,6 +226,9 @@ public enum ScriptPackLibrary {
     }
     if root.contains(key: "glassMeridian") {
       try keys(root.table(forKey: "glassMeridian"), "profile")
+    }
+    if root.contains(key: "hollowManifest") {
+      try keys(root.table(forKey: "hollowManifest"), "schema sourceID version")
     }
     if root.contains(key: "wayfarerInduction") {
       try keys(root.table(forKey: "wayfarerInduction"), "profile flightAllowance")
@@ -473,6 +477,7 @@ public enum ScriptPackLibrary {
     try validateOrbitalOutlookJourney(manifest)
     try validateOriginalSurvey(manifest)
     try validateGlassMeridian(manifest)
+    try NativeHollowManifestCommission.validateDeclaration(manifest)
     try validateWayfarerInduction(manifest)
     try validateFlightReception(manifest)
     try validateMeasuredExtraction(manifest)

@@ -2600,6 +2600,33 @@ struct NativeC01InquiryClockWitness: Sendable {
   }
 }
 
+/// Actual camera-phase data; construction remains confined to this mutation-site file.
+struct NativeC03AppliedCameraStep: Sendable {
+  struct Manual: Sendable {
+    let pitch: Double
+    let roll: Double
+    let yaw: Double
+    let translation: Vector3
+  }
+  let before: ShipPose
+  let after: ShipPose
+  let delta: Double
+  let manual: Manual?
+  var work: Bool { manual == nil }
+  fileprivate init(game: borrowing Game, before: ShipPose, delta: Double, work: Bool) {
+    self.before = before
+    after = game.commander.flightSimulation.pose
+    self.delta = delta
+    manual =
+      work
+      ? nil
+      : .init(
+        pitch: game.pitch * delta, roll: game.roll * delta,
+        yaw: game.yaw * delta,
+        translation: game.autoPilot.velocity * delta + Vector3(0, 0, game.speed * delta * 18))
+  }
+}
+
 public struct Game: Sendable {
   // Runtime snapshots are values. Array CoW copies the existing payload on first mutation;
   // cloning never reinitializes epochs, random state or universe defaults.
@@ -2646,6 +2673,11 @@ public struct Game: Sendable {
     var c01ClinicEscortRuntime = NativeC01ClinicEscortRuntime()
     var nativeRecordRecoveryIdentificationPending: WayfarerRecordRecoveryIdentificationPending?
     var nativeIdentifiedSalvagePending: NativeIdentifiedSalvagePending?
+    var hollowManifestConsentReview: NativeHollowManifestConsentReview?
+    var nativeC03MotionPending: NativeC03MotionPending?
+    var nativeC03AttainedMotion: NativeC03AttainedMotionResult?
+    var nativeC03ClockEvidence: CurrentNewtNativeClockEvidence?
+    var c03ArchiveReaderDisplay: NativeC03ArchiveReaderDisplay?
     var nativeCrimboMotionSample: NativeCrimboMotionSample?
     var nativeCrimboAttainedMotion: NativeCrimboAttainedMotion?
     var nativeCrimboLifecycleAvailable = false
@@ -3763,6 +3795,11 @@ public struct Game: Sendable {
       c01ClinicEscortRuntime = NativeC01ClinicEscortRuntime()
       nativeRecordRecoveryIdentificationPending = nil
       nativeIdentifiedSalvagePending = nil
+      hollowManifestConsentReview = nil
+      nativeC03MotionPending = nil
+      nativeC03AttainedMotion = nil
+      nativeC03ClockEvidence = nil
+      c03ArchiveReaderDisplay = nil
     }
     _modify {
       var epoch = valueStorage[0].nativeStationRuntimeEpoch
@@ -3904,6 +3941,51 @@ public struct Game: Sendable {
       yield stored
     }
     _modify { yield &valueStorage[0].nativeIdentifiedSalvagePending }
+  }
+  var hollowManifestConsentReview: NativeHollowManifestConsentReview? {
+    _read {
+      let stored: NativeHollowManifestConsentReview? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.hollowManifestConsentReview)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].hollowManifestConsentReview }
+  }
+  var nativeC03MotionPending: NativeC03MotionPending? {
+    _read {
+      let stored: NativeC03MotionPending? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeC03MotionPending)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeC03MotionPending }
+  }
+  var nativeC03AttainedMotion: NativeC03AttainedMotionResult? {
+    _read {
+      let stored: NativeC03AttainedMotionResult? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeC03AttainedMotion)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeC03AttainedMotion }
+  }
+  var nativeC03ClockEvidence: CurrentNewtNativeClockEvidence? {
+    _read {
+      let stored: CurrentNewtNativeClockEvidence? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.nativeC03ClockEvidence)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].nativeC03ClockEvidence }
+  }
+  var c03ArchiveReaderDisplay: NativeC03ArchiveReaderDisplay? {
+    _read {
+      let stored: NativeC03ArchiveReaderDisplay? = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.c03ArchiveReaderDisplay)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].c03ArchiveReaderDisplay }
   }
   var nativeCrimboMotionSample: NativeCrimboMotionSample? {
     _read {
@@ -5784,7 +5866,7 @@ public struct Game: Sendable {
     }
     do {
       try candidate.preflightActiveMissionProjectiles()
-      candidate.persistScriptActors(unloading: true)
+      try candidate.persistScriptActorsChecked(unloading: true)
       try candidate.performNativeLaunch()
     } catch is NativeStationRuntimeError {
       notify("STATION EXIT UNAVAILABLE - LAUNCH REFUSED")
@@ -5928,7 +6010,10 @@ public struct Game: Sendable {
 
   @inline(never)
   private mutating func completeNativeDock(atMainStation: Bool, deferringNativeOffers: Bool) {
-    persistScriptActors(unloading: true)
+    do { try persistScriptActorsChecked(unloading: true) } catch {
+      notify("ORIGINAL FREIGHTER STATE UNAVAILABLE - DOCKING DEFERRED", voiced: false)
+      return
+    }
     persistBlackjackTargets()
     if commander.npcPersistence.count > 0 {
       commander.npcPersistence.resetPhysicalBindings(system: systemIdentity)
@@ -6107,7 +6192,7 @@ public struct Game: Sendable {
     }
     let destination = journey?.destination ?? selectedSystem
     guard flushNativeSalvageMotion(parkingSystem: systemIdentity) else { return false }
-    persistScriptActors(unloading: true)
+    try persistScriptActorsChecked(unloading: true)
     if destination != commander.system { try departOrdinarySimulation() }
     persistBlackjackTargets()
     retaliation.clear()
@@ -6191,7 +6276,7 @@ public struct Game: Sendable {
     }
     guard try consumeNativeEquipment("Galactic Hyperdrive") else { return false }
     guard flushNativeSalvageMotion(parkingSystem: systemIdentity) else { return false }
-    persistScriptActors(unloading: true)
+    try persistScriptActorsChecked(unloading: true)
     mapSearch = PlanetSearchState()
     commander.navigationPlan = nil
     persistBlackjackTargets()
@@ -6524,6 +6609,8 @@ public struct Game: Sendable {
       notify("NATIVE MOTION UNAVAILABLE - PAUSED", voiced: false)
       return false
     }
+    // Install actual original-source routing once, before the native path reads its opening.
+    _ = prepareC03FreighterRoutePass(delta: dt)
     guard let npcFrame = prepareCurrentNewtNPCFrame(path) else {
       paused = true
       notify("FLIGHT PAUSED - NPC MOTION UNAVAILABLE", voiced: false)
@@ -6577,6 +6664,7 @@ public struct Game: Sendable {
       dt: dt, c01MotionStartTime: c01MotionStartTime,
       nativeMotion: evidence, nativeStart: path.motion.start,
       newtBirthActors: births.actors, newtBirths: births, npcFrame: evidence.npcFrame)
+    nativeC03ClockEvidence = evidence
     return true
   }
 
@@ -6734,9 +6822,16 @@ public struct Game: Sendable {
     let timingStandardFrame = beginMovedBodyTimingObservation(
       dt: dt, c01MotionStartTime: c01MotionStartTime, nativeMotion: nativeMotion, newtBirths: newtBirths)
     let before = nativeStart ?? commander.flightSimulation.pose
-    if nativeMotion == nil && !moveWorkFrame(delta: dt, bornAtEnd: newtBirthActors) {
-      moveManualCameraBodies(dt: dt, before: before, newtBirthActors: newtBirthActors)
+    if nativeMotion == nil {
+      let c03UsedWorkFrame = moveWorkFrame(delta: dt, bornAtEnd: newtBirthActors)
+      if !c03UsedWorkFrame {
+        moveManualCameraBodies(dt: dt, before: before, newtBirthActors: newtBirthActors)
+      }
+      if nativeC03MotionPending != nil {
+        captureC03CameraStep(.init(game: self, before: before, delta: dt, work: c03UsedWorkFrame))
+      }
     }
+    // Native paths require their own applied-phase representation; missing captures refuse.
     finishMovedBodyContacts(dt: dt, before: before, asteroidContactFrame: asteroidContactFrame,
       timingStandardFrame: timingStandardFrame, nativeMotion: nativeMotion, npcFrame: npcFrame,
       newtBirths: newtBirths, newtBirthActors: newtBirthActors)
@@ -6896,7 +6991,8 @@ public struct Game: Sendable {
       return
     }
     advanceScriptNPCFlight(
-      delta: lateDelta, excluding: Set(npcFrame?.entries.keys.map { $0 } ?? []))
+      delta: lateDelta, excluding: Set(npcFrame?.entries.keys.map { $0 } ?? []),
+      prepareC03Routes: npcFrame == nil)
     synchronizeScriptNPCPhysicalVelocities()
     let weaponBirths =
       npcFrame.map {
@@ -6913,12 +7009,13 @@ public struct Game: Sendable {
       }
       return
     }
-    persistScriptActors()
+    let refusedC03 = persistScriptActors()
     let retainedNPCs = persistNPCStates()
     guard persistEMPState() else { return }
     let departingActors = Set(
       bodies.filter {
         $0.energy > 0 && $0.leavesLocalBubble && $0.id != 0 && !retainedNPCs.contains($0.id)
+        && !refusedC03.contains($0.id)
       }.compactMap { $0.physical?.identity })
     if !departingActors.isEmpty,
       bodies.contains(where: { $0.physical?.currentNewtKitStock != nil })
@@ -6932,6 +7029,7 @@ public struct Game: Sendable {
     // native wreck flush must retain its new velocity and finite spent work.
     let departing = bodies.filter {
       $0.energy > 0 && $0.leavesLocalBubble && $0.id != 0 && !retainedNPCs.contains($0.id)
+        && !refusedC03.contains($0.id)
     }
     // Ordinary traffic/projectile culls must not replay native lifetime history.
     let nativePending = commander.alienStorageState?.current.salvage.pending
@@ -6981,6 +7079,7 @@ public struct Game: Sendable {
     }
     bodies.removeAll {
       $0.energy > 0 && $0.leavesLocalBubble && $0.id != 0 && !retainedNPCs.contains($0.id)
+        && !refusedC03.contains($0.id)
     }
   }
   @inline(never)
@@ -7022,7 +7121,8 @@ public struct Game: Sendable {
       notify("ORIGINAL STATION LIFECYCLE UNAVAILABLE - SETTLEMENT DEFERRED", voiced: false)
       return
     }
-    var initial = bodies.filter { $0.energy <= 0 }
+    let refusedC03 = persistC03ActorsPreservingRefusals()
+    var initial = bodies.filter { $0.energy <= 0 && !refusedC03.contains($0.id) }
     if !initial.isEmpty { ensurePhysicalActors() }
     if !initial.isEmpty,
       bodies.contains(where: { $0.physical?.currentNewtKitStock != nil })
@@ -7032,10 +7132,11 @@ public struct Game: Sendable {
         notify("MECHANISM STATE UNAVAILABLE - DESTRUCTION SETTLEMENT DEFERRED", voiced: false)
         return
       }
-      initial = bodies.filter { $0.energy <= 0 }
+      initial = bodies.filter { $0.energy <= 0 && !refusedC03.contains($0.id) }
     }
     for body in initial { settleLegacyCombatDeath(body) }
     var deferred = registerDestroyedCargo()
+    deferred.formUnion(refusedC03)
     deferred.formUnion(registerDestroyedWrecks())
     deferred.formUnion(registerDestroyedNativeSalvage())
     guard registerEMPHullDeaths() else {
@@ -7084,6 +7185,7 @@ public actor GameRuntime {
   var controls = Controls()
   var assemblyCalibrationControls = NativeAssemblySurveyInstrumentControls()
   var assemblyCapacityEditor: NativeAssemblyCapacityEditorSession?
+  var c03ArchiveReaderUI: NativeC03ArchiveReaderUI?
   var galleryNamespace: URL?
   var galleryParent: GalleryParentState?
   var scriptSaveURL: URL?
@@ -7146,10 +7248,19 @@ public actor GameRuntime {
     game.prepareFlightWeaponDisplay()
     refreshAssemblyCalibrationProjection()
     refreshAssemblyCapacityEditorProjection()
+    refreshC03ArchiveReaderProjection()
     return game
   }
   public func key(_ key: String) {
     if handleAssemblyCapacityEditorKey(key) { return }
+    if rejectUnprovedC03ArchiveReaderKey(key) { return }
+    if key == MissionUIAction.originalSealConsent.rawValue {
+      openHollowManifestConsentReview()
+      return
+    }
+    if handleHollowManifestConsentKey(key) { return }
+    if handleHollowManifestWakeKey(key) { return }
+    if handleHollowManifestRegisterKey(key) { return }
     if galleryAction(key) { return }
     keyAfterGallery(key)
   }
@@ -7323,6 +7434,8 @@ public actor GameRuntime {
     }
     game.c01ClinicEscortRuntime.attainedSample = game.c01ClinicAttainedSample()
     let observations = PreparedFrameObservations(game: game)
+    game.nativeC03ClockEvidence = nil
+    game.beginC03AttainedMotionStep()
     beginAssemblyCalibrationMotion()
     game.tick(
       delta: delta, controls: controls,
@@ -7344,6 +7457,7 @@ public actor GameRuntime {
     let committedRecordIdentification: UUID?
     let salvageStart: Double
     let salvagePlayer: ActorIdentity?
+    let hollowInspectionStart: NativeHollowManifestInspectionSample?
 
     @inline(never)
     init(game: borrowing Game) {
@@ -7355,6 +7469,7 @@ public actor GameRuntime {
       committedRecordIdentification = game.recordRecoveryState?.identification?.operation
       salvageStart = game.commander.flightSimulation.physicalTime
       salvagePlayer = game.commander.flightSimulation.player
+      hollowInspectionStart = game.hollowManifestInspectionSample()
     }
   }
 
@@ -7407,7 +7522,8 @@ public actor GameRuntime {
     commitOriginalSurveyScan(start: surveyStart)
     finishAdvance(
       delta: context.nativeClockDeferred ? attained : delta,
-      context: context, stationEntryAttempted: stationEntryAttempted)
+      context: context, stationEntryAttempted: stationEntryAttempted,
+      hollowInspectionStart: observations.hollowInspectionStart)
     game.advanceInductionUtilityWork(from: utilityWorkStart, publish: scriptPublisher())
     game.advanceIsolationWork(from: isolationWorkStart, publish: scriptPublisher())
     game.advanceC01LaneRepairWork(from: c01LaneStart, publish: scriptPublisher())
@@ -7485,7 +7601,10 @@ public actor GameRuntime {
     )
   }
   // Reserve later event/restoration buffers only after the physical tick and native entry.
-  private func finishAdvance(delta: Double, context: AdvanceContext, stationEntryAttempted: Bool) {
+  private func finishAdvance(
+    delta: Double, context: AdvanceContext, stationEntryAttempted: Bool,
+    hollowInspectionStart: NativeHollowManifestInspectionSample?
+  ) {
     let (
       wasDocked, wasLive, location, localActive, flightActive, calendarActive, clockAdvanced,
       startPhysicalTime, startPlayer, transitSample, startTransitSeconds, _, _
@@ -7530,15 +7649,28 @@ public actor GameRuntime {
     game.observeScriptLocation(wasDocked: wasDocked, galaxy: location.0, system: location.1)
     game.scriptEventsDeferred = false
     if localActive && !game.docked {
-      game.persistScriptActors()
-      do { try game.restoreScriptActors() } catch {
+      do {
+        try game.persistScriptActorsChecked()
+        try game.restoreScriptActors()
+      } catch {
         // Earlier physical effects stay committed. The restore operation's own
         // all-record preflight prevents partial actor/projectile publication.
+        // Refused persistence cannot leave an attainable C03 frame observation.
+        game.nativeC03MotionPending = nil
+        game.nativeC03AttainedMotion = nil
+        game.nativeC03ClockEvidence = nil
         controls = Controls()
         game.paused = true
         game.notify("MISSION FLIGHT RESTORE REFUSED - PAUSED", voiced: false)
         return
       }
+    }
+    game.finishC03AttainedMotionStep(native: game.nativeC03ClockEvidence)
+    game.nativeC03ClockEvidence = nil
+    commitHollowManifestInspection(from: hollowInspectionStart)
+    if wasLive && !wasDocked && localActive && flightActive && !stationEntryAttempted {
+      receiveHollowManifestConsentAfterPhysics(
+        delta: delta, startTime: startPhysicalTime, startPlayer: startPlayer)
     }
     if localActive {
       game.advanceNativeWormholeFrame(from: transitSample, publish: scriptPublisher())
@@ -7792,6 +7924,7 @@ public actor GameRuntime {
         try Self.writeCommander(&candidate, to: url, navigationBinding: navigationBinding)
       }
       game = candidate
+      resetC03ArchiveReaderUI()
       controls = Controls()
       scriptSaveURL = url
       game.scriptDurabilityAvailable = true

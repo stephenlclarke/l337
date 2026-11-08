@@ -158,6 +158,38 @@ final class CurrentNewtNativeClockEvidence: Sendable {
     return expected
   }
 
+  /// A mutation-issued capture is accepted only when it is this owner's exact retained
+  /// leg, not another candidate with the same endpoint or a copied closing clock.
+  func validatesC03AppliedSegments(_ segments: [NativeC03NewtAppliedSegment],
+    opening: FlightSimulationState, bodies: [SpaceBody], current game: Game) -> Bool
+  {
+    guard completedOuterInterval, terminalEvents.isEmpty, !segments.isEmpty,
+      segments.count == legs.count,
+      verifiedFinalFlight(from: opening, usedD: attainedDuration,
+        epoch: game.nativeStationRuntimeEpoch) == game.storedFlightSimulation(),
+      retainedSceneMatches(opening: opening, bodies: bodies,
+        epoch: game.nativeStationRuntimeEpoch, current: game)
+    else { return false }
+    for index in legs.indices {
+      let segment = segments[index]
+      let leg = legs[index]
+      let nextCelestials = index + 1 < legs.count
+        ? legs[index + 1].opening.before.celestials : game.celestials
+      guard segment.opening === leg.opening,
+        segment.epoch == game.nativeStationRuntimeEpoch,
+        segment.beforeBodies == leg.opening.before.bodies,
+        segment.afterFlight == leg.afterMotion, segment.afterBodies == leg.afterBodies,
+        segment.afterCelestials == nextCelestials,
+        leg.trajectory.rootMotion === original,
+        leg.resolution.admitted, leg.resolution.stoppedAt.isEmpty, leg.resolution.impacts.isEmpty,
+        leg.result.acceptedDuration == leg.opening.interval.end - leg.opening.interval.start,
+        leg.result.released.isEmpty, leg.boundaryEvents.isEmpty,
+        leg.impactEffects.isEmpty, leg.ordnanceEffects.isEmpty
+      else { return false }
+    }
+    return true
+  }
+
   /// Join a sealed actual opening geometry snapshot to this owner's real
   /// retained endpoints. Later admission must come from Game's actual census,
   /// never from a caller-supplied actor set or a copied closing flight value.

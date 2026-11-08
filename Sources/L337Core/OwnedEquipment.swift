@@ -17,6 +17,7 @@ public enum OwnedGearKind: Codable, Sendable, Equatable {
   var valid: Bool {
     if case .module(let name) = self {
       if name == NativeIsolationProgrammerDefinition.name { return true }
+      if name == NativeHollowManifestKitDefinition.name { return true }
       if name == NativeUnderTowReferenceDefinition.name { return true }
       if name == NativeAssemblyReferenceDefinition.name { return true }
       if name == NativeMemoryAtlasWatcherSource.name { return true }
