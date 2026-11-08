@@ -55,7 +55,9 @@ public struct CatalogueShip: Codable, Sendable, Equatable, Identifiable {
     if OriginalDetailedHullStage.blocksRuntime(id) {
       return "Original hull pending; unavailable for flight or purchase"
     }
-    return game == nil ? "Display object; not a flyable ship" : "Available for exchange at a main station"
+    guard game != nil else { return "Display object; not a flyable ship" }
+    return catalogue.purchasePolicy == .never
+      ? "Not for sale" : "Available for exchange at a main station"
   }
 }
 public struct ShipDesign: Codable, Sendable, Equatable {

@@ -16,7 +16,7 @@ spec.loader.exec_module(bridge)
 class OriginalFleetCandidateQualificationInputTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.plan_path = ROOT / "docs/fleet-physical/actual55-candidate-qualification-inputs.json"
+        cls.plan_path = ROOT / "docs/milestones/fleet-physical/actual55-candidate-qualification-inputs.json"
         cls.plan = bridge.load_plan(cls.plan_path)
         cls.terminal = Path(cls.plan["terminalRoot"])
         cls.row = next(row for row in cls.plan["rows"] if row["id"] == "SH125")

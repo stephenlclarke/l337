@@ -85,4 +85,26 @@ struct OriginalFleetCatalogueUnitTests {
         $0.key == "original.purchasePolicy" && $0.text.contains("plughQuestFabrication")
       })
   }
+  @Test func neverPurchaseAvailabilityDoesNotAdvertiseExchangeOrReleasePendingHulls() throws {
+    let current = try #require(ShipCatalogue.ship("SH029"))
+    try #require(current.game != nil && current.catalogue.purchasePolicy == .blueprintFabrication)
+    #expect(current.availability == "Available for exchange at a main station")
+    // A label-only unit value changes no catalogue entry, ownership, fit or actor.
+    var fields = try #require(
+      JSONSerialization.jsonObject(with: JSONEncoder().encode(current)) as? [String: Any])
+    var metadata = try #require(fields["catalogue"] as? [String: Any])
+    metadata["purchasePolicy"] = "never"
+    metadata["normalPurchaseEligible"] = false
+    fields["catalogue"] = metadata
+    let never = try JSONDecoder().decode(
+      CatalogueShip.self, from: JSONSerialization.data(withJSONObject: fields))
+    #expect(never.game == current.game && never.design == current.design)
+    #expect(never.availability == "Not for sale")
+    let pending = try #require(ShipCatalogue.ship("SH043"))
+    #expect(pending.availability == "Original hull pending; unavailable for flight or purchase")
+    let display = try #require(ShipCatalogue.ship("SH028"))
+    try #require(display.game == nil)
+    #expect(display.availability == "Display object; not a flyable ship")
+  }
+
 }

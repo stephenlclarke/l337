@@ -22,3 +22,5 @@ Physical trackpad/SpinHold contact delivery under actual macOS gesture settings 
 Records introduced only with monolithic M01 source commit `8a3021b` have no distinct bounded main-fix attribution in the checked evidence. They remain explicitly unresolved. PR25 is still unmerged; its review/authored/test status is not integration proof. This does not claim that none of that source is on main, or that a historical pending caveat is still a live failure. It means removal needs record-scope fix/integration evidence. No unimplemented original mission, fleet, equipment, physical, receiving or save requirement is silently discarded.
 
 [Documentation home](../README.md).
+
+- [Current integration work records](../archive/work-items/missions/current-integration/) retain open and UNRUN requirements.
