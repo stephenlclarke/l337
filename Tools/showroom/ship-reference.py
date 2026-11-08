@@ -192,8 +192,9 @@ def references(ships, write=True):
 # Local asset generation uses the same resource limits as the physical quality job,
 # but not its diagnostic policies, immutable sessions or persistent custody records.
 ASSET_RSS = 2415919104
-# Existing normal CPU1/nonbatch phase allocation; never the asset default.
+# Normal tests/game retain 3 GiB; the human-authorized compiler-only limit is 6 GiB.
 NORMAL_RSS = 3221225472
+NORMAL_COMPILER_RSS = 6442450944
 ASSET_SECONDS = 7200
 ASSET_CLEANUP = 4
 ASSET_OUTPUT = 16 * 1024 * 1024
@@ -278,7 +279,7 @@ def stop_renderer(process,known,deadline):
 
 
 def execution_rss_limit(command, profile):
-    """Keep asset bounds; normal build/test drivers have closed existing phase commands."""
+    """Select separate compiler/test bounds only for closed phase commands."""
     if profile == 'asset':return ASSET_RSS
     if profile == 'normal-ci' and command == ['/usr/bin/make', 'ci']:return NORMAL_RSS
     if not isinstance(command,list) or not command or Path(command[0]).name != 'swift':
@@ -290,7 +291,7 @@ def execution_rss_limit(command, profile):
     focused_build = build + [
         '-Xlinker','-O0','-Xswiftc','-driver-batch-size-limit','-Xswiftc','1','--disable-index-store']
     if profile == 'normal-compiler':
-        if arguments == focused_build:return NORMAL_RSS
+        if arguments == focused_build:return NORMAL_COMPILER_RSS
         if not explicit_native and arguments in (
             build,
             build + ['-Xlinker','-O0'],
@@ -298,7 +299,7 @@ def execution_rss_limit(command, profile):
             ['build','--product','L337','--enable-code-coverage','--jobs','1',
              '-Xswiftc','-disable-batch-mode','-Xlinker','-O0','-Xswiftc',
              '-driver-batch-size-limit','-Xswiftc','1','--disable-index-store'],
-        ):return NORMAL_RSS
+        ):return NORMAL_COMPILER_RSS
     if profile == 'normal-test':
         if arguments == ['test','--enable-code-coverage','list','--skip-build']:return NORMAL_RSS
         test = ['test','--enable-code-coverage','--skip-build']
