@@ -2678,6 +2678,7 @@ public struct Game: Sendable {
     var nativeC03AttainedMotion: NativeC03AttainedMotionResult?
     var nativeC03ClockEvidence: CurrentNewtNativeClockEvidence?
     var c03ArchiveReaderDisplay: NativeC03ArchiveReaderDisplay?
+    var c03CrewRuntime = NativeC03CrewRuntime()
     var nativeCrimboMotionSample: NativeCrimboMotionSample?
     var nativeCrimboAttainedMotion: NativeCrimboAttainedMotion?
     var nativeCrimboLifecycleAvailable = false
@@ -3800,6 +3801,7 @@ public struct Game: Sendable {
       nativeC03AttainedMotion = nil
       nativeC03ClockEvidence = nil
       c03ArchiveReaderDisplay = nil
+      c03CrewRuntime = NativeC03CrewRuntime()
     }
     _modify {
       var epoch = valueStorage[0].nativeStationRuntimeEpoch
@@ -3977,6 +3979,15 @@ public struct Game: Sendable {
       yield stored
     }
     _modify { yield &valueStorage[0].nativeC03ClockEvidence }
+  }
+  var c03CrewRuntime: NativeC03CrewRuntime {
+    _read {
+      let stored: NativeC03CrewRuntime = valueStorage.withUnsafeBufferPointer { storage in
+        storage.baseAddress!.pointer(to: \.c03CrewRuntime)!.pointee
+      }
+      yield stored
+    }
+    _modify { yield &valueStorage[0].c03CrewRuntime }
   }
   var c03ArchiveReaderDisplay: NativeC03ArchiveReaderDisplay? {
     _read {
@@ -6528,6 +6539,8 @@ public struct Game: Sendable {
     guard !docked, ![Screen.gameOver, .secret, .help, .title, .demo].contains(screen) else {
       return
     }
+    beginC03CrewFatalObservation()
+    defer { endC03CrewFatalObservation() }
     approvedWorkMotion = nil
     lastAppliedWorkMotion = nil
     plannedLegacyWorkMotion.removeAll(keepingCapacity: true)

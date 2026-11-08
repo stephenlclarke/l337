@@ -1619,7 +1619,7 @@ extension Game {
       return []
     } catch {
       return c03RecognizedBodyIDs().union(c03WakeRecognizedBodyIDs())
-        .union(c03RegisterRecognizedBodyIDs())
+        .union(c03RegisterRecognizedBodyIDs()).union(c03EvacuationRecognizedBodyIDs())
     }
   }
 
@@ -1736,6 +1736,12 @@ extension Game {
     }
   }
   mutating func recordScriptActorRemoval(_ body: SpaceBody, destroyed: Bool) {
+    if isC03EvacuationBody(body) {
+      do { try recordC03EvacuationRemoval(body, destroyed: destroyed) } catch {
+        notify("ORIGINAL EVACUATION STATE UNAVAILABLE - REMOVAL NOT RETAINED", voiced: false)
+      }
+      return
+    }
     if isC03RegisterBody(body) {
       do { try recordC03RegisterRemoval(body, destroyed: destroyed) } catch {
         notify("ORIGINAL REGISTER STATE UNAVAILABLE - REMOVAL NOT RETAINED", voiced: false)
@@ -2534,7 +2540,7 @@ extension Game {
     }
   }
 
-  /// Both owned captures publish Commander fields only. Restore their common beforeimage
+  /// Owned captures publish Commander fields only. Restore their common beforeimage
   /// on either refusal; no half-captured source reaches a writer, cull or death settlement.
   private mutating func captureC03OwnedActors(unloading: Bool) throws {
     guard withReadOnlyScriptState({ $0.instances.values.contains(where: NativeHollowManifestCommission.marked) })
@@ -2544,6 +2550,7 @@ extension Game {
       try captureC03Actors(unloading: unloading)
       try captureC03WakeActors(unloading: unloading)
       try captureC03RegisterActor(unloading: unloading)
+      try captureC03EvacuationActors(unloading: unloading)
     } catch {
       commander = before
       throw error
