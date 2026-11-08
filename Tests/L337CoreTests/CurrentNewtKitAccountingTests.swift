@@ -68,6 +68,7 @@ extension CurrentNewtKitAccountingTests {
     defer { storage.clean() }
     let runtime = try await observedRecordRuntime(history: history, storage: storage)
     let before = await runtime.snapshot()
+    try #require(before.commander.empCustodyStateValid && before.commander.valid)
     let beforeBodyCandidate = before.bodies.first { $0.physical?.currentNewtKitStock != nil }
     let beforeBody = try #require(beforeBodyCandidate)
     let identity = try #require(beforeBody.nativeGeometryIdentity())
@@ -109,6 +110,79 @@ extension CurrentNewtKitAccountingTests {
       #expect(after.commander.savedEMPState?.records[logical]?.source == logical)
     }
     #expect(after.commander.nativePeople == before.commander.nativePeople)
+    #expect(after.commander.empCustodyStateValid && after.commander.valid)
+  }
+
+  @Test(arguments: [
+    "missing-original", "missing-current", "foreign-kit", "future-observation",
+    "negative-charge", "foreign-load",
+  ])
+  func actualIssuedStockCannotLoseOrReplaceItsCustodyDuringValidation(fault: String) async throws {
+    let storage = try NativeStationTestStorage()
+    defer { storage.clean() }
+    let runtime = try await observedRecordRuntime(history: "actual-disabled-history", storage: storage)
+    let game = await runtime.snapshot()
+    let original = try #require(game.commander.savedEMPState?.records.values.first)
+    let stock = try #require(original.hull.body.nativeGeometryStock())
+    try #require(original.valid && game.commander.empCustodyStateValid && game.commander.valid)
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.sortedKeys]
+    let originalBytes = try encoder.encode(game.commander)
+    var record = original
+    if fault == "missing-original" {
+      var object = try #require(
+        JSONSerialization.jsonObject(with: encoder.encode(original)) as? [String: Any])
+      var custody = try #require(object["custody"] as? [String: Any])
+      var stored = try #require(custody["original"] as? [String: Any])
+      var body = try #require(stored["body"] as? [String: Any])
+      var physical = try #require(body["physical"] as? [String: Any])
+      physical.removeValue(forKey: "currentNewtKitStock")
+      body["physical"] = physical
+      stored["body"] = body
+      custody["original"] = stored
+      object["custody"] = custody
+      record = try JSONDecoder().decode(
+        EMPHullRecord.self, from: JSONSerialization.data(withJSONObject: object))
+    } else if fault == "missing-current" {
+      record.hull.body.physical?.currentNewtKitStock = nil
+    } else {
+      var object = try #require(
+        JSONSerialization.jsonObject(with: JSONEncoder().encode(stock)) as? [String: Any])
+      switch fault {
+      case "foreign-kit":
+        var issue = try #require(object["issue"] as? [String: Any])
+        issue["kitID"] = UUID().uuidString
+        object["issue"] = issue
+      case "future-observation":
+        object["observedAt"] = record.hull.physicalTime + 1
+      case "negative-charge":
+        var charges = try #require(object["charges"] as? [String: Any])
+        charges["electricalJoules"] = -1.0
+        object["charges"] = charges
+      case "foreign-load":
+        var issue = try #require(object["issue"] as? [String: Any])
+        var load = try #require(issue["birthLoad"] as? [String: Any])
+        load["r3SHA256"] = String(repeating: "0", count: 64)
+        issue["birthLoad"] = load
+        object["issue"] = issue
+      default:
+        Issue.record(Comment(rawValue: "Unknown current Newt custody fault: " + fault))
+        return
+      }
+      record.hull.body.physical?.currentNewtKitStock = try JSONDecoder().decode(
+        CurrentNewtKitStock.self, from: JSONSerialization.data(withJSONObject: object))
+    }
+    var changed = game.commander
+    changed.savedEMPState?.records[record.source] = record
+    let before = try encoder.encode(changed)
+    #expect(!record.valid)
+    #expect(!changed.empCustodyStateValid && !changed.valid)
+    if case .some = changed.nativeEMPCustodyRecord(for: record.source) {
+      Issue.record(Comment(rawValue: "Invalid stock returned an owned custody record: " + fault))
+    }
+    #expect(try encoder.encode(changed) == before)
+    #expect(try encoder.encode(game.commander) == originalBytes)
+    #expect(game.commander.savedEMPState?.records[original.source] == original)
   }
 
   @inline(never)

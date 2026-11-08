@@ -1389,3 +1389,67 @@ extension NativeHollowManifestStateUnitTests {
   }
 
 }
+
+extension NativeHollowManifestStateUnitTests {
+  @Test(arguments: [
+    "admission", "request", "reply", "revocation", "withdrawal", "terminal",
+    "first-seal", "latest-seal",
+  ])
+  func everyRetainedTimeFamilyRejectsBackdatedFactsAndAcceptsItsExactWatermark(family: String)
+    throws
+  {
+    let (state, watermark) = try retainedTimeHistory(family)
+    try #require(state.shapeValid)
+    let before = state
+    let reference = state.latestAdmissions[1]
+    let stale = consentRequest(state, slot: 1, time: watermark - 1)
+    #expect(throws: State.Failure.invalidState) {
+      _ = try state.retainingConsentRequest(request: stale, admission: reference)
+    }
+    #expect(state == before)
+    let boundary = consentRequest(state, slot: 1, time: watermark)
+    let accepted = try state.retainingConsentRequest(request: boundary, admission: reference)
+    #expect(accepted.shapeValid && accepted.preservesHistory(of: before))
+    #expect(accepted.consents.last?.request == boundary)
+    #expect(accepted.nextSourceSequence == state.nextSourceSequence + 1)
+    #expect(accepted.admissions == state.admissions && accepted.terminals == state.terminals)
+    #expect(accepted.withdrawals == state.withdrawals)
+    #expect(accepted.firstCompromises == state.firstCompromises)
+    #expect(accepted.latestSealDamage == state.latestSealDamage)
+  }
+
+  private func retainedTimeHistory(_ family: String) throws -> (State, Double) {
+    var state = try fixture()
+    switch family {
+    case "admission":
+      return (try reboundSealState(state, time: 50), 50)
+    case "request":
+      let request = consentRequest(state, time: 50)
+      return (try state.retainingConsentRequest(request: request, admission: state.latestAdmissions[0]), 50)
+    case "reply", "revocation":
+      let request = consentRequest(state)
+      state = try state.retainingConsentRequest(request: request, admission: state.latestAdmissions[0])
+      let reply = try consentReply(state, time: family == "reply" ? 50 : 32)
+      state = try state.retainingConsentReply(reply: reply, admission: state.latestAdmissions[0])
+      if family == "reply" { return (state, 50) }
+      let hit = effect(state, damage: 1, after: 219)
+      let player = try #require(hit.incident.origin).owner
+      state = try state.retainingRootEffect(effect: hit, actualPlayer: player)
+      let revocation = try consentReply(state, decision: .revoked, time: 50)
+      return (try state.retainingConsentRevocation(
+        revocation: revocation, admission: state.latestAdmissions[0]), 50)
+    case "withdrawal", "terminal":
+      let hit = family == "withdrawal" ? effect(state, damage: 1, after: 219) : effect(state)
+      let player = family == "withdrawal" ? hit.incident.origin?.owner : nil
+      return (try state.retainingRootEffect(effect: hit, actualPlayer: player), 40)
+    case "first-seal", "latest-seal":
+      let facts = try sealFacts(state, time: family == "first-seal" ? 50 : 40)
+      state = try state.retainingSealDamage(facts: facts, admission: state.latestAdmissions[0])
+      if family == "first-seal" { return (state, 50) }
+      let latest = try sealFacts(state, incident: 21, time: 50, before: 15)
+      return (try state.retainingSealDamage(facts: latest, admission: state.latestAdmissions[0]), 50)
+    default:
+      throw State.Failure.invalidState
+    }
+  }
+}

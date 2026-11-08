@@ -287,69 +287,115 @@ struct EMPHullRecord: Equatable, Codable, Sendable {
 
   @inline(never)
   private func currentNewtStockIsValid() -> Bool {
-    let original = custody.original.body.physical?.currentNewtKitStock
-    let current = hull.body.physical?.currentNewtKitStock
-    guard original != nil || current != nil else { return pods.isEmpty }
-    guard let original, let current,
-      let catalogue = custody.original.body.physical?.catalogueShipID,
+    // Extract only the two stock leaves. Full body/physical optionals must retire
+    // before the nested stock validators reserve their own temporary values.
+    currentNewtStockPairIsValid(
+      original: custody.original.body.nativeGeometryStock(),
+      current: hull.body.nativeGeometryStock())
+  }
+
+  @inline(never)
+  private func currentNewtStockPairIsValid(
+    original: CurrentNewtKitStock?, current: CurrentNewtKitStock?
+  ) -> Bool {
+    // Tag matching does not invoke the large stock's synthesized Equatable path.
+    guard let original else {
+      if case .none = current { return pods.isEmpty }
+      return false
+    }
+    guard let current,
+      currentNewtStockSourcesAreValid(original: original, current: current),
+      currentNewtStockActuationIsValid(original: original, current: current),
+      currentNewtStockObservationIsValid(current),
+      currentNewtStockReleaseIsValid(original: original, current: current)
+    else { return false }
+    return true
+  }
+
+  @inline(never)
+  private func currentNewtStockSourcesAreValid(
+    original: borrowing CurrentNewtKitStock, current: borrowing CurrentNewtKitStock
+  ) -> Bool {
+    let sourceIdentity = source
+    guard let catalogue = custody.original.body.nativeGeometryCatalogueID(),
       let parent = ShipCatalogue.ship(catalogue),
       EMPState.declaredNativeCrewCount(parent) == crewTotal,
       original.issue.birthLoad.catalogueShipID == catalogue,
-      hull.body.physical?.catalogueShipID == catalogue,
+      hull.body.nativeGeometryCatalogueID() == catalogue,
       let r3 = OriginalFleetR3Data.contract(for: catalogue),
       original.issue.birthLoad.r3SHA256 == r3.sourceSHA256,
       original.issue.birthLoad.people.count == crewTotal,
       Set(original.issue.birthLoad.people.map { $0.identity.ordinal }) == Set(0..<crewTotal),
-      original.issue.birthLoad.people.allSatisfy({ $0.identity.source == source }),
-      custody.original.body.physical?.currentNewtKitReceipt == nil,
-      hull.body.physical?.currentNewtKitReceipt == nil,
-      original.phase == .stowed, original.issue.birthActor == source,
-      original.issue.person.source == source,
+      original.issue.birthLoad.people.allSatisfy({ $0.identity.source == sourceIdentity }),
+      case .none = custody.original.body.nativeGeometryReceipt(),
+      case .none = hull.body.nativeGeometryReceipt(),
+      original.phase == .stowed, original.issue.birthActor == sourceIdentity,
+      original.issue.person.source == sourceIdentity,
       (0..<crewTotal).contains(original.issue.person.ordinal),
       original.issue.issuedAt <= custody.original.physicalTime,
-      CurrentNewtKitStock.permitsTransition(from: original, to: current),
+      CurrentNewtKitStock.permitsTransition(from: copy original, to: copy current),
       let descriptor = CurrentNewtKitSource.current, descriptor.matches(original.issue),
-      descriptor.matches(original, at: custody.original.physicalTime),
-      descriptor.matches(current, at: hull.physicalTime),
+      descriptor.matches(copy original, at: custody.original.physicalTime),
+      descriptor.matches(copy current, at: hull.physicalTime),
       current.structurallyValid
     else { return false }
-    if custody.original.body.physical?.identity == original.issue.birthActor {
+    if custody.original.body.nativeGeometryIdentity() == original.issue.birthActor {
       guard originalSpawn == original.issue.birthSpawn else { return false }
     } else {
-      guard custody.traffic?.currentNewtKitStock == original else { return false }
+      guard custody.traffic?.currentNewtKitStock == (copy original) else { return false }
     }
-    if let actuation = current.actuation {
-      guard actuation.source == source, actuation.sequence == sequence,
-        actuation.startedAt <= hull.physicalTime,
-        actuation.load.catalogueShipID == catalogue, actuation.load.r3SHA256 == r3.sourceSHA256,
-        actuation.load.people.allSatisfy({ original.issue.birthLoad.people.contains($0) }),
-        actuation.load.people.contains(where: {
-          $0.identity == original.issue.person && $0.profile == original.issue.personProfile
-        }),
-        disableEpisodes.contains(where: { episode in
-          guard let schedule = episode.ejections.first(where: {
-            $0.ordinal == original.issue.person.ordinal
-          }) else {
-            return false
-          }
-          return episode.actorBindings.contains(actuation.parent)
-            && actuation.startedAt == episode.incident.physicalTime + schedule.delay
-            && actuation.deadline == episode.deadline
-        })
-      else { return false }
-    }
-    if current.phase == .actuating && current.interruptedAt == nil {
-      guard let physical = hull.body.physical,
-        descriptor.matchesAttachedObservation(stock: current,
-          state: .init(pose: Game.modelPose(of: hull.body, player: .init()),
-            velocity: physical.velocity, angularVelocity: physical.angularVelocity),
-          at: hull.physicalTime)
-      else { return false }
-    }
+    return true
+  }
+
+  @inline(never)
+  private func currentNewtStockActuationIsValid(
+    original: borrowing CurrentNewtKitStock, current: borrowing CurrentNewtKitStock
+  ) -> Bool {
+    guard let actuation = current.actuation else { return true }
+    let originalPeople = original.issue.birthLoad.people
+    let person = original.issue.person
+    let profile = original.issue.personProfile
+    guard let catalogue = custody.original.body.nativeGeometryCatalogueID(),
+      let r3 = OriginalFleetR3Data.contract(for: catalogue),
+      actuation.source == source, actuation.sequence == sequence,
+      actuation.startedAt <= hull.physicalTime,
+      actuation.load.catalogueShipID == catalogue, actuation.load.r3SHA256 == r3.sourceSHA256,
+      actuation.load.people.allSatisfy({ originalPeople.contains($0) }),
+      actuation.load.people.contains(where: { $0.identity == person && $0.profile == profile }),
+      disableEpisodes.contains(where: { episode in
+        guard let schedule = episode.ejections.first(where: { $0.ordinal == person.ordinal }) else {
+          return false
+        }
+        return episode.actorBindings.contains(actuation.parent)
+          && actuation.startedAt == episode.incident.physicalTime + schedule.delay
+          && actuation.deadline == episode.deadline
+      })
+    else { return false }
+    return true
+  }
+
+  @inline(never)
+  private func currentNewtStockObservationIsValid(_ current: borrowing CurrentNewtKitStock) -> Bool {
+    guard current.phase == .actuating, current.interruptedAt == nil else { return true }
+    guard let descriptor = CurrentNewtKitSource.current,
+      let velocity = hull.body.nativeGeometryVelocity(),
+      let angularVelocity = hull.body.nativeGeometryAngularVelocity(),
+      descriptor.matchesAttachedObservation(stock: copy current,
+        state: .init(pose: Game.modelPose(of: hull.body, player: .init()),
+          velocity: velocity, angularVelocity: angularVelocity),
+        at: hull.physicalTime)
+    else { return false }
+    return true
+  }
+
+  @inline(never)
+  private func currentNewtStockReleaseIsValid(
+    original: borrowing CurrentNewtKitStock, current: borrowing CurrentNewtKitStock
+  ) -> Bool {
     if current.phase == .released {
       guard pods.count == 1, let receipt = current.receipt,
         receipt.issue.person == original.issue.person,
-        pods[0].body.physical?.currentNewtKitReceipt == receipt
+        pods[0].body.nativeGeometryReceipt() == receipt
       else { return false }
     } else if !pods.isEmpty {
       return false
