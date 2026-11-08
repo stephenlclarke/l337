@@ -45,6 +45,11 @@ public struct CatalogueShip: Codable, Sendable, Equatable, Identifiable {
   }
   public var searchText: String {
     var terms = [id, name, shipClass, appearances, evidence] + (catalogue.aliases ?? [])
+    if let type = catalogue.primaryType { terms += [type.rawValue, type.label] }
+    if let role = catalogue.primaryRole { terms += [role.rawValue, role.label] }
+    for preference in catalogue.roleWeights {
+      terms += [preference.role.rawValue, preference.role.label]
+    }
     if let original = originalDefinition {
       terms += [original.name, original.family, original.role, original.purchasePolicy]
     }

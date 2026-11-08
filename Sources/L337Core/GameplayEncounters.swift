@@ -414,6 +414,39 @@ extension Game {
     }
     let acceleration = max(1, (craft?.acceleration ?? 2) * 18)
     let offset = destination - actor.position
+    let forward: Vector3
+    if let craft, actor.catalogueShipID != nil, let role = actor.npc?.role,
+      [.trader, .miner, .pirate].contains(role), bodies[index].scriptNPC == nil,
+      bodies[index].missionActorID == nil, bodies[index].missionInstanceID == nil
+    {
+      // Use the existing script driver's per-axis step for ordinary current sources.
+      // No roll command is required to point the nose; retain the actor's actual bank.
+      let local = actor.orientation.inverse(offset)
+      let pitch = max(-craft.pitch * delta,
+        min(craft.pitch * delta, -atan2(local.y, hypot(local.x, local.z))))
+      let yaw = max(-craft.yaw * delta, min(craft.yaw * delta, -atan2(local.x, local.z)))
+      var step = Basis3()
+      step.rotate(pitch: pitch, roll: 0, yaw: yaw)
+      let orientation = step.transformed(by: actor.orientation)
+      bodies[index].orientation = orientation.relative(to: commander.flightSimulation.pose.orientation)
+      forward = orientation.z.unit
+    } else {
+      forward = applyLegacyGameplaySteering(
+        index: index, actor: actor, craft: craft, offset: offset, delta: delta)
+    }
+    let brakingSpeed = sqrt(2 * acceleration * max(0, offset.length - stopDistance))
+    let speed = max(0, min(requestedSpeed, actor.maximumSpeedUnitsPerSecond, brakingSpeed))
+    let desiredVelocity = forward * speed
+    let change = desiredVelocity - physical.velocity
+    let impulse = min(change.length, acceleration * delta)
+    bodies[index].physical?.velocity = physical.velocity + change.unit * impulse
+  }
+
+  /// Existing mission, script, security and unnamed-hull steering remains unchanged.
+  private mutating func applyLegacyGameplaySteering(
+    index: Int, actor: borrowing ActorSnapshot, craft: ShipPerformance?,
+    offset: Vector3, delta: Double
+  ) -> Vector3 {
     let desired = offset.unit
     let heading = actor.orientation.z.unit
     let axis = heading.cross(desired)
@@ -427,12 +460,7 @@ extension Game {
     bodies[index].orientation.y = commander.flightSimulation.pose.shipVector(
       forward.cross(right).unit)
     bodies[index].orientation.z = commander.flightSimulation.pose.shipVector(forward)
-    let brakingSpeed = sqrt(2 * acceleration * max(0, offset.length - stopDistance))
-    let speed = max(0, min(requestedSpeed, actor.maximumSpeedUnitsPerSecond, brakingSpeed))
-    let desiredVelocity = forward * speed
-    let change = desiredVelocity - physical.velocity
-    let impulse = min(change.length, acceleration * delta)
-    bodies[index].physical?.velocity = physical.velocity + change.unit * impulse
+    return forward
   }
 
   @inline(never)

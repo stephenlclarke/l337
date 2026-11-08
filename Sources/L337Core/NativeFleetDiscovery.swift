@@ -81,6 +81,11 @@ struct FleetDiscoveryEntry: Codable, Sendable, Equatable {
     return true
   }
   var status: String {
+    if milestone?.kind == .playerDestruction,
+      ShipCatalogue.ship(ship)?.catalogue.collectionMilestone == .blueprintAndFabrication
+    {
+      return "Player destruction recorded"
+    }
     if milestone != nil { return "Collection milestone recorded" }
     return identification == nil ? "Encountered" : "Identified"
   }
