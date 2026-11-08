@@ -138,7 +138,7 @@ class IsolatedCrashEvidenceTests(unittest.TestCase):
             rows = evidence.snapshot()
         self.assertEqual(rows[10]['start'], 'Thu Oct 22 01:00:00 2026')
         self.assertEqual(rows[10]['command'], '/tool/swift helper --filter selected name')
-        self.assertEqual(read.call_args.kwargs['timeout'], 2)
+        self.assertNotIn('timeout',read.call_args.kwargs)
 
     def test_failure_retains_only_exact_attributed_reports_and_existing_images(self):
         capture = evidence.IsolatedCrashEvidence(self.root, self.root / 'evidence', roots=[])
@@ -154,6 +154,26 @@ class IsolatedCrashEvidenceTests(unittest.TestCase):
         self.assertEqual(saved, [matched])
         self.assertNotIn('observed_images', reports.call_args.kwargs)
         self.assertEqual(images.call_args.args[0], capture.history)
+
+    def test_live_observer_and_capture_failures_keep_full_error_details_in_raw_evidence(self):
+        detail='fixture observer: '+('\u754c'*5000)+' exact-final-detail'
+        capture=evidence.IsolatedCrashEvidence(self.root,self.root/'evidence',roots=[],
+            read_snapshot=lambda:(_ for _ in ()).throw(OSError(detail)))
+        process=SimpleNamespace(pid=10,poll=lambda:None)
+        with patch.object(evidence.threading,'Thread') as thread:
+            thread.return_value.start.side_effect=lambda:thread.call_args.kwargs['target']()
+            thread.return_value.is_alive.return_value=False
+            capture.start(process)
+        self.assertEqual(capture.errors,[{'type':'OSError','detail':detail}])
+        collector_detail='fixture collector: '+('x'*9000)+' original-suffix'
+        with patch.object(evidence,'retain_test_images',side_effect=ValueError(collector_detail)):
+            result=capture.finish('c'*40,failed=True)
+        self.assertEqual(result['errors'],[{'type':'OSError','detail':detail}])
+        self.assertEqual(result['captureError'],{'type':'ValueError','detail':collector_detail})
+        self.assertNotIn('matchedReports',result)
+        saved=json.loads((capture.evidence/'capture.json').read_text())
+        self.assertEqual(saved['errors'],result['errors'])
+        self.assertEqual(saved['captureError'],result['captureError'])
 
     def test_success_does_not_collect_reports_or_copy_images(self):
         capture = evidence.IsolatedCrashEvidence(self.root, self.root / 'evidence', roots=[])

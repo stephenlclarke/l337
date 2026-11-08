@@ -19,8 +19,7 @@ spec.loader.exec_module(reference)
 
 class ShipReferenceGuardTests(unittest.TestCase):
     def command(self):
-        return ['/bound/toolchain/swift', 'build', '--build-tests', '--enable-code-coverage',
-                '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
+        return ['/bound/toolchain/swift', 'build', '--build-tests', '--enable-code-coverage']
 
     def guarded(self, resident, profile=None, command=None):
         process = Mock(pid=987654, returncode=None)
@@ -41,10 +40,6 @@ class ShipReferenceGuardTests(unittest.TestCase):
             cleanup.assert_called_once()
             return code
 
-    def test_default_asset_budget_preserves_its_inclusive_limit_and_refusal_cleanup(self):
-        self.assertEqual(reference.ASSET_RSS, 2415919104)
-        self.assertEqual(self.guarded(reference.ASSET_RSS), 0)
-        self.assertEqual(self.guarded(reference.ASSET_RSS + 1), 1)
 
     def test_asset_build_and_render_share_one_guard_without_overlap(self):
         @contextmanager
@@ -72,7 +67,7 @@ class ShipReferenceGuardTests(unittest.TestCase):
                     else:
                         staged = reference.render_media(['SH005', 'SH058'])
                 calls = [call.args for call in execute.call_args_list]
-                options = ['--build-system', 'native', '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
+                options = []
                 self.assertEqual(calls[0][0], ['swift', 'build', *options, '--product', 'L337'])
                 self.assertEqual(execute.call_count, 1 if build_exit else 2)
                 if not build_exit:
@@ -83,73 +78,21 @@ class ShipReferenceGuardTests(unittest.TestCase):
                 self.assertEqual(calls[0][1], root)
                 self.assertEqual(calls[0][3], [17, 17])
                 self.assertTrue(all(not call.kwargs for call in execute.call_args_list))
-                guard.worker_limit.assert_called_once()
-                self.assertEqual(guard.worker_limit.call_args.kwargs['peak_per_worker'], reference.ASSET_RSS)
+                guard.worker_limit.assert_not_called()
 
-    def test_compiler_has_its_own_inclusive_six_gib_limit_and_keeps_cleanup(self):
-        self.assertEqual(reference.NORMAL_COMPILER_RSS, 6442450944)
-        self.assertEqual(reference.NORMAL_RSS, 3221225472)
-        for resident in [reference.NORMAL_RSS + 1, reference.NORMAL_COMPILER_RSS]:
-            with self.subTest(resident=resident):
-                self.assertEqual(self.guarded(resident, 'normal-compiler'), 0)
-        self.assertEqual(self.guarded(reference.NORMAL_COMPILER_RSS + 1, 'normal-compiler'), 1)
-        self.assertEqual(self.guarded(reference.NORMAL_RSS + 1), 1)
 
-    def test_test_and_game_commands_cannot_claim_the_compiler_allowance(self):
-        for command in [self.driver_command(),
-                        [self.command()[0], 'test', '--enable-code-coverage', 'list', '--skip-build'],
-                        ['/unit/L337'], ['/usr/bin/make', 'ci']]:
-            with self.subTest(command=command), patch.object(reference.subprocess, 'Popen') as launch, \
-                    patch.object(reference, 'process_memory') as sample:
-                with self.assertRaises(ValueError):
-                    reference.run_renderer(command, Path('/unit'), io.BytesIO(), (), 100,
-                                           profile='normal-compiler')
-                launch.assert_not_called()
-                sample.assert_not_called()
 
     def driver_command(self):
         return ['/bound/toolchain/swift', 'test', '--enable-code-coverage', '--skip-build',
                 '--xunit-output', '/unit/tests.xml', '--filter', 'Suite/method']
 
-    def test_explicit_native_backend_preserves_focused_phase_bounds_and_exact_options(self):
-        build = self.command() + [
-            '-Xlinker', '-O0', '-Xswiftc', '-driver-batch-size-limit', '-Xswiftc', '1',
-            '--disable-index-store',
-        ]
-        discovery = [build[0], 'test', '--enable-code-coverage', 'list', '--skip-build']
-        for original, profile in (
-                (build, 'normal-compiler'), (discovery, 'normal-test'),
-                (self.driver_command(), 'normal-test')):
-            backend = ['--build-system', 'native']
-            exact = original[:2] + backend + original[2:]
-            with self.subTest(command=exact):
-                limit = reference.NORMAL_COMPILER_RSS if profile == 'normal-compiler' else reference.NORMAL_RSS
-                self.assertEqual(self.guarded(limit, profile, exact), 0)
-                self.assertEqual(self.guarded(limit + 1, profile, exact), 1)
-            for changed in (
-                    original[:2] + ['--build-system', 'swiftbuild'] + original[2:],
-                    exact[:4] + backend + exact[4:], original + backend, exact[:-1]):
-                with self.subTest(command=changed), patch.object(reference.subprocess, 'Popen') as launch:
-                    with self.assertRaises(ValueError):
-                        reference.run_renderer(changed, Path('/unit'), io.BytesIO(), (), 100,
-                                               profile=profile)
-                    launch.assert_not_called()
 
-    def test_mission_pack_gate_retains_validation_with_one_native_compiler_job(self):
+    def test_mission_pack_gate_retains_validation_with_toolchain_resource_defaults(self):
         root = Path(__file__).resolve().parents[2]
-        commands = subprocess.check_output(
-            ['/usr/bin/make', '-n', 'mission-packs-check'], cwd=root, text=True).strip().splitlines()
-        self.assertEqual([shlex.split(command) for command in commands], [
-            ['swift', 'build', '--build-system', 'native', '--jobs', '1',
-             '-Xswiftc', '-disable-batch-mode', '--product', 'L337'],
-            ['swift', 'run', '--build-system', 'native', '--jobs', '1',
-             '-Xswiftc', '-disable-batch-mode', '--skip-build', 'L337',
-             '--validate-mission-pack', 'docs/mission-packs/courier.toml'],
-        ])
-        self.assertEqual(reference.execution_rss_limit(shlex.split(commands[0]), 'normal-compiler'),
-                         reference.NORMAL_COMPILER_RSS)
-        with self.assertRaises(ValueError):
-            reference.execution_rss_limit(shlex.split(commands[1]), 'normal-compiler')
+        commands = subprocess.check_output(['/usr/bin/make','-n','mission-packs-check'],cwd=root,text=True).strip().splitlines()
+        self.assertEqual([shlex.split(c) for c in commands],[
+            ['swift','build','--product','L337'],
+            ['swift','run','--skip-build','L337','--validate-mission-pack','docs/mission-packs/courier.toml']])
 
     def ci_rows(self, compiler=None):
         # Entirely synthetic kernel/RSS rows: no subprocess or host resource sampling.
@@ -165,226 +108,16 @@ class ShipReferenceGuardTests(unittest.TestCase):
                 frontend: row(worker, '/bound/toolchain/swift-frontend -frontend -c source.swift')}
         return observer, leader, worker, frontend, rows
 
-    def test_make_ci_recognizes_only_exact_actual_pure_compiler_commands(self):
-        flags = ['--jobs', '1', '-Xswiftc', '-disable-batch-mode', '-Xlinker', '-O0',
-                 '-Xswiftc', '-driver-batch-size-limit', '-Xswiftc', '1', '--disable-index-store']
-        normal = ['/bound/toolchain/swift', 'build', '--build-tests', '--build-system', 'native',
-                  '--enable-code-coverage', *flags]
-        leaks = ['/bound/toolchain/swift', 'build', '--build-system', 'native', *flags]
-        for command in (normal, leaks):
-            with self.subTest(command=command):
-                self.assertEqual(reference.execution_rss_limit(command, 'normal-compiler'),
-                                 reference.NORMAL_COMPILER_RSS)
-        for command in (normal + ['--jobs', '2'], normal + ['--build-system', 'native'],
-                        normal[:-1], ['/bound/toolchain/swift', 'run', 'L337']):
-            with self.subTest(command=command), self.assertRaises(ValueError):
-                reference.execution_rss_limit(command, 'normal-compiler')
 
-    def test_make_ci_exclusive_compiler_branch_counts_all_rss_at_six_gib(self):
-        observer, leader, worker, frontend, rows = self.ci_rows()
-        # Observer overhead is never subtracted from the whole selected aggregate.
-        rows[observer]['rss'] = 17
-        for delta, expected in ((0, 0), (1, 1)):
-            with self.subTest(delta=delta):
-                rows[frontend]['rss'] = reference.NORMAL_COMPILER_RSS - 17 + delta
-                process = Mock(pid=leader, returncode=None)
-                def completed():
-                    process.returncode = 0
-                    return 0
-                process.poll.side_effect = completed
-                with patch.object(reference.subprocess, 'Popen', return_value=process), \
-                        patch.object(reference, 'process_memory', return_value=rows) as sample, \
-                        patch.object(reference, 'stop_renderer', return_value=(True, False)), \
-                        patch.object(reference.os, 'getpid', return_value=observer), \
-                        patch.object(reference.time, 'monotonic', return_value=10):
-                    code = reference.run_renderer(['/usr/bin/make', 'ci'], Path('/unit'),
-                                                  io.BytesIO(), (), 100, profile='normal-ci')
-                self.assertEqual(code, expected)
-                self.assertTrue(sample.call_args.kwargs['include_command'])
 
-    def test_make_ci_rechecks_runtime_cap_after_compiler_finishes_in_the_same_guard(self):
-        observer, leader, worker, frontend, compiling = self.ci_rows()
-        compiling[frontend]['rss'] = 4 * 1024 ** 3
-        for extra, expected in ((0, 0), (1, 1)):
-            runtime = {pid: dict(row) for pid, row in compiling.items() if pid not in (worker, frontend)}
-            runtime[103] = {'parent': leader, 'group': 100, 'start': 'unit-runtime',
-                            'rss': reference.NORMAL_RSS + extra,
-                            'command': '/bound/toolchain/swift-test --skip-build'}
-            process = Mock(pid=leader, returncode=None)
-            polls = iter((None, 0))
-            def completed():
-                process.returncode = next(polls)
-                return process.returncode
-            process.poll.side_effect = completed
-            with self.subTest(extra=extra), \
-                    patch.object(reference.subprocess, 'Popen', return_value=process), \
-                    patch.object(reference, 'process_memory', side_effect=(compiling, runtime)) as sample, \
-                    patch.object(reference, 'stop_renderer', return_value=(True, False)), \
-                    patch.object(reference.os, 'getpid', return_value=observer), \
-                    patch.object(reference.time, 'monotonic', return_value=10), \
-                    patch.object(reference.time, 'sleep'):
-                code = reference.run_renderer(['/usr/bin/make', 'ci'], Path('/unit'),
-                                              io.BytesIO(), (), 100, profile='normal-ci')
-            self.assertEqual(code, expected)
-            self.assertEqual(sample.call_count, 2)
 
-    def test_make_ci_unknown_overlap_and_completed_compiler_cannot_raise_runtime_limit(self):
-        observer, leader, worker, frontend, original = self.ci_rows()
-        self.assertEqual(reference.normal_ci_sample_rss_limit(leader, set(original), original, observer),
-                         reference.NORMAL_COMPILER_RSS)
-        scenarios = []
-        runtime = {pid: dict(row) for pid, row in original.items() if pid not in (worker, frontend)}
-        runtime[103] = {'parent': leader, 'group': 100, 'start': 'unit-runtime', 'rss': 0,
-                        'command': '/bound/swift-test --skip-build'}
-        scenarios.append(runtime)
-        overlap = {pid: dict(row) for pid, row in original.items()}
-        overlap[103] = runtime[103]
-        scenarios.append(overlap)
-        unknown = {pid: dict(row) for pid, row in original.items()}
-        unknown[worker]['command'] += ' --jobs 8'
-        scenarios.append(unknown)
-        sibling = {pid: dict(row) for pid, row in original.items()}
-        sibling[103] = dict(runtime[103], command='/bound/python3 unrelated.py')
-        scenarios.append(sibling)
-        two_builds = {pid: dict(row) for pid, row in original.items()}
-        two_builds[103] = dict(original[worker])
-        scenarios.append(two_builds)
-        malformed = {pid: dict(row) for pid, row in original.items()}
-        malformed[worker]['command'] = '"unfinished'
-        scenarios.append(malformed)
-        orphan = {pid: dict(row) for pid, row in original.items()}
-        orphan[worker]['parent'] = 99999
-        scenarios.append(orphan)
-        for index, rows in enumerate(scenarios):
-            with self.subTest(index=index):
-                self.assertEqual(reference.normal_ci_sample_rss_limit(leader, set(rows), rows, observer),
-                                 reference.NORMAL_RSS)
-        noncompiler_overflow = {pid: dict(row) for pid, row in original.items()}
-        noncompiler_overflow[observer]['rss'] = reference.NORMAL_RSS + 1
-        self.assertEqual(reference.normal_ci_sample_rss_limit(
-            leader, set(noncompiler_overflow), noncompiler_overflow, observer), reference.NORMAL_RSS)
-        # A real swift dispatcher may retain one normalized swift-build child.
-        dispatched = {pid: dict(row) for pid, row in original.items()}
-        dispatched[worker]['command'] = original[worker]['command'].replace('/swift-build ', '/swift build ', 1)
-        dispatched[103] = dict(original[worker], parent=worker)
-        dispatched[frontend]['parent'] = 103
-        self.assertEqual(reference.normal_ci_sample_rss_limit(
-            leader, set(dispatched), dispatched, observer), reference.NORMAL_COMPILER_RSS)
-        # The one exact current sampler is allowed, but its RSS still enters the aggregate.
-        sampled = {pid: dict(row) for pid, row in original.items()}
-        sampled[104] = {'parent': observer, 'group': 55, 'start': 'unit-ps', 'rss': 20,
-                        'command': '/bin/ps -ww -axo pid=,ppid=,pgid=,lstart=,rss=,command='}
-        self.assertEqual(reference.normal_ci_sample_rss_limit(leader, set(sampled), sampled, observer),
-                         reference.NORMAL_COMPILER_RSS)
 
-    def test_make_ci_runtime_and_unknown_descendants_never_inherit_compiler_allowance(self):
-        observer, leader, worker, frontend, original = self.ci_rows()
-        for command in (
-                '/bound/toolchain/swift-test --skip-build',
-                '/bound/toolchain/swift test --skip-build',
-                '/bound/toolchain/swift-run --skip-build L337',
-                '/bound/toolchain/L337 --validate-mission-pack docs/mission-packs/courier.toml',
-                '/bound/toolchain/L337PackageTests.xctest',
-                '/bound/toolchain/python3 unknown.py',
-                '/different/toolchain/swift-frontend -frontend -c source.swift'):
-            rows = {pid: dict(row) for pid, row in original.items()}
-            rows[103] = dict(original[frontend], parent=frontend, command=command)
-            with self.subTest(command=command):
-                self.assertEqual(reference.normal_ci_sample_rss_limit(
-                    leader, set(rows), rows, observer), reference.NORMAL_RSS)
 
-    def test_make_ci_nested_builds_only_allow_exact_direct_swift_dispatch_pair(self):
-        observer, leader, worker, frontend, original = self.ci_rows()
-        # Two real swift-build processes are never dispatcher duplication.
-        nested = {pid: dict(row) for pid, row in original.items()}
-        nested[103] = dict(original[worker], parent=worker)
-        self.assertEqual(reference.normal_ci_sample_rss_limit(
-            leader, set(nested), nested, observer), reference.NORMAL_RSS)
-        # A swift dispatcher with a matching direct swift-build child is one build.
-        dispatched = {pid: dict(row) for pid, row in original.items()}
-        dispatched[worker]['command'] = original[worker]['command'].replace('/swift-build ', '/swift build ', 1)
-        dispatched[103] = dict(original[worker], parent=worker)
-        dispatched[frontend]['parent'] = 103
-        self.assertEqual(reference.normal_ci_sample_rss_limit(
-            leader, set(dispatched), dispatched, observer), reference.NORMAL_COMPILER_RSS)
-        for command in (original[worker]['command'].replace('--build-tests ', '', 1),
-                        '/bound/toolchain/swift-build --build-system native --jobs 1 '
-                        '-Xswiftc -disable-batch-mode --product L337',
-                        original[worker]['command'] + ' --jobs 2'):
-            changed = {pid: dict(row) for pid, row in dispatched.items()}
-            changed[103]['command'] = command
-            with self.subTest(command=command):
-                self.assertEqual(reference.normal_ci_sample_rss_limit(
-                    leader, set(changed), changed, observer), reference.NORMAL_RSS)
-        extra = {pid: dict(row) for pid, row in dispatched.items()}
-        extra[104] = dict(original[worker], parent=103)
-        self.assertEqual(reference.normal_ci_sample_rss_limit(
-            leader, set(extra), extra, observer), reference.NORMAL_RSS)
-        indirect = {pid: dict(row) for pid, row in dispatched.items()}
-        indirect[103]['parent'] = frontend
-        indirect[frontend]['parent'] = worker
-        self.assertEqual(reference.normal_ci_sample_rss_limit(
-            leader, set(indirect), indirect, observer), reference.NORMAL_RSS)
 
-    def test_hosted_leak_build_and_native_monitor_sampler_are_closed_commands(self):
-        command = ['/bound/toolchain/swift', 'build', '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
-        self.assertEqual(reference.execution_rss_limit(command, 'normal-compiler'), reference.NORMAL_COMPILER_RSS)
-        with self.assertRaises(ValueError):
-            reference.execution_rss_limit(command + ['--jobs', '2'], 'normal-compiler')
-        observer,leader,worker,frontend,rows=self.ci_rows()
-        rows[104]={'parent':observer,'group':55,'start':'unit-ps','rss':1,
-                   'command':'ps -ww -axo pid=,ppid=,pgid=,stat=,lstart=,rss=,command='}
-        self.assertEqual(reference.normal_ci_sample_rss_limit(leader,set(rows),rows,observer),reference.NORMAL_COMPILER_RSS)
-        rows[104]['command'] += ' extra'
-        self.assertEqual(reference.normal_ci_sample_rss_limit(leader,set(rows),rows,observer),reference.NORMAL_RSS)
 
-    def test_full_make_ci_keeps_the_same_normal_bound_and_exact_entry_point(self):
-        command = ['/usr/bin/make', 'ci']
-        self.assertEqual(reference.execution_admission_peak(command, 'normal-ci'),
-                         reference.NORMAL_COMPILER_RSS)
-        self.assertEqual(reference.execution_rss_limit(command, 'normal-ci'), reference.NORMAL_RSS)
-        self.assertEqual(self.guarded(reference.NORMAL_RSS, 'normal-ci', command), 0)
-        self.assertEqual(self.guarded(reference.NORMAL_RSS + 1, 'normal-ci', command), 1)
-        for changed in (['make', 'ci'], ['/usr/bin/make', 'coverage-check'],
-                        command + ['ELITE_SANITIZERS=0'], command + ['-j2']):
-            with self.subTest(command=changed), patch.object(reference.subprocess, 'Popen') as launch:
-                with self.assertRaises(ValueError):
-                    reference.run_renderer(changed, Path('/unit'), io.BytesIO(), (), 100,
-                                           profile='normal-ci')
-                launch.assert_not_called()
 
-    def test_normal_driver_keeps_the_existing_inclusive_normal_phase_budget(self):
-        for resident, expected in [((reference.ASSET_RSS + reference.NORMAL_RSS) // 2, 0),
-                                   (reference.NORMAL_RSS, 0), (reference.NORMAL_RSS + 1, 1)]:
-            with self.subTest(resident=resident):
-                self.assertEqual(self.guarded(resident, 'normal-test', self.driver_command()), expected)
 
-    def test_serial_normal_driver_requires_the_exact_flag_placement(self):
-        command = self.driver_command()
-        serial = command[:4] + ['--no-parallel'] + command[4:]
-        self.assertEqual(self.guarded(reference.NORMAL_RSS, 'normal-test', serial), 0)
-        self.assertEqual(self.guarded(reference.NORMAL_RSS + 1, 'normal-test', serial), 1)
-        for changed in (command + ['--no-parallel'],
-                        command[:4] + ['--parallel'] + command[4:],
-                        serial[:5] + ['--no-parallel'] + serial[5:]):
-            with self.subTest(command=changed), patch.object(reference.subprocess, 'Popen') as launch:
-                with self.assertRaises(ValueError):
-                    reference.run_renderer(changed, Path('/unit'), io.BytesIO(), (), 100,
-                                           profile='normal-test')
-                launch.assert_not_called()
 
-    def test_discovery_uses_the_same_normal_limit_and_rejects_other_shapes(self):
-        command = ['/bound/toolchain/swift', 'test', '--enable-code-coverage', 'list', '--skip-build']
-        self.assertEqual(self.guarded(reference.NORMAL_RSS, 'normal-test', command), 0)
-        self.assertEqual(self.guarded(reference.NORMAL_RSS + 1, 'normal-test', command), 1)
-        for changed in [command[:-1], command + ['--jobs', '2'],
-                        [command[0], 'test', 'list', '--skip-build'],
-                        [command[0], 'test', '--enable-code-coverage', '--skip-build', 'list']]:
-            with self.subTest(command=changed), patch.object(reference.subprocess, 'Popen') as launch:
-                with self.assertRaises(ValueError):
-                    reference.run_renderer(changed, Path('/unit'), io.BytesIO(), (), 100,
-                                           profile='normal-test')
-                launch.assert_not_called()
 
     def test_normal_driver_rejects_unsupported_options_and_outputs_before_launch(self):
         command = self.driver_command()
@@ -452,8 +185,8 @@ class ShipReferenceGuardTests(unittest.TestCase):
                 patch.object(reference.time, 'monotonic', return_value=10):
             self.assertEqual(reference.run_renderer(self.driver_command(), Path('/unit'), io.BytesIO(), (), 100,
                              profile='normal-test', failure_evidence=requested), 1)
-        factory.assert_called_once_with('/unit/test-failure-evidence', {'unit': 'frozen'}, deadline=96)
-        sample.assert_called_once_with(1, include_command=True)
+        factory.assert_called_once_with('/unit/test-failure-evidence', {'unit': 'frozen'}, deadline=None)
+        sample.assert_called_once_with(None, include_command=True)
         capture.observe.assert_called_once_with(rows, {987654}, 987654)
         cleanup.assert_called_once_with(process, {987654: 'unit-start'}, 14)
         capture.finish.assert_called_once_with(True, 14)

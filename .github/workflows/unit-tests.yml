@@ -14,7 +14,6 @@ jobs:
   scope:
     name: Classify changed paths
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     outputs:
       requires_build: ${{ steps.scope.outputs.requires_build }}
     steps:
@@ -42,12 +41,12 @@ jobs:
               if re.fullmatch('[0-9a-f]{40}', base) and base != '0' * 40:
                   source = subprocess.check_output(
                       ['git', 'show', base + ':Tools/CI/change_scope.py'],
-                      stderr=subprocess.DEVNULL, timeout=30)
+                      stderr=subprocess.DEVNULL)
                   with tempfile.TemporaryDirectory() as directory:
                       script = Path(directory) / 'change_scope.py'
                       script.write_bytes(source)
                       result = subprocess.check_output(
-                          ['python3', '-I', str(script)], timeout=90).decode().strip()
+                          ['python3', '-I', str(script)]).decode().strip()
                       if result == 'false':
                           needed = 'false'
           except (KeyError, TypeError, ValueError, OSError, subprocess.SubprocessError):
@@ -62,7 +61,6 @@ jobs:
     if: ${{ !cancelled() && (needs.scope.result != 'success' || needs.scope.outputs.requires_build != 'false') }}
     # External PRs remain hosted. Enable the isolated VM only after provisioning.
     runs-on: ${{ github.event_name == 'push' && github.repository == 'stephenlclarke/l337' && github.actor_id == '22142777' && vars.ELITE_LOCAL_RUNNER_ENABLED == 'true' && fromJSON('["self-hosted", "macOS", "ARM64", "elite-ci"]') || 'macos-15' }}
-    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

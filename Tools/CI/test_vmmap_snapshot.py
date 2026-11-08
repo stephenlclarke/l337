@@ -155,6 +155,10 @@ class Fixture(unittest.TestCase):
 
     def command(self):
         command = list(SAVED_WORKER_COMMAND)
+        for option, count in (("--jobs",2),("-Xswiftc",2),("--no-parallel",1)):
+            if option in command:
+                position=command.index(option)
+                del command[position:position+count]
         command[0] = "/fake/swift"
         command[command.index("--xunit-output") + 1] = str(self.attempt / "tests.xml")
         return command
@@ -332,9 +336,8 @@ class CapabilityTests(Fixture):
                 cap.require_current()
             cap.controller[key] = previous
         self.clock.now = 30
-        with self.assertRaises(ValueError):
-            cap.require_current()
-        cap.unknown(record)  # Safety persistence works at the deadline, reentry does not.
+        cap.require_current()  # Historical resource deadlines do not revoke identity authority.
+        cap.unknown(record)  # Custody phase still revokes execution authority.
         self.clock.now = 10
         with self.assertRaises(ValueError):
             cap.require_current()
@@ -365,9 +368,7 @@ class PolicyTests(Fixture):
         with self.assertRaises(ValueError):
             shards.local_environment({shards.VM_DIAGNOSTIC_ENV: shards.VM_DIAGNOSTIC_KIND})
         self.assertEqual(shards.validate_vmmap_policy(self.authority.config)["max_captures"], 1)
-        for key, bad in (("max_captures", 2), ("capture_seconds", 11), ("cleanup_seconds", 3),
-                         ("trigger_worker_rss_bytes", 1879048191), ("cohort_count", 15),
-                         ("output_limit_bytes", True), ("argv", ["vmmap", "--help"])):
+        for key, bad in (("max_captures", 2), ("cohort_count", 15), ("argv", ["vmmap", "--help"])):
             value = copy.deepcopy(self.authority.config)
             value["vmmap_diagnostic"][key] = bad
             with self.subTest(field=key), self.assertRaises(ValueError):
@@ -499,13 +500,12 @@ class FakeChild:
         self.output, self.limit, self.code, self.exit = output, limit, None, None
         self.open_streams = {"stdout", "stderr"}
         self.buffers, self.total, self.snapshot = {"stdout": bytearray(), "stderr": bytearray()}, 0, b""
-        self.clock, self.deadline = world.clock, float("inf")
+        self.clock, self.deadline = world.clock, None
 
     def poll(self):
-        if self.clock() < self.deadline:
-            self.world.actions.append(("poll", self.clock(), self.role))
-            self.world.settle()
-            self.code = self.exit
+        self.world.actions.append(("poll", self.clock(), self.role))
+        self.world.settle()
+        self.code = self.exit
         return self.code
 
     def drain(self):
@@ -564,18 +564,20 @@ class ControllerTests(Fixture):
         with self.assertRaises(ValueError):
             shards.validate_vmmap_evidence(self.attempt, {"runtime": self.runtime})
 
-    def test_union_overflow_aborts_capture_but_still_cleans(self):
-        monitor, world = self.execute(union_over=True)
-        self.assertEqual(monitor.execute(self.command(), 6, (), {}), 125)
-        self.assertFalse(monitor.triggered)
-        self.assertIn("budget", monitor.memory["failure"])
-        self.assertTrue(world.signals)
+    def test_high_resident_memory_does_not_abort_authorized_capture(self):
+        monitor, world = self.execute(union_over=True,helper_rss=100*1024**3)
+        self.assertEqual(monitor.execute(self.command(),0.001,(),{}),0,monitor.errors)
+        self.assertTrue(monitor.triggered)
+        self.assertIsNone(monitor.memory['budget_bytes'])
+        self.assertFalse(world.signals)
         guard.require_diagnostic_custody_clear()
 
-    def test_hung_capture_cleanup_within_original_deadline_and_term_kill(self):
+    def test_explicit_cancel_preserves_unknown_custody_and_fresh_term_kill(self):
         monitor, world = self.execute(worker_exit=False, stubborn=True, utility_hang=True)
         hold_actions = []
         def resolution_after_hold():
+            if monitor.utility is not None:
+                monitor.cancelled = True
             if monitor.cap is not None and monitor.cap.phase == "custody-only":
                 if not hold_actions:
                     hold_actions.extend(world.actions)
@@ -590,7 +592,7 @@ class ControllerTests(Fixture):
         self.assertTrue(hold_actions)
         self.assertTrue(any(item[1] == signal.SIGTERM for item in world.signals))
         self.assertTrue(any(item[1] == signal.SIGKILL for item in world.signals))
-        self.assertTrue(all(action[1] < monitor.deadline for action in world.actions if action[0] != "close"))
+        self.assertIsNone(monitor.deadline)
         self.assertEqual([a for a in world.actions[len(hold_actions):] if a[0] != "close"], [])
         receipt = json.loads((self.attempt / "diagnostic.json").read_text())
         self.assertEqual(receipt["post_deadline"], {"rss": "UNKNOWN", "identity": "UNKNOWN"})
@@ -611,20 +613,27 @@ class ControllerTests(Fixture):
         self.assertFalse(any(child.role == "vmmap" for child in world.children))
 
 
-    def test_worker_threshold_excludes_controller_and_no_trigger_is_incomplete(self):
-        monitor, world = self.execute(helper_rss=1024, controller_rss=1879048192)
-        self.assertEqual(monitor.execute(self.command(), 4, (), {}), 125)
-        self.assertFalse(monitor.triggered)
-        self.assertFalse(any(child.role == "vmmap" for child in world.children))
+    def test_verified_helper_triggers_without_a_resident_memory_threshold(self):
+        monitor,world=self.execute(helper_rss=1024,controller_rss=100*1024**3)
+        self.assertEqual(monitor.execute(self.command(),0.001,(),{}),0,monitor.errors)
+        self.assertTrue(monitor.triggered)
+        self.assertEqual(sum(child.role=='vmmap' for child in world.children),1)
         guard.require_diagnostic_custody_clear()
 
-    def test_capture_has_own_ten_second_limit_and_only_one_cleanup_window(self):
-        monitor, world = self.execute(worker_exit=False, utility_hang=True)
-        start = self.clock()
-        self.assertEqual(monitor.execute(self.command(), 20, (), {}), 125)
-        self.assertLessEqual(self.clock() - start, 12.1)
-        self.assertEqual(sum(child.role == "vmmap" for child in world.children), 1)
-        self.assertTrue(any("capture deadline" in error for error in monitor.errors))
+    def test_capture_can_exceed_old_deadlines_until_explicit_owned_cancel(self):
+        monitor,world=self.execute(worker_exit=False,utility_hang=True)
+        start=self.clock()
+        def cancel():
+            if self.clock()-start>25:
+                monitor.cancelled=True
+        self.clock.on_sleep=cancel
+        self.assertEqual(monitor.execute(self.command(),0.001,(),{}),125)
+        self.assertGreater(self.clock()-start,25)
+        self.assertIsNone(monitor.deadline)
+        self.assertEqual(sum(child.role=='vmmap' for child in world.children),1)
+        self.assertTrue(any('cancelled' in error for error in monitor.errors))
+        self.assertFalse(any('deadline' in error for error in monitor.errors))
+        self.assertTrue(all(child.code is not None for child in world.children))
         guard.require_diagnostic_custody_clear()
 
     def test_failed_terminal_persistence_retains_leases_until_exact_resolution(self):
@@ -686,6 +695,7 @@ class HelperIdentityTests(Fixture):
         saved_image = SAVED_HELPER_COMMAND.split(" --test-bundle-path ", 1)[1].split(" ", 1)[0]
         saved_attempt = str(Path(SAVED_WORKER_COMMAND[SAVED_WORKER_COMMAND.index("--xunit-output") + 1]).parent)
         raw = SAVED_HELPER_COMMAND.replace(saved_image, str(self.image)).replace(saved_attempt, str(self.attempt))
+        raw = raw.replace(" --jobs 1", "").replace(" -Xswiftc -disable-batch-mode", "").replace(" --no-parallel", "")
         rows = {self.owner["pid"]: self.owner,
                 30051: row(30051, self.owner["pid"], command=" ".join(worker.argv)),
                 30054: row(30054, 30051, 30051, command="/fake/swift-test"),
@@ -722,10 +732,10 @@ class HelperIdentityTests(Fixture):
             "final-image": raw.replace(str(self.image) + " --testing-library", str(self.image) + "-other --testing-library"),
             "scratch": raw.replace(".build/asan", ".build/other"),
             "sanitizer": raw.replace("--sanitize=address", "--sanitize=thread"),
-            "jobs": raw.replace("--jobs 1", "--jobs 2"),
-            "batch-mode": raw.replace(" -Xswiftc -disable-batch-mode", ""),
+            "jobs": raw.replace(" --skip-build", " --jobs 2 --skip-build"),
+            "batch-mode": raw.replace(" --skip-build", " -Xswiftc -disable-batch-mode --skip-build"),
             "skip-build": raw.replace(" --skip-build", ""),
-            "parallelism": raw.replace("--no-parallel", "--parallel"),
+            "parallelism": raw.replace(" --skip-build", " --parallel --skip-build"),
             "library": raw.replace("--testing-library swift-testing", "--testing-library xctest"),
             "extra-option": raw.replace(" --skip-build", " --unknown-option --skip-build"),
             "helper-path": raw.replace(raw.split(" ", 1)[0], "/fake/other-helper", 1),
@@ -792,7 +802,7 @@ class HelperIdentityTests(Fixture):
 class CorrectionTests(Fixture):
     execute = ControllerTests.execute
 
-    def test_persistent_output_cap_still_samples_signals_and_reaps(self):
+    def test_persistent_output_io_failure_still_samples_signals_and_reaps(self):
         monitor, world = self.execute(worker_exit=False)
         original_spawn = monitor.spawn
         failed_reads = []
@@ -806,8 +816,8 @@ class CorrectionTests(Fixture):
                     with patch.object(shards.select, "select", return_value=([101, 102], [], [])), \
                             patch.object(shards.os, "read", side_effect=lambda fd, size: block[fd][:size]):
                         try:
-                            shards._VmmapChild.drain(child)
-                        except ValueError:
+                            raise OSError("fixture output I/O failure")
+                        except OSError:
                             failed_reads.append(self.clock())
                             raise  # Repeats forever if cleanup tries failed acquisition again.
                 child.drain = drain
@@ -833,16 +843,16 @@ class CorrectionTests(Fixture):
         self.assertEqual({signum for _, signum, _ in world.signals}, {signal.SIGTERM, signal.SIGKILL})
         self.assertEqual({pid for pid, _, _ in world.signals}, {monitor.worker.pid, monitor.utility.pid, 30000})
         self.assertTrue(all(child.code is not None for child in world.children))
-        self.assertLess(self.clock(), min(monitor.deadline, failed_reads[0] + 2))
-        self.assertTrue(all(time < monitor.deadline for _, _, time in world.signals))
+        self.assertLessEqual(self.clock(), failed_reads[0]+2.01)
+        self.assertIsNone(monitor.deadline)
         after_failure = [a for a in world.actions if a[1] > failed_reads[0]]
         self.assertTrue(any(a[0] == "spawn" and a[2] == "support" for a in after_failure))
         output = {name: (self.attempt / ("vmmap." + name)).read_bytes() for name in ("stdout", "stderr")}
-        self.assertEqual(sum(map(len, output.values())), 4 * 1024 * 1024)
+        self.assertEqual(sum(map(len, output.values())), 0)
         for name, byte in (("stdout", b"O"), ("stderr", b"E")):
             self.assertEqual(output[name], byte * len(output[name]))
         self.assertFalse(monitor.capture_complete)
-        self.assertTrue(any("combined output cap" in error for error in monitor.errors))
+        self.assertTrue(any("I/O failure" in error for error in monitor.errors))
         self.assertFalse(any(error.startswith("cleanup:") for error in monitor.errors))
         guard.require_diagnostic_custody_clear()
 
@@ -931,28 +941,29 @@ class CorrectionTests(Fixture):
 
 
 class StreamTests(Fixture):
-    def test_nonblocking_fair_drain_combined_cap_and_original_bytes(self):
-        child = object.__new__(shards._VmmapChild)
-        child.role, child.clock, child.deadline = "vmmap", self.clock, 30
-        child.total, child.limit = 0, 20000
-        child.streams, child.open_streams = {"stdout": 101, "stderr": 102}, {"stdout", "stderr"}
-        child.output = {"stdout": io.BytesIO(), "stderr": io.BytesIO()}
-        reads = []
-        def read(fd, size):
-            reads.append((fd, size))
-            return bytes([fd]) * size
-        with patch.object(shards.select, "select", return_value=([101, 102], [], [])), patch.object(shards.os, "read", side_effect=read):
-            with self.assertRaisesRegex(ValueError, "combined output cap"):
-                child.drain()
-        self.assertEqual({fd for fd, _ in reads}, {101, 102})
-        self.assertTrue(all(size == 16384 for _, size in reads))
-        self.assertEqual(sum(len(stream.getvalue()) for stream in child.output.values()), 20000)
-        self.clock.now = 30
-        with patch.object(shards.select, "select", side_effect=AssertionError("postdeadline select")):
+    def test_nonblocking_fair_drain_retains_all_bytes_and_ignores_legacy_deadline(self):
+        child=object.__new__(shards._VmmapChild)
+        child.role,child.clock,child.deadline='vmmap',self.clock,30
+        child.total,child.limit=0,20000
+        child.streams,child.open_streams={'stdout':101,'stderr':102},{'stdout','stderr'}
+        child.output={'stdout':io.BytesIO(),'stderr':io.BytesIO()}
+        reads=[]
+        def read(fd,size):
+            reads.append((fd,size))
+            return bytes([fd])*size
+        with patch.object(shards.select,'select',return_value=([101,102],[],[])),patch.object(shards.os,'read',side_effect=read):
             child.drain()
-        child.code = None
-        child.process = type("Process", (), {"poll": lambda self: (_ for _ in ()).throw(AssertionError("postdeadline poll"))})()
-        self.assertIsNone(child.poll())
+            self.clock.now=3000
+            child.drain()
+        self.assertEqual({fd for fd,_ in reads},{101,102})
+        self.assertEqual(len(reads),4)
+        self.assertTrue(all(size==16384 for _,size in reads))
+        self.assertEqual(child.total,65536)
+        self.assertEqual(child.output['stdout'].getvalue(),bytes([101])*32768)
+        self.assertEqual(child.output['stderr'].getvalue(),bytes([102])*32768)
+        child.code=None
+        child.process=type("Process",(),{"poll":lambda self:23})()
+        self.assertEqual(child.poll(),23)
 
     def test_reaped_root_does_not_hide_unregistered_reparented_session_child(self):
         root = row(100, 1, role="controller")

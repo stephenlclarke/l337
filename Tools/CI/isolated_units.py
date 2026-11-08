@@ -1013,7 +1013,7 @@ def main() -> int:
     result_path.unlink(missing_ok=True)
     sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     command = [
-        os.environ.get("SWIFT_EXECUTABLE", "swift"), "test", "--jobs", "3",
+        os.environ.get("SWIFT_EXECUTABLE", "swift"), "test",
         "--enable-code-coverage", "--xunit-output", str(xml), "--filter", selection(),
     ]
     result = {"commit": sha, "command": command, "status": "failed"}

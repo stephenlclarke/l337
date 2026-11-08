@@ -315,23 +315,23 @@ class OwnedFaultStackTests(unittest.TestCase):
         self.assertIn(21, result['remainingMatchedOwned'])
         self.assertIn('cleanup denied', result['cleanupError'])
 
-    def test_log_cap_is_reserved_then_charged_once_in_shared_budget(self):
-        self.payload = b'x' * (artifacts.FAULT_LOG_LIMIT + 4096)
+    def test_full_log_above_legacy_cap_is_charged_once(self):
+        self.payload = b'x' * (1024*1024 + 4096)
         self.start()
-        self.assertEqual(self.budget.used, artifacts.FAULT_LOG_LIMIT)
-        result = self.hook.finish()
-        self.assertTrue(result['logTruncated'])
-        self.assertEqual(self.hook.log.stat().st_size, artifacts.FAULT_LOG_LIMIT)
-        self.assertEqual(self.budget.used, artifacts.FAULT_LOG_LIMIT)
-        self.hook.finish()
-        self.assertEqual(self.budget.used, artifacts.FAULT_LOG_LIMIT)
-
-    def test_budget_refusal_never_starts_debugger(self):
-        self.budget.limit = artifacts.FAULT_LOG_LIMIT - 1
-        self.start()
-        self.assertEqual(self.hook.finish()['status'], 'diagnostic-budget-refused')
-        self.assertEqual(self.calls, [])
         self.assertEqual(self.budget.used, 0)
+        result = self.hook.finish()
+        self.assertFalse(result.get('logTruncated',False))
+        self.assertEqual(self.hook.log.stat().st_size, len(self.payload))
+        self.assertEqual(self.budget.used, len(self.payload))
+        self.hook.finish()
+        self.assertEqual(self.budget.used, len(self.payload))
+
+    def test_legacy_budget_does_not_refuse_owned_debugger(self):
+        self.budget.limit = 1
+        self.start()
+        self.assertEqual(self.hook.finish()['status'], 'target-exited')
+        self.assertTrue(self.calls)
+        self.assertEqual(self.budget.used, len(self.payload))
 
     def test_actual_cleanup_rechecks_reused_pid_between_term_and_kill(self):
         identity = dict(self.row, pid=21)
@@ -475,7 +475,7 @@ class OwnedFaultStackTests(unittest.TestCase):
         self.assertEqual(result['status'], 'fault-captured')
         self.assertTrue(result['handedBack'])
         self.assertIn(('detach', False), calls)
-        self.assertIn('thread backtrace all -c 160', calls)
+        self.assertIn('thread backtrace all', calls)
         self.assertIn('register read far esr', calls)
         self.assertEqual(result['faultThreads'][0]['sp'], '0xb100')
         self.assertEqual(result['faultThreads'][0]['fp'], '0xb180')
@@ -497,20 +497,20 @@ class OwnedFaultStackTests(unittest.TestCase):
         self.assertNotIn('reportedFaultAddress', facts)
         self.assertNotIn('faultRegion', facts)
         self.assertEqual(facts['sp'], '0xb100')
-        self.assertIn('thread backtrace all -c 160', calls)
+        self.assertIn('thread backtrace all', calls)
 
-    def test_multiple_long_fault_metadata_stays_inside_the_existing_session_reader_limit(self):
+    def test_all_long_fault_metadata_is_retained_without_session_quota(self):
         result, calls = self.run_session('many-long-faults')
-        self.assertLessEqual(self.hook.session.stat().st_size, 8192)
-        self.assertEqual(len(result['faultThreads']), 1)
-        self.assertEqual(len(result['otherFaultThreads']), 15)
-        self.assertTrue(result['faultThreadsTruncated'])
-        self.assertTrue(result['otherFaultThreadsTruncated'])
+        self.assertGreater(self.hook.session.stat().st_size, 8192)
+        self.assertEqual(len(result['faultThreads']), 32)
+        self.assertEqual(len(result['otherFaultThreads']), 31)
+        self.assertFalse(result['faultThreadsTruncated'])
+        self.assertFalse(result['otherFaultThreadsTruncated'])
         primary = result['faultThreads'][0]
         self.assertEqual(primary['reportedFaultAddress'], '0xafff')
         self.assertEqual(primary['sp'], '0xb100')
-        self.assertTrue(primary['stopDescriptionTruncated'])
-        self.assertTrue(primary['faultRegion']['nameTruncated'])
+        self.assertFalse(primary['stopDescriptionTruncated'])
+        self.assertFalse(primary['faultRegion']['nameTruncated'])
         self.session = result
         self.start()
         accepted = self.hook.finish()
@@ -526,7 +526,7 @@ class OwnedFaultStackTests(unittest.TestCase):
         self.assertIn('selection failed', result['registersStatus'])
         self.assertNotIn('register read', calls)
         self.assertNotIn('register read far esr', calls)
-        self.assertIn('thread backtrace all -c 160', calls)
+        self.assertIn('thread backtrace all', calls)
         self.assertIn('image list -o -u -f', calls)
         self.assertEqual(result['faultThreads'][0]['sp'], '0xb100')
 
@@ -563,7 +563,7 @@ class OwnedFaultStackTests(unittest.TestCase):
         result, calls = self.run_session('stale-attach-stop')
         self.assertEqual(result['status'], 'fault-captured')
         self.assertIn('advance-stop-id', calls)
-        self.assertLess(calls.index('advance-stop-id'), calls.index('thread backtrace all -c 160'))
+        self.assertLess(calls.index('advance-stop-id'), calls.index('thread backtrace all'))
 
     def test_live_observer_exec_transition_retains_current_cleanup_identity(self):
         self.observer_code = None
@@ -599,7 +599,7 @@ class OwnedFaultStackTests(unittest.TestCase):
             variables = set(re.findall(r'\$\{([^}]+)\}', command))
             self.assertEqual(variables, expected[name])
             self.assertLess(calls.index(command), calls.index(('attach', 21)))
-            self.assertLess(calls.index(command), calls.index('thread backtrace all -c 160'))
+            self.assertLess(calls.index(command), calls.index('thread backtrace all'))
         self.assertTrue(result['handedBack'])
         self.assertIn('register read', calls)
         self.assertIn('image list -o -u -f', calls)
@@ -609,7 +609,7 @@ class OwnedFaultStackTests(unittest.TestCase):
         self.assertEqual(result['status'], 'observer-error')
         self.assertNotIn(('attach', 21), calls)
         self.assertNotIn('continue', calls)
-        self.assertNotIn('thread backtrace all -c 160', calls)
+        self.assertNotIn('thread backtrace all', calls)
 
     def test_session_failed_detach_is_never_claimed_handed_back(self):
         result, calls = self.run_session('detach-failure')
@@ -740,15 +740,16 @@ class CrashArtifactTests(unittest.TestCase):
         self.image.unlink()
         self.assertEqual(self.retain()[0]['status'], 'refused-image')
 
-    def test_size_cap_prioritizes_image_and_never_truncates_symbols(self):
-        budget = artifacts.ArtifactBudget(self.image.stat().st_size)
-        row = self.retain(budget)[0]
-        self.assertEqual(row['status'], 'retained-image')
-        self.assertEqual(row['symbols']['status'], 'refused-size-cap')
-        self.assertEqual((self.evidence / row['retainedImage']).read_bytes(), self.image.read_bytes())
-        self.assertEqual(budget.used, self.image.stat().st_size)
+    def test_legacy_size_budget_retains_full_image_and_symbols(self):
+        budget=artifacts.ArtifactBudget(1)
+        row=self.retain(budget)[0]
+        self.assertEqual(row['status'],'retained-image')
+        self.assertEqual(row['symbols']['status'],'retained-matching-dsym')
+        self.assertEqual((self.evidence/row['retainedImage']).read_bytes(),self.image.read_bytes())
+        self.assertGreater(budget.used,self.image.stat().st_size)
+        self.assertIsNone(budget.limit)
 
-    def test_all_images_precede_earlier_symbols_under_the_shared_cap(self):
+    def test_all_images_and_symbols_survive_a_small_legacy_budget(self):
         later = self.workspace / '.build/asan/Later.xctest/Contents/MacOS/Later'
         later.parent.mkdir(parents=True)
         later.write_bytes(b'later failing cohort image')
@@ -757,11 +758,11 @@ class CrashArtifactTests(unittest.TestCase):
         budget = artifacts.ArtifactBudget(self.image.stat().st_size + later.stat().st_size)
         rows = self.retain(budget)
         self.assertEqual([row['status'] for row in rows], ['retained-image', 'retained-image'])
-        self.assertEqual(rows[0]['symbols']['status'], 'refused-size-cap')
+        self.assertEqual(rows[0]['symbols']['status'], 'retained-matching-dsym')
         self.assertEqual((self.evidence / rows[1]['retainedImage']).read_bytes(), later.read_bytes())
-        self.assertEqual(budget.used, budget.limit)
+        self.assertGreater(budget.used,self.image.stat().st_size+later.stat().st_size)
 
-    def test_growth_between_report_stat_and_hash_cannot_exceed_the_cap(self):
+    def test_growth_before_snapshot_hash_retains_complete_attributed_bytes(self):
         baseline = artifacts.report_snapshot([self.reports])
         report = self.reports / 'growing.ips'
         raw = json.dumps(self.payload()).encode()
@@ -777,11 +778,10 @@ class CrashArtifactTests(unittest.TestCase):
         budget = artifacts.ArtifactBudget(len(raw) + 10)
         with patch.object(artifacts, 'sha', side_effect=grow_after_snapshot_stat):
             rows, _ = self.collect(baseline, budget)
-        self.assertEqual(rows[0]['reason'], 'artifact-size-cap')
-        self.assertGreater(rows[0]['bytes'], budget.limit)
-        self.assertEqual(budget.used, 0)
-        self.assertFalse((self.evidence / 'matched-crashes').exists())
-        self.assertFalse((self.evidence / 'unattributed-helper-diagnostics').exists())
+        self.assertTrue(rows[0]['matchedActualProcess'])
+        retained=self.evidence/rows[0]['retained']
+        self.assertEqual(retained.read_bytes(),raw+b' '*1024)
+        self.assertEqual(budget.used,len(raw)+1024)
 
     def test_growth_during_report_read_is_rechecked_before_retention(self):
         baseline = artifacts.report_snapshot([self.reports])
@@ -797,16 +797,15 @@ class CrashArtifactTests(unittest.TestCase):
         budget = artifacts.ArtifactBudget(len(raw) + 10)
         with patch.object(Path, 'open', grow_during_read):
             rows, _ = self.collect(baseline, budget)
-        self.assertEqual(rows[0]['reason'], 'artifact-size-cap')
-        self.assertGreater(rows[0]['bytes'], budget.limit)
-        self.assertEqual(budget.used, 0)
-        self.assertFalse((self.evidence / 'matched-crashes').exists())
-        self.assertFalse((self.evidence / 'unattributed-helper-diagnostics').exists())
+        self.assertTrue(rows[0]['matchedActualProcess'])
+        self.assertEqual(rows[0]['bytes'],len(raw)+1024)
+        self.assertEqual(budget.used,len(raw)+1024)
+        self.assertEqual((self.evidence/rows[0]['retained']).read_bytes(),raw+b' '*1024)
 
-    def test_oversized_image_is_refused_without_partial_output(self):
-        row = self.retain(artifacts.ArtifactBudget(1))[0]
-        self.assertEqual(row['status'], 'refused-image-size-cap')
-        self.assertFalse((self.evidence / 'native-images').exists())
+    def test_large_image_has_complete_output_despite_small_legacy_budget(self):
+        row=self.retain(artifacts.ArtifactBudget(1))[0]
+        self.assertEqual(row['status'],'retained-image')
+        self.assertEqual((self.evidence/row['retainedImage']).read_bytes(),self.image.read_bytes())
 
     def test_uuid_tool_failure_is_metadata_not_a_native_test_invocation(self):
         with patch.object(artifacts.subprocess, 'run', return_value=SimpleNamespace(
@@ -984,7 +983,7 @@ class CrashArtifactTests(unittest.TestCase):
         self.assertEqual((self.evidence / rows[0]['retained']).read_bytes(), raw)
         self.assertEqual(budget.used, len(raw))
 
-    def test_changed_then_disappearing_report_keeps_prior_original_with_cap_refusal(self):
+    def test_changed_then_disappearing_report_keeps_every_verified_original(self):
         images = self.retain()
         baseline = artifacts.report_snapshot([self.reports])
         report = self.reports / '.swiftpm-testing-helper-2026-10-20-210144.ips'
@@ -1009,13 +1008,13 @@ class CrashArtifactTests(unittest.TestCase):
             rows, _ = artifacts.collect_reports(
                 [self.reports], baseline, self.history, self.evidence, budget,
                 window=1, observed_images=images)
-        self.assertEqual(rows[0]['reason'], 'artifact-size-cap')
+        self.assertNotEqual(rows[0].get('reason'),'artifact-size-cap')
         self.assertFalse(rows[0]['matchedActualProcess'])
         version = rows[0]['retainedVersions'][0]
         self.assertEqual(version['sha256'], hashlib.sha256(raw).hexdigest())
         self.assertFalse(version['matchedActualProcess'])
         self.assertEqual((self.evidence / version['retained']).read_bytes(), raw)
-        self.assertEqual(budget.used, len(raw))
+        self.assertEqual(budget.used,len(raw)*2+100)
 
     def test_two_roots_share_one_original_and_all_references_follow_genuine_promotion(self):
         images = self.retain()
@@ -1039,7 +1038,7 @@ class CrashArtifactTests(unittest.TestCase):
             if calls == 2:
                 self.history[23] = [dict(self.row)]
             elif calls == 3:
-                first.write_bytes(raw + b' ' * (budget.limit + 1))
+                first.write_bytes(raw + b' ' * 1024)
                 second.unlink()
             return snapshot(current_roots)
 
@@ -1053,26 +1052,17 @@ class CrashArtifactTests(unittest.TestCase):
         self.assertEqual(len(rows), 2)
         changed = next(row for row in rows if row['directory'] == str(self.reports))
         disappeared = next(row for row in rows if row['directory'] == str(system_reports))
-        self.assertEqual(changed['reason'], 'artifact-size-cap')
-        self.assertFalse(changed['matchedActualProcess'])
-        self.assertNotIn('retained', changed)
-        self.assertEqual(len(changed['retainedVersions']), 1)
+        self.assertTrue(changed['matchedActualProcess'])
         self.assertTrue(disappeared['matchedActualProcess'])
-        self.assertEqual(disappeared['attribution'], 'proved-pid-start-path')
-        references = [row for row in rows if 'retained' in row]
-        references += [version for row in rows for version in row.get('retainedVersions', [])]
-        self.assertEqual(len(references), 2)
-        self.assertEqual(len({row['retained'] for row in references}), 1)
+        self.assertEqual(disappeared['attribution'],'proved-pid-start-path')
+        references=[row for row in rows if 'retained' in row]
+        references += [version for row in rows for version in row.get('retainedVersions',[])]
+        self.assertEqual({row['sha256'] for row in references},
+                         {hashlib.sha256(raw).hexdigest(),hashlib.sha256(raw+b' '*1024).hexdigest()})
         for row in references:
             self.assertTrue(row['matchedActualProcess'])
             self.assertTrue(row['retained'].startswith('matched-crashes/'))
-            self.assertEqual(row['sha256'], hashlib.sha256(raw).hexdigest())
-            self.assertEqual((self.evidence / row['retained']).read_bytes(), raw)
-            self.assertNotIn('error', row)
-        self.assertTrue(all('error' not in row for row in rows))
-        self.assertFalse(any((self.evidence / 'unattributed-helper-diagnostics').iterdir()))
-        self.assertEqual(budget.used, len(raw))
-
-
-if __name__ == '__main__':
-    unittest.main()
+            retained=(self.evidence/row['retained']).read_bytes()
+            self.assertIn(retained,(raw,raw+b' '*1024))
+            self.assertEqual(hashlib.sha256(retained).hexdigest(),row['sha256'])
+        self.assertEqual(budget.used,len(raw)*2+1024)

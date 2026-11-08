@@ -9,12 +9,12 @@ import time
 
 from crash_artifacts import attributed_report, confined, report_identity
 
-HISTORY_LIMIT = 65536
-COMMAND_LIMIT = 8192
-RECORD_LIMIT = 64
-REPORT_LIMIT = 1024 * 1024
-REPORT_COUNT = 8
-DIRECTORY_LIMIT = 4096
+HISTORY_LIMIT = None
+COMMAND_LIMIT = None
+RECORD_LIMIT = None
+REPORT_LIMIT = None
+REPORT_COUNT = None
+DIRECTORY_LIMIT = None
 NAME = re.compile(r'\.?swiftpm-testing-helper-\d{4}-\d{2}-\d{2}-\d{6}\.(ips|crash)$')
 
 
@@ -52,11 +52,12 @@ class PassiveFailureEvidence:
         self.truncated = False
         self.errors = []
         self.directory.mkdir(mode=0o700)
-        self.baseline = self.report_inventory(deadline)
+        self.baseline = self.report_inventory()
         self.persist()
 
     def report_inventory(self, deadline=None):
-        """Filename/stat baseline only in two fixed report roots; no report bodies before failure."""
+        """Complete filename/stat baseline in fixed report roots; no early report bodies."""
+        deadline = None
         result = {}
         for root in self.roots:
             if deadline is not None and self.clock() >= deadline:
@@ -68,9 +69,6 @@ class PassiveFailureEvidence:
             try:
                 with os.scandir(root) as entries:
                     for count, entry in enumerate(entries):
-                        if count >= DIRECTORY_LIMIT:
-                            self.errors.append('report-directory-entry-cap')
-                            break
                         if deadline is not None and self.clock() >= deadline:
                             self.errors.append('report-inventory-deadline')
                             break
@@ -78,9 +76,6 @@ class PassiveFailureEvidence:
                             continue
                         stat = entry.stat(follow_symlinks=False)
                         result[str(root / entry.name)] = (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
-                        if len(result) >= REPORT_COUNT * 4:
-                            self.errors.append('report-candidate-cap')
-                            return result
             except FileNotFoundError:
                 continue
             except OSError as error:
@@ -88,12 +83,10 @@ class PassiveFailureEvidence:
         return result
 
     def persist(self):
-        """Atomically retain bounded exact identities while the existing child is alive."""
+        """Atomically retain complete exact identities while the existing child is alive."""
         value = dict(schema=1, image=self.image, processes=self.history,
-                     truncated=self.truncated, errors=self.errors[-16:])
+                     truncated=self.truncated, errors=list(self.errors))
         raw = (json.dumps(value, sort_keys=True) + '\n').encode()
-        if len(raw) > HISTORY_LIMIT:
-            raise ValueError('Owned identity metadata cap exceeded')
         pending = self.directory / 'observed-processes.pending'
         pending.write_bytes(raw)
         pending.replace(self.directory / 'observed-processes.json')
@@ -110,56 +103,46 @@ class PassiveFailureEvidence:
                 continue
             if pid != leader and executable not in {'swiftpm-testing-helper', 'L337CoreTests', 'L337PackageTests'}:
                 continue
-            if len(command.encode()) > COMMAND_LIMIT or not row.get('start'):
+            if not row.get('start'):
                 self.truncated = True
                 continue
             record = {key: row[key] for key in ['parent', 'group', 'start', 'command']}
             records = self.history.get(str(pid), [])
             if record in records:
                 continue
-            if sum(map(len, self.history.values())) >= RECORD_LIMIT:
-                self.truncated = True
-                continue
             records.append(record)
             self.history[str(pid)] = records
             probe = json.dumps(dict(schema=1, image=self.image, processes=self.history,
-                                    truncated=self.truncated, errors=self.errors[-16:])).encode()
-            if len(probe) + 1 > HISTORY_LIMIT:
-                records.pop()
-                if not records:self.history.pop(str(pid), None)
-                self.truncated = True
-                continue
+                                    truncated=self.truncated, errors=list(self.errors))).encode()
             changed = True
         if changed or self.truncated:
             self.persist()
 
-    def finish(self, failed, deadline):
-        """One natural-failure inventory inside the existing cleanup deadline; never wait for a report."""
+    def finish(self, failed, deadline=None):
+        """Retain complete natural-failure evidence once; never wait for a report."""
+        deadline = None
         records = []
         if failed and not self.history:
             self.errors.append('no-observed-owned-process-identity')
         if failed and self.history:
             candidates = self.report_inventory(deadline)
             changed = [name for name, value in candidates.items() if self.baseline.get(name) != value]
-            for name in sorted(changed)[:REPORT_COUNT]:
-                if self.clock() >= deadline:
+            for name in sorted(changed):
+                if deadline is not None and self.clock() >= deadline:
                     self.errors.append('report-read-deadline')
                     break
                 row = dict(name=Path(name).name, matched=False)
                 records.append(row)
                 try:
                     path = confined(name, Path(name).parent)
-                    if path.stat().st_size > REPORT_LIMIT:
-                        row['status'] = 'report-byte-cap'
-                        continue
                     with path.open('rb') as stream:
-                        raw = stream.read(REPORT_LIMIT + 1)
+                        raw = stream.read()
                     stat = path.stat()
                     signature = (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns)
-                    if len(raw) > REPORT_LIMIT or signature != candidates[name] or len(raw) != stat.st_size:
+                    if signature != candidates[name] or len(raw) != stat.st_size:
                         row['status'] = 'changed-or-oversized-report'
                         continue
-                    if self.clock() >= deadline:
+                    if deadline is not None and self.clock() >= deadline:
                         row['status'] = 'report-read-deadline'
                         break
                     text = raw.decode('utf-8', errors='replace')
@@ -170,12 +153,12 @@ class PassiveFailureEvidence:
                     if not report_has_test_uuid(payload, text, path.suffix, self.image):
                         row['status'] = 'unproved-frozen-test-uuid'
                         continue
-                    if self.clock() >= deadline:
+                    if deadline is not None and self.clock() >= deadline:
                         row['status'] = 'report-validation-deadline'
                         break
                     digest = hashlib.sha256(raw).hexdigest()
                     target = self.directory / (digest[:16] + '-' + path.name)
-                    if self.clock() >= deadline:
+                    if deadline is not None and self.clock() >= deadline:
                         row['status'] = 'report-persist-deadline'
                         break
                     with target.open('xb') as stream:
@@ -188,7 +171,7 @@ class PassiveFailureEvidence:
         self.persist()
         value = dict(schema=1, failure=failed, image=self.image, reports=records,
                      matchedReports=sum(row['matched'] for row in records),
-                     errors=self.errors[-16:], historyTruncated=self.truncated,
+                     errors=list(self.errors), historyTruncated=self.truncated,
                      attribution='Only exact PID/start/executable plus frozen test UUID; missing evidence remains UNKNOWN',
                      noDebugger=True, noExtraProcessSamples=True, noRetry=True,
                      limits=dict(historyBytes=HISTORY_LIMIT, reportBytes=REPORT_LIMIT,

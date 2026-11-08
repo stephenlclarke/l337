@@ -11,7 +11,7 @@ def read(endpoint):
         "https://sonarcloud.io/api/" + endpoint,
         headers={"Authorization": "Bearer " + os.environ["SONAR_TOKEN"]},
     )
-    with urllib.request.urlopen(request, timeout=30) as response:
+    with urllib.request.urlopen(request) as response:
         return json.load(response)
 
 

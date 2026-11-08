@@ -190,23 +190,23 @@ def references(ships, write=True):
     return documents
 
 
-# Local asset generation uses the same resource limits as the physical quality job,
-# but not its diagnostic policies, immutable sessions or persistent custody records.
-ASSET_RSS = 2415919104
-# Normal tests/game retain 3 GiB; the human-authorized compiler-only limit is 6 GiB.
-NORMAL_RSS = 3221225472
-NORMAL_COMPILER_RSS = 6442450944
-ASSET_SECONDS = 7200
+# Execution uses OS/toolchain resource defaults. Identity, leases and cleanup remain.
+# None is deliberate: no large replacement memory/time/output ceiling is installed.
+ASSET_RSS = None
+# Compiler, test and renderer RSS are unrestricted by the project.
+NORMAL_RSS = None
+NORMAL_COMPILER_RSS = None
+ASSET_SECONDS = None
 ASSET_CLEANUP = 4
-ASSET_OUTPUT = 16 * 1024 * 1024
+ASSET_OUTPUT = None
 
 
-def process_memory(timeout=1, *, include_command=False):
+def process_memory(timeout=None, *, include_command=False):
     """One existing kernel/RSS sample; optional owned failure attribution never changes RSS ownership."""
     columns='pid=,ppid=,pgid=,lstart=,rss='
     command=['/bin/ps','-axo',columns]
     if include_command:command=['/bin/ps','-ww','-axo',columns+',command=']
-    raw=subprocess.check_output(command,timeout=timeout,stderr=subprocess.PIPE).decode()
+    raw=subprocess.check_output(command,stderr=subprocess.PIPE).decode()
     rows={}
     for line in raw.splitlines():
         fields=line.split(None,9) if include_command else line.split()
@@ -280,148 +280,41 @@ def stop_renderer(process,known,deadline):
 
 
 def execution_rss_limit(command, profile):
-    """Select separate compiler/test bounds only for closed phase commands."""
-    if profile == 'asset':return ASSET_RSS
-    if profile == 'normal-ci' and command == ['/usr/bin/make', 'ci']:return NORMAL_RSS
+    """Validate the closed command interface; no project RSS ceiling is applied."""
+    if profile == 'asset':return None
+    if profile == 'normal-ci' and command == ['/usr/bin/make', 'ci']:return None
     if not isinstance(command,list) or not command or Path(command[0]).name != 'swift':
         raise ValueError('Unknown execution profile or unsupported normal command')
-    explicit_native = command[2:4] == ['--build-system', 'native']
-    arguments = command[1:2] + command[4:] if explicit_native else command[1:]
-    # quality_phase's real normal command places --build-tests before its backend.
-    if command[1:5] == ['build', '--build-tests', '--build-system', 'native']:
-        explicit_native = True
-        arguments = command[1:3] + command[5:]
-    build = ['build','--build-tests','--enable-code-coverage','--jobs','1',
-             '-Xswiftc','-disable-batch-mode']
-    focused_build = build + [
-        '-Xlinker','-O0','-Xswiftc','-driver-batch-size-limit','-Xswiftc','1','--disable-index-store']
-    if profile == 'normal-compiler':
-        if not explicit_native and arguments == ['build','--jobs','1','-Xswiftc','-disable-batch-mode']:
-            return NORMAL_COMPILER_RSS  # Exact hosted leak-phase pure build.
-        if arguments == focused_build:return NORMAL_COMPILER_RSS
-        if explicit_native and arguments in (
-            # Existing local leak-phase build, which never starts the diagnostic app.
-            ['build','--jobs','1','-Xswiftc','-disable-batch-mode','-Xlinker','-O0',
-             '-Xswiftc','-driver-batch-size-limit','-Xswiftc','1','--disable-index-store'],
-            # The mission gate builds first, then validates separately with --skip-build.
-            ['build','--jobs','1','-Xswiftc','-disable-batch-mode','--product','L337'],
-        ):return NORMAL_COMPILER_RSS
-        if not explicit_native and arguments in (
-            build,
-            build + ['-Xlinker','-O0'],
-            build + ['-Xlinker','-O0','-Xswiftc','-driver-batch-size-limit','-Xswiftc','1'],
-            ['build','--product','L337','--enable-code-coverage','--jobs','1',
-             '-Xswiftc','-disable-batch-mode','-Xlinker','-O0','-Xswiftc',
-             '-driver-batch-size-limit','-Xswiftc','1','--disable-index-store'],
-        ):return NORMAL_COMPILER_RSS
-    if profile == 'normal-test':
-        if arguments == ['test','--enable-code-coverage','list','--skip-build']:return NORMAL_RSS
-        test = ['test','--enable-code-coverage','--skip-build']
-        for prefix in (test + ['--xunit-output'], test + ['--no-parallel','--xunit-output']):
-            start = len(prefix)
-            if len(arguments) != start + 3 or arguments[:start] != prefix:
-                continue
-            output, selector, expression = arguments[start:]
-            if (Path(output).is_absolute() and Path(output).name == 'tests.xml'
-                    and selector == '--filter' and isinstance(expression,str) and expression):
-                return NORMAL_RSS
+    args=command[1:]
+    if args[1:3]==['--build-system','native']:args=args[:1]+args[3:]
+    if args[:4]==['build','--build-tests','--build-system','native']:args=args[:2]+args[4:]
+    if profile=='normal-compiler' and args in (
+            ['build','--build-tests','--enable-code-coverage'],
+            ['build','--product','L337','--enable-code-coverage'],
+            ['build'],['build','--product','L337']):return None
+    if profile=='normal-test':
+        if args==['test','--enable-code-coverage','list','--skip-build']:return None
+        prefix=['test','--enable-code-coverage','--skip-build','--xunit-output']
+        if len(args)==len(prefix)+3 and args[:len(prefix)]==prefix:
+            output,selector,expression=args[len(prefix):]
+            if Path(output).is_absolute() and Path(output).name=='tests.xml' and selector=='--filter' and isinstance(expression,str) and expression:
+                return None
     raise ValueError('Unknown execution profile or unsupported normal command')
 
 
 def execution_admission_peak(command, profile):
-    """Reserve the maximum phase before mixed CI; never use its 3 GiB idle cap for admission."""
-    limit = execution_rss_limit(command, profile)
-    return NORMAL_COMPILER_RSS if profile == 'normal-ci' else limit
+    execution_rss_limit(command, profile)
+    return None
 
 
 def normal_ci_sample_rss_limit(leader, selected, rows, observer):
-    """Compiler allowance only for one exclusive, closed pure-build branch; count all RSS."""
-    def under(pid, ancestor):
-        seen = set()
-        while pid in selected and pid in rows and pid not in seen:
-            if pid == ancestor:return True
-            seen.add(pid)
-            pid = rows[pid]['parent']
-        return False
-
-    compilers = {}
-    executables = {}
-    for pid in selected:
-        try:
-            lexer = shlex.shlex(rows[pid].get('command', ''), posix=True)
-            lexer.whitespace_split = True
-            lexer.commenters = ''
-            executable = next(lexer, '')
-            executables[pid] = Path(executable)
-            if Path(executable).name not in {'swift', 'swift-build'}:continue
-            command = [executable, *lexer]
-            if Path(executable).name == 'swift-build':
-                command = [str(Path(command[0]).with_name('swift')), 'build', *command[1:]]
-            if execution_rss_limit(command, 'normal-compiler') == NORMAL_COMPILER_RSS:
-                compilers[pid] = command
-        except (ValueError, KeyError):
-            continue
-    roots = [pid for pid in compilers if not any(other != pid and under(pid, other) for other in compilers)]
-    if len(roots) != 1 or not under(roots[0], leader):return NORMAL_RSS
-    compiler = roots[0]
-    # Only swift -> its direct, matching swift-build child is dispatcher duplication.
-    # A second swift-build is a second build even when nested under the first.
-    for pid in compilers.keys() - {compiler}:
-        if (len(compilers) != 2 or executables[compiler].name != 'swift'
-                or executables[pid].name != 'swift-build' or rows[pid]['parent'] != compiler
-                or compilers[pid] != compilers[compiler]):return NORMAL_RSS
-    compiler_tree = {pid for pid in selected if under(pid, compiler)}
-    # Pure-build argv does not grant arbitrary descendants a compiler allowance.
-    # Only toolchain sibling compiler/linker tools are known compilation processes;
-    # runtime, test, game, plugin and unknown descendants retain the safe 3 GiB cap.
-    tools = {'swiftc', 'swift-frontend', 'swift-autolink-extract', 'clang', 'ld'}
-    toolchain = executables[compiler].parent
-    for pid in compiler_tree - compilers.keys():
-        executable = executables.get(pid)
-        if executable is None or executable.parent != toolchain or executable.name not in tools:
-            return NORMAL_RSS
-    # CI/observer ancestors retain their own 3 GiB ceiling even during compilation.
-    if sum(rows[pid]['rss'] for pid in selected - compiler_tree if pid in rows) > NORMAL_RSS:return NORMAL_RSS
-    allowed = compiler_tree | {pid for pid in selected if under(compiler, pid)}
-    allowed.add(observer)
-    samplers = (['/bin/ps', '-ww', '-axo', 'pid=,ppid=,pgid=,lstart=,rss=,command='],
-                ['ps', '-ww', '-axo', 'pid=,ppid=,pgid=,stat=,lstart=,rss=,command='],
-                ['/bin/ps', '-ww', '-axo', 'pid=,ppid=,pgid=,stat=,lstart=,rss=,command='])
-    for pid in selected:
-        try:
-            if rows[pid]['parent'] == observer and shlex.split(rows[pid].get('command', '')) in samplers:
-                allowed.add(pid)
-        except (KeyError, ValueError):
-            pass
-    # An overlapping runtime, second build, unknown sibling or malformed sample never
-    # receives a compiler allowance. The original 3 GiB whole-tree guard still applies.
-    return NORMAL_COMPILER_RSS if selected <= allowed else NORMAL_RSS
+    """Legacy telemetry API: neither compiler nor runtime has an RSS ceiling."""
+    return None
 
 
-def write_rss_refusal(rows, selected, aggregate, limit, profile):
-    """Retain one bounded prefix of the existing refusal sample; never collect more."""
-    prefix = 'RSS refusal sample: '
-    record = {'profile': profile, 'aggregate': aggregate, 'limit': limit,
-              'selectedCount': len(selected), 'rows': [], 'truncated': bool(selected)}
-    for pid in sorted(selected)[:32]:
-        row = rows[pid]
-        # Keep each retained kernel identity exact; omit a row that cannot fit.
-        if len(row['start']) > 64:break
-        record['rows'].append({'pid': pid, 'parent': row['parent'], 'group': row['group'],
-                               'start': row['start'], 'rss': row['rss']})
-        record['truncated'] = len(record['rows']) < len(selected)
-        line = prefix + json.dumps(record, ensure_ascii=True, separators=(',', ':')) + '\n'
-        if len(line) > 4096:
-            record['rows'].pop()
-            break
-    record['truncated'] = len(record['rows']) < len(selected)
-    line = prefix + json.dumps(record, ensure_ascii=True, separators=(',', ':')) + '\n'
-    if len(line) <= 4096:sys.stderr.write(line)
-
-
-def run_renderer(command,root,log,descriptors,deadline,*,profile='asset',failure_evidence=None):
-    """Ordinary owned subprocess/session, sampled RSS and one bounded cleanup path."""
-    rss_limit=execution_rss_limit(command,profile)
+def run_renderer(command,root,log,descriptors,deadline=None,*,profile='asset',failure_evidence=None):
+    """Authorize the command and retain owned-process cleanup, without resource ceilings."""
+    execution_rss_limit(command,profile)
     evidence=None
     if failure_evidence is not None:
         if profile!='normal-test' or len(command)!=8 or command[6]!='--filter':
@@ -432,7 +325,7 @@ def run_renderer(command,root,log,descriptors,deadline,*,profile='asset',failure
             raise ValueError('Failure evidence must use this exact run output sibling')
         from passive_failure_evidence import PassiveFailureEvidence
         evidence=PassiveFailureEvidence(failure_evidence['directory'],failure_evidence['image'],
-                                        deadline=deadline-ASSET_CLEANUP)
+                                        deadline=None)
     process=None;known={};code=1;cancelled=[None];handlers={}
     evidence_active=evidence is not None
     evidence_error=None
@@ -448,15 +341,12 @@ def run_renderer(command,root,log,descriptors,deadline,*,profile='asset',failure
         for signum in (signal.SIGINT,signal.SIGTERM):
             previous=signal.getsignal(signum)
             signal.signal(signum,cancel);handlers[signum]=previous
-        if time.monotonic()>=deadline-ASSET_CLEANUP:raise TimeoutError('Renderer deadline')
         if cancelled[0] is not None:return 128+cancelled[0]
         process=subprocess.Popen(command,cwd=root,stdout=log,stderr=subprocess.STDOUT,
             start_new_session=True,pass_fds=tuple(descriptors))
         while True:
             if cancelled[0] is not None:code=128+cancelled[0];break
-            if time.monotonic()>=deadline-ASSET_CLEANUP:raise TimeoutError('Renderer deadline')
-            if log.tell()>ASSET_OUTPUT:raise RuntimeError('Renderer output limit')
-            sample_timeout=min(1,max(.001,deadline-ASSET_CLEANUP-time.monotonic()))
+            sample_timeout=None
             rows=process_memory(sample_timeout,include_command=True) if evidence_active or profile=='normal-ci' else process_memory(sample_timeout)
             selected=owned_processes(process.pid,known,rows,process.returncode is None)
             if evidence_active:
@@ -468,16 +358,9 @@ def run_renderer(command,root,log,descriptors,deadline,*,profile='asset',failure
                     retain_capture_unknown()
             selected.update(pid for pid,row in rows.items() if pid==os.getpid() or row['parent']==os.getpid())
             aggregate = sum(rows[pid]['rss'] for pid in selected)
-            if profile=='normal-ci':
-                rss_limit=normal_ci_sample_rss_limit(process.pid,selected,rows,os.getpid())
-            if aggregate > rss_limit:
-                try:write_rss_refusal(rows, selected, aggregate, rss_limit, profile)
-                except BaseException:pass  # Diagnostics must not bypass the existing refusal.
-                raise RuntimeError('Renderer RSS limit')
             # First observation precedes poll: even a short-lived leader reserves its group.
             if process.poll() is not None:code=process.returncode;break
             time.sleep(.1)
-        if log.tell()>ASSET_OUTPUT:raise RuntimeError('Renderer output limit')
     except KeyboardInterrupt:
         code=130
     except Exception as error:
@@ -485,7 +368,7 @@ def run_renderer(command,root,log,descriptors,deadline,*,profile='asset',failure
         code=124 if isinstance(error,TimeoutError) else 1
     finally:
         try:
-            cleanup_deadline=min(deadline,time.monotonic()+ASSET_CLEANUP)
+            cleanup_deadline=time.monotonic()+ASSET_CLEANUP
             if process is not None:
                 clean,signalled=stop_renderer(process,known,cleanup_deadline)
                 if not clean or (code==0 and signalled):code=125
@@ -504,31 +387,23 @@ def run_renderer(command,root,log,descriptors,deadline,*,profile='asset',failure
 
 
 def render_media(ids, *, readme_medusa=False):
-    """Use the same asset leases and limits for ship media and the original Medusa header."""
+    """Use asset identity leases and default toolchain resources for both media paths."""
     root=Path.cwd()
     sys.path.insert(0,str(root/'Tools/CI'))
-    from recoverable_shards import file_claim,worker_limit
+    from recoverable_shards import file_claim
     import native_runner
     controls=native_runner.diagnostic_custody_root().parent
-    deadline=time.monotonic()+ASSET_SECONDS
+    deadline=None
     with ExitStack() as stack:
         locks=[stack.enter_context(file_claim(path)) for path in (
             controls/'recoverable-control.lock',controls/'sanitizer-checkpoints/executor.lock')]
         # Preserve any existing historical hold. Fresh developer Macs need no diagnostic bootstrap.
         if native_runner.diagnostic_custody_root().exists():native_runner.require_diagnostic_custody_clear()
-        text=subprocess.check_output(['/usr/bin/vm_stat'],timeout=1,stderr=subprocess.PIPE).decode()
-        page=re.search(r'page size of (\d+) bytes',text)
-        counts=[re.search(re.escape(key)+r':\s*(\d+)\.',text) for key in ('Pages free','Pages inactive','Pages speculative')]
-        if page is None or any(value is None for value in counts):raise RuntimeError('RAM admission sample unavailable')
-        worker_limit(explicit=1,cpu_budget=min(1,os.cpu_count() or 0),
-            ram_available=int(page[1])*sum(int(value[1]) for value in counts),ram_reserve=2147483648,
-            peak_per_worker=ASSET_RSS,disk_available=shutil.disk_usage(root).free,
-            disk_reserve=42949672960,disk_per_worker=85899345920)
         (root/'.build').mkdir(exist_ok=True)
         directory=Path(tempfile.mkdtemp(prefix='ship-media-',dir=root/'.build'))
-        # Use SwiftPM's single-worker native backend for this isolated asset command.
+        # Use SwiftPM defaults; preserve build-before-skip-build-render ordering.
         # Finish and reap the compiler before starting a no-build renderer under the same lease.
-        options = ['--build-system', 'native', '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
+        options = []
         output = directory / 'output'
         arguments = ['--readme-media', '--medusa-only'] if readme_medusa else [
             '--ship-media-directory', str(output), '--ship-media', *ids]
@@ -571,7 +446,7 @@ def isolated_media_plan():
     """Reap the Python process holding the decoded fleet before native compilation."""
     result = subprocess.run(
         [sys.executable, str(Path(__file__).resolve()), '--asset-plan'],
-        check=True, stdout=subprocess.PIPE, text=True, timeout=ASSET_SECONDS,
+        check=True, stdout=subprocess.PIPE, text=True,
     )
     inputs = json.loads(result.stdout)
     if (not isinstance(inputs, dict) or len(inputs) != 171

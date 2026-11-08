@@ -167,7 +167,7 @@ def request(url, method="HEAD", one_byte=False, json_limit=0, opener=None):
             headers["Range"] = "bytes=0-0"
         req = urllib.request.Request(url, method=method, headers=headers)
         try:
-            response = opener.open(req, timeout=10)
+            response = opener.open(req)
         except urllib.error.HTTPError as error:
             status, location = error.code, error.headers.get("Location")
             error.close()

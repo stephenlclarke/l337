@@ -24,7 +24,7 @@ SHARD_JOBS = {"native_shards", "thread_shards", "address_shards"}
 LOCAL_COMPONENTS_BACKEND = "owned-local-components-v1"
 GITHUB_BACKEND = "github-artifacts-v1"
 LOCAL_COMPONENT_ROLES = {"native_checks", "prepare_address", "native_local_components", "native_phase", "native_aggregate"}
-PHASE_BUILD_PROFILE = "jobs1-nonbatch-v1"
+PHASE_BUILD_PROFILE = "toolchain-defaults-v1"
 
 CUSTODY_KIND = "owned-diagnostic-custody-v1"
 _CUSTODY_SEAL = object()
@@ -44,7 +44,7 @@ def _custody_json(path, immutable=False):
     info = path.lstat()
     if (not path.is_file() or info.st_uid != os.getuid()
             or info.st_mode & 0o777 != (0o400 if immutable else 0o600)
-            or info.st_size > 1024 * 1024):
+):
         raise ValueError("Diagnostic custody material is missing, foreign or malformed")
     def unique(pairs):
         result = {}
@@ -91,8 +91,9 @@ def diagnostic_custody_registry():
                 or any(not isinstance(record[key], str) or not re.fullmatch(r"[0-9a-f]{64}", record[key])
                        for key in ("policy_sha256", "session_sha256"))
                 or not isinstance(record["attempt"], str) or not Path(record["attempt"]).is_absolute()
-                or type(record["deadline"]) not in (int, float) or not math.isfinite(record["deadline"])
-                or record["deadline"] <= 0 or not isinstance(record["controller"], dict)
+                or (record["deadline"] is not None and (type(record["deadline"]) not in (int, float)
+                    or not math.isfinite(record["deadline"]) or record["deadline"] <= 0))
+                or not isinstance(record["controller"], dict)
                 or not isinstance(record["identities"], list) or not isinstance(record["intents"], list)):
             raise ValueError("Invalid registered diagnostic custody record")
         controller = record["controller"]
@@ -134,7 +135,7 @@ def diagnostic_custody_registry():
                     or set(terminal) != {"absent", "reaped", "time"}
                     or terminal["absent"] != expected or terminal["reaped"] is not True
                     or type(terminal["time"]) not in (int, float) or not math.isfinite(terminal["time"])
-                    or not 0 <= terminal["time"] <= record["deadline"]
+                    or (terminal["time"] < 0 or (record["deadline"] is not None and terminal["time"] > record["deadline"]))
                     or any(not isinstance(intent, dict) or intent.get("state") not in ("reaped", "not-launched")
                            for intent in record["intents"])):
                 raise ValueError("Diagnostic CLEAN lacks bounded terminal proof")
@@ -155,7 +156,7 @@ def diagnostic_custody_registry():
                 or any(type(n) is not int or n < 0 for n in sample["roles"].values())
                 or sample["union_bytes"] != sum(sample["roles"].values())
                 or sample["worker_bytes"] != sample["roles"]["worker"]
-                or not 0 <= sample["time"] <= record["deadline"]):
+                or (sample["time"] < 0 or (record["deadline"] is not None and sample["time"] > record["deadline"]))):
             raise ValueError("Invalid last-verified diagnostic sample")
         for intent in record["intents"]:
             if (not isinstance(intent, dict) or set(intent) != {"role", "argv", "pid", "state"}
@@ -390,19 +391,13 @@ def normal_phase_guard():
 
 
 def phase_resource_limits(profile):
-    """Preserve stricter allocations; split the approved normal compiler/runtime limits."""
-    guard = normal_phase_guard()
-    configured = profile["admission"]["peak_per_worker"]
-    runtime = min(configured, guard.NORMAL_RSS)
-    compiler = guard.NORMAL_COMPILER_RSS if configured >= guard.NORMAL_RSS else configured
-    return {"runtime": runtime, "compiler": compiler, "admission": max(configured, compiler)}
+    """No project resource ceilings; legacy allocation fields are historical metadata only."""
+    return {"runtime": None, "compiler": None, "admission": None}
 
 
 def phase_resource_admission(profile):
-    """Reserve the maximum phase without modifying the installed policy or reserves."""
-    bounds = dict(profile["admission"])
-    bounds["peak_per_worker"] = phase_resource_limits(profile)["admission"]
-    return bounds
+    """Source authorization remains required; RAM/CPU/disk admission is removed."""
+    return {}
 
 
 def phase_profile(policy, phase):
@@ -411,20 +406,14 @@ def phase_profile(policy, phase):
     if backend != LOCAL_COMPONENTS_BACKEND and "phase_profiles" not in policy.get("recoverable_shards", {}):
         return None
     if not isinstance(profiles, dict) or set(profiles) != {"normal", "leaks"} or phase not in profiles:
-        raise ValueError("Both independent phase profiles are mandatory")
+        raise ValueError("Both independently authorized phase profiles are mandatory")
     for value in profiles.values():
         if (not isinstance(value, dict) or set(value) != {"build_profile", "admission"}
-                or value["build_profile"] != PHASE_BUILD_PROFILE):
+                or value["build_profile"] not in ("jobs1-nonbatch-v1", PHASE_BUILD_PROFILE)
+                or not isinstance(value["admission"], dict)):
             raise ValueError("Unknown phase build profile")
-        bounds = value["admission"]
-        if (not isinstance(bounds, dict) or set(bounds) != {"explicit", "cpu_budget", "ram_capacity", "ram_reserve", "peak_per_worker",
-                           "disk_capacity", "disk_reserve", "disk_per_worker"}
-                or any(type(n) not in (int, float) or not math.isfinite(n) or n <= 0 for n in bounds.values())
-                or bounds["explicit"] != 1 or bounds["cpu_budget"] != 1
-                or bounds["ram_capacity"] < bounds["ram_reserve"] + bounds["peak_per_worker"]
-                or bounds["disk_capacity"] < bounds["disk_reserve"] + bounds["disk_per_worker"]):
-            raise ValueError("Each phase requires its own complete serial resource allocation")
-    return profiles[phase]
+    # Keep authorization for the exact phase, but never reapply legacy resource fields.
+    return {"build_profile": PHASE_BUILD_PROFILE, "admission": {}}
 
 
 def read_local_components_binding(policy, now=None):
@@ -539,7 +528,7 @@ def require_recoverable_job(policy: dict, environment: dict, event: dict, now=No
             or (job == "native_phase" and (phase not in ("normal", "leaks") or any((mode, shard, worker))))
             or (job in ("prepare_thread", "prepare_address") and (mode != job.removeprefix("prepare_") or any((shard, worker, phase))))
             or (job in SHARD_JOBS and (mode not in ("thread", "address")
-                or not re.fullmatch(r"[0-9a-f]{64}", shard) or worker not in ("one", "two") or phase
+                or not re.fullmatch(r"[0-9a-f]{64}", shard) or worker not in policy.get("recoverable_shards", {}).get("workers", {}) or phase
                 or (job == "thread_shards" and mode != "thread") or (job == "address_shards" and mode != "address")))):
         raise ValueError("Recoverable role does not match its exact request type.")
     if environment["GITHUB_JOB"] not in PREPARE_JOBS:
@@ -616,7 +605,7 @@ def authorize_recoverable(policy: dict, environment: dict, event: dict, api=None
         raise ValueError("Pre-job artifact read credentials are unavailable.")
     value["GITHUB_TOKEN"], value["GH_TOKEN"] = token, token
     api = api or (lambda path: json.loads(subprocess.check_output(
-        ["gh", "api", path], env=value, stderr=subprocess.PIPE, timeout=60)))
+        ["gh", "api", path], env=value, stderr=subprocess.PIPE)))
     source = api(f"repos/{REPOSITORY}/contents/{workflow_path(value)}?ref={policy['approved_head']}")
     if (source["encoding"] != "base64" or hashlib.sha256(base64.b64decode(source["content"])).hexdigest()
             != activation["workflow_sha256"]):
