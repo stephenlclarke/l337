@@ -2815,7 +2815,7 @@ class AsanTestMemoryTests(Fixture):
         authority = SimpleNamespace(output=output)
         self.assertEqual(shards.NativeAuthority.snapshot(authority, resident=True)[10]["rss_bytes"], 123*1024)
         self.assertNotIn("rss_bytes", shards.NativeAuthority.snapshot(authority)[10])
-        self.assertEqual(calls, [["ps", "-axo", "pid=,ppid=,pgid=,stat=,lstart=,rss=,command="],
+        self.assertEqual(calls, [["ps", "-ww", "-axo", "pid=,ppid=,pgid=,stat=,lstart=,rss=,command="],
                                  ["ps", "-axo", "pid=,ppid=,pgid=,stat=,lstart=,command="]])
 
     def test_no_helper_resident_observation_cannot_qualify(self):
@@ -3764,10 +3764,14 @@ class OwnedQualityBridgeTests(Fixture):
                 observed_images={'fake': dict(sha256='a' * 64, uuid=shards.fingerprint({'arm64': 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'}))},
                 resident_memory=dict(kind='sampled-owned-process-rss-v1', mode=phase, phase_profile_sha256=shards.fingerprint(profile),
                     failure=None, budget_bytes=profile['admission']['peak_per_worker'], samples=1,
-                    helper_samples=1 if phase == 'normal' else 0, high_water_bytes=1024)))
+                    helper_samples=1 if phase == 'normal' else 0, high_water_bytes=1024, last_bytes=1024, last_phase_kind='runtime',
+                    last_budget_bytes=profile['admission']['peak_per_worker'])))
             shards.validate_phase_memory(value, identity, profile, origin)
             for mutation in [lambda v: v['processes']['resident_memory'].update(mode='address'),
                              lambda v: v['processes']['resident_memory'].update(samples=0),
+                             lambda v: v['processes']['resident_memory'].update(last_phase_kind='compiler'),
+                             lambda v: v['processes']['resident_memory'].update(last_budget_bytes=1),
+                             lambda v: v['processes']['resident_memory'].update(last_bytes=1025),
                              lambda v: v['processes']['resident_memory'].update(budget_bytes=1),
                              lambda v: v['processes']['resident_memory'].update(high_water_bytes=9000),
                              lambda v: v['processes']['resident_memory'].update(phase_profile_sha256='f' * 64),
@@ -3795,10 +3799,15 @@ class OwnedQualityBridgeTests(Fixture):
             monitor = shards.NativeMonitor(authority, attempt, authority.root, phase=phase)
             self.assertEqual(monitor.memory['budget_bytes'], authority.config['phase_profiles'][phase]['admission']['peak_per_worker'])
             self.assertEqual(monitor.memory['phase_profile_sha256'], shards.fingerprint(authority.phase_profile(phase)))
-            monitor.sample_memory({42: dict(command='fake phase', rss_bytes=monitor.memory['budget_bytes'] + 1)})
+            observer = dict(parent=0, start='observer', command='fake observer', rss_bytes=0)
+            monitor.controller = {'pid': 41, **observer}
+            live = {42: dict(parent=41, command='fake phase', rss_bytes=monitor.memory['budget_bytes'] + 1)}
+            monitor.sample_memory(live, {41: observer, **live})
             self.assertEqual(monitor.memory['failure'], 'owned process tree exceeds budget')
             monitor = shards.NativeMonitor(authority, attempt, authority.root, phase=phase)
-            monitor.sample_memory({42: dict(command='fake phase')})
+            monitor.controller = {'pid': 41, **observer}
+            live = {42: dict(parent=41, command='fake phase')}
+            monitor.sample_memory(live, {41: observer, **live})
             self.assertEqual(monitor.memory['failure'], 'incomplete resident sample')
         with patch.object(authority, 'phase_profile', return_value=None), self.assertRaises(ValueError):
             shards.NativeMonitor(authority, self.root, authority.root, phase='normal')
@@ -3816,7 +3825,7 @@ class OwnedQualityBridgeTests(Fixture):
             policy='normal-coverage-80-v1' if phase == 'normal' else 'leaks-at-exit-diagnostics-v1')
         flags = ['--jobs', '1', '-Xswiftc', '-disable-batch-mode']
         identity['build_profile'] = dict(kind='owned-phase-build-v1', phase=phase, profile=profile['build_profile'],
-            policy_sha256=shards.native_runner.policy_digest(authority.policy), admission=profile['admission'], flags=flags,
+            policy_sha256=shards.native_runner.policy_digest(authority.policy), admission=shards.native_runner.phase_resource_admission(profile), flags=flags,
             argv=['/fake/swift', 'build', *(['--build-tests'] if phase == 'normal' else []), *identity['flags'], *flags])
         attempt = self.root / ('fresh-owned-' + phase)
         attempt.mkdir(mode=0o700)
@@ -3844,7 +3853,15 @@ class OwnedQualityBridgeTests(Fixture):
                 uuid=shards.fingerprint({'fake-arm64': 'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'}))},
             resident_memory=dict(kind='sampled-owned-process-rss-v1', mode=phase,
                 phase_profile_sha256=shards.fingerprint(profile), failure=None, budget_bytes=profile['admission']['peak_per_worker'],
-                samples=1, helper_samples=1 if phase == 'normal' else 0, high_water_bytes=1024)))
+                samples=1, helper_samples=1 if phase == 'normal' else 0, high_water_bytes=1024, last_bytes=1024, last_phase_kind='runtime',
+                    last_budget_bytes=profile['admission']['peak_per_worker'])))
+        limits = shards.native_runner.phase_resource_limits(profile)
+        if limits['compiler'] != limits['runtime']:
+            memory['processes']['resident_memory'].update(
+                phase_limits_kind='closed-compiler-runtime-rss-v1', compiler_budget_bytes=limits['compiler'],
+                admission_peak_bytes=limits['admission'], compiler_samples=0, runtime_samples=1,
+                compiler_high_water_bytes=0, runtime_high_water_bytes=1024, last_budget_bytes=limits['runtime'],
+                last_phase_kind='runtime')
         verifier = SimpleNamespace(verify=lambda actual: self.assertEqual(actual, runtime), phase_origin=lambda a, i: origin)
         bundle = authority.cache / 'full-phases' / shards.phase_key(runtime, METHODS, phase, profile)
         bundle.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -3930,7 +3947,7 @@ class OwnedQualityBridgeTests(Fixture):
                 patch.object(shards.shutil, 'disk_usage', return_value=SimpleNamespace(free=100 * 1024**3)):
             for phase in ('normal', 'leaks'):
                 observed = authority.admission(phase)
-                self.assertEqual(observed['peak_per_worker'], authority.phase_profile(phase)['admission']['peak_per_worker'])
+                self.assertEqual(observed['peak_per_worker'], shards.native_runner.phase_resource_admission(authority.phase_profile(phase))['peak_per_worker'])
         authority.legacy_cache = Path(authority.config['legacy_cache'])
         authority.legacy_cache.mkdir(parents=True, exist_ok=True, mode=0o700)
         with patch.object(authority, 'admission', return_value={'explicit': 1}) as admission, \
@@ -3995,6 +4012,226 @@ class OwnedQualityBridgeTests(Fixture):
                 self.assertEqual(execution.call_count, 1)
                 claim.assert_called_with(phase=phase)
             shards.validate_phase(destination, checksum, phase, fixture.anchor['runtime'], METHODS, authority.phase_profile(phase))
+
+
+class HostedClosedPhaseMemoryTests(unittest.TestCase):
+    """Exercise the actual hosted wrapper, authority and monitor with fake kernel rows only."""
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory(dir='/tmp')
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name).resolve()
+        self.gib = 1024 ** 3
+        self.bounds = dict(explicit=1, cpu_budget=1, ram_capacity=16*self.gib,
+            ram_reserve=2*self.gib, peak_per_worker=3*self.gib, disk_capacity=200*self.gib,
+            disk_reserve=40*self.gib, disk_per_worker=80*self.gib)
+        self.profile = dict(build_profile='jobs1-nonbatch-v1', admission=self.bounds)
+        self.available = 8*self.gib
+        self.calls = []
+        self.authority = SimpleNamespace(root=self.root, cache=self.root,
+            config={'admission': self.bounds}, phase_profile=lambda phase: self.profile,
+            environment={}, policy={'approved_head': HEAD}, authorization=lambda: {})
+        def output(command):
+            self.calls.append(command)
+            if command == ['sysctl', '-n', 'hw.logicalcpu']:return '4'
+            if command == ['vm_stat']:
+                return ('Mach Virtual Memory Statistics: (page size of 1 bytes)\n'
+                        + 'Pages free: '+str(self.available)+'.\nPages inactive: 0.\nPages speculative: 0.\n')
+            raise AssertionError('Unexpected real resource command: '+repr(command))
+        self.authority.output = output
+        self.authority.admission = lambda phase: shards.NativeAuthority.admission(self.authority, phase)
+
+    def rows(self):
+        def row(parent, command, rss=0):
+            return dict(parent=parent, command=command, rss_bytes=rss, start='fake-start', group=100, state='S')
+        return {55: row(0, '/bound/python3 observer.py', 17),
+                100: row(55, '/bound/python3 quality_phase_checkpoints.py normal'),
+                101: row(100, '/bound/toolchain/swift-build --build-tests --enable-code-coverage '
+                         '--jobs 1 -Xswiftc -disable-batch-mode'),
+                102: row(101, '/bound/toolchain/swift-frontend -frontend -c source.swift'),
+                104: row(55, 'ps -ww -axo pid=,ppid=,pgid=,stat=,lstart=,rss=,command=', 11)}
+
+    def monitor(self, name, rows):
+        attempt = self.root / name
+        attempt.mkdir()
+        monitor = shards.NativeMonitor(self.authority, attempt, self.root, phase='normal')
+        monitor.controller = {'pid': 55, **rows[55]}
+        monitor.root_identity = {'pid': 100, **rows[100]}
+        monitor.known = {100: rows[100]}
+        return monitor
+
+    def sample(self, monitor, rows):
+        self.authority.snapshot = lambda resident=False: rows
+        monitor.observe()
+
+    def test_actual_phase_admission_reserves_six_plus_two_without_mutating_policy(self):
+        for phase in ('normal', 'leaks'):
+            with patch.object(shards.native_runner, 'require_diagnostic_custody_clear'), \
+                    patch.object(shards.shutil, 'disk_usage', return_value=SimpleNamespace(free=120*self.gib)):
+                admitted = self.authority.admission(phase)
+                self.assertEqual(admitted['peak_per_worker'], 6*self.gib)
+                self.assertEqual(admitted['ram_reserve'], 2*self.gib)
+                self.assertEqual(self.bounds['peak_per_worker'], 3*self.gib)
+                self.available = 8*self.gib-1
+                with patch.object(shards.legacy, 'progress'), self.assertRaises(ValueError):
+                    self.authority.admission(phase)
+                self.available = 8*self.gib
+        self.assertEqual(self.calls.count(['vm_stat']), 4)
+        self.assertEqual(self.calls.count(['sysctl', '-n', 'hw.logicalcpu']), 4)
+        records = list(self.root.glob('preparation/*/resource-admission.json'))
+        self.assertEqual(len(records), 2)
+        for path in records:
+            sample = shards.load_json(path)['sample']
+            self.assertEqual(sample['ram_required'], 8*self.gib)
+            self.assertEqual(sample['ram_available'], 8*self.gib-1)
+
+    def test_actual_monitor_counts_observer_and_sampler_and_rechecks_runtime_after_compile(self):
+        rows = self.rows()
+        monitor = self.monitor('transition', rows)
+        rows[102]['rss_bytes'] = 6*self.gib-28
+        self.sample(monitor, rows)
+        self.assertIsNone(monitor.memory['failure'])
+        self.assertEqual(monitor.memory['last_budget_bytes'], 6*self.gib)
+        runtime = {pid: dict(row) for pid,row in rows.items() if pid not in (101,102)}
+        runtime[103] = dict(rows[102], parent=100, command='/bound/Tests.xctest', rss_bytes=3*self.gib-28)
+        self.sample(monitor, runtime)
+        self.assertIsNone(monitor.memory['failure'])
+        self.assertEqual(monitor.memory['last_budget_bytes'], 3*self.gib)
+        self.assertEqual(monitor.memory['compiler_samples'], 1)
+        self.assertEqual(monitor.memory['runtime_samples'], 1)
+        runtime[103]['rss_bytes'] += 1
+        self.sample(monitor, runtime)
+        self.assertEqual(monitor.memory['failure'], 'owned process tree exceeds budget')
+        self.assertEqual(monitor.memory['last_bytes'], 3*self.gib+1)
+
+    def test_strict_phase_also_counts_observer_sampler_and_refuses_missing_observer(self):
+        self.bounds['peak_per_worker'] = 2*self.gib
+        for delta, refused in ((0, False), (1, True), (28, True)):
+            rows = self.rows()
+            rows[102]['rss_bytes'] = 2*self.gib-28+delta
+            monitor = self.monitor('strict-'+str(delta), rows)
+            with self.subTest(delta=delta):
+                self.sample(monitor, rows)
+                self.assertEqual(monitor.memory['last_bytes'], 2*self.gib+delta)
+                self.assertEqual(monitor.memory['budget_bytes'], 2*self.gib)
+                self.assertEqual(monitor.memory['last_budget_bytes'], 2*self.gib)
+                self.assertEqual(monitor.memory['last_phase_kind'], 'runtime')
+                self.assertEqual(monitor.memory['failure'] is not None, refused)
+        rows = self.rows()
+        monitor = self.monitor('strict-missing-observer', rows)
+        del rows[55]
+        self.sample(monitor, rows)
+        self.assertEqual(monitor.memory['failure'], 'incomplete observer resident sample')
+        self.assertEqual(monitor.memory['samples'], 0)
+        rows = self.rows()
+        monitor = self.monitor('strict-unbound-observer', rows)
+        monitor.controller = None
+        self.sample(monitor, rows)
+        self.assertEqual(monitor.memory['failure'], 'incomplete observer resident sample')
+        self.assertEqual(monitor.memory['samples'], 0)
+        rows = self.rows()
+        monitor = self.monitor('strict-missing-observer-rss', rows)
+        del rows[55]['rss_bytes']
+        self.sample(monitor, rows)
+        self.assertEqual(monitor.memory['failure'], 'incomplete resident sample')
+
+    def test_strict_admission_keeps_its_own_peak_plus_unchanged_reserve(self):
+        self.bounds['peak_per_worker'] = 2*self.gib
+        self.available = 4*self.gib
+        with patch.object(shards.native_runner, 'require_diagnostic_custody_clear'), \
+                patch.object(shards.shutil, 'disk_usage', return_value=SimpleNamespace(free=120*self.gib)):
+            admitted = self.authority.admission('normal')
+            self.assertEqual(admitted['peak_per_worker'], 2*self.gib)
+            self.assertEqual(admitted['ram_reserve'], 2*self.gib)
+            self.available -= 1
+            with patch.object(shards.legacy, 'progress'), self.assertRaises(ValueError):
+                self.authority.admission('normal')
+        records = list(self.root.glob('preparation/*/resource-admission.json'))
+        self.assertEqual(len(records), 1)
+        sample = shards.load_json(records[0])['sample']
+        self.assertEqual(sample['ram_required'], 4*self.gib)
+        self.assertEqual(sample['ram_available'], 4*self.gib-1)
+        self.assertEqual(self.calls.count(['vm_stat']), 2)
+
+    def test_actual_monitor_rejects_compiler_one_byte_over_six_including_observer(self):
+        rows = self.rows()
+        rows[102]['rss_bytes'] = 6*self.gib-27
+        monitor = self.monitor('compiler-over', rows)
+        self.sample(monitor, rows)
+        self.assertEqual(monitor.memory['last_bytes'], 6*self.gib+1)
+        self.assertEqual(monitor.memory['failure'], 'owned process tree exceeds budget')
+
+    def test_actual_monitor_overlap_descendant_runtime_unknown_and_second_build_stay_at_three(self):
+        original = self.rows()
+        for index, (parent, command) in enumerate((
+                (100, '/bound/Tests.xctest'), (102, '/bound/L337'),
+                (102, '/bound/toolchain/swift-test --skip-build'),
+                (101, original[101]['command']), (100, '/bound/python3 unknown.py'))):
+            rows = {pid: dict(row) for pid,row in original.items()}
+            rows[102]['rss_bytes'] = 4*self.gib
+            rows[103] = dict(rows[102], parent=parent, command=command, rss_bytes=0)
+            monitor = self.monitor('unsafe-'+str(index), rows)
+            with self.subTest(command=command):
+                self.sample(monitor, rows)
+                self.assertEqual(monitor.memory['last_budget_bytes'], 3*self.gib)
+                self.assertEqual(monitor.memory['failure'], 'owned process tree exceeds budget')
+        rows = self.rows()
+        monitor = self.monitor('observer-over', rows)
+        rows[55]['rss_bytes'] = 3*self.gib+1
+        self.sample(monitor, rows)
+        self.assertEqual(monitor.memory['last_budget_bytes'], 3*self.gib)
+        self.assertIsNotNone(monitor.memory['failure'])
+
+    def test_phase_receipt_requires_separate_compiler_and_runtime_proof(self):
+        rows = self.rows();rows[102]['rss_bytes'] = 4*self.gib
+        monitor = self.monitor('receipt', rows)
+        self.sample(monitor, rows)
+        runtime = {pid: dict(row) for pid,row in rows.items() if pid not in (101,102)}
+        runtime[103] = dict(rows[102], parent=100, command='/bound/swiftpm-testing-helper', rss_bytes=2*self.gib)
+        # Only sample fake rows here; helper-image lifecycle has its existing separate tests.
+        live = {pid: row for pid,row in runtime.items() if pid not in (55,104)}
+        monitor.sample_memory(live, runtime)
+        row = rows[100]
+        identity = dict(phase='normal', image_sha256='a'*64,
+            image_uuid='UUID: AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA (arm64) /fake/image')
+        origin = dict(tested_head=HEAD, authorization=dict(role='native_phase',phase='normal',head=HEAD,workspace=str(self.root)))
+        value = dict(child=dict(pid=100), terminal=dict(pid=100,exit_code=0), processes=dict(
+            running=False,workspace=str(self.root),root={'pid':100,**row},processes={'100':row},
+            observed_images={'fake':dict(sha256='a'*64,uuid=shards.fingerprint({'arm64':'AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA'}))},
+            resident_memory=deepcopy(monitor.memory)))
+        shards.validate_phase_memory(value,identity,self.profile,origin)
+        for changes in ({'runtime_high_water_bytes':3*self.gib+1},
+                        {'compiler_budget_bytes':3*self.gib}, {'admission_peak_bytes':3*self.gib},
+                        {'phase_limits_kind':'fixed-six'}, {'runtime_samples':0}, {'last_budget_bytes':6*self.gib+1}):
+            changed=deepcopy(value);changed['processes']['resident_memory'].update(changes)
+            with self.subTest(changes=changes),self.assertRaises(ValueError):
+                shards.validate_phase_memory(changed,identity,self.profile,origin)
+        runtime_only = deepcopy(value)
+        proof = runtime_only['processes']['resident_memory']
+        proof.update(samples=1, compiler_samples=0, compiler_high_water_bytes=0,
+            high_water_bytes=proof['runtime_high_water_bytes'])
+        shards.validate_phase_memory(runtime_only,identity,self.profile,origin)
+        mutations = [
+            {'last_phase_kind':'compiler', 'last_budget_bytes':6*self.gib},
+            {'last_phase_kind':'runtime', 'last_budget_bytes':6*self.gib},
+            {'last_phase_kind':'unknown'},
+            {'last_bytes':proof['high_water_bytes']+1},
+            {'last_bytes':3*self.gib+1},
+            {'last_bytes':-1}, {'last_bytes':True}, {'last_bytes':1.0}, {'last_bytes':None},
+            {'last_phase_kind':'compiler', 'last_budget_bytes':6*self.gib,'last_bytes':5*self.gib},
+        ]
+        for changes in mutations:
+            changed=deepcopy(runtime_only);changed['processes']['resident_memory'].update(changes)
+            with self.subTest(finalSample=changes), self.assertRaises(ValueError):
+                shards.validate_phase_memory(changed,identity,self.profile,origin)
+        # Also reject a last sample below the overall compiler high-water but
+        # above its own runtime high-water and within the runtime limit.
+        changed=deepcopy(value)
+        changed['processes']['resident_memory']['last_bytes'] += 1
+        with self.assertRaises(ValueError):
+            shards.validate_phase_memory(changed,identity,self.profile,origin)
+        # A large installed reservation cannot raise the runtime/test ceiling.
+        rotated=deepcopy(self.profile);rotated['admission']['peak_per_worker']=6*self.gib
+        self.assertEqual(shards.native_runner.phase_resource_limits(rotated)['runtime'],3*self.gib)
 
 
 if __name__ == "__main__":

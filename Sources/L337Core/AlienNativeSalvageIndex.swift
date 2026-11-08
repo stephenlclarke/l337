@@ -20,6 +20,7 @@ struct AlienNativeSalvageIndex: Sendable {
   struct ReceivedStructure: Sendable {
     let record: AlienStorageCompanion
     let item: SalvageLootItem
+    let collection: AlienStorageCompanionCollection
   }
 
   /// Retained intake facts, indexed once when custody changes; no scene or unlock authority.
@@ -81,7 +82,7 @@ struct AlienNativeSalvageIndex: Sendable {
           value = nil
         }
       case .companion(let item):
-        if case .structural = item.origin, case .collected = item.state,
+        if case .structural = item.origin, case .collected(let collection) = item.state,
           let plan = plans[item.plan], native.inspections[plan.plan.section] != nil,
           let wreck = native.wrecks[plan.plan.section.wreck]
         {
@@ -92,7 +93,7 @@ struct AlienNativeSalvageIndex: Sendable {
             throw AlienStorageError.invalidJoin
           }
           receivedStructure[wreck.catalogueShipID, default: []].append(
-            .init(record: item, item: original))
+            .init(record: item, item: original, collection: collection))
         }
         if case .researched(_, let research) = item.state { missileResearch.append(research) }
         if case .pending(let lot, let time, let offer, let binding) = item.state {
@@ -131,6 +132,14 @@ struct AlienNativeSalvageIndex: Sendable {
         guard pending.updateValue(value, forKey: value.lot.identity) == nil else {
           throw AlienStorageError.duplicateKey
         }
+      }
+    }
+    // Internal precedence for equivalent histories: first actual collection, then
+    // immutable record ID. Page UUID ordering and hot array ordering confer no rights.
+    for ship in Array(receivedStructure.keys) {
+      receivedStructure[ship]?.sort {
+        if $0.collection.at != $1.collection.at { return $0.collection.at < $1.collection.at }
+        return $0.record.id.uuidString < $1.record.id.uuidString
       }
     }
     self.receivedStructure = receivedStructure

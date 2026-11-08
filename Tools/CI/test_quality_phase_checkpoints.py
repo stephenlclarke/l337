@@ -601,6 +601,30 @@ class NormalLeaksOnlyCITests(unittest.TestCase):
             with self.assertRaises(subprocess.CalledProcessError):
                 runner.run_hosted_phase('normal')
 
+    def test_hosted_wrapper_reaches_real_closed_phase_monitor_and_peak_admission(self):
+        from types import SimpleNamespace
+        import recoverable_shards
+        gib=1024**3
+        profile=dict(build_profile='jobs1-nonbatch-v1',admission=dict(peak_per_worker=3*gib))
+        admitted=[]
+        row=dict(start='fixed-start',command='python phase normal')
+        authority=SimpleNamespace(root=self.root,phase_profile=lambda phase:profile,
+            admission=lambda **values:admitted.append(values),snapshot=lambda:{os.getpid():row})
+        policy=self.root/'policy.json';policy.write_text('{}')
+        def execute(command,workspace,attempt,timeout,descriptors,environment,monitor,isolate_environment):
+            self.assertIsInstance(monitor,recoverable_shards.NativeMonitor)
+            self.assertEqual(monitor.memory['budget_bytes'],3*gib)
+            self.assertEqual(monitor.memory['compiler_budget_bytes'],6*gib)
+            self.assertEqual(monitor.memory['admission_peak_bytes'],6*gib)
+            self.assertFalse(isolate_environment)
+            return 0
+        with patch.dict(os.environ,dict(GITHUB_ACTIONS='true',GITHUB_JOB='native_checks',ELITE_NATIVE_POLICY=str(policy)),clear=True), \
+                patch.object(runner,'ROOT',self.root),patch.object(runner,'reviewed_build_profile'), \
+                patch.object(recoverable_shards,'NativeAuthority',return_value=authority), \
+                patch.object(recoverable_shards,'execute_process',side_effect=execute):
+            runner.run_hosted_phase('normal')
+        self.assertEqual(admitted,[{'phase':'normal'}])
+
     def test_framework_python_image_matches_only_its_own_runtime_prefix(self):
         prefix = self.root / 'runtime'
         launcher = prefix / 'bin/python3.12'

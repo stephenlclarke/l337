@@ -4,6 +4,8 @@ import argparse
 import base64
 from contextlib import contextmanager
 import hashlib
+import importlib.util
+from functools import lru_cache
 import json
 import math
 import os
@@ -375,6 +377,32 @@ def backend_descriptor(policy):
             or not re.fullmatch(r"[0-9a-f]{64}", descriptor["sha256"])):
         raise ValueError("Local components binding is outside its exact owned target namespace")
     return backend, descriptor
+
+
+@lru_cache(maxsize=1)
+def normal_phase_guard():
+    """Use the maintained closed process classifier; no second compiler policy."""
+    path = Path(__file__).resolve().parents[1] / "showroom/ship-reference.py"
+    spec = importlib.util.spec_from_file_location("owned_phase_ship_reference", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def phase_resource_limits(profile):
+    """Preserve stricter allocations; split the approved normal compiler/runtime limits."""
+    guard = normal_phase_guard()
+    configured = profile["admission"]["peak_per_worker"]
+    runtime = min(configured, guard.NORMAL_RSS)
+    compiler = guard.NORMAL_COMPILER_RSS if configured >= guard.NORMAL_RSS else configured
+    return {"runtime": runtime, "compiler": compiler, "admission": max(configured, compiler)}
+
+
+def phase_resource_admission(profile):
+    """Reserve the maximum phase without modifying the installed policy or reserves."""
+    bounds = dict(profile["admission"])
+    bounds["peak_per_worker"] = phase_resource_limits(profile)["admission"]
+    return bounds
 
 
 def phase_profile(policy, phase):

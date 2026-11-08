@@ -40,7 +40,7 @@ struct OriginalBisonAcquisitionRuntimeTests {
     #expect(try bundle(storage.directory) == files)
     try await runtime.save(to: storage.url)
     let saved = try NativeSaveTestFixture.readVersionedCommander(from: storage.url)
-    #expect(saved.shipID == "SH025" && saved.fleetBlueprintAcquisition(for: shipID) == nil)
+    #expect(saved.shipID == "SH029" && saved.fleetBlueprintAcquisition(for: shipID) == nil)
     let cold = GameRuntime(game: Game(executive: false), saveURL: storage.url)
     try await cold.load(from: storage.url, persistMigrations: false)
     let restored = await cold.snapshot().commander
@@ -144,6 +144,68 @@ struct OriginalBisonAcquisitionRuntimeTests {
     let sold = await runtime.snapshot()
     try #require(sold.commander.cargo[commodity.rawValue] == 0)
     #expect(sold.commander.fleetBlueprintAcquisition(for: shipID) == proof)
+    // A second real paid-EMP/empty-cut/scoop intake is required, never a cloned receipt.
+    await runtime.key("0")
+    try await runtime.bisonDepartToAllowedRegion()
+    try await runtime.bisonEarnBank()
+    let secondActor = try await runtime.bisonAdmitControlledHostile(shipID)
+    try #require(secondActor != actor)
+    try await runtime.bisonSelect(secondActor)
+    try await runtime.bisonSelectTool(.empPirateBlaster)
+    try await runtime.bisonDisableWithActualEMP(shipID, actor: secondActor)
+    let secondEmpty = try await runtime.bisonWaitForEmptyHull(secondActor)
+    await runtime.key(FlightControlInput.token(for: .releaseHold))
+    try await runtime.bisonSelect(secondEmpty)
+    let secondLot = try await runtime.bisonCutActualSection(source: secondActor)
+    try #require(secondLot.section != lot.section)
+    await runtime.key(FlightControlInput.token(for: .releaseHold))
+    let secondPending = await runtime.snapshot()
+    let secondBody = try #require(secondPending.bodies.first { $0.physical?.payload == .salvage(secondLot) })
+    let secondFragment = try #require(secondBody.physical?.identity)
+    try await runtime.bisonSelect(secondFragment)
+    try await runtime.bisonScoopActualSample(shipID, lot: secondLot)
+    let twice = await runtime.snapshot()
+    let state = try #require(twice.commander.alienStorageState?.current)
+    let intakes = try #require(state.salvage.receivedStructure[shipID])
+    let firstIntake = try #require(intakes.first { $0.item.identity == lot })
+    let secondIntake = try #require(intakes.first { $0.item.identity == secondLot })
+    guard case .collected(let firstReceipt) = firstIntake.record.state,
+      case .collected(let secondReceipt) = secondIntake.record.state
+    else { throw SaveError.invalidCommander }
+    try #require(firstReceipt.at < secondReceipt.at && firstReceipt.operation != secondReceipt.operation)
+    // Removing one source from a query-only negative copy cannot manufacture the other.
+    let originalEMP = twice.commander.savedEMPState
+    var secondOnly = twice.commander
+    secondOnly.savedEMPState?.records.removeValue(forKey: actor)
+    let secondProof = try #require(secondOnly.fleetBlueprintAcquisition(for: shipID))
+    try #require(secondProof.source == secondActor && secondProof.section == secondLot.section
+      && secondProof.collection == secondReceipt.operation && secondProof.receivedMassKg >= 50)
+    #expect(twice.commander.savedEMPState == originalEMP)
+    #expect(twice.commander.fleetBlueprintAcquisition(for: shipID) == proof)
+    let world = state.snapshot
+    let reversedWorld = AlienStorageSnapshot(
+      owner: world.owner, revision: world.revision, worldRevision: world.worldRevision,
+      world: world.world.reversed(), sources: world.sources, attachments: world.attachments,
+      upgrades: world.upgrades, receipts: world.receipts, commands: world.commands)
+    try #require(reversedWorld == world)
+    var reordered = twice.commander
+    try reordered.replaceAlienStorage(with: reversedWorld)
+    #expect(reordered == twice.commander)
+    #expect(reordered.fleetBlueprintAcquisition(for: shipID) == proof)
+    #expect(twice.commander.alienStorageState?.current.snapshot == world)
+    await runtime.setControls(Controls())
+    try await runtime.save(to: storage.url)
+    do {
+      let replay = GameRuntime(game: Game(executive: false), saveURL: storage.url)
+      try await replay.load(from: storage.url, persistMigrations: false)
+      let coldTwice = await replay.snapshot()
+      #expect(coldTwice.commander.fleetBlueprintAcquisition(for: shipID) == proof)
+      let coldIntakes = try #require(coldTwice.commander.alienStorageState?.current.salvage.receivedStructure[shipID])
+      #expect(coldIntakes.map { $0.record.id } == intakes.map { $0.record.id })
+      #expect(coldIntakes.map { $0.record } == intakes.map { $0.record })
+      #expect(coldIntakes.map { $0.item.identity } == intakes.map { $0.item.identity })
+    }
+    try await ScriptProcurementFixture.dock(runtime)
     await runtime.key("8")
     try await ScriptProcurementFixture.travel(runtime, path: [69, 0], verifyDeparture: true)
     try await openReview(runtime, shipID: shipID)
@@ -247,16 +309,47 @@ struct OriginalBisonAcquisitionRuntimeTests {
   }
 
   private func paidStarterGame(recovery: Bool) throws -> Game {
-    var initial = try ScriptProcurementFixture.freshG03FlightGame()
+    let source = try #require(OriginalFleetRuntimeHullSource.source(for: "SH029"))
+    try OriginalDetailedHullStage.requireRuntime(source.ship.id)
+    let current = try #require(OriginalFleetR3Data.contract(for: source.ship.id))
+    let fitting = try #require(current.fitting)
+    try #require(source.ship.id == "SH029" && source.ship.name == "Okapi")
+    try #require(source.performance == current.performance && source.ship.game == current.performance)
+    try #require(source.performance.workTools?.contains(.salvageCutter) == true)
+    try #require(fitting.compatibleUtilities.contains("salvageCutter")
+      && fitting.compatibleUtilities.contains("cargoScoop") && !fitting.roleKitIncluded)
+    try #require(fitting.equipmentUnits == 20 && fitting.utilityMounts == 3)
+    try #require(current.accommodation?.operatingCrew == 1
+      && current.accommodation?.intrinsicCrewPlaces == 1)
+    // Root-authorised controlled initial hull, before any inventory/history. No earned
+    // acquisition, live transfer, included role kit or G1 Okapi helper is substituted.
+    var initial = Game(executive: false)
+    try #require(initial.commander.equipmentInventory == nil
+      && initial.commander.equipmentPurchaseHistory == nil
+      && initial.commander.equipmentOwnerID == nil && initial.commander.hullInstanceID == nil)
+    initial.commander.shipID = source.ship.id
+    initial.commander.fuel = source.performance.fuel
+    initial.energy = source.performance.energy
+    initial.frontShield = source.performance.shield
+    initial.rearShield = source.performance.shield
+    initial.screen = .status
+    initial.commander.galaxy = 0
     initial.commander.system = 69
     initial.selectedSystem = 69
     initial.market = MarketItem.at(initial.currentSystem)
     initial.commander.credits = 20_000_000
-    try #require(initial.commander.shipID == "SH025" && initial.currentSystem.name == "Verasel")
+    try #require(initial.commander.shipID == "SH029" && initial.currentSystem.name == "Verasel")
     try #require(initial.currentSystem.technology == 16 && initial.currentSystem.government == 4)
     try #require(!initial.commander.unlimitedCash && !initial.commander.unlimitedFuel)
+    try initial.commander.prepareEquipment(legacy: false)
+    try #require(initial.commander.nativeCrewMissing == 0)
+    try #require(initial.commander.fleetBlueprintAcquisition(for: "SH029") == nil)
     try initial.prepareG03FlightEquipment()
-    for name in ["Military Laser", "Military Shield Booster"] {
+    // Pulse came from paid G03 preparation; the remaining ancestors must also be paid.
+    for name in [
+      "Military Laser", ShieldBooster.mining.equipmentName, ShieldBooster.beam.equipmentName,
+      ShieldBooster.military.equipmentName,
+    ] {
       let item = try #require(Equipment.all.first { $0.name == name })
       let before = initial.commander
       let history = try #require(before.equipmentPurchaseHistory)
@@ -283,6 +376,19 @@ struct OriginalBisonAcquisitionRuntimeTests {
         #expect(initial.commander.equipmentPurchaseHistory?.paid.last?.binding.request == quote.request)
       }
     }
+    try #require(initial.commander.commonEquipmentUnits <= fitting.equipmentUnits)
+    try #require(initial.commander.passengerFit?.allowed == true)
+    let inventory = try #require(initial.commander.equipmentInventory)
+    try inventory.validate(context: EquipmentRuntimeCatalog.context(
+      owner: inventory.owner, hull: inventory.activeHull, performance: initial.commander.nativePerformance))
+    try OriginalFleetR3Fitting.validateUtilities(inventory, ship: initial.commander.ship)
+    if recovery {
+      for utility in [ComponentUtility.empPirateBlaster, .salvageCutter, .fuelScoops] {
+        try #require(initial.commander.fittedEquipment(at: .utility(utility)) != nil)
+      }
+    }
+    try #require(initial.energy.isFinite && initial.energy > 0
+      && initial.energy <= initial.commander.performance.energy)
     try NativeSaveTestFixture.prepareCurrentPolicy(&initial)
     return initial
   }
@@ -374,13 +480,23 @@ enum NativeEarnedPeregrineFixture {
     try await ScriptProcurementFixture.travel(runtime, path: [7, 185, 0, 69], verifyDeparture: true)
     let shop = await runtime.snapshot()
     try #require(shop.nativeMainStationDockEvidenceIsCurrent && shop.currentSystem.technology == 16)
-    // Every fitted node is paid at this attained shop; no decoded certificate grants ownership.
+    // Basic navigation is existing standard hardware, not a purchasable shop upgrade.
+    let navigation = try #require(shop.commander.fittedEquipment(at: .navigation))
+    let navigationNode = try #require(EquipmentRuntimeCatalog.node(for: NavigationTier.basic.equipmentName))
+    let navigationPolicy = try #require(EquipmentRuntimeCatalog.graph.nodes.first { $0.id == navigationNode })
+    let foundationHistory = try #require(shop.commander.equipmentPurchaseHistory)
+    try #require(navigation.node == navigationNode && navigation.provenance == .standard)
+    try #require(navigation.location?.hullInstanceID == hull && shop.commander.navigationTier == .basic)
+    try #require(navigationPolicy.policy == .standardFoundation && foundationHistory.owner == owner)
+    try #require(!foundationHistory.paid.contains { $0.node == navigationNode })
+    // Every additional upgrade is paid at this attained shop with its full ancestry.
     for name in [
       TargetingTier.basic.equipmentName, TargetingTier.advanced.equipmentName,
       TargetingTier.docking.equipmentName, ShieldBooster.pulse.equipmentName,
-      "Extra Energy Unit", "Military Laser", "Military Shield Booster",
+      "Extra Energy Unit", "Military Laser", ShieldBooster.mining.equipmentName,
+      ShieldBooster.beam.equipmentName, ShieldBooster.military.equipmentName,
       Equipment.empPirateBlaster, "Salvage Cutter", "Fuel Scoops",
-      "Targeting: Salvage Module", NavigationTier.basic.equipmentName,
+      "Targeting: Salvage Module",
     ] {
       try await runtime.scriptCommand { game in
         try #require(game.docked && game.nativeMainStationDockEvidenceIsCurrent)
@@ -399,6 +515,9 @@ enum NativeEarnedPeregrineFixture {
         try #require(game.commander.equipmentOwnerID == owner && game.commander.hullInstanceID == hull)
       }
     }
+    let paidSetup = await runtime.snapshot()
+    try #require(paidSetup.commander.fittedEquipment(at: .navigation) == navigation)
+    try #require(paidSetup.commander.navigationTier == .basic)
     await runtime.key("3")
     for axis in EMPModuleAxis.allCases {
       for grade in 1...3 {
@@ -587,7 +706,10 @@ extension GameRuntime {
       let previousDropped = try #require(game.gameplayCombatTrace?.dropped)
       var input = Controls()
       input.throttle = -1
-      input.fire = incoming
+      // A terminal charge or safety stop needs an ordinary release before a fresh press.
+      // Keep holding a valid charge; changing saved phase/latch state would bypass input.
+      let terminalCharge = game.commander.savedEMPCharge.map { $0.phase != .charging } ?? false
+      input.fire = incoming && !terminalCharge && !game.workFireSuspended
       setControls(input)
       let after = try bisonLiveFrame()
       let trace = try #require(after.gameplayCombatTrace)
@@ -679,8 +801,13 @@ extension GameRuntime {
   fileprivate func bisonScoopActualSample(_ shipID: String, lot: SalvageLotIdentity) throws {
     setControls(Controls())
     for _ in 0..<1200 {
-      if let proof = game.commander.fleetBlueprintAcquisition(for: shipID) {
-        try #require(proof.section == lot.section && proof.receivedMassKg >= 50)
+      if let received = game.commander.alienStorageState?.current.salvage.receivedStructure[shipID]?.first(where: {
+        $0.item.identity == lot
+      }) {
+        guard case .collected(let receipt) = received.record.state else { throw SaveError.invalidCommander }
+        try #require(receipt.at <= game.commander.flightSimulation.physicalTime
+          && received.item.massKg >= 50 && received.item.identity.section == lot.section)
+        try #require(game.commander.fleetBlueprintAcquisition(for: shipID) != nil)
         return
       }
       _ = try bisonLiveFrame()
@@ -720,6 +847,8 @@ extension GameRuntime {
 
   fileprivate func bisonAdmitControlledHostile(_ shipID: String) throws -> ActorIdentity {
     let source = try #require(OriginalBisonActivation.source(for: shipID))
+    let allocatedSpawn = game.commander.flightSimulation.allocateSpawn()
+    let sequence = try #require(allocatedSpawn)
     let context = try #require(game.gameplayContext())
     try #require(context.system.galaxy == 0 && context.system.system == 69 && context.government == 4)
     let position = context.anchors.arrival * 0.6 + context.anchors.station.position * 0.4
@@ -735,11 +864,12 @@ extension GameRuntime {
     npc.cargoProvenance = .generated
     npc.routeProvenance = .generated
     let request = SpawnRequest(
-      identity: .init(system: context.system, visit: context.visit, sequence: 9001,
+      identity: .init(system: context.system, visit: context.visit, sequence: sequence,
         member: 0, producer: .ambient),
       population: .civilian, hull: .cobra, position: position, orientation: .init(),
       velocity: .init(0, 0, 0), npc: npc, rock: nil, payload: nil, priority: .ordinary,
       catalogueShipID: shipID)
+    try #require(!game.bodies.contains { $0.physical?.spawnIdentity == request.identity })
     try #require(OriginalBisonActivation.matchesRequest(request, context: context))
     let receipts = game.admitEncounterPlan(.init(
       system: context.system, visit: context.visit, revision: context.revision,
@@ -769,7 +899,7 @@ extension GameRuntime {
     var militaryHit = false
     for _ in 0..<1200 {
       try #require(game.bodies.count <= 256 && game.screen.isFlight && !game.docked)
-      try #require(!game.paused && game.energy > 0 && game.commander.shipID == "SH025")
+      try #require(!game.paused && game.energy > 0 && game.commander.shipID == "SH029")
       let context = try #require(game.gameplayContext())
       try #require(context.player.identity == player)
       if incoming {

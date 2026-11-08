@@ -1259,7 +1259,7 @@ def phase_matches_runtime(identity, runtime, inventory, phase_profile=None):
         expected = [identity["swift_executable"], "build", *(["--build-tests"] if identity["phase"] == "normal" else []),
                     *identity["flags"], *expected_flags]
         if (build["kind"] != "owned-phase-build-v1" or build["phase"] != identity["phase"]
-                or build["profile"] != phase_profile["build_profile"] or build["admission"] != phase_profile["admission"]
+                or build["profile"] != phase_profile["build_profile"] or build["admission"] != native_runner.phase_resource_admission(phase_profile)
                 or build["flags"] != expected_flags or build["argv"] != expected
                 or not re.fullmatch(r"[0-9a-f]{64}", build["policy_sha256"])):
             raise ValueError("Actual phase build argv/profile/allocation differs")
@@ -1382,12 +1382,37 @@ def validate_phase_memory(value, identity, profile, origin):
             or not same_process(record["root"], record.get("processes", {}).get(str(child["pid"])))
             or memory.get("kind") != "sampled-owned-process-rss-v1" or memory.get("mode") != identity["phase"]
             or memory.get("phase_profile_sha256") != fingerprint(profile) or memory.get("failure") is not None
-            or memory.get("budget_bytes") != profile["admission"]["peak_per_worker"]
+            or memory.get("budget_bytes") != native_runner.phase_resource_limits(profile)["runtime"]
             or type(memory.get("samples")) is not int or memory["samples"] < 1
-            or type(memory.get("high_water_bytes")) is not int or not 0 <= memory["high_water_bytes"] <= memory["budget_bytes"]
+            or type(memory.get("high_water_bytes")) is not int or not 0 <= memory["high_water_bytes"] <= native_runner.phase_resource_limits(profile)["compiler"]
+            or type(memory.get("last_bytes")) is not int or not 0 <= memory["last_bytes"] <= memory["high_water_bytes"]
             or type(memory.get("helper_samples")) is not int or not 0 <= memory["helper_samples"] <= memory["samples"]
             or (identity["phase"] == "normal" and memory["helper_samples"] < 1)):
         raise ValueError("Phase process/image lifecycle or independent RSS budget proof is incomplete")
+    limits = native_runner.phase_resource_limits(profile)
+    if limits["compiler"] != limits["runtime"]:
+        counters = ("compiler_samples", "runtime_samples", "compiler_high_water_bytes", "runtime_high_water_bytes")
+        last_kind = memory.get("last_phase_kind")
+        if (memory.get("phase_limits_kind") != "closed-compiler-runtime-rss-v1"
+                or memory.get("compiler_budget_bytes") != limits["compiler"]
+                or memory.get("admission_peak_bytes") != limits["admission"]
+                or any(type(memory.get(name)) is not int or memory[name] < 0 for name in counters)
+                or memory["compiler_samples"] + memory["runtime_samples"] != memory["samples"]
+                or memory["helper_samples"] > memory["runtime_samples"]
+                or any(memory[kind + "_samples"] == 0 and memory[kind + "_high_water_bytes"] != 0
+                       for kind in ("compiler", "runtime"))
+                or memory["compiler_high_water_bytes"] > limits["compiler"]
+                or memory["runtime_high_water_bytes"] > limits["runtime"]
+                or max(memory["compiler_high_water_bytes"], memory["runtime_high_water_bytes"]) != memory["high_water_bytes"]
+                or last_kind not in ("compiler", "runtime")
+                or memory.get("last_budget_bytes") != limits[last_kind]
+                or memory[last_kind + "_samples"] < 1
+                or memory["last_bytes"] > memory[last_kind + "_high_water_bytes"]
+                or memory["last_bytes"] > limits[last_kind]):
+            raise ValueError("Closed compiler/runtime phase RSS proof is incomplete")
+    elif (memory.get("last_phase_kind") != "runtime"
+            or memory.get("last_budget_bytes") != limits["runtime"]):
+        raise ValueError("Fixed phase final RSS sample budget is inconsistent")
     if identity["phase"] == "normal":
         parsed = {}
         for uuid_value, architecture in re.findall(r"UUID: ([0-9A-Fa-f-]{36}) \(([^)]+)\)", identity["image_uuid"]):
@@ -1538,7 +1563,7 @@ class NativeAuthority:
 
     def snapshot(self, resident=False):
         fields = "pid=,ppid=,pgid=,stat=,lstart=," + ("rss=," if resident else "") + "command="
-        return process_rows(self.output(["ps", "-axo", fields]), resident=resident)
+        return process_rows(self.output(["ps", *(["-ww"] if resident else []), "-axo", fields]), resident=resident)
 
     def host(self):
         raw = self.output(["ioreg", "-rd1", "-c", "IOPlatformExpertDevice"])
@@ -1557,7 +1582,8 @@ class NativeAuthority:
         native_runner.require_diagnostic_custody_clear()
         if phase is not None and self.phase_profile(phase) is None:
             raise ValueError("Independent phase admission was not approved")
-        bounds = dict(self.config["admission"] if phase is None else self.phase_profile(phase)["admission"])
+        bounds = (dict(self.config["admission"]) if phase is None
+                  else native_runner.phase_resource_admission(self.phase_profile(phase)))
         configured_cpu, cpus, stage = bounds.get("cpu_budget"), None, "configuration"
         observed = {}
         try:
@@ -2915,6 +2941,7 @@ class NativeMonitor:
         self.bound_callback = None
         self.stop, self.thread = threading.Event(), None
         self.memory = None
+        self.phase_limits = None
         profile = authority.phase_profile(phase) if phase is not None else None
         if phase is not None and profile is None:
             raise ValueError("Phase RSS monitoring requires its own approved profile")
@@ -2932,6 +2959,17 @@ class NativeMonitor:
                            "authority": "sampled RSS sum; not physical footprint or an OS hard limit"}
             if profile is not None:
                 self.memory["phase_profile_sha256"] = fingerprint(profile)
+                self.phase_limits = native_runner.phase_resource_limits(profile)
+                self.memory["budget_bytes"] = self.phase_limits["runtime"]
+                self.memory["last_budget_bytes"] = self.phase_limits["runtime"]
+                self.memory["last_phase_kind"] = "runtime"
+                if self.phase_limits["compiler"] != self.phase_limits["runtime"]:
+                    self.memory.update(phase_limits_kind="closed-compiler-runtime-rss-v1",
+                        compiler_budget_bytes=self.phase_limits["compiler"],
+                        admission_peak_bytes=self.phase_limits["admission"],
+                        compiler_samples=0, runtime_samples=0,
+                        compiler_high_water_bytes=0, runtime_high_water_bytes=0,
+                        last_budget_bytes=self.phase_limits["runtime"], last_phase_kind="runtime")
 
     def persist(self):
         record = {"schema": SCHEMA, "workspace": str(self.workspace), "controller": self.controller,
@@ -2950,19 +2988,44 @@ class NativeMonitor:
             self.persist()
             legacy.progress(json.dumps({label.lower() + "_resident_memory_refused": self.memory}, sort_keys=True))
 
-    def sample_memory(self, live):
+    def sample_memory(self, live, rows=None):
         if self.memory is None or not live:
             return
-        if any(type(row.get("rss_bytes")) is not int or row["rss_bytes"] < 0 for row in live.values()):
+        sample = dict(live)
+        dynamic = self.memory.get("phase_limits_kind") == "closed-compiler-runtime-rss-v1"
+        if self.phase_limits is not None:
+            # Reuse this same snapshot for the observer and its direct children.
+            # They enter aggregate RSS and the shared ancestor/overlap checks, but
+            # do not acquire cleanup ownership merely by appearing in the sample.
+            pid = self.controller["pid"] if self.controller is not None else None
+            if pid is None or rows is None or not same_process(self.controller, rows.get(pid)):
+                self.memory_failure("incomplete observer resident sample")
+                return
+            sample.update({child: row for child, row in rows.items()
+                           if child == pid or row["parent"] == pid})
+        if any(type(row.get("rss_bytes")) is not int or row["rss_bytes"] < 0 for row in sample.values()):
             self.memory_failure("incomplete resident sample")
             return
-        total = sum(row["rss_bytes"] for row in live.values())
+        total = sum(row["rss_bytes"] for row in sample.values())
+        budget = self.memory["budget_bytes"]
+        if dynamic:
+            guard = native_runner.normal_phase_guard()
+            adapted = {pid: {**row, "rss": row["rss_bytes"]} for pid, row in sample.items()}
+            leader = self.root_identity["pid"] if self.root_identity else None
+            observer = self.controller["pid"] if self.controller else None
+            limit = guard.normal_ci_sample_rss_limit(leader, set(adapted), adapted, observer)
+            kind = "compiler" if limit == guard.NORMAL_COMPILER_RSS else "runtime"
+            budget = self.phase_limits[kind]
+            self.memory[kind + "_samples"] += 1
+            self.memory[kind + "_high_water_bytes"] = max(self.memory[kind + "_high_water_bytes"], total)
+            self.memory["last_budget_bytes"] = budget
+            self.memory["last_phase_kind"] = kind
         self.memory["samples"] += 1
         self.memory["helper_samples"] += int(any(
             "swiftpm-testing-helper" in row["command"] for row in live.values()))
         self.memory["last_bytes"] = total
         self.memory["high_water_bytes"] = max(self.memory["high_water_bytes"], total)
-        if total > self.memory["budget_bytes"]:
+        if total > budget:
             self.memory_failure("owned process tree exceeds budget")
 
     def cleanup_memory_failure(self, live):
@@ -2981,7 +3044,7 @@ class NativeMonitor:
             raise
         live = descendants(self.known, rows)
         self.known.update(live)
-        self.sample_memory(live)
+        self.sample_memory(live, rows)
         for row in live.values():
             argv = arguments(row)
             if "swiftpm-testing-helper" not in row["command"]:

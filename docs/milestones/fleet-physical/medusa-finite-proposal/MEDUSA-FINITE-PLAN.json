@@ -1,0 +1,368 @@
+{
+  "schemaVersion": 1,
+  "id": "SH171",
+  "name": "Medusa",
+  "status": "PROPOSED_FINITE_ENGINEERING_LAYOUT_UNVALIDATED",
+  "coordinateFrame": "Existing source-owned per-hull engineering metres, source axes and origin unchanged; scale5/41 retained. No global native/SI adoption.",
+  "geometryPolicy": "Axis-aligned whole finite boxes represent equivalent mass distributions only; never replace source organ meshes or imply biological mechanism/material/function.",
+  "allocations": [
+    {
+      "id": "organ-equivalent-1",
+      "originalAllocationIndex": 0,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        2.638033882271673e-05,
+        6.440707983780631,
+        -4.032008697265583
+      ],
+      "detailedOwnerIndex": 7,
+      "nativeOwnerIndex": 7,
+      "ownerName": "curved seed propulsion organ 0",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "organ-equivalent-2",
+      "originalAllocationIndex": 1,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        -7.791992960117165,
+        4.532102286384882,
+        -3.9271970983968068
+      ],
+      "detailedOwnerIndex": 14,
+      "nativeOwnerIndex": 14,
+      "ownerName": "curved seed propulsion organ 1",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "organ-equivalent-3",
+      "originalAllocationIndex": 2,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        -10.972128193786679,
+        1.670966747472334e-05,
+        -3.8290718701296793
+      ],
+      "detailedOwnerIndex": 21,
+      "nativeOwnerIndex": 21,
+      "ownerName": "curved seed propulsion organ 2",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "organ-equivalent-4",
+      "originalAllocationIndex": 3,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        -7.792014469910934,
+        -4.532065304630761,
+        -3.927197098391958
+      ],
+      "detailedOwnerIndex": 28,
+      "nativeOwnerIndex": 28,
+      "ownerName": "curved seed propulsion organ 3",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "organ-equivalent-5",
+      "originalAllocationIndex": 4,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        -2.489290976866797e-05,
+        -6.426831045297493,
+        -4.035555086207113
+      ],
+      "detailedOwnerIndex": 35,
+      "nativeOwnerIndex": 35,
+      "ownerName": "curved seed propulsion organ 4",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "organ-equivalent-6",
+      "originalAllocationIndex": 5,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        7.780344221066001,
+        -4.525325631023296,
+        -3.9317807360740398
+      ],
+      "detailedOwnerIndex": 42,
+      "nativeOwnerIndex": 42,
+      "ownerName": "curved seed propulsion organ 5",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "organ-equivalent-7",
+      "originalAllocationIndex": 6,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        10.959003279175858,
+        -1.579853523619881e-05,
+        -3.834334331250354
+      ],
+      "detailedOwnerIndex": 49,
+      "nativeOwnerIndex": 49,
+      "ownerName": "curved seed propulsion organ 6",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "organ-equivalent-8",
+      "originalAllocationIndex": 7,
+      "massKg": 900,
+      "originalAnchorMetres": [
+        7.78036454319888,
+        4.52529069120219,
+        -3.931780736050916
+      ],
+      "detailedOwnerIndex": 56,
+      "nativeOwnerIndex": 56,
+      "ownerName": "curved seed propulsion organ 7",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "power-equivalent",
+      "originalAllocationIndex": 8,
+      "massKg": 750,
+      "originalAnchorMetres": [
+        -0.019216200376120828,
+        0.3904177966240872,
+        0.6892645312339782
+      ],
+      "detailedOwnerIndex": 0,
+      "nativeOwnerIndex": 0,
+      "ownerName": "central grown seed carapace",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionsMetres": [
+        1.5,
+        1,
+        1.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "control-and-sensing-equivalent",
+      "originalAllocationIndex": 9,
+      "massKg": 90,
+      "originalAnchorMetres": [
+        -0.019216200376120828,
+        0.3904177966240872,
+        0.6892645312339782
+      ],
+      "detailedOwnerIndex": 0,
+      "nativeOwnerIndex": 0,
+      "ownerName": "central grown seed carapace",
+      "newCentreOffsetMetres": [
+        0,
+        1.2,
+        0
+      ],
+      "newDimensionsMetres": [
+        1,
+        0.4,
+        1
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "empty-fuel-transfer-equivalent",
+      "originalAllocationIndex": 10,
+      "massKg": 180,
+      "originalAnchorMetres": [
+        -0.019216200376120828,
+        0.3904177966240872,
+        0.6892645312339782
+      ],
+      "detailedOwnerIndex": 0,
+      "nativeOwnerIndex": 0,
+      "ownerName": "central grown seed carapace",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        3
+      ],
+      "newDimensionsMetres": [
+        1.2,
+        0.8,
+        1.2
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "empty-single-crew-conversion-environment-equivalent",
+      "originalAllocationIndex": 11,
+      "massKg": 120,
+      "originalAnchorMetres": [
+        -0.019216200376120828,
+        0.3904177966240872,
+        0.6892645312339782
+      ],
+      "detailedOwnerIndex": 0,
+      "nativeOwnerIndex": 0,
+      "ownerName": "central grown seed carapace",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        6
+      ],
+      "newDimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "empty-interface-equivalent",
+      "originalAllocationIndex": 12,
+      "massKg": 140,
+      "originalAnchorMetres": [
+        -0.019216200376120828,
+        0.3904177966240872,
+        0.6892645312339782
+      ],
+      "detailedOwnerIndex": 0,
+      "nativeOwnerIndex": 0,
+      "ownerName": "central grown seed carapace",
+      "newCentreOffsetMetres": [
+        0,
+        -1.2,
+        0
+      ],
+      "newDimensionsMetres": [
+        1.2,
+        0.4,
+        1
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    },
+    {
+      "id": "empty-launcher-equivalent",
+      "originalAllocationIndex": 13,
+      "massKg": 160,
+      "originalAnchorMetres": [
+        -0.019216200376120828,
+        0.3904177966240872,
+        0.6892645312339782
+      ],
+      "detailedOwnerIndex": 0,
+      "nativeOwnerIndex": 0,
+      "ownerName": "central grown seed carapace",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        -3
+      ],
+      "newDimensionsMetres": [
+        1,
+        1,
+        1.4
+      ],
+      "newDimensionBasis": "NEW_PROPOSED_UNIFORM_EQUIVALENT_ENGINEERING_DISTRIBUTION_NOT_RECOVERED_OR_MATERIAL_FUNCTION",
+      "materialAndBiologicalFunctionQualified": false
+    }
+  ],
+  "population": "R3 nativeCrew1/conversionCrew1/nativeAutonomousfalse and raw questActorCrew0 remain distinct source declarations. No actual population, awake identity, biological function, people or service grant.",
+  "sourceGeometry": {
+    "nativeVertices": 39276,
+    "nativeFaces": 76228,
+    "detailedComponents": 582,
+    "nativeComponents": 582
+  },
+  "qualification": "UNRUN; no generated moments/containment/separation/refusal result exists."
+}
