@@ -155,6 +155,7 @@ extension GameRuntime {
     candidate = prepared.game
     candidate.commander.publishAlienStorage(alienPublication)
     candidate.recordNewCommanderSavePublication(to: url)
+    candidate.acknowledgeC03CrewDeathPersistence()
   }
 
   /// User commands are staged before a frame is published. Disk failure publishes no
@@ -271,6 +272,7 @@ extension GameRuntime {
     candidate = prepared.game
     candidate.commander.publishAlienStorage(alienPublication)
     candidate.recordNewCommanderSavePublication(to: url)
+    candidate.acknowledgeC03CrewDeathPersistence()
   }
 }
 

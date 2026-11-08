@@ -250,13 +250,15 @@ extension Game {
     bodies[shotIndex].energy = 0
     applyNativeCrimeResolution(
       resolution, target: proof.hit.target, attacker: proof.currentSource, context: context)
-    return Self.missionImpactReceipt(
+    let receipt = Self.missionImpactReceipt(
       kind: proof.kind, hit: proof.hit, part: proof.victimPart,
       component: proof.victimComponentID, damage: proof.damage, plan: plan, eventID: eventID,
       sourceInstance: proof.sourceInstanceID, sourceActor: proof.sourceActorID,
       sourceComponent: proof.sourceComponentID, origin: proof.originalOrigin,
       adjudication: proof.attribution == .frozenLaunch ? .frozenLaunch : .unknown,
       terminalShot: proof.shotID, player: false)
+    retainC03CrewNativeImpact(receipt)
+    return receipt
   }
 
   /// Instant mission lasers use a real current-visit emission and the ordinary crime ledger.
@@ -282,12 +284,14 @@ extension Game {
     applyNativeCrimeResolution(
       stage.resolution, target: proof.hit?.target, attacker: proof.origin.owner,
       context: stage.context)
-    return Self.missionImpactReceipt(
+    let receipt = Self.missionImpactReceipt(
       kind: .laser, hit: proof.hit, part: proof.victimPart, component: proof.victimComponentID,
       damage: proof.hit == nil ? 0 : proof.damage, plan: stage.damage, eventID: stage.eventID,
       sourceInstance: proof.sourceInstanceID, sourceActor: proof.sourceActorID,
       sourceComponent: proof.sourceComponentID, origin: proof.origin,
       adjudication: .currentVisit, terminalShot: nil, player: false)
+    retainC03CrewNativeImpact(receipt)
+    return receipt
   }
 
   /// Read the actual immutable game while staging; no whole-game mutation receiver copies.
@@ -407,6 +411,7 @@ extension Game {
       sourceInstance: source?.missionInstanceID, sourceActor: source?.missionActorID,
       sourceComponent: nil, origin: origin, adjudication: .currentVisit, terminalShot: nil,
       player: origin.owner == context.player.identity)
+    retainC03CrewNativeImpact(receipt)
     return (receipt, incident)
   }
 
@@ -513,14 +518,14 @@ extension Game {
     observeSafeGunneryOrdinaryHit(incident)
     observeDefensiveFlightOrdinaryHit(incident)
     let source = bodies.first(where: { $0.physical?.identity == origin.owner })
-    return (
-      Self.missionImpactReceipt(
-        kind: kind, hit: contact.hit, part: contact.victimPart,
-        component: contact.componentUUID, damage: proof.damage, plan: plan, eventID: eventID,
-        sourceInstance: source?.missionInstanceID, sourceActor: source?.missionActorID,
-        sourceComponent: nil, origin: origin, adjudication: .currentVisit, terminalShot: nil,
-        player: origin.owner == context.player.identity), incident
-    )
+    let receipt = Self.missionImpactReceipt(
+      kind: kind, hit: contact.hit, part: contact.victimPart,
+      component: contact.componentUUID, damage: proof.damage, plan: plan, eventID: eventID,
+      sourceInstance: source?.missionInstanceID, sourceActor: source?.missionActorID,
+      sourceComponent: nil, origin: origin, adjudication: .currentVisit, terminalShot: nil,
+      player: origin.owner == context.player.identity)
+    retainC03CrewNativeImpact(receipt)
+    return (receipt, incident)
   }
 
   private func missionDamagePlan(

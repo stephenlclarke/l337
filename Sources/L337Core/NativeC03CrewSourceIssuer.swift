@@ -9,6 +9,42 @@ struct NativeC03CrewSourcePreparation: Sendable {
   let custody: NativePeopleCustodyState
 }
 
+extension Game {
+  /// The sealed admission owner calls this only AFTER its real physical policy has accepted
+  /// the complete paired cohort and occupied fitting. This stages reciprocal saved owners;
+  /// it supplies no physical qualification, live allocator commit or authority factory.
+  @inline(never)
+  func prepareC03EvacuationCrewSource(
+    context: NativeC03EvacuationAdmissionContext, admitted: [SpaceBody],
+    flight: FlightSimulationState
+  ) throws -> NativeC03CrewSourcePreparation {
+    guard acceptsHollowManifestEvacuationAdmissionContext(context),
+      let previous = hollowManifestMission, previous.id == context.pin.missionID,
+      previous.savedHollowManifest == context.pin.state,
+      previous.ownedEncounters[NativeC03CrewSourceState.encounter] == context.installedEncounter
+    else { throw NativeMissionActorAdmissionError.stalePlan }
+    let prepared = try NativeC03CrewSourceState.preparingAdmission(
+      context: context, admitted: admitted, flight: flight)
+    var selected = previous
+    selected.savedHollowManifest = prepared.state
+    selected.ownedEncounters[NativeC03CrewSourceState.encounter] = prepared.encounter
+    var candidate = commander
+    candidate.flightSimulation = flight
+    candidate.savedNativePeopleCustody = prepared.custody
+    candidate.scriptState.geometry = context.geometry
+    candidate.scriptState.instances[selected.id] = selected
+    guard prepared.state.preservesHistory(of: context.pin.state),
+      prepared.encounter.valid,
+      NativeHollowManifestCommission.prefixValid(selected),
+      NativeC03CrewSourceSave.validSource(
+        prepared.custody.hollowManifestCrew, custody: prepared.custody, commander: candidate),
+      NativeHollowManifestSave.validateClaims(candidate), candidate.nativePeopleStateValid,
+      candidate.valid, acceptsHollowManifestEvacuationAdmissionContext(context)
+    else { throw SaveError.invalidCommander }
+    return prepared
+  }
+}
+
 extension NativeC03CrewSourceState {
   static func preparingAdmission(
     context: NativeC03EvacuationAdmissionContext, admitted: [SpaceBody], flight: FlightSimulationState
