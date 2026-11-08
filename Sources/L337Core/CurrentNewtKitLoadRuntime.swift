@@ -44,10 +44,10 @@ extension Game {
     _ body: borrowing SpaceBody, stock: CurrentNewtKitStock,
     catalogue: String, sourceSHA: String
   ) -> CurrentNewtKitLoad? {
-    let record = nativeMechanicalStoredEMPState()?.records[stock.issue.person.source]
+    let record = CurrentNewtObservedEMPRecord.observe(
+      state: nativeMechanicalStoredEMPState(), source: stock.issue.person.source)
     let retained = stock.receipt?.loadAtRelease
-    let retainedNPC = record?.activeTrafficTransfer?.npc
-      ?? record?.custody.original.body.physical?.npc
+    let retainedNPC = record?.retainedNPC
     let npc = body.nativeLaunchNPC()
     guard let resources = npc?.resources ?? retained?.resources ?? retainedNPC?.resources,
       let cargo = npc?.ordinaryCargo ?? record?.salvageCargo ?? retained?.cargo
@@ -59,11 +59,9 @@ extension Game {
       switch outcome {
       case .aboard, .deceasedWithHull: people.append(person)
       case .captured:
-        guard record.crewCaptures.contains(where: {
-          $0.contains(person.identity.ordinal) && $0.valid(record: record)
-        }) else { return nil }
+        guard record.hasValidCapture(ordinal: person.identity.ordinal) else { return nil }
       case .occupiedPod:
-        guard record.podIndex(for: person.identity.ordinal) != nil else { return nil }
+        guard record.hasPod(ordinal: person.identity.ordinal) else { return nil }
       }
     }
     let result = CurrentNewtKitLoad(catalogueShipID: catalogue, r3SHA256: sourceSHA,

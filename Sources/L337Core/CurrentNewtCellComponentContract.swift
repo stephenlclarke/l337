@@ -34,21 +34,20 @@ extension Game {
     source: CurrentNewtKitSource, load: CurrentNewtKitLoad
   ) -> CurrentNewtCellComponentContract? {
     let identity = body.nativeGeometryIdentity()!
-    let record = nativeMechanicalStoredEMPState()?.records[stock.issue.person.source]
+    let record = CurrentNewtObservedEMPRecord.observe(
+      state: nativeMechanicalStoredEMPState(), source: stock.issue.person.source)
     let bodyID = body.id
     let unique = bodies.filter({ $0.id == bodyID && $0.physical?.identity == identity }).count == 1
     let live: Bool
     if unique { live = bodies.contains(body) } else { live = false }
     let archived: Bool
-    // Optional equality would wrap the borrowed RHS in an owned payload.
-    // A missing archive never matches; compare the actual complete body directly.
-    if record?.hull.binding == nil, record != nil {
-      archived = record!.hull.body == body
-    } else { archived = false }
+    // Missing history cannot match an archive. Compare the complete actual body
+    // inside its immutable observation, without force-unwrapping a full record.
+    if let record { archived = record.matchesArchivedBody(body) } else { archived = false }
     guard live || archived else { return nil }
     if let record {
-      guard record.valid, record.hull.body.physical?.currentNewtKitStock == stock,
-        record.hull.binding == (live ? identity : nil) else { return nil }
+      guard record.valid, record.hasHullStock(stock),
+        record.hasHullBinding(live ? identity : nil) else { return nil }
       if live, body.nativeGeometryEMPSource() == nil {
         guard record.isRecovered,
           nativeMechanicalStoredNPCPersistence().logicalIdentity(for: identity) == record.source
@@ -59,19 +58,21 @@ extension Game {
         nativeMechanicalStoredNPCPersistence().logicalIdentity(for: identity) == stock.issue.birthActor
       else { return nil }
     }
-    return currentNewtCellForPerson(body, stock: stock, source: source, load: load, live: live, identity: identity)
+    return currentNewtCellForPerson(body, stock: stock, source: source, load: load,
+      live: live, identity: identity, record: record)
   }
 
   @inline(never)
   private func currentNewtCellForPerson(
     _ body: borrowing SpaceBody, stock: CurrentNewtKitStock, source: CurrentNewtKitSource,
-    load: CurrentNewtKitLoad, live: Bool, identity: ActorIdentity
+    load: CurrentNewtKitLoad, live: Bool, identity: ActorIdentity,
+    record: CurrentNewtObservedEMPRecord?
   ) -> CurrentNewtCellComponentContract? {
     let person = stock.issue.person
     if load.people.contains(where: { $0.identity == person && $0.profile == stock.issue.personProfile }) {
       guard commander.nativePeople?.admissions.contains(where: { $0.person == .emp(person) }) != true
       else { return nil }
-      if let record = nativeMechanicalStoredEMPState()?.records[person.source] {
+      if let record {
         guard record.crewOutcome(ordinal: person.ordinal) == .aboard
           || record.crewOutcome(ordinal: person.ordinal) == .deceasedWithHull else { return nil }
       }
@@ -80,24 +81,22 @@ extension Game {
     // A released cell's person belongs to its independently authenticated pod.
     // The parent carries no cell components; this contract is historical only.
     if stock.phase == .released, let receipt = stock.receipt,
-      let record = nativeMechanicalStoredEMPState()?.records[person.source],
-      let pod = record.podIndex(for: person.ordinal),
-      record.pods[pod].body.physical?.currentNewtKitReceipt == receipt {
+      let record, record.podMatches(ordinal: person.ordinal, receipt: receipt) {
       return .init(stock: stock, occupied: true, parts: source.releasedParts, mass: source.podMass)
     }
-    return currentNewtEmptyCellForCapturedPerson(stock: stock, source: source, person: person, live: live, identity: identity)
+    return currentNewtEmptyCellForCapturedPerson(stock: stock, source: source, person: person,
+      live: live, identity: identity, record: record)
   }
 
   @inline(never)
   private func currentNewtEmptyCellForCapturedPerson(
     stock: CurrentNewtKitStock, source: CurrentNewtKitSource, person: EMPCrewIdentity,
-    live: Bool, identity: ActorIdentity
+    live: Bool, identity: ActorIdentity, record: CurrentNewtObservedEMPRecord?
   ) -> CurrentNewtCellComponentContract? {
-    guard let record = nativeMechanicalStoredEMPState()?.records[person.source],
-      record.hull.binding == (live ? identity : nil),
-      record.hull.body.physical?.currentNewtKitStock == stock,
+    guard let record, record.hasHullBinding(live ? identity : nil),
+      record.hasHullStock(stock),
       record.crewOutcome(ordinal: person.ordinal) == .captured,
-      record.crewCaptures.contains(where: { $0.contains(person.ordinal) && $0.valid(record: record) }),
+      record.hasValidCapture(ordinal: person.ordinal),
       commander.nativePeople?.admissions.filter({
         $0.person == .emp(person) && $0.origin == .capturedCrew && $0.valid(commander: commander)
       }).count == 1,

@@ -962,7 +962,16 @@ def worker_limit(explicit, cpu_budget, ram_available, ram_reserve, peak_per_work
                  int((ram_available - ram_reserve) // peak_per_worker),
                  int((disk_available - disk_reserve) // disk_per_worker))
     if result < 1:
-        raise ValueError("RAM/disk admission reserve blocks a new worker")
+        # Reuse the existing sanitized refusal schema; never sample again or invent
+        # configured/observed CPU values that this boundary was not given.
+        bounds = dict(explicit=explicit, cpu_budget=cpu_budget, ram_available=ram_available,
+                      ram_reserve=ram_reserve, peak_per_worker=peak_per_worker,
+                      disk_available=disk_available, disk_reserve=disk_reserve,
+                      disk_per_worker=disk_per_worker, ram_capacity=ram_capacity,
+                      disk_capacity=disk_capacity)
+        message = "RAM/disk admission reserve blocks a new worker"
+        refusal = admission_refusal(bounds, None, None, "decision", ValueError(message))
+        raise ValueError(message + ": " + json.dumps(refusal, sort_keys=True))
     return result
 
 

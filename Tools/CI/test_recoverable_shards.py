@@ -461,6 +461,35 @@ class AdmissionTests(Fixture):
                      for unit in shards.legacy.partition(methods, mode, 1)}
         return shards.make_plan(self.runtimes[mode], methods, resources=resources)
 
+    def test_worker_refusal_preserves_exact_ram_disk_available_and_required_without_sampling(self):
+        gib = 1024 ** 3
+        original = dict(explicit=1, cpu_budget=1, ram_available=8*gib, ram_reserve=2*gib,
+                        peak_per_worker=6*gib, disk_available=120*gib, disk_reserve=40*gib,
+                        disk_per_worker=80*gib)
+        self.assertEqual(shards.worker_limit(**original), 1)
+        for changes, reasons in (({'ram_available': 8*gib-1}, ['ram']),
+                                 ({'disk_available': 120*gib-1}, ['disk']),
+                                 ({'ram_available': 8*gib-1, 'disk_available': 120*gib-1}, ['ram', 'disk'])):
+            bounds = {**original, **changes}
+            with self.subTest(changes=changes), self.assertRaises(ValueError) as refused:
+                shards.worker_limit(**bounds)
+            message = str(refused.exception)
+            prefix = 'RAM/disk admission reserve blocks a new worker: '
+            self.assertTrue(message.startswith(prefix))
+            record = json.loads(message[len(prefix):])
+            self.assertEqual(record['reasons'], reasons)
+            sample = record['sample']
+            self.assertEqual(sample['ram_available'], bounds['ram_available'])
+            self.assertEqual(sample['ram_required'], 8*gib)
+            self.assertEqual(sample['disk_available'], bounds['disk_available'])
+            self.assertEqual(sample['disk_required'], 120*gib)
+            self.assertEqual(sample['ram_reserve'], 2*gib)
+            self.assertEqual(sample['peak_per_worker'], 6*gib)
+            self.assertEqual(sample['disk_reserve'], 40*gib)
+            self.assertEqual(sample['disk_per_worker'], 80*gib)
+            self.assertIsNone(sample['cpu_observed'])
+            self.assertIsNone(sample['cpu_budget_configured'])
+
     def test_ram_cpu_disk_caps_and_cross_mode_pool_are_bounded(self):
         self.assertEqual(shards.worker_limit(**ADMISSION), 2)
         self.assertEqual(shards.worker_limit(**{**ADMISSION, "cpu_budget": 1}), 1)

@@ -20,6 +20,7 @@ class RetiredHullResourceTests(unittest.TestCase):
         cls.resources = cls.root / "Sources/L337Core/Resources"
         source = Path(__file__).resolve().parents[2] / "Sources/L337Core/Resources"
         shutil.copytree(source, cls.resources)
+        shutil.copyfile(source.parents[2] / "Package.swift", cls.root / "Package.swift")
         cls.old = json.loads(Path(__file__).with_name("fixtures")
                              .joinpath("retired_hull_meshes.json").read_bytes())
 
@@ -126,12 +127,12 @@ class RetiredHullResourceTests(unittest.TestCase):
                 app = Path(temporary) / "L337.app"
                 bundle = app / "Contents/Resources/L337_L337Core.bundle"
                 destination = bundle / "Contents/Resources" if nested else bundle
+                targets = package_macos.resource_targets(self.root)
                 for source in self.resources.rglob("*"):
                     if not source.is_file():
                         continue
                     relative = source.relative_to(self.resources)
-                    copied = relative.parts[0] in package_macos.COPIED_RESOURCE_DIRECTORIES
-                    target = destination / (relative if copied else Path(source.name))
+                    target = destination / targets[relative]
                     target.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copyfile(source, target)
                 result = gate.verify(self.root, app)

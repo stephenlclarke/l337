@@ -99,9 +99,9 @@ extension Game {
   ) throws {
     if let logical = body.nativeGeometryEMPSource() {
       guard nativeMechanicalStoredEMPState()?.valid == true,
-        let record = nativeMechanicalStoredEMPState()?.records[logical],
-        record.hull.binding == identity,
-        record.hull.body.physical?.currentNewtKitStock == stock
+        let record = CurrentNewtObservedEMPRecord.observe(
+          state: nativeMechanicalStoredEMPState(), source: logical),
+        record.hasHullBinding(identity), record.hasHullStock(stock)
       else { throw MissionNativeBridgeError.invalidGeometry }
     } else {
       guard let logical = nativeMechanicalStoredNPCPersistence().logicalIdentity(for: identity),

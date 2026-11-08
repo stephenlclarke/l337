@@ -14,17 +14,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-COPIED_RESOURCE_DIRECTORIES = (
-    "Ships",
-    "MissionPacks",
-    "ScriptPacks",
-    "ShipTextures",
-    "OriginalWorlds",
-    "OriginalShipTextures",
-    "OriginalFleetShowroomModels",
-    "OriginalFleetPhysical",
-    "OriginalMarkets",
-)
+
 
 
 def run(*arguments, capture=False, check=True):
@@ -110,23 +100,169 @@ def bundle_resources(app):
     return bundle / "Contents/Resources" if (bundle / "Contents/Resources").is_dir() else bundle
 
 
-def verify_resources(app, source_root=None):
-    """Verify maintained resources using SwiftPM's copied/processed layouts."""
-    from retired_hull_resources import verify_resource_tree
+def _manifest_parts(tokens):
+    """Split literal Swift arguments/array items without evaluating the manifest."""
+    parts, current, stack = [], [], []
+    closing = {"(": ")", "[": "]", "{": "}"}
+    for token in tokens:
+        if token == "," and not stack:
+            if current:
+                parts.append(current)
+                current = []
+            continue
+        if token in closing:
+            stack.append(closing[token])
+        elif token in closing.values():
+            if not stack or stack.pop() != token:
+                raise RuntimeError("Unbalanced Package.swift resource declaration")
+        current.append(token)
+    if stack:
+        raise RuntimeError("Unbalanced Package.swift resource declaration")
+    if current:
+        parts.append(current)
+    return parts
 
-    root = ROOT if source_root is None else source_root
-    source_provenance = verify_resource_tree(root / "Sources/L337Core/Resources")
-    bundle = bundle_resources(app)
-    for source in (root / "Sources/L337Core/Resources").rglob("*"):
+
+def _manifest_call_end(tokens, start):
+    depth = 0
+    for index in range(start, len(tokens)):
+        if tokens[index] == "(":
+            depth += 1
+        elif tokens[index] == ")":
+            depth -= 1
+            if depth == 0:
+                return index
+    raise RuntimeError("Unbalanced Package.swift target declaration")
+
+
+def _manifest_tokens(text):
+    """Scan strings and nested Swift comments in one bounded, nonrecursive pass."""
+    tokens, index = [], 0
+    word = re.compile(r"[A-Za-z_]\w*")
+    while index < len(text):
+        if text[index].isspace():
+            index += 1
+        elif text.startswith("//", index):
+            end = text.find("\n", index + 2)
+            index = len(text) if end < 0 else end + 1
+        elif text.startswith("/*", index):
+            depth = 1
+            index += 2
+            while depth and index < len(text):
+                if text.startswith("/*", index):
+                    depth += 1
+                    index += 2
+                elif text.startswith("*/", index):
+                    depth -= 1
+                    index += 2
+                else:
+                    index += 1
+            if depth:
+                raise RuntimeError("Unterminated Package.swift block comment")
+        elif text[index] == '"':
+            start = index
+            index += 1
+            while index < len(text):
+                if text[index] == "\\":
+                    index += 2
+                elif text[index] == '"':
+                    index += 1
+                    tokens.append(text[start:index])
+                    break
+                else:
+                    index += 1
+            else:
+                raise RuntimeError("Unterminated Package.swift string")
+        else:
+            match = word.match(text, index)
+            if match:
+                tokens.append(match.group())
+                index = match.end()
+            else:
+                tokens.append(text[index])
+                index += 1
+    return tokens
+
+
+def resource_declarations(source_root):
+    """Read only L337Core's explicit .copy/.process literals; unsupported syntax refuses."""
+    text = (Path(source_root) / "Package.swift").read_text()
+    tokens = _manifest_tokens(text)
+    targets = []
+    for index in range(len(tokens) - 2):
+        if tokens[index:index + 3] != [".", "target", "("]:
+            continue
+        end = _manifest_call_end(tokens, index + 2)
+        arguments = _manifest_parts(tokens[index + 3:end])
+        if ["name", ":", '"L337Core"'] not in arguments:
+            continue
+        resources = [part[2:] for part in arguments if part[:2] == ["resources", ":"]]
+        if len(resources) != 1 or resources[0][:1] != ["["] or resources[0][-1:] != ["]"]:
+            raise RuntimeError("L337Core resources must be one literal array in Package.swift")
+        targets.append(_manifest_parts(resources[0][1:-1]))
+    if len(targets) != 1 or not targets[0]:
+        raise RuntimeError("Expected one nonempty L337Core resource declaration")
+    declarations = []
+    for part in targets[0]:
+        if (len(part) != 5 or part[0] != "." or part[1] not in ("copy", "process")
+                or part[2] != "(" or part[4] != ")"):
+            raise RuntimeError("Unsupported L337Core resource declaration in Package.swift")
+        try:
+            path = json.loads(part[3])
+        except (ValueError, TypeError) as error:
+            raise RuntimeError("Resource paths must be literal strings") from error
+        if (not isinstance(path, str) or not path.startswith("Resources/")
+                or "\\" in path or any(piece in ("", ".", "..") for piece in path.split("/"))):
+            raise RuntimeError(f"Invalid L337Core resource path: {path!r}")
+        declarations.append((part[1], Path(*path.split("/")[1:])))
+    return tuple(declarations)
+
+
+def resource_targets(source_root):
+    """Map every maintained file once to its exact copied/processed bundle location."""
+    resources = Path(source_root) / "Sources/L337Core/Resources"
+    declarations = resource_declarations(source_root)
+    by_path = {}
+    for rule, relative in declarations:
+        if relative in by_path:
+            raise RuntimeError(f"Resource must have exactly one Package.swift declaration: {relative}")
+        by_path[relative] = rule
+        path = resources / relative
+        if path.is_symlink() or not path.exists():
+            raise RuntimeError(f"Missing/invalid declared source resource: {relative}")
+    result, owners = {}, {}
+    for source in sorted(resources.rglob("*")):
+        relative = source.relative_to(resources)
+        if source.is_symlink():
+            raise RuntimeError(f"Invalid symbolic source resource: {relative}")
         if not source.is_file():
             continue
-        relative = source.relative_to(root / "Sources/L337Core/Resources")
-        target = (
-            bundle / relative
-            if relative.parts[0] in COPIED_RESOURCE_DIRECTORIES
-            else bundle / source.name
-        )
-        if not target.is_file() or source.read_bytes() != target.read_bytes():
+        matches = [(by_path[path], path) for path in (relative, *relative.parents)
+                   if path in by_path]
+        if len(matches) != 1:
+            raise RuntimeError(f"Resource must have exactly one Package.swift declaration: {relative}")
+        rule, declared = matches[0]
+        target = (Path(declared.name) / relative.relative_to(declared)
+                  if rule == "copy" else Path(source.name))
+        if target in owners:
+            raise RuntimeError(f"Packaged resource destination collision: {owners[target]} and {relative}")
+        result[relative] = target
+        owners[target] = relative
+    return result
+
+
+def verify_resources(app, source_root=None):
+    """Verify every maintained resource byte at its Package.swift-defined location."""
+    from retired_hull_resources import verify_resource_tree
+
+    root = Path(ROOT if source_root is None else source_root)
+    targets = resource_targets(root)
+    source_provenance = verify_resource_tree(root / "Sources/L337Core/Resources")
+    bundle = bundle_resources(app)
+    for relative, packaged in targets.items():
+        source = root / "Sources/L337Core/Resources" / relative
+        target = bundle / packaged
+        if target.is_symlink() or not target.is_file() or source.read_bytes() != target.read_bytes():
             raise RuntimeError(f"Missing/changed packaged resource: {relative}")
     return {"source": source_provenance, "bundle": verify_resource_tree(bundle)}
 
