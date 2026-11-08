@@ -188,13 +188,15 @@ public struct ScriptOwnedActor: Codable, Sendable, Equatable {
   private static func bodyValid(
     _ body: borrowing SpaceBody, identity: UUID, presence: ScriptActorPresence
   ) -> Bool {
-    body.missionActorID == identity
-      && body.position.finite && body.position.length <= 1e9 && body.orientation.validRotation
-      && body.energy.isFinite && (0...10_000_000).contains(body.energy)
-      && Self.npcValid(body)
-      && body.rotation.isFinite && body.rotationRate.isFinite && (0...32).contains(body.missiles)
-      && (-1..<1_000_000_000).contains(body.id)
-      && (presence != .destroyed || body.energy == 0)
+    guard body.missionActorID == identity,
+      body.position.finite, body.position.length <= 1e9, body.orientation.validRotation,
+      body.energy.isFinite, (0...10_000_000).contains(body.energy),
+      Self.npcValid(body),
+      body.rotation.isFinite, body.rotationRate.isFinite, (0...32).contains(body.missiles),
+      (-1..<1_000_000_000).contains(body.id)
+    else { return false }
+    if presence == .destroyed { return body.energy == 0 }
+    return true
   }
 
   @inline(never)
