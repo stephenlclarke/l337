@@ -2296,8 +2296,9 @@ extension Game {
     source: borrowing MissionActorAdmissionSource, context: C03ActorAdmissionContext,
     bodyIDs: [UUID: Int], bodies admitted: [SpaceBody], flight: FlightSimulationState
   ) throws -> MissionActorRetentionPatch {
+    let sourceInstanceID = source.instanceID
     guard acceptsHollowManifestInstalledCase(context.pin),
-      let expected = withReadOnlyScriptState({ $0.instances[source.instanceID] }),
+      let expected = withReadOnlyScriptState({ $0.instances[sourceInstanceID] }),
       expected.ownedEncounters[source.encounterID] == context.installedEncounter,
       (1...2).contains(admitted.count), admitted.count == bodyIDs.count,
       Set(admitted.compactMap(\.missionActorID)) == Set(bodyIDs.keys),
@@ -2601,8 +2602,9 @@ extension Game {
     source: borrowing MissionActorAdmissionSource, context: NativeC03WakeAdmissionContext,
     bodyIDs: [UUID: Int], bodies admitted: [SpaceBody], flight: FlightSimulationState
   ) throws -> MissionActorRetentionPatch {
+    let sourceInstanceID = source.instanceID
     guard acceptsHollowManifestWakeAdmissionContext(context),
-      let expected = withReadOnlyScriptState({ $0.instances[source.instanceID] }),
+      let expected = withReadOnlyScriptState({ $0.instances[sourceInstanceID] }),
       source.instanceID == context.pin.missionID,
       expected.ownedEncounters[source.encounterID] == context.installedEncounter,
       source.encounterID == NativeC03WakeTrail.encounter,
@@ -2668,8 +2670,9 @@ extension Game {
     source: borrowing MissionActorAdmissionSource, context: NativeC03RegisterAdmissionContext,
     bodyIDs: [UUID: Int], bodies admitted: [SpaceBody], flight: FlightSimulationState
   ) throws -> MissionActorRetentionPatch {
+    let sourceInstanceID = source.instanceID
     guard acceptsHollowManifestRegisterAdmissionContext(context),
-      let expected = withReadOnlyScriptState({ $0.instances[source.instanceID] }),
+      let expected = withReadOnlyScriptState({ $0.instances[sourceInstanceID] }),
       source.instanceID == context.pin.missionID,
       source.encounterID == NativeC03RegisterState.encounter,
       expected.ownedEncounters[source.encounterID] == context.installedEncounter,

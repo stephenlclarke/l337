@@ -369,9 +369,11 @@ enum NativeC03PublicationNamespace {
     _ publication: borrowing NativeC03PublicationPreflight.Publication,
     commander: borrowing Commander
   ) -> Bool {
-    commander.withReadOnlyScriptState { script in
-      guard let index = script.instances.index(forKey: publication.mission) else { return false }
-      return matches(script.instances[index].value, state: publication.state)
+    let mission = publication.mission
+    let state = publication.state
+    return commander.withReadOnlyScriptState { script in
+      guard let index = script.instances.index(forKey: mission) else { return false }
+      return matches(script.instances[index].value, state: state)
     }
   }
 
