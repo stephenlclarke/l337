@@ -134,7 +134,8 @@ struct NativeC03SealLaboratoryAnalysis: Codable, Equatable, Sendable {
   /// An internally rehashed but source-mismatched result is still invalid. Recompute from
   /// the original records rather than accepting the result's own identity or count.
   func valid(in state: borrowing NativeHollowManifestState) -> Bool {
-    shapeValid && self == (try? Self.examining(state))
+    guard shapeValid else { return false }
+    return self == (try? Self.examining(state))
   }
 }
 
