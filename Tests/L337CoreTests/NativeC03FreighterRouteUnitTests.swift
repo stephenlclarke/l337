@@ -19,7 +19,8 @@ struct NativeC03FreighterRouteUnitTests {
     let actor = try #require(body.missionActorID)
     var flight = FlightSimulationState()
     flight.enter(Route.world, arriving: false)
-    let physical = try #require(flight.allocateActor())
+    let allocatedActor = flight.allocateActor()
+    let physical = try #require(allocatedActor)
     let anchors = try #require(flight.anchors)
     let layout = try Route.candidateLayout(anchors: anchors)
     let binding = try Route.Binding(
@@ -158,8 +159,9 @@ struct NativeC03FreighterRouteUnitTests {
     case "owned": f.owned.presence = .unloaded
     case "actor": f.body.missionActorID = UUID()
     case "physical":
+      let invalidPhysicalActor = f.flight.allocateActor()
       f.body.physical = .init(
-        identity: try #require(f.flight.allocateActor()), population: .mission)
+        identity: try #require(invalidPhysicalActor), population: .mission)
     case "world": f.flight.enter(.init(galaxy: 0, system: 7), arriving: false)
     case "visit": f.flight.enter(Route.world, arriving: false)
     case "intent": f.body.scriptNPC?.intent = nil
