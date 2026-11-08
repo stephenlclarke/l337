@@ -86,14 +86,26 @@ class ShipReferenceGuardTests(unittest.TestCase):
                 guard.worker_limit.assert_called_once()
                 self.assertEqual(guard.worker_limit.call_args.kwargs['peak_per_worker'], reference.ASSET_RSS)
 
-    def test_compiler_accepts_only_the_existing_normal_bound_and_keeps_cleanup(self):
+    def test_compiler_has_its_own_inclusive_six_gib_limit_and_keeps_cleanup(self):
+        self.assertEqual(reference.NORMAL_COMPILER_RSS, 6442450944)
         self.assertEqual(reference.NORMAL_RSS, 3221225472)
-        middle = (reference.ASSET_RSS + reference.NORMAL_RSS) // 2
-        for resident in [middle, reference.NORMAL_RSS]:
+        for resident in [reference.NORMAL_RSS + 1, reference.NORMAL_COMPILER_RSS]:
             with self.subTest(resident=resident):
                 self.assertEqual(self.guarded(resident, 'normal-compiler'), 0)
-        self.assertEqual(self.guarded(reference.NORMAL_RSS + 1, 'normal-compiler'), 1)
-        self.assertEqual(self.guarded(middle), 1)
+        self.assertEqual(self.guarded(reference.NORMAL_COMPILER_RSS + 1, 'normal-compiler'), 1)
+        self.assertEqual(self.guarded(reference.NORMAL_RSS + 1), 1)
+
+    def test_test_and_game_commands_cannot_claim_the_compiler_allowance(self):
+        for command in [self.driver_command(),
+                        [self.command()[0], 'test', '--enable-code-coverage', 'list', '--skip-build'],
+                        ['/unit/L337'], ['/usr/bin/make', 'ci']]:
+            with self.subTest(command=command), patch.object(reference.subprocess, 'Popen') as launch, \
+                    patch.object(reference, 'process_memory') as sample:
+                with self.assertRaises(ValueError):
+                    reference.run_renderer(command, Path('/unit'), io.BytesIO(), (), 100,
+                                           profile='normal-compiler')
+                launch.assert_not_called()
+                sample.assert_not_called()
 
     def driver_command(self):
         return ['/bound/toolchain/swift', 'test', '--enable-code-coverage', '--skip-build',
@@ -111,8 +123,9 @@ class ShipReferenceGuardTests(unittest.TestCase):
             backend = ['--build-system', 'native']
             exact = original[:2] + backend + original[2:]
             with self.subTest(command=exact):
-                self.assertEqual(self.guarded(reference.NORMAL_RSS, profile, exact), 0)
-                self.assertEqual(self.guarded(reference.NORMAL_RSS + 1, profile, exact), 1)
+                limit = reference.NORMAL_COMPILER_RSS if profile == 'normal-compiler' else reference.NORMAL_RSS
+                self.assertEqual(self.guarded(limit, profile, exact), 0)
+                self.assertEqual(self.guarded(limit + 1, profile, exact), 1)
             for changed in (
                     original[:2] + ['--build-system', 'swiftbuild'] + original[2:],
                     exact[:4] + backend + exact[4:], original + backend, exact[:-1]):
