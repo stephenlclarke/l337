@@ -201,7 +201,8 @@ struct NativeC03RegisterRuntimeUnitTests {
       case 2:
         broken.bodies[index].scriptNPC?.components[NativeC03RegisterGeometry.component]?.energy = 0
       default:
-        broken.bodies[index].physical?.angularVelocity = broken.modelPose(of: broken.bodies[index]).orientation.z * 10
+        let angularVelocity = broken.modelPose(of: broken.bodies[index]).orientation.z * 10
+        broken.bodies[index].physical?.angularVelocity = angularVelocity
       }
       let before = broken.commander
       #expect(throws: (any Error).self) { try broken.recoverHollowManifestRegister() }
