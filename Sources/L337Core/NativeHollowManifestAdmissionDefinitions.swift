@@ -43,7 +43,9 @@ extension NativeHollowManifestCommission {
   static func profiles(pack: borrowing ScriptPack, state: borrowing ScriptInstance)
     -> [ScriptNPCDefinition]
   {
-    if marked(state) || applies(pack) {
+    let native: Bool
+    if marked(state) { native = true } else { native = applies(pack) }
+    if native {
       guard let declared = installedAdmissionDeclarations(pack: pack, state: state) else { return [] }
       let evacuation = NativeC03EvacuationDefinitions.installed(pack: pack, state: state)
       if state.savedHollowManifest?.crewSource != nil && evacuation == nil { return [] }
@@ -58,7 +60,9 @@ extension NativeHollowManifestCommission {
   static func designs(pack: borrowing ScriptPack, state: borrowing ScriptInstance) -> [String:
     ShipDesign]
   {
-    if marked(state) || applies(pack) {
+    let native: Bool
+    if marked(state) { native = true } else { native = applies(pack) }
+    if native {
       guard let declared = installedAdmissionDeclarations(pack: pack, state: state) else { return [:] }
       var values = declared.designs
       let evacuation = NativeC03EvacuationDefinitions.installed(pack: pack, state: state)

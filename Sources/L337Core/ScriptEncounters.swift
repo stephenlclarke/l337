@@ -1012,10 +1012,13 @@ extension Game {
   private static func validatePreparedMissionActorCondition(
     _ actor: ScriptOwnedActor, spec: ScriptActorDefinition,
     template: MissionActorAdmissionTemplate,
-    mechanicallyDisabled: Bool = false, preparedOrientation: Basis3? = nil
+    mechanicallyDisabled: Bool = false, preparedOrientation: Basis3? = nil,
+    preparedPose: ShipPose? = nil
   ) throws {
     try validatePreparedMissionActorPose(
-      actor, spec: spec, orientation: preparedOrientation ?? Basis3())
+      actor, spec: spec,
+      expectedPosition: preparedPose?.position ?? Vector3(spec.x, spec.y, spec.z),
+      orientation: preparedPose?.orientation ?? preparedOrientation ?? Basis3())
     try validatePreparedMissionActorEnergy(
       actor, template: template, mechanicallyDisabled: mechanicallyDisabled)
     if let resources = preparedMissionActorNPCResources(actor) {
@@ -1027,10 +1030,11 @@ extension Game {
 
   @inline(never)
   private static func validatePreparedMissionActorPose(
-    _ actor: borrowing ScriptOwnedActor, spec: ScriptActorDefinition, orientation: Basis3
+    _ actor: borrowing ScriptOwnedActor, spec: ScriptActorDefinition,
+    expectedPosition: Vector3, orientation: Basis3
   ) throws {
     guard actor.body.id == -1, actor.body.physical == nil,
-      actor.body.position == .init(spec.x, spec.y, spec.z),
+      actor.body.position == expectedPosition,
       actor.body.orientation == orientation, actor.body.hostile == spec.hostile
     else {
       throw MissionPackError(
@@ -2224,12 +2228,11 @@ extension Game {
       let base = try Self.missionActorAdmissionTemplate(
         actor, specification: spec,
         npcDefinitions: declared.profiles, installedModels: declared.designs, geometry: geometry,
-        legacy: nil, initialNativeCondition: condition)
+        initialNativeCondition: condition)
       let canonical = projections[actor.identity]?.body ?? base.canonicalBody
       if initial {
         try Self.validatePreparedMissionActorCondition(
           actor, spec: spec, template: base,
-          legacy: nil,
           preparedPose: .init(position: canonical.position, orientation: canonical.orientation))
       }
       templates.append(
@@ -2584,12 +2587,12 @@ extension Game {
       let initial = context.initial ? NativeC03EvidenceInitialCondition.state(for: .wakeFragment) : nil
       let base = try Self.missionActorAdmissionTemplate(
         actor, specification: spec, npcDefinitions: context.profiles,
-        installedModels: context.designs, geometry: context.geometry, legacy: nil,
+        installedModels: context.designs, geometry: context.geometry,
         initialNativeCondition: initial)
       let canonical = context.projections[actor.identity]?.body ?? base.canonicalBody
       if context.initial {
         try Self.validatePreparedMissionActorCondition(
-          actor, spec: spec, template: base, legacy: nil,
+          actor, spec: spec, template: base,
           preparedPose: .init(position: canonical.position, orientation: canonical.orientation))
       }
       templates.append(.init(
@@ -2653,12 +2656,12 @@ extension Game {
     let initial = context.initial ? NativeC03EvidenceInitialCondition.state(for: .custodyArchive) : nil
     let base = try Self.missionActorAdmissionTemplate(
       actor, specification: spec, npcDefinitions: [NativeC03RegisterGeometry.profile],
-      installedModels: context.designs, geometry: context.geometry, legacy: nil,
+      installedModels: context.designs, geometry: context.geometry,
       initialNativeCondition: initial)
     let canonical = context.projection?.body ?? base.canonicalBody
     if context.initial {
       try Self.validatePreparedMissionActorCondition(
-        actor, spec: spec, template: base, legacy: nil,
+        actor, spec: spec, template: base,
         preparedPose: .init(position: canonical.position, orientation: canonical.orientation))
     }
     let template = MissionActorAdmissionTemplate(
