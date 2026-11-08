@@ -35,11 +35,13 @@ struct CurrentNewtKitLoadModel: Sendable {
   let rules: [Rule]
   let fixed: [CurrentNewtKitReceipt.MassProperties]
   let fixedAllocations: [Allocation]
+  let expectedPeople: [Int: CurrentNewtKitIssue.PersonProfile]
+  let bisonInventory: CurrentNewtBisonInventory?
   let maximumCargoMassKilograms: Double
   let maximumFuelTenthsLY: Double
   let maximumMissiles: Int
 
-  static func decode(_ value: Any?) -> Self? {
+  static func decode(_ value: Any?, people: [Int: CurrentNewtKitIssue.PersonProfile]) -> Self? {
     guard let root = value as? [String: Any], let catalogue = root["catalogueShipID"] as? String,
       let r3 = root["r3SHA256"] as? String, r3.utf8.count == 64,
       let entries = root["rules"] as? [[String: Any]], !entries.isEmpty,
@@ -98,13 +100,13 @@ struct CurrentNewtKitLoadModel: Sendable {
       maximumCargo.isFinite, maximumCargo > 0, maximumFuel.isFinite, maximumFuel >= 0,
       maximumMissiles >= 0 else { return nil }
     return .init(catalogueShipID: catalogue, r3SHA256: r3, rules: rules, fixed: fixed, fixedAllocations: fixedAllocations,
+      expectedPeople: people, bisonInventory: nil,
       maximumCargoMassKilograms: maximumCargo, maximumFuelTenthsLY: maximumFuel,
       maximumMissiles: maximumMissiles)
   }
 
   func matches(_ load: CurrentNewtKitLoad, selectedPerson: EMPCrewIdentity) -> Bool {
-    load.people.count == 1 && load.people.first?.identity == selectedPerson
-      && matchesInventory(load)
+    load.people.contains(where: { $0.identity == selectedPerson }) && matchesInventory(load)
   }
 
   /// Empty parent rosters are valid after a genuine person handoff; this does
@@ -112,6 +114,10 @@ struct CurrentNewtKitLoadModel: Sendable {
   func matchesInventory(_ load: CurrentNewtKitLoad) -> Bool {
     guard load.structurallyValid, load.catalogueShipID == catalogueShipID,
       load.r3SHA256 == r3SHA256, load.hasFuelScoops == false,
+      load.people.count <= expectedPeople.count,
+      Set(load.people.map { $0.identity.ordinal }).count == load.people.count,
+      Set(load.people.map { $0.identity.source }).count <= 1,
+      load.people.allSatisfy({ expectedPeople[$0.identity.ordinal] == $0.profile }),
       let current = OriginalFleetR3Data.contract(for: catalogueShipID),
       current.sourceSHA256 == r3SHA256, let performance = current.performance,
       let expected = NPCResources.stock(performance), let fuel = load.resources.fuel,
@@ -129,6 +135,7 @@ struct CurrentNewtKitLoadModel: Sendable {
       load.resources.shieldRecharge == expected.shieldRecharge,
       load.resources.fuelCapacity == expected.fuelCapacity
     else { return false }
+    if let bisonInventory { return bisonInventory.allocations(load) != nil }
     var tonnes = 0
     var cargoMass = 0.0
     for amount in load.cargo {
@@ -151,6 +158,7 @@ struct CurrentNewtKitLoadModel: Sendable {
   /// Merge actual cargo fractions into their two shared beds. This preserves
   /// the declared gap and never overlays one solid box per commodity.
   func allocations(_ load: CurrentNewtKitLoad) -> [Allocation]? {
+    if let bisonInventory { return bisonInventory.allocations(load) }
     var result = fixedAllocations
     var cargo: [String: Allocation] = [:]
     for rule in rules {

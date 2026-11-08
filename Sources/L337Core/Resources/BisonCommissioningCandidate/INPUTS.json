@@ -1,0 +1,78 @@
+{
+  "files": [
+    {
+      "bytes": 313350,
+      "path": "Bison-v2.json",
+      "sha256": "48c747bffefc6abccee84e9eacaea361f318fe3afd6c52f82ce463a34b648a5e",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/docs/fleet-physical/bison-wide-shoes/SH005-current-newt-person7-wide-shoes-v2.json"
+    },
+    {
+      "bytes": 49893,
+      "path": "Commissioning-v2.json",
+      "sha256": "574c69e938a2d801713b1c4292b9146609b95f6b7c5656c0d64e12dcde8fa683",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/docs/fleet-physical/bison-wide-shoes/SH005-current-newt-person7-wide-shoes-commissioning-v2.json"
+    },
+    {
+      "bytes": 8132,
+      "path": "Newt-physical.json",
+      "sha256": "0d7cd491b77b6e14016daa8a3c5e622416963870f669f80d63ad3b4d74aaee17",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/evidence/BISON-COMMISSIONING-PAUSED-20261107/MBA/Newt-physical.json"
+    },
+    {
+      "bytes": 8516,
+      "path": "Newt-audit.json",
+      "sha256": "48d8b124b7a223272c7d8422f816eb70f3e62bc5b3f7b421eaf84e4160fc774a",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/evidence/BISON-COMMISSIONING-PAUSED-20261107/MBA/Newt-audit.json"
+    },
+    {
+      "bytes": 27799,
+      "path": "SH040-current.toml",
+      "sha256": "510a2059ce49a7d902c11ca65303264afa8ee103cd1a9e9ad823dbe05fee816c",
+      "source": "/Volumes/SSD/offload/l337-trial-hull-admission.wN7nAy/elite/Sources/L337Core/Resources/Ships/SH040.toml"
+    },
+    {
+      "bytes": 2839,
+      "path": "OriginalCryostasisCapsule.swift",
+      "sha256": "441d2d3f0c8ffd1a7d452c70777dd53e255df305f18940e2a5a28be1680d2fd1",
+      "source": "/Volumes/SSD/offload/l337-trial-hull-admission.wN7nAy/elite/Sources/L337Core/OriginalCryostasisCapsule.swift"
+    },
+    {
+      "bytes": 5868,
+      "path": "MC1-physical-input-blockers.json",
+      "sha256": "8cdab859cd68aff6b11b87dd2443631a37e9dbc8cb1bca9db0932caecee92f8f",
+      "source": "/private/tmp/l337-mc1-bison-unobserved-frozen-5vd_6qqj/physical-input-blockers.json"
+    },
+    {
+      "bytes": 12375,
+      "path": "MC1-manifest.json",
+      "sha256": "ea76ba0276b51465f7b064ac6ba6c4386761cc80cbbdd2094429b5cd19c7444e",
+      "source": "/private/tmp/l337-mc1-bison-unobserved-frozen-5vd_6qqj/manifest.json"
+    },
+    {
+      "bytes": 6881,
+      "path": "Newt-engineering.json",
+      "sha256": "3c40451f7c6690059636e1d2baf654e47ea6f4b5ffab6699eee8668f378d2ee4",
+      "source": "/Volumes/SSD/offload/l337-trial-hull-admission.wN7nAy/elite/docs/fleet-design-v2/successors/SH040-cryostasis-engineering.json"
+    },
+    {
+      "bytes": 22238,
+      "path": "four-material-reference.py",
+      "sha256": "75a86bbfbee5492f26a732c854f7d66abf9818c19b2f1cf55b1a7e50311de9a9",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/elite/docs/fleet-physical/bison-four-material-reference/four-material-reference.py"
+    },
+    {
+      "bytes": 20041,
+      "path": "SOURCE-AUDIT.json",
+      "sha256": "4dfc66d511695c9df82d5b6a00b65eba4ad9a13f07ddc397f0a74ca515dc8591",
+      "source": "/private/tmp/l337-bison-thermal-authority-20261107/SOURCE-AUDIT.json"
+    },
+    {
+      "bytes": 12961,
+      "path": "CO2-CaO-REFERENCE-CHECK.json",
+      "sha256": "0890bada1c81ca2c4d72ecff714cc9841a7d708550d4402b5fb7166641fd571f",
+      "source": "/private/tmp/l337-bison-thermal-authority-20261107/CO2-CaO-REFERENCE-CHECK.json"
+    }
+  ],
+  "newSourceIsNotObservedCommissioning": true,
+  "scope": "ONE concrete commissioning source correction; actual current rigid/contact source preserved, no shared MC1 hunks"
+}

@@ -1,0 +1,36 @@
+{
+  "actualObservations": [],
+  "newUnqualifiedInputs": [
+    "gamma1.2..1.4",
+    "compressibility0.9..1.1",
+    "effectiveCd>=0.7",
+    "screenCd>=0.5",
+    "viscosity<=5e-5Pa.s",
+    "resistanceMultiplier<=5",
+    "particleDiameter>=1.5mm at allstates",
+    "voidFraction>=0.3",
+    "actualgaspreheat350..355K",
+    "coldfeed>=189.5K",
+    "preheaterUA>=0.3W/K",
+    "diffuser/recuperatorloss<=500Pa each",
+    "constantCp and solid densities",
+    "pressure/seal/strength and kinetics"
+  ],
+  "primarySources": [
+    {
+      "doesNotSupport": "Multiplier5 or this reacting packed-bed performance",
+      "locator": "PDFpageIndex90 Equation9.41",
+      "supports": "Classical Ergun150/1.75 pressure-loss correlation; original validity and uncertainty range not supplied",
+      "url": "https://publications.anl.gov/anlpubs/2021/05/166771.pdf"
+    },
+    {
+      "doesNotSupport": "The authored5e-5Pa.s upper bound; abstract contains no such numeric result",
+      "supports": "Reference gaseousCO2 correlation temperature coverage100..2000K",
+      "url": "https://www.nist.gov/publications/reference-correlation-viscosity-carbon-dioxide"
+    },
+    {
+      "supports": "CO2triple216.58K/5.185bar; sublimationAntoine154.26..195.89K withA6.81228 B1301.679 C-3.494",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=24"
+    }
+  ]
+}

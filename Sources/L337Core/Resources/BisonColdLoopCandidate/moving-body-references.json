@@ -1,0 +1,282 @@
+{
+  "actualObservations": [],
+  "configurations": [
+    {
+      "gateAngleRadians": 1.5707963267948966,
+      "movingRigidBodies": [
+        {
+          "actualMotionStateObserved": false,
+          "centreMetres": [
+            -0.07,
+            -0.3800000000000001,
+            -0.3968433192797521
+          ],
+          "explicitVelocitySpinAndFluidExcessEnergyRequired": true,
+          "id": "pump-rotor",
+          "inertiaAboutCentreOfMassKgM2": [
+            2.5328403465319123e-07,
+            2.710505431213761e-20,
+            0.0,
+            2.710505431213761e-20,
+            2.532840346535165e-07,
+            1.0842021724855044e-19,
+            0.0,
+            1.0842021724855044e-19,
+            3.7438525774403496e-07
+          ],
+          "jointOriginInSourceMetres": [
+            -0.07,
+            -0.38,
+            -0.4
+          ],
+          "massKg": 0.0038203769490518192,
+          "poseAngleRadians": 0,
+          "positiveCoordinateAxisInSourceFrame": [
+            0,
+            0,
+            1
+          ],
+          "primitivePartIDs": [
+            "pump-wet-shaft",
+            "pump-hub-with-shaft-bore",
+            "pump-magnetic-ring",
+            "pump-pitched-blade-0",
+            "pump-carrier-spoke-0",
+            "pump-pitched-blade-1",
+            "pump-carrier-spoke-1",
+            "pump-pitched-blade-2",
+            "pump-carrier-spoke-2",
+            "pump-pitched-blade-3",
+            "pump-carrier-spoke-3"
+          ]
+        },
+        {
+          "actualMotionStateObserved": false,
+          "centreMetres": [
+            0.06491084651767265,
+            -0.26931857947393095,
+            -0.1296
+          ],
+          "explicitVelocitySpinAndFluidExcessEnergyRequired": true,
+          "id": "valve-gate",
+          "inertiaAboutCentreOfMassKgM2": [
+            2.443269087824265e-08,
+            6.3940845936318025e-09,
+            3.3881317890172014e-21,
+            6.3940845936318025e-09,
+            2.2482553455223375e-08,
+            0.0,
+            3.3881317890172014e-21,
+            0.0,
+            4.511854436020429e-08
+          ],
+          "jointOriginInSourceMetres": [
+            0.060000000000000005,
+            -0.27,
+            -0.12960000000000002
+          ],
+          "massKg": 0.0019107629216738452,
+          "poseAngleRadians": 1.5707963267948966,
+          "positiveCoordinateAxisInSourceFrame": [
+            0,
+            -1,
+            0
+          ],
+          "primitivePartIDs": [
+            "valve-flap-with-shaft-cutout",
+            "valve-wet-shaft",
+            "valve-dry-shaft",
+            "valve-actuator-rotor"
+          ]
+        }
+      ],
+      "pumpAngleRadians": 0,
+      "wallRefittedAtThisAngle": false
+    },
+    {
+      "gateAngleRadians": 0.7853981633974483,
+      "movingRigidBodies": [
+        {
+          "actualMotionStateObserved": false,
+          "centreMetres": [
+            -0.06999999999999999,
+            -0.38,
+            -0.3968433192797521
+          ],
+          "explicitVelocitySpinAndFluidExcessEnergyRequired": true,
+          "id": "pump-rotor",
+          "inertiaAboutCentreOfMassKgM2": [
+            2.5328403465340807e-07,
+            -2.710505431213761e-20,
+            -2.710505431213761e-20,
+            -2.710505431213761e-20,
+            2.5328403465340807e-07,
+            -1.0842021724855044e-19,
+            -2.710505431213761e-20,
+            -1.0842021724855044e-19,
+            3.743852577442518e-07
+          ],
+          "jointOriginInSourceMetres": [
+            -0.07,
+            -0.38,
+            -0.4
+          ],
+          "massKg": 0.0038203769490518192,
+          "poseAngleRadians": 0.4487989505128276,
+          "positiveCoordinateAxisInSourceFrame": [
+            0,
+            0,
+            1
+          ],
+          "primitivePartIDs": [
+            "pump-wet-shaft",
+            "pump-hub-with-shaft-bore",
+            "pump-magnetic-ring",
+            "pump-pitched-blade-0",
+            "pump-carrier-spoke-0",
+            "pump-pitched-blade-1",
+            "pump-carrier-spoke-1",
+            "pump-pitched-blade-2",
+            "pump-carrier-spoke-2",
+            "pump-pitched-blade-3",
+            "pump-carrier-spoke-3"
+          ]
+        },
+        {
+          "actualMotionStateObserved": false,
+          "centreMetres": [
+            0.06347249287401266,
+            -0.26931857947393095,
+            -0.13307249287401265
+          ],
+          "explicitVelocitySpinAndFluidExcessEnergyRequired": true,
+          "id": "valve-gate",
+          "inertiaAboutCentreOfMassKgM2": [
+            3.477561761922347e-08,
+            4.521300575645597e-09,
+            1.0342926740990985e-08,
+            4.521300575645597e-09,
+            2.2482553455223375e-08,
+            -4.521300575645597e-09,
+            1.0342926740990985e-08,
+            -4.521300575645597e-09,
+            3.4775617619196364e-08
+          ],
+          "jointOriginInSourceMetres": [
+            0.060000000000000005,
+            -0.27,
+            -0.12960000000000002
+          ],
+          "massKg": 0.0019107629216738452,
+          "poseAngleRadians": 0.7853981633974483,
+          "positiveCoordinateAxisInSourceFrame": [
+            0,
+            -1,
+            0
+          ],
+          "primitivePartIDs": [
+            "valve-flap-with-shaft-cutout",
+            "valve-wet-shaft",
+            "valve-dry-shaft",
+            "valve-actuator-rotor"
+          ]
+        }
+      ],
+      "pumpAngleRadians": 0.4487989505128276,
+      "wallRefittedAtThisAngle": false
+    },
+    {
+      "gateAngleRadians": 0,
+      "movingRigidBodies": [
+        {
+          "actualMotionStateObserved": false,
+          "centreMetres": [
+            -0.07,
+            -0.3800000000000001,
+            -0.3968433192797521
+          ],
+          "explicitVelocitySpinAndFluidExcessEnergyRequired": true,
+          "id": "pump-rotor",
+          "inertiaAboutCentreOfMassKgM2": [
+            2.5328403465319123e-07,
+            2.710505431213761e-20,
+            1.3552527156068805e-20,
+            2.710505431213761e-20,
+            2.5328403465340807e-07,
+            0.0,
+            1.3552527156068805e-20,
+            0.0,
+            3.7438525774403496e-07
+          ],
+          "jointOriginInSourceMetres": [
+            -0.07,
+            -0.38,
+            -0.4
+          ],
+          "massKg": 0.0038203769490518192,
+          "poseAngleRadians": 0.7853981633974483,
+          "positiveCoordinateAxisInSourceFrame": [
+            0,
+            0,
+            1
+          ],
+          "primitivePartIDs": [
+            "pump-wet-shaft",
+            "pump-hub-with-shaft-bore",
+            "pump-magnetic-ring",
+            "pump-pitched-blade-0",
+            "pump-carrier-spoke-0",
+            "pump-pitched-blade-1",
+            "pump-carrier-spoke-1",
+            "pump-pitched-blade-2",
+            "pump-carrier-spoke-2",
+            "pump-pitched-blade-3",
+            "pump-carrier-spoke-3"
+          ]
+        },
+        {
+          "actualMotionStateObserved": false,
+          "centreMetres": [
+            0.06,
+            -0.26931857947393095,
+            -0.13451084651767264
+          ],
+          "explicitVelocitySpinAndFluidExcessEnergyRequired": true,
+          "id": "valve-gate",
+          "inertiaAboutCentreOfMassKgM2": [
+            4.5118544360177185e-08,
+            6.776263578034403e-21,
+            6.776263578034403e-21,
+            6.776263578034403e-21,
+            2.2482553455203046e-08,
+            -6.394084593625026e-09,
+            6.776263578034403e-21,
+            -6.394084593625026e-09,
+            2.443269087818844e-08
+          ],
+          "jointOriginInSourceMetres": [
+            0.060000000000000005,
+            -0.27,
+            -0.12960000000000002
+          ],
+          "massKg": 0.0019107629216738452,
+          "poseAngleRadians": 0,
+          "positiveCoordinateAxisInSourceFrame": [
+            0,
+            -1,
+            0
+          ],
+          "primitivePartIDs": [
+            "valve-flap-with-shaft-cutout",
+            "valve-wet-shaft",
+            "valve-dry-shaft",
+            "valve-actuator-rotor"
+          ]
+        }
+      ],
+      "pumpAngleRadians": 0.7853981633974483,
+      "wallRefittedAtThisAngle": false
+    }
+  ],
+  "scope": "Derived finite moving-body full moments and joint axes only; no observed motion, torque law, stop time or operating authority"
+}

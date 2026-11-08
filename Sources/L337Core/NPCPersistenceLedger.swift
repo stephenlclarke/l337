@@ -192,6 +192,15 @@ public struct NPCPersistenceLedger: Equatable, Codable, Sendable {
 
   public init() {}
 
+  /// Complete retained census, including terminal and rebound snapshots. A
+  /// logical unpublished reservation cannot already occupy any of these owners.
+  func conflictsWithUnpublishedBison(actors: Set<ActorIdentity>, spawns: Set<SpawnIdentity>) -> Bool {
+    entries.contains { logical, entry in
+      actors.contains(logical) || actors.contains(entry.snapshot.actor)
+        || entry.binding.map(actors.contains) == true || entry.offer.map(spawns.contains) == true
+    }
+  }
+
   public var count: Int { entries.count }
   public var livingCount: Int { entries.values.filter { $0.terminal == nil }.count }
   public var unboundSnapshots: [ActorIdentity: NPCPersistenceSnapshot] {

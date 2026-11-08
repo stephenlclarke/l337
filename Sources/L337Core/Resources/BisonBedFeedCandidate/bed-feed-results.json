@@ -1,0 +1,442 @@
+{
+  "actualObservations": [],
+  "allConditionalChecksPass": true,
+  "checks": {
+    "antiIceElectrical": true,
+    "boundedGasInventory": true,
+    "closedHeatLedger": true,
+    "closedVolumeCorrection": true,
+    "coldFeedSinglePhase": true,
+    "finiteBedPorosity": true,
+    "finiteFeedFlow": true,
+    "fullFixedElectricalSplit": true,
+    "localHotCollector": true,
+    "operatingMaterialCap": true,
+    "originalDryHardwareMass": true,
+    "originalRadiatorCapacity": true,
+    "phaseSuperheat": true,
+    "recuperatorHeat": true,
+    "sourceColdHeat": true,
+    "stockMassClosure": true
+  },
+  "closedHotLedgerResidualJoules": -4.9112713895738125e-09,
+  "closedVolumeEnergyCorrectionUpperBoundJoules": 1629.4344568691129,
+  "currentCarrierServiceHeatJoules": 67622400.0,
+  "fixed42ElectricalTotalWatts": 42.0,
+  "gasInventoryUpperComponentsKg": {
+    "coldFeed": 0.00018295812286107837,
+    "postThrottleAndEntireBed": 0.009016978842800378,
+    "preheater": 0.00016560778639265487,
+    "tankHeadspace": 0.014391029229484535
+  },
+  "generatorSHA256": "0cee2015df4ecff2b6504e7d6349fb35daaded4229cc3df413f2b6445d187144",
+  "hydraulics": {
+    "bedOutletBeforeScreensPascals": 15167.546997887719,
+    "deliveredOutletLowerBoundPascals": 15167.534453522276,
+    "empiricalCorrelationQualificationRequired": true,
+    "flowBoundPass": true,
+    "inletPressurePascals": 20000,
+    "meteringChokedCapacityKgPerSecond": 0.0006189224520248683,
+    "meteringIsChoked": true,
+    "meteringStagnationPressureLowerBoundPascals": 41145.20473961658,
+    "porosity": 0.3036283338128205,
+    "pressureSquaredGradientK": 385538834.0899892,
+    "screenPressureDropPascals": 0.012544365442880233,
+    "upstreamLinePressureDropPascals": 130.2996786336358
+  },
+  "independentReactionNodeNetWatts": 1784.2910078017774,
+  "layout": {
+    "bedCentreMetres": [
+      0.0,
+      -0.17684210526315788,
+      0.993178947368421
+    ],
+    "bedDimensionsMetres": [
+      0.4,
+      0.187,
+      0.2204
+    ],
+    "bedUnitComponent": {
+      "centreMetres": [
+        0.0,
+        -0.17684210526315788,
+        0.993178947368421
+      ],
+      "id": "bed-unit-distribution",
+      "inertiaAboutCentreOfMassKgM2": [
+        0.006962096666666584,
+        0.0,
+        0.0,
+        0.0,
+        0.017381346666666575,
+        0.0,
+        0.0,
+        0.0,
+        0.016247416666666625
+      ],
+      "massKg": 1.0
+    },
+    "bedVolumeCubicMetres": 0.01648592,
+    "dewarInnerVolumeCubicMetres": 0.009867,
+    "dewarPortCentreMetres": [
+      0,
+      -0.33,
+      0.14
+    ],
+    "dewarPortDimensionsMetres": [
+      0.012,
+      0.012,
+      0.009999999999999981
+    ],
+    "diffuserGasUnitComponent": {
+      "centreMetres": [
+        1.3142513429930754e-06,
+        -0.17684210526315788,
+        0.8813368677204606
+      ],
+      "id": "diffuser-gas-unit-distribution",
+      "inertiaAboutCentreOfMassKgM2": [
+        0.0029146466910185964,
+        0.0,
+        2.178924049243688e-09,
+        0.0,
+        0.01333378254796147,
+        -2.7755575615628914e-17,
+        2.178924049243688e-09,
+        -2.7755575615628914e-17,
+        0.01624680460630923
+      ],
+      "massKg": 1.0
+    },
+    "diffuserPlenumFreeVolumeCubicMetres": 0.000232832176,
+    "feedBoreVolumeCubicMetres": 0.00012884210526315802,
+    "feedCentrelineLengthMetres": 0.8947368421052632,
+    "feedDryWallComponent": {
+      "centreMetres": [
+        0.0,
+        -0.31340138096667675,
+        0.566690854650887
+      ],
+      "id": "closed-square-feed-wall",
+      "inertiaAboutCentreOfMassKgM2": [
+        0.019914409146388867,
+        0.0,
+        0.0,
+        0.0,
+        0.019333324986816544,
+        -0.0017229159106419006,
+        0.0,
+        -0.0017229159106419006,
+        0.0006017480472916559
+      ],
+      "massKg": 0.36465684210526345
+    },
+    "feedDryWallMassKg": 0.36465684210526345,
+    "feedOuterBoxes": [
+      {
+        "maximumMetres": [
+          0.007,
+          -0.323,
+          0.857
+        ],
+        "minimumMetres": [
+          -0.007,
+          -0.337,
+          0.145
+        ]
+      },
+      {
+        "maximumMetres": [
+          0.007,
+          -0.16984210526315788,
+          0.857
+        ],
+        "minimumMetres": [
+          -0.007,
+          -0.337,
+          0.843
+        ]
+      },
+      {
+        "maximumMetres": [
+          0.007,
+          -0.16984210526315788,
+          0.8684210526315789
+        ],
+        "minimumMetres": [
+          -0.007,
+          -0.1838421052631579,
+          0.843
+        ]
+      }
+    ],
+    "feedOuterVolumeCubicMetres": 0.00017180947368421068,
+    "freeRespiratoryGasVolumeCubicMetres": 1.4518772072318467,
+    "hardwareRawMoments": {
+      "centreMetres": [
+        -2.0478733333333646e-05,
+        -0.1807626746537396,
+        -0.0036055661363490685
+      ],
+      "id": "new120kg-finite-hardware",
+      "inertiaAboutCentreOfMassKgM2": [
+        72.89821193364463,
+        7.472670067093236e-05,
+        0.002476131313774881,
+        7.472670067093236e-05,
+        75.49629868865365,
+        -0.29995947904654036,
+        0.002476131313774881,
+        -0.29995947904654036,
+        8.515480582166528
+      ],
+      "massKg": 120.0
+    },
+    "heaterComponent": {
+      "centreMetres": [
+        0.017,
+        -0.33,
+        0.15
+      ],
+      "id": "paid-anti-ice-heater",
+      "inertiaAboutCentreOfMassKgM2": [
+        1.0416666666674193e-06,
+        0.0,
+        0.0,
+        0.0,
+        1.0416666666668772e-06,
+        0.0,
+        0.0,
+        0.0,
+        1.6666666666663096e-06
+      ],
+      "massKg": 0.025
+    },
+    "inletGasUnitComponent": {
+      "centreMetres": [
+        0.0016713091922005566,
+        -0.1768421052631579,
+        0.878078947368421
+      ],
+      "id": "inlet-gas-unit-distribution",
+      "inertiaAboutCentreOfMassKgM2": [
+        0.0030018037720521695,
+        0.0,
+        -4.336808689942018e-19,
+        0.0,
+        0.01350820130543584,
+        0.0,
+        -4.336808689942018e-19,
+        0.0,
+        0.016508443030133775
+      ],
+      "massKg": 0.9999999999999999
+    },
+    "inletPlenumFreeVolumeCubicMetres": 0.00021540000000000003,
+    "innerPressureDivider": {
+      "apertureCentreMetres": [
+        0.17,
+        -0.17684210526315788,
+        0.879678947368421
+      ],
+      "apertureDimensionsMetres": [
+        0.009,
+        0.001,
+        0.0002
+      ],
+      "centreMetres": [
+        0.0,
+        -0.17684210526315788,
+        0.879678947368421
+      ],
+      "dimensionsMetres": [
+        0.4,
+        0.187,
+        0.0002
+      ],
+      "noUnmeteredBypassInGeometricConstruction": true,
+      "sealStrengthAndUniformDistributionQualified": false
+    },
+    "interiorVolumePartitionResidualCubicMetres": -6.844026213814747e-19,
+    "newBoxMinimumBoundaryClearanceMetres": [
+      0.16321052631578942,
+      0.16321052631578942,
+      0.3070239736275318,
+      0.16021052631578941
+    ],
+    "outletGasUnitComponent": {
+      "centreMetres": [
+        0.0,
+        -0.17684210526315788,
+        1.1050210141990824
+      ],
+      "id": "outlet-gas-unit-distribution",
+      "inertiaAboutCentreOfMassKgM2": [
+        0.002914669202086717,
+        0.0,
+        0.0,
+        0.0,
+        0.013333662134580315,
+        -5.551115123125783e-17,
+        0.0,
+        -5.551115123125783e-17,
+        0.016246706733987093
+      ],
+      "massKg": 1.0
+    },
+    "outletPlenumFreeVolumeCubicMetres": 0.00023283037600000002,
+    "preheaterPlateMassKg": 0.072,
+    "reactorCentreMetres": [
+      0.0,
+      -0.17684210526315788,
+      0.991578947368421
+    ],
+    "reactorDryComponent": {
+      "centreMetres": [
+        -0.00010675733333333333,
+        -0.17684210526315786,
+        0.9919800291549563
+      ],
+      "id": "screened-reactor-27kg",
+      "inertiaAboutCentreOfMassKgM2": [
+        0.23182541194081097,
+        1.0842021724855044e-19,
+        -0.00032831002859343584,
+        1.0842021724855044e-19,
+        0.5661393524490279,
+        8.881784197001252e-16,
+        -0.00032831002859343584,
+        8.881784197001252e-16,
+        0.5250188386928367
+      ],
+      "massKg": 27.0
+    },
+    "reactorHardwareEffectiveShellKg": 6.7038604159999995,
+    "reactorPortCentreMetres": [
+      0,
+      -0.17684210526315788,
+      0.8724999999999999
+    ],
+    "reactorPortDimensionsMetres": [
+      0.012,
+      0.012,
+      0.008157894736842142
+    ],
+    "remainingHotHeatpathMassKg": 4.610343157894736,
+    "restrictorMassKg": 0.11966560000000001,
+    "screens": [
+      {
+        "centreMetres": [
+          0.0,
+          -0.17684210526315788,
+          0.882878947368421
+        ],
+        "holeCount": [
+          500,
+          231
+        ],
+        "holeDimensionsMetres": [
+          0.0005996,
+          0.0006086580086580086
+        ],
+        "massKg": 0.052236992000000024,
+        "openAreaSquareMetres": 0.042151879999999996,
+        "thicknessMetres": 0.0002,
+        "webMetres": 0.0002
+      },
+      {
+        "centreMetres": [
+          0.0,
+          -0.17684210526315788,
+          1.103478947368421
+        ],
+        "holeCount": [
+          500,
+          231
+        ],
+        "holeDimensionsMetres": [
+          0.0005996,
+          0.0006086580086580086
+        ],
+        "massKg": 0.052236992000000024,
+        "openAreaSquareMetres": 0.042151879999999996,
+        "thicknessMetres": 0.0002,
+        "webMetres": 0.0002
+      }
+    ]
+  },
+  "maximumAntiIceElectricalWatts": 3.488,
+  "maximumRecuperatedHeatWatts": 101.64,
+  "minimumDownstreamExpansionKelvin": 226.6589117782832,
+  "netSensibleEnthalpyIncreaseJoules": 15024298.735641506,
+  "nominalAntiIceElectricalWatts": 2.7840005919211728,
+  "nominalCapturedCO2KgPerSecond": 0.000536823068720074,
+  "nominalColdHeatFromElectricalAndParasiticWatts": 39.31599940807883,
+  "nominalGasSensibleFromElectricWatts": 2.6840005919211727,
+  "nominalGrossHotWatts": 1784.2910078017771,
+  "nominalLatentColdWatts": 300.8493327414121,
+  "nominalLineCO2KgPerSecond": 0.0005368001183842346,
+  "nominalOtherElectricalDrawWatts": 39.21599940807883,
+  "nominalRadiatorAfter13_2WFeedbackWatts": 1771.091007801777,
+  "nominalRecuperatedHotHeatWatts": 85.88801894147753,
+  "nominalSolidSublimationKgPerSecond": 0.0005372309513239503,
+  "oldSaturatedIdealChoke": {
+    "equilibriumGasConditionPass": false,
+    "equilibriumSublimationPascals": 3476.2955767490394,
+    "sonicKelvin": 160.8695652173913,
+    "sonicPascals": 23862.06240395011
+  },
+  "paidChemicalReferenceJoules": 47008664.5041599,
+  "parasiticHeaterHeatReturnedToColdWatts": 0.1,
+  "phaseStates": [
+    {
+      "CaCO3Kg": 0.0,
+      "CaORemainingKg": 20.0,
+      "bedSolidVolumeCubicMetres": 0.005988023952095809,
+      "bedVoidGasCO2Kg": 0.0009805886243501225,
+      "bodyIndependentThermalCO2TotalKg": 14.0,
+      "capturedCO2Kg": 0,
+      "dewarHeadGasCO2Kg": 0.0011187318841318857,
+      "diffuserGasCO2Kg": 7.218401974123129e-05,
+      "feedLineGasCO2Kg": 0.0001569453355853385,
+      "inletGasCO2Kg": 0.00014243668449946968,
+      "outletGasCO2Kg": 2.174824527380817e-05,
+      "solidCO2Kg": 13.997507365206419,
+      "totalUnreactedGasCO2Kg": 0.002492634793581856
+    },
+    {
+      "CaCO3Kg": 26.370339740471266,
+      "CaORemainingKg": 5.225038543882333,
+      "bedSolidVolumeCubicMetres": 0.011295135469330175,
+      "bedVoidGasCO2Kg": 0.0004848613702212833,
+      "bodyIndependentThermalCO2TotalKg": 14.0,
+      "capturedCO2Kg": 11.595378284353599,
+      "dewarHeadGasCO2Kg": 0.010424723381990159,
+      "diffuserGasCO2Kg": 7.218401974123129e-05,
+      "feedLineGasCO2Kg": 0.0001569453355853385,
+      "inletGasCO2Kg": 0.00014243668449946968,
+      "outletGasCO2Kg": 2.174824527380817e-05,
+      "solidCO2Kg": 2.3933188166090904,
+      "totalUnreactedGasCO2Kg": 0.01130289903731129
+    },
+    {
+      "CaCO3Kg": 27.290534998125402,
+      "CaORemainingKg": 4.709465001874596,
+      "bedSolidVolumeCubicMetres": 0.011480327579028548,
+      "bedVoidGasCO2Kg": 0.000467562925346143,
+      "bodyIndependentThermalCO2TotalKg": 14.0,
+      "capturedCO2Kg": 12,
+      "dewarHeadGasCO2Kg": 0.01074945675017489,
+      "diffuserGasCO2Kg": 7.218401974123129e-05,
+      "feedLineGasCO2Kg": 0.0001569453355853385,
+      "inletGasCO2Kg": 0.00014243668449946968,
+      "outletGasCO2Kg": 2.174824527380817e-05,
+      "solidCO2Kg": 1.9883896660393792,
+      "totalUnreactedGasCO2Kg": 0.01161033396062088
+    }
+  ],
+  "phaseValveTransientOrKineticsQualified": false,
+  "sourceDesignSHA256": "13eaddb1bad8461fadcdccd5da65103f869dace23f36e79d0c26042046d81023",
+  "status": "CONDITIONAL_FINITE_PHASE_FEED_SOURCE_NOT_QUALIFIED",
+  "totalGasInventoryUpperBoundKg": 0.023756573981538645
+}

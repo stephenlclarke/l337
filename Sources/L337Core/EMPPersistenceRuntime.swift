@@ -458,7 +458,7 @@ extension Game {
     _ receipt: CurrentNewtKitReceipt, at time: Double
   ) -> Bool {
     guard time == commander.flightSimulation.physicalTime,
-      let source = CurrentNewtKitSource.current,
+      let source = CurrentNewtKitSource.source(for: receipt.issue),
       var record = commander.savedEMPState?.records[receipt.issue.person.source],
       record.hull.binding == nil, record.hull.physicalTime <= time,
       let actor = record.hull.body.physical?.identity,

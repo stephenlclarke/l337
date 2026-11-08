@@ -8,7 +8,7 @@ extension Game {
     _ receipt: CurrentNewtKitReceipt, at time: Double
   ) -> Bool {
     guard time == commander.flightSimulation.physicalTime,
-      let source = CurrentNewtKitSource.current, source.matches(receipt, observedAt: time),
+      let source = CurrentNewtKitSource.source(for: receipt.issue), source.matches(receipt, observedAt: time),
       var record = commander.savedEMPState?.records[receipt.issue.person.source],
       let podIndex = record.podIndex(for: receipt.issue.person.ordinal),
       let podActor = record.pods[podIndex].binding,
@@ -21,12 +21,11 @@ extension Game {
       return observeCurrentNewtArchiveForCapture(receipt, at: time)
     }
     guard let parentActor = record.hull.binding,
-      record.disableEpisodes.contains(where: { $0.actorBindings.contains(parentActor) }),
       let parentIndex = bodies.firstIndex(where: { $0.physical?.identity == parentActor }),
-      bodies[parentIndex].physical?.empSource == record.source,
       var stock = bodies[parentIndex].physical?.currentNewtKitStock,
       stock.receipt == receipt, stock.phase == .released, stock.observedAt == time,
       source.matches(stock, at: time),
+      currentNewtParentOwner(body: bodies[parentIndex], stock: stock) == record.source,
       record.hull.body.physical?.currentNewtKitStock == stock,
       let load = currentNewtKitLoad(for: bodies[parentIndex])
     else { return false }
@@ -73,7 +72,7 @@ extension Game {
     _ receipt: CurrentNewtKitReceipt, at time: Double
   ) -> Bool {
     guard time == commander.flightSimulation.physicalTime,
-      let source = CurrentNewtKitSource.current, source.matches(receipt, observedAt: time),
+      let source = CurrentNewtKitSource.source(for: receipt.issue), source.matches(receipt, observedAt: time),
       var record = commander.savedEMPState?.records[receipt.issue.person.source],
       let podIndex = record.podIndex(for: receipt.issue.person.ordinal),
       record.pods[podIndex].binding == nil, record.pods[podIndex].physicalTime == time,
@@ -89,10 +88,9 @@ extension Game {
     let parentIndex: Int?
     var stock: CurrentNewtKitStock
     if let parentActor = record.hull.binding {
-      guard record.disableEpisodes.contains(where: { $0.actorBindings.contains(parentActor) }),
-        let index = bodies.firstIndex(where: { $0.physical?.identity == parentActor }),
-        bodies[index].physical?.empSource == record.source,
+      guard let index = bodies.firstIndex(where: { $0.physical?.identity == parentActor }),
         let current = bodies[index].physical?.currentNewtKitStock,
+        currentNewtParentOwner(body: bodies[index], stock: current) == record.source,
         current == record.hull.body.physical?.currentNewtKitStock
       else { return false }
       parentIndex = index

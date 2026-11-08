@@ -1,0 +1,3777 @@
+{
+  "actualDiaphragmOrFlowStateQualified": false,
+  "actualMotionObserved": false,
+  "actualObservations": [],
+  "actualOpenStateObserved": false,
+  "additionalPreparationElectricalJoules": 7377285.714285715,
+  "additionalPreparationHeatJoules": 2582050.0,
+  "additionalPreparationRejectJoules": 9959335.714285715,
+  "baseDry": {
+    "centreMetres": [
+      -4.26686016268489e-18,
+      -0.088772458958505,
+      -0.004039220176708997
+    ],
+    "id": "canonical-dry-reference-gate-open",
+    "inertiaAboutCentreOfMassKgM2": [
+      159.01711421642563,
+      5.137404390174461e-16,
+      5.570088574594495e-05,
+      5.068015451135389e-16,
+      162.14744347245025,
+      -0.41661110632905063,
+      5.570088574594842e-05,
+      -0.41661110632905063,
+      41.25289470522769
+    ],
+    "massKg": 247.99999999999994
+  },
+  "baselineConnectedFluidRedistributionRawMoments": {
+    "firstKgMetres": [
+      -1.5170400000019203e-06,
+      1.5170399999879792e-06,
+      -1.2073395871925983e-17
+    ],
+    "massKg": 3.46859991900636e-17,
+    "secondKgMetresSquared": [
+      [
+        -3.071291999995436e-07,
+        5.15793600000829e-07,
+        2.048004000008444e-07
+      ],
+      [
+        5.15793600000829e-07,
+        -9.139451999945685e-07,
+        -2.04800399995629e-07
+      ],
+      [
+        2.0480040000078187e-07,
+        -2.048003999953455e-07,
+        4.0109127096776865e-07
+      ]
+    ]
+  },
+  "baselineConnectedSourceSHA256": "284c1c1512589721943a6475c834cdb0e34bab016f0e7c59ba1210f6b95caa95",
+  "baselineLayoutSHA256": "e69e9bcb643a94777c05f8b4727cfaa607e1da9503ef0866fc16164c5d81028d",
+  "baselineSourceSHA256": "d9904fa044c3b8edc92cdcf98a0474e6b71c97f7e80a2a4e283dda65de0bc2f4",
+  "bodyCoreOrContactQualified": false,
+  "conductivityFloorQualified": false,
+  "configurationReferences": [
+    {
+      "actualMotionOrRestObserved": false,
+      "dry": {
+        "centreMetres": [
+          -4.26686016268489e-18,
+          -0.088772458958505,
+          -0.004039220176708997
+        ],
+        "id": "same-fixed-wall-position-only-dry",
+        "inertiaAboutCentreOfMassKgM2": [
+          159.01711421642563,
+          5.137404390174461e-16,
+          5.570088574594495e-05,
+          5.068015451135389e-16,
+          162.14744347245025,
+          -0.41661110632905063,
+          5.570088574594842e-05,
+          -0.41661110632905063,
+          41.25289470522769
+        ],
+        "massKg": 247.99999999999994
+      },
+      "gateAngleRadians": 1.5707963267948966,
+      "portableStates": [
+        {
+          "centreMetres": [
+            -0.0015531371886107412,
+            -0.04410195240220507,
+            -0.009776303967416293
+          ],
+          "id": "nominal-cold-loop-phase-state-0-connected-passages-proposed-mechanisms-open-configuration",
+          "inertiaAboutCentreOfMassKgM2": [
+            192.7511560347493,
+            0.0002642719134695534,
+            -0.0005345249604684398,
+            0.0002642719134695534,
+            193.22217540354765,
+            -0.2933796654035369,
+            -0.0005345249604684398,
+            -0.2933796654035369,
+            50.66802952254471
+          ],
+          "massKg": 372.45499999999987
+        },
+        {
+          "centreMetres": [
+            -0.001553150609670713,
+            -0.04037822054095454,
+            0.02123160210344358
+          ],
+          "id": "nominal-cold-loop-phase-state-1-connected-passages-proposed-mechanisms-open-configuration",
+          "inertiaAboutCentreOfMassKgM2": [
+            203.367004118671,
+            -0.0018915406813434822,
+            -0.018475736845894597,
+            -0.0018915406813434822,
+            204.49265002773535,
+            1.2658608889473435,
+            -0.018475736845894597,
+            1.2658608889473435,
+            50.11242167627624
+          ],
+          "massKg": 372.45499999999987
+        }
+      ],
+      "pumpAngleRadians": 0,
+      "wallRefittedAtThisAngle": false
+    },
+    {
+      "actualMotionOrRestObserved": false,
+      "dry": {
+        "centreMetres": [
+          -1.1082067788781971e-08,
+          -0.088772458958505,
+          -0.0040392469311873415
+        ],
+        "id": "same-fixed-wall-position-only-dry",
+        "inertiaAboutCentreOfMassKgM2": [
+          159.0171159160281,
+          -4.980772212584235e-07,
+          5.578729043623863e-05,
+          -4.980772212653624e-07,
+          162.14744480886705,
+          -0.4166123087938345,
+          5.57872904362421e-05,
+          -0.4166123087938345,
+          41.25289434204204
+        ],
+        "massKg": 247.99999999999994
+      },
+      "gateAngleRadians": 0.7853981633974483,
+      "portableStates": [
+        {
+          "centreMetres": [
+            -0.0015531439716327657,
+            -0.04410195240220507,
+            -0.009776320343080059
+          ],
+          "id": "nominal-cold-loop-phase-state-0-connected-passages-proposed-mechanisms-open-configuration",
+          "inertiaAboutCentreOfMassKgM2": [
+            192.751157527093,
+            0.0002637012113132879,
+            -0.0005344215677546768,
+            0.0002637012113132879,
+            193.22217655419232,
+            -0.2933810432004226,
+            -0.0005344215677546768,
+            -0.2933810432004226,
+            50.66802918084566
+          ],
+          "massKg": 372.45499999999987
+        },
+        {
+          "centreMetres": [
+            -0.0015531573926927378,
+            -0.04037822054095454,
+            0.021231585727779813
+          ],
+          "id": "nominal-cold-loop-phase-state-1-connected-passages-proposed-mechanisms-open-configuration",
+          "inertiaAboutCentreOfMassKgM2": [
+            203.36700598926137,
+            -0.0018921207910259537,
+            -0.018475711790557153,
+            -0.0018921207910259537,
+            204.49265155662667,
+            1.2658594884386802,
+            -0.018475711790557153,
+            1.2658594884386802,
+            50.11242133457713
+          ],
+          "massKg": 372.45499999999987
+        }
+      ],
+      "pumpAngleRadians": 0.4487989505128276,
+      "wallRefittedAtThisAngle": false
+    },
+    {
+      "actualMotionOrRestObserved": false,
+      "dry": {
+        "centreMetres": [
+          -3.783654613329864e-08,
+          -0.088772458958505,
+          -0.004039258013255127
+        ],
+        "id": "same-fixed-wall-position-only-dry",
+        "inertiaAboutCentreOfMassKgM2": [
+          159.01711663958184,
+          -1.70054200517011e-06,
+          5.508569892041301e-05,
+          -1.7005420051770488e-06,
+          162.14744470282392,
+          -0.41661280687105634,
+          5.508569892041648e-05,
+          -0.41661280687105634,
+          41.25289351244513
+        ],
+        "massKg": 247.99999999999994
+      },
+      "gateAngleRadians": 0,
+      "portableStates": [
+        {
+          "centreMetres": [
+            -0.0015531603472965314,
+            -0.04410195240220507,
+            -0.009776327126102083
+          ],
+          "id": "nominal-cold-loop-phase-state-0-connected-passages-proposed-mechanisms-open-configuration",
+          "inertiaAboutCentreOfMassKgM2": [
+            192.75115816321798,
+            0.00026232341442754617,
+            -0.0005350275769548029,
+            0.00026232341442754617,
+            193.22217640878063,
+            -0.29338161390257883,
+            -0.0005350275769548029,
+            -0.29338161390257883,
+            50.66802839930902
+          ],
+          "massKg": 372.45499999999987
+        },
+        {
+          "centreMetres": [
+            -0.0015531737683565036,
+            -0.04037822054095454,
+            0.02123157894475779
+          ],
+          "id": "nominal-cold-loop-phase-state-1-connected-passages-proposed-mechanisms-open-configuration",
+          "inertiaAboutCentreOfMassKgM2": [
+            203.36700678206128,
+            -0.0018935212996890466,
+            -0.01847650692307735,
+            -0.0018935212996890466,
+            204.49265156788974,
+            1.2658589083289977,
+            -0.01847650692307735,
+            1.2658589083289977,
+            50.11242055304032
+          ],
+          "massKg": 372.45499999999987
+        }
+      ],
+      "pumpAngleRadians": 0.7853981633974483,
+      "wallRefittedAtThisAngle": false
+    }
+  ],
+  "criteriaWaived": [],
+  "dewar": {
+    "centreMetres": [
+      -2.832677553558737e-18,
+      -0.3099946519555587,
+      0.018488281810542948
+    ],
+    "id": "redistributed5kg-dewar",
+    "inertiaAboutCentreOfMassKgM2": [
+      0.045594435564932034,
+      5.3035393409765e-18,
+      -2.498399417685025e-19,
+      4.5623855121289874e-18,
+      0.09159802129787085,
+      -3.2492503443323772e-06,
+      -2.233701621668056e-19,
+      -3.2492503443323772e-06,
+      0.07199919472379168
+    ],
+    "massKg": 5.0
+  },
+  "extraWorkingFluid": {
+    "centreMetres": [
+      -0.00012949183974110353,
+      -0.18358514097758863,
+      -0.049554744953301026
+    ],
+    "id": "same-paid-fluid-new-mechanisms",
+    "inertiaAboutCentreOfMassKgM2": [
+      0.21700122764570406,
+      -0.0010446661716642255,
+      -0.006265940350240568,
+      -0.0010446661716642252,
+      0.21397703206676388,
+      -0.008883954239145639,
+      -0.006265940350240568,
+      -0.008883954239145632,
+      0.025533544627358767
+    ],
+    "massKg": 0.9549999999999998
+  },
+  "fluidRedistributionRawMoments": {
+    "firstKgMetres": [
+      -4.971869527522798e-07,
+      -1.4225524112749037e-09,
+      -1.6872262310290432e-06
+    ],
+    "massKg": -3.521962994683381e-17,
+    "secondKgMetresSquared": [
+      [
+        -1.765884130291655e-07,
+        1.3415512409740948e-07,
+        9.347349332681633e-08
+      ],
+      [
+        1.3415512409740948e-07,
+        -1.1246278339277296e-07,
+        5.671671679654327e-07
+      ],
+      [
+        9.347349332687886e-08,
+        5.671671679651492e-07,
+        1.4375149648588152e-06
+      ]
+    ]
+  },
+  "freeRespiratoryGasCubicMetres": 1.4464066204559547,
+  "generatorSHA256": "af6717344c9d6681701d880db03e24a3642c98cc26826274b46eac1d2da5fa5c",
+  "geometryIsProposed": true,
+  "geometryMomentConvention": "Unit-density geometry massKg encodes volume; only declared proposed densities or original nominal liquid density convert it to physical mass.",
+  "hardware": {
+    "centreMetres": [
+      -0.00017095443092163972,
+      -0.1766124722159198,
+      -0.007101605728464234
+    ],
+    "id": "same120kg-proposed-moving-mechanisms-reference-open",
+    "inertiaAboutCentreOfMassKgM2": [
+      73.62175086556321,
+      -0.005980126374957552,
+      -0.01846131295863003,
+      -0.005980126374957559,
+      76.24680595553296,
+      -0.3475750233637631,
+      -0.018461312958630027,
+      -0.3475750233637631,
+      8.731906032093736
+    ],
+    "massKg": 120.0
+  },
+  "macroCertificates": [
+    {
+      "index": 0,
+      "minimumCornerClearanceMetres": 0.23843611508495033,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 1,
+      "minimumCornerClearanceMetres": 0.23913839011546875,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 2,
+      "minimumCornerClearanceMetres": 0.2745195668926492,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 3,
+      "minimumCornerClearanceMetres": 0.2745195668926492,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 4,
+      "minimumCornerClearanceMetres": 0.09440652117770204,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 5,
+      "minimumCornerClearanceMetres": 0.2138030038436194,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 6,
+      "minimumCornerClearanceMetres": 0.25021052631578944,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 7,
+      "minimumCornerClearanceMetres": 0.11021052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 8,
+      "minimumCornerClearanceMetres": 0.2859962259206857,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 9,
+      "minimumCornerClearanceMetres": 0.2859962259206857,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 10,
+      "minimumCornerClearanceMetres": 0.24840448898114822,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 11,
+      "minimumCornerClearanceMetres": 0.24840448898114822,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 12,
+      "minimumCornerClearanceMetres": 0.25271052631578944,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 13,
+      "minimumCornerClearanceMetres": 0.11271052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 14,
+      "minimumCornerClearanceMetres": 0.11271052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 15,
+      "minimumCornerClearanceMetres": 0.11271052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 16,
+      "minimumCornerClearanceMetres": 0.11271052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 17,
+      "minimumCornerClearanceMetres": 0.11471052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 18,
+      "minimumCornerClearanceMetres": 0.22277375924964538,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 19,
+      "minimumCornerClearanceMetres": 0.22277375924964538,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 20,
+      "minimumCornerClearanceMetres": 0.16721052631578942,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 21,
+      "minimumCornerClearanceMetres": 0.11721052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 22,
+      "minimumCornerClearanceMetres": 0.11721052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 23,
+      "minimumCornerClearanceMetres": 0.16621052631578942,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 24,
+      "minimumCornerClearanceMetres": 0.12021052631578943,
+      "noBoundaryCrossing": true
+    }
+  ],
+  "mechanismMaterialOrClearanceQualified": false,
+  "microcellPopulationQualified": false,
+  "newInternalVoidContentsObserved": false,
+  "newMeteringCapacityKgPerSecond": 0.0005933582109364622,
+  "nominalAccumulatorLiquidCubicMetres": 6.648204272811085e-05,
+  "nominalDiaphragmLocalZMetres": -0.07510405774581516,
+  "nominalJointClearances": [
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "pump-journal-radial",
+      "minimumNominalMetres": 5.000000000000002e-05
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "pump-carrier-to-can",
+      "minimumNominalMetres": 0.0007999999999999986
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-wet-journal-radial",
+      "minimumNominalMetres": 5.000000000000002e-05
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-dry-journal-radial",
+      "minimumNominalMetres": 5.000000000000002e-05
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-actuator-rotor-to-stator",
+      "minimumNominalMetres": 0.00019999999999999987
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-plate-to-journal-axial",
+      "minimumNominalMetres": 0.00020000000000000052
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-open-plate-to-port",
+      "minimumNominalMetres": 0.00020000000000000052
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-swept-plate-to-pocket-low-z",
+      "minimumNominalMetres": 0.00023353783423510008
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-swept-plate-to-pocket-high-z",
+      "minimumNominalMetres": 0.0002999999999999997
+    }
+  ],
+  "nominalLiquidDensityKgPerCubicMetre": 630.0,
+  "peakRSSBytes": 38731776,
+  "phaseStates": [
+    {
+      "CaCO3Kg": 0.0,
+      "CaORemainingKg": 20.0,
+      "bedSolidVolumeCubicMetres": 0.005988023952095809,
+      "bedVoidGasCO2Kg": 0.0009805886243501225,
+      "bodyIndependentThermalCO2TotalKg": 14.0,
+      "capturedCO2Kg": 0,
+      "dewarHeadGasCO2Kg": 0.00047716729957403194,
+      "diffuserGasCO2Kg": 7.218401974123129e-05,
+      "feedLineGasCO2Kg": 0.0001569453355853385,
+      "inletGasCO2Kg": 0.00014243668449946968,
+      "outletGasCO2Kg": 2.174824527380817e-05,
+      "solidCO2Kg": 13.998148929790977,
+      "totalUnreactedGasCO2Kg": 0.0018510702090240021
+    },
+    {
+      "CaCO3Kg": 26.370339740471266,
+      "CaORemainingKg": 5.225038543882333,
+      "bedSolidVolumeCubicMetres": 0.011295135469330175,
+      "bedVoidGasCO2Kg": 0.0004848613702212833,
+      "bodyIndependentThermalCO2TotalKg": 14.0,
+      "capturedCO2Kg": 11.595378284353599,
+      "dewarHeadGasCO2Kg": 0.009783158797432306,
+      "diffuserGasCO2Kg": 7.218401974123129e-05,
+      "feedLineGasCO2Kg": 0.0001569453355853385,
+      "inletGasCO2Kg": 0.00014243668449946968,
+      "outletGasCO2Kg": 2.174824527380817e-05,
+      "solidCO2Kg": 2.393960381193648,
+      "totalUnreactedGasCO2Kg": 0.010661334452753437
+    }
+  ],
+  "portableStates": [
+    {
+      "centreMetres": [
+        -0.0015531371886107412,
+        -0.04410195240220507,
+        -0.009776303967416293
+      ],
+      "id": "nominal-cold-loop-phase-state-0-connected-passages-proposed-mechanisms-open",
+      "inertiaAboutCentreOfMassKgM2": [
+        192.75115603474927,
+        0.0002642719134695534,
+        -0.0005345249604684398,
+        0.0002642719134695534,
+        193.22217540354762,
+        -0.2933796654035369,
+        -0.0005345249604684398,
+        -0.2933796654035369,
+        50.66802952254468
+      ],
+      "massKg": 372.45499999999987
+    },
+    {
+      "centreMetres": [
+        -0.001553150609670713,
+        -0.04037822054095454,
+        0.02123160210344358
+      ],
+      "id": "nominal-cold-loop-phase-state-1-connected-passages-proposed-mechanisms-open",
+      "inertiaAboutCentreOfMassKgM2": [
+        203.36700411867096,
+        -0.0018915406813434822,
+        -0.018475736845894597,
+        -0.0018915406813434822,
+        204.49265002773532,
+        1.2658608889473435,
+        -0.018475736845894597,
+        1.2658608889473435,
+        50.11242167627621
+      ],
+      "massKg": 372.45499999999987
+    }
+  ],
+  "preparation": {
+    "actualPreparationObserved": false,
+    "addedHeatJoules": 2582050.0,
+    "totalConservativeSeconds": 79644.55886198881,
+    "totalElectricalJoules": 564477409.5238096,
+    "totalNitrogenStockRequiredKg": 19.53808,
+    "totalRejectedJoules": 933297739.5238096
+  },
+  "pressureIntegrityQualified": false,
+  "proposalLimits": [
+    "All densities, nominal clearances and fixed joints are authored unqualified inputs",
+    "New hydraulic obstructions and cold material interfaces require original flow/head/power/pressure limits; old conditional performance is not inherited acceptance",
+    "Dry actuator void contents are unobserved; no free gas/vacuum/cooling/source receipt",
+    "Explicit motion and fluid excess energy required; geometry/capture supplies no torque law, finite-time stop, local heat/pressure or one-second quiet proof",
+    "No material/preparation/stock/people/commissioning/birth or operating authority"
+  ],
+  "proposedAssemblies": [
+    {
+      "allDry": {
+        "centreMetres": [
+          -0.07,
+          -0.38,
+          -0.3999598009658028
+        ],
+        "id": "pump-all-paid-dry-mechanisms",
+        "inertiaAboutCentreOfMassKgM2": [
+          0.00012937434303388062,
+          0.0,
+          0.0,
+          0.0,
+          0.00012937434303388062,
+          -1.3877787807814457e-17,
+          0.0,
+          -1.3877787807814457e-17,
+          0.00013814848167623822
+        ],
+        "massKg": 0.3
+      },
+      "assemblyCentreMetres": [
+        -0.07,
+        -0.38,
+        -0.4
+      ],
+      "cavityCylinderRadiusMetres": 0.013,
+      "cavityLengthMetres": 0.03476281113338298,
+      "dryVoidTerms": [],
+      "fluid": {
+        "centreMetres": [
+          -0.07,
+          -0.38,
+          -0.40008039806839435
+        ],
+        "id": "pump-unit-density-fluid-geometry",
+        "inertiaAboutCentreOfMassKgM2": [
+          3.6034077297710063e-09,
+          0.0,
+          0.0,
+          0.0,
+          3.6034077297701593e-09,
+          0.0,
+          0.0,
+          0.0,
+          1.557121422637155e-09
+        ],
+        "massKg": 2e-05
+      },
+      "fluidBase": {
+        "centreMetres": [
+          -3.019456721211222e-19,
+          0.0,
+          0.0
+        ],
+        "id": "pump-local-unit-density-fluid-base",
+        "inertiaAboutCentreOfMassKgM2": [
+          3.660670289781219e-09,
+          -7.445262354143152e-42,
+          0.0,
+          -7.445262354143152e-42,
+          3.660670289781219e-09,
+          0.0,
+          0.0,
+          0.0,
+          1.6122415848467161e-09
+        ],
+        "massKg": 2.0650745257428212e-05
+      },
+      "fluidBaseTerms": [
+        {
+          "a": 0,
+          "b": 6.283185307179586,
+          "centre": [
+            0,
+            0,
+            0
+          ],
+          "inner": 0,
+          "kind": "sector",
+          "outer": 0.013,
+          "rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "sign": 1,
+          "z0": -0.01738140556669149,
+          "z1": 0.01738140556669149
+        },
+        {
+          "centre": [
+            0,
+            0,
+            -0.021190702783345748
+          ],
+          "dimensions": [
+            0.012,
+            0.012,
+            0.00761859443330851
+          ],
+          "kind": "box",
+          "rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "sign": 1
+        },
+        {
+          "centre": [
+            0,
+            0,
+            0.021190702783345748
+          ],
+          "dimensions": [
+            0.012,
+            0.012,
+            0.00761859443330851
+          ],
+          "kind": "box",
+          "rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "sign": 1
+        }
+      ],
+      "housing": {
+        "centreMetres": [
+          -0.07,
+          -0.38,
+          -0.4
+        ],
+        "id": "pump-residual-housing",
+        "inertiaAboutCentreOfMassKgM2": [
+          0.0001227054580427156,
+          0.0,
+          0.0,
+          0.0,
+          0.00012270545804270866,
+          0.0,
+          0.0,
+          0.0,
+          0.0001259808002729984
+        ],
+        "massKg": 0.25403583961436405
+      },
+      "housingGeometry": {
+        "centreMetres": [
+          1.0268653879000133e-19,
+          0.0,
+          0.0
+        ],
+        "id": "pump-local-unit-density-housing",
+        "inertiaAboutCentreOfMassKgM2": [
+          4.752487049495349e-08,
+          1.5454183888370736e-41,
+          0.0,
+          1.5454183888370736e-41,
+          4.752487049495349e-08,
+          0.0,
+          0.0,
+          0.0,
+          4.879343847721077e-08
+        ],
+        "massKg": 9.839024743746123e-05
+      },
+      "housingProposedEffectiveDensityKgPerCubicMetre": 2581.9209345502886,
+      "id": "pump",
+      "outer": {
+        "maximumMetres": [
+          -0.045000000000000005,
+          -0.355,
+          -0.375
+        ],
+        "minimumMetres": [
+          -0.095,
+          -0.405,
+          -0.42500000000000004
+        ]
+      },
+      "outerDimensionsMetres": [
+        0.05,
+        0.05,
+        0.05
+      ],
+      "parts": [
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 6.36172512351933e-08,
+          "group": "pump-rotor",
+          "id": "pump-wet-shaft",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38,
+              -0.4
+            ],
+            "id": "pump-wet-shaft",
+            "inertiaAboutCentreOfMassKgM2": [
+              5.36609526130018e-08,
+              0.0,
+              0.0,
+              0.0,
+              5.3660952612988246e-08,
+              0.0,
+              0.0,
+              0.0,
+              1.3956034490222608e-10
+            ],
+            "massKg": 0.0004962145596345077
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7800,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "inner": 0,
+              "kind": "sector",
+              "outer": 0.00075,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.018,
+              "z1": 0.018
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.693141652942297e-08,
+          "group": "pump-rotor",
+          "id": "pump-hub-with-shaft-bore",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38,
+              -0.4
+            ],
+            "id": "pump-hub-with-shaft-bore",
+            "inertiaAboutCentreOfMassKgM2": [
+              4.3266924672360303e-10,
+              0.0,
+              0.0,
+              0.0,
+              4.326692467202149e-10,
+              0.0,
+              0.0,
+              0.0,
+              4.554322944332501e-10
+            ],
+            "massKg": 0.00015371482462944201
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "centre": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "dimensions": [
+                0.004,
+                0.004,
+                0.004
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1
+            },
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "inner": 0,
+              "kind": "sector",
+              "outer": 0.00075,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": -1,
+              "z0": -0.002,
+              "z1": 0.002
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 3.6370218150609036e-07,
+          "group": "pump-rotor",
+          "id": "pump-magnetic-ring",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38,
+              -0.396
+            ],
+            "id": "pump-magnetic-ring",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.787300714081513e-07,
+              0.0,
+              0.0,
+              0.0,
+              1.787300714080971e-07,
+              -5.421010862427522e-20,
+              0.0,
+              -5.421010862427522e-20,
+              3.5336849327411747e-07
+            ],
+            "massKg": 0.002727766361295678
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7500,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "inner": 0.0105,
+              "kind": "sector",
+              "outer": 0.0122,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0025,
+              "z1": 0.0055
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 1.44e-08,
+          "group": "pump-rotor",
+          "id": "pump-pitched-blade-0",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.065,
+              -0.38,
+              -0.39999999999999997
+            ],
+            "id": "pump-pitched-blade-0",
+            "inertiaAboutCentreOfMassKgM2": [
+              5.300640000135916e-11,
+              0.0,
+              0.0,
+              0.0,
+              1.3047480000188033e-10,
+              -2.1942312451157613e-11,
+              0.0,
+              -2.1942312451157613e-11,
+              1.5581159999951465e-10
+            ],
+            "massKg": 3.888e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "centre": [
+                0.005,
+                0.0,
+                0.0
+              ],
+              "dimensions": [
+                0.006,
+                0.004,
+                0.0006
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.8660254037844387,
+                  -0.49999999999999994
+                ],
+                [
+                  0.0,
+                  0.49999999999999994,
+                  0.8660254037844387
+                ]
+              ],
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 9.572040116406397e-09,
+          "group": "pump-rotor",
+          "id": "pump-carrier-spoke-0",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.06297559025085864,
+              -0.38,
+              -0.396
+            ],
+            "id": "pump-carrier-spoke-0",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.606428908285432e-11,
+              0.0,
+              0.0,
+              0.0,
+              4.3123123549922355e-10,
+              -1.6940658945086007e-21,
+              0.0,
+              -1.6940658945086007e-21,
+              4.35330474437629e-10
+            ],
+            "massKg": 7.179030087304798e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7500,
+          "terms": [
+            {
+              "a": -0.08726646259971647,
+              "b": 0.08726646259971647,
+              "centre": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "inner": 0.00075,
+              "kind": "sector",
+              "outer": 0.0105,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0035,
+              "z1": 0.0045
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 1.44e-08,
+          "group": "pump-rotor",
+          "id": "pump-pitched-blade-1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.375,
+              -0.39999999999999997
+            ],
+            "id": "pump-pitched-blade-1",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.3047480000272736e-10,
+              0.0,
+              2.1942312450522338e-11,
+              0.0,
+              5.300640000305322e-11,
+              -8.470329472543003e-22,
+              2.1942312450522338e-11,
+              -8.470329472543003e-22,
+              1.5581160000120871e-10
+            ],
+            "massKg": 3.888e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "centre": [
+                3.061616997868383e-19,
+                0.005,
+                0.0
+              ],
+              "dimensions": [
+                0.006,
+                0.004,
+                0.0006
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  6.123233995736766e-17,
+                  -0.8660254037844387,
+                  0.49999999999999994
+                ],
+                [
+                  1.0,
+                  5.3028761936245346e-17,
+                  -3.0616169978683824e-17
+                ],
+                [
+                  0.0,
+                  0.49999999999999994,
+                  0.8660254037844387
+                ]
+              ],
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 9.572040116406387e-09,
+          "group": "pump-rotor",
+          "id": "pump-carrier-spoke-1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.37297559025085864,
+              -0.396
+            ],
+            "id": "pump-carrier-spoke-1",
+            "inertiaAboutCentreOfMassKgM2": [
+              4.312312355076939e-10,
+              -2.117582368135751e-22,
+              0.0,
+              -2.117582368135751e-22,
+              1.6064289093018717e-11,
+              -1.6940658945086007e-21,
+              0.0,
+              -1.6940658945086007e-21,
+              4.3533047444440525e-10
+            ],
+            "massKg": 7.17903008730479e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7500,
+          "terms": [
+            {
+              "a": 1.4835298641951802,
+              "b": 1.658062789394613,
+              "centre": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "inner": 0.00075,
+              "kind": "sector",
+              "outer": 0.0105,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0035,
+              "z1": 0.0045
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 1.44e-08,
+          "group": "pump-rotor",
+          "id": "pump-pitched-blade-2",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07500000000000001,
+              -0.38,
+              -0.39999999999999997
+            ],
+            "id": "pump-pitched-blade-2",
+            "inertiaAboutCentreOfMassKgM2": [
+              5.300640000135916e-11,
+              2.117582368135751e-22,
+              0.0,
+              2.117582368135751e-22,
+              1.304748000010333e-10,
+              2.1942312449463547e-11,
+              0.0,
+              2.1942312449463547e-11,
+              1.5581159999866761e-10
+            ],
+            "massKg": 3.888e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "centre": [
+                -0.005,
+                6.123233995736766e-19,
+                0.0
+              ],
+              "dimensions": [
+                0.006,
+                0.004,
+                0.0006
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  -1.0,
+                  -1.0605752387249069e-16,
+                  6.123233995736765e-17
+                ],
+                [
+                  1.2246467991473532e-16,
+                  -0.8660254037844387,
+                  0.49999999999999994
+                ],
+                [
+                  0.0,
+                  0.49999999999999994,
+                  0.8660254037844387
+                ]
+              ],
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 9.572040116406387e-09,
+          "group": "pump-rotor",
+          "id": "pump-carrier-spoke-2",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07702440974914138,
+              -0.38,
+              -0.396
+            ],
+            "id": "pump-carrier-spoke-2",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.6064289086242453e-11,
+              0.0,
+              4.235164736271502e-22,
+              0.0,
+              4.3123123549922355e-10,
+              -1.6940658945086007e-21,
+              4.235164736271502e-22,
+              -1.6940658945086007e-21,
+              4.35330474437629e-10
+            ],
+            "massKg": 7.17903008730479e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7500,
+          "terms": [
+            {
+              "a": 3.0543261909900767,
+              "b": 3.2288591161895095,
+              "centre": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "inner": 0.00075,
+              "kind": "sector",
+              "outer": 0.0105,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0035,
+              "z1": 0.0045
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 1.44e-08,
+          "group": "pump-rotor",
+          "id": "pump-pitched-blade-3",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.385,
+              -0.39999999999999997
+            ],
+            "id": "pump-pitched-blade-3",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.3047480000272736e-10,
+              2.117582368135751e-22,
+              -2.1942312450522338e-11,
+              2.117582368135751e-22,
+              5.300640000305322e-11,
+              -8.470329472543003e-22,
+              -2.1942312450522338e-11,
+              -8.470329472543003e-22,
+              1.5581160000036168e-10
+            ],
+            "massKg": 3.888e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "centre": [
+                -9.184850993605148e-19,
+                -0.005,
+                0.0
+              ],
+              "dimensions": [
+                0.006,
+                0.004,
+                0.0006
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  -1.8369701987210297e-16,
+                  0.8660254037844387,
+                  -0.49999999999999994
+                ],
+                [
+                  -1.0,
+                  -1.5908628580873602e-16,
+                  9.184850993605147e-17
+                ],
+                [
+                  0.0,
+                  0.49999999999999994,
+                  0.8660254037844387
+                ]
+              ],
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 9.572040116406387e-09,
+          "group": "pump-rotor",
+          "id": "pump-carrier-spoke-3",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.3870244097491414,
+              -0.396
+            ],
+            "id": "pump-carrier-spoke-3",
+            "inertiaAboutCentreOfMassKgM2": [
+              4.312312355009176e-10,
+              -4.235164736271502e-22,
+              0.0,
+              -4.235164736271502e-22,
+              1.6064289086242453e-11,
+              -1.6940658945086007e-21,
+              0.0,
+              -1.6940658945086007e-21,
+              4.3533047443932305e-10
+            ],
+            "massKg": 7.17903008730479e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7500,
+          "terms": [
+            {
+              "a": 4.625122517784973,
+              "b": 4.799655442984406,
+              "centre": [
+                0.0,
+                0.0,
+                0.0
+              ],
+              "inner": 0.00075,
+              "kind": "sector",
+              "outer": 0.0105,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0035,
+              "z1": 0.0045
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 1.2063715789784817e-08,
+          "group": "fixed",
+          "id": "pump-journal--1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38,
+              -0.41500000000000004
+            ],
+            "id": "pump-journal--1",
+            "inertiaAboutCentreOfMassKgM2": [
+              4.375107593310927e-11,
+              0.0,
+              0.0,
+              0.0,
+              4.3751075932262236e-11,
+              -8.470329472543003e-22,
+              0.0,
+              -8.470329472543003e-22,
+              6.176622484385262e-11
+            ],
+            "massKg": 3.8603890527311414e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 3200,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0008,
+              "kind": "sector",
+              "outer": 0.0016,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.016,
+              "z1": -0.013999999999999999
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.8098520140387286e-09,
+          "group": "fixed",
+          "id": "pump-journal-support--1-0",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.0612182219980849,
+              -0.38,
+              -0.41500000000000004
+            ],
+            "id": "pump-journal-support--1-0",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.853606414443465e-12,
+              5.293955920339377e-23,
+              5.293955920339377e-23,
+              5.293955920339377e-23,
+              1.3661267122156307e-10,
+              0.0,
+              5.293955920339377e-23,
+              0.0,
+              1.3585184422919955e-10
+            ],
+            "massKg": 1.5686600437904568e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "a": -0.03490658503988659,
+              "b": 0.03490658503988659,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0016,
+              "kind": "sector",
+              "outer": 0.013,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.0155,
+              "z1": -0.014499999999999999
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.809852014038738e-09,
+          "group": "fixed",
+          "id": "pump-journal-support--1-1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.3712182219980849,
+              -0.415
+            ],
+            "id": "pump-journal-support--1-1",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.366126712224101e-10,
+              5.293955920339377e-23,
+              -5.293955920339377e-23,
+              5.293955920339377e-23,
+              1.8536064157140145e-12,
+              -4.235164736271502e-22,
+              -5.293955920339377e-23,
+              -4.235164736271502e-22,
+              1.3585184422962307e-10
+            ],
+            "massKg": 1.5686600437904592e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "a": 1.53588974175501,
+              "b": 1.6057029118347832,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0016,
+              "kind": "sector",
+              "outer": 0.013,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.0155,
+              "z1": -0.014499999999999999
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.809852014038738e-09,
+          "group": "fixed",
+          "id": "pump-journal-support--1-2",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07878177800191512,
+              -0.38,
+              -0.415
+            ],
+            "id": "pump-journal-support--1-2",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.853606414443465e-12,
+              1.0587911840678754e-22,
+              -1.0587911840678754e-22,
+              1.0587911840678754e-22,
+              1.366126712219866e-10,
+              -4.235164736271502e-22,
+              -1.0587911840678754e-22,
+              -4.235164736271502e-22,
+              1.3585184422919955e-10
+            ],
+            "massKg": 1.5686600437904592e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "a": 3.1066860685499065,
+              "b": 3.1764992386296798,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0016,
+              "kind": "sector",
+              "outer": 0.013,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.0155,
+              "z1": -0.014499999999999999
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.809852014038662e-09,
+          "group": "fixed",
+          "id": "pump-journal-support--1-3",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38878177800191516,
+              -0.41500000000000004
+            ],
+            "id": "pump-journal-support--1-3",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.366126712224101e-10,
+              5.293955920339377e-23,
+              5.293955920339377e-23,
+              5.293955920339377e-23,
+              1.8536064148669815e-12,
+              0.0,
+              5.293955920339377e-23,
+              0.0,
+              1.3585184422919955e-10
+            ],
+            "massKg": 1.568660043790439e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "a": 4.6774823953448035,
+              "b": 4.747295565424576,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0016,
+              "kind": "sector",
+              "outer": 0.013,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.0155,
+              "z1": -0.014499999999999999
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 1.2063715789784817e-08,
+          "group": "fixed",
+          "id": "pump-journal-1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38,
+              -0.38500000000000006
+            ],
+            "id": "pump-journal-1",
+            "inertiaAboutCentreOfMassKgM2": [
+              4.375107592972114e-11,
+              0.0,
+              4.235164736271502e-22,
+              0.0,
+              4.375107592972114e-11,
+              0.0,
+              4.235164736271502e-22,
+              0.0,
+              6.176622484300559e-11
+            ],
+            "massKg": 3.8603890527311414e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 3200,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0008,
+              "kind": "sector",
+              "outer": 0.0016,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.013999999999999999,
+              "z1": 0.016
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.8098520140387286e-09,
+          "group": "fixed",
+          "id": "pump-journal-support-1-0",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.0612182219980849,
+              -0.38,
+              -0.38500000000000006
+            ],
+            "id": "pump-journal-support-1-0",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.853606414443465e-12,
+              5.293955920339377e-23,
+              1.0587911840678754e-22,
+              5.293955920339377e-23,
+              1.366126712219866e-10,
+              0.0,
+              1.0587911840678754e-22,
+              0.0,
+              1.3585184423004659e-10
+            ],
+            "massKg": 1.5686600437904568e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "a": -0.03490658503988659,
+              "b": 0.03490658503988659,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0016,
+              "kind": "sector",
+              "outer": 0.013,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.014499999999999999,
+              "z1": 0.0155
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.809852014038738e-09,
+          "group": "fixed",
+          "id": "pump-journal-support-1-1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.3712182219980849,
+              -0.38500000000000006
+            ],
+            "id": "pump-journal-support-1-1",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.3661267122071604e-10,
+              5.293955920339377e-23,
+              1.0587911840678754e-22,
+              5.293955920339377e-23,
+              1.8536064140199486e-12,
+              0.0,
+              1.0587911840678754e-22,
+              0.0,
+              1.3585184422919955e-10
+            ],
+            "massKg": 1.5686600437904592e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "a": 1.53588974175501,
+              "b": 1.6057029118347832,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0016,
+              "kind": "sector",
+              "outer": 0.013,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.014499999999999999,
+              "z1": 0.0155
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.809852014038738e-09,
+          "group": "fixed",
+          "id": "pump-journal-support-1-2",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07878177800191512,
+              -0.38,
+              -0.38500000000000006
+            ],
+            "id": "pump-journal-support-1-2",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.853606413596432e-12,
+              1.0587911840678754e-22,
+              5.293955920339377e-23,
+              1.0587911840678754e-22,
+              1.3661267122113955e-10,
+              -4.235164736271502e-22,
+              5.293955920339377e-23,
+              -4.235164736271502e-22,
+              1.3585184422962307e-10
+            ],
+            "massKg": 1.5686600437904592e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "a": 3.1066860685499065,
+              "b": 3.1764992386296798,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0016,
+              "kind": "sector",
+              "outer": 0.013,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.014499999999999999,
+              "z1": 0.0155
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 5.809852014038662e-09,
+          "group": "fixed",
+          "id": "pump-journal-support-1-3",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38878177800191516,
+              -0.385
+            ],
+            "id": "pump-journal-support-1-3",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.366126712224101e-10,
+              5.293955920339377e-23,
+              0.0,
+              5.293955920339377e-23,
+              1.853606415290498e-12,
+              -4.235164736271502e-22,
+              0.0,
+              -4.235164736271502e-22,
+              1.3585184422919955e-10
+            ],
+            "massKg": 1.568660043790439e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 2700,
+          "terms": [
+            {
+              "a": 4.6774823953448035,
+              "b": 4.747295565424576,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0016,
+              "kind": "sector",
+              "outer": 0.013,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.014499999999999999,
+              "z1": 0.0155
+            }
+          ]
+        },
+        {
+          "domain": "outside",
+          "geometricVolumeCubicMetres": 2.850396453151412e-07,
+          "group": "fixed",
+          "id": "pump-static-can",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38,
+              -0.4
+            ],
+            "id": "pump-static-can",
+            "inertiaAboutCentreOfMassKgM2": [
+              4.132174059481679e-07,
+              0.0,
+              0.0,
+              0.0,
+              4.132174059481679e-07,
+              0.0,
+              0.0,
+              0.0,
+              3.7864067900408686e-07
+            ],
+            "massKg": 0.0022233092334581015
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7800,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.013,
+              "kind": "sector",
+              "outer": 0.0131,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.01738140556669149,
+              "z1": 0.01738140556669149
+            }
+          ]
+        },
+        {
+          "domain": "outside",
+          "geometricVolumeCubicMetres": 5.6739676597954545e-06,
+          "group": "fixed",
+          "id": "pump-stator",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              -0.07,
+              -0.38,
+              -0.4
+            ],
+            "id": "pump-stator",
+            "inertiaAboutCentreOfMassKgM2": [
+              5.913711706649963e-06,
+              0.0,
+              0.0,
+              0.0,
+              5.913711706648228e-06,
+              0.0,
+              0.0,
+              0.0,
+              1.1403767161364924e-05
+            ],
+            "massKg": 0.03971777361856818
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7000,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                0,
+                0,
+                0
+              ],
+              "inner": 0.0132,
+              "kind": "sector",
+              "outer": 0.02,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.004,
+              "z1": 0.004
+            }
+          ]
+        }
+      ],
+      "referenceAngleRadians": 0.0,
+      "unobservedDryVoid": null
+    },
+    {
+      "allDry": {
+        "centreMetres": [
+          0.07031694792411256,
+          -0.2702421497137892,
+          -0.1349047598173224
+        ],
+        "id": "valve-all-paid-dry-mechanisms",
+        "inertiaAboutCentreOfMassKgM2": [
+          1.0520537844256085e-05,
+          -1.8340930769576366e-08,
+          2.779206454285154e-08,
+          -1.8340930769576366e-08,
+          1.0441378189786918e-05,
+          4.74356169535145e-09,
+          2.779206454285154e-08,
+          4.74356169535145e-09,
+          9.84874900338082e-06
+        ],
+        "massKg": 0.08
+      },
+      "assemblyCentreMetres": [
+        0.07,
+        -0.27,
+        -0.135
+      ],
+      "cavityLengthMetres": 0.014183026695691662,
+      "cavitySquareMetres": 0.018,
+      "dryVoidTerms": [
+        {
+          "a": 0,
+          "b": 6.283185307179586,
+          "centre": [
+            -0.01,
+            0,
+            0.0054
+          ],
+          "inner": 0,
+          "kind": "sector",
+          "outer": 0.0008,
+          "rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              6.123233995736766e-17,
+              1.0
+            ],
+            [
+              0.0,
+              -1.0,
+              6.123233995736766e-17
+            ]
+          ],
+          "sign": 1,
+          "z0": 0.006,
+          "z1": 0.0093
+        },
+        {
+          "a": 0,
+          "b": 6.283185307179586,
+          "centre": [
+            -0.01,
+            0,
+            0.0054
+          ],
+          "inner": 0,
+          "kind": "sector",
+          "outer": 0.0023,
+          "rotation": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              6.123233995736766e-17,
+              1.0
+            ],
+            [
+              0.0,
+              -1.0,
+              6.123233995736766e-17
+            ]
+          ],
+          "sign": 1,
+          "z0": 0.0093,
+          "z1": 0.0117
+        }
+      ],
+      "fluid": {
+        "centreMetres": [
+          0.06936056287214154,
+          -0.26951885160394395,
+          -0.13521403510135643
+        ],
+        "id": "valve-unit-density-fluid-geometry",
+        "inertiaAboutCentreOfMassKgM2": [
+          2.278256988862438e-10,
+          -1.560900939441864e-12,
+          -3.5012427954705085e-12,
+          -1.560900939441864e-12,
+          2.368574250128779e-10,
+          -5.027199221220485e-13,
+          -3.5012427954705085e-12,
+          -5.027199221220485e-13,
+          3.126918952346293e-10
+        ],
+        "massKg": 4.9999999999999996e-06
+      },
+      "fluidBase": {
+        "centreMetres": [
+          -0.0008300797038747464,
+          0.00045996853977057876,
+          3.81239040870311e-05
+        ],
+        "id": "valve-local-unit-density-fluid-base",
+        "inertiaAboutCentreOfMassKgM2": [
+          2.3669884693793993e-10,
+          -1.998831926930389e-12,
+          1.850127772381863e-12,
+          -1.9988319269303905e-12,
+          2.5060549730182467e-10,
+          9.180236104157059e-14,
+          1.8501277723818625e-12,
+          9.180236104157088e-14,
+          3.209378369441709e-10
+        ],
+        "massKg": 5.235140649404098e-06
+      },
+      "fluidBaseBoxes": [
+        {
+          "maximumMetres": [
+            0.009,
+            0.009,
+            0.007091513347845831
+          ],
+          "minimumMetres": [
+            -0.009,
+            -0.009,
+            -0.007091513347845831
+          ]
+        },
+        {
+          "maximumMetres": [
+            0.0,
+            0.004,
+            0.004
+          ],
+          "minimumMetres": [
+            -0.0125,
+            -0.004,
+            -0.004
+          ]
+        },
+        {
+          "maximumMetres": [
+            0.004,
+            0.0125,
+            0.004
+          ],
+          "minimumMetres": [
+            -0.004,
+            0.0,
+            -0.004
+          ]
+        },
+        {
+          "maximumMetres": [
+            0.0011,
+            0.006,
+            0.0069
+          ],
+          "minimumMetres": [
+            -0.0112,
+            -0.006,
+            -0.0057
+          ]
+        }
+      ],
+      "housing": {
+        "centreMetres": [
+          0.07048498084394829,
+          -0.27027867381001297,
+          -0.1350454139458199
+        ],
+        "id": "valve-residual-housing",
+        "inertiaAboutCentreOfMassKgM2": [
+          1.041854586628782e-05,
+          -4.591591702338138e-08,
+          -3.7392036228607595e-08,
+          -4.591591702338138e-08,
+          1.0268834929467487e-05,
+          2.009891845837497e-08,
+          -3.7392036228607595e-08,
+          2.009891845837497e-08,
+          9.699211589771911e-06
+        ],
+        "massKg": 0.0778382141308401
+      },
+      "housingGeometry": {
+        "centreMetres": [
+          0.0004849808439482854,
+          -0.0002786738100129332,
+          -4.541394581989011e-05
+        ],
+        "id": "valve-local-unit-density-housing",
+        "inertiaAboutCentreOfMassKgM2": [
+          1.3821083880369633e-09,
+          -6.091135449922442e-12,
+          -4.9603704375538266e-12,
+          -6.09113544992244e-12,
+          1.3622479637306412e-09,
+          2.666291836511634e-12,
+          -4.960370437553825e-12,
+          2.6662918365116337e-12,
+          1.2866826011629055e-09
+        ],
+        "massKg": 1.0325898646581548e-05
+      },
+      "housingProposedEffectiveDensityKgPerCubicMetre": 7538.153994626794,
+      "id": "valve",
+      "outer": {
+        "maximumMetres": [
+          0.0825,
+          -0.2575,
+          -0.12250000000000001
+        ],
+        "minimumMetres": [
+          0.05750000000000001,
+          -0.28250000000000003,
+          -0.14750000000000002
+        ]
+      },
+      "outerDimensionsMetres": [
+        0.025,
+        0.025,
+        0.025
+      ],
+      "parts": [
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 2.1953478789739097e-07,
+          "group": "valve-gate",
+          "id": "valve-flap-with-shaft-cutout",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.06547980638902483,
+              -0.27,
+              -0.1296
+            ],
+            "id": "valve-flap-with-shaft-cutout",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.1386851530474987e-08,
+              6.776263578034403e-21,
+              3.3881317890172014e-21,
+              6.776263578034403e-21,
+              1.7012911604514646e-08,
+              0.0,
+              3.3881317890172014e-21,
+              0.0,
+              2.6733890860791308e-08
+            ],
+            "massKg": 0.0017123713455996497
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7800,
+          "terms": [
+            {
+              "centre": [
+                -0.0046,
+                0.0,
+                0.0054
+              ],
+              "dimensions": [
+                0.0024,
+                0.0086,
+                0.0108
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  6.123233995736766e-17,
+                  0.0,
+                  -1.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  1.0,
+                  0.0,
+                  6.123233995736766e-17
+                ]
+              ],
+              "sign": 1
+            },
+            {
+              "a": 0,
+              "b": 3.141592653589793,
+              "centre": [
+                -0.01,
+                0.0,
+                0.0054
+              ],
+              "inner": 0,
+              "kind": "sector",
+              "outer": 0.0005,
+              "rotation": [
+                [
+                  6.123233995736766e-17,
+                  1.0,
+                  -6.123233995736766e-17
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  1.0,
+                  -6.123233995736766e-17,
+                  3.749399456654644e-33
+                ]
+              ],
+              "sign": -1,
+              "z0": -0.0043,
+              "z1": 0.0043
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 9.032078879070654e-09,
+          "group": "valve-gate",
+          "id": "valve-wet-shaft",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.06000000000000001,
+              -0.26975000000000005,
+              -0.12960000000000002
+            ],
+            "id": "valve-wet-shaft",
+            "inertiaAboutCentreOfMassKgM2": [
+              7.808232190948709e-10,
+              0.0,
+              0.0,
+              0.0,
+              8.806276906897135e-12,
+              8.470329472543003e-22,
+              0.0,
+              8.470329472543003e-22,
+              7.808232190948709e-10
+            ],
+            "massKg": 7.045021525675111e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7800,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0.0,
+                0.0054
+              ],
+              "inner": 0,
+              "kind": "sector",
+              "outer": 0.0005,
+              "rotation": [
+                [
+                  6.123233995736766e-17,
+                  1.0,
+                  -6.123233995736766e-17
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  1.0,
+                  -6.123233995736766e-17,
+                  3.749399456654644e-33
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.0055,
+              "z1": 0.006
+            }
+          ]
+        },
+        {
+          "domain": "dry",
+          "geometricVolumeCubicMetres": 4.319689898685965e-09,
+          "group": "valve-gate",
+          "id": "valve-dry-shaft",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.060000000000000005,
+              -0.26125,
+              -0.1296
+            ],
+            "id": "valve-dry-shaft",
+            "inertiaAboutCentreOfMassKgM2": [
+              8.704175145937023e-11,
+              0.0,
+              5.293955920339377e-23,
+              0.0,
+              4.211697650774855e-12,
+              -2.117582368135751e-22,
+              5.293955920339377e-23,
+              -2.117582368135751e-22,
+              8.704175145894671e-11
+            ],
+            "massKg": 3.369358120975053e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7800,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0.0,
+                0.0054
+              ],
+              "inner": 0,
+              "kind": "sector",
+              "outer": 0.0005,
+              "rotation": [
+                [
+                  6.123233995736766e-17,
+                  1.0,
+                  -6.123233995736766e-17
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  1.0,
+                  -6.123233995736766e-17,
+                  3.749399456654644e-33
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.006,
+              "z1": 0.0115
+            }
+          ]
+        },
+        {
+          "domain": "dry",
+          "geometricVolumeCubicMetres": 1.2566370614359173e-08,
+          "group": "valve-gate",
+          "id": "valve-actuator-rotor",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.060000000000000005,
+              -0.2595,
+              -0.12960000000000002
+            ],
+            "id": "valve-actuator-rotor",
+            "inertiaAboutCentreOfMassKgM2": [
+              9.032078878994825e-11,
+              2.117582368135751e-22,
+              0.0,
+              2.117582368135751e-22,
+              1.1780972450785478e-10,
+              4.235164736271502e-22,
+              0.0,
+              4.235164736271502e-22,
+              9.032078878994825e-11
+            ],
+            "massKg": 9.42477796076938e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7500,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0.0,
+                0.0054
+              ],
+              "inner": 0.0005,
+              "kind": "sector",
+              "outer": 0.0015,
+              "rotation": [
+                [
+                  6.123233995736766e-17,
+                  1.0,
+                  -6.123233995736766e-17
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  1.0,
+                  -6.123233995736766e-17,
+                  3.749399456654644e-33
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0095,
+              "z1": 0.0115
+            }
+          ]
+        },
+        {
+          "domain": "dry",
+          "geometricVolumeCubicMetres": 1.347743248390021e-08,
+          "group": "fixed",
+          "id": "valve-actuator-stator",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.06000000000000001,
+              -0.2595,
+              -0.12960000000000002
+            ],
+            "id": "valve-actuator-stator",
+            "inertiaAboutCentreOfMassKgM2": [
+              2.2036725230686123e-10,
+              -2.117582368135751e-22,
+              -1.0587911840678754e-22,
+              -2.117582368135751e-22,
+              3.6463193585128863e-10,
+              4.235164736271502e-22,
+              -2.117582368135751e-22,
+              4.235164736271502e-22,
+              2.2036725230516717e-10
+            ],
+            "massKg": 9.434202738730146e-05
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7000,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0,
+                0.0054
+              ],
+              "inner": 0.0017,
+              "kind": "sector",
+              "outer": 0.0022,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  0.0,
+                  -1.0,
+                  6.123233995736766e-17
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0094,
+              "z1": 0.0116
+            }
+          ]
+        },
+        {
+          "domain": "dry",
+          "geometricVolumeCubicMetres": 8.482300164692427e-10,
+          "group": "fixed",
+          "id": "valve-dry-journal",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.060000000000000005,
+              -0.2611,
+              -0.1296
+            ],
+            "id": "valve-dry-journal",
+            "inertiaAboutCentreOfMassKgM2": [
+              7.843300218885704e-13,
+              0.0,
+              3.308722450212111e-24,
+              0.0,
+              1.2791308647977588e-12,
+              -1.3234889800848443e-23,
+              3.308722450212111e-24,
+              -1.3234889800848443e-23,
+              7.843300218885704e-13
+            ],
+            "massKg": 2.7143360527015765e-06
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 3200,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0,
+                0.0054
+              ],
+              "inner": 0.00055,
+              "kind": "sector",
+              "outer": 0.0008,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  0.0,
+                  -1.0,
+                  6.123233995736766e-17
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0085,
+              "z1": 0.0093
+            }
+          ]
+        },
+        {
+          "domain": "dry",
+          "geometricVolumeCubicMetres": 3.675663404700057e-10,
+          "group": "fixed",
+          "id": "valve-shaft-seal",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.060000000000000005,
+              -0.26385000000000003,
+              -0.1296
+            ],
+            "id": "valve-shaft-seal",
+            "inertiaAboutCentreOfMassKgM2": [
+              1.0144830997744363e-13,
+              8.271806125530277e-25,
+              8.271806125530277e-25,
+              8.271806125530277e-25,
+              1.9628042581110622e-13,
+              0.0,
+              8.271806125530277e-25,
+              0.0,
+              1.0144830997082618e-13
+            ],
+            "massKg": 4.410796085640069e-07
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 1200,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0,
+                0.0054
+              ],
+              "inner": 0.0005,
+              "kind": "sector",
+              "outer": 0.0008,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  0.0,
+                  -1.0,
+                  6.123233995736766e-17
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.006,
+              "z1": 0.0063
+            }
+          ]
+        },
+        {
+          "domain": "outside",
+          "geometricVolumeCubicMetres": 1.5376000000000005e-08,
+          "group": "fixed",
+          "id": "valve-seat-metal",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.0586932882414152,
+              -0.27,
+              -0.13381997918834546
+            ],
+            "id": "valve-seat-metal",
+            "inertiaAboutCentreOfMassKgM2": [
+              4.40517331066917e-09,
+              2.117582368135751e-22,
+              -9.498695521136706e-13,
+              2.117582368135751e-22,
+              2.3069991079721816e-09,
+              -8.470329472543003e-22,
+              -9.498695521136706e-13,
+              -8.470329472543003e-22,
+              2.098962949303486e-09
+            ],
+            "massKg": 0.00011993280000000003
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7800,
+          "terms": [
+            {
+              "centre": [
+                -0.0113,
+                0,
+                0.0006
+              ],
+              "dimensions": [
+                0.0002,
+                0.012,
+                0.0126
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1
+            },
+            {
+              "centre": [
+                -0.0113,
+                0,
+                0
+              ],
+              "dimensions": [
+                0.0002,
+                0.008,
+                0.008
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": -1
+            },
+            {
+              "centre": [
+                -0.01125,
+                0,
+                0
+              ],
+              "dimensions": [
+                0.0001,
+                0.0092,
+                0.0092
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": -1
+            },
+            {
+              "centre": [
+                -0.01125,
+                0,
+                0
+              ],
+              "dimensions": [
+                0.0001,
+                0.008,
+                0.008
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1
+            }
+          ]
+        },
+        {
+          "domain": "outside",
+          "geometricVolumeCubicMetres": 2.063999999999998e-09,
+          "group": "fixed",
+          "id": "valve-seat-seal",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.05875000000000001,
+              -0.27,
+              -0.135
+            ],
+            "id": "valve-seat-seal",
+            "inertiaAboutCentreOfMassKgM2": [
+              6.135859199997384e-11,
+              0.0,
+              0.0,
+              0.0,
+              3.068135999998387e-11,
+              0.0,
+              0.0,
+              0.0,
+              3.0681359999950784e-11
+            ],
+            "massKg": 2.476799999999997e-06
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 1200,
+          "terms": [
+            {
+              "centre": [
+                -0.01125,
+                0,
+                0
+              ],
+              "dimensions": [
+                0.0001,
+                0.0092,
+                0.0092
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": 1
+            },
+            {
+              "centre": [
+                -0.01125,
+                0,
+                0
+              ],
+              "dimensions": [
+                0.0001,
+                0.008,
+                0.008
+              ],
+              "kind": "box",
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.0,
+                  1.0
+                ]
+              ],
+              "sign": -1
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 2.1912608758788786e-09,
+          "group": "fixed",
+          "id": "valve-wet-journal--1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.06,
+              -0.275,
+              -0.12960000000000002
+            ],
+            "id": "valve-wet-journal--1",
+            "inertiaAboutCentreOfMassKgM2": [
+              2.86763006622284e-12,
+              2.6469779601696886e-23,
+              6.617444900424222e-24,
+              2.6469779601696886e-23,
+              4.566587665257931e-12,
+              0.0,
+              6.617444900424222e-24,
+              0.0,
+              2.8676300661169607e-12
+            ],
+            "massKg": 7.012034802812411e-06
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 3200,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0,
+                0.0054
+              ],
+              "inner": 0.00055,
+              "kind": "sector",
+              "outer": 0.001,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  0.0,
+                  -1.0,
+                  6.123233995736766e-17
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.0055,
+              "z1": -0.0045000000000000005
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 1.0956304379394412e-09,
+          "group": "fixed",
+          "id": "valve-journal-end-support--1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.060000000000000005,
+              -0.27575,
+              -0.1296
+            ],
+            "id": "valve-journal-end-support--1",
+            "inertiaAboutCentreOfMassKgM2": [
+              2.960804304837337e-12,
+              2.6469779601696886e-23,
+              1.3234889800848443e-23,
+              2.6469779601696886e-23,
+              5.565528717188613e-12,
+              -5.293955920339377e-23,
+              1.3234889800848443e-23,
+              -5.293955920339377e-23,
+              2.960804304837337e-12
+            ],
+            "massKg": 8.545917415927642e-06
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7800,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0,
+                0.0054
+              ],
+              "inner": 0.00055,
+              "kind": "sector",
+              "outer": 0.001,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  0.0,
+                  -1.0,
+                  6.123233995736766e-17
+                ]
+              ],
+              "sign": 1,
+              "z0": -0.006,
+              "z1": -0.0055
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 2.1912608758788786e-09,
+          "group": "fixed",
+          "id": "valve-wet-journal-1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.06,
+              -0.265,
+              -0.12960000000000002
+            ],
+            "id": "valve-wet-journal-1",
+            "inertiaAboutCentreOfMassKgM2": [
+              2.8676300661169607e-12,
+              2.6469779601696886e-23,
+              6.617444900424222e-24,
+              2.6469779601696886e-23,
+              4.566587665257931e-12,
+              0.0,
+              6.617444900424222e-24,
+              0.0,
+              2.8676300661169607e-12
+            ],
+            "massKg": 7.012034802812411e-06
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 3200,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0,
+                0.0054
+              ],
+              "inner": 0.00055,
+              "kind": "sector",
+              "outer": 0.001,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  0.0,
+                  -1.0,
+                  6.123233995736766e-17
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0045000000000000005,
+              "z1": 0.0055
+            }
+          ]
+        },
+        {
+          "domain": "wet",
+          "geometricVolumeCubicMetres": 1.0956304379394412e-09,
+          "group": "fixed",
+          "id": "valve-journal-end-support-1",
+          "materialOrJointQualified": false,
+          "physical": {
+            "centreMetres": [
+              0.060000000000000005,
+              -0.26425000000000004,
+              -0.1296
+            ],
+            "id": "valve-journal-end-support-1",
+            "inertiaAboutCentreOfMassKgM2": [
+              2.9608043046255788e-12,
+              0.0,
+              1.3234889800848443e-23,
+              0.0,
+              5.565528717082734e-12,
+              0.0,
+              1.3234889800848443e-23,
+              0.0,
+              2.9608043046255788e-12
+            ],
+            "massKg": 8.545917415927642e-06
+          },
+          "proposedEffectiveDensityKgPerCubicMetre": 7800,
+          "terms": [
+            {
+              "a": 0,
+              "b": 6.283185307179586,
+              "centre": [
+                -0.01,
+                0,
+                0.0054
+              ],
+              "inner": 0.00055,
+              "kind": "sector",
+              "outer": 0.001,
+              "rotation": [
+                [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                [
+                  0.0,
+                  6.123233995736766e-17,
+                  1.0
+                ],
+                [
+                  0.0,
+                  -1.0,
+                  6.123233995736766e-17
+                ]
+              ],
+              "sign": 1,
+              "z0": 0.0055,
+              "z1": 0.006
+            }
+          ]
+        }
+      ],
+      "referenceAngleRadians": 1.5707963267948966,
+      "unobservedDryVoid": {
+        "centreMetres": [
+          -0.01,
+          0.009938183347350716,
+          0.005400000000000001
+        ],
+        "id": "valve-local-unit-density-unobserved-void",
+        "inertiaAboutCentreOfMassKgM2": [
+          5.078543328095097e-14,
+          -4.0389678347315804e-28,
+          3.0292258760486853e-28,
+          -4.0389678347315804e-28,
+          3.871928907946064e-14,
+          1.0097419586828951e-28,
+          3.0292258760486853e-28,
+          1.0097419586828951e-28,
+          5.078543328095218e-14
+        ],
+        "massKg": 1.4941414660473078e-08
+      }
+    }
+  ],
+  "proposedFluidRedistributionRawMoments": {
+    "firstKgMetres": [
+      -4.971869527522798e-07,
+      -1.4225524112749037e-09,
+      -1.6872262310290432e-06
+    ],
+    "massKg": -3.521962994683381e-17,
+    "secondKgMetresSquared": [
+      [
+        -1.765884130291655e-07,
+        1.3415512409740948e-07,
+        9.347349332681633e-08
+      ],
+      [
+        1.3415512409740948e-07,
+        -1.1246278339277296e-07,
+        5.671671679654327e-07
+      ],
+      [
+        9.347349332687886e-08,
+        5.671671679651492e-07,
+        1.4375149648588152e-06
+      ]
+    ]
+  },
+  "pumpOrValveFunctionQualified": false,
+  "quietTransitionObserved": false,
+  "radiatorPatchWallMassKg": 2.9883563976934044,
+  "referenceGateAngleRadians": 1.5707963267948966,
+  "referencePumpAngleRadians": 0,
+  "rigidRuntimeConsumerUpdated": false,
+  "solidPoreDomainCubicMetres": 0.009230048218294267,
+  "sourceDesignSHA256": "b9b9c51a41f3fc2fef75bb8575ded23192be50fcf62f9e217731ebb6fde5de62",
+  "status": "PROPOSED_FINITE_MOVING_MECHANISMS_NOT_APPARATUS_OR_OPERATION_QUALIFICATION",
+  "torqueFlowOrActuatorPerformanceQualified": false,
+  "wall": {
+    "materialQualificationObserved": false,
+    "rawResidual": [
+      -4.263256414560601e-14,
+      4.3368086899420177e-16,
+      1.0547118733938987e-14,
+      -2.831068712794149e-15,
+      -3.552713678800501e-15,
+      7.105427357601002e-15,
+      -2.842170943040401e-14,
+      -8.239936510889834e-16,
+      -2.220446049250313e-16,
+      -2.793772158060648e-15,
+      1.0658141036401503e-14
+    ],
+    "retainedLidMassKg": 16.342105263157904,
+    "wallCellEffectiveDensityKgPerCubicMetre": [
+      1086.7632818478385,
+      1591.2079092328834,
+      2187.8703982197017,
+      2681.1331249503023,
+      2396.9486394115816,
+      1785.373740472607,
+      1146.8724990172734,
+      877.1877330110697,
+      853.5486536907006,
+      865.503668780522,
+      615.5827357088983,
+      140.02137233758356,
+      506.8655417050373,
+      385.28745090156514,
+      578.1603065483857,
+      1076.1932759078193,
+      669.1286568473718,
+      168.81085198614937,
+      399.5657925569542,
+      265.0856467446079,
+      235.13382913399505,
+      100.0,
+      300.17577244309507,
+      100.0,
+      819.2038795260571,
+      571.3698451848655,
+      683.9423359743313,
+      427.4846171212967,
+      817.4201730025276,
+      599.4489834736872,
+      250.56792505919722,
+      100.0,
+      287.12438268820387,
+      100.0,
+      5534.726617292986,
+      3495.758719259837,
+      1715.48379280712,
+      3911.22060501846,
+      2505.5788938065775,
+      2567.9760428088266,
+      3798.802192040768,
+      1580.6457861498934,
+      3307.5085284968677,
+      5328.572678556011,
+      1228.3409245079906,
+      1341.3161132052776,
+      3679.0401827469827,
+      2616.376777335652,
+      3511.4143740209915,
+      3335.2962700401526,
+      4385.186628517547,
+      4361.603037136336,
+      3422.8717302550185,
+      3565.9995847426835,
+      2843.614417450164,
+      3852.03272660268,
+      1578.3005411151357,
+      1435.331430899064,
+      278.90017041049725,
+      410.7427100935635,
+      174.8024258661246,
+      674.2653203087077,
+      1032.2230832472783,
+      565.4534206792196,
+      363.89309224800917,
+      490.84356430047967,
+      110.68085468409657,
+      593.815063005807,
+      100.0,
+      263.8754681705507,
+      100.0,
+      228.68616731342007,
+      590.1817200935639,
+      808.4359245936737,
+      425.9732613691554,
+      679.6588567817842,
+      577.2778100787708,
+      821.488459489511,
+      100.0,
+      310.5215961532542,
+      100.0,
+      248.32454016299718,
+      1085.0926530045963,
+      1555.5711135759639,
+      2183.5472218088776,
+      2681.777652440078,
+      2399.067995352362,
+      1781.9923537554066,
+      1141.0370074114699,
+      868.3638300239263,
+      846.8047063756554,
+      859.6641403380947
+    ],
+    "wallCellMassKg": [
+      0.039398777382334035,
+      2.186811152179893,
+      2.020265073407886,
+      2.927434632513037,
+      2.6171436226235123,
+      1.7243271875249433,
+      0.5695905492744626,
+      0.3724662381353429,
+      0.19092228945686326,
+      0.12715017442463786,
+      0.16744981692060454,
+      0.04777637331518222,
+      0.12160296297062044,
+      0.11499023031315961,
+      0.397285420331178,
+      0.9243887316675505,
+      0.16001649211784708,
+      0.05047961968962608,
+      0.1090679467026119,
+      0.09026083335827546,
+      0.06396072267196794,
+      0.03412077207756263,
+      0.08350261792153674,
+      0.034636137905816496,
+      0.14752375230803308,
+      0.128616675323386,
+      0.1452057634842947,
+      0.11344748479135719,
+      0.14720253913272485,
+      0.1349373543775747,
+      0.06952463689100905,
+      0.034689451612188345,
+      0.07837524495692048,
+      0.03404968713573379,
+      7.081842953260182,
+      4.472924493675652,
+      1.9236834101398412,
+      4.385905726896644,
+      8.070560886653043,
+      8.27154437650486,
+      4.2598436580236045,
+      1.7724807945567536,
+      4.232052924203866,
+      6.818063019890079,
+      1.5716977769504754,
+      1.7162528018489838,
+      4.785895739951126,
+      3.4035253356239044,
+      2.96410315233216,
+      2.815435928362606,
+      4.364090309518919,
+      4.340620174418832,
+      2.88936132424026,
+      3.0101803673621195,
+      3.6991284276696996,
+      5.010933857926808,
+      2.0194812387481282,
+      1.8365481228550637,
+      0.09496463544580269,
+      0.11211886714898135,
+      0.05227128395317865,
+      0.16124488199453468,
+      0.8866208404025161,
+      0.3885538273171765,
+      0.10860501786147436,
+      0.11775910347587264,
+      0.037765162160258894,
+      0.16152860991221038,
+      0.03404968713573379,
+      0.07202907765045893,
+      0.034689451612188,
+      0.06345314445456426,
+      0.13285127192967586,
+      0.14558463903475188,
+      0.11304639548465886,
+      0.14429635075487912,
+      0.12994657190260897,
+      0.14793516370033258,
+      0.03463613790581719,
+      0.08638060956397273,
+      0.03412077207756263,
+      0.06754883848277445,
+      0.03933821153972152,
+      2.1378351876197312,
+      2.016273080867533,
+      2.9281383693314242,
+      2.6194576725757734,
+      1.721061419178613,
+      0.5666923710794999,
+      0.36871948492891576,
+      0.18941379916073603,
+      0.12629229584272678
+    ]
+  }
+}

@@ -48,7 +48,9 @@ extension Game {
   func currentNewtArchiveCoastProjection(for object: EMPStoredObject)
     -> CurrentNewtArchiveCoastProjection?
   {
-    guard let source = CurrentNewtKitSource.current, let physical = object.body.physical else { return nil }
+    guard let physical = object.body.physical,
+      let issue = physical.currentNewtKitStock?.issue ?? physical.currentNewtKitReceipt?.issue,
+      let source = CurrentNewtKitSource.source(for: issue) else { return nil }
     let mass: CurrentNewtKitSource.Mass
     if let stock = physical.currentNewtKitStock {
       guard let record = commander.savedEMPState?.records[stock.issue.person.source],

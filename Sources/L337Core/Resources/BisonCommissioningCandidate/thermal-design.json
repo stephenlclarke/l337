@@ -1,0 +1,242 @@
+{
+  "actualObservations": [],
+  "biologicalCryostasisAndOperatingCrewFitnessQualified": false,
+  "carrier": {
+    "auxiliaryElectricalWatts": 10,
+    "bodyReferenceKelvin": 310,
+    "dryHardwareKgUnchanged": 180,
+    "existingGasKg": 2.5,
+    "existingHullInitialKelvin": 293,
+    "existingHullMaximumKelvin": 298,
+    "existingHullThermalCapacityMinimumJoulesPerKelvin": 20000000,
+    "existingNitrogenKg": 1.5,
+    "existingOxygenKg": 1,
+    "gasKelvin": 280,
+    "heatSinkKelvin": 303,
+    "maximumEnvironmentalHeatLeakWatts": 5,
+    "maximumPressurePascals": 150000,
+    "minimumBodyToGasConductanceWattsPerKelvin": 9,
+    "minimumCoolingCOP": 8,
+    "minimumEnvelopeSpecificHeatJoulesPerKgKelvin": 300,
+    "minimumSharedSinkConductanceWattsPerKelvin": 1000,
+    "newMaterialPerformanceAssumptionsRequireQualification": true,
+    "operativeBodyReferenceRangeKelvin": [
+      309.5,
+      310.5
+    ],
+    "operativeGasTemperatureRangeKelvin": [
+      279.5,
+      280.5
+    ],
+    "thermalCapacityMaterialID": "body primary pressure envelope"
+  },
+  "custody": {
+    "actualIdentitiesOrAwakeStatesGranted": false,
+    "carrierEmptyOrdinal": 7,
+    "carrierOccupiedOrdinals": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      9,
+      10,
+      11
+    ],
+    "originalRoles": 12,
+    "portableBodyOrdinal": 7
+  },
+  "externalThermochemistry": {
+    "CO2MolarMassKgPerMol": 0.0440095,
+    "CaOMolarMassKgPerMol": 0.0560774,
+    "antoineA": 6.81228,
+    "antoineB": 1301.679,
+    "antoineC": -3.494,
+    "carbonationEnthalpyAt298JoulesPerMol": 178418.312,
+    "enthalpyBasis": "Bureau of Mines 1982 reports calcination42.643kcal/mol; reverse reaction releases heat, not electrical energy.",
+    "measuredEnthalpyUncertaintyJoulesPerMol": 100.416,
+    "newConstantCpApproximationJoulesPerKgKelvin": {
+      "CO2": 1000,
+      "CaCO3": 1000,
+      "CaO": 900
+    },
+    "primarySourceCrossCheck": "Researcher supplied NISTJANAF CaO/CO2 +USGScalcite positiveCp bracket1.62..1.87kW;1880W outward design allowance includes measured reaction uncertainty. ConstantCp remains authored approximation.",
+    "sourceURLs": [
+      "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=24",
+      "https://stacks.cdc.gov/view/cdc/201784",
+      "https://janaf.nist.gov/tables/Ca-027.html",
+      "https://janaf.nist.gov/tables/C-095.html",
+      "https://pubs.usgs.gov/bul/1452/report.pdf",
+      "https://pubs.acs.org/doi/10.1021/acssuschemeng.8b00199"
+    ]
+  },
+  "finiteGasOperations": {
+    "CO2GammaAssumption": 1.3,
+    "closedSealTestSeconds": 3600,
+    "coldCircuitSeparateFromRespiratoryGas": true,
+    "equalisationOrServiceToResetPackOrClock": false,
+    "maximumBedPressurePascals": 20000,
+    "maximumColdCircuitInFlightCO2Kg": 0.002,
+    "maximumFlowOrificeDiameterMetres": 0.004,
+    "maximumMassLeakKgPerSecond": 1e-07,
+    "measurementTolerancePascals": 500,
+    "minimumDischargeCoefficient": 0.7,
+    "operativePressureRangePascals": [
+      60000,
+      150000
+    ],
+    "qualifiedActualPressureSealOrStockObserved": false,
+    "vacuumTargetPascals": 0.1
+  },
+  "nativeTestsRun": false,
+  "portable": {
+    "absorberHousingAndHeatpathDryKgUnchanged": 32,
+    "absorberInteriorDimensionsMetres": [
+      0.4,
+      0.185,
+      0.23
+    ],
+    "additionalDewarDryKg": 5,
+    "assumedCaODensityKgPerCubicMetre": 3340,
+    "assumedCarbonateDensityKgPerCubicMetre": 2710,
+    "assumedSolidCO2DensityKgPerCubicMetre": 1560,
+    "bodyAndGasKelvin": 190,
+    "calciumOxideKgWithinExisting32": 20,
+    "chargedSolidCO2Kg": 14,
+    "coldCO2Kelvin": 185,
+    "coldCO2RangeKelvin": [
+      184.5,
+      185.5
+    ],
+    "dewarInteriorDimensionsMetres": [
+      0.33,
+      0.13,
+      0.23
+    ],
+    "existingCryothermalDryKg": 32,
+    "extraPaidMechanicalPairs": 0,
+    "finiteCryothermalHardwareAllocationKg": {
+      "CaO": 20,
+      "heatpathAndWallCollector": 5,
+      "reactorVessel": 3,
+      "supports": 1,
+      "vacuumMLI": 1,
+      "valvesAndSensors": 2
+    },
+    "fixedElectricalWattsAllCountedAsColdHeat": 42,
+    "heatLocations": {
+      "allMassRetainedInClosedThermalCircuit": true,
+      "coldNode": "body/gas190K transfers heat to185K CO2 sublimator",
+      "hotLeakReturnsToColdNodeAndIsIncludedInCoolingLoad": true,
+      "hotNode": "CO2 captured by CaO in850K packed bed releases chemical reaction heat",
+      "reactionHeatIsPositiveAtHotNode": true,
+      "rejection": "fixed source forecap patch radiates to bounded293K reservoir; conduction path and view require qualification",
+      "view": "Actual outward forecap view>=0.9 to reservoir<=293K is required; forecap lies at maximumZ and has no direct view of remaining Newt. Bay/carrier/solar visibility is NOT established."
+    },
+    "heatSinkKelvin": 293,
+    "heatpath": "Closed heatpipe/collector candidate, not bulk copper; effective25W/K must be qualified over actual forecap routing. Existing wall material collector performs heat spreading; no conductivity inferred from mass.",
+    "hotBedKelvin": 850,
+    "hotBedRangeKelvin": [
+      845,
+      855
+    ],
+    "maximumBodyGasDeviationKelvin": 0.5,
+    "maximumClosedVolumeEnergyCorrectionJoules": 2000,
+    "maximumEnvironmentalIngressWatts": 15,
+    "maximumHotRejectionDesignWatts": 1880,
+    "maximumHotToColdConductanceWattsPerKelvin": 0.02,
+    "maximumOperationalCapturedCO2Kg": 12,
+    "minimumCO2UptakeKgPerKgCaO": 0.65,
+    "minimumColdPathConductanceWattsPerKelvin": 80,
+    "minimumHotRadiatorConductanceWattsPerKelvin": 25,
+    "minimumLatentJoulesPerKg": 560000,
+    "minimumPackedBedVoidFraction": 0.3,
+    "minimumRadiatorEmissivity": 0.85,
+    "minimumRadiatorViewFactor": 0.9,
+    "newReactionAndPackingPerformanceRequireQualification": true,
+    "operativeBodyGasTemperatureRangeKelvin": [
+      189.5,
+      190.5
+    ],
+    "radiatorAreaSquareMetres": 0.15,
+    "radiatorKelvin": 750,
+    "radiatorRangeKelvin": [
+      745,
+      755
+    ],
+    "ratedOccupiedMassLimitKgUnchanged": 372.5,
+    "remainingHardwareKgWithinExisting32": 12,
+    "valveQuietMaximumSeconds": 1,
+    "ventedMassKg": 0
+  },
+  "preparationPlant": {
+    "CO2GasCpJoulesPerKgKelvin": 1000,
+    "CO2PreparationLatentJoulesPerKg": 600000,
+    "CaOIsPaidMaterialStockNotRegeneratedByThisPlant": true,
+    "bodyCpJoulesPerKgKelvin": 3000,
+    "bodyInitialKelvin": 293,
+    "bodyKg": 101,
+    "bodyKgIsConservativePreparationUpperBound": true,
+    "bodyPhaseChangeJoulesPerKg": 200000,
+    "coldHardwareCpJoulesPerKgKelvin": 1000,
+    "coldHardwareKg": 226,
+    "dryHardwareAllocationKg": {
+      "coldRefrigerator": 600,
+      "control": 100,
+      "energyBank": 2500,
+      "tanksStructurePumpsIncluding100kgAbsorbent": 650,
+      "warmHeatPump": 150
+    },
+    "externalColdPlateSupportsPreparationWithoutConsumingPortableCO2OrCaO": true,
+    "externalPreparationCO2AbsorbentDryKg": 100,
+    "externalPreparationCO2CapacityKg": 25,
+    "extraHotForecapCpJoulesPerKgKelvin": 1000,
+    "extraHotForecapWallMassUpperBoundKg": 10,
+    "finiteCO2StockKg": 14.05,
+    "finiteElectricalEnergyJoules": 1000000000,
+    "finiteFreshCalciumOxideStockKg": 20,
+    "finiteNitrogenStockKg": 19.55,
+    "finiteOxygenStockKg": 30.5,
+    "gasStockAlreadyIncludedInCarriedCharge": true,
+    "hotAssemblyKg": 32,
+    "hotBedCpJoulesPerKgKelvin": 1000,
+    "hotWaterBufferKg": 16000,
+    "maximumCoolingElectricalWatts": 5000,
+    "maximumDirectElectricalWatts": 2000,
+    "maximumGasSealPumpOperationsJoules": 15000000,
+    "maximumPreparationSeconds": 86400,
+    "maximumTotalElectricalWatts": 8000,
+    "maximumWarmCarrierCoolingElectricalWatts": 1000,
+    "minimumCoolingCOP": 0.35,
+    "minimumWarmCarrierCoolingCOP": 8,
+    "notCarriedOrInventedAtBirth": true,
+    "packChargeEfficiencyMinimum": 0.9,
+    "plantDryHardwareKg": 4000,
+    "plantOuterDimensionsMetres": [
+      5,
+      4,
+      4
+    ],
+    "preparationBreathingSupportSeparateFromServiceCartridges": true,
+    "serviceBodyMassAtActualIssueKg": 100,
+    "waterCpJoulesPerKgKelvin": 4180,
+    "waterInitialKelvin": 293,
+    "waterMaximumKelvin": 313
+  },
+  "sourceCorrection": "Carrier environment cells support operating crew. Portable Newt retains frozen occupant requirement. Temperatures are new assumptions, not recovered requirements.",
+  "status": "NEW_ENGINEERING_CANDIDATE_NOT_QUALIFIED_OR_OBSERVED",
+  "unchangedLifeSupport": {
+    "co2KgPerMinute": 0.0014,
+    "oxygenKgPerMinute": 0.001,
+    "sorbentCapacityKg": 0.75
+  },
+  "unchangedPerUnitElectrical": {
+    "continuousWatts": 42,
+    "initialJoules": 1500000,
+    "ratedSeconds": 21600,
+    "startupJoules": 120000
+  }
+}

@@ -5,7 +5,6 @@ extension Game {
   /// native endpoint; no future state or fixture request can issue stock here.
   mutating func armCurrentNewtMechanisms(at time: Double) {
     guard time == commander.flightSimulation.physicalTime,
-      let source = CurrentNewtKitSource.current,
       let state = commander.savedEMPState else { return }
     for logical in state.sources {
       guard var record = commander.savedEMPState?.records[logical], !record.terminal,
@@ -13,6 +12,7 @@ extension Game {
         let index = bodies.firstIndex(where: { $0.physical?.identity == parent }),
         isEMPDisabled(bodies[index]), bodies[index].physical?.empSource == logical,
         var stock = bodies[index].physical?.currentNewtKitStock,
+        let source = CurrentNewtKitSource.source(for: stock.issue),
         stock.phase == .stowed, source.matches(stock, at: time),
         record.hull.body.physical?.currentNewtKitStock == stock,
         stock.issue.person.source == logical,
@@ -29,7 +29,8 @@ extension Game {
         startedAt: time, unlockAt: time + source.dropDuration,
         completeAt: time + source.duration, deadline: episode.deadline)
       guard source.matches(actuation, issue: stock.issue),
-        stock.beginActuation(actuation, charges: source.charges(at: time, actuation: actuation))
+        stock.beginActuation(actuation, work: source.work(at: time, actuation: actuation),
+          charges: source.charges(at: time, actuation: actuation))
       else { continue }
       bodies[index].physical?.currentNewtKitStock = stock
       record.hull = .init(body: bodies[index], pose: commander.flightSimulation.pose, time: time)
@@ -47,11 +48,12 @@ extension Game {
   }
 
   private mutating func releaseCurrentNewtKit(source logical: ActorIdentity) {
-    guard let source = CurrentNewtKitSource.current, let context = gameplayContext(),
+    guard let context = gameplayContext(),
       var record = commander.savedEMPState?.records[logical], !record.terminal, !record.isRecovered,
       let parent = record.hull.binding,
       let parentIndex = bodies.firstIndex(where: { $0.physical?.identity == parent }),
       var stock = bodies[parentIndex].physical?.currentNewtKitStock,
+      let source = CurrentNewtKitSource.source(for: stock.issue),
       stock.phase == .actuating, stock.interruptedAt == nil,
       stock.observedAt == context.physicalTime, let a = stock.actuation,
       context.physicalTime == a.unlockAt, context.physicalTime < a.deadline,
@@ -124,9 +126,9 @@ extension Game {
 
   private mutating func interruptCurrentNewtRelease(logical: ActorIdentity,
     parent: ActorIdentity, at time: Double) {
-    guard let source = CurrentNewtKitSource.current,
-      let index = bodies.firstIndex(where: { $0.physical?.identity == parent }),
+    guard let index = bodies.firstIndex(where: { $0.physical?.identity == parent }),
       var stock = bodies[index].physical?.currentNewtKitStock,
+      let source = CurrentNewtKitSource.source(for: stock.issue),
       stock.phase == .actuating, stock.interruptedAt == nil,
       let a = stock.actuation, time == a.unlockAt, stock.observedAt == time,
       var record = commander.savedEMPState?.records[logical]

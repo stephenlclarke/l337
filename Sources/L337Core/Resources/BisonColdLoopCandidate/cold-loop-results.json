@@ -1,0 +1,834 @@
+{
+  "actualObservations": [],
+  "allConditionalChecksPass": true,
+  "checks": {
+    "CO2Vents": true,
+    "CO2Volume": true,
+    "accumulatorHoop": true,
+    "bodyPanelScreen": true,
+    "boundaryConductance": true,
+    "boundaryHeat": true,
+    "coldMetalBudget": true,
+    "fixed42": true,
+    "headerScreen": true,
+    "liquidReserve": true,
+    "loadedMass": true,
+    "pinScreen": true,
+    "pipeScreen": true,
+    "plateScreen": true,
+    "primaryConductivity": true,
+    "primaryCp": true,
+    "primaryDensity": true,
+    "primaryLiquid": true,
+    "primaryViscosity": true,
+    "pumpHead": true,
+    "regulatorRange": true,
+    "warmLiquidPhase": true,
+    "warmPressure": true
+  },
+  "coreBodyOrActualContactQualified": false,
+  "derived": {
+    "CO2AvailableDomainCubicMetres": 0.009354587770294272,
+    "CO2CollectorCubicMetres": 7.6846752e-05,
+    "CO2CollectorPressureDropPascals": 1434.267226448296,
+    "CO2VentColumnVolumeCubicMetres": 4.76928e-05,
+    "CO2VentPressureDropPascals": 265.21213506810216,
+    "accumulatorHoopStressPascals": 43199999.99999996,
+    "accumulatorInnerVolumeCubicMetres": 0.0011870696337148248,
+    "accumulatorOuterVolumeCubicMetres": 0.0013089969389957472,
+    "accumulatorShellMassKg": 0.3292037242584907,
+    "allocatedElectricalWatts": 42.0,
+    "bodyChannelDP": 5800.781250000003,
+    "bodyFluidConvectionConductance": 346.39139858870607,
+    "bodyHeaderDP": 2431.3593106995886,
+    "bodyPanelInternalSpreadingConductance": 1393.6679536679535,
+    "bodyPanelScreeningStressPascals": 180000000.0000001,
+    "bodyReynolds": 1018.5185185185181,
+    "bodyUA": 263.49691561503215,
+    "bypassBranchDP": 29787.190755208336,
+    "coldChannelDP": 30386.7317520511,
+    "coldHeaderDP": 506.0730848403043,
+    "coldHeaderRibCount": 11,
+    "coldHeaderScreeningStressPascals": 45000000.0,
+    "coldPortDP": 4218.099445010758,
+    "coldReynolds": 48.18854864853024,
+    "coldUA": 135.89091558088091,
+    "effectiveBoundaryConductanceWattsPerKelvin": 84.5334112824741,
+    "fittingDP": 9725.437242798353,
+    "fixedCircuitFluidVolumeCubicMetres": 0.0014435863126472364,
+    "fullColdBranchCapacityWatts": 410.3030405505174,
+    "mainLineDP": 5592.1264146090525,
+    "mainPipeScreeningStressPascals": 115200000.00000004,
+    "mainReynolds": 18333.333333333336,
+    "matrixAxialConductivity": 0.3199999999999999,
+    "matrixConductionWattsPerKelvin": 385.45354971428566,
+    "matrixExposedAreaSquareMetres": 41.51445975244799,
+    "matrixGasConductanceWattsPerKelvin": 242.1676818892799,
+    "matrixMassKg": 0.4613519962054655,
+    "matrixMetalVolumeCubicMetres": 0.00017087110970572797,
+    "maximumBoundaryHeatWatts": 325.7696292680433,
+    "minimumAccumulatorLiquidReserveCubicMetres": 3.297618735276361e-05,
+    "occupiedMassKg": 372.455,
+    "otherRatedElectricalWatts": 13.5,
+    "padResistanceKelvinPerWatt": 0.0008951822916666666,
+    "pinScreeningStressPascals": 57295779.51308232,
+    "plateFluidVolumeCubicMetres": 0.00015782871264723636,
+    "plateMassKg": 1.4696992588221096,
+    "plateOuterVolumeCubicMetres": 0.00034154112000000006,
+    "plateScreeningStressPascals": 180000000.0,
+    "plateTieColumnsPerPlate": 163008,
+    "pumpTemperaturePenaltyFraction": 0.4496005767946608,
+    "ratedPumpElectricalWatts": 27.5,
+    "referenceColdBranchFraction": 0.3655432346189875,
+    "referenceControlledBoundaryWatts": 273.349332741412,
+    "requiredHotBoundaryKelvin": 188.9129386809095,
+    "requiredPumpElectricalWatts": 26.886112229170863,
+    "residualColdDumpWatts": 1.0,
+    "totalPressureDropPascals": 58660.60850000916,
+    "worstHeatPlacementBoundaryKelvin": 189.09199195592248,
+    "zeroCoolingBranchCapacityWatts": -27.5
+  },
+  "generatorSHA256": "ba6d448d18d19e7eb3cee394c9f71dc1d2e50439e9fb93d386fe91959d1cc54e",
+  "porePopulationAndTransportQualified": false,
+  "primary": {
+    "allColdRowsLiquid": true,
+    "maximumDensity": 637.828,
+    "maximumViscosityPascalSeconds": 0.000389206,
+    "maximumWarmBladderPascals": 1455206.304369542,
+    "minimumCpJoulesPerKgKelvin": 2066.57,
+    "minimumDensity": 620.928,
+    "minimumThermalConductivity": 0.151052,
+    "minimumVapourPressureMarginPascals": 57509.96549776988,
+    "sampledColdRows": 48,
+    "warmPressureStates": [
+      {
+        "kelvin": 180.0,
+        "maximumBladderPascals": 528453.0434051416,
+        "maximumSaturationPascals": 7085.329999999999,
+        "minimumBladderPascals": 416761.24905266427
+      },
+      {
+        "kelvin": 181.0,
+        "maximumBladderPascals": 531388.8936462812,
+        "maximumSaturationPascals": 7085.329999999999,
+        "minimumBladderPascals": 419947.6579107837
+      },
+      {
+        "kelvin": 182.0,
+        "maximumBladderPascals": 534324.7438874209,
+        "maximumSaturationPascals": 7085.329999999999,
+        "minimumBladderPascals": 423150.201227832
+      },
+      {
+        "kelvin": 183.0,
+        "maximumBladderPascals": 537260.5941285605,
+        "maximumSaturationPascals": 7085.329999999999,
+        "minimumBladderPascals": 426370.7932523471
+      },
+      {
+        "kelvin": 184.0,
+        "maximumBladderPascals": 540196.4443697003,
+        "maximumSaturationPascals": 7085.329999999999,
+        "minimumBladderPascals": 429608.8067873768
+      },
+      {
+        "kelvin": 185.0,
+        "maximumBladderPascals": 555927.3292652064,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 432864.4630181263
+      },
+      {
+        "kelvin": 186.0,
+        "maximumBladderPascals": 558932.3418558291,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 436138.8880743805
+      },
+      {
+        "kelvin": 187.0,
+        "maximumBladderPascals": 561937.3544464519,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 439431.43300562847
+      },
+      {
+        "kelvin": 188.0,
+        "maximumBladderPascals": 564942.3670370746,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 442743.25583301747
+      },
+      {
+        "kelvin": 189.0,
+        "maximumBladderPascals": 567947.3796276974,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 446073.69293524866
+      },
+      {
+        "kelvin": 190.0,
+        "maximumBladderPascals": 570952.3922183202,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 449423.9352688285
+      },
+      {
+        "kelvin": 191.0,
+        "maximumBladderPascals": 573957.4048089429,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 452793.3042813953
+      },
+      {
+        "kelvin": 192.0,
+        "maximumBladderPascals": 576962.4173995656,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 456182.05060945323
+      },
+      {
+        "kelvin": 193.0,
+        "maximumBladderPascals": 579967.4299901883,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 459591.4163979047
+      },
+      {
+        "kelvin": 194.0,
+        "maximumBladderPascals": 582972.4425808111,
+        "maximumSaturationPascals": 14170.7,
+        "minimumBladderPascals": 463021.70005831297
+      },
+      {
+        "kelvin": 195.0,
+        "maximumBladderPascals": 595408.3104600107,
+        "maximumSaturationPascals": 21256.0,
+        "minimumBladderPascals": 466472.1923889487
+      },
+      {
+        "kelvin": 196.0,
+        "maximumBladderPascals": 598461.6864110876,
+        "maximumSaturationPascals": 21256.0,
+        "minimumBladderPascals": 469944.1898760565
+      },
+      {
+        "kelvin": 197.0,
+        "maximumBladderPascals": 601515.0623621646,
+        "maximumSaturationPascals": 21256.0,
+        "minimumBladderPascals": 473438.0078103043
+      },
+      {
+        "kelvin": 198.0,
+        "maximumBladderPascals": 604568.4383132416,
+        "maximumSaturationPascals": 21256.0,
+        "minimumBladderPascals": 476952.913591428
+      },
+      {
+        "kelvin": 199.0,
+        "maximumBladderPascals": 607621.8142643186,
+        "maximumSaturationPascals": 21256.0,
+        "minimumBladderPascals": 480490.2608938317
+      },
+      {
+        "kelvin": 200.0,
+        "maximumBladderPascals": 610675.1902153955,
+        "maximumSaturationPascals": 21256.0,
+        "minimumBladderPascals": 484050.3831046585
+      },
+      {
+        "kelvin": 201.0,
+        "maximumBladderPascals": 621531.0311570897,
+        "maximumSaturationPascals": 28341.300000000003,
+        "minimumBladderPascals": 487633.62014486844
+      },
+      {
+        "kelvin": 202.0,
+        "maximumBladderPascals": 624623.2253419509,
+        "maximumSaturationPascals": 28341.300000000003,
+        "minimumBladderPascals": 491239.20752648584
+      },
+      {
+        "kelvin": 203.0,
+        "maximumBladderPascals": 627715.4195268122,
+        "maximumSaturationPascals": 28341.300000000003,
+        "minimumBladderPascals": 494869.7061056101
+      },
+      {
+        "kelvin": 204.0,
+        "maximumBladderPascals": 630807.6137116732,
+        "maximumSaturationPascals": 28341.300000000003,
+        "minimumBladderPascals": 498523.2389078911
+      },
+      {
+        "kelvin": 205.0,
+        "maximumBladderPascals": 633899.8078965343,
+        "maximumSaturationPascals": 28341.300000000003,
+        "minimumBladderPascals": 502201.2840581278
+      },
+      {
+        "kelvin": 206.0,
+        "maximumBladderPascals": 643828.1917144267,
+        "maximumSaturationPascals": 35426.7,
+        "minimumBladderPascals": 505904.21594771446
+      },
+      {
+        "kelvin": 207.0,
+        "maximumBladderPascals": 646953.5712858561,
+        "maximumSaturationPascals": 35426.7,
+        "minimumBladderPascals": 509632.4165250195
+      },
+      {
+        "kelvin": 208.0,
+        "maximumBladderPascals": 650078.9508572853,
+        "maximumSaturationPascals": 35426.7,
+        "minimumBladderPascals": 513387.479029564
+      },
+      {
+        "kelvin": 209.0,
+        "maximumBladderPascals": 653204.3304287145,
+        "maximumSaturationPascals": 35426.7,
+        "minimumBladderPascals": 517167.4102790242
+      },
+      {
+        "kelvin": 210.0,
+        "maximumBladderPascals": 662503.3902952578,
+        "maximumSaturationPascals": 42512.0,
+        "minimumBladderPascals": 520973.80361062684
+      },
+      {
+        "kelvin": 211.0,
+        "maximumBladderPascals": 665658.1683442828,
+        "maximumSaturationPascals": 42512.0,
+        "minimumBladderPascals": 524808.326288872
+      },
+      {
+        "kelvin": 212.0,
+        "maximumBladderPascals": 668812.9463933079,
+        "maximumSaturationPascals": 42512.0,
+        "minimumBladderPascals": 528668.9118957521
+      },
+      {
+        "kelvin": 213.0,
+        "maximumBladderPascals": 671967.724442333,
+        "maximumSaturationPascals": 42512.0,
+        "minimumBladderPascals": 532558.5157834047
+      },
+      {
+        "kelvin": 214.0,
+        "maximumBladderPascals": 680826.9404076469,
+        "maximumSaturationPascals": 49597.3,
+        "minimumBladderPascals": 536476.3262653288
+      },
+      {
+        "kelvin": 215.0,
+        "maximumBladderPascals": 684008.3747086173,
+        "maximumSaturationPascals": 49597.3,
+        "minimumBladderPascals": 540424.1170510981
+      },
+      {
+        "kelvin": 216.0,
+        "maximumBladderPascals": 687189.8090095876,
+        "maximumSaturationPascals": 49597.3,
+        "minimumBladderPascals": 544399.7205858037
+      },
+      {
+        "kelvin": 217.0,
+        "maximumBladderPascals": 695705.6378364296,
+        "maximumSaturationPascals": 56682.7,
+        "minimumBladderPascals": 548407.6314152369
+      },
+      {
+        "kelvin": 218.0,
+        "maximumBladderPascals": 698911.6546006529,
+        "maximumSaturationPascals": 56682.7,
+        "minimumBladderPascals": 552444.3069689691
+      },
+      {
+        "kelvin": 219.0,
+        "maximumBladderPascals": 707140.569463126,
+        "maximumSaturationPascals": 63768.0,
+        "minimumBladderPascals": 556512.9774719487
+      },
+      {
+        "kelvin": 220.0,
+        "maximumBladderPascals": 710369.5218351037,
+        "maximumSaturationPascals": 63768.0,
+        "minimumBladderPascals": 560614.2033009087
+      },
+      {
+        "kelvin": 221.0,
+        "maximumBladderPascals": 713598.4742070815,
+        "maximumSaturationPascals": 63768.0,
+        "minimumBladderPascals": 564747.1208540236
+      },
+      {
+        "kelvin": 222.0,
+        "maximumBladderPascals": 721622.9586205173,
+        "maximumSaturationPascals": 70853.3,
+        "minimumBladderPascals": 568913.713352914
+      },
+      {
+        "kelvin": 223.0,
+        "maximumBladderPascals": 724873.5124881772,
+        "maximumSaturationPascals": 70853.3,
+        "minimumBladderPascals": 573113.1025026591
+      },
+      {
+        "kelvin": 224.0,
+        "maximumBladderPascals": 732715.1848715676,
+        "maximumSaturationPascals": 77938.70000000001,
+        "minimumBladderPascals": 577347.3374165467
+      },
+      {
+        "kelvin": 225.0,
+        "maximumBladderPascals": 735986.23480403,
+        "maximumSaturationPascals": 77938.70000000001,
+        "minimumBladderPascals": 581617.0447453808
+      },
+      {
+        "kelvin": 226.0,
+        "maximumBladderPascals": 743677.0337424633,
+        "maximumSaturationPascals": 85024.0,
+        "minimumBladderPascals": 585922.8660123148
+      },
+      {
+        "kelvin": 227.0,
+        "maximumBladderPascals": 746967.6400864566,
+        "maximumSaturationPascals": 85024.0,
+        "minimumBladderPascals": 590263.8948939822
+      },
+      {
+        "kelvin": 228.0,
+        "maximumBladderPascals": 754534.6204827817,
+        "maximumSaturationPascals": 92109.3,
+        "minimumBladderPascals": 594643.9079478891
+      },
+      {
+        "kelvin": 229.0,
+        "maximumBladderPascals": 761980.4243369476,
+        "maximumSaturationPascals": 99194.7,
+        "minimumBladderPascals": 599060.4445259931
+      },
+      {
+        "kelvin": 230.0,
+        "maximumBladderPascals": 765307.8497707333,
+        "maximumSaturationPascals": 99194.7,
+        "minimumBladderPascals": 603517.4037066035
+      },
+      {
+        "kelvin": 231.0,
+        "maximumBladderPascals": 772668.5879179427,
+        "maximumSaturationPascals": 106280.0,
+        "minimumBladderPascals": 608012.2676265003
+      },
+      {
+        "kelvin": 232.0,
+        "maximumBladderPascals": 776013.4735799251,
+        "maximumSaturationPascals": 106280.0,
+        "minimumBladderPascals": 612549.0632579944
+      },
+      {
+        "kelvin": 233.0,
+        "maximumBladderPascals": 783300.1281258839,
+        "maximumSaturationPascals": 113365.0,
+        "minimumBladderPascals": 617125.2142478843
+      },
+      {
+        "kelvin": 234.0,
+        "maximumBladderPascals": 790509.1991733477,
+        "maximumSaturationPascals": 120451.0,
+        "minimumBladderPascals": 621744.8811583165
+      },
+      {
+        "kelvin": 235.0,
+        "maximumBladderPascals": 793887.4436142595,
+        "maximumSaturationPascals": 120451.0,
+        "minimumBladderPascals": 626408.9364679392
+      },
+      {
+        "kelvin": 236.0,
+        "maximumBladderPascals": 801045.8823359343,
+        "maximumSaturationPascals": 127536.0,
+        "minimumBladderPascals": 631114.7151024253
+      },
+      {
+        "kelvin": 237.0,
+        "maximumBladderPascals": 808144.7208069022,
+        "maximumSaturationPascals": 134621.0,
+        "minimumBladderPascals": 635868.3978195513
+      },
+      {
+        "kelvin": 238.0,
+        "maximumBladderPascals": 815189.9498273532,
+        "maximumSaturationPascals": 141707.0,
+        "minimumBladderPascals": 640665.5050669246
+      },
+      {
+        "kelvin": 239.0,
+        "maximumBladderPascals": 822193.4565941944,
+        "maximumSaturationPascals": 148792.0,
+        "minimumBladderPascals": 645510.562028948
+      },
+      {
+        "kelvin": 240.0,
+        "maximumBladderPascals": 825633.5965799442,
+        "maximumSaturationPascals": 148792.0,
+        "minimumBladderPascals": 650404.5594293296
+      },
+      {
+        "kelvin": 241.0,
+        "maximumBladderPascals": 832610.2246145927,
+        "maximumSaturationPascals": 155877.0,
+        "minimumBladderPascals": 655346.596901065
+      },
+      {
+        "kelvin": 242.0,
+        "maximumBladderPascals": 839553.3717890179,
+        "maximumSaturationPascals": 162963.0,
+        "minimumBladderPascals": 660341.5272140626
+      },
+      {
+        "kelvin": 243.0,
+        "maximumBladderPascals": 846464.1955819655,
+        "maximumSaturationPascals": 170048.0,
+        "minimumBladderPascals": 665386.5583241428
+      },
+      {
+        "kelvin": 244.0,
+        "maximumBladderPascals": 853352.3244770487,
+        "maximumSaturationPascals": 177133.0,
+        "minimumBladderPascals": 670484.7111860669
+      },
+      {
+        "kelvin": 245.0,
+        "maximumBladderPascals": 860214.3701124339,
+        "maximumSaturationPascals": 184219.0,
+        "minimumBladderPascals": 675635.0806685294
+      },
+      {
+        "kelvin": 246.0,
+        "maximumBladderPascals": 867058.1469456644,
+        "maximumSaturationPascals": 191304.0,
+        "minimumBladderPascals": 680842.8785813295
+      },
+      {
+        "kelvin": 247.0,
+        "maximumBladderPascals": 873886.4117936239,
+        "maximumSaturationPascals": 198389.0,
+        "minimumBladderPascals": 686107.296150373
+      },
+      {
+        "kelvin": 248.0,
+        "maximumBladderPascals": 880699.3241193331,
+        "maximumSaturationPascals": 205474.99999999997,
+        "minimumBladderPascals": 691431.70308728
+      },
+      {
+        "kelvin": 249.0,
+        "maximumBladderPascals": 887500.1238445046,
+        "maximumSaturationPascals": 212560.0,
+        "minimumBladderPascals": 696813.1296096864
+      },
+      {
+        "kelvin": 250.0,
+        "maximumBladderPascals": 894292.3642537025,
+        "maximumSaturationPascals": 219645.0,
+        "minimumBladderPascals": 702257.1897248077
+      },
+      {
+        "kelvin": 251.0,
+        "maximumBladderPascals": 901073.836246764,
+        "maximumSaturationPascals": 226731.00000000003,
+        "minimumBladderPascals": 707763.0935996826
+      },
+      {
+        "kelvin": 252.0,
+        "maximumBladderPascals": 911011.6075514,
+        "maximumSaturationPascals": 240901.0,
+        "minimumBladderPascals": 713334.5040751701
+      },
+      {
+        "kelvin": 253.0,
+        "maximumBladderPascals": 917770.0714648901,
+        "maximumSaturationPascals": 247987.0,
+        "minimumBladderPascals": 718970.6462459516
+      },
+      {
+        "kelvin": 254.0,
+        "maximumBladderPascals": 924525.7450152608,
+        "maximumSaturationPascals": 255072.0,
+        "minimumBladderPascals": 724677.6960186263
+      },
+      {
+        "kelvin": 255.0,
+        "maximumBladderPascals": 931283.4257226216,
+        "maximumSaturationPascals": 262157.0,
+        "minimumBladderPascals": 730452.622919006
+      },
+      {
+        "kelvin": 256.0,
+        "maximumBladderPascals": 941129.3087094084,
+        "maximumSaturationPascals": 276328.0,
+        "minimumBladderPascals": 736296.9959965755
+      },
+      {
+        "kelvin": 257.0,
+        "maximumBladderPascals": 947878.9951098241,
+        "maximumSaturationPascals": 283413.0,
+        "minimumBladderPascals": 742217.3737863428
+      },
+      {
+        "kelvin": 258.0,
+        "maximumBladderPascals": 954638.6279576987,
+        "maximumSaturationPascals": 290499.0,
+        "minimumBladderPascals": 748213.1610235956
+      },
+      {
+        "kelvin": 259.0,
+        "maximumBladderPascals": 964445.8101271838,
+        "maximumSaturationPascals": 304669.0,
+        "minimumBladderPascals": 754286.2109021435
+      },
+      {
+        "kelvin": 260.0,
+        "maximumBladderPascals": 971210.0311628833,
+        "maximumSaturationPascals": 311755.0,
+        "minimumBladderPascals": 760441.0357404869
+      },
+      {
+        "kelvin": 261.0,
+        "maximumBladderPascals": 981006.415967151,
+        "maximumSaturationPascals": 325925.0,
+        "minimumBladderPascals": 766674.4598835841
+      },
+      {
+        "kelvin": 262.0,
+        "maximumBladderPascals": 987787.4149882125,
+        "maximumSaturationPascals": 333011.0,
+        "minimumBladderPascals": 772996.4591789662
+      },
+      {
+        "kelvin": 263.0,
+        "maximumBladderPascals": 997585.6897535344,
+        "maximumSaturationPascals": 347181.0,
+        "minimumBladderPascals": 779403.9541843181
+      },
+      {
+        "kelvin": 264.0,
+        "maximumBladderPascals": 1007387.0796115949,
+        "maximumSaturationPascals": 361352.0,
+        "minimumBladderPascals": 785899.1342215006
+      },
+      {
+        "kelvin": 265.0,
+        "maximumBladderPascals": 1014202.6740010686,
+        "maximumSaturationPascals": 368437.0,
+        "minimumBladderPascals": 792489.9315047737
+      },
+      {
+        "kelvin": 266.0,
+        "maximumBladderPascals": 1024025.0006954926,
+        "maximumSaturationPascals": 382608.0,
+        "minimumBladderPascals": 799173.222893862
+      },
+      {
+        "kelvin": 267.0,
+        "maximumBladderPascals": 1033860.5088266941,
+        "maximumSaturationPascals": 396779.0,
+        "minimumBladderPascals": 805957.3137738171
+      },
+      {
+        "kelvin": 268.0,
+        "maximumBladderPascals": 1043712.7106116143,
+        "maximumSaturationPascals": 410949.0,
+        "minimumBladderPascals": 812842.0511452019
+      },
+      {
+        "kelvin": 269.0,
+        "maximumBladderPascals": 1050598.5697642064,
+        "maximumSaturationPascals": 418035.0,
+        "minimumBladderPascals": 819830.2139355849
+      },
+      {
+        "kelvin": 270.0,
+        "maximumBladderPascals": 1060491.385782533,
+        "maximumSaturationPascals": 432205.0,
+        "minimumBladderPascals": 826927.7858534062
+      },
+      {
+        "kelvin": 271.0,
+        "maximumBladderPascals": 1070416.1450427384,
+        "maximumSaturationPascals": 446376.0,
+        "minimumBladderPascals": 834134.7690829571
+      },
+      {
+        "kelvin": 272.0,
+        "maximumBladderPascals": 1080365.1157417775,
+        "maximumSaturationPascals": 460547.00000000006,
+        "minimumBladderPascals": 841457.4894237845
+      },
+      {
+        "kelvin": 273.0,
+        "maximumBladderPascals": 1090348.2579191374,
+        "maximumSaturationPascals": 474716.99999999994,
+        "minimumBladderPascals": 848899.354460392
+      },
+      {
+        "kelvin": 274.0,
+        "maximumBladderPascals": 1100371.83330884,
+        "maximumSaturationPascals": 488888.00000000006,
+        "minimumBladderPascals": 856463.9057304737
+      },
+      {
+        "kelvin": 275.0,
+        "maximumBladderPascals": 1110428.5247926277,
+        "maximumSaturationPascals": 503059.0,
+        "minimumBladderPascals": 864158.2361151717
+      },
+      {
+        "kelvin": 276.0,
+        "maximumBladderPascals": 1120524.9901872529,
+        "maximumSaturationPascals": 517229.0,
+        "minimumBladderPascals": 871982.8991178947
+      },
+      {
+        "kelvin": 277.0,
+        "maximumBladderPascals": 1133711.4787803935,
+        "maximumSaturationPascals": 538485.0,
+        "minimumBladderPascals": 879941.8857936525
+      },
+      {
+        "kelvin": 278.0,
+        "maximumBladderPascals": 1143908.1451142193,
+        "maximumSaturationPascals": 552656.0,
+        "minimumBladderPascals": 888046.5878993744
+      },
+      {
+        "kelvin": 279.0,
+        "maximumBladderPascals": 1154161.7979311561,
+        "maximumSaturationPascals": 566827.0,
+        "minimumBladderPascals": 896294.3889794999
+      },
+      {
+        "kelvin": 280.0,
+        "maximumBladderPascals": 1167547.7884961814,
+        "maximumSaturationPascals": 588083.0,
+        "minimumBladderPascals": 904693.5783584516
+      },
+      {
+        "kelvin": 281.0,
+        "maximumBladderPascals": 1177920.6831170863,
+        "maximumSaturationPascals": 602253.0,
+        "minimumBladderPascals": 913252.9501895881
+      },
+      {
+        "kelvin": 282.0,
+        "maximumBladderPascals": 1188350.3740124046,
+        "maximumSaturationPascals": 616424.0,
+        "minimumBladderPascals": 921977.9115195394
+      },
+      {
+        "kelvin": 283.0,
+        "maximumBladderPascals": 1201983.7451023099,
+        "maximumSaturationPascals": 637680.0,
+        "minimumBladderPascals": 930870.1025262248
+      },
+      {
+        "kelvin": 284.0,
+        "maximumBladderPascals": 1215719.498574259,
+        "maximumSaturationPascals": 658936.0,
+        "minimumBladderPascals": 939939.272084782
+      },
+      {
+        "kelvin": 285.0,
+        "maximumBladderPascals": 1226380.743827693,
+        "maximumSaturationPascals": 673107.0,
+        "minimumBladderPascals": 949191.5954873718
+      },
+      {
+        "kelvin": 286.0,
+        "maximumBladderPascals": 1240322.9116515478,
+        "maximumSaturationPascals": 694363.0,
+        "minimumBladderPascals": 958637.8175258095
+      },
+      {
+        "kelvin": 287.0,
+        "maximumBladderPascals": 1254387.669106241,
+        "maximumSaturationPascals": 715619.0,
+        "minimumBladderPascals": 968284.9968737479
+      },
+      {
+        "kelvin": 288.0,
+        "maximumBladderPascals": 1265300.2193769647,
+        "maximumSaturationPascals": 729789.0,
+        "minimumBladderPascals": 978136.0618398896
+      },
+      {
+        "kelvin": 289.0,
+        "maximumBladderPascals": 1279602.2263957441,
+        "maximumSaturationPascals": 751045.0,
+        "minimumBladderPascals": 988207.6316410976
+      },
+      {
+        "kelvin": 290.0,
+        "maximumBladderPascals": 1294039.852928799,
+        "maximumSaturationPascals": 772301.0,
+        "minimumBladderPascals": 998503.4904527572
+      },
+      {
+        "kelvin": 291.0,
+        "maximumBladderPascals": 1308624.6021754814,
+        "maximumSaturationPascals": 793557.0,
+        "minimumBladderPascals": 1009037.0100219337
+      },
+      {
+        "kelvin": 292.0,
+        "maximumBladderPascals": 1323362.1638388524,
+        "maximumSaturationPascals": 814813.0,
+        "minimumBladderPascals": 1019822.4644355738
+      },
+      {
+        "kelvin": 293.0,
+        "maximumBladderPascals": 1338258.736871252,
+        "maximumSaturationPascals": 836069.0,
+        "minimumBladderPascals": 1030860.0082128035
+      },
+      {
+        "kelvin": 294.0,
+        "maximumBladderPascals": 1353321.060187358,
+        "maximumSaturationPascals": 857325.0,
+        "minimumBladderPascals": 1042175.1409090725
+      },
+      {
+        "kelvin": 295.0,
+        "maximumBladderPascals": 1368556.445237507,
+        "maximumSaturationPascals": 878581.0,
+        "minimumBladderPascals": 1053769.0240449642
+      },
+      {
+        "kelvin": 296.0,
+        "maximumBladderPascals": 1387588.4786484248,
+        "maximumSaturationPascals": 906922.9999999999,
+        "minimumBladderPascals": 1065664.0944431126
+      },
+      {
+        "kelvin": 297.0,
+        "maximumBladderPascals": 1403229.5963253307,
+        "maximumSaturationPascals": 928179.0000000001,
+        "minimumBladderPascals": 1077873.4412846908
+      },
+      {
+        "kelvin": 298.0,
+        "maximumBladderPascals": 1419077.1363217083,
+        "maximumSaturationPascals": 949435.0000000001,
+        "minimumBladderPascals": 1090410.922814211
+      },
+      {
+        "kelvin": 299.0,
+        "maximumBladderPascals": 1438904.7152394517,
+        "maximumSaturationPascals": 977776.0000000001,
+        "minimumBladderPascals": 1103291.2236739062
+      },
+      {
+        "kelvin": 300.0,
+        "maximumBladderPascals": 1455206.304369542,
+        "maximumSaturationPascals": 999032.0,
+        "minimumBladderPascals": 1116541.9654977699
+      }
+    ]
+  },
+  "sourceDesignSHA256": "b9b9c51a41f3fc2fef75bb8575ded23192be50fcf62f9e217731ebb6fde5de62",
+  "status": "CONDITIONAL_COLD_LOOP_SOURCE_NOT_APPARATUS_QUALIFICATION"
+}

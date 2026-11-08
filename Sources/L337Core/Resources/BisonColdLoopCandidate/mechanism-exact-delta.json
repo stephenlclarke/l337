@@ -1,0 +1,190 @@
+{
+  "acceptedPlayableIncrement": 0,
+  "actualObservations": [],
+  "apparatusMaterialTorqueFlowPressureThermalQuietQualified": false,
+  "baselineConnectedSourceSHA256": "284c1c1512589721943a6475c834cdb0e34bab016f0e7c59ba1210f6b95caa95",
+  "canonicalDryCentreDeltaMetres": [
+    7.190708602032896e-18,
+    1.3877787807814457e-17,
+    -1.8214596497756474e-17
+  ],
+  "canonicalDryInertiaMaximumAbsoluteDeltaKgM2": 2.842170943040401e-14,
+  "canonicalDryMassKg": 247.99999999999994,
+  "cavityLengthsMetres": [
+    0.03476281113338298,
+    0.014183026695691662
+  ],
+  "changedQuiescentFourMaterialReferences": 8,
+  "distinctPassingChecks": 7,
+  "finiteMaterialPiecesIncludingResidualHousings": 38,
+  "firstCriteriaSHA256": "f29b217f5626f4830ade98cc93e7faaf4daca2a55ac12b8de26d3897fc7c017e",
+  "gasOrVacuumContentsObserved": false,
+  "generatorSHA256": "af6717344c9d6681701d880db03e24a3642c98cc26826274b46eac1d2da5fa5c",
+  "hotRadiatorPatchMassKg": 2.9883563976934044,
+  "liquidPhysicalMomentDelta": {
+    "firstKgMetres": [
+      -4.971869527522798e-07,
+      -1.4225524112749037e-09,
+      -1.6872262310290432e-06
+    ],
+    "massKg": -3.521962994683381e-17,
+    "secondKgMetresSquared": [
+      [
+        -1.765884130291655e-07,
+        1.3415512409740948e-07,
+        9.347349332681633e-08
+      ],
+      [
+        1.3415512409740948e-07,
+        -1.1246278339277296e-07,
+        5.671671679654327e-07
+      ],
+      [
+        9.347349332687886e-08,
+        5.671671679651492e-07,
+        1.4375149648588152e-06
+      ]
+    ]
+  },
+  "mechanicalModelOrThresholdsChangedToFixTestFailure": false,
+  "mechanismSourceSHA256": "d008b997143cc5d5d1b9d50ecbd7c0bfd9531e3db248e296ba09d51c64d4a633",
+  "nominalClearances": [
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "pump-journal-radial",
+      "minimumNominalMetres": 5.000000000000002e-05
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "pump-carrier-to-can",
+      "minimumNominalMetres": 0.0007999999999999986
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-wet-journal-radial",
+      "minimumNominalMetres": 5.000000000000002e-05
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-dry-journal-radial",
+      "minimumNominalMetres": 5.000000000000002e-05
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-actuator-rotor-to-stator",
+      "minimumNominalMetres": 0.00019999999999999987
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-plate-to-journal-axial",
+      "minimumNominalMetres": 0.00020000000000000052
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-open-plate-to-port",
+      "minimumNominalMetres": 0.00020000000000000052
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-swept-plate-to-pocket-low-z",
+      "minimumNominalMetres": 0.00023353783423510008
+    },
+    {
+      "coldToleranceOrMaterialQualified": false,
+      "id": "valve-swept-plate-to-pocket-high-z",
+      "minimumNominalMetres": 0.0002999999999999997
+    }
+  ],
+  "nominalWetMassKg": [
+    372.45499999999987,
+    372.45499999999987
+  ],
+  "originalFailuresRetained": true,
+  "originalInterfaces": [
+    {
+      "id": "pump",
+      "interfaces": [
+        {
+          "axis": 2,
+          "centreMetres": [
+            -0.07,
+            -0.38,
+            -0.42500000000000004
+          ],
+          "sideMetres": 0.012
+        },
+        {
+          "axis": 2,
+          "centreMetres": [
+            -0.07,
+            -0.38,
+            -0.375
+          ],
+          "sideMetres": 0.012
+        }
+      ]
+    },
+    {
+      "id": "valve",
+      "interfaces": [
+        {
+          "axis": 0,
+          "centreMetres": [
+            0.05750000000000001,
+            -0.27,
+            -0.135
+          ],
+          "sideMetres": 0.008
+        },
+        {
+          "axis": 1,
+          "centreMetres": [
+            0.07,
+            -0.2575,
+            -0.135
+          ],
+          "sideMetres": 0.008
+        }
+      ]
+    }
+  ],
+  "outerEnvelopesExact": true,
+  "paidAssemblyMassKg": [
+    0.3,
+    0.08
+  ],
+  "paidFluidVolumeCubicMetres": [
+    2e-05,
+    4.9999999999999996e-06
+  ],
+  "positiveWallDensityRangeKgPerCubicMetre": [
+    100.0,
+    5534.726617292986
+  ],
+  "proposedResidualHousingDensitiesKgPerCubicMetre": [
+    2581.9209345502886,
+    7538.153994626794
+  ],
+  "retainedFields": [
+    "phaseStates",
+    "dewar",
+    "preparation",
+    "freeRespiratoryGasCubicMetres",
+    "solidPoreDomainCubicMetres",
+    "nominalAccumulatorLiquidCubicMetres",
+    "nominalDiaphragmLocalZMetres",
+    "newMeteringCapacityKgPerSecond",
+    "additionalPreparationHeatJoules",
+    "additionalPreparationElectricalJoules",
+    "additionalPreparationRejectJoules",
+    "nominalLiquidDensityKgPerCubicMetre",
+    "macroCertificates",
+    "sourceDesignSHA256",
+    "actualObservations",
+    "criteriaWaived"
+  ],
+  "runtimeShippingNativeCompilerRendererUpdated": false,
+  "sealedDryActuatorVoidCubicMetres": 1.4941414660473078e-08,
+  "testEvidenceJoinSHA256": "5915ab34fc9a5edae3a1cba3ba8e6734c87b94f72b251de64b59fa4bc6f8afe9",
+  "unaffectedChecksReusedNotRerun": true
+}

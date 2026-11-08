@@ -1,0 +1,28 @@
+{
+  "actualObservations": [],
+  "canonicalSourceFrozen": true,
+  "carrierFixedElectricalServiceHeatJoules": 10886400,
+  "carrierResidualDumpRequiredRatingWattsPerCell": 42,
+  "carrierResidualUsefulElectricalDifferenceDestination": "Warm-side cell dump to existing finite hull sink; no stored/exported credit and no reduced42W debit",
+  "carrierTemperatureIsNewAssumption": "280K gas/310K body reference, eleven carrier bodies, empty7",
+  "carrierTotalServiceHullHeatJoules": 67622400,
+  "hotDesignAllowanceWatts": 1880,
+  "maximumOperationalCO2CaptureKg": 12,
+  "minimumCaOConversionFraction": 0.7459050626406961,
+  "minimumNearDepletionUptakeKgPerSecond": 0.0005420238095238096,
+  "minimumSixHourCO2UptakeKg": 11.707714285714287,
+  "newMaterialAndPhysiologicalQualification": "OPEN",
+  "portableDryAggregate": [
+    248,
+    "originalCOM",
+    "originalFullInertia"
+  ],
+  "portableMassMaximumKg": 372.5,
+  "portableNoVentOrAddedPaidPairs": true,
+  "portableTemperatureIsNewAssumption": "190K frozen body/gas,185K sublimator",
+  "pressureRangePascals": [
+    60000,
+    150000
+  ],
+  "scope": "New candidate engineering acceptance, not observations or actual operation receipts"
+}

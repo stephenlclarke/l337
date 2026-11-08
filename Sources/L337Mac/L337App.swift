@@ -1266,6 +1266,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, NSMe
   private func show(_ error: Error) { NSAlert(error: error).runModal() }
 }
 
+@main
 public struct L337App {
   @MainActor public static func main() async throws {
     if let index = CommandLine.arguments.firstIndex(of: "--validate-commander-save") {

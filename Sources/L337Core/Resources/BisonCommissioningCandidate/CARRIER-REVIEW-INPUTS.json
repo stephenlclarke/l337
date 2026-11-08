@@ -1,0 +1,36 @@
+{
+  "baseCommit": "a81bba23c8114fd6441f01fe7afaa53d749be5fc",
+  "files": [
+    {
+      "bytes": 13233,
+      "path": "evaluate-thermal-a81.py",
+      "sha256": "09f56cbc0dc910a462b886859ac5937d83ea3d96ea406fb6356b80d655e769f9",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/evidence/BISON-COMMISSIONING-CORRECTION-a81bba23/MBA/evaluate-thermal.py"
+    },
+    {
+      "bytes": 8600,
+      "path": "thermal-design.json",
+      "sha256": "71008ed226ec826ea5992fb5407f78c07146cc38217e42ff43e016a14a8ec3fc",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/evidence/BISON-COMMISSIONING-CORRECTION-a81bba23/MBA/thermal-design.json"
+    },
+    {
+      "bytes": 14568,
+      "path": "material-cavity-candidate.json",
+      "sha256": "f82ab776c13b30ac128e0f5c0411bb6815c04304382d80900c8b8eafb95dee32",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/evidence/BISON-COMMISSIONING-CORRECTION-a81bba23/MBA/material-cavity-candidate.json"
+    },
+    {
+      "bytes": 313350,
+      "path": "Bison-v2.json",
+      "sha256": "48c747bffefc6abccee84e9eacaea361f318fe3afd6c52f82ce463a34b648a5e",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/evidence/BISON-COMMISSIONING-CORRECTION-a81bba23/MBA/inputs/Bison-v2.json"
+    },
+    {
+      "bytes": 3579,
+      "path": "thermal-results-a81.json",
+      "sha256": "3351b4057462c178a1b1b7e4b6b342dc0b9fcf812bf3be603aedcb8c6f9c92f1",
+      "source": "/Users/sclarke/Library/EliteNativeCI/fleet-authoring/evidence/BISON-COMMISSIONING-CORRECTION-a81bba23/MBA/thermal-results.json"
+    }
+  ],
+  "scope": "Same-source carrier first-law review correction only"
+}

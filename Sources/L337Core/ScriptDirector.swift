@@ -170,6 +170,9 @@ extension Game {
     if NativeBorrowedVoiceDefinition.applies(pack) {
       if let reason = borrowedVoiceUnavailable(pack) { return reason }
     }
+    if NativeTitheCommissionDefinition.applies(pack) {
+      if let reason = titheCommissionUnavailable(pack) { return reason }
+    }
     if NativeUnderTowDefinition.applies(pack) {
       if let reason = underTowUnavailable(pack) { return reason }
     }
@@ -630,6 +633,9 @@ extension Game {
     }
     guard !NativeBorrowedVoiceDefinition.applies(pack) else {
       throw MissionPackError("Review Dain's actual Borrowed Voice investigation at Taledea; verify the original visit history first.")
+    }
+    guard !NativeTitheCommissionDefinition.applies(pack) else {
+      throw MissionPackError("Use Voss's actual Rakenor desk and explicitly confirm the original permanent-mark commission.")
     }
     guard !NativeUnderTowDefinition.applies(pack) else {
       throw MissionPackError("Review Penn's actual Under Tow commission at Luera; collect the original separately.")
@@ -1719,6 +1725,7 @@ extension Game {
     if let entry = memoryAtlasGalleryEntry(pack) { return entry }
     if let entry = quietChoirGalleryEntry(pack) { return entry }
     if let entry = borrowedVoiceGalleryEntry(pack) { return entry }
+    if let entry = titheCommissionGalleryEntry(pack) { return entry }
     if let entry = underTowGalleryEntry(pack) { return entry }
     if let entry = assemblyOfOrbitsGalleryEntry(pack) { return entry }
     if pack.manifest.providerContract != nil {
@@ -1890,6 +1897,7 @@ extension Game {
     if let entry = memoryAtlasMissingGalleryEntry(state) { return entry }
     if let entry = quietChoirMissingGalleryEntry(state) { return entry }
     if let entry = borrowedVoiceMissingGalleryEntry(state) { return entry }
+    if let entry = titheCommissionMissingGalleryEntry(state) { return entry }
     if let entry = underTowMissingGalleryEntry(state) { return entry }
     if let entry = assemblyOfOrbitsMissingGalleryEntry(state) { return entry }
     let pledged = commander.scriptState.pledgeLedger?.receipt(instance: state.id) != nil

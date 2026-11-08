@@ -1,0 +1,125 @@
+{
+  "acceptedIncrement": 0,
+  "actualObservations": [],
+  "artifacts": [
+    {
+      "bytes": 1242,
+      "path": "FIRST-CRITERIA.json",
+      "sha256": "eed2a76a2ef1194d3bdb3e914f185d9035d0f05ffb8c79828bc7cc35e0429d84"
+    },
+    {
+      "bytes": 1182,
+      "path": "ADOPTED-CRITERIA.json",
+      "sha256": "1460d4dfad9dae08c2d54ea3dcdd7cd92f6a0204b84c62dd6215303b8654d3e9"
+    },
+    {
+      "bytes": 3621,
+      "path": "INPUTS.json",
+      "sha256": "5b680b4c7d7d837c6a3538ee4cfdc8ab2631527ade4e58885d2bfb439cdd8264"
+    },
+    {
+      "bytes": 8592,
+      "path": "build-material-cavity.py",
+      "sha256": "cd901433589d871d2d57b6e8dc3b47149ad6b9310d14cef0ebc4e83d0594e66e"
+    },
+    {
+      "bytes": 4731,
+      "path": "fit-material-moments.py",
+      "sha256": "2709711f4041b15a4c9e246ed8270681644e1abee915b91e8cb865a7469be74b"
+    },
+    {
+      "bytes": 1847,
+      "path": "build-radiator.py",
+      "sha256": "85a83bf8878dbdea5ff1afae6d5a80306341b928a0f113aa688a96826de89aeb"
+    },
+    {
+      "bytes": 13865,
+      "path": "evaluate-thermal.py",
+      "sha256": "704ac7c7c3116aaa18dac1c3d4b47e2e48cc00ebdc64ceaf3ce49918f4c2dfff"
+    },
+    {
+      "bytes": 17355,
+      "path": "test-correction.py",
+      "sha256": "92a8a3592a6fe1c3ec3dd093ff37eee44b3485c601f63ad087f0213524fd14e7"
+    },
+    {
+      "bytes": 14568,
+      "path": "material-cavity-candidate.json",
+      "sha256": "f82ab776c13b30ac128e0f5c0411bb6815c04304382d80900c8b8eafb95dee32"
+    },
+    {
+      "bytes": 6020,
+      "path": "material-moment-fit.json",
+      "sha256": "7d823e0af929b462bfa2d83608b471c7bdafdfe868e569e8a3b89b94c4a77973"
+    },
+    {
+      "bytes": 1878,
+      "path": "radiator-source-patch.json",
+      "sha256": "7955278721725babe2c1458c1ffa0874ffb8e2a7c2911b29adfb1c3ef50b4385"
+    },
+    {
+      "bytes": 8600,
+      "path": "thermal-design.json",
+      "sha256": "71008ed226ec826ea5992fb5407f78c07146cc38217e42ff43e016a14a8ec3fc"
+    },
+    {
+      "bytes": 3926,
+      "path": "thermal-results.json",
+      "sha256": "e0b1b1dc9f1d26ed53e153f9019b10c706ae17f1ed43e2ddb2d1f9f5a3a80727"
+    },
+    {
+      "bytes": 6275,
+      "path": "finite-operation-requirements.json",
+      "sha256": "4b27bcc08467c9159ccb7e67348cae7baca23d939357129fd9245695d04e515a"
+    },
+    {
+      "bytes": 1629,
+      "path": "source-physical-delta.json",
+      "sha256": "1568bf7a9092c1c2c9fd46b33077a6b5b4fb39d267c15b592e98d9ae53c8f671"
+    },
+    {
+      "bytes": 4420,
+      "path": "changed-load-contact-results.json",
+      "sha256": "cece3a51c4eacbae20b1901aa1f34b416519214e6371ffcd8c406a8a56f05c3e"
+    },
+    {
+      "bytes": 812,
+      "path": "negative-controls.json",
+      "sha256": "11587384c985d33010b4619395130a18e8b49e8686650adfc825629c081bb7f0"
+    },
+    {
+      "bytes": 126,
+      "path": "correction-test-results.json",
+      "sha256": "3e6421ae17a5abf7372c2cecedd4a7a8cddd61f9a2a1eebc7d1be6e9bf1b18d9"
+    },
+    {
+      "bytes": 4275,
+      "path": "test-carrier-energy.py",
+      "sha256": "9431b455450c9b8377ee390dc2c7d24bdddcc5bac7ea89a1154947f140d1eb95"
+    },
+    {
+      "bytes": 1673,
+      "path": "CARRIER-REVIEW-INPUTS.json",
+      "sha256": "634cb00517ade81d3785775a0d448356f649f0ba918098d32c05b577c140fee3"
+    },
+    {
+      "bytes": 380,
+      "path": "review-correction-controls.json",
+      "sha256": "3dcdf108f22c146e8bd4f9aeefee088522f605786a756cf578b02306a31266d3"
+    },
+    {
+      "bytes": 123,
+      "path": "review-correction-test-results.json",
+      "sha256": "3a47a5724ea20f6fdbb88f725d6110ea3bc47ccb95d12546e61b9e499213328c"
+    }
+  ],
+  "baseBisonSourceSHA256": "48c747bffefc6abccee84e9eacaea361f318fe3afd6c52f82ce463a34b648a5e",
+  "baseCommissioningSHA256": "574c69e938a2d801713b1c4292b9146609b95f6b7c5656c0d64e12dcde8fa683",
+  "id": "SH005-finite-commissioning-candidate-v3",
+  "qualifiedBirth": false,
+  "reviewCorrection": "a81 fixed42W carrier debit: all electrical energy assigned to warm-side hull heat; old ledger rejected; unaffected proofs frozen/reused",
+  "sharedRuntimeOrShippingResourceChanges": false,
+  "status": "NEW_ENGINEERING_SOURCE_NOT_QUALIFIED_OR_OBSERVED",
+  "supersedesAuthoredCommissioningInputsNotRecoveredHumanRequirements": true,
+  "unaffectedBaseProofCommit": "a81bba23c8114fd6441f01fe7afaa53d749be5fc"
+}

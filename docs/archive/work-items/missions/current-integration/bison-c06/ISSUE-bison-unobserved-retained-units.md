@@ -1,0 +1,9 @@
+# Actual Bison commissioning is blocked by missing physical inputs
+
+The exact 7d94 commissioning source requires thirteen private actual unit identities and retained pressure, gas, thermal, seal and operative observations. Its expected values explicitly do not prove those observations. Existing runtime body/profile records have no preconditioned thermal stock, temperature or thermal energy for the twelve original bodies. The source requires preconditioned 190 K stock and explicitly denies that 120 kJ startup supplies ambient-to-cryostatic cooling.
+
+Required thermal inputs remain absent: body/gas/hardware heat capacities, heat ingress, refrigeration or COP and power allocation, plus actual preconditioning and measurement operations. Actual finite O2/N2 source/transfer, containment and seal/circulation/equalisation/isolation test operations and their work/time/leak budgets are also absent. The portable pressure capacity is an explicit lumped proposal; exactInnerWallAndCentreOnlyHardwareVolumeCertificate is false. These are physical-source and runtime-owner needs, not a human approval gate.
+
+The finite service clock starts at actual-complete-configuration-birth-issue.issuedAt. A provisional actor allocation has no such complete issue. Neither its timestamp nor an expected battery budget may silently become an actual service clock or observed store. Full positive commissioning cannot be produced from the supplied inputs without inventing state or physics.
+
+The useful independent subset is private UNOBSERVED unit retention, monotone actual retention time, strict current-wire reconciliation and atomic refusal of unsupported service/commissioning. This supplies no new hardware, people, gas, charge, operative flag, seal, pressure or receipt. The actual native body must still refuse its first snapshot while qualification is missing.

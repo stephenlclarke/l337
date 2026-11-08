@@ -1,0 +1,48 @@
+{
+  "status": "SOURCE_REQUIREMENTS_ONLY_NO_ACTUAL_OPERATION_OR_RUNTIME_AUTHORITY",
+  "actualObservations": [],
+  "bodyBoundary": {
+    "reference": "distributed pad upper face, with the specified material and heat-spreading conditions",
+    "coreSkinContactCryobiologyQualified": false,
+    "arbitraryLocalHeatFluxQualified": false
+  },
+  "qualificationRequired": [
+    "Pure propane charge and continuous density/Cp/viscosity/conductivity/EOS bounds over actual pressure/temperature history; no dissolved gas or cavitation",
+    "Nitrogen compressibility, thermal equilibrium, accumulator expansion/reserve and actual separator deformation/profile/strength/seals",
+    "Pad/bonds, aluminium panel conduction/spreading, pressure integrity, restraint support and machined cradle strength",
+    "Pinned steel plate integrity, sealed gas vents, actual manifold distribution and all pressure-loss bounds",
+    "Manufacture and joint conductivity of the 0.2 mm matrix, pore gas conductivity and distributed CO2 population through depletion",
+    "At least half the counted matrix area active, specified gas path length/shape, collector/vent continuity and no local dryout or obstruction",
+    "Pump curve/efficiency/rotor/passages, valve flow authority, control stability, temperature/pressure sensing and all heat destinations",
+    "Actual preparation/startup temperature, heat timing, source stock, seals, respiration, commissioning and carrier operation authority"
+  ],
+  "quietTransition": {
+    "maximumSecondsUnchanged": 1,
+    "actualQuietOrSettledStateObserved": false,
+    "requirements": [
+      "Measure or resolve actual liquid/rotor/valve/diaphragm P and L before stopping",
+      "Conserve total P and L through internal stops, transferring fluid/rotor momentum to the body; no velocity reset",
+      "Include motor, viscous and stop dissipation in the unchanged electrical/thermal ledger",
+      "Resolve actual pump/valve stop and residual fluid motion, local temperature excursion and pressure transients within the quiet bound",
+      "Use actual evolving mass distribution in full tensors and dense unilateral/contact/work history; nominal static source states are not admission evidence"
+    ],
+    "closedLoopIdentity": "P = massFlow * integral(dr) = 0 for an ideal steady closed circuit; L = massFlow * integral(r cross dr) need not be zero",
+    "nominalReferenceOnly": "Two flat-diaphragm, microcell-population, quiescent phase configurations; no actual profile or quiet grant"
+  },
+  "ownership": {
+    "physicalSourceAuthor": "G4 on MBA",
+    "maintainedRuntimeSaveConsumers": "MC1",
+    "nativeExecution": "G1 only",
+    "runtimeChangesInThisSlice": false,
+    "shippingResourceChangesInThisSlice": false,
+    "playableIncrement": 0
+  },
+  "custody": {
+    "originalOperatingRoles": 12,
+    "carrierBodies": 11,
+    "carrierCell7Empty": true,
+    "original7OnlyFrozenNewt": true,
+    "privateUnitsRemainUnobserved": true,
+    "identityConsentAwakeFitnessOrAuthorityGranted": false
+  }
+}

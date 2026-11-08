@@ -1,0 +1,91 @@
+{
+  "availableForecapSquareMetres": 0.5702958448753463,
+  "matchingFiniteWallPatchMassKg": 2.94233763795712,
+  "patches": [
+    {
+      "areaSquareMetres": 0.003051523545706371,
+      "materialOwner": "ceramic-pressure-shell",
+      "sourceFaceIndex": 82,
+      "unchangedSourceFaceVertices": [
+        36,
+        37,
+        38
+      ],
+      "verticesMetres": [
+        [
+          0.4547368421052631,
+          0.0,
+          1.2
+        ],
+        [
+          0.39473684210526316,
+          0.20210526315789473,
+          1.2
+        ],
+        [
+          0.31578947368421056,
+          0.36631578947368426,
+          1.2
+        ]
+      ]
+    },
+    {
+      "areaSquareMetres": 0.11567867036011084,
+      "materialOwner": "ceramic-pressure-shell",
+      "sourceFaceIndex": 83,
+      "unchangedSourceFaceVertices": [
+        36,
+        38,
+        39
+      ],
+      "verticesMetres": [
+        [
+          0.4547368421052631,
+          0.0,
+          1.2
+        ],
+        [
+          0.31578947368421056,
+          0.36631578947368426,
+          1.2
+        ],
+        [
+          -0.3157894736842106,
+          0.36631578947368426,
+          1.2
+        ]
+      ]
+    },
+    {
+      "areaSquareMetres": 0.031269806094182784,
+      "materialOwner": "ceramic-pressure-shell",
+      "sourceFaceIndex": 84,
+      "unchangedSourceFaceVertices": [
+        36,
+        39,
+        40
+      ],
+      "verticesMetres": [
+        [
+          0.4547368421052631,
+          0.0,
+          1.2
+        ],
+        [
+          -0.033996782967784356,
+          0.2323487725757111,
+          1.2
+        ],
+        [
+          -0.08407194947117025,
+          0.12819242624866817,
+          1.2
+        ]
+      ]
+    }
+  ],
+  "rendererAndCollisionUnchanged": true,
+  "requestedSquareMetres": 0.15,
+  "status": "PASS_EXACT_SOURCE_PATCH_AREA",
+  "thermalMaterialOrViewQualified": false
+}

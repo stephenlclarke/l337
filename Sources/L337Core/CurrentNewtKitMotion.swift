@@ -35,11 +35,12 @@ extension CurrentNewtKitSource {
 
   private func terms(at elapsed: Double, extra: [Mass]) -> Terms? {
     let p = phase(elapsed: elapsed)
-    var parts = movingMasses(p)
+    let moving = movingMasses(p, people: [])
+    var parts = moving
     parts += extra.map { .init(properties: $0, relativeVelocity: .init(0, 0, 0)) }
     guard let whole = CurrentNewtKitMass.combined(parts.map(\.properties)),
       let parent = CurrentNewtKitMass.combined(
-        Array(parts.prefix(1 + retainedParts.count)).map(\.properties) + extra)
+        Array(moving.dropLast()).map(\.properties) + extra)
     else { return nil }
     let rate = parts.reduce(Vector3(0, 0, 0)) {
       $0 + $1.relativeVelocity * ($1.properties.massKilograms / whole.massKilograms)
@@ -58,12 +59,23 @@ extension CurrentNewtKitSource {
   func motion(_ a: CurrentNewtKitStock.Actuation, at time: Double) -> Motion? {
     guard time.isFinite, time >= a.startedAt, time <= a.unlockAt + 1e-9,
       let model = loadModel, model.matchesInventory(a.load),
-      let extra = model.masses(a.load), let beginning = terms(at: 0, extra: extra),
+      let inventory = model.masses(a.load), let people = currentParentPeople(a.load),
+      let beginning = terms(at: 0, extra: inventory + people.map(\.massInCarrier)),
       a.initialParent.structurallyValid,
       a.initialParent.angularVelocity.length <= maximumInitialAngularSpeed
     else { return nil }
     let elapsed = min(duration, time - a.startedAt)
+    let extra = inventory + people.map(\.massInCarrier)
     let initial = a.initialParent
+    if dropDuration == 0 && time == a.startedAt {
+      let offset = initial.pose.orientation.apply(podOrigin)
+      let pod = State(pose: .init(position: initial.pose.position + offset,
+        orientation: initial.pose.orientation), velocity: initial.velocity
+          + initial.angularVelocity.cross(offset), angularVelocity: initial.angularVelocity)
+      return .init(parent: initial, pod: pod, parentMass: beginning.parentMass,
+        podMass: podMass, assemblyMass: beginning.mass, workJoules: 0,
+        charges: charges(at: time, actuation: a))
+    }
     let initialLocalOmega = local(initial.angularVelocity, in: initial.pose.orientation)
     let worldSpin = initial.pose.orientation.apply(
       CurrentNewtKitMass.product(beginning.mass.inertiaKgM2, initialLocalOmega))

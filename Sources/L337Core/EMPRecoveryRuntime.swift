@@ -37,11 +37,18 @@ extension Game {
     if binding == nil, let physical = body.physical {
       let elapsed = now - record.hull.physicalTime
       guard elapsed.isFinite, elapsed >= 0 else { return false }
-      body.position = body.position + physical.velocity * elapsed
-      body.orientation = RelativeWorkController.rotated(
-        body.orientation,
-        omega: physical.angularVelocity, delta: elapsed)
-      body.rotation += body.rotationRate * elapsed
+      if physical.currentNewtKitStock != nil {
+        if elapsed > 0 {
+          guard coastCurrentNewtArchiveObject(&record.hull, to: now) else { return false }
+          body = record.hull.body
+        }
+      } else {
+        body.position = body.position + physical.velocity * elapsed
+        body.orientation = RelativeWorkController.rotated(
+          body.orientation,
+          omega: physical.angularVelocity, delta: elapsed)
+        body.rotation += body.rotationRate * elapsed
+      }
     }
     guard var physical = body.physical, var npc = physical.npc,
       let catalogue = physical.catalogueShipID, npc.resources?.valid == true,
@@ -129,6 +136,9 @@ extension Game {
       body.physical?.angularVelocity = snapshot.angularVelocity
       body.physical?.laserCooldown = snapshot.laserCooldown
       body.physical?.catalogueShipID = snapshot.catalogueShipID
+      guard CurrentNewtKitStock.permitsTransition(from: body.physical?.currentNewtKitStock,
+        to: snapshot.currentNewtKitStock) else { return false }
+      body.physical?.currentNewtKitStock = snapshot.currentNewtKitStock
       record.hull = .init(body: body, pose: ShipPose(), time: snapshot.physicalTime)
       record.hull.binding = nil
     } else if commander.npcPersistence.terminalReason(for: record.source) == nil {
@@ -136,11 +146,17 @@ extension Game {
       guard elapsed.isFinite, elapsed >= 0, let physical = record.hull.body.physical else {
         return false
       }
-      record.hull.body.position = record.hull.body.position + physical.velocity * elapsed
-      record.hull.body.orientation = RelativeWorkController.rotated(
-        record.hull.body.orientation,
-        omega: physical.angularVelocity, delta: elapsed)
-      record.hull.body.rotation += record.hull.body.rotationRate * elapsed
+      if physical.currentNewtKitStock != nil {
+        if elapsed > 0 {
+          guard coastCurrentNewtArchiveObject(&record.hull, to: now) else { return false }
+        }
+      } else {
+        record.hull.body.position = record.hull.body.position + physical.velocity * elapsed
+        record.hull.body.orientation = RelativeWorkController.rotated(
+          record.hull.body.orientation,
+          omega: physical.angularVelocity, delta: elapsed)
+        record.hull.body.rotation += record.hull.body.rotationRate * elapsed
+      }
       if var resources = physical.npc?.resources {
         if var reserve = resources.electrical {
           guard

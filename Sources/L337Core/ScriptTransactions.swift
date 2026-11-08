@@ -42,6 +42,7 @@ extension GameRuntime {
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary
   ) throws -> NativeSavePreparation {
     try Self.requireGalleryFileAccess(url, namespace: namespace)
+    let originalJournal = candidate.commander.savedBisonUnitAllocations
     // Both publication paths pin current policy before choosing the save schema.
     try candidate.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
     if candidate.commander.scriptState.calendarLedger == nil {
@@ -58,6 +59,7 @@ extension GameRuntime {
     candidate.inductionUtilityWorkRuntime.dirty = false
     candidate.inductionUtilityWorkRuntime.publishedSeconds =
       candidate.inductionUtilityQualifiedSeconds
+    guard candidate.commander.savedBisonUnitAllocations == originalJournal else { throw SaveError.invalidCommander }
     return try Self.prepareNativeSaveState(
       candidate, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
   }
@@ -69,7 +71,8 @@ extension GameRuntime {
     navigationBinding: ScriptNavigationTradeBinding?
   ) throws -> AlienStoragePublication? {
     try ScriptSaveStore.write(
-      commander: prepared.commander, world: prepared.game.scriptWorldSave, to: url,
+      commander: prepared.commander,
+      world: try BisonUnitJournalSave.preparedWorld(prepared.game.scriptWorldSave, commander: prepared.commander), to: url,
       scope: namespace == nil ? "commander" : "gallery",
       exclusive: exclusive, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary,
       navigationBinding: navigationBinding)
@@ -152,6 +155,7 @@ extension GameRuntime {
   static func writeCommander(
     _ candidate: inout Game, to url: URL, navigationBinding: ScriptNavigationTradeBinding? = nil
   ) throws {
+    let originalJournal = candidate.commander.savedBisonUnitAllocations
     try candidate.commander.prepareEquipment()
     try candidate.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
     if (candidate.requiresScriptDurability || candidate.commander.usesEconomyMiningSaveVersion
@@ -165,6 +169,7 @@ extension GameRuntime {
       }
     }
     candidate.persistScriptActors()
+    guard candidate.commander.savedBisonUnitAllocations == originalJournal else { throw SaveError.invalidCommander }
     let prepared = try Self.prepareNativeSaveState(candidate)
     try writePreparedCommander(
       &candidate, prepared: prepared, to: url, navigationBinding: navigationBinding)
@@ -178,7 +183,8 @@ extension GameRuntime {
     var alienPublication: AlienStoragePublication?
     if prepared.game.requiresScriptDurability {
       alienPublication = try ScriptSaveStore.write(
-        commander: prepared.commander, world: prepared.game.scriptWorldSave, to: url,
+        commander: prepared.commander,
+        world: try BisonUnitJournalSave.preparedWorld(prepared.game.scriptWorldSave, commander: prepared.commander), to: url,
         scope: prepared.game.isMissionTrial ? "gallery" : "commander",
         exclusive: candidate.pendingNewSaveDestination == url, navigationBinding: navigationBinding)
     } else {

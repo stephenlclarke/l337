@@ -1,0 +1,5 @@
+# fix(save): join original Tithe commission validation to current archives
+
+Add the optional ScriptInstance commission leaf and required current save/read/lexical/Commander joins over reviewed 127-path source. Preserve existing Bison checkpoints, C06 sale/Newt schema projection, every lexical guard and all current primary typed reads. Game changes only the two required validator calls. The native leaf limit and original content identity remain unchanged; native definitions and content stay with their Researcher owner.
+
+Two methods/six cases cover legitimate pending-journal cold load, actual unissued-case transaction rollback, and rehashed detached/escaped claims with file/state preservation. Source is UNCOMPILED and tests UNRUN. No desk contact, positive commission, consent, mark, stock or completion is issued; positive commissioning remains blocked by the missing real source. Combine these exact owned hooks with the Researcher's implementation for the single whole-packet review and G1 execution, without reapplying or overwriting old shared files.

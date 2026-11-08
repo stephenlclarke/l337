@@ -189,7 +189,11 @@ public struct EncounterDirector: Equatable, Codable, Sendable {
       {
         pool.append((baseline.ship.id, baseline.ship.catalogue.encounterWeight(for: .trader), nil))
       }
-      pool += sources.map { ($0.ship.id, $0.ship.catalogue.encounterWeight(for: .transporter), nil) }
+      pool += sources.map { source in
+        let kit = source.ship.id == "SH005" ? CurrentNewtKitSource.bison : nil
+        return (source.ship.id, source.ship.catalogue.encounterWeight(for: .transporter),
+          kit?.sourceQualifiedForBirth == true ? kit?.configuration : nil)
+      }
       if let kit = CurrentNewtKitSource.current, kit.sourceQualifiedForBirth,
         let equipped = OriginalFleetRuntimeHullSource.source(for: "SH029"),
         equipped.permitsAmbientTrader(context: context, position: positions[0])

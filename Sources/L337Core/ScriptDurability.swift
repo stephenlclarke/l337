@@ -3,6 +3,7 @@ import Foundation
 extension Game {
   /// Actual retained feature state; canonical native inventory and installed library are not triggers.
   public var requiresScriptDurability: Bool {
+    if nativeDurabilityBison() { return true }
     if nativeDurabilityWatcher() { return true }
     if nativeDurabilityPeople() { return true }
     if nativeDurabilityUtility() { return true }

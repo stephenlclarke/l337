@@ -1,0 +1,126 @@
+import Foundation
+
+/// Finite intrinsic dry source for SH078. It is a calculator, never a live actor or admission credential.
+struct OriginalOryxVoyagerPhysicalSource: Sendable {
+  static let id = "SH078"
+  static let fileName = "SH078-finite-dry-source.json"
+  static let byteCount = 12809
+  static let sha256 = "5d5b9d5c3c0333f8081fc6f82a765fc4a9bd91e262c804e64dc5ceeb08e8bdba"
+
+  typealias Mass = OriginalFiniteDryMass
+  typealias ImpulseResponse = OriginalFiniteDryImpulseResponse
+
+  private struct Part: Decodable, Sendable {
+    let id: String
+    let massKg: Double
+    let centreMetres: [Double]
+    let dimensionsMetres: [Double]
+    let originalHardwareAllocationIndex: Int
+  }
+
+  private struct Document: Decodable, Sendable {
+    let schemaVersion: Int
+    let id: String
+    let name: String
+    let status: String
+    let r3SHA256: String
+    let engineeringSHA256: String
+    let resourceSHA256: String
+    let nativeSourceSHA256: String
+    let coordinateUnits: String
+    let metresPerSourceUnit: Double
+    let nativeVertices: Int
+    let nativeTriangles: Int
+    let finiteIntrinsicHardware: [Part]
+    let emptyDryReference: Mass
+    let emptyStateOnly: Bool
+    let peopleOrFuelCargoEquipmentGranted: Bool
+    let actualObservations: [String]
+    let nativeEvidenceQualified: Bool
+    let materialsOrMechanismFunctionQualified: Bool
+    let operatingAuthorityGranted: Bool
+  }
+
+  let emptyDry: Mass
+  let nativeSourceSHA256: String
+  let specificationSHA256: String
+
+  private init(emptyDry: Mass, nativeSourceSHA256: String, specificationSHA256: String) {
+    self.emptyDry = emptyDry
+    self.nativeSourceSHA256 = nativeSourceSHA256
+    self.specificationSHA256 = specificationSHA256
+  }
+
+  private static let resources: Bundle = Bundle.main.resourceURL.flatMap {
+    Bundle(url: $0.appendingPathComponent("L337_L337Core.bundle"))
+  } ?? Bundle.module
+
+  static var folder: URL { resources.resourceURL!.appendingPathComponent("OryxVoyagerPhysical") }
+
+  static let current: Self? = {
+    guard let source = try? OriginalFleetCurrentHullSource(id: id) else { return nil }
+    return load(from: folder, source: source)
+  }()
+
+  static func load(from directory: URL, source: OriginalFleetCurrentHullSource) -> Self? {
+    let file = directory.appendingPathComponent(fileName)
+    guard let facts = try? file.resourceValues(
+      forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey]),
+      facts.isRegularFile == true, facts.isSymbolicLink != true, facts.fileSize == byteCount,
+      let bytes = try? Data(contentsOf: file)
+    else { return nil }
+    return decode(bytes, source: source)
+  }
+
+  static func decode(_ bytes: Data, source: OriginalFleetCurrentHullSource) -> Self? {
+    guard bytes.count == byteCount, ScriptPackLibrary.hash(bytes) == sha256,
+      source.contract.id == id, source.contract.name == "Oryx Voyager",
+      source.model.coordinateUnits == "metres", source.nativeTriangles == 200,
+      source.mesh.vertices.count == 112,
+      let registration = OriginalFleetPhysicalData.registrations[id],
+      let pending = OriginalDetailedHullStage.registration(for: id),
+      let d = try? JSONDecoder().decode(Document.self, from: bytes),
+      d.schemaVersion == 1, d.id == id, d.name == "Oryx Voyager",
+      d.status == "FINITE_INTRINSIC_EMPTY_DRY_SOURCE_NOT_NATIVE_OR_OPERATIONAL_QUALIFICATION",
+      d.r3SHA256 == source.contract.sourceSHA256,
+      d.engineeringSHA256 == registration.sha256,
+      d.resourceSHA256 == pending.resourceSHA256,
+      d.nativeSourceSHA256 == source.model.sourceSHA256,
+      d.coordinateUnits == "metres", d.metresPerSourceUnit == 1,
+      d.nativeVertices == 112, d.nativeTriangles == 200,
+      d.emptyStateOnly, !d.peopleOrFuelCargoEquipmentGranted, d.actualObservations.isEmpty,
+      !d.nativeEvidenceQualified, !d.materialsOrMechanismFunctionQualified,
+      !d.operatingAuthorityGranted, d.finiteIntrinsicHardware.count == 10,
+      Set(d.finiteIntrinsicHardware.map(\.id)).count == 10,
+      d.finiteIntrinsicHardware.allSatisfy({
+        $0.massKg.isFinite && $0.massKg > 0 && $0.centreMetres.count == 3
+          && $0.centreMetres.allSatisfy(\.isFinite) && $0.dimensionsMetres.count == 3
+          && $0.dimensionsMetres.allSatisfy { $0.isFinite && $0 > 0 }
+          && (0..<8).contains($0.originalHardwareAllocationIndex)
+      }),
+      d.emptyDryReference.valid, d.emptyDryReference.massKg == 50196,
+      d.emptyDryReference.massKg == Double(source.engineering.dryMassKilograms)
+    else { return nil }
+    return Self(emptyDry: d.emptyDryReference, nativeSourceSHA256: d.nativeSourceSHA256,
+      specificationSHA256: d.r3SHA256)
+  }
+
+  /// A reference response from rest. This does not assert that an actual body is at rest,
+  /// supply impulse energy, alter any body or include people, cargo, fuel or paid equipment.
+  func responseFromRest(impulse: Vector3, atLocalPoint point: Vector3) -> ImpulseResponse? {
+    emptyDry.responseFromRest(impulse: impulse, atLocalPoint: point)
+  }
+}
+
+extension OriginalHullPhysicalContract {
+  /// Separate finite-mechanism reference. The original engineering budget remains intact;
+  /// neither value is a loaded actor or substitutes for pending native qualification.
+  var finiteOryxVoyagerDrySource: OriginalOryxVoyagerPhysicalSource? {
+    guard id == OriginalOryxVoyagerPhysicalSource.id, metresPerSourceUnit == 1,
+      let finite = OriginalOryxVoyagerPhysicalSource.current,
+      finite.specificationSHA256 == specificationSHA256,
+      finite.nativeSourceSHA256 == model.sourceSHA256
+    else { return nil }
+    return finite
+  }
+}

@@ -1,0 +1,756 @@
+{
+  "actualObservations": [],
+  "compatibility": "Separate finite source reference; original engineering resource/pins and all runtime refusal paths unchanged. No implicit replacement of original point tensor or current actor state.",
+  "coordinateUnits": "metres",
+  "detailedTriangles": 700,
+  "detailedVertices": 376,
+  "emptyDryReference": {
+    "centreMetres": [
+      -5.955472390322156e-17,
+      -0.3135693082184946,
+      -4.664103778607366
+    ],
+    "id": "finite-intrinsic-empty-rhinoceros-trader",
+    "inertiaAboutCentreOfMassKgM2": [
+      8704691.476589266,
+      -0.1269368985134026,
+      1.3338323252758478e-10,
+      -0.1269368985134026,
+      12416236.425951941,
+      479224.2833276131,
+      1.3338323252758478e-10,
+      479224.2833276131,
+      4701705.151136746
+    ],
+    "massKg": 61087.0
+  },
+  "emptyStateOnly": true,
+  "engineeringSHA256": "2b383f5ee2356174eae999eadf563b8fa0b7c2e3c944fa3e8707cb511414aa51",
+  "finiteIntrinsicHardware": [
+    {
+      "centreMetres": [
+        -11.645724793135152,
+        0.0,
+        -18.89075332055904
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          0.9999999999999999,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 8,
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "id": "port-propulsion",
+      "inertiaAboutCentreOfMassKgM2": [
+        75.00000000005821,
+        0.0,
+        0.0,
+        0.0,
+        75.00000000005821,
+        0.0,
+        0.0,
+        0.0,
+        54.00000000001455
+      ],
+      "massKg": 900.0,
+      "materialDensityKgPerCubicMetre": 3125.0000000000005,
+      "nativeComponentIndex": 8,
+      "originalHardwareAllocationIndex": 0,
+      "owningComponentName": "engine_pair/negative side/propulsion casing"
+    },
+    {
+      "centreMetres": [
+        11.645724793135152,
+        0.0,
+        -18.890753320559043
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 11,
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "id": "starboard-propulsion",
+      "inertiaAboutCentreOfMassKgM2": [
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        54.00000000001455
+      ],
+      "massKg": 900.0,
+      "materialDensityKgPerCubicMetre": 3125.0000000000005,
+      "nativeComponentIndex": 11,
+      "originalHardwareAllocationIndex": 1,
+      "owningComponentName": "engine_pair/positive side/propulsion casing"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -1.9613852283174988,
+        -4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999997,
+          1.0,
+          1.0000000000000007
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999997,
+          1.0,
+          1.0000000000000007
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.5,
+        1,
+        1.8
+      ],
+      "id": "electrical-plant",
+      "inertiaAboutCentreOfMassKgM2": [
+        265.0,
+        0.0,
+        0.0,
+        0.0,
+        343.125,
+        0.0,
+        0.0,
+        0.0,
+        203.1250000000009
+      ],
+      "massKg": 750.0,
+      "materialDensityKgPerCubicMetre": 277.77777777777777,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 2,
+      "owningComponentName": "low freight deck"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -1.9613852283174988,
+        6.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.5,
+        0.8,
+        1.6
+      ],
+      "id": "empty-tank-plumbing",
+      "inertiaAboutCentreOfMassKgM2": [
+        47.99999999999909,
+        0.0,
+        0.0,
+        0.0,
+        72.14999999999964,
+        4.547473508864641e-13,
+        0.0,
+        4.547473508864641e-13,
+        43.34999999999923
+      ],
+      "massKg": 180.0,
+      "materialDensityKgPerCubicMetre": 93.74999999999999,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 3,
+      "owningComponentName": "low freight deck"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -0.9,
+        -4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1,
+        0.5,
+        1
+      ],
+      "id": "controls-and-sensors",
+      "inertiaAboutCentreOfMassKgM2": [
+        9.375000000000227,
+        0.0,
+        0.0,
+        0.0,
+        15.000000000000227,
+        0.0,
+        0.0,
+        0.0,
+        9.375000000000199
+      ],
+      "massKg": 90.0,
+      "materialDensityKgPerCubicMetre": 180.0,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 5,
+      "owningComponentName": "low freight deck"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -3.05,
+        -4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          0.9999999999999999,
+          0.9999999999999997,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          0.9999999999999999,
+          0.9999999999999997,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.6,
+        0.4,
+        1
+      ],
+      "id": "empty-equipment-interface",
+      "inertiaAboutCentreOfMassKgM2": [
+        13.533333333332848,
+        0.0,
+        0.0,
+        0.0,
+        41.53333333333285,
+        0.0,
+        0.0,
+        0.0,
+        31.73333333333335
+      ],
+      "massKg": 140.0,
+      "materialDensityKgPerCubicMetre": 218.74999999999997,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 6,
+      "owningComponentName": "low freight deck"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -1.9613852283174993,
+        -8.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1,
+        1,
+        1.4
+      ],
+      "id": "empty-launcher-mechanism",
+      "inertiaAboutCentreOfMassKgM2": [
+        39.466666666663514,
+        0.0,
+        0.0,
+        0.0,
+        39.466666666663514,
+        0.0,
+        0.0,
+        0.0,
+        26.666666666665606
+      ],
+      "massKg": 160.0,
+      "materialDensityKgPerCubicMetre": 114.28571428571429,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 7,
+      "owningComponentName": "low freight deck"
+    },
+    {
+      "centreMetres": [
+        -2.0,
+        -1.961385228317499,
+        0.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999993
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999993
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-01",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.799999999999955,
+        0.0,
+        0.0,
+        0.0,
+        40.000000000000114
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "low freight deck"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -1.961385228317499,
+        0.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-02",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.000000000000114,
+        0.0,
+        0.0,
+        0.0,
+        46.80000000000001,
+        0.0,
+        0.0,
+        0.0,
+        40.000000000000114
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "low freight deck"
+    },
+    {
+      "centreMetres": [
+        2.0,
+        -1.961385228317499,
+        0.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          0.9999999999999991,
+          0.9999999999999996,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          0.9999999999999991,
+          0.9999999999999996,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-03",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.799999999999955,
+        0.0,
+        0.0,
+        0.0,
+        40.000000000000114
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "low freight deck"
+    }
+  ],
+  "generatorSHA256": "691d8fd5951e09b6ce0fd5156f884017b34d87144c5bd4f10a76aa282f5db304",
+  "id": "SH067",
+  "inputSHA256": {
+    "SH067-R3.toml": "18e33608d5ff332934812bfcf40b6f99cafdcc900727a0a5f2090ab183dd15af",
+    "SH067-engineering.json": "2b383f5ee2356174eae999eadf563b8fa0b7c2e3c944fa3e8707cb511414aa51",
+    "SH067-model.json": "bf1744adc072c0c27f0afeb9411bf9447aab3005e7720c07d3da6b33caeee48e",
+    "SH067-ownership.json": "cbee1a1c760f4ee83d1504986db8bf49060428be987c0996086db603e1379896",
+    "SH067-resource.toml": "18b486ffe7d4adceefa606b31bcbc8a0bd4b5c79f40e6faa6c481a8b53052c60"
+  },
+  "materialsOrMechanismFunctionQualified": false,
+  "metresPerSourceUnit": 12.25865767698437,
+  "metresPerSourceUnitExact": "40000/3263",
+  "name": "Rhinoceros Trader",
+  "nativeAdmissionBlocked": true,
+  "nativeComponents": [
+    {
+      "faceCount": 12,
+      "firstFace": 0,
+      "signedVolumeCubicMetres": 3200.5275551580235
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 12,
+      "signedVolumeCubicMetres": 1495.263081209625
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 24,
+      "signedVolumeCubicMetres": 13.495707809892005
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 36,
+      "signedVolumeCubicMetres": 13.495707809892002
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 48,
+      "signedVolumeCubicMetres": 13.495707809892005
+    },
+    {
+      "faceCount": 116,
+      "firstFace": 60,
+      "signedVolumeCubicMetres": 81.41608211381094
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 176,
+      "signedVolumeCubicMetres": 0.4384354980554672
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 188,
+      "signedVolumeCubicMetres": 21.133949414440064
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 200,
+      "signedVolumeCubicMetres": 128.1071905992023
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 244,
+      "signedVolumeCubicMetres": 2.566359512768417
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 288,
+      "signedVolumeCubicMetres": 21.133949414440053
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 300,
+      "signedVolumeCubicMetres": 128.1071905992022
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 344,
+      "signedVolumeCubicMetres": 2.5663595127685195
+    }
+  ],
+  "nativeEvidenceQualified": false,
+  "nativeFaceLimit": 512,
+  "nativeRefusalStage": "nativeEvidencePending",
+  "nativeSourceSHA256": "7cd4727a35a98a558d717bb3f16cf2d92a7bbd20d40f391f31b1854c1fa7736f",
+  "nativeTriangles": 388,
+  "nativeVertices": 220,
+  "operatingAuthorityGranted": false,
+  "originalPointAllocationReference": {
+    "centreMetres": [
+      -1.477395343837891e-17,
+      -0.3126381439368439,
+      -4.596658233844167
+    ],
+    "inertiaAboutCentreOfMassKgM2": [
+      8709291.62799875,
+      -0.12693689851503623,
+      7.69477992657741e-11,
+      -0.12693689851503623,
+      12420229.090443246,
+      485979.3461642578,
+      7.69477992657741e-11,
+      485979.3461642578,
+      4699748.088054929
+    ],
+    "massKg": 61087
+  },
+  "ownershipSHA256": "cbee1a1c760f4ee83d1504986db8bf49060428be987c0996086db603e1379896",
+  "peopleOrFuelCargoEquipmentGranted": false,
+  "preservedR3": {
+    "cargoTonnes": 74,
+    "crewRequired": 3,
+    "equipmentBudgetUnits": 24,
+    "initialPurchasedCabins": 0,
+    "intrinsicCrewPlaces": 3,
+    "nativeAutonomous": false,
+    "utilityMounts": 2
+  },
+  "r3SHA256": "18e33608d5ff332934812bfcf40b6f99cafdcc900727a0a5f2090ab183dd15af",
+  "resourceSHA256": "18b486ffe7d4adceefa606b31bcbc8a0bd4b5c79f40e6faa6c481a8b53052c60",
+  "roundingReserve": {
+    "centreMetres": [
+      -5.955472390322155e-17,
+      -0.31356930821849466,
+      -4.664103778607366
+    ],
+    "id": "explicit-rounding-reserve-at-new-com",
+    "inertiaAboutCentreOfMassKgM2": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      8.604228440844963e-16
+    ],
+    "massKg": 0.68192717085185
+  },
+  "schemaVersion": 1,
+  "showroomSHA256": "bf1744adc072c0c27f0afeb9411bf9447aab3005e7720c07d3da6b33caeee48e",
+  "status": "FINITE_INTRINSIC_EMPTY_DRY_SOURCE_NOT_NATIVE_OR_OPERATIONAL_QUALIFICATION",
+  "stockModel": "Original approved area-mass lamina model retained. This slice makes intrinsic point allocations finite; it does not qualify material thickness, stock overlaps or whole pressure/cargo/free volume.",
+  "targetDetailedLengthMetres": 40,
+  "unchangedStock": {
+    "centreMetres": [
+      -4.736432038356073e-17,
+      -0.27432383195664095,
+      -4.284071248151675
+    ],
+    "id": "unchanged-original-surface-stock",
+    "inertiaAboutCentreOfMassKgM2": [
+      8295560.274018405,
+      -0.12693689851381798,
+      1.1355242690520302e-10,
+      -0.12693689851381798,
+      11767203.864206236,
+      465893.0274484664,
+      1.1355242690520302e-10,
+      465893.0274484664,
+      4450799.498864794
+    ],
+    "massKg": 57606.31807282915
+  }
+}

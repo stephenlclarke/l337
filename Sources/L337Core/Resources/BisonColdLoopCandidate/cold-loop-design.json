@@ -1,0 +1,207 @@
+{
+  "accumulator": {
+    "actualBladderOrPressureObserved": false,
+    "centreMetres": [
+      0,
+      -0.33,
+      -0.25
+    ],
+    "gasCompressibilityRange": [
+      0.9,
+      1.1
+    ],
+    "innerRadiusMetres": 0.048,
+    "maximumWorkingPressurePascals": 1800000,
+    "metalDensityKgPerCubicMetre": 2700,
+    "minimumLiquidReserveCubicMetres": 2.5e-05,
+    "minimumMetalAllowableStressPascals": 100000000,
+    "mountAndValveMassKg": 0.08,
+    "nitrogenMassKg": 0.01,
+    "nitrogenSpecificGasConstant": 296.8,
+    "outerRadiusMetres": 0.05,
+    "shape": "hollow spherocylinder with flexible separating bladder",
+    "straightLengthMetres": 0.1
+  },
+  "actualObservations": [],
+  "allocation": {
+    "baseOccupiedMassKg": 371.5,
+    "bodyPanelPadPumpAccumulatorPipesFromCradleKg": 18,
+    "coldPlatesMatrixAndHeadersFromDewarKg": 5,
+    "maximumOccupiedMassKgUnchanged": 372.5,
+    "newPaidNitrogenStockKg": 0.01,
+    "newPaidPropaneStockKg": 0.945,
+    "sourceActualStocksObserved": false
+  },
+  "bodyPanel": {
+    "actualBodyContactOrCoreThermalTransportObserved": false,
+    "centreMetres": [
+      0,
+      -0.0723,
+      -0.02
+    ],
+    "channelCount": 48,
+    "channelHeightMetres": 0.001,
+    "channelLengthMetres": 1.6,
+    "channelWidthMetres": 0.008,
+    "headerInnerSquareMetres": 0.012,
+    "headerLengthMetres": 0.5,
+    "headerOuterSquareMetres": 0.015,
+    "headersCount": 2,
+    "metalDensityKgPerCubicMetre": 2700,
+    "minimumMetalAllowableStressPascals": 200000000,
+    "minimumMetalConductivityWattsPerMetreKelvin": 100,
+    "outerDimensionsMetres": [
+      0.56,
+      0.0026,
+      1.72
+    ],
+    "padBondMinimumConductivity": 1,
+    "padCoreMinimumConductivity": 2,
+    "padCoreThicknessMetres": 0.0009,
+    "padDensityKgPerCubicMetre": 1000,
+    "padThicknessMetres": 0.001
+  },
+  "coldExchanger": {
+    "actualPoreCoverageOrTransportQualified": false,
+    "gapCellCounts": [
+      9,
+      28
+    ],
+    "gasCollectorDepthMetres": 0.0018,
+    "headerCrossDimensionsMetres": [
+      0.06,
+      0.006
+    ],
+    "headerLengthMetres": 0.23,
+    "headerRibPitchMetres": 0.005,
+    "headerRibThicknessMetres": 0.0005,
+    "headersCount": 2,
+    "innerDimensionsMetres": [
+      0.33,
+      0.13,
+      0.23
+    ],
+    "matrixMetalDensityKgPerCubicMetre": 2700,
+    "matrixPitchMetres": 0.0002,
+    "matrixStrutWidthMetres": 1.6e-05,
+    "maximumCollectorFittingK": 6,
+    "maximumCollectorFrictionDarcyFactor": 0.1,
+    "maximumCollectorPathMetres": 0.4,
+    "maximumGasPathLengthCells": 1,
+    "maximumPinnedPressureLossMultiplier": 2,
+    "minimumActivePoreFraction": 0.5,
+    "minimumCO2GasConductivity": 0.007,
+    "minimumCollectorOutletEffectivePerimeterMetres": 0.024,
+    "minimumFluidOpenWidthFraction": 0.7,
+    "minimumGasPathShapeFactor": 0.3333333333333333,
+    "minimumHeaderOuterWallMetres": 0.001,
+    "minimumMatrixJointFactor": 0.5,
+    "minimumMatrixMetalConductivity": 100,
+    "minimumMatrixPlateContactConductanceWattsPerKelvin": 2000,
+    "minimumPlateAllowableStressPascals": 300000000,
+    "minimumPlateMetalConductivity": 5,
+    "pinPitchMetres": 0.0005,
+    "pinRadiusMetres": 5e-05,
+    "plateCount": 40,
+    "plateFluidGapMetres": 0.0001,
+    "plateMetalDensityKgPerCubicMetre": 8000,
+    "plateSideBorderMetres": 0.002,
+    "plateTotalThicknessMetres": 0.0002,
+    "portLengthMetres": 0.004,
+    "ventCentresXMetres": [
+      -0.155,
+      0.155
+    ],
+    "ventCentresYMetres": [
+      -0.055,
+      0.055
+    ],
+    "ventSealBorderMetres": 0.001,
+    "ventSideMetres": 0.0072
+  },
+  "coolant": {
+    "actualPureChargeOrPhaseObserved": false,
+    "chargedMassKg": 0.945,
+    "coldOperationKelvin": [
+      180,
+      195
+    ],
+    "massFlowKgPerSecond": 0.11,
+    "maximumColdDensityKgPerCubicMetre": 640,
+    "maximumPrepCpJoulesPerKgKelvin": 3000,
+    "maximumViscosityPascalSeconds": 0.0005,
+    "maximumWarmStorageKelvin": 300,
+    "minimumColdNusselt": 4,
+    "minimumCpJoulesPerKgKelvin": 2000,
+    "minimumDensityKgPerCubicMetre": 600,
+    "minimumThermalConductivityWattsPerMetreKelvin": 0.12,
+    "species": "pure liquid propane"
+  },
+  "mainCircuit": {
+    "actualPumpFlowOrEfficiencyObserved": false,
+    "branchInnerSquareMetres": 0.004,
+    "branchLengthMetres": 0.23,
+    "branchOuterSquareMetres": 0.006,
+    "innerSquareMetres": 0.012,
+    "maximumAdapterExtraFluidVolumeCubicMetres": 3e-06,
+    "maximumCentrelineLengthMetres": 2.3,
+    "maximumFittingLossCoefficient": 20,
+    "maximumFrictionDarcyFactor": 0.06,
+    "maximumPumpHeadPascals": 60000,
+    "metalDensityKgPerCubicMetre": 2700,
+    "minimumFixedCircuitFluidVolumeCubicMetres": 0.001425,
+    "minimumMetalAllowableStressPascals": 200000000,
+    "minimumPumpOverallEfficiency": 0.4,
+    "outerSquareMetres": 0.015,
+    "pumpCentreMetres": [
+      -0.07,
+      -0.38,
+      -0.4
+    ],
+    "pumpDisplacedLineLengthMetres": 0.05,
+    "pumpDryMassKg": 0.3,
+    "pumpExternalDimensionsMetres": [
+      0.05,
+      0.05,
+      0.05
+    ],
+    "pumpFluidVolumeCubicMetres": 2e-05
+  },
+  "power": {
+    "allResidualHeatDestination": "cold boundary dump, no stored/exported energy or motor-energy credit",
+    "beaconWatts": 3,
+    "blowerWatts": 5,
+    "controlWatts": 2,
+    "maximumAntiIceWatts": 3.5,
+    "unchangedTotalWatts": 42
+  },
+  "regulator": {
+    "actualMixingFractionOrControlObserved": false,
+    "bypassInnerSquareMetres": 0.008,
+    "bypassLengthMetres": 0.28,
+    "bypassOuterSquareMetres": 0.011,
+    "maximumBypassValveLossCoefficient": 10,
+    "valveCentreMetres": [
+      0.07,
+      -0.27,
+      -0.135
+    ],
+    "valveDryMassKg": 0.08,
+    "valveFluidVolumeCubicMetres": 5e-06,
+    "valveOuterDimensionsMetres": [
+      0.025,
+      0.025,
+      0.025
+    ]
+  },
+  "status": "NEW_FINITE_COLD_LOOP_SOURCE_NOT_QUALIFIED_OR_OBSERVED",
+  "target": {
+    "biologicalCoreOrActualBodyContactQualified": false,
+    "maximumCO2SinkKelvin": 185.5,
+    "maximumColdHeatWatts": 303.6433333333334,
+    "maximumQuietSeconds": 1,
+    "minimumBoundaryConductanceWattsPerKelvin": 80,
+    "minimumHotBoundaryKelvin": 189.5,
+    "nominalColdHeatWatts": 300.8493327414121
+  }
+}

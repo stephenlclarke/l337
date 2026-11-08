@@ -30,7 +30,7 @@ extension Game {
     guard let actor = record.pods[podIndex].binding else { return result }
     guard let body = bodies.first(where: { $0.physical?.identity == actor }),
       body.physical?.currentNewtKitReceipt == receipt,
-      currentOccupiedNewtPodHasCurrentCustody(body), let source = CurrentNewtKitSource.current,
+      currentOccupiedNewtPodHasCurrentCustody(body), let source = CurrentNewtKitSource.source(for: receipt.issue),
       let components = source.components(receipt: receipt, at: interval.start,
         pod: currentNewtBodyState(body)) else { return nil }
     result.append(.init(interval: interval, actor: actor, source: .pod(receipt),

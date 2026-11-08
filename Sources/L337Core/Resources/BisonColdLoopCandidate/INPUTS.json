@@ -1,0 +1,131 @@
+{
+  "baseCommit": "dd85bac509a0de7d98723918bcff5ec1eeafd024",
+  "files": [
+    {
+      "bytes": 313350,
+      "path": "Bison-v2.json",
+      "sha256": "48c747bffefc6abccee84e9eacaea361f318fe3afd6c52f82ce463a34b648a5e",
+      "source": "Frozen dd85 parent packet MBA/inputs/Bison-v2.json"
+    },
+    {
+      "bytes": 49893,
+      "path": "Commissioning-v2.json",
+      "sha256": "574c69e938a2d801713b1c4292b9146609b95f6b7c5656c0d64e12dcde8fa683",
+      "source": "Frozen dd85 parent packet MBA/inputs/Commissioning-v2.json"
+    },
+    {
+      "bytes": 14636,
+      "path": "NIST-propane-15bar.tsv",
+      "sha256": "8a8c3d3889109deaaf84c26b7fc39c5dba772ea979f9206bda7067e79208c526",
+      "source": "MBA primary NIST fluid fetch; request metadata and fetch logs retained in this stage"
+    },
+    {
+      "bytes": 14634,
+      "path": "NIST-propane-18bar.tsv",
+      "sha256": "ba04ec166b6f56ef428cf9ae627d77dcdaa15935bc29877e15ccbcc73175c765",
+      "source": "MBA primary NIST fluid fetch; request metadata and fetch logs retained in this stage"
+    },
+    {
+      "bytes": 2144,
+      "path": "NIST-propane-2bar.tsv",
+      "sha256": "d8de8d8d6ca4eaccf7e68dc08497cbf57669b540a87aabda9a9773ef3e4d5167",
+      "source": "MBA primary NIST fluid fetch; request metadata and fetch logs retained in this stage"
+    },
+    {
+      "bytes": 128962,
+      "path": "NIST-propane-saturation.tsv",
+      "sha256": "51cff4acf2a1e97266ee78e2bfc07c3785ae2d834a248ed9b8a45cc4af8612c4",
+      "source": "MBA primary NIST fluid fetch; request metadata and fetch logs retained in this stage"
+    },
+    {
+      "bytes": 6881,
+      "path": "Newt-engineering.json",
+      "sha256": "3c40451f7c6690059636e1d2baf654e47ea6f4b5ffab6699eee8668f378d2ee4",
+      "source": "Frozen dd85 parent packet MBA/inputs/Newt-engineering.json"
+    },
+    {
+      "bytes": 8132,
+      "path": "Newt-physical.json",
+      "sha256": "0d7cd491b77b6e14016daa8a3c5e622416963870f669f80d63ad3b4d74aaee17",
+      "source": "Frozen dd85 parent packet MBA/inputs/Newt-physical.json"
+    },
+    {
+      "bytes": 27799,
+      "path": "SH040-current.toml",
+      "sha256": "510a2059ce49a7d902c11ca65303264afa8ee103cd1a9e9ad823dbe05fee816c",
+      "source": "Frozen dd85 parent packet MBA/inputs/SH040-current.toml"
+    },
+    {
+      "bytes": 4015,
+      "path": "bed-feed-design.json",
+      "sha256": "13eaddb1bad8461fadcdccd5da65103f869dace23f36e79d0c26042046d81023",
+      "source": "Frozen dd85 parent packet MBA/bed-feed-design.json"
+    },
+    {
+      "bytes": 12591,
+      "path": "bed-feed-results.json",
+      "sha256": "10853a75e688ab55ef919640ee63e1b14fa3238d527f3b9ef7d922c9d942305b",
+      "source": "Frozen dd85 parent packet MBA/bed-feed-results.json"
+    },
+    {
+      "bytes": 29681,
+      "path": "build-bed-feed.py",
+      "sha256": "0cee2015df4ecff2b6504e7d6349fb35daaded4229cc3df413f2b6445d187144",
+      "source": "Frozen dd85 parent packet MBA/build-bed-feed.py"
+    },
+    {
+      "bytes": 8592,
+      "path": "build-material-cavity.py",
+      "sha256": "cd901433589d871d2d57b6e8dc3b47149ad6b9310d14cef0ebc4e83d0594e66e",
+      "source": "dd85bac509a0de7d98723918bcff5ec1eeafd024:docs/fleet-physical/bison-commissioning-correction/build-material-cavity.py"
+    },
+    {
+      "bytes": 2503,
+      "path": "candidate-source.json",
+      "sha256": "37bd629c38ab3ee06f342590053c3d47c067ff41f25a7b27fd2de7c52cd147be",
+      "source": "Frozen dd85 parent packet MBA/candidate-source.json"
+    },
+    {
+      "bytes": 10614,
+      "path": "complete-rigid-source.py",
+      "sha256": "e51da7ad5347f57203176536f1aa4231d221e57604b136dfd2f2d65d664dd7aa",
+      "source": "Frozen dd85 parent packet MBA/complete-rigid-source.py"
+    },
+    {
+      "bytes": 22238,
+      "path": "four-material-reference.py",
+      "sha256": "75a86bbfbee5492f26a732c854f7d66abf9818c19b2f1cf55b1a7e50311de9a9",
+      "source": "Frozen dd85 parent packet MBA/inputs/four-material-reference.py"
+    },
+    {
+      "bytes": 14568,
+      "path": "material-cavity-candidate.json",
+      "sha256": "f82ab776c13b30ac128e0f5c0411bb6815c04304382d80900c8b8eafb95dee32",
+      "source": "Frozen dd85 parent packet MBA/inputs/material-cavity-candidate.json"
+    },
+    {
+      "bytes": 1878,
+      "path": "radiator-source-patch.json",
+      "sha256": "7955278721725babe2c1458c1ffa0874ffb8e2a7c2911b29adfb1c3ef50b4385",
+      "source": "dd85bac509a0de7d98723918bcff5ec1eeafd024:docs/fleet-physical/bison-commissioning-correction/radiator-source-patch.json"
+    },
+    {
+      "bytes": 7414,
+      "path": "rigid-source-delta.json",
+      "sha256": "5d0f03909e4c7899a40dac0f18a8a03e39b68afb0a18c293a9023997b3bbc84f",
+      "source": "Frozen dd85 parent packet MBA/rigid-source-delta.json"
+    },
+    {
+      "bytes": 8600,
+      "path": "thermal-design.json",
+      "sha256": "71008ed226ec826ea5992fb5407f78c07146cc38217e42ff43e016a14a8ec3fc",
+      "source": "Frozen dd85 parent packet MBA/inputs/thermal-design.json"
+    },
+    {
+      "bytes": 3926,
+      "path": "thermal-results.json",
+      "sha256": "e0b1b1dc9f1d26ed53e153f9019b10c706ae17f1ed43e2ddb2d1f9f5a3a80727",
+      "source": "dd85bac509a0de7d98723918bcff5ec1eeafd024:docs/fleet-physical/bison-commissioning-correction/thermal-results.json"
+    }
+  ]
+}

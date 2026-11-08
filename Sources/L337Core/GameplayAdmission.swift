@@ -40,12 +40,21 @@ extension Game {
           continue
         }
         if let existing = bodies.first(where: { $0.physical?.spawnIdentity == request.identity }) {
+          if request.currentNewtKitConfiguration == CurrentBisonWideShoePhysicalSource.configurationID {
+            // This journal version cannot own a published/commissioned actor.
+            receipts.append(.init(request: request.identity, actor: nil, refusal: .unqualifiedOriginalHull))
+            continue
+          }
           receipts.append(
             .init(request: request.identity, actor: existing.physical?.identity, refusal: nil))
           continue
         }
         if let refusal = batchRefusal([request]) {
           receipts.append(.init(request: request.identity, actor: nil, refusal: refusal))
+          continue
+        }
+        if request.currentNewtKitConfiguration == CurrentBisonWideShoePhysicalSource.configurationID {
+          receipts.append(constructReservedBisonBody(request, context: context))
           continue
         }
         guard let actor = commander.flightSimulation.allocateActor() else {
@@ -56,6 +65,25 @@ extension Game {
       }
     }
     return receipts
+  }
+
+  /// Qualified preflight above is unchanged. Only the real journal reserves
+  /// the actor. Physical refusal retains that unobserved reservation; complete
+  /// body construction/publication remains barred until an actual completed
+  /// state owner and its reviewed journal version exist.
+  @inline(never)
+  private mutating func constructReservedBisonBody(
+    _ request: SpawnRequest, context: EncounterContext
+  ) -> SpawnReceipt {
+    do {
+      let owner = try reserveBisonUnobservedUnits(request: request, context: context)
+      try requireBisonUnitCommissioning(owner)
+      // Journal v2 carries no completed-state authority, even if a future
+      // commissioning operation returns. Do not publish an UNOBSERVED owner.
+      return .init(request: request.identity, actor: nil, refusal: .unqualifiedOriginalHull)
+    } catch {
+      return .init(request: request.identity, actor: nil, refusal: .staleContext)
+    }
   }
 
   @inline(never)
@@ -358,7 +386,7 @@ extension Game {
   ) -> AdmissionRefusal? {
     if requests.contains(where: { request in
       if request.currentNewtKitConfiguration != nil,
-        CurrentNewtKitSource.current?.permitsBirth(request, context: context) != true
+        CurrentNewtKitSource.birthSource(for: request, context: context) == nil
       { return true }
       if let id = request.catalogueShipID { return OriginalDetailedHullStage.blocksRuntime(id) }
       return request.hull.isTargetShip && ShipCatalogue.nativeShip(request.hull) == nil

@@ -14,6 +14,38 @@ struct CurrentNewtMechanicalPlan: Sendable {
     let cell: CurrentNewtCellComponentContract
   }
 
+  /// Resolve only the exact issue-selected definitions before entering the
+  /// owning planning frame. Definitions alone grant no stock or birth rights.
+  struct ResolvedSources: Sendable {
+    private let configurations: [String: CurrentNewtKitSource]
+
+    @inline(never)
+    init?(issues: [CurrentNewtKitIssue]) {
+      if issues.isEmpty {
+        // Preserve the original no-stock cold lookup and empty-plan behavior.
+        if let source = CurrentNewtKitSource.current {
+          configurations = [source.configuration: source]
+        } else {
+          configurations = [:]
+        }
+        return
+      }
+      var resolved: [String: CurrentNewtKitSource] = [:]
+      for issue in issues {
+        guard let source = CurrentNewtKitSource.source(for: issue) else { return nil }
+        resolved[issue.configuration] = source
+      }
+      configurations = resolved
+    }
+
+    func source(for issue: CurrentNewtKitIssue) -> CurrentNewtKitSource? {
+      guard let source = configurations[issue.configuration],
+        source.configuration == issue.configuration, source.sourceSHA256 == issue.sourceSHA256,
+        source.parentCatalogueID == issue.birthLoad.catalogueShipID else { return nil }
+      return source
+    }
+  }
+
   let interval: CurrentNewtMechanicalInterval
   let owners: [Owner]
   let proposals: [CurrentNewtMechanicalProposal]
@@ -28,16 +60,14 @@ extension Game {
     -> CurrentNewtMechanicalPlan?
   {
     guard interval.valid, storedFlightSimulation().physicalTime == interval.start else { return nil }
-    guard let source = CurrentNewtKitSource.current else {
-      guard !bodies.contains(where: { $0.physical?.currentNewtKitStock != nil }) else { return nil }
-      return .init(interval: interval, owners: [], proposals: [], drives: [], coasts: [], interruptions: [])
-    }
-    return currentNewtMechanicalPlanAfterSource(interval, source: source)
+    let issues = bodies.compactMap { $0.physical?.currentNewtKitStock?.issue }
+    guard let sources = CurrentNewtMechanicalPlan.ResolvedSources(issues: issues) else { return nil }
+    return currentNewtMechanicalPlanAfterSource(interval, sources: sources)
   }
 
   @inline(never)
   private func currentNewtMechanicalPlanAfterSource(
-    _ interval: CurrentNewtMechanicalInterval, source: CurrentNewtKitSource
+    _ interval: CurrentNewtMechanicalInterval, sources: CurrentNewtMechanicalPlan.ResolvedSources
   ) -> CurrentNewtMechanicalPlan? {
     var owners: [CurrentNewtMechanicalPlan.Owner] = []
     var proposals: [CurrentNewtMechanicalProposal] = []
@@ -46,6 +76,7 @@ extension Game {
     var interruptions: [ActorIdentity] = []
     for body in bodies {
       guard let physical = body.physical, let stock = physical.currentNewtKitStock else { continue }
+      guard let source = sources.source(for: stock.issue) else { return nil }
       let logical: ActorIdentity
       let recovered: Bool
       if let current = physical.empSource {
@@ -62,7 +93,8 @@ extension Game {
         record.isRecovered == recovered, record.hull.binding == physical.identity,
         recovered || record.disableEpisodes.contains(where: { $0.actorBindings.contains(physical.identity) }),
         !recovered || stock.interruptedAt != nil
-          || (stock.phase == .released && stock.work.rodMetres == source.stroke),
+          || (stock.phase == .released && (stock.work.rodMetres == source.stroke
+            || stock.actuation?.parent == physical.identity)),
         record.hull.body.physical?.currentNewtKitStock == stock,
         source.matches(stock, at: interval.start),
         stock.actuation == nil || stock.observedAt == interval.start,
@@ -159,10 +191,10 @@ extension CurrentNewtKitSource {
 
   func loadedParentMass(work: CurrentNewtKitStock.WorkState, load: CurrentNewtKitLoad) -> Mass? {
     guard validWork(work), let model = loadModel, model.matchesInventory(load),
-      let extra = model.masses(load) else { return nil }
+      let extra = model.masses(load), let people = currentParentPeople(load) else { return nil }
     let p = phase(work: work, at: 0, actuation: nil, interrupted: true)
     return CurrentNewtKitMass.combined(
-      Array(movingMasses(p).dropLast()).map(\.properties) + extra)
+      Array(movingMasses(p, people: people.map(\.massInCarrier)).dropLast()).map(\.properties) + extra)
   }
 }
 
@@ -190,9 +222,9 @@ extension Game {
           && time.isFinite && time >= plan.interval.start && time <= plan.interval.end
       }) else { return nil }
     if plan.owners.isEmpty { return result.drives.isEmpty && result.stoppedAt.isEmpty ? [:] : nil }
-    guard let source = CurrentNewtKitSource.current else { return nil }
     guard result.drives.allSatisfy({ outcome in
       guard let drive = plan.drives.first(where: { $0.issue.kitID == outcome.kitID }),
+        let source = CurrentNewtKitSource.source(for: drive.issue),
         outcome.valid(for: drive), source.validWork(outcome.work),
         outcome.impulseOnPod.length <= drive.maximumForceNewtons
           * ((outcome.interruptedAt ?? plan.interval.end) - plan.interval.start) + 1e-6,
@@ -205,6 +237,7 @@ extension Game {
     }) else { return nil }
     var updates: [ActorIdentity: CurrentNewtKitStock] = [:]
     for owner in plan.owners {
+      guard let source = CurrentNewtKitSource.source(for: owner.stock.issue) else { return nil }
       var stock = owner.stock
       if stock.phase == .stowed {
         guard updates[owner.parent] == nil else { return nil }

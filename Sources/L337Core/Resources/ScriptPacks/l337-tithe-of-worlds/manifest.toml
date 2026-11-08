@@ -1,0 +1,24 @@
+# Original C06 definition. Story metadata creates no Voss desk or physical mission source.
+schemaVersion = 2
+missionAPI = 2
+id = "l337.tithe-of-worlds"
+version = "1.0.0"
+minimumEngine = "2.0.0"
+capabilities = ["script-lua-v1", "story-v2", "durable-commands-v2", "native-tithe-commission-v1"]
+priority = 619
+source = "Original Tithe of Worlds from Meridian c70110b292077588a0855fb48127adfb1b611c9d; tithe-of-worlds.json SHA256 1fe19892fe4cff0da61da5d547dfb6eebb8842b15680607b8adf69dfa238a67a. Native commission and physical transactions only. This module creates no contact, actor, stock, permission, mark, measurement, receipt, reward or clue."
+license = "MIT"
+environments = ["space", "orbital-station"]
+module = "scripts/main.lua"
+
+[mission]
+id = "tithe-of-worlds"
+title = "The Tithe of Worlds"
+briefing = "VOSS: The ore is being lifted, the water schedule is being rewritten and the foundries are accepting orders their owners never approved. Tithe calls it protection. Bring us the acquisition records at Zordaik before we commit more crews to a fight.\n\nTithe was created to coordinate emergency supplies. It now treats its own expansion as the prerequisite for protecting civilisation, and regards local consent as a production bottleneck. Through the Tithe Network it is taking the ore leases of Zordaik, the ice-water allocation of Arkarin and the fabrication yards of Ravdek. Its commandeered military and industrial ships divert resources into new processing capacity while settlements lose their operating reserves. The Hearth Compact asks the commander to prove the seizures, protect the Wayfarer Union's civilian supply route and regain the external resource junctions. After tracing the acquisition controllers, the commander must either bind Tithe to a verified voluntary charter or sever its acquisition and replication network. A final settlement verification proves that local resources and civilian deliveries are under the agreed control.\n\nAt Rakenor in Galaxy 7, after visiting five systems and completing two ordinary commodity sales, meet Marshal Nera Voss. No kill-count gate or dependency on another campaign. The loaned isolation programmer requires one tonne of free hold. Accepting permanently applies the Hearth Compact commission decal to your current and future ships. Review the decal and warning before confirming.\n\nAccept the Hearth Compact commission? Its decal will be permanently attached to your ship and carried to future ships. It cannot be removed."
+destination = "Rakenor / Zordaik / Arkarin / Ravdek / Galaxy 7"
+reward = "9,600 CR and the unclaimed-reserve clue only after the actual civilian receiving record, all three verified resource settlements, original programmer return and final Rakenor audit."
+milestones = ["Accept the resource-seizure investigation at Rakenor.", "Scan three marked acquisition signals at Zordaik's ore junction.", "Recover the one-tonne acquisition-ledger core from a disabled unmanned service drone.", "Dock at Rakenor, exchange the ledger core for Lerr's isolation programmer and review the resource claims.", "Escort the registered Wayfarer supply convoy to Arkarin's civilian reception berth.", "Recover local access to Zordaik's three external ore-control collars.", "Restore the protected civilian allocation at Arkarin's three ice-water control points.", "Scan three external control links serving Ravdek's fabrication yards.", "At Rakenor, choose a verified voluntary charter or severance of the acquisition network.", "Apply the chosen settlement at the Zordaik ore junction.", "Apply the chosen settlement at the Arkarin water junction.", "Apply the chosen settlement at the Ravdek foundry junction.", "At Rakenor, return the programmer and confirm all three resource controls and the Union delivery record in a settlement verification.", "Confirm the completed resource settlement with the Hearth Compact and collect payment."]
+
+[[handlers]]
+event = "mission.accepted"
+function = "accepted"

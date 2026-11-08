@@ -34,11 +34,12 @@ struct CurrentNewtMechanicalSegmentResult: Sendable {
 extension Game {
   /// Only validated existing kit clocks can split an already accepted outer interval.
   func nextCurrentNewtMechanicalEndpoint(in interval: CurrentNewtMechanicalInterval) -> Double? {
-    guard interval.valid, let source = CurrentNewtKitSource.current,
+    guard interval.valid,
       let state = commander.savedEMPState else { return nil }
     var next: Double?
     for record in state.records.values where !record.terminal && !record.isRecovered {
       guard let stock = record.hull.body.physical?.currentNewtKitStock,
+        let source = CurrentNewtKitSource.source(for: stock.issue),
         source.matches(stock, at: interval.start), stock.interruptedAt == nil,
         stock.phase == .released || (record.crewAboard > 0
           && record.aboardOrdinals.contains(stock.issue.person.ordinal))
@@ -88,7 +89,7 @@ extension Game {
         else { return false }
         guard let proposal = plan.proposals.first(where: { $0.actor == owner.parent }),
           contacts.stoppedAt[owner.parent] == nil else { return true }
-        return CurrentNewtKitSource.current?.matchesState(currentNewtBodyState(body), proposal.after) == true
+        return CurrentNewtKitSource.source(for: owner.stock.issue)?.matchesState(currentNewtBodyState(body), proposal.after) == true
       }) else { return refused }
     var interrupted: [ActorIdentity] = []
     for owner in plan.owners {
@@ -138,7 +139,7 @@ struct CurrentNewtMechanicalContactScene: Sendable {
 
   func components(at time: Double) -> [CurrentNewtKitComponent]? {
     guard time >= interval.start, time <= interval.end,
-      let source = CurrentNewtKitSource.current, let a = stock.actuation,
+      let source = CurrentNewtKitSource.source(for: stock.issue), let a = stock.actuation,
       let motion = source.motion(a, at: time) else { return nil }
     return source.components(stock: stock, work: source.work(at: time, actuation: a),
       at: time, parent: motion.parent, load: load)
@@ -150,11 +151,11 @@ extension Game {
     interval: CurrentNewtMechanicalInterval) -> CurrentNewtMechanicalContactScene?
   {
     guard interval.valid, commander.flightSimulation.physicalTime == interval.start,
-      let source = CurrentNewtKitSource.current,
       let body = bodies.first(where: { $0.physical?.identity == proposal.actor }),
       let logical = body.physical?.empSource,
       let record = commander.savedEMPState?.records[logical], record.hull.binding == proposal.actor,
       let stock = body.physical?.currentNewtKitStock, stock.phase == .actuating,
+      let source = CurrentNewtKitSource.source(for: stock.issue),
       stock.interruptedAt == nil, stock.observedAt == interval.start,
       record.hull.body.physical?.currentNewtKitStock == stock,
       let a = stock.actuation, source.matches(stock, at: interval.start),

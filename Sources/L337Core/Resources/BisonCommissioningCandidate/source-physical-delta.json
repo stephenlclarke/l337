@@ -1,0 +1,53 @@
+{
+  "actualObservations": [],
+  "canonicalDryAggregatePreserved": true,
+  "canonicalOuterGeometryPreserved": true,
+  "canonicalWallFacetDensityDistributionPreserved": false,
+  "coldCircuitPhaseAndFlowDetails": "Effective homogenized finite envelopes; actual vapor/headspace, mass transfer, working-fluid and heatpipe apparatus qualification OPEN",
+  "freeGasVolumeCubicMetres": 1.4520530167055308,
+  "newFiniteGasMassDistribution": true,
+  "portableStates": [
+    {
+      "centreMetres": [
+        -0.0015568909784820458,
+        -0.04374797974692988,
+        -0.009624301353997899
+      ],
+      "id": "closed-thermal-candidate-0.0",
+      "inertiaAboutCentreOfMassKgM2": [
+        192.52124056817584,
+        0.0011095273822024077,
+        0.005623955103214835,
+        0.0011095273822024007,
+        193.02015589566042,
+        -0.27405551977835324,
+        0.005623955103214835,
+        -0.2740555197783537,
+        50.63657799341508
+      ],
+      "massKg": 371.5
+    },
+    {
+      "centreMetres": [
+        -0.0015568909784820458,
+        -0.03997364472609035,
+        0.021679694198266725
+      ],
+      "id": "closed-thermal-candidate-1.0",
+      "inertiaAboutCentreOfMassKgM2": [
+        203.19882654309086,
+        -0.0010734913731873033,
+        -0.01248205150533901,
+        -0.0010734913731873172,
+        204.35981210066592,
+        1.299195902705031,
+        -0.01248205150533901,
+        1.2991959027050306,
+        50.073014812356895
+      ],
+      "massKg": 371.5
+    }
+  ],
+  "status": "NEW_SOURCE_CANDIDATE_NOT_SHIPPING_OR_OBSERVED",
+  "variableInternalMassStateNotProvedByInstantaneousContactCases": true
+}

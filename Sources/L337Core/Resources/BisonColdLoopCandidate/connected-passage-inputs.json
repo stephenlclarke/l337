@@ -1,0 +1,24 @@
+{
+  "baselineFilesPinnedByRetainedManifest": true,
+  "baselineStageManifestSHA256": "05931c67d61aa4d71886e3f81fdb26d1f1ac2f5ff8a125f7d8f855a3ff94a9e2",
+  "conductivityQualificationGranted": false,
+  "files": [
+    {
+      "bytes": 313350,
+      "path": "Bison-v2.json",
+      "sha256": "48c747bffefc6abccee84e9eacaea361f318fe3afd6c52f82ce463a34b648a5e"
+    },
+    {
+      "bytes": 49893,
+      "path": "Commissioning-v2.json",
+      "sha256": "574c69e938a2d801713b1c4292b9146609b95f6b7c5656c0d64e12dcde8fa683"
+    },
+    {
+      "bytes": 4966,
+      "path": "CO2-conductivity-DECISION.md",
+      "sha256": "a1f2cc76f863405b541d298f477f1a22efb6b49af289f1bb3aebf2b1466044cc"
+    }
+  ],
+  "firstCriteriaSHA256": "4d060987173cbd8a5690c1c245d59a1b7d24522766c5e073368ef6296c512ade",
+  "physicalBase": "8bf154948fa0609e1bf01776959bb2fbbe6432dd"
+}

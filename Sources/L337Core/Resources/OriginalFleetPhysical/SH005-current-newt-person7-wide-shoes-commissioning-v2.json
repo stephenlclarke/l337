@@ -1,0 +1,1256 @@
+{
+  "actualCommissioningRequirements": {
+    "actualParentBirthActorAndAll12OriginalProfileBindingsRequired": true,
+    "actualPortableOriginal7BindingRequired": true,
+    "actualPressureTemperatureAndSealTestsRequired": true,
+    "completeBeforeFirstBodySnapshot": true,
+    "initialValuesDoNotProveLaterOperatingState": true,
+    "laterPressureThermalGasCustody": "Read actual retained unit state/species/charge and actual physical roster. An initial nominal pressure is not a future pressure reading. No atmosphere refill, latch closure or operative flag may be created from this JSON.",
+    "noDefaultAtmosphereTemperatureSealOrOperativeState": true,
+    "noGenericStockPersonRoleActorOrEMPImmunityGrant": true,
+    "privateActualCommissioningIdentityPerUnitRequired": true,
+    "removal": "Only proved physical transfer changes displacement. Unknown is not empty; deceasedWithHull retains body volume and mass until actual physical removal. Closed-mass/reference tensors from1430 remain unchanged.",
+    "sourceDeclarationIsNotObservedState": true
+  },
+  "admission": {
+    "actorAdmission": false,
+    "changesExistingGeometryMassTensorOrStock": false,
+    "compiler": false,
+    "engineeringAssumptionsForHumanFollowUp": true,
+    "native": false,
+    "observedCommissioning": false
+  },
+  "carrierCells": [
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-0",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-0",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 0
+      },
+      "originalCellOrdinal": 0,
+      "sourceComponentID": "crew-environment-cell-0"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-1",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-1",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 1
+      },
+      "originalCellOrdinal": 1,
+      "sourceComponentID": "crew-environment-cell-1"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-2",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-2",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 2
+      },
+      "originalCellOrdinal": 2,
+      "sourceComponentID": "crew-environment-cell-2"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-3",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-3",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 3
+      },
+      "originalCellOrdinal": 3,
+      "sourceComponentID": "crew-environment-cell-3"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-4",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-4",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 4
+      },
+      "originalCellOrdinal": 4,
+      "sourceComponentID": "crew-environment-cell-4"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-5",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-5",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 5
+      },
+      "originalCellOrdinal": 5,
+      "sourceComponentID": "crew-environment-cell-5"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-6",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-6",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 6
+      },
+      "originalCellOrdinal": 6,
+      "sourceComponentID": "crew-environment-cell-6"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-7",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-7",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "originalCellOrdinal": 7,
+      "sourceComponentID": "crew-environment-cell-7"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-8",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-8",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 8
+      },
+      "originalCellOrdinal": 8,
+      "sourceComponentID": "crew-environment-cell-8"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-9",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-9",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 9
+      },
+      "originalCellOrdinal": 9,
+      "sourceComponentID": "crew-environment-cell-9"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-10",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-10",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 10
+      },
+      "originalCellOrdinal": 10,
+      "sourceComponentID": "crew-environment-cell-10"
+    },
+    {
+      "afterProvedPhysicalBodyRemoval": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.689528,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "parked-empty",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-11",
+        "initialAbsolutePressurePascals": 79287.13993763935,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "empty-no-metabolism",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": null,
+        "oxygenDemandUpperBoundKgPerSecond": 0.0,
+        "physicalBodyDisplacementCubicMetres": 0.0,
+        "physicalBodyOrdinal": null
+      },
+      "expectedAtBirth": {
+        "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+        "cavityVolumeCubicMetres": 1.689528,
+        "connectedFreeGasVolumeCubicMetres": 1.323512,
+        "expectedCirculation": "operative",
+        "expectedCryothermalLoop": "holding-target",
+        "expectedElectricalIsolation": "connected-isolated-bus",
+        "expectedMechanicalRestraint": "locked-on-actual-body",
+        "expectedPressureEqualisationValve": "closed",
+        "expectedPressureSeal": "closed",
+        "expectedSorbent": "installed-unused",
+        "expectedTransferSeal": "closed",
+        "gasComponentID": "charged-crew-cell-atmosphere-11",
+        "initialAbsolutePressurePascals": 101213.92398751198,
+        "initialControlSetpointKelvin": 190.0,
+        "initialGasMassKg": 2.5,
+        "initialGasTemperatureKelvin": 190.0,
+        "initialMetabolicState": "conservative-rated-demand",
+        "initialNitrogenMassKg": 1.5,
+        "initialOxygenMassKg": 1.0,
+        "initialPhysicalBodyTemperatureKelvin": 190.0,
+        "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+        "physicalBodyDisplacementCubicMetres": 0.366016,
+        "physicalBodyOrdinal": 11
+      },
+      "originalCellOrdinal": 11,
+      "sourceComponentID": "crew-environment-cell-11"
+    }
+  ],
+  "constantsProvenance": [
+    {
+      "quantity": "O2 molar mass",
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?Name=7782-44-7"
+    },
+    {
+      "quantity": "N2/O2 molar masses",
+      "url": "https://nvlpubs.nist.gov/nistpubs/jres/83/jresv83n5p419_A1b.pdf"
+    },
+    {
+      "quantity": "R and exact SI constituents",
+      "url": "https://pages.nist.gov/teqp-docs/en/stable/_static/doxygen/html/namespaceteqp_1_1constants.html"
+    }
+  ],
+  "coordinateUnits": "metres",
+  "driveContactPairs": [
+    {
+      "actuatorMovingComponentIDs": [
+        "new-moving-tube-rod-14.238718506088443",
+        "new-moving-tube-cap-14.238718506088443",
+        "new-load-catch-14.238718506088443"
+      ],
+      "capComponentID": "new-moving-tube-cap-14.238718506088443",
+      "capContactFaceInCarrierMetres": [
+        [
+          36.96279264214047,
+          -2.5693550142720696,
+          14.198718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4893550142720695,
+          14.198718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4893550142720695,
+          14.278718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.5693550142720696,
+          14.278718506088444
+        ]
+      ],
+      "contactAtUnlock": "Actual solid closed-cap +X face against original shoe -X face. Point and entire cap face must lie in material; do not apply a force through the open rod bore.",
+      "forceNormalInCarrier": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "forcePointInCarrierMetres": [
+        36.96279264214047,
+        -2.5293550142720695,
+        14.238718506088443
+      ],
+      "maximumNormalForceNewtons": 2000.0,
+      "ordinaryContactAndPaidWorkRequired": true,
+      "shoeComponentID": "new-Bison-conformal-thrust-shoe--0.75",
+      "shoeContactFaceInCarrierMetres": [
+        [
+          36.96279264214047,
+          -2.585,
+          14.185
+        ],
+        [
+          36.96279264214047,
+          -2.475,
+          14.185
+        ],
+        [
+          36.96279264214047,
+          -2.585,
+          14.315
+        ],
+        [
+          36.96279264214047,
+          -2.475,
+          14.315
+        ]
+      ]
+    },
+    {
+      "actuatorMovingComponentIDs": [
+        "new-moving-tube-rod-15.738718506088443",
+        "new-moving-tube-cap-15.738718506088443",
+        "new-load-catch-15.738718506088443"
+      ],
+      "capComponentID": "new-moving-tube-cap-15.738718506088443",
+      "capContactFaceInCarrierMetres": [
+        [
+          36.96279264214047,
+          -2.5693550142720696,
+          15.698718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4893550142720695,
+          15.698718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4893550142720695,
+          15.778718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.5693550142720696,
+          15.778718506088444
+        ]
+      ],
+      "contactAtUnlock": "Actual solid closed-cap +X face against original shoe -X face. Point and entire cap face must lie in material; do not apply a force through the open rod bore.",
+      "forceNormalInCarrier": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "forcePointInCarrierMetres": [
+        36.96279264214047,
+        -2.5293550142720695,
+        15.738718506088443
+      ],
+      "maximumNormalForceNewtons": 2000.0,
+      "ordinaryContactAndPaidWorkRequired": true,
+      "shoeComponentID": "new-Bison-conformal-thrust-shoe-0.75",
+      "shoeContactFaceInCarrierMetres": [
+        [
+          36.96279264214047,
+          -2.585,
+          15.685
+        ],
+        [
+          36.96279264214047,
+          -2.475,
+          15.685
+        ],
+        [
+          36.96279264214047,
+          -2.585,
+          15.815
+        ],
+        [
+          36.96279264214047,
+          -2.475,
+          15.815
+        ]
+      ]
+    }
+  ],
+  "finiteServicePerUnit": {
+    "allCarrierCellsRunFixedClockIncludingEmpty7": true,
+    "carrierUnitCount": 12,
+    "clockOrigin": "actual-complete-configuration-birth-issue.issuedAt",
+    "continuousPowerWatts": 42.0,
+    "electricalAfterStartupJoules": 1380000.0,
+    "initialSorbentCapacityKgCO2": 0.75,
+    "initialUsableElectricalJoules": 1500000.0,
+    "initialUsableOxygenKg": 1.0,
+    "noSilentResetRechargeOrDisabledCarrierTopUp": true,
+    "onceOnlyStartupJoules": 120000.0,
+    "portableStockIsSeparate": true,
+    "portableUnitCount": 1,
+    "sixHourRemainingElectricalJoules": 472800.0,
+    "sorbentIsDryHardware": "Clean sorbent and its cartridge are included in the existing dry assembly masses;0.75kg is adsorption capacity, not a newly supplied0.75kg gas mass.",
+    "unitCount": 13
+  },
+  "gasVolumeUnit": "m^3",
+  "id": "SH005-current-newt-person7-wide-shoes-commissioning-v2",
+  "materialContactIntegrationRequirements": "FOUR actual component material pairs: two paid cap/shoe and two passive hollow-rod annulus/shoe. All six moving components retain actual motion/mass. Cap applied forces total4000N, not2000N for each of four pairs. Any actual passive reaction must come from the same full unilateral cluster solve with real equal/opposite impulse/work/torque, never duplicated force, open-bore traction, pair exemption or nominal-source certificate substituted for actual curves.",
+  "mechanicalBindingsBasis": "Exact source component identities/unchanged508 geometry and phase motion. These lists replace name-prefix inference, not native contact/force/custody proof.",
+  "movingDriveComponentIDs": [
+    "new-moving-tube-rod-14.238718506088443",
+    "new-moving-tube-cap-14.238718506088443",
+    "new-load-catch-14.238718506088443",
+    "new-moving-tube-rod-15.738718506088443",
+    "new-moving-tube-cap-15.738718506088443",
+    "new-load-catch-15.738718506088443"
+  ],
+  "newAssumptions": {
+    "basis": "New explicitly authored commissioning/state model. No recovered pressure, temperature, inner-wall capacity or observed seals are asserted.",
+    "gasModel": "Uniform-temperature ideal O2/N2 mixture; both species are the existing2.5kg charged atmosphere, not extra masses or a separate free oxygen reservoir.",
+    "initialMeasurementToleranceKelvin": 0.5,
+    "initialMeasurementTolerancePascals": 500.0,
+    "initialPhysicalBodies": "Already preconditioned cryostatic stock at190K. The120kJ startup is electrical startup, never free cooling of a100kg body from ambient. Actual producer/commissioning custody must establish that preconditioned state before the first body snapshot.",
+    "initialTemperatureKelvin": 190.0,
+    "metabolism": "Use the existing portable rated O2/CO2 envelope explicitly for each occupied carrier cell as well; empty cells have zero physiological demand but the same fixed42W clock. These are new conservative model demand limits, not measured human physiology. Actual deceased bodies retain displacement; actual deceased metabolism may stop only from its proved state. No death/unknown/empty alias creates gas or service charge.",
+    "molarGasConstantJPerMolKelvin": 8.31446261815324,
+    "nitrogenMassKg": 1.5,
+    "nitrogenMolarMassKgPerMol": 0.0280134,
+    "operativeAbsolutePressureRangePascals": [
+      60000.0,
+      150000.0
+    ],
+    "operativeTemperatureRangeKelvin": [
+      185.0,
+      195.0
+    ],
+    "oxygenMassKg": 1.0,
+    "oxygenMolarMassKgPerMol": 0.0319988,
+    "thermalOperation": "Proposed cryothermal holding capability within the existing42W continuous service budget; exact heat-leak/refrigeration and biological viability remain engineering follow-up, not renderer or actor qualification."
+  },
+  "parentConfigurationBytes": 313350,
+  "parentConfigurationID": "SH005-current-newt-person7-wide-shoes-v2",
+  "parentConfigurationSHA256": "48c747bffefc6abccee84e9eacaea361f318fe3afd6c52f82ce463a34b648a5e",
+  "passiveDriveMaterialContactPairs": [
+    {
+      "actualAnnularMaterialQuads": [
+        [
+          [
+            36.96279264214047,
+            -2.5793550142720694,
+            14.188718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4793550142720693,
+            14.188718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4893550142720695,
+            14.198718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.5693550142720696,
+            14.198718506088444
+          ]
+        ],
+        [
+          [
+            36.96279264214047,
+            -2.4793550142720693,
+            14.188718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4793550142720693,
+            14.288718506088443
+          ],
+          [
+            36.96279264214047,
+            -2.4893550142720695,
+            14.278718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4893550142720695,
+            14.198718506088444
+          ]
+        ],
+        [
+          [
+            36.96279264214047,
+            -2.4793550142720693,
+            14.288718506088443
+          ],
+          [
+            36.96279264214047,
+            -2.5793550142720694,
+            14.288718506088443
+          ],
+          [
+            36.96279264214047,
+            -2.5693550142720696,
+            14.278718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4893550142720695,
+            14.278718506088444
+          ]
+        ],
+        [
+          [
+            36.96279264214047,
+            -2.5793550142720694,
+            14.288718506088443
+          ],
+          [
+            36.96279264214047,
+            -2.5793550142720694,
+            14.188718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.5693550142720696,
+            14.198718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.5693550142720696,
+            14.278718506088444
+          ]
+        ]
+      ],
+      "innerVoidBoundaryInCarrierMetres": [
+        [
+          36.96279264214047,
+          -2.5693550142720696,
+          14.198718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4893550142720695,
+          14.198718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4893550142720695,
+          14.278718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.5693550142720696,
+          14.278718506088444
+        ]
+      ],
+      "noOpenBoreForceOrPairExemption": true,
+      "nominalAppliedActuatorForceNewtons": 0,
+      "ordinaryUnilateralReactionRequired": true,
+      "outerContactBoundaryInCarrierMetres": [
+        [
+          36.96279264214047,
+          -2.5793550142720694,
+          14.188718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4793550142720693,
+          14.188718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4793550142720693,
+          14.288718506088443
+        ],
+        [
+          36.96279264214047,
+          -2.5793550142720694,
+          14.288718506088443
+        ]
+      ],
+      "rodComponentID": "new-moving-tube-rod-14.238718506088443",
+      "shoeComponentID": "new-Bison-conformal-thrust-shoe--0.75"
+    },
+    {
+      "actualAnnularMaterialQuads": [
+        [
+          [
+            36.96279264214047,
+            -2.5793550142720694,
+            15.688718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4793550142720693,
+            15.688718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4893550142720695,
+            15.698718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.5693550142720696,
+            15.698718506088444
+          ]
+        ],
+        [
+          [
+            36.96279264214047,
+            -2.4793550142720693,
+            15.688718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4793550142720693,
+            15.788718506088443
+          ],
+          [
+            36.96279264214047,
+            -2.4893550142720695,
+            15.778718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4893550142720695,
+            15.698718506088444
+          ]
+        ],
+        [
+          [
+            36.96279264214047,
+            -2.4793550142720693,
+            15.788718506088443
+          ],
+          [
+            36.96279264214047,
+            -2.5793550142720694,
+            15.788718506088443
+          ],
+          [
+            36.96279264214047,
+            -2.5693550142720696,
+            15.778718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.4893550142720695,
+            15.778718506088444
+          ]
+        ],
+        [
+          [
+            36.96279264214047,
+            -2.5793550142720694,
+            15.788718506088443
+          ],
+          [
+            36.96279264214047,
+            -2.5793550142720694,
+            15.688718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.5693550142720696,
+            15.698718506088444
+          ],
+          [
+            36.96279264214047,
+            -2.5693550142720696,
+            15.778718506088444
+          ]
+        ]
+      ],
+      "innerVoidBoundaryInCarrierMetres": [
+        [
+          36.96279264214047,
+          -2.5693550142720696,
+          15.698718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4893550142720695,
+          15.698718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4893550142720695,
+          15.778718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.5693550142720696,
+          15.778718506088444
+        ]
+      ],
+      "noOpenBoreForceOrPairExemption": true,
+      "nominalAppliedActuatorForceNewtons": 0,
+      "ordinaryUnilateralReactionRequired": true,
+      "outerContactBoundaryInCarrierMetres": [
+        [
+          36.96279264214047,
+          -2.5793550142720694,
+          15.688718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4793550142720693,
+          15.688718506088444
+        ],
+        [
+          36.96279264214047,
+          -2.4793550142720693,
+          15.788718506088443
+        ],
+        [
+          36.96279264214047,
+          -2.5793550142720694,
+          15.788718506088443
+        ]
+      ],
+      "rodComponentID": "new-moving-tube-rod-15.738718506088443",
+      "shoeComponentID": "new-Bison-conformal-thrust-shoe-0.75"
+    }
+  ],
+  "physicalCapacityBinding": {
+    "carrier": "Exact new180kg hollow environmental cells: use each declared inner cavity and the actual own person bbox displacement. Cell7 has no hidden body and begins at its different, empty-volume pressure.",
+    "pod": {
+      "actualProposedPersonDisplacementCubicMetres": 0.366016,
+      "capacityIsNewAssumptionNotRecovered": true,
+      "declaredFiniteHardwareBoxVolumesCubicMetres": 0.0916170030616708,
+      "envelopeBudgetIsNecessaryNotSufficient": true,
+      "exactInnerWallAndCentreOnlyHardwareVolumeCertificate": false,
+      "excludedWallAndHardwareVolumeCubicMetres": 0.27131375069252,
+      "model": "NEW_LUMPED_CONNECTED_PRESSURE_CAPACITY",
+      "physicalOuterEnvelopeCubicMetres": 2.03732975069252,
+      "physicalOwnerIDs": [
+        "ceramic-pressure-shell",
+        "sealed-laminated-lid"
+      ],
+      "preservedCentreOnlyPhysicalHardware": [
+        "cradle-mount-restraints",
+        "lid-hinge-latch"
+      ],
+      "proposedOccupiedFreeGasCubicMetres": 1.4,
+      "proposedTotalCavityCubicMetres": 1.766016
+    }
+  },
+  "portablePod": {
+    "afterProvedPhysicalBodyRemoval": {
+      "carbonDioxideOutputUpperBoundKgPerSecond": 0.0,
+      "cavityVolumeCubicMetres": 1.766016,
+      "connectedFreeGasVolumeCubicMetres": 1.766016,
+      "expectedCirculation": "operative",
+      "expectedCryothermalLoop": "holding-target",
+      "expectedElectricalIsolation": "connected-isolated-bus",
+      "expectedMechanicalRestraint": "parked-empty",
+      "expectedPressureEqualisationValve": "closed",
+      "expectedPressureSeal": "closed",
+      "expectedSorbent": "installed-unused",
+      "expectedTransferSeal": "closed",
+      "gasComponentID": "charged-free-atmosphere",
+      "initialAbsolutePressurePascals": 75853.13098214283,
+      "initialControlSetpointKelvin": 190.0,
+      "initialGasMassKg": 2.5,
+      "initialGasTemperatureKelvin": 190.0,
+      "initialMetabolicState": "empty-no-metabolism",
+      "initialNitrogenMassKg": 1.5,
+      "initialOxygenMassKg": 1.0,
+      "initialPhysicalBodyTemperatureKelvin": null,
+      "oxygenDemandUpperBoundKgPerSecond": 0.0,
+      "physicalBodyDisplacementCubicMetres": 0.0,
+      "physicalBodyOrdinal": null
+    },
+    "expectedAtBirth": {
+      "carbonDioxideOutputUpperBoundKgPerSecond": 2.3333333333333332e-05,
+      "cavityVolumeCubicMetres": 1.766016,
+      "connectedFreeGasVolumeCubicMetres": 1.4,
+      "expectedCirculation": "operative",
+      "expectedCryothermalLoop": "holding-target",
+      "expectedElectricalIsolation": "connected-isolated-bus",
+      "expectedMechanicalRestraint": "locked-on-actual-body",
+      "expectedPressureEqualisationValve": "closed",
+      "expectedPressureSeal": "closed",
+      "expectedSorbent": "installed-unused",
+      "expectedTransferSeal": "closed",
+      "gasComponentID": "charged-free-atmosphere",
+      "initialAbsolutePressurePascals": 95684.17354611425,
+      "initialControlSetpointKelvin": 190.0,
+      "initialGasMassKg": 2.5,
+      "initialGasTemperatureKelvin": 190.0,
+      "initialMetabolicState": "conservative-rated-demand",
+      "initialNitrogenMassKg": 1.5,
+      "initialOxygenMassKg": 1.0,
+      "initialPhysicalBodyTemperatureKelvin": 190.0,
+      "oxygenDemandUpperBoundKgPerSecond": 1.6666666666666667e-05,
+      "physicalBodyDisplacementCubicMetres": 0.366016,
+      "physicalBodyOrdinal": 7
+    },
+    "selectedPersonPhysicalComponentID": "original-person-ordinal-7",
+    "sourceComponentID": "unchanged-current-Newt-dry"
+  },
+  "pressureUnit": "Pa-absolute",
+  "schemaVersion": 1,
+  "sourcePins": {
+    "Bison-base.json": {
+      "bytes": 313350,
+      "sha256": "48c747bffefc6abccee84e9eacaea361f318fe3afd6c52f82ce463a34b648a5e"
+    },
+    "Newt-audit.json": {
+      "bytes": 8516,
+      "sha256": "48d8b124b7a223272c7d8422f816eb70f3e62bc5b3f7b421eaf84e4160fc774a"
+    },
+    "Newt-physical.json": {
+      "bytes": 8132,
+      "sha256": "0d7cd491b77b6e14016daa8a3c5e622416963870f669f80d63ad3b4d74aaee17"
+    }
+  },
+  "status": "NEW_EXPLICIT_INITIAL_STATE_SOURCE_ENGINEERING_FOLLOW_UP_PENDING_NOT_ISSUANCE_PROOF",
+  "temperatureUnit": "K"
+}

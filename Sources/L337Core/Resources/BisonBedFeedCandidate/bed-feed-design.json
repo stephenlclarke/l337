@@ -1,0 +1,145 @@
+{
+  "actualObservations": [],
+  "feed": {
+    "antiIceMaximumElectricalWattsWithin42": 3.5,
+    "antiIceMaximumParasiticToColdWatts": 0.1,
+    "antiIceOutletKelvin": 190,
+    "bendZMetres": 0.85,
+    "gammaAssumption": 1.3,
+    "heaterCentreMetres": [
+      0.017,
+      -0.33,
+      0.15
+    ],
+    "heaterDimensionsMetres": [
+      0.02,
+      0.02,
+      0.01
+    ],
+    "heaterMassKg": 0.025,
+    "innerSquareWidthMetres": 0.012,
+    "mainYMetres": -0.33,
+    "maximumDesignMassFlowKgPerSecond": 0.00056,
+    "maximumFittingLossCoefficient": 10,
+    "maximumFrictionDarcyFactor": 0.1,
+    "maximumHeaterCpJoulesPerKgKelvin": 1100,
+    "maximumMeteringStagnationKelvin": 355,
+    "maximumRecuperatorPressureDropPascals": 500,
+    "metalDensityKgPerCubicMetre": 8000,
+    "minimumColdFeedKelvin": 189.5,
+    "minimumLinePressurePascals": 40000,
+    "minimumMeteringDischargeCoefficient": 0.7,
+    "minimumMeteringStagnationKelvin": 350,
+    "minimumRecuperatorConductanceWattsPerKelvin": 0.3,
+    "outerSquareWidthMetres": 0.014,
+    "qualifiedGammaRange": [
+      1.2,
+      1.4
+    ],
+    "singlePhaseAndValveTransientsObserved": false
+  },
+  "phase": {
+    "Antoine": [
+      6.81228,
+      1301.679,
+      -3.494
+    ],
+    "CO2MolarMassKgPerMol": 0.0440095,
+    "CO2TripleKelvin": 216.58,
+    "CO2TriplePascals": 518500,
+    "CaCO3DensityKgPerCubicMetre": 2710,
+    "CaODensityKgPerCubicMetre": 3340,
+    "CaOMolarMassKgPerMol": 0.0560774,
+    "actualPhaseOrFiniteStockObserved": false,
+    "coldCO2Kelvin": 185,
+    "coldCO2RangeKelvin": [
+      184.5,
+      185.5
+    ],
+    "compressibilityOrHeatCapacityObserved": false,
+    "gasConstantJoulesPerMolKelvin": 8.31446261815324,
+    "minimumLatentJoulesPerKg": 560000,
+    "nominalCO2CpJoulesPerKgKelvin": 1000,
+    "qualifiedCompressibilityFactorRange": [
+      0.9,
+      1.1
+    ],
+    "solidDensityKgPerCubicMetre": 1560,
+    "totalThermalCO2StockKg": 14
+  },
+  "primaryReferences": [
+    "https://publications.anl.gov/anlpubs/2021/05/166771.pdf",
+    "https://www.nist.gov/publications/reference-correlation-viscosity-carbon-dioxide",
+    "https://webbook.nist.gov/cgi/cbook.cgi?ID=C124389&Mask=24"
+  ],
+  "reactor": {
+    "ErgunMultiplierOrViscosityObserved": false,
+    "initialCaOKg": 20,
+    "innerDimensionsMetres": [
+      0.4,
+      0.187,
+      0.23
+    ],
+    "maximumCapturedAndGasKg": 12,
+    "maximumDiffuserPressureDropPascals": 500,
+    "maximumGasInventoryKg": 0.025,
+    "maximumInletPressurePascals": 20000,
+    "maximumQualifiedErgunMultiplier": 5,
+    "maximumTemperatureKelvin": 855,
+    "maximumViscosityPascalSeconds": 5e-05,
+    "metalDensityKgPerCubicMetre": 8000,
+    "minimumBedVoidFraction": 0.3,
+    "minimumEffectivePelletDiameterMetres": 0.0015,
+    "minimumOutletPressurePascals": 10000,
+    "minimumScreenDischargeCoefficient": 0.5,
+    "nominalDiffuserPressurePascals": 20500,
+    "nominalMeanPressurePascals": 15000,
+    "nominalTemperatureKelvin": 850,
+    "plenumDepthMetres": 0.003,
+    "preheaterPlateDimensionsMetres": [
+      0.3,
+      0.1,
+      0.0003
+    ],
+    "preheaterPlateOffsetMetres": [
+      -0.04,
+      0,
+      -0.1135
+    ],
+    "reactionKineticsQualified": false,
+    "reactorAssemblyDryKg": 27,
+    "restrictorApertureOffsetMetres": [
+      0.17,
+      0,
+      -0.1119
+    ],
+    "restrictorBodyDimensionsMetres": [
+      0.4,
+      0.187,
+      0.0002
+    ],
+    "restrictorOffsetMetres": [
+      0,
+      0,
+      -0.1119
+    ],
+    "restrictorThroatDimensionsMetres": [
+      0.009,
+      0.001,
+      0.0002
+    ],
+    "screenBorderAndWebMetres": 0.0002,
+    "screenHoleCountX": 500,
+    "screenHoleCountY": 231,
+    "screenThicknessMetres": 0.0002
+  },
+  "sourcing": {
+    "allNumericalExecutionHost": "mba",
+    "externalHardwareOrExtraEquipmentSlots": 0,
+    "extraPaidPairs": 0,
+    "feedDryMassDebitedFromExistingHeatpathKg": 5,
+    "nativeGeometryChanged": false,
+    "newPhysicalSourceUnobserved": true
+  },
+  "status": "NEW_FINITE_PHASE_FEED_CANDIDATE_NOT_QUALIFIED_OR_OBSERVED"
+}

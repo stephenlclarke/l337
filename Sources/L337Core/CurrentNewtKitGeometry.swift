@@ -27,7 +27,7 @@ enum CurrentNewtKitGeometry {
   static func mesh(part: [String: Any]) -> Mesh? {
     guard let shape = part["shape"] as? String else { return nil }
     switch shape {
-    case "hollowStorageAssembly":
+    case "hollowStorageAssembly", "hollowEnvironmentalAssembly":
       guard let centre = vector(part["centreMetres"]),
         let outer = vector(part["dimensionsMetres"]),
         let inner = vector(part["cavityDimensionsMetres"]), positive(outer), positive(inner),
@@ -64,7 +64,7 @@ enum CurrentNewtKitGeometry {
         }
       }
       return make(vertices: vertices, faces: surface)
-    case "affineHeightWedge":
+    case "affineHeightWedge", "affineExtrudedQuadrilateral":
       guard let vertices = vertices(part["verticesMetres"]), vertices.count == 8 else { return nil }
       return make(vertices: vertices, faces: faces)
     case "affineHeightWedgeDifference":

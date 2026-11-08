@@ -1,0 +1,223 @@
+{
+  "cases": [
+    {
+      "lambdaNewtons": [
+        266.9921376460701,
+        1300.6072842371238,
+        1297.4723130886766,
+        270.1271087946381
+      ],
+      "q": 0.0,
+      "rotation": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "state": "nominal-cold-loop-phase-state-0-connected-passages-proposed-mechanisms-open"
+    },
+    {
+      "lambdaNewtons": [
+        266.9921374001078,
+        1300.6072844833168,
+        1297.4723133233513,
+        270.1271085599765
+      ],
+      "q": 0.3,
+      "rotation": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "state": "nominal-cold-loop-phase-state-0-connected-passages-proposed-mechanisms-open"
+    },
+    {
+      "lambdaNewtons": [
+        266.99213764609743,
+        1300.6072842370336,
+        1297.4723130886543,
+        270.12710879472525
+      ],
+      "q": 0.0,
+      "rotation": [
+        [
+          0.781639173907025,
+          0.5501172307043584,
+          0.29395787843858057
+        ],
+        [
+          -0.4829292842142122,
+          0.8320301337746346,
+          -0.2729563388883143
+        ],
+        [
+          -0.3947397981737998,
+          0.07139249941787586,
+          0.9160150668873173
+        ]
+      ],
+      "state": "nominal-cold-loop-phase-state-0-connected-passages-proposed-mechanisms-open"
+    },
+    {
+      "lambdaNewtons": [
+        266.992137400096,
+        1300.6072844833952,
+        1297.4723133233636,
+        270.12710855989616
+      ],
+      "q": 0.3,
+      "rotation": [
+        [
+          0.781639173907025,
+          0.5501172307043584,
+          0.29395787843858057
+        ],
+        [
+          -0.4829292842142122,
+          0.8320301337746346,
+          -0.2729563388883143
+        ],
+        [
+          -0.3947397981737998,
+          0.07139249941787586,
+          0.9160150668873173
+        ]
+      ],
+      "state": "nominal-cold-loop-phase-state-0-connected-passages-proposed-mechanisms-open"
+    },
+    {
+      "lambdaNewtons": [
+        331.9014204523031,
+        1235.6979553680565,
+        1167.753096930775,
+        399.8462788897062
+      ],
+      "q": 0.0,
+      "rotation": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "state": "nominal-cold-loop-phase-state-1-connected-passages-proposed-mechanisms-open"
+    },
+    {
+      "lambdaNewtons": [
+        331.9014202063092,
+        1235.6979556141505,
+        1167.7530971643762,
+        399.8462786562943
+      ],
+      "q": 0.3,
+      "rotation": [
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "state": "nominal-cold-loop-phase-state-1-connected-passages-proposed-mechanisms-open"
+    },
+    {
+      "lambdaNewtons": [
+        331.9014204523599,
+        1235.6979553680019,
+        1167.7530969307172,
+        399.8462788897616
+      ],
+      "q": 0.0,
+      "rotation": [
+        [
+          0.781639173907025,
+          0.5501172307043584,
+          0.29395787843858057
+        ],
+        [
+          -0.4829292842142122,
+          0.8320301337746346,
+          -0.2729563388883143
+        ],
+        [
+          -0.3947397981737998,
+          0.07139249941787586,
+          0.9160150668873173
+        ]
+      ],
+      "state": "nominal-cold-loop-phase-state-1-connected-passages-proposed-mechanisms-open"
+    },
+    {
+      "lambdaNewtons": [
+        331.9014202062811,
+        1235.6979556142053,
+        1167.753097164407,
+        399.8462786562388
+      ],
+      "q": 0.3,
+      "rotation": [
+        [
+          0.781639173907025,
+          0.5501172307043584,
+          0.29395787843858057
+        ],
+        [
+          -0.4829292842142122,
+          0.8320301337746346,
+          -0.2729563388883143
+        ],
+        [
+          -0.3947397981737998,
+          0.07139249941787586,
+          0.9160150668873173
+        ]
+      ],
+      "state": "nominal-cold-loop-phase-state-1-connected-passages-proposed-mechanisms-open"
+    }
+  ],
+  "paidForceNewtons": 4000,
+  "paidWorkJoules": 2400,
+  "scope": "Quiescent zero-angular-velocity instantaneous nominal references only. Flow/rotor/diaphragm stop, dense trajectory and actual quiet state remain OPEN."
+}

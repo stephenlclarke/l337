@@ -1,0 +1,50 @@
+{
+  "acceptedIncrement": 0,
+  "actualOperationsPerformed": [],
+  "owner": "MC1/G1 actual physical-source/commissioning state owner; this engineering packet grants no unit IDs, observed state, custody, awake state or qualified birth",
+  "preparationElectricalOrigin": "Separate finite external plant, before once-only complete configuration issue. No pack reset/recharge/top-up after issue; all13 clocks retain actual common issue origin including empty cell7.",
+  "requiredOperations": [
+    {
+      "actualRequirement": "Physical stock identity/location, actual source mass/composition and once-only material debit. Gas capacities and a new JSON do not create stock. No plant regeneration is credited.",
+      "inputs": "30.5kgO2/19.55kgN2/14.05kgCO2/20kgfreshCaO/100kg external respiratory absorbent; freshCaO20 is within portable dry32, not extra carried mass;1GJ finite external electrical;16t water293K;4t dryplant80m3 envelope",
+      "operation": "acquire finite paid material and energy"
+    },
+    {
+      "actualRequirement": "Actual initial/final body/gas/hardware measurements, calibrated sensors, phase/temperature and source custody; no frozen or warm body appears from120kJ startup. Actual pre-existing identity and crew-role/fitness remain separate. An actual100kg issue body requires preparation body material/respiration ledger, not a silent reset.",
+      "inputs": "101kg per-body preparation upper bound/100kg actual issue model; carrier gas280K/body310K reference; portable190K, CO2 solid185K, hotbed850K;113.069MJ conservative base cold budget; maximum24h external preparation",
+      "operation": "prepare all physical bodies and hardware"
+    },
+    {
+      "actualRequirement": "Species transfer/source debits, net body-material migration, capturedCO2 location, actual heat sink temperatures and finite energy ledger. Source gas residuals and test leaks are measured and accounted.",
+      "inputs": "Up to24h12 conservative O2/CO2 envelopes; externalO2 replenishment and separate100kg/25kgCO2capacity scrubber, coldplate, warmheatpump and finitewaterbuffer. ThermalCO2/CaObed remain isolated/fresh; external plant carries prep cooling load. Service cartridges/pack are not consumed and reset to unused.",
+      "operation": "pay preparation respiration and heat rejection"
+    },
+    {
+      "actualRequirement": "Actual closed seals/valves and calibrated pressure/species/temp/time measurements; finite pump/compression work <=15MJ external shared operation allowance. Measured nonzero leakage is a mass/location debit throughout service, never ideal conservation.",
+      "inputs": "<=0.1Pa evacuation target; meter1kgO2+1.5kgN2 per13 service units including empty7; source actual free volumes, no hidden inner-wall flag. Closed3600s test, calibrated pressure resolution1Pa, constant measured temperature; permitted mass leakage<=1e-7kg/s. Test gas lost is debited and any pre-issue replacement metered once from explicit reserves.",
+      "operation": "evacuate, meter gas, seal and leak-test"
+    },
+    {
+      "actualRequirement": "Actual flow, thermal material/phase/contact/permeability/working fluid and insulation/vacuum qualification. No bulk-copper conductivity is inferred from5kg. Forecap area is proven source geometry; bay/carrier/solar view and actual sink are unproved. Candidate temperatures grant no human physiological fitness. Actual warm-side dump hardware/continuity/thermal coupling must be qualified; the energy correction does not observe a resistor or operating state.",
+      "inputs": "CarrierCOP>=8 at stated280K/303K bounds, auxiliary10W plusleak5W, minimumbody-to-gas9W/K, coupledexisting pressure-envelopeCp>=300J/kgK and sharedsinkpath>=1000W/K. Portablecoldpath>=80W/K; hot-to-coldG<=0.02W/K; heatpipe/collector>=25W/K, radiator0.15m2\u03b5>=0.85/view>=0.9 to<=293K, incidentingress<=15W. All12fixed42W debits enter the hull thermal ledger, including55.666667W total useful-demand remainder through warm-side dump paths rated42W percell within existing180kg hardware; no additional equipment slot/mass or storage/export credit.",
+      "operation": "qualify thermal apparatus and breathable service"
+    },
+    {
+      "actualRequirement": "Measured usable capacity, kinetics, flow/pressure and packedbed swelling/permeability through endofservice; stoichiometry or a4mm upstream orifice cannot certify uptake. Actual controlled pressure, source volume and fullspecies/body/absorber/coldcircuit mass distribution remain owner state.",
+      "inputs": "14kg finite CO2stock in5kgdewar;20kgCaO within27kgreactor plus5kgseparateheatpath.6h demand11.707714kgCO2/0.542024g/s at850K and bed<=20kPa;>=74.5905% actualCaO conversion. Intrinsic0.65kg/kg assumption is82.8237% conversion, but physical operatingcapture capped12kg incl<=0.002kginflight mass; verify void fraction>=0.3 and final bedvolume.",
+      "operation": "qualify closed CO2 capture including near depletion"
+    },
+    {
+      "actualRequirement": "Observe switch/continuity/closure, charged fresh material and actual preparation transfer with no free cold stock. Remove external preparation connections before native mechanical actuation; do not grant ordinary-kit identity or bootstrap actual body state from this packet.",
+      "inputs": "Actual separate1kg isolator, separate13th1.5MJ pack, once120kJstartup, fixed42W13units6h including empty7. Actual source-qualified190K/body/gas and185Ksolid inventory supplied by paid preparation.",
+      "operation": "isolate portable and issue once"
+    },
+    {
+      "actualRequirement": "Owner must assemble current fullmass/COM/tensor, fluid/valve/bedstate and rigid constraints. Proposed <=1s thermal-flow quiet interval needs physical latch/flow observation and finite temperature buffer; instantaneous8 changed-load cases do not prove dense curves, variable internal mass motion, valve quieting, isolation or an actual native clock.",
+      "inputs": "Existing6moving43.3376kg,2paidcap+2passiveannulus,4000N/2400J and372.5kgrated envelope unchanged.19kg new stock/hardware gives371.5kg ideal sealed occupied source.",
+      "operation": "actuate only with actual retained physical state"
+    }
+  ],
+  "sharedRuntimeHunksChanged": false,
+  "status": "REQUIRED_FINITE_OPERATIONS_NOT_ACTUAL_RECORDS"
+}

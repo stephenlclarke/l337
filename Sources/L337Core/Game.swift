@@ -426,6 +426,11 @@ public struct Commander: Sendable, Equatable, Codable {
   }
 
   @inline(never)
+  fileprivate static func nativeDurabilityBison(at commander: UnsafePointer<Commander>) -> Bool {
+    commander.pointer(to: \.savedBisonUnitAllocations)!.pointee != nil
+  }
+
+  @inline(never)
   fileprivate static func nativeDurabilityWatcher(at commander: UnsafePointer<Commander>) -> Bool {
     commander.pointer(to: \.savedMemoryAtlasWatcherSourceStorage)!.pointee != nil
   }
@@ -752,6 +757,8 @@ public struct Commander: Sendable, Equatable, Codable {
   var alienStorageState: AlienCommanderStorage? = nil
   var savedEquipmentVersion: Int?
   var nativeStations: NativeStationWorld?
+  // Optional means no Bison reservation has been allocated; reads never create one.
+  var savedBisonUnitAllocations: BisonUnitAllocationJournal?
   private var savedFlightSimulation: FlightSimulationState?
   public var flightSimulation: FlightSimulationState {
     _read {
@@ -953,6 +960,7 @@ public struct Commander: Sendable, Equatable, Codable {
     case savedEquipmentVersion
     case nativeStations
     case savedFlightSimulation
+    case savedBisonUnitAllocations
     case savedCrimeLedger
     case savedStationSecurity
     case encounterDirector
@@ -1021,6 +1029,7 @@ public struct Commander: Sendable, Equatable, Codable {
     guard equalSavedEquipmentVersion(lhs, rhs) else { return false }
     guard equalNativeStations(lhs, rhs) else { return false }
     guard equalSavedFlightSimulation(lhs, rhs) else { return false }
+    guard equalSavedBisonUnitAllocations(lhs, rhs) else { return false }
     guard equalSavedCrimeLedger(lhs, rhs) else { return false }
     guard equalSavedStationSecurity(lhs, rhs) else { return false }
     guard equalEncounterDirector(lhs, rhs) else { return false }
@@ -1090,6 +1099,7 @@ public struct Commander: Sendable, Equatable, Codable {
     guard equalSavedEquipmentVersion(lhs, rhs) else { return false }
     guard equalNativeStations(lhs, rhs) else { return false }
     guard equalSavedFlightSimulation(lhs, rhs) else { return false }
+    guard equalSavedBisonUnitAllocations(lhs, rhs) else { return false }
     guard equalSavedCrimeLedger(lhs, rhs) else { return false }
     guard equalSavedStationSecurity(lhs, rhs) else { return false }
     guard equalEncounterDirector(lhs, rhs) else { return false }
@@ -1370,6 +1380,19 @@ public struct Commander: Sendable, Equatable, Codable {
     }
     let right = withUnsafePointer(to: rhs) { pointer in
       pointer.pointer(to: \.savedFlightSimulation)!.pointee
+    }
+    return left == right
+  }
+
+  @inline(never)
+  private static func equalSavedBisonUnitAllocations(
+    _ lhs: borrowing Self, _ rhs: borrowing Self
+  ) -> Bool {
+    let left = withUnsafePointer(to: lhs) { pointer in
+      pointer.pointer(to: \.savedBisonUnitAllocations)!.pointee
+    }
+    let right = withUnsafePointer(to: rhs) { pointer in
+      pointer.pointer(to: \.savedBisonUnitAllocations)!.pointee
     }
     return left == right
   }
@@ -2060,6 +2083,13 @@ public struct Commander: Sendable, Equatable, Codable {
   }
 
   @inline(never)
+  private static func equalSavedBisonUnitAllocations(
+    _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
+  ) -> Bool {
+    lhs.pointer(to: \.savedBisonUnitAllocations)!.pointee == rhs.pointer(to: \.savedBisonUnitAllocations)!.pointee
+  }
+
+  @inline(never)
   private static func equalSavedCrimeLedger(
     _ lhs: UnsafePointer<Self>, _ rhs: UnsafePointer<Self>
   ) -> Bool {
@@ -2395,6 +2425,7 @@ public struct Commander: Sendable, Equatable, Codable {
       NativeFirstCommodityTradeSave.validateClaims(self),
       NativeUnderTowSave.validateClaims(self),
       NativeBorrowedVoiceSave.validateClaims(self),
+      NativeTitheCommissionSave.validateClaims(self),
       NativeQuietChoirSave.validateClaims(self),
       NativeMemoryAtlasSave.validateClaims(self),
       NativeSignedPassageOpeningSave.validateClaims(self),
@@ -2444,6 +2475,7 @@ public struct Commander: Sendable, Equatable, Codable {
     guard (navigationPlan?.valid ?? true) else { return false }
     guard blackjack.valid else { return false }
     guard (savedFlightSimulation?.valid ?? true) else { return false }
+    guard (savedBisonUnitAllocations?.valid(in: self) ?? true) else { return false }
     guard (savedCargoDebrisLedger?.valid ?? true) else { return false }
     guard (savedMiningLedger?.valid ?? true) else { return false }
     guard (savedWantedCareers?.valid(in: flightSimulation) ?? true) else { return false }
@@ -2909,6 +2941,13 @@ public struct Game: Sendable {
   @inline(never)
   func nativeFrameRearRecharge() -> Double {
     commanderStorage.withUnsafeBufferPointer { storage in Commander.nativeFrameReadShieldRecharge(at: storage.baseAddress!, front: false) }
+  }
+
+  @inline(never)
+  func nativeDurabilityBison() -> Bool {
+    commanderStorage.withUnsafeBufferPointer { storage in
+      Commander.nativeDurabilityBison(at: storage.baseAddress!)
+    }
   }
 
   @inline(never)
@@ -5137,7 +5176,7 @@ public struct Game: Sendable {
   }
   private mutating func loadCommander(_ value: Commander) -> Bool {
     guard value.valid, !value.usesAlienStorageSaveVersion,
-      !CurrentNewtKitSave.hasClaims(value),
+      !CurrentNewtKitSave.hasClaims(value), value.savedBisonUnitAllocations == nil,
       !value.usesEMPSaveVersion, !value.usesModularDriveSaveVersion,
       !value.usesEconomyMiningSaveVersion,
       !value.usesFreightNativeSaveVersion, !value.usesProviderContractSaveVersion,
@@ -5620,7 +5659,7 @@ public struct Game: Sendable {
         before: .init(
           stock: item.quantity, cargo: before.commander.cargo[index],
           credits: before.commander.credits),
-        unitPrice: item.bidPrice)
+        unitPrice: item.bidPrice, operation: UUID())
     }
   }
   public mutating func purchase() {
@@ -5657,7 +5696,7 @@ public struct Game: Sendable {
       market[index].quantity += saleQuantity
       commander.cargo[index] -= saleQuantity
       recordFirstNativeCommoditySale(
-        index: index, before: beforeSale, unitPrice: market[index].bidPrice)
+        index: index, before: beforeSale, unitPrice: market[index].bidPrice, operation: UUID())
       recordFirstNativeCommodityTrade(
         buying: false, index: index, before: beforeTrade, unitPrice: market[index].bidPrice)
     }
@@ -7511,6 +7550,7 @@ public actor GameRuntime {
     var candidate = game
     candidate.resolveCourierTerminals()
     candidate.resolveFreightTerminals()
+    try BisonUnitJournalSave.validatePreservation(from: game, to: candidate)
     try Self.writeCommander(&candidate, to: url)
     game = candidate
     scriptSaveURL = url
@@ -7568,6 +7608,7 @@ public actor GameRuntime {
       try candidate.applyMeasuredPending()
       _ = try candidate.recordRecoveryLossIfNeeded()
       _ = try candidate.recordIdentifiedSalvageLossIfNeeded()
+      try BisonUnitJournalSave.validatePreservation(from: value, to: candidate)
       return try finishNativeSaveState(
         &candidate, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
     } catch {
@@ -7681,12 +7722,14 @@ public actor GameRuntime {
     let data = try CommanderSaveInput.read(from: url)
     try ScriptSaveJSONPreflight.validate(data)
     try CurrentNewtKitSave.validateFields(data, location: .commander, schema: nil)
+    try BisonUnitJournalSave.validateFields(data, location: .pointer)
     // A malformed pointer must not turn a misplaced native inquiry into a raw-Commander fallback.
     try NativeMemoryAtlasWatcherEnvelope.validateFields(data, location: .commander, schema: nil)
     _ = try NativeC01InquirySave.validateFields(data, location: .commander, schema: nil)
     try NativeIsolationWorkParentSave.validateFields(data, part: .commander)
     try NativeIsolationWorkSave.validateFields(data, part: .commander)
     try NativeBorrowedVoiceSave.validateFields(data, part: .commander)
+    try NativeTitheCommissionSave.validateFields(data, part: .commander)
     try NativeQuietChoirSave.validateFields(data, part: .commander)
     try NativeMemoryAtlasSave.validateFields(data, part: .commander)
     try NativeSignedPassageOpeningSave.validateFields(data, part: .commander)
@@ -7726,7 +7769,11 @@ public actor GameRuntime {
       candidate.resolveCourierTerminals()
       candidate.resolveFreightTerminals()
       candidate.suspendUnavailableScriptContent(navigationBinding: navigationBinding)
-      guard candidate.commander.valid else { throw SaveError.invalidCommander }
+      guard candidate.commander.valid,
+        candidate.commander.savedBisonUnitAllocations == commander.savedBisonUnitAllocations,
+        BisonUnitJournalSave.sceneIsConsistent(candidate.bodies, commander: candidate.commander) else {
+        throw SaveError.invalidCommander
+      }
       if persistMigrations && Self.nativeCommanderNeedsRepublishing(candidate, persisted: commander)
       {
         try Self.writeCommander(&candidate, to: url, navigationBinding: navigationBinding)

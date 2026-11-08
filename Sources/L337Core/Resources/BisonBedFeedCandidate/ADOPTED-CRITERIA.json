@@ -1,0 +1,29 @@
+{
+  "actualObservations": [],
+  "allGasReserveKg": 0.025,
+  "maximumBedInletPressurePascals": 20000,
+  "maximumCapturedPlusReservedGasKg": 12,
+  "minimumBedVoidAt12kgCapture": 0.3,
+  "minimumDesignMassFlowKgPerSecond": 0.00056,
+  "minimumGasExpansionKelvin": 221.58,
+  "minimumOutletPressurePascals": 10000,
+  "newFlowAssemblyQualificationKgPerSecond": 0.00056,
+  "parentCommit": "8fba148f2272e02ebd13377fc08f6487dc1f0c9e",
+  "retainedMinimumCaOConversionFraction": 0.7459050626406961,
+  "retainedNearDepletionUptakeKgPerSecond": 0.0005420238095238096,
+  "scope": "Chosen finite bed/feed candidate; new engineering assumptions, no actual qualification",
+  "thermalBaseCommit": "a81bba23c8114fd6441f01fe7afaa53d749be5fc",
+  "unchangedLimits": {
+    "CO2ThermalStockKg": 14,
+    "chargedAdditionalKg": 19,
+    "dryKg": 248,
+    "electricalWattsPerUnit": 42,
+    "loadedMaximumKg": 372.5,
+    "loopDryKg": 32,
+    "movingDriveMassKg": 43.3376,
+    "paidForceNewtons": 4000,
+    "paidPairs": 2,
+    "paidWorkJoules": 2400,
+    "passivePairs": 2
+  }
+}
