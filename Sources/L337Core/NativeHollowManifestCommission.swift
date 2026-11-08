@@ -309,10 +309,12 @@ struct NativeHollowManifestInstalledCase: Sendable {
 
 extension Game {
   func hollowManifestInstalledCase() throws -> NativeHollowManifestInstalledCase {
-    guard !isMissionTrial, trialTitle == nil, let owner = commander.equipmentOwnerID,
+    guard !isMissionTrial, trialTitle == nil,
+      let owner = withReadOnlyCommander({ $0.equipmentOwnerID }),
       let instance = hollowManifestMission, let state = instance.savedHollowManifest,
       hollowManifestPack?.digest == instance.digest,
-      state.birth.input.owner == owner, NativeHollowManifestSave.validateClaims(commander)
+      state.birth.input.owner == owner,
+      withReadOnlyCommander({ NativeHollowManifestSave.validateClaims($0) })
     else { throw SaveError.invalidCommander }
     // Source ownership survives inactive work/suspension. Actual work producers enforce their
     // own eligibility; historical issuance needs no current issuer berth, carrier or fitting.
@@ -323,13 +325,14 @@ extension Game {
 
   }
   func acceptsHollowManifestInstalledCase(_ pin: NativeHollowManifestInstalledCase) -> Bool {
-    commander.equipmentOwnerID == pin.owner && nativeStationRuntimeEpoch == pin.runtimeEpoch
+    withReadOnlyCommander({ $0.equipmentOwnerID == pin.owner })
+      && nativeStationRuntimeEpoch == pin.runtimeEpoch
       && hollowManifestPack?.digest == pin.digest
       && withReadOnlyScriptState({ $0.instances[pin.missionID] }) == pin.snapshot
       && withReadOnlyScriptState({ $0.nextEvent }) == pin.nextEvent
       && withReadOnlyScriptState({ $0.pendingEvents }) == pin.pendingEvents
       && !isMissionTrial && trialTitle == nil
-      && NativeHollowManifestSave.validateClaims(commander)
+      && withReadOnlyCommander({ NativeHollowManifestSave.validateClaims($0) })
   }
 }
 

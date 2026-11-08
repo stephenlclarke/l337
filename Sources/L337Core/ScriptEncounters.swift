@@ -2114,9 +2114,11 @@ extension Game {
       let pack = scriptPack(for: instance)
     else { throw SaveError.invalidCommander }
     guard let station = scriptAnchor, station.energy > 0, bodies.contains(station),
-      let anchors = commander.flightSimulation.anchors, let projected = gameplayContext(),
+      let anchors = withReadOnlyCommander({ $0.flightSimulation.anchors }),
+      let projected = gameplayContext(),
       NativeC03AnchorFrames.matches(
-        canonical: anchors, current: projected, flight: commander.flightSimulation, station: station)
+        canonical: anchors, current: projected,
+        flight: withReadOnlyCommander({ $0.flightSimulation }), station: station)
     else { return nil }
     let flight = withReadOnlyCommander({ $0.flightSimulation })
     let initial = pin.state.phase == .unadmitted
@@ -2431,7 +2433,8 @@ private final class C03PreparedCapture {
 
 extension Game {
   func isC03OriginalBody(_ body: borrowing SpaceBody) -> Bool {
-    guard let id = body.missionInstanceID, let instance = commander.scriptState.instances[id]
+    guard let id = body.missionInstanceID,
+      let instance = withReadOnlyScriptState({ $0.instances[id] })
     else { return false }
     return NativeHollowManifestCommission.marked(instance)
   }

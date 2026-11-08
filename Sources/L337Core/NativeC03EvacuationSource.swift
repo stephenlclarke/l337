@@ -77,7 +77,7 @@ extension Game {
       instance.savedHollowManifest?.custodyRegister?.recovery != nil
     else { return nil }
     let pin = try hollowManifestInstalledCase()
-    let custody = commander.nativePeople
+    let custody = withReadOnlyCommander { $0.nativePeople }
     let source = custody?.hollowManifestCrew
     let initial = source == nil
     let held: NativeC03HeldRegisterData?
@@ -95,13 +95,15 @@ extension Game {
       accommodation = try .candidate(owner: pin.owner, mission: instance.id)
     } else {
       guard let custody, let source,
-        NativeC03CrewSourceSave.validSource(source, custody: custody, commander: commander),
+        withReadOnlyCommander({
+          NativeC03CrewSourceSave.validSource(source, custody: custody, commander: $0)
+        }),
         source.mission == instance.id, pin.state.crewSource == source.missionReference
       else { throw SaveError.invalidCommander }
       held = nil
       accommodation = source.registration.accommodation
     }
-    let flight = commander.flightSimulation
+    let flight = withReadOnlyCommander { $0.flightSimulation }
     guard let station = scriptAnchor, bodies.contains(station), let current = flight.anchors,
       let projected = gameplayContext(), NativeC03AnchorFrames.matches(
         canonical: current, current: projected, flight: flight, station: station)
@@ -111,7 +113,7 @@ extension Game {
     guard source.map({ $0.registration.reference == reference }) ?? true else {
       throw SaveError.invalidCommander
     }
-    let previousGeometry = commander.scriptState.geometry
+    let previousGeometry = withReadOnlyScriptState { $0.geometry }
     var geometry = previousGeometry
     let declared = try NativeC03EvacuationDefinitions.resolve()
     let designs = declared.designs
@@ -185,9 +187,9 @@ extension Game {
   func acceptsHollowManifestEvacuationAdmissionContext(_ context: NativeC03EvacuationAdmissionContext) -> Bool {
     guard !docked, systemIdentity == NativeHollowManifestDefinition.carrierWorld,
       acceptsHollowManifestInstalledCase(context.pin),
-      commander.nativePeople == context.previousCustody,
-      commander.flightSimulation == context.flight,
-      commander.scriptState.geometry == context.previousGeometry,
+      withReadOnlyCommander({ $0.nativePeople == context.previousCustody }),
+      withReadOnlyCommander({ $0.flightSimulation == context.flight }),
+      withReadOnlyScriptState({ $0.geometry == context.previousGeometry }),
       nativeStationRuntimeEpoch == context.epoch, scriptAnchor == context.station,
       hollowManifestMission?.ownedEncounters[NativeC03CrewSourceState.encounter] == context.installedEncounter
     else { return false }
