@@ -192,8 +192,8 @@ def main():
     parser.add_argument('--research', type=Path, default=Path('docs/research'))
     parser.add_argument('--expansions', type=Path, help='Recovered P30/P46 package directories for verified source geometry')
     parser.add_argument('--models', type=Path, required=True, help='Pinned O08 Resources/Models directory')
-    parser.add_argument('--model-inventory',type=Path,default=Path('docs/SHIP-MODEL-RESEARCH.json'))
-    parser.add_argument('--additional-inventory',type=Path,default=Path('docs/SHIP-MODEL-RESEARCH-2.json'))
+    parser.add_argument('--model-inventory',type=Path,default=Path('docs/design/SHIP-MODEL-RESEARCH.json'))
+    parser.add_argument('--additional-inventory',type=Path,default=Path('docs/design/SHIP-MODEL-RESEARCH-2.json'))
     parser.add_argument('--model-cache',type=Path,help='Verified archive cache containing Pxx/S9/Santa/IC.oxz')
     args = parser.parse_args()
     research = args.research

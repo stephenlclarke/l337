@@ -4,6 +4,6 @@ The bundled G07 offer requires destruction of three distinct registered armed ra
 
 The exact twelve-path boundary reuses existing native NPC combat, admission, choices, payment and saves. NPCs carry no incidental bounty. No producer, saved state, schema or receipt type changes.
 
-Matching build and native pack CLI passed. Focused owner qualification passed as an explicit 15-method / 16-case aggregate: ten unaffected passes retained and five corrected combat-fixture journeys passed on the final source. One independent review is pending. Broad CI, sanitizer, leak and release gates are integrator responsibilities. See [docs/ISSUE-original-corridor-defence.md](docs/ISSUE-original-corridor-defence.md).
+Matching build and native pack CLI passed. Focused owner qualification passed as an explicit 15-method / 16-case aggregate: ten unaffected passes retained and five corrected combat-fixture journeys passed on the final source. One independent review is pending. Broad CI, sanitizer, leak and release gates are integrator responsibilities. See [docs/ISSUE-original-corridor-defence.md](docs/archive/work-items/quality-delivery/ISSUE-original-corridor-defence.md).
 
 Focused coverage from the retained final five-method profile is 120/151 helper lines (79.47%). It excludes the ten retained passing methods, including failure and withdrawal paths, whose initial profile was replaced by SwiftPM. This is a recorded coverage exception to the 90% aim; canonical combined coverage remains a follow-up gate, and no aggregate coverage percentage is claimed.

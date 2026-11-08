@@ -1130,6 +1130,10 @@ struct L337App {
     withExtendedLifetime(delegate) { app.run() }
   }
   @MainActor private static func media() throws {
+    try medusaReadmeImage()
+    if CommandLine.arguments.contains("--medusa-only") {
+      return
+    }
     try exportAppIcon()
     try exportRouteReadmeMedia()
     try FileManager.default.createDirectory(atPath: "docs", withIntermediateDirectories: true)
@@ -1175,6 +1179,23 @@ struct L337App {
       }
     }
     try gif.finish()
+  }
+  @MainActor private static func medusaReadmeImage() throws {
+    var game = Game(executive: false)
+    game.commander.shipDisplayStyle = .shadedPanels
+    let frame = try Display.originalDesignPresentation(
+      game, shipID: "SH171", time: 1.25, width: 1024, height: 768)
+    guard frame.hasShipSurfaces,
+      let image = imageForFrame(frame, width: 1024, height: 768)
+    else { throw ShipFileError.invalid("SH171") }
+    let directory = URL(fileURLWithPath: "docs/images", isDirectory: true)
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    guard let png = CGImageDestinationCreateWithURL(
+      directory.appendingPathComponent("medusa-readme.png") as CFURL,
+      UTType.png.identifier as CFString, 1, nil)
+    else { throw SaveError.invalidCommander }
+    CGImageDestinationAddImage(png, image, nil)
+    guard CGImageDestinationFinalize(png) else { throw SaveError.invalidCommander }
   }
   private static func diagnostics() async throws {
     try await GameRuntime().diagnoseScriptHost()

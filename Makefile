@@ -2,6 +2,7 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := help
 RELEASE_PLAN ?= dist/release-plan.json
 ELITE_SANITIZERS ?= 0
+README_MEDIA_ARGS ?=
 .PHONY: release-plan publish-release release-readme release
 .PHONY: sanitizer-checkpoints-check native-runner-check instance-equality-check ci-capture-check change-scope-check help build run test unit-ci local-runner-check coverage coverage-check threads threads-full address sanitizers sanitizers-check leaks readme-media induction-ark-model induction-crew-log-model ships ships-check showroom-data showroom-import showroom-check liberator-design hull-designs mission-packs-check flight-controls-check package-macos homebrew-cask homebrew-cask-check sonar ci
 help:
@@ -38,9 +39,13 @@ sanitizers-check:
 leaks: sanitizer-checkpoints-check
 	python3 Tools/CI/quality_phase_checkpoints.py leaks
 readme-media:
-	swift run --jobs 1 -Xswiftc -disable-batch-mode L337 --readme-media
+ifeq ($(filter --medusa-only,$(README_MEDIA_ARGS)),)
+	swift run --jobs 1 -Xswiftc -disable-batch-mode L337 --readme-media $(README_MEDIA_ARGS)
 	mkdir -p Resources
 	iconutil -c icns .build/L337.iconset -o Resources/L337.icns
+else
+	python3 Tools/showroom/ship-reference.py --readme-medusa
+endif
 
 induction-ark-model:
 	python3 Tools/export-induction-ark-model.py
