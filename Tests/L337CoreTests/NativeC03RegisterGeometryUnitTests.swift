@@ -105,7 +105,8 @@ struct NativeC03RegisterGeometryUnitTests {
     let body = try #require(spinning.bodies.first)
     // Negative-only native omega. The centre stays stationary while the sampled edges move
     // too fast, so a centre-only relative-speed check would incorrectly accept this snapshot.
-    spinning.bodies[0].physical?.angularVelocity = spinning.modelPose(of: body).orientation.z * 10
+    let angularVelocity = spinning.modelPose(of: body).orientation.z * 10
+    spinning.bodies[0].physical?.angularVelocity = angularVelocity
     #expect(try NativeC03RegisterProbe.measure(in: spinning, bodyID: id, component: component) == nil)
     game.speed = 0.2
     #expect(try NativeC03RegisterProbe.measure(in: game, bodyID: id, component: component) == nil)
