@@ -1,0 +1,1579 @@
+{
+  "actualGameAcceptance": false,
+  "actualObservations": [],
+  "adoptedKitOrLoadSemanticsEdited": false,
+  "adoptedSourceGeometryOrMassEdited": false,
+  "coordinateUnits": "metres",
+  "detailedSourceSHA256": "0d0741f3c0a1eed7595b65274eab5726bc1b22c258b6943f6fdb5332931e91b7",
+  "emptyDryReference": {
+    "centreMetres": [
+      -0.000439370327030006,
+      -1.425719911368685,
+      -2.212408784621561
+    ],
+    "id": "SH029-proposed-finite-empty",
+    "inertiaAboutCentreOfMassKgM2": [
+      4177248.483915724,
+      -5.9640974895247645,
+      204.24817569251405,
+      -5.9640974895247645,
+      5402484.187762398,
+      -153245.7628038793,
+      204.24817569251405,
+      -153245.7628038793,
+      1688214.6142582719
+    ],
+    "massKg": 45520.0
+  },
+  "engineeringSHA256": "f64a24c2863cf047f852d99313ca7ee131ebcda40c3e140f43572d6fbf3aa827",
+  "finiteIntrinsicHardware": [
+    {
+      "centreMetres": [
+        -7.000000000000008,
+        -2.000000000000002,
+        -16.372803966627874
+      ],
+      "certificates": {
+        "design": {
+          "cornerWinding": [
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "noBoundaryContact": true
+        },
+        "nativeDesign": {
+          "cornerWinding": [
+            1.0,
+            1.0000000000000002,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0000000000000002,
+            1.0
+          ],
+          "noBoundaryContact": true
+        }
+      },
+      "detailedComponentIndex": 8,
+      "detailedOwnerName": "pallet stern drive casing",
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "equivalentDistributionGeometry": {
+        "faces": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            4,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            5
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            0,
+            5,
+            1
+          ],
+          [
+            2,
+            3,
+            7
+          ],
+          [
+            2,
+            7,
+            6
+          ],
+          [
+            0,
+            2,
+            6
+          ],
+          [
+            0,
+            6,
+            4
+          ],
+          [
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            7,
+            3
+          ]
+        ],
+        "materialOrBiologicalFunctionQualified": false,
+        "purpose": "Equivalent empty mass geometry only; never recovered installed mechanism or native LOD",
+        "vertices": [
+          [
+            -7.300000000000008,
+            -2.300000000000002,
+            -16.772803966627873
+          ],
+          [
+            -7.300000000000008,
+            -2.300000000000002,
+            -15.972803966627874
+          ],
+          [
+            -7.300000000000008,
+            -1.7000000000000022,
+            -16.772803966627873
+          ],
+          [
+            -7.300000000000008,
+            -1.7000000000000022,
+            -15.972803966627874
+          ],
+          [
+            -6.700000000000008,
+            -2.300000000000002,
+            -16.772803966627873
+          ],
+          [
+            -6.700000000000008,
+            -2.300000000000002,
+            -15.972803966627874
+          ],
+          [
+            -6.700000000000008,
+            -1.7000000000000022,
+            -16.772803966627873
+          ],
+          [
+            -6.700000000000008,
+            -1.7000000000000022,
+            -15.972803966627874
+          ]
+        ]
+      },
+      "id": "SH029-empty-intrinsic-0",
+      "inertiaAboutCentreOfMassKgM2": [
+        74.9999999999709,
+        0.0,
+        0.0,
+        0.0,
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        53.99999999998545
+      ],
+      "massKg": 900.0,
+      "nativeComponentIndex": 5,
+      "nativeOwnerName": "pallet stern drive bounded closed casing",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority",
+      "originalAnchorMetres": [
+        -7.000000000000008,
+        -2.000000000000002,
+        -16.372803966627874
+      ],
+      "originalHardwareAllocationIndex": 0
+    },
+    {
+      "centreMetres": [
+        7.000000000000007,
+        -2.000000000000003,
+        -16.372803966627878
+      ],
+      "certificates": {
+        "design": {
+          "cornerWinding": [
+            1.0,
+            1.0000000000000002,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "noBoundaryContact": true
+        },
+        "nativeDesign": {
+          "cornerWinding": [
+            1.0,
+            1.0,
+            1.0000000000000002,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "noBoundaryContact": true
+        }
+      },
+      "detailedComponentIndex": 11,
+      "detailedOwnerName": "pallet stern drive casing",
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "equivalentDistributionGeometry": {
+        "faces": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            4,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            5
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            0,
+            5,
+            1
+          ],
+          [
+            2,
+            3,
+            7
+          ],
+          [
+            2,
+            7,
+            6
+          ],
+          [
+            0,
+            2,
+            6
+          ],
+          [
+            0,
+            6,
+            4
+          ],
+          [
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            7,
+            3
+          ]
+        ],
+        "materialOrBiologicalFunctionQualified": false,
+        "purpose": "Equivalent empty mass geometry only; never recovered installed mechanism or native LOD",
+        "vertices": [
+          [
+            6.700000000000007,
+            -2.300000000000003,
+            -16.772803966627876
+          ],
+          [
+            6.700000000000007,
+            -2.300000000000003,
+            -15.972803966627877
+          ],
+          [
+            6.700000000000007,
+            -1.700000000000003,
+            -16.772803966627876
+          ],
+          [
+            6.700000000000007,
+            -1.700000000000003,
+            -15.972803966627877
+          ],
+          [
+            7.300000000000007,
+            -2.300000000000003,
+            -16.772803966627876
+          ],
+          [
+            7.300000000000007,
+            -2.300000000000003,
+            -15.972803966627877
+          ],
+          [
+            7.300000000000007,
+            -1.700000000000003,
+            -16.772803966627876
+          ],
+          [
+            7.300000000000007,
+            -1.700000000000003,
+            -15.972803966627877
+          ]
+        ]
+      },
+      "id": "SH029-empty-intrinsic-1",
+      "inertiaAboutCentreOfMassKgM2": [
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        53.99999999998545
+      ],
+      "massKg": 900.0,
+      "nativeComponentIndex": 6,
+      "nativeOwnerName": "pallet stern drive bounded closed casing",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        0
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority",
+      "originalAnchorMetres": [
+        7.000000000000007,
+        -2.000000000000003,
+        -16.372803966627878
+      ],
+      "originalHardwareAllocationIndex": 1
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -3.0,
+        -4.0
+      ],
+      "certificates": {
+        "design": {
+          "cornerWinding": [
+            0.9999999999999997,
+            0.9999999999999997,
+            1.0000000000000002,
+            0.9999999999999999,
+            1.0000000000000002,
+            0.9999999999999997,
+            0.9999999999999997,
+            0.9999999999999996
+          ],
+          "noBoundaryContact": true
+        },
+        "nativeDesign": {
+          "cornerWinding": [
+            0.9999999999999997,
+            0.9999999999999997,
+            1.0000000000000002,
+            0.9999999999999999,
+            1.0000000000000002,
+            0.9999999999999997,
+            0.9999999999999997,
+            0.9999999999999996
+          ],
+          "noBoundaryContact": true
+        }
+      },
+      "detailedComponentIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "dimensionsMetres": [
+        1.0,
+        0.8,
+        1.2
+      ],
+      "equivalentDistributionGeometry": {
+        "faces": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            4,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            5
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            0,
+            5,
+            1
+          ],
+          [
+            2,
+            3,
+            7
+          ],
+          [
+            2,
+            7,
+            6
+          ],
+          [
+            0,
+            2,
+            6
+          ],
+          [
+            0,
+            6,
+            4
+          ],
+          [
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            7,
+            3
+          ]
+        ],
+        "materialOrBiologicalFunctionQualified": false,
+        "purpose": "Equivalent empty mass geometry only; never recovered installed mechanism or native LOD",
+        "vertices": [
+          [
+            -0.5,
+            -3.4,
+            -4.6
+          ],
+          [
+            -0.5,
+            -3.4,
+            -3.4
+          ],
+          [
+            -0.5,
+            -2.6,
+            -4.6
+          ],
+          [
+            -0.5,
+            -2.6,
+            -3.4
+          ],
+          [
+            0.5,
+            -3.4,
+            -4.6
+          ],
+          [
+            0.5,
+            -3.4,
+            -3.4
+          ],
+          [
+            0.5,
+            -2.6,
+            -4.6
+          ],
+          [
+            0.5,
+            -2.6,
+            -3.4
+          ]
+        ]
+      },
+      "id": "SH029-empty-intrinsic-2",
+      "inertiaAboutCentreOfMassKgM2": [
+        130.0,
+        0.0,
+        0.0,
+        0.0,
+        152.5,
+        0.0,
+        0.0,
+        0.0,
+        102.5
+      ],
+      "massKg": 750.0,
+      "nativeComponentIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        -3
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority",
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "originalHardwareAllocationIndex": 2
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -3.0,
+        1.9999999999999998
+      ],
+      "certificates": {
+        "design": {
+          "cornerWinding": [
+            0.9999999999999997,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0000000000000002,
+            0.9999999999999999,
+            1.0000000000000002
+          ],
+          "noBoundaryContact": true
+        },
+        "nativeDesign": {
+          "cornerWinding": [
+            0.9999999999999997,
+            1.0,
+            1.0,
+            1.0,
+            1.0,
+            1.0000000000000002,
+            0.9999999999999999,
+            1.0000000000000002
+          ],
+          "noBoundaryContact": true
+        }
+      },
+      "detailedComponentIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "dimensionsMetres": [
+        1.0,
+        0.6,
+        1.2
+      ],
+      "equivalentDistributionGeometry": {
+        "faces": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            4,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            5
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            0,
+            5,
+            1
+          ],
+          [
+            2,
+            3,
+            7
+          ],
+          [
+            2,
+            7,
+            6
+          ],
+          [
+            0,
+            2,
+            6
+          ],
+          [
+            0,
+            6,
+            4
+          ],
+          [
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            7,
+            3
+          ]
+        ],
+        "materialOrBiologicalFunctionQualified": false,
+        "purpose": "Equivalent empty mass geometry only; never recovered installed mechanism or native LOD",
+        "vertices": [
+          [
+            -0.5,
+            -3.3,
+            1.4
+          ],
+          [
+            -0.5,
+            -3.3,
+            2.5999999999999996
+          ],
+          [
+            -0.5,
+            -2.7,
+            1.4
+          ],
+          [
+            -0.5,
+            -2.7,
+            2.5999999999999996
+          ],
+          [
+            0.5,
+            -3.3,
+            1.4
+          ],
+          [
+            0.5,
+            -3.3,
+            2.5999999999999996
+          ],
+          [
+            0.5,
+            -2.7,
+            1.4
+          ],
+          [
+            0.5,
+            -2.7,
+            2.5999999999999996
+          ]
+        ]
+      },
+      "id": "SH029-empty-intrinsic-3",
+      "inertiaAboutCentreOfMassKgM2": [
+        27.0,
+        0.0,
+        0.0,
+        0.0,
+        36.600000000000136,
+        0.0,
+        0.0,
+        0.0,
+        20.40000000000009
+      ],
+      "massKg": 180.0,
+      "nativeComponentIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        0,
+        0,
+        3
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority",
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "originalHardwareAllocationIndex": 3
+    },
+    {
+      "centreMetres": [
+        -2.0,
+        -3.0,
+        -2.220446049250313e-16
+      ],
+      "certificates": {
+        "design": {
+          "cornerWinding": [
+            0.9999999999999999,
+            0.9999999999999996,
+            1.0,
+            1.0000000000000002,
+            0.9999999999999997,
+            1.0,
+            0.9999999999999994,
+            1.0000000000000002
+          ],
+          "noBoundaryContact": true
+        },
+        "nativeDesign": {
+          "cornerWinding": [
+            0.9999999999999999,
+            0.9999999999999996,
+            1.0,
+            1.0000000000000002,
+            0.9999999999999997,
+            1.0,
+            0.9999999999999994,
+            1.0000000000000002
+          ],
+          "noBoundaryContact": true
+        }
+      },
+      "detailedComponentIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "dimensionsMetres": [
+        0.8,
+        0.8,
+        0.8
+      ],
+      "equivalentDistributionGeometry": {
+        "faces": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            4,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            5
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            0,
+            5,
+            1
+          ],
+          [
+            2,
+            3,
+            7
+          ],
+          [
+            2,
+            7,
+            6
+          ],
+          [
+            0,
+            2,
+            6
+          ],
+          [
+            0,
+            6,
+            4
+          ],
+          [
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            7,
+            3
+          ]
+        ],
+        "materialOrBiologicalFunctionQualified": false,
+        "purpose": "Equivalent empty mass geometry only; never recovered installed mechanism or native LOD",
+        "vertices": [
+          [
+            -2.4,
+            -3.4,
+            -0.40000000000000024
+          ],
+          [
+            -2.4,
+            -3.4,
+            0.3999999999999998
+          ],
+          [
+            -2.4,
+            -2.6,
+            -0.40000000000000024
+          ],
+          [
+            -2.4,
+            -2.6,
+            0.3999999999999998
+          ],
+          [
+            -1.6,
+            -3.4,
+            -0.40000000000000024
+          ],
+          [
+            -1.6,
+            -3.4,
+            0.3999999999999998
+          ],
+          [
+            -1.6,
+            -2.6,
+            -0.40000000000000024
+          ],
+          [
+            -1.6,
+            -2.6,
+            0.3999999999999998
+          ]
+        ]
+      },
+      "id": "SH029-empty-intrinsic-4",
+      "inertiaAboutCentreOfMassKgM2": [
+        12.799999999999955,
+        0.0,
+        0.0,
+        0.0,
+        12.800000000000182,
+        0.0,
+        0.0,
+        0.0,
+        12.799999999999955
+      ],
+      "massKg": 120.0,
+      "nativeComponentIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        -2,
+        0,
+        1
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority",
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "originalHardwareAllocationIndex": 4
+    },
+    {
+      "centreMetres": [
+        2.0,
+        -3.0,
+        -2.220446049250313e-16
+      ],
+      "certificates": {
+        "design": {
+          "cornerWinding": [
+            1.0,
+            1.0000000000000002,
+            1.0,
+            1.0,
+            1.0000000000000002,
+            1.0000000000000002,
+            1.0000000000000002,
+            1.0
+          ],
+          "noBoundaryContact": true
+        },
+        "nativeDesign": {
+          "cornerWinding": [
+            1.0,
+            1.0000000000000002,
+            1.0,
+            1.0,
+            1.0000000000000002,
+            1.0000000000000002,
+            1.0000000000000002,
+            1.0
+          ],
+          "noBoundaryContact": true
+        }
+      },
+      "detailedComponentIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "equivalentDistributionGeometry": {
+        "faces": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            4,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            5
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            0,
+            5,
+            1
+          ],
+          [
+            2,
+            3,
+            7
+          ],
+          [
+            2,
+            7,
+            6
+          ],
+          [
+            0,
+            2,
+            6
+          ],
+          [
+            0,
+            6,
+            4
+          ],
+          [
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            7,
+            3
+          ]
+        ],
+        "materialOrBiologicalFunctionQualified": false,
+        "purpose": "Equivalent empty mass geometry only; never recovered installed mechanism or native LOD",
+        "vertices": [
+          [
+            1.7,
+            -3.3,
+            -0.40000000000000024
+          ],
+          [
+            1.7,
+            -3.3,
+            0.3999999999999998
+          ],
+          [
+            1.7,
+            -2.7,
+            -0.40000000000000024
+          ],
+          [
+            1.7,
+            -2.7,
+            0.3999999999999998
+          ],
+          [
+            2.3,
+            -3.3,
+            -0.40000000000000024
+          ],
+          [
+            2.3,
+            -3.3,
+            0.3999999999999998
+          ],
+          [
+            2.3,
+            -2.7,
+            -0.40000000000000024
+          ],
+          [
+            2.3,
+            -2.7,
+            0.3999999999999998
+          ]
+        ]
+      },
+      "id": "SH029-empty-intrinsic-5",
+      "inertiaAboutCentreOfMassKgM2": [
+        7.5,
+        0.0,
+        0.0,
+        0.0,
+        7.500000000000114,
+        0.0,
+        0.0,
+        0.0,
+        5.400000000000091
+      ],
+      "massKg": 90.0,
+      "nativeComponentIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        2,
+        0,
+        1
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority",
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "originalHardwareAllocationIndex": 5
+    },
+    {
+      "centreMetres": [
+        -2.0,
+        -3.0,
+        -4.0
+      ],
+      "certificates": {
+        "design": {
+          "cornerWinding": [
+            1.0000000000000007,
+            1.0000000000000009,
+            1.0,
+            1.0000000000000002,
+            0.9999999999999993,
+            1.0000000000000007,
+            1.0,
+            1.0000000000000002
+          ],
+          "noBoundaryContact": true
+        },
+        "nativeDesign": {
+          "cornerWinding": [
+            1.0000000000000007,
+            1.0000000000000009,
+            1.0,
+            1.0000000000000002,
+            0.9999999999999993,
+            1.0000000000000007,
+            1.0,
+            1.0000000000000002
+          ],
+          "noBoundaryContact": true
+        }
+      },
+      "detailedComponentIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "equivalentDistributionGeometry": {
+        "faces": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            4,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            5
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            0,
+            5,
+            1
+          ],
+          [
+            2,
+            3,
+            7
+          ],
+          [
+            2,
+            7,
+            6
+          ],
+          [
+            0,
+            2,
+            6
+          ],
+          [
+            0,
+            6,
+            4
+          ],
+          [
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            7,
+            3
+          ]
+        ],
+        "materialOrBiologicalFunctionQualified": false,
+        "purpose": "Equivalent empty mass geometry only; never recovered installed mechanism or native LOD",
+        "vertices": [
+          [
+            -2.3,
+            -3.3,
+            -4.4
+          ],
+          [
+            -2.3,
+            -3.3,
+            -3.6
+          ],
+          [
+            -2.3,
+            -2.7,
+            -4.4
+          ],
+          [
+            -2.3,
+            -2.7,
+            -3.6
+          ],
+          [
+            -1.7,
+            -3.3,
+            -4.4
+          ],
+          [
+            -1.7,
+            -3.3,
+            -3.6
+          ],
+          [
+            -1.7,
+            -2.7,
+            -4.4
+          ],
+          [
+            -1.7,
+            -2.7,
+            -3.6
+          ]
+        ]
+      },
+      "id": "SH029-empty-intrinsic-6",
+      "inertiaAboutCentreOfMassKgM2": [
+        11.66666666666697,
+        0.0,
+        0.0,
+        0.0,
+        11.66666666666697,
+        0.0,
+        0.0,
+        0.0,
+        8.400000000000091
+      ],
+      "massKg": 140.0,
+      "nativeComponentIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        -2,
+        0,
+        -3
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority",
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "originalHardwareAllocationIndex": 6
+    },
+    {
+      "centreMetres": [
+        2.0,
+        -3.0,
+        -4.0
+      ],
+      "certificates": {
+        "design": {
+          "cornerWinding": [
+            1.0,
+            1.0000000000000002,
+            0.9999999999999993,
+            1.0000000000000007,
+            0.9999999999999999,
+            1.0000000000000004,
+            1.0000000000000007,
+            1.0000000000000009
+          ],
+          "noBoundaryContact": true
+        },
+        "nativeDesign": {
+          "cornerWinding": [
+            1.0,
+            1.0000000000000002,
+            0.9999999999999993,
+            1.0000000000000007,
+            0.9999999999999999,
+            1.0000000000000004,
+            1.0000000000000007,
+            1.0000000000000009
+          ],
+          "noBoundaryContact": true
+        }
+      },
+      "detailedComponentIndex": 0,
+      "detailedOwnerName": "reinforced low pallet",
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "equivalentDistributionGeometry": {
+        "faces": [
+          [
+            0,
+            1,
+            3
+          ],
+          [
+            0,
+            3,
+            2
+          ],
+          [
+            4,
+            6,
+            7
+          ],
+          [
+            4,
+            7,
+            5
+          ],
+          [
+            0,
+            4,
+            5
+          ],
+          [
+            0,
+            5,
+            1
+          ],
+          [
+            2,
+            3,
+            7
+          ],
+          [
+            2,
+            7,
+            6
+          ],
+          [
+            0,
+            2,
+            6
+          ],
+          [
+            0,
+            6,
+            4
+          ],
+          [
+            1,
+            5,
+            7
+          ],
+          [
+            1,
+            7,
+            3
+          ]
+        ],
+        "materialOrBiologicalFunctionQualified": false,
+        "purpose": "Equivalent empty mass geometry only; never recovered installed mechanism or native LOD",
+        "vertices": [
+          [
+            1.7,
+            -3.3,
+            -4.4
+          ],
+          [
+            1.7,
+            -3.3,
+            -3.6
+          ],
+          [
+            1.7,
+            -2.7,
+            -4.4
+          ],
+          [
+            1.7,
+            -2.7,
+            -3.6
+          ],
+          [
+            2.3,
+            -3.3,
+            -4.4
+          ],
+          [
+            2.3,
+            -3.3,
+            -3.6
+          ],
+          [
+            2.3,
+            -2.7,
+            -4.4
+          ],
+          [
+            2.3,
+            -2.7,
+            -3.6
+          ]
+        ]
+      },
+      "id": "SH029-empty-intrinsic-7",
+      "inertiaAboutCentreOfMassKgM2": [
+        13.33333333333303,
+        0.0,
+        0.0,
+        0.0,
+        13.33333333333303,
+        0.0,
+        0.0,
+        0.0,
+        9.599999999999454
+      ],
+      "massKg": 160.0,
+      "nativeComponentIndex": 0,
+      "nativeOwnerName": "reinforced low pallet",
+      "newCentreOffsetMetres": [
+        2,
+        0,
+        -3
+      ],
+      "newDimensionBasis": "NEW equivalent uniform empty mass-distribution engineering, not recovered or installed mechanism geometry; no person/cabin/service/energy authority",
+      "originalAnchorMetres": [
+        0.0,
+        -3.0,
+        -1.0000000000000002
+      ],
+      "originalHardwareAllocationIndex": 7
+    }
+  ],
+  "generatorSHA256": "40678d9c9294afbc8f6a19fd64504a904d06862f2720318f8cb2323ec8674d5a",
+  "id": "SH029",
+  "inputManifestSHA256": "59d693224f0a605deffacfbdf3099d3368e1eed3df0120d334334820e3bc94a8",
+  "installedCabinCrewPowerOrLoadedAuthorityGranted": false,
+  "metresPerSourceUnit": 1,
+  "name": "Okapi",
+  "nativeComponents": [
+    {
+      "faceCount": 12,
+      "faceStart": 0,
+      "name": "reinforced low pallet",
+      "vertexCount": 8,
+      "vertexStart": 0
+    },
+    {
+      "faceCount": 32,
+      "faceStart": 12,
+      "name": "forward pressure cabin",
+      "vertexCount": 18,
+      "vertexStart": 8
+    },
+    {
+      "faceCount": 12,
+      "faceStart": 44,
+      "name": "segmented deck cargo",
+      "vertexCount": 8,
+      "vertexStart": 26
+    },
+    {
+      "faceCount": 12,
+      "faceStart": 56,
+      "name": "segmented deck cargo",
+      "vertexCount": 8,
+      "vertexStart": 34
+    },
+    {
+      "faceCount": 12,
+      "faceStart": 68,
+      "name": "segmented deck cargo",
+      "vertexCount": 8,
+      "vertexStart": 42
+    },
+    {
+      "faceCount": 16,
+      "faceStart": 80,
+      "name": "pallet stern drive bounded closed casing",
+      "vertexCount": 10,
+      "vertexStart": 50
+    },
+    {
+      "faceCount": 16,
+      "faceStart": 96,
+      "name": "pallet stern drive bounded closed casing",
+      "vertexCount": 10,
+      "vertexStart": 60
+    },
+    {
+      "faceCount": 8,
+      "faceStart": 112,
+      "name": "broad cabin window pressure canopy",
+      "vertexCount": 6,
+      "vertexStart": 70
+    }
+  ],
+  "nativeFaceLimit": 512,
+  "nativeSourceSHA256": "585cb9a7f47fb13f6249c09f2ccc262eb852c98ad10721a95730b68fc4eb7b5c",
+  "nativeTriangles": 120,
+  "originalPointAllocationReference": {
+    "centreOfMassMetres": [
+      -1.3986174459247845e-16,
+      -1.4257199113686845,
+      -2.1596843453779724
+    ],
+    "dryMassKilograms": 45520,
+    "inertiaAboutCentreOfMassKgM2": [
+      4171309.2074277224,
+      25.521504283102313,
+      8.650912642919666e-11,
+      25.521504283102313,
+      5394472.820061804,
+      -149467.49059116415,
+      8.650912642919666e-11,
+      -149467.49059116415,
+      1685907.5230456782
+    ]
+  },
+  "planSHA256": "bc85c90747bb32b8c87bb6724f75fd7daadc16bc0a1c785d932bf5e4a012955c",
+  "r3SHA256": "229d27ea2c5213bd0993c99b9545997e065673e578b7120829e5c6bd06dafc59",
+  "resourceSHA256": "ecf10abbdaed31818297c0658daa7ffa542214411ab285b2c9e429e3b1ea5ade",
+  "roundingReserve": {
+    "centreMetres": [
+      -0.000439370327030006,
+      -1.425719911368685,
+      -2.212408784621561
+    ],
+    "id": "reserve-at-new-com",
+    "inertiaAboutCentreOfMassKgM2": [
+      -4.440892098500626e-16,
+      0.0,
+      0.0,
+      0.0,
+      2.220446049250313e-16,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "massKg": 0.3124617045832565
+  },
+  "schemaVersion": 1,
+  "sourceOnlyReference": true,
+  "status": "PROPOSED_FINITE_INTRINSIC_EMPTY_REFERENCE_NOT_ADOPTED_LOAD_OR_INSTALLATION",
+  "unchangedStock": {
+    "centreMetres": [
+      -8.201216121497112e-17,
+      -1.3476524591393884,
+      -1.5940777561796626
+    ],
+    "id": "SH029-original-area-lamina-stock",
+    "inertiaAboutCentreOfMassKgM2": [
+      3787803.7380695585,
+      25.52150428309535,
+      6.701775095774334e-11,
+      25.52150428309535,
+      4927187.49634972,
+      -135537.41232179402,
+      6.701775095774334e-11,
+      -135537.41232179402,
+      1593287.3773995985
+    ],
+    "massKg": 42279.68753829542
+  }
+}

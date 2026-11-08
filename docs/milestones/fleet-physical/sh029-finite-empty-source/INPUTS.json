@@ -1,0 +1,56 @@
+[
+  {
+    "file": "SH029-resource.toml",
+    "sourcePath": "Sources/L337Core/Resources/Ships/SH029.toml",
+    "bytes": 299661,
+    "sha256": "ecf10abbdaed31818297c0658daa7ffa542214411ab285b2c9e429e3b1ea5ade"
+  },
+  {
+    "file": "SH029-R3.toml",
+    "sourcePath": "docs/fleet-design-v2/ships/SH029.toml",
+    "bytes": 3527,
+    "sha256": "229d27ea2c5213bd0993c99b9545997e065673e578b7120829e5c6bd06dafc59"
+  },
+  {
+    "file": "SH029-engineering.json",
+    "sourcePath": "Sources/L337Core/Resources/OriginalFleetPhysical/SH029.json",
+    "bytes": 33093,
+    "sha256": "f64a24c2863cf047f852d99313ca7ee131ebcda40c3e140f43572d6fbf3aa827"
+  },
+  {
+    "file": "SH029-model.json",
+    "sourcePath": "Sources/L337Core/Resources/OriginalFleetShowroomModels/SH029.json",
+    "bytes": 11465,
+    "sha256": "57ce315d0c17fcc402f3bda4f94573fcc1f9fdee460ddadd12eccb42bb572473"
+  },
+  {
+    "file": "SH029-ownership.json",
+    "sourcePath": "docs/milestones/fleet-physical/baseline-029-061-source-ownership/SH029.json",
+    "bytes": 6701,
+    "sha256": "cb34dbde2c08c9a3ff6c5cf3d888dea7902abbb1d7570660604ca27361b27ac6"
+  },
+  {
+    "file": "SH029-roles.json",
+    "sourcePath": "docs/milestones/fleet-physical/baseline-029-061-role-unit-map-first.json",
+    "bytes": 116777,
+    "sha256": "cd6f1104333dd94aa78b758e6ef0dac1504ab79fe6a3e6d5ef3ef3287536b3c3"
+  },
+  {
+    "file": "SH029-detailed.toml",
+    "sourcePath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02/SH029-design.toml",
+    "bytes": 403032,
+    "sha256": "0d0741f3c0a1eed7595b65274eab5726bc1b22c258b6943f6fdb5332931e91b7"
+  },
+  {
+    "file": "SH029-native.toml",
+    "sourcePath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02-native-lod/SH029-design.toml",
+    "bytes": 296962,
+    "sha256": "585cb9a7f47fb13f6249c09f2ccc262eb852c98ad10721a95730b68fc4eb7b5c"
+  },
+  {
+    "file": "SH029-native-components.json",
+    "sourcePath": "/Users/sclarke/.codex/visualizations/2026/10/13/01a136c8-628e-7112-a1af-e1e3e59b1859/fleet-completion-20261019/batch-02-native-lod/SH029-components.json",
+    "bytes": 1244,
+    "sha256": "a4eced5046a13e212c00e8ee6402e576f49540507a80ca8ce3ec53ec0a3e9650"
+  }
+]

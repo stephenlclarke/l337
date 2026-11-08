@@ -1,0 +1,59 @@
+{
+  "id": "SH029",
+  "scope": "Separate proposed finite intrinsic EMPTY source only",
+  "preserved": {
+    "dryMassKilograms": 45520,
+    "intrinsicAllocations": 8,
+    "intrinsicHardwareMassKg": 3240,
+    "nativeVertices": 76,
+    "nativeTriangles": 120,
+    "metresPerSourceUnit": 1,
+    "adoptedSourcesChanged": false
+  },
+  "ownerMappings": {
+    "detailedDriveIndices": [
+      8,
+      11
+    ],
+    "nativeDriveIndices": [
+      5,
+      6
+    ],
+    "otherDetailedAndNativeOwner": 0,
+    "otherOwnerName": "reinforced low pallet"
+  },
+  "referenceCriteria": {
+    "massAbsoluteKg": 1e-08,
+    "centreAbsoluteMetres": 1e-09,
+    "fullInertiaAbsoluteKgM2": 1e-06,
+    "boxRawMomentAbsolute": 1e-08,
+    "tetrahedronRawMomentAbsolute": 1e-07,
+    "ownerCornerWindingAbsolute": 1e-08,
+    "strictBoundaryContactForbidden": true,
+    "strictPairContactOrOverlapForbidden": true,
+    "diagonalOnlyMomentResidualRejectAbove": 1e-06
+  },
+  "references": [
+    "Eight-point Gauss box volume integrals",
+    "Oriented tetrahedron volume/first/second integrals over12triangle box surfaces",
+    "Degree2 three-point surface quadrature over all2376 detailed original triangles with exact adopted14/5kg-per-square-metre role map",
+    "Full independent tensor solve and momentum/work identities"
+  ],
+  "negatives": [
+    "outside box",
+    "overlapping boxes",
+    "actual opposite drive component used as owner",
+    "missing owner face",
+    "changed adopted input bytes",
+    "old point tensor used for new finite reference",
+    "diagonal-only inertia response"
+  ],
+  "actualMBA": "Six methodsPASS, process0, elapsed0.8919997089542449s; raw suite0.745s; peak58490880B; no retries",
+  "swift": "Six authored methods UNCOMPILED_UNRUN; G1 sole compiler/native/game/renderer executor",
+  "authority": [
+    "No adopted physical or native geometry/mass changes",
+    "No Newt kit/load semantics changes",
+    "No cabin installation,crew position,power qualification or loaded tensor",
+    "No operating stock,body,custody or game acceptance"
+  ]
+}
