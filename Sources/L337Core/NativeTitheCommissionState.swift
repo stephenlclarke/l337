@@ -58,7 +58,7 @@ struct NativeTitheCommissionAcceptanceFacts: Codable, Sendable, Equatable {
       && Set(visited.map { $0.actor.visit }).count == visited.count
       && visited.allSatisfy({ $0.valid && $0.station.world == owner
         && $0.actor.visit <= dock.actor.visit && $0.calendarSeconds <= calendarSeconds })
-      && visited.contains({ $0.station == dock.station && $0.actor == dock.actor })
+      && visited.contains(where: { $0.station == dock.station && $0.actor == dock.actor })
       && sequence > 0 && sequence < UInt64(Int64.max)
       && physicalTime.isFinite && (0...1e12).contains(physicalTime)
       && calendarSeconds.isFinite && (dock.calendarSeconds...1e12).contains(calendarSeconds)
