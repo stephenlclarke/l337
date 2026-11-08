@@ -18,7 +18,7 @@ ALLOWED_PATHS = {
     '.gitignore', 'Makefile', 'Tools/CI/test_quality_phase_checkpoints.py',
     'Tools/CI/quality_phase_checkpoints.py', 'Tools/CI/m01_normal_attestation.py',
     'Tools/CI/test_m01_normal_attestation.py',
-    'docs/ISSUE-m01-generated-profile.md', 'docs/PR-m01-generated-profile.md',
+    'docs/archive/work-items/quality-delivery/ISSUE-m01-generated-profile.md', 'docs/archive/work-items/quality-delivery/PR-m01-generated-profile.md',
 }
 
 

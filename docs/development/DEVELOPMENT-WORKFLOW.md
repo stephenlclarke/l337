@@ -1,0 +1,19 @@
+# Developer and reviewer workflow
+
+The [agent rules](../../AGENTS.md), latest direct human instructions and Root’s [completion ledger](../COMPLETION-LEDGER.md) govern current work. Consult the ledger before choosing work and route the next player-facing batch through Root. Work only on PRs you raise or Root assigns. Preserve another owner’s working changes.
+
+The assigned owner implements a useful bounded feature or concrete correction, writes meaningful focused unit tests and ensures they pass. Coordinate the existing executor lease through Root; G1 owns native execution and integration for the current assignment. Source-only review, authored UNRUN tests and prepared assets do not establish integration readiness or playable completion.
+
+Before integration, independently review the actual changed code and relevant callers for bugs, performance and style. MBA raises actionable GitHub issues, verifies corrected code and applicable hosted unit results, and answers/resolves actual review threads. Reuse completed reviews and unaffected evidence. Before merging every project or distribution-tap PR, the publishing agent posts `@codex review`, waits for the result, fixes every actionable finding, and requests review again until clean. CI does not need to request reviews automatically. Address existing actionable automated findings as well. Required checks and any required independent approval must pass on the final PR head before protected merge; do not bypass or weaken protections.
+
+Record assignment, bounded files, dependencies and next handoff in the existing ledger row. At freeze record the commit and focused evidence; after integration record the actual candidate/main commit. Root owns ledger reconciliation. Keep functional status, playable build/release location and blockers distinct. Only Root dispatches the owned MBA pipeline, with one MBA task active at a time.
+
+Batch broad integration, system and performance checks after several useful deliveries and at formal release checkpoints. Preserve the final [CI and release gates](INTEGRATION-WORKFLOW.md). A source review or focused pass does not waive them.
+
+Reviewer entry points are the assigned PR’s actual diff and discussion, actionable GitHub issues, Actions results and completed committed-main Sonar analyses. Keep one concise handoff; raw evidence should be stored once and linked. Earlier local queue comments and dated assignment tables are [historical records](../archive/checkpoints/MBA-TEST-QUEUE.md).
+
+The complete [October workflow snapshot](../archive/checkpoints/DEVELOPMENT-WORKFLOW-202610.md) is retained for decisions and failure context. Its M01-only queue, role/model labels and old sanitizer requirements are historical; use current authority above, including the mandatory publishing-agent review loop.
+
+After a bounded issue is actually implemented/fixed and integrated, close its actual linked GitHub issue and remove its ISSUE/PR Markdown records from the repository, including any archive copy. Git history retains them. Record the actual integrated commit/evidence in the existing coverage or work record before removal and fix indexes/links. Keep outstanding work and unresolved fix/integration explicitly indexed; authored source, source review, an UNRUN/PASS label or a mass source import alone does not prove integration. A separate open requirement stays once in the live ledger/current contract; broader game or release acceptance does not retain an otherwise finished bounded record.
+
+Do not close an actual GitHub issue while its own bounded implementation, integration or required acceptance remains unresolved. A filename number or a link alone does not establish issue identity or closure eligibility. A genuinely separate broader milestone remains open in its own ledger/contract; it does not retain a finished bounded issue.

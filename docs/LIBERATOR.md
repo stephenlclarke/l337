@@ -1,5 +1,7 @@
 # Liberator DSV2
 
+Historical predecessor design and visual-reference record, retained at this path because generated provenance links to it. It is not the current SH171 identity or acquisition guide. Use the [Medusa original contract](fleet-design-v2/ships/SH171.toml) and [original hull bindings](player/ORIGINAL-FLEET.md).
+
 The Liberator from Blake's 7 is a purchasable, flyable native adaptation at stable save ID `SH171`. Search **Liberator**, **DSV2** or **SH171** in the station shipyard. Its individual [TOML](../Sources/L337Core/Resources/Ships/SH171.toml) supplies the actual geometry, materials, gameplay, price and source notes; [the rotating catalogue entry](SHIP-CATALOGUE.md#sh171---liberator-dsv2) is rendered from that same definition. Existing ship records are preserved. Research reserves SH168-SH170 for three other craft, so those IDs are not reused.
 
 ## Visual references and authoring

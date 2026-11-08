@@ -30,7 +30,7 @@ def digest(data):
 
 # exportShipMedia -> Display.shipPortrait -> CatalogueShip.previewMesh / Display.draw
 # -> imageFor / drawFrame (Quartz CPU path; no ShipPanelRenderer is supplied).
-# Keep this boundary in sync when that call path gains a dependency. See docs/PR-75.md.
+# Keep this boundary in sync when that call path gains a dependency. See docs/archive/work-items/fleet/PR-75.md.
 RENDER_FILES = (
     'Package.swift', 'Package.resolved',
     'Sources/L337Core/AutoTargetControl.swift',  # Basis3 and SpaceBody.modelVector
@@ -313,8 +313,8 @@ def run_renderer(command,root,log,descriptors,deadline):
     return code
 
 
-def render_media(ids):
-    """Keep make ships as the sole asset route, with normal shared leases and no bespoke protocol."""
+def render_media(ids, *, readme_medusa=False):
+    """Use the same asset leases and limits for ship media and the original Medusa header."""
     root=Path.cwd()
     sys.path.insert(0,str(root/'Tools/CI'))
     from recoverable_shards import file_claim,worker_limit
@@ -337,7 +337,8 @@ def render_media(ids):
         (root/'.build').mkdir(exist_ok=True)
         directory=Path(tempfile.mkdtemp(prefix='ship-media-',dir=root/'.build'))
         with (directory/'render.log').open('wb',buffering=0) as log:
-            command=['swift','run','--jobs','1','-Xswiftc','-disable-batch-mode','L337','--ship-media',*ids]
+            arguments=['--readme-media','--medusa-only'] if readme_medusa else ['--ship-media',*ids]
+            command=['swift','run','--jobs','1','-Xswiftc','-disable-batch-mode','L337',*arguments]
             code=run_renderer(command,root,log,[lock.fileno() for lock in locks],deadline)
         if code:raise RuntimeError('Ship renderer exited '+str(code)+'; log: '+str(directory/'render.log'))
 
@@ -345,8 +346,13 @@ def render_media(ids):
 def main():
     """Render changed ships first, then rebuild the central reference deterministically."""
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--check',action='store_true')
+    mode=parser.add_mutually_exclusive_group()
+    mode.add_argument('--check',action='store_true')
+    mode.add_argument('--readme-medusa',action='store_true')
     args=parser.parse_args()
+    if args.readme_medusa:
+        render_media([],readme_medusa=True)
+        return
     ships=ship_files.read_ships();shared=shared_hash();manifest_path=MEDIA/'manifest.json'
     old=json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     changed=[s['id'] for s in ships if needs_render(ship_files.SHIP_FOLDER/(s['id']+'.toml'),shared,old.get(s['id'],{}),MEDIA/(s['id']+'.gif'))]

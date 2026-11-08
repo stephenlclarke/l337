@@ -144,6 +144,14 @@ class CleanupTests(unittest.TestCase):
 
 
 class PublicationTests(unittest.TestCase):
+    def test_medusa_header_does_not_read_or_republish_the_ship_catalogue(self):
+        with patch.object(media.sys,'argv',['ship-reference.py','--readme-medusa']),\
+             patch.object(media.ship_files,'read_ships',side_effect=AssertionError('catalogue read')),\
+             patch.object(media,'references') as refs,patch.object(media,'render_media') as render:
+            media.main()
+        render.assert_called_once_with([],readme_medusa=True)
+        refs.assert_not_called()
+
     def test_failed_renderer_leaves_manifest_and_reference_publication_untouched(self):
         with tempfile.TemporaryDirectory() as temp:
             directory=Path(temp);manifest=directory/'manifest.json';manifest.write_text('{"old":"unchanged"}')
@@ -196,6 +204,25 @@ class EntryPointTests(unittest.TestCase):
             self.assertEqual(run.call_args.args[0],['swift','run','--jobs','1','-Xswiftc','-disable-batch-mode','L337','--ship-media','SH001'])
             self.assertEqual(len(list((root/'.build').glob('ship-media-*/render.log'))),1)
             self.assertEqual(list(root.rglob('policy.json')),[]);self.assertEqual(list(root.rglob('state.json')),[])
+
+    def test_medusa_header_uses_existing_guard_and_admission(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)
+            for available, permitted in [(1,False),(1000000,True)]:
+                with self.subTest(available=available),\
+                     patch.dict(sys.modules,self.setup_entry(root)),patch.object(media.Path,'cwd',return_value=root),\
+                     patch.object(media.subprocess,'check_output',return_value=(
+                         f'page size of 16384 bytes\nPages free: {available}.\nPages inactive: {available}.\nPages speculative: {available}.').encode()),\
+                     patch.object(media.shutil,'disk_usage',return_value=SimpleNamespace(free=200*1024**3)),\
+                     patch.object(media,'run_renderer',return_value=0) as run:
+                    if permitted:
+                        media.render_media([],readme_medusa=True)
+                        self.assertEqual(run.call_args.args[0],['swift','run','--jobs','1','-Xswiftc','-disable-batch-mode','L337','--readme-media','--medusa-only'])
+                        self.assertEqual(run.call_args.args[3],[3,3])
+                    else:
+                        with self.assertRaisesRegex(ValueError,'RAM'):
+                            media.render_media([],readme_medusa=True)
+                        run.assert_not_called()
 
 
 
