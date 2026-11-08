@@ -30,12 +30,13 @@ public enum ComparisonRating: String, Sendable {
       return a.text == b.text ? .same : .different
     }
     guard left.isFinite, right.isFinite else { return .unavailable }
-    // Use the same formatter as the displayed fields, including its halfway rule.
-    if left == right || NativeShipValueFormat.tenths(left) == NativeShipValueFormat.tenths(right) {
+    // Honor each field's rendered precision; native fields already use the tenths formatter.
+    if left == right || a.text == b.text {
       return .same
     }
-    let lowerIsBetter = ["price", "jump_spool_seconds", "required_crew_including_commander"]
-      .contains(b.key)
+    let lowerIsBetter = [
+      "price", "hull_price_credits", "jump_spool_seconds", "required_crew_including_commander",
+    ].contains(b.key)
     return (right > left) != lowerIsBetter ? .better : .worse
   }
 }
@@ -171,16 +172,20 @@ extension Commander {
     do {
       return try projectedEquipmentTransfer(to: shipID).gameShipProfile
     } catch {
-      // Keep the comparison explicit without presenting a fit that cannot transfer.
+      // Native qualification stops precede any carried-fit projection for staged originals.
+      let pendingOriginal = OriginalDetailedHullStage.blocksRuntime(shipID)
+      let reason = pendingOriginal ? "Original hull qualification pending" : "Incompatible carried fit"
       return .init(
-        id: "game-" + shipID, title: ship.name + " / incompatible carried fit",
+        id: "game-" + shipID,
+        title: ship.name + (pendingOriginal ? " / original qualification pending" : " / incompatible carried fit"),
         group: "native-game",
-        context:
-          "Carried fittings or resources cannot transfer to this hull. Review trade for details.",
+        context: pendingOriginal
+          ? "This original hull awaits native and actual-game qualification. Use Source notes for authored requirements."
+          : "Carried fittings or resources cannot transfer to this hull. Review trade for details.",
         fields: gameShipProfile.fields.map { field in
           .init(
             key: field.key, label: field.label, text: "Unavailable", number: nil,
-            unit: field.unit, status: "game", basis: "Incompatible carried fit")
+            unit: field.unit, status: "game", basis: reason)
         })
     }
   }

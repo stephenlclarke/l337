@@ -1,0 +1,113 @@
+{
+  "status": "AUTHORED_CURRENT_BASE_CRITERIA_NOT_EXECUTION_PROOF",
+  "baseCommit": "cb233c5af4bd96127050c5271c3688b1280dc34d",
+  "features": [
+    {
+      "id": "ordinary-original-axis-steering",
+      "requirement": "Use each genuine original hull pitch/yaw limit and retain actual bank for ordinary trader/miner/pirate actors. Mission/script/security/unnamed fallback, source/admission rules, acceleration/braking and beam paths remain exact.",
+      "positiveSource": "Qualified SH029 with own literal pitch0.84/yaw0.78/roll0.95; real allocation/admission/TrafficIntent, two banks and four target axes plus zero duration.",
+      "negativeSource": "SH025 native964 remains unavailable to runtime and mission loader; no replacement geometry or admission waiver."
+    },
+    {
+      "id": "declared-role-search",
+      "requirement": "Search current primary type, primary role and all declared secondary roles by raw and readable labels, preserving substring/case conventions and pending-hull trade/discovery boundaries."
+    },
+    {
+      "id": "pending-original-readout",
+      "requirement": "Show qualification pending when original staged source blocks projection; preserve incompatible carried-fit wording for real fuel/capacity incompatibility and own-fit availability."
+    },
+    {
+      "id": "rendered-precision-and-price",
+      "requirement": "Compare actual displayed precision. Source yaw0.84/0.78 differs, native0.8/0.8 is same; lower hull_price_credits is better. Incompatible/missing groups remain unavailable."
+    },
+    {
+      "id": "destruction-versus-fabrication",
+      "requirement": "Player destruction is recorded as destruction history for blueprint/fabrication hulls; station/capital collection milestones retain their own meaning and cold-save facts confer no fabrication."
+    }
+  ],
+  "testSuites": [
+    {
+      "file": "Tests/L337CoreTests/NativeFleetDiscoveryUnitTests.swift",
+      "suite": "NativeFleetDiscoveryUnitTests",
+      "methods": [
+        "encounterIdentificationAndDestructionRemainDiscoveryFacts",
+        "npcKillsForeignOwnersUnknownTypesAndBackdatedEvidenceRefuseAtomically",
+        "stationCollectionNeedsActualDockingEvidenceAndCannotCreateABlueprint",
+        "pendingNonstationCapitalsRefuseDestructionMilestonesAtomically",
+        "nonstationCapitalDestructionCompletesItsOwnMilestoneWithoutPurchaseRights",
+        "strictDiscoverySchemaPreservesLowerFeaturesAndRejectsNestedUnknownFields"
+      ],
+      "status": "UNCOMPILED_UNRUN; five enabled methods and one explicitly source-blocked positive method",
+      "sourceBlockedMethods": [
+        "nonstationCapitalDestructionCompletesItsOwnMilestoneWithoutPurchaseRights"
+      ]
+    },
+    {
+      "file": "Tests/L337CoreTests/OriginalFleetNPCSteeringTests.swift",
+      "suite": "OriginalFleetNPCSteeringTests",
+      "methods": [
+        "currentSourceIntentKeepsSeparateAxesAndActualBank",
+        "unqualifiedPeregrineRemainsUnavailableToTheSteeringFixture",
+        "zeroDurationKeepsRolledCurrentSourceAndVelocityUntouched"
+      ],
+      "status": "UNCOMPILED_UNRUN_CURRENT_COMPOSITION"
+    },
+    {
+      "file": "Tests/L337CoreTests/OriginalFleetPendingComparisonTests.swift",
+      "suite": "OriginalFleetPendingComparisonTests",
+      "methods": [
+        "actualPendingOriginalsShowQualificationWithoutProjectingACarriedFit",
+        "genuineStartingFuelIncompatibilityKeepsTheOldLabelAndOwnFitStaysAvailable",
+        "genuineEnvironmentObjectsKeepNilGameProfileAndSeparateSourceNotes"
+      ],
+      "status": "UNCOMPILED_UNRUN_CURRENT_COMPOSITION"
+    },
+    {
+      "file": "Tests/L337CoreTests/OriginalFleetRoleSearchTests.swift",
+      "suite": "OriginalFleetRoleSearchTests",
+      "methods": [
+        "genuineMultirolePeregrineMatchesSecondaryRolesAndReadableLabels",
+        "completeCurrentFleetRoleQueriesPreserveExistingIdentityAndSourceMatching",
+        "searchingDeclaredPendingRolesDoesNotGrantVisibilityKnowledgeOrTrade"
+      ],
+      "status": "UNCOMPILED_UNRUN_CURRENT_COMPOSITION"
+    },
+    {
+      "file": "Tests/L337CoreTests/OriginalFleetSourceRatingTests.swift",
+      "suite": "OriginalFleetSourceRatingTests",
+      "methods": [
+        "actualOriginalSourceNotesUseVisiblePrecisionAndRealPriceDirection",
+        "actualCompatibleNativeProjectionsKeepEqualDisplayedTenthsAndPriceDirection",
+        "actualUnavailableFitsAndIncompatibleSourceGroupsNeverReceiveBenefitRatings"
+      ],
+      "status": "UNCOMPILED_UNRUN_CURRENT_COMPOSITION"
+    }
+  ],
+  "distinctMethodIdentities": 18,
+  "sourceReview": "Reuse prior whole steering algorithm review only for exact unchanged scope/algorithm; current composition and changed fixture review pending via Root. No review of other draft packets inferred.",
+  "actualSwiftExecution": "G1 sole executor. 18 declared identities comprise17 enabled source-planned methods and1 source-blocked positive. Actual discovery/execution/case counts remain unissued; blocked test is not PASS.",
+  "genuineBlockers": [
+    "SH025964 and SH0611720 native triangles exceed512; no candidate is admitted by this batch.",
+    "SH061 fixed512 diagnostic loses28 original profile contacts; fidelity/physical/C03 acceptance remains open.",
+    "Empty-hull budgets do not establish installed cabins,crew positions,power or loaded tensors.",
+    "Positive nonstation-capital destruction milestone acceptance is source-blocked for SH043/SH081/SH123; it is explicitly disabled and cannot count as runnable or passed."
+  ],
+  "preservedCurrentWork": [
+    "All PR315 integrated Medusa fivepaths",
+    "Current beam/birth diagnostics and Newt source pool/kit budget/SH029 derivation",
+    "Current showroom controls and physical scaling",
+    "Current optical material validation and purchase-policy status",
+    "Current SH023/SH040/SH058 successors and all unrelated newer source/tests",
+    "Current package/resources and executor policy; no compiler/native/renderer execution"
+  ],
+  "enabledSourcePlannedMethods": 17,
+  "sourceBlockedPositiveMethods": 1,
+  "positiveCapitalAcceptance": {
+    "status": "SOURCE_BLOCKED_NOT_PASS",
+    "method": "NativeFleetDiscoveryUnitTests.nonstationCapitalDestructionCompletesItsOwnMilestoneWithoutPurchaseRights",
+    "sourceFacts": "Only SH043/SH081/SH123 currently declare destruction milestones; all three remain in pending source registrations and blocksRuntime.",
+    "preservation": "Complete original positive body, capital/vessel/destruction/never predicates and milestone assertions retained behind explicit disabled trait. No admitted actor or metadata substitution.",
+    "unblocking": "A genuinely qualified original capital source is required; then remove the explicit source blocker and execute the unchanged positive assertions through G1. Native/game acceptance remains distinct.",
+    "currentNegative": "Separate actual-ID parameterized test requires all three pending and destruction proof invalid, record refusal and atomic unchanged discovery."
+  }
+}

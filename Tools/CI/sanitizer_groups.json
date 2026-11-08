@@ -41,7 +41,7 @@
         "Tests/L337CoreTests/ScriptCourierGalleryTests.swift": "7531755a80670b00e04af0c31429f887f6cd8eb6468c81026da96e367309c8d7",
         "Tests/L337CoreTests/ShipPanelRendererTests.swift": "5d03195a7f7f59ceaa2622026dc080ee7adb23bb6702c6af787e570ba5c6200a",
         "Tests/L337CoreTests/StartupFrameObservationTests.swift": "17763f7920621c31dca708c61d55501453840e545ac087ced20242741261be92",
-        "Tests/L337CoreTests/StartupSaveRegistrationTests.swift": "986e75a3960cdd01dc18c1fc5b730029f7185dc087abc1803f36faccd95530f6",
+        "Tests/L337CoreTests/StartupSaveRegistrationTests.swift": "9125198939eb3196ae3eef92e542a65a0005aa500acf0ce1f0016c7ebd5e3c10",
         "Tests/L337CoreTests/StartupSaveTests.swift": "fb6de96cce5c538662117b3c3233276087ebf643cd176de9665268e006aa1953",
         "Tests/L337CoreTests/WantedBoardTests.swift": "908856dc077bf51b40901a8692ed853412d8704262e7665bedcd3388dc1a3450"
       },
@@ -177,6 +177,7 @@
         "L337CoreTests.StartupFrameObservationTests/startupArgumentsSelectTheExactSceneAndFiniteDistinctDrawCount()",
         "L337CoreTests.StartupSaveRegistrationTests/actorRestartRetainsUnpublishedDestinationOrUnacknowledgedSuccess(published:)",
         "L337CoreTests.StartupSaveRegistrationTests/collisionAtFirstPublicationPreservesTheExistingPointerAndGeneration()",
+        "L337CoreTests.StartupSaveRegistrationTests/controlledBisonManifestRequiresAFullSecondBudgetAcrossSaveQuitAndContinue()",
         "L337CoreTests.StartupSaveRegistrationTests/failedFirstWriteHasNoReceiptAndPreservesTheRegisteredCommander()",
         "L337CoreTests.StartupSaveRegistrationTests/failedOrMissingSelectedSaveUsesANewDestinationWithoutOverwriting(missing:)",
         "L337CoreTests.StartupSaveRegistrationTests/freshNativeLaunchPublishesAndAcknowledgesItsDefaultDestination()",
