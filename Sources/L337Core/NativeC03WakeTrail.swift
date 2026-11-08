@@ -127,8 +127,9 @@ struct NativeC03WakeTrail: Codable, Equatable, Sendable {
             && admission.spawn.system == admission.actor.system
             && admission.spawn.visit == admission.actor.visit && admission.spawn.producer == .mission
             && admission.spawn.sequence > 0 && admission.spawn.member < 3
-            && admission.sequence > origin.sequence && admission.sequence < state.nextSourceSequence
-            && admission.physicalTime.isFinite
+            && admission.sequence > origin.sequence,
+          admission.sequence < state.nextSourceSequence,
+          admission.physicalTime.isFinite
             && (origin.physicalTime...1e12).contains(admission.physicalTime)
             && admission.geometry == (try? NativeC03WakeGeometry.geometryHash(mark))
         else { return false }
