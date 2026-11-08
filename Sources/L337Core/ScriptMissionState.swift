@@ -71,6 +71,23 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       set { values[0] = newValue }
       _modify { yield &values[0] }
     }
+
+    /// Inspect the enum tag under a synchronous borrow, without projecting or
+    /// copying the potentially large optional payload through its read coroutine.
+    @inline(never)
+    func hasValue() -> Bool {
+      values.withUnsafeBufferPointer { storage in
+        Self.isPresent(storage.baseAddress!.pointee)
+      }
+    }
+
+    @inline(never)
+    private static func isPresent(_ value: borrowing Value?) -> Bool {
+      switch value {
+      case .none: false
+      case .some: true
+      }
+    }
   }
 
   // The payload never escapes. Distinct instance values share only read access; every
@@ -1596,6 +1613,15 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
 
   private var payload: Storage
 
+  /// The complete recognition predicate reads only its three small stored values
+  /// and the optional's presence. Recognition still flags malformed nonnil claims;
+  /// it never validates a source or grants an installed case.
+  @inline(never)
+  func hasHollowManifestMarks(definition: String, digest: String, receipt: String) -> Bool {
+    payload.definition == definition || payload.digest == digest
+      || payload.savedHollowManifest!.hasValue() || payload.receipts.contains(receipt)
+  }
+
   init(id: UUID, definition: String, version: String, digest: String) {
     payload = Storage(id: id, definition: definition, version: version, digest: digest)
   }
@@ -2853,6 +2879,16 @@ public struct ScriptInstance: Codable, Sendable, Equatable, Identifiable {
 
   public var definition: String {
     _read { yield storage[0].definition }
+  }
+
+  /// Keep the payload address inside this synchronous storage borrow. The returned
+  /// Bool adds no authority and avoids the public field read-coroutine chain.
+  @inline(never)
+  func hasHollowManifestMarks(definition: String, digest: String, receipt: String) -> Bool {
+    storage.withUnsafeBufferPointer { values in
+      values.baseAddress!.pointee.hasHollowManifestMarks(
+        definition: definition, digest: digest, receipt: receipt)
+    }
   }
 
   public var version: String {

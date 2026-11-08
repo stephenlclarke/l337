@@ -163,6 +163,27 @@ class ScriptInstanceStorageInventoryTests(unittest.TestCase):
                 "lhs.savedGlassMeridian!.value == rhs.savedGlassMeridian!.value",
                 "lhs.savedGlassMeridian == rhs.savedGlassMeridian"))
 
+    def test_optional_tag_reader_requires_borrowed_presence_without_payload_projection(self):
+        for before, after in [
+            ("    @inline(never)\n    func hasValue()", "    func hasValue()"),
+            ("    @inline(never)\n    private static func isPresent",
+             "    private static func isPresent"),
+            ("values.withUnsafeBufferPointer { storage in",
+             "values.withUnsafeMutableBufferPointer { storage in"),
+            ("Self.isPresent(storage.baseAddress!.pointee)", "Self.isPresent(values[0])"),
+            ("Self.isPresent(storage.baseAddress!.pointee)", "Self.isPresent(value)"),
+            ("Self.isPresent(storage.baseAddress!.pointee)", "true"),
+            ("isPresent(_ value: borrowing Value?)", "isPresent(_ value: Value?)"),
+            ("case .none: false", "case .none: true"),
+            ("case .some: true", "case .some: false"),
+            ("switch value {", "switch value { default: true"),
+            ("    func hasValue() -> Bool {", "    func uncheckedReader() -> Bool {"),
+            ("    func hasValue() -> Bool {",
+             "    func extraUncheckedReader() -> Bool { true }\n    func hasValue() -> Bool {"),
+        ]:
+            with self.subTest(before=before, after=after), self.assertRaisesRegex(ValueError, "typed Array COW"):
+                inspect_instance_storage(self.changed(before, after))
+
     def test_typed_field_cow_and_initialized_count_cannot_be_removed(self):
         for before, after in [
             ("_modify { yield &values[0] }", "_modify { fatalError() }"),

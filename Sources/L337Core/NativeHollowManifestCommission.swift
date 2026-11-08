@@ -52,8 +52,7 @@ enum NativeHollowManifestCommission {
     ScriptIdentity.uuid("hollow-manifest-contact-v1:\(owner):\(mission):\(dock.sequence)")
   }
   static func marked(_ instance: borrowing ScriptInstance) -> Bool {
-    instance.definition == stateID || instance.digest == digest || instance.savedHollowManifest != nil
-      || instance.receipts.contains(receipt)
+    instance.hasHollowManifestMarks(definition: stateID, digest: digest, receipt: receipt)
   }
   static func applies(_ pack: borrowing ScriptPack) -> Bool {
     pack.manifest.stateID == stateID || pack.manifest.hollowManifest != nil
