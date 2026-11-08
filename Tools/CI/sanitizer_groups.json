@@ -239,7 +239,7 @@
       "name": "salvage-shared-release",
       "reason": "Both source files consume NativeSalvageReleaseSnapshot.shared actor/task.",
       "sources": {
-        "Tests/L337CoreTests/NativeSalvageAdmissionRuntimeTests.swift": "fcd51875523b75ea75bf91d5b270e59849d24a9904de946035dfb71c9dec8fe9",
+        "Tests/L337CoreTests/NativeSalvageAdmissionRuntimeTests.swift": "cc910eda3122bcf688a859bb2a8b4dc78300f39b523cea19d720c816723e639f",
         "Tests/L337CoreTests/NativeSalvageOfferTests.swift": "5ef3d5917f344023b03bed06f27ade6980ab2675e2e4812c99b72bd8096006a2"
       },
       "members": [
