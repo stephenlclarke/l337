@@ -222,7 +222,11 @@ class EntryPointTests(unittest.TestCase):
                      patch.object(media,'run_renderer',return_value=0) as run:
                     if permitted:
                         media.render_media([],readme_medusa=True)
-                        self.assertEqual(run.call_args.args[0],['swift','run','--jobs','1','-Xswiftc','-disable-batch-mode','L337','--readme-media','--medusa-only'])
+                        flags = ['--build-system', 'native', '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
+                        self.assertEqual([call.args[0] for call in run.call_args_list], [
+                            ['swift', 'build', *flags, '--product', 'L337'],
+                            ['swift', 'run', *flags, '--skip-build', 'L337', '--readme-media', '--medusa-only'],
+                        ])
                         self.assertEqual(run.call_args.args[3],[3,3])
                     else:
                         with self.assertRaisesRegex(ValueError,'RAM'):
