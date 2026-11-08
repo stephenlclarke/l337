@@ -1,0 +1,828 @@
+{
+  "actualDiaphragmOrFlowStateQualified": false,
+  "actualObservations": [],
+  "actualOpenStateObserved": false,
+  "additionalPreparationElectricalJoules": 7377285.714285715,
+  "additionalPreparationHeatJoules": 2582050.0,
+  "additionalPreparationRejectJoules": 9959335.714285715,
+  "baseDry": {
+    "centreMetres": [
+      -1.1457568764717785e-17,
+      -0.08877245895850501,
+      -0.004039220176708979
+    ],
+    "id": "canonical-dry-connected-pump-valve",
+    "inertiaAboutCentreOfMassKgM2": [
+      159.01711421642565,
+      4.309214231522904e-16,
+      5.570088574603195e-05,
+      4.2398252924838317e-16,
+      162.14744347245028,
+      -0.4166111063290501,
+      5.570088574603542e-05,
+      -0.4166111063290501,
+      41.25289470522769
+    ],
+    "massKg": 247.99999999999994
+  },
+  "baselineLayoutSHA256": "e69e9bcb643a94777c05f8b4727cfaa607e1da9503ef0866fc16164c5d81028d",
+  "baselineSourceSHA256": "d9904fa044c3b8edc92cdcf98a0474e6b71c97f7e80a2a4e283dda65de0bc2f4",
+  "bodyCoreOrContactQualified": false,
+  "conductivityFloorQualified": false,
+  "connectedFixedAssemblies": [
+    {
+      "actualOpenStateObserved": false,
+      "centralCavityDimensionsMetres": [
+        0.026,
+        0.026,
+        0.024060150375939855
+      ],
+      "fluid": {
+        "centreMetres": [
+          -0.06999999999999999,
+          -0.37999999999999995,
+          -0.39999999999999997
+        ],
+        "id": "pump-connected-fluid-geometric-moments",
+        "inertiaAboutCentreOfMassKgM2": [
+          3.0785502251891414e-09,
+          -1.0587911840678754e-22,
+          -2.117582368135751e-22,
+          -1.0587911840678754e-22,
+          3.0785502251882944e-09,
+          0.0,
+          -1.0587911840678754e-22,
+          -4.235164736271502e-22,
+          1.9221333333346376e-09
+        ],
+        "massKg": 2.0000000000000052e-05
+      },
+      "fluidBoxes": [
+        {
+          "maximumMetres": [
+            -0.05700000000000001,
+            -0.367,
+            -0.3879699248120301
+          ],
+          "minimumMetres": [
+            -0.083,
+            -0.393,
+            -0.41203007518796997
+          ]
+        },
+        {
+          "maximumMetres": [
+            -0.064,
+            -0.374,
+            -0.375
+          ],
+          "minimumMetres": [
+            -0.07600000000000001,
+            -0.386,
+            -0.42500000000000004
+          ]
+        }
+      ],
+      "fluidVolumeCubicMetres": 2.0000000000000052e-05,
+      "geometryMomentConvention": "fluid/oldFluid use unit density 1 kg/m3; their massKg fields encode geometric volume, not actual stock",
+      "housing": {
+        "centreMetres": [
+          -0.06999999999999999,
+          -0.38,
+          -0.39999999999999997
+        ],
+        "id": "pump-hollow-connected-fixed-assembly",
+        "inertiaAboutCentreOfMassKgM2": [
+          0.00014001366602328646,
+          0.0,
+          -3.469446951953614e-18,
+          0.0,
+          0.00014001366602328646,
+          6.938893903907228e-18,
+          -1.734723475976807e-18,
+          -6.938893903907228e-18,
+          0.00014331771428571088
+        ],
+        "massKg": 0.3
+      },
+      "housingEffectiveDensityKgPerCubicMetre": 2857.1428571428523,
+      "housingSolidVolumeCubicMetres": 0.00010500000000000017,
+      "id": "pump",
+      "interfaces": [
+        {
+          "axis": 2,
+          "centreMetres": [
+            -0.07,
+            -0.38,
+            -0.42500000000000004
+          ],
+          "sideMetres": 0.012
+        },
+        {
+          "axis": 2,
+          "centreMetres": [
+            -0.07,
+            -0.38,
+            -0.375
+          ],
+          "sideMetres": 0.012
+        }
+      ],
+      "oldFluid": {
+        "centreMetres": [
+          -0.07,
+          -0.38,
+          -0.4
+        ],
+        "id": "pump-prior-sealed-fluid-geometric-moments",
+        "inertiaAboutCentreOfMassKgM2": [
+          2.5855324860234988e-09,
+          0.0,
+          0.0,
+          0.0,
+          2.585532486024346e-09,
+          0.0,
+          0.0,
+          0.0,
+          2.2533333333328532e-09
+        ],
+        "massKg": 2e-05
+      },
+      "outer": {
+        "maximumMetres": [
+          -0.045000000000000005,
+          -0.355,
+          -0.375
+        ],
+        "minimumMetres": [
+          -0.095,
+          -0.405,
+          -0.42500000000000004
+        ]
+      },
+      "pressureIntegrityQualified": false,
+      "pumpOrValveFunctionQualified": false
+    },
+    {
+      "actualOpenStateObserved": false,
+      "centralCavityDimensionsMetres": [
+        0.018,
+        0.018,
+        0.014049382716049386
+      ],
+      "fluid": {
+        "centreMetres": [
+          0.06951840000000001,
+          -0.26951840000000005,
+          -0.135
+        ],
+        "id": "valve-connected-fluid-geometric-moments",
+        "inertiaAboutCentreOfMassKgM2": [
+          2.2631774255013947e-10,
+          -1.1596928000354164e-12,
+          -6.617444900424222e-24,
+          -1.1596928000354164e-12,
+          2.2631774255028506e-10,
+          2.6469779601696886e-23,
+          -1.3234889800848443e-23,
+          0.0,
+          2.9810728106658674e-10
+        ],
+        "massKg": 5.000000000000005e-06
+      },
+      "fluidBoxes": [
+        {
+          "maximumMetres": [
+            0.079,
+            -0.261,
+            -0.12797530864197532
+          ],
+          "minimumMetres": [
+            0.061000000000000006,
+            -0.279,
+            -0.1420246913580247
+          ]
+        },
+        {
+          "maximumMetres": [
+            0.07,
+            -0.266,
+            -0.131
+          ],
+          "minimumMetres": [
+            0.05750000000000001,
+            -0.274,
+            -0.139
+          ]
+        },
+        {
+          "maximumMetres": [
+            0.07400000000000001,
+            -0.2575,
+            -0.131
+          ],
+          "minimumMetres": [
+            0.066,
+            -0.27,
+            -0.139
+          ]
+        }
+      ],
+      "fluidVolumeCubicMetres": 5.000000000000005e-06,
+      "geometryMomentConvention": "fluid/oldFluid use unit density 1 kg/m3; their massKg fields encode geometric volume, not actual stock",
+      "housing": {
+        "centreMetres": [
+          0.07022663529411764,
+          -0.27022663529411767,
+          -0.135
+        ],
+        "id": "valve-hollow-connected-fixed-assembly",
+        "inertiaAboutCentreOfMassKgM2": [
+          1.0538021598328201e-05,
+          -4.109084522727763e-09,
+          3.2526065174565133e-19,
+          -4.109084522727763e-09,
+          1.0538021598328635e-05,
+          0.0,
+          3.2526065174565133e-19,
+          0.0,
+          9.984647713305074e-06
+        ],
+        "massKg": 0.08
+      },
+      "housingEffectiveDensityKgPerCubicMetre": 7529.411764705875,
+      "housingSolidVolumeCubicMetres": 1.0625000000000011e-05,
+      "id": "valve",
+      "interfaces": [
+        {
+          "axis": 0,
+          "centreMetres": [
+            0.05750000000000001,
+            -0.27,
+            -0.135
+          ],
+          "sideMetres": 0.008
+        },
+        {
+          "axis": 1,
+          "centreMetres": [
+            0.07,
+            -0.2575,
+            -0.135
+          ],
+          "sideMetres": 0.008
+        }
+      ],
+      "oldFluid": {
+        "centreMetres": [
+          0.07,
+          -0.27,
+          -0.135
+        ],
+        "id": "valve-prior-sealed-fluid-geometric-moments",
+        "inertiaAboutCentreOfMassKgM2": [
+          2.3422903012751687e-10,
+          0.0,
+          0.0,
+          0.0,
+          2.342290301275301e-10,
+          0.0,
+          0.0,
+          0.0,
+          2.699999999999885e-10
+        ],
+        "massKg": 5e-06
+      },
+      "outer": {
+        "maximumMetres": [
+          0.0825,
+          -0.2575,
+          -0.12250000000000001
+        ],
+        "minimumMetres": [
+          0.05750000000000001,
+          -0.28250000000000003,
+          -0.14750000000000002
+        ]
+      },
+      "pressureIntegrityQualified": false,
+      "pumpOrValveFunctionQualified": false
+    }
+  ],
+  "criteriaWaived": [],
+  "dewar": {
+    "centreMetres": [
+      -2.832677553558737e-18,
+      -0.3099946519555587,
+      0.018488281810542948
+    ],
+    "id": "redistributed5kg-dewar",
+    "inertiaAboutCentreOfMassKgM2": [
+      0.045594435564932034,
+      5.3035393409765e-18,
+      -2.498399417685025e-19,
+      4.5623855121289874e-18,
+      0.09159802129787085,
+      -3.2492503443323772e-06,
+      -2.233701621668056e-19,
+      -3.2492503443323772e-06,
+      0.07199919472379168
+    ],
+    "massKg": 5.0
+  },
+  "extraWorkingFluid": {
+    "centreMetres": [
+      -0.0001289712251308917,
+      -0.18358513948800495,
+      -0.0495529782242633
+    ],
+    "id": "same-paid-propane-nitrogen-new-passages",
+    "inertiaAboutCentreOfMassKgM2": [
+      0.21700007033299187,
+      -0.0010446232928604097,
+      -0.006265871732323513,
+      -0.0010446232928604095,
+      0.2139759384858668,
+      -0.008883696892134866,
+      -0.006265871732323513,
+      -0.008883696892134862,
+      0.025533834329378648
+    ],
+    "massKg": 0.9549999999999998
+  },
+  "fluidRedistributionRawMoments": {
+    "firstKgMetres": [
+      -1.5170400000019203e-06,
+      1.5170399999879792e-06,
+      -1.2073395871925983e-17
+    ],
+    "massKg": 3.46859991900636e-17,
+    "secondKgMetresSquared": [
+      [
+        -3.071291999995436e-07,
+        5.15793600000829e-07,
+        2.048004000008444e-07
+      ],
+      [
+        5.15793600000829e-07,
+        -9.139451999945685e-07,
+        -2.04800399995629e-07
+      ],
+      [
+        2.0480040000078187e-07,
+        -2.048003999953455e-07,
+        4.0109127096776865e-07
+      ]
+    ]
+  },
+  "freeRespiratoryGasCubicMetres": 1.4464066204559547,
+  "generatorSHA256": "0c46a102d89cea4b7793739e93d91ff1d3eebc8eae3d301bb7b87099437fdc32",
+  "hardware": {
+    "centreMetres": [
+      -0.0001710146393416363,
+      -0.17661246187297336,
+      -0.007101769719504846
+    ],
+    "id": "unchanged120kg-redistributed-fixed-housings",
+    "inertiaAboutCentreOfMassKgM2": [
+      73.62177271421012,
+      -0.005980875992799733,
+      -0.018462569872339928,
+      -0.00598087599279974,
+      76.24682709783833,
+      -0.3475780355452417,
+      -0.018462569872339924,
+      -0.34757803554524175,
+      8.731910086927089
+    ],
+    "massKg": 120.0
+  },
+  "macroCertificates": [
+    {
+      "index": 0,
+      "minimumCornerClearanceMetres": 0.23843611508495033,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 1,
+      "minimumCornerClearanceMetres": 0.23913839011546875,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 2,
+      "minimumCornerClearanceMetres": 0.2745195668926492,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 3,
+      "minimumCornerClearanceMetres": 0.2745195668926492,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 4,
+      "minimumCornerClearanceMetres": 0.09440652117770204,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 5,
+      "minimumCornerClearanceMetres": 0.2138030038436194,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 6,
+      "minimumCornerClearanceMetres": 0.25021052631578944,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 7,
+      "minimumCornerClearanceMetres": 0.11021052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 8,
+      "minimumCornerClearanceMetres": 0.2859962259206857,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 9,
+      "minimumCornerClearanceMetres": 0.2859962259206857,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 10,
+      "minimumCornerClearanceMetres": 0.24840448898114822,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 11,
+      "minimumCornerClearanceMetres": 0.24840448898114822,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 12,
+      "minimumCornerClearanceMetres": 0.25271052631578944,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 13,
+      "minimumCornerClearanceMetres": 0.11271052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 14,
+      "minimumCornerClearanceMetres": 0.11271052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 15,
+      "minimumCornerClearanceMetres": 0.11271052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 16,
+      "minimumCornerClearanceMetres": 0.11271052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 17,
+      "minimumCornerClearanceMetres": 0.11471052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 18,
+      "minimumCornerClearanceMetres": 0.22277375924964538,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 19,
+      "minimumCornerClearanceMetres": 0.22277375924964538,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 20,
+      "minimumCornerClearanceMetres": 0.16721052631578942,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 21,
+      "minimumCornerClearanceMetres": 0.11721052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 22,
+      "minimumCornerClearanceMetres": 0.11721052631578943,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 23,
+      "minimumCornerClearanceMetres": 0.16621052631578942,
+      "noBoundaryCrossing": true
+    },
+    {
+      "index": 24,
+      "minimumCornerClearanceMetres": 0.12021052631578943,
+      "noBoundaryCrossing": true
+    }
+  ],
+  "microcellPopulationQualified": false,
+  "newMeteringCapacityKgPerSecond": 0.0005933582109364622,
+  "nominalAccumulatorLiquidCubicMetres": 6.648204272811085e-05,
+  "nominalDiaphragmLocalZMetres": -0.07510405774581516,
+  "nominalLiquidDensityKgPerCubicMetre": 630.0,
+  "peakRSSBytes": 37339136,
+  "phaseStates": [
+    {
+      "CaCO3Kg": 0.0,
+      "CaORemainingKg": 20.0,
+      "bedSolidVolumeCubicMetres": 0.005988023952095809,
+      "bedVoidGasCO2Kg": 0.0009805886243501225,
+      "bodyIndependentThermalCO2TotalKg": 14.0,
+      "capturedCO2Kg": 0,
+      "dewarHeadGasCO2Kg": 0.00047716729957403194,
+      "diffuserGasCO2Kg": 7.218401974123129e-05,
+      "feedLineGasCO2Kg": 0.0001569453355853385,
+      "inletGasCO2Kg": 0.00014243668449946968,
+      "outletGasCO2Kg": 2.174824527380817e-05,
+      "solidCO2Kg": 13.998148929790977,
+      "totalUnreactedGasCO2Kg": 0.0018510702090240021
+    },
+    {
+      "CaCO3Kg": 26.370339740471266,
+      "CaORemainingKg": 5.225038543882333,
+      "bedSolidVolumeCubicMetres": 0.011295135469330175,
+      "bedVoidGasCO2Kg": 0.0004848613702212833,
+      "bodyIndependentThermalCO2TotalKg": 14.0,
+      "capturedCO2Kg": 11.595378284353599,
+      "dewarHeadGasCO2Kg": 0.009783158797432306,
+      "diffuserGasCO2Kg": 7.218401974123129e-05,
+      "feedLineGasCO2Kg": 0.0001569453355853385,
+      "inletGasCO2Kg": 0.00014243668449946968,
+      "outletGasCO2Kg": 2.174824527380817e-05,
+      "solidCO2Kg": 2.393960381193648,
+      "totalUnreactedGasCO2Kg": 0.010661334452753437
+    }
+  ],
+  "portableStates": [
+    {
+      "centreMetres": [
+        -0.0015531358537194046,
+        -0.04410195239838567,
+        -0.009776299437402651
+      ],
+      "id": "nominal-cold-loop-phase-state-0-connected-passages",
+      "inertiaAboutCentreOfMassKgM2": [
+        192.75115474281228,
+        0.00026438413946890463,
+        -0.0005344389681174446,
+        0.00026438413946890463,
+        193.22217417715515,
+        -0.29337917266024716,
+        -0.0005344389681174446,
+        -0.29337917266024716,
+        50.668029813265754
+      ],
+      "massKg": 372.45499999999987
+    },
+    {
+      "centreMetres": [
+        -0.0015531492747793767,
+        -0.04037822053713514,
+        0.02123160663345722
+      ],
+      "id": "nominal-cold-loop-phase-state-1-connected-passages",
+      "inertiaAboutCentreOfMassKgM2": [
+        203.36700272208859,
+        -0.0018914266039532501,
+        -0.01847563543683992,
+        -0.0018914266039532501,
+        204.49264869670813,
+        1.2658613880175216,
+        -0.01847563543683992,
+        1.2658613880175216,
+        50.11242196698665
+      ],
+      "massKg": 372.45499999999987
+    }
+  ],
+  "preparation": {
+    "actualPreparationObserved": false,
+    "addedHeatJoules": 2582050.0,
+    "totalConservativeSeconds": 79644.55886198881,
+    "totalElectricalJoules": 564477409.5238096,
+    "totalNitrogenStockRequiredKg": 19.53808,
+    "totalRejectedJoules": 933297739.5238096
+  },
+  "pressureIntegrityQualified": false,
+  "pumpOrValveFunctionQualified": false,
+  "quietTransitionObserved": false,
+  "radiatorPatchWallMassKg": 2.9883594746403412,
+  "rigidRuntimeConsumerUpdated": false,
+  "solidPoreDomainCubicMetres": 0.009230048218294267,
+  "sourceDesignSHA256": "b9b9c51a41f3fc2fef75bb8575ded23192be50fcf62f9e217731ebb6fde5de62",
+  "status": "CONNECTED_FIXED_HOUSINGS_AND_PORTS_SOURCE_NOT_FUNCTION_OR_OPERATION_QUALIFICATION",
+  "wall": {
+    "materialQualificationObserved": false,
+    "rawResidual": [
+      -7.105427357601002e-14,
+      -3.209238430557093e-15,
+      5.10702591327572e-15,
+      -2.55351295663786e-15,
+      0.0,
+      7.105427357601002e-15,
+      0.0,
+      -6.227657278756737e-16,
+      -4.0939474033052647e-16,
+      -2.9221416952829316e-15,
+      7.105427357601002e-15
+    ],
+    "retainedLidMassKg": 16.3421052631579,
+    "wallCellEffectiveDensityKgPerCubicMetre": [
+      1086.7629865619726,
+      1591.2088409747894,
+      2187.8737939818197,
+      2681.1380346679803,
+      2396.9520447144714,
+      1785.3746273877646,
+      1146.8715710490585,
+      877.18586937481,
+      853.5470780348844,
+      865.5023021572074,
+      615.5780868095761,
+      140.01477130906994,
+      506.86075274550655,
+      385.2821509133557,
+      578.1540108273223,
+      1076.1892823908315,
+      669.1243005395374,
+      168.8045759141084,
+      399.55992193009666,
+      265.07928235469467,
+      235.12696418041736,
+      100.0,
+      300.168521872928,
+      100.0,
+      819.1990544825031,
+      571.3638585347416,
+      683.9367350535027,
+      427.4777632721893,
+      817.4154930906689,
+      599.4432587261184,
+      250.56090962657228,
+      100.0,
+      287.11821348055673,
+      100.0,
+      5534.73871003336,
+      3495.763624303126,
+      1715.480740162203,
+      3911.2260715064144,
+      2505.580265750601,
+      2567.9746708648026,
+      3798.806956543004,
+      1580.6419442757483,
+      3307.5097020079183,
+      5328.584114915609,
+      1228.3319487223323,
+      1341.311444102838,
+      3679.038645246,
+      2616.376514709825,
+      3511.4137375711366,
+      3335.2988986069504,
+      4385.189146507241,
+      4361.61011145942,
+      3422.8721069395096,
+      3566.004057957479,
+      2843.6131481622488,
+      3852.039602442684,
+      1578.2962409754693,
+      1435.3289446068418,
+      278.89446197534846,
+      410.7376183680341,
+      174.79614331562075,
+      674.2611423503256,
+      1032.2180984689371,
+      565.4466025187339,
+      363.8877295107996,
+      490.838677736143,
+      110.67459991699765,
+      593.8106397834832,
+      100.0,
+      263.8699181158546,
+      100.0,
+      228.68033798128656,
+      590.1773194390659,
+      808.4323174492663,
+      425.96824726084577,
+      679.6547515978194,
+      577.2734153451958,
+      821.4849573763357,
+      100.0,
+      310.51625217360083,
+      100.0,
+      248.31902550426614,
+      1085.09236386087,
+      1555.572282871195,
+      2183.551206910607,
+      2681.7838716560072,
+      2399.073330936537,
+      1781.9953561270988,
+      1141.0372582703285,
+      868.3629601805186,
+      846.8036150359011,
+      859.6630351951659
+    ],
+    "wallCellMassKg": [
+      0.03939876667724095,
+      2.186812432681064,
+      2.020268209032195,
+      2.927439993260488,
+      2.617147340753553,
+      1.724328044114174,
+      0.5695900884020241,
+      0.37246544680919824,
+      0.19092193701319818,
+      0.12714997365553762,
+      0.16744855233455425,
+      0.04777412099328831,
+      0.12160181404330034,
+      0.11498864851530079,
+      0.39728109419851093,
+      0.9243853014639003,
+      0.1600154503434572,
+      0.05047774295169101,
+      0.10906634422004423,
+      0.09025866630342191,
+      0.06395885527843484,
+      0.03412077207756263,
+      0.08350060096465363,
+      0.034636137905816496,
+      0.14752288340525085,
+      0.12861532771457926,
+      0.14520457436944928,
+      0.11344566589095414,
+      0.14720169636552718,
+      0.13493606572363964,
+      0.06952269033138547,
+      0.034689451612188345,
+      0.07837356097189627,
+      0.03404968713573379,
+      7.08185842627161,
+      4.472930769820556,
+      1.923679987010804,
+      4.385911856824676,
+      8.070565305734718,
+      8.271539957423183,
+      4.259849000769451,
+      1.7724764864137166,
+      4.232054425745232,
+      6.818077653043301,
+      1.5716862921728505,
+      1.7162468275972282,
+      4.785893739886154,
+      3.4035249939859322,
+      2.964102615083399,
+      2.815438147224381,
+      4.364092815395032,
+      4.340627214708661,
+      2.8893616422123274,
+      3.010184143353405,
+      3.6991267765108846,
+      5.010942802393775,
+      2.0194757365949236,
+      1.83654494157218,
+      0.09496269174149419,
+      0.11211747728013118,
+      0.052269405277984585,
+      0.1612438828709167,
+      0.8866165587618188,
+      0.388549142187942,
+      0.10860341733598257,
+      0.11775793113201968,
+      0.03776302798543309,
+      0.16152740671445098,
+      0.03404968713573379,
+      0.07202756267324852,
+      0.034689451612188,
+      0.06345152700013627,
+      0.13285028133215737,
+      0.1455839894535043,
+      0.11304506482162816,
+      0.14429547919547933,
+      0.12994558263790396,
+      0.14793453303330387,
+      0.03463613790581719,
+      0.08637912298067006,
+      0.03412077207756263,
+      0.06754733839425453,
+      0.03933820105730139,
+      2.1378367945925456,
+      2.016276760684146,
+      2.9281451598737998,
+      2.6194634983118226,
+      1.7210643188914398,
+      0.5666924956677476,
+      0.36871911558118137,
+      0.18941355504918647,
+      0.1262921334874171
+    ]
+  }
+}

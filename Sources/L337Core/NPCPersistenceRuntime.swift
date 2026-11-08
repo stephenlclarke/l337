@@ -113,11 +113,18 @@ extension Game {
       }
       let elapsed = now - snapshot.physicalTime
       guard elapsed.isFinite, elapsed > 0 else { continue }
-      snapshot.position = snapshot.position + snapshot.velocity * elapsed
-      snapshot.rotation += snapshot.rotationRate * elapsed
+      let retainedNewt = snapshot.currentNewtKitStock != nil
+      if retainedNewt {
+        guard let coast = currentNewtUnboundNPCProjection(logical: logical, snapshot: snapshot, at: now)
+        else { continue }
+        snapshot = coast
+      } else {
+        snapshot.position = snapshot.position + snapshot.velocity * elapsed
+        snapshot.rotation += snapshot.rotationRate * elapsed
+        let spin = snapshot.angularVelocity * elapsed
+        snapshot.orientation.rotate(pitch: spin.x, roll: spin.z, yaw: spin.y)
+      }
       snapshot.laserCooldown = max(0, snapshot.laserCooldown - elapsed)
-      let spin = snapshot.angularVelocity * elapsed
-      snapshot.orientation.rotate(pitch: spin.x, roll: spin.z, yaw: spin.y)
       if var resources = snapshot.npc.resources {
         if var reserve = resources.electrical {
           guard
@@ -135,11 +142,45 @@ extension Game {
         snapshot.npc.resources = resources
       }
       snapshot.physicalTime = now
-      _ = commander.npcPersistence.updateUnbound(logicalIdentity: logical, snapshot: snapshot)
+      if retainedNewt {
+        // Publish the coast, finite stock and canonical recovered archive together.
+        // A failed projection/join leaves both original owners untouched.
+        var candidate = self
+        guard candidate.commander.npcPersistence.updateUnbound(logicalIdentity: logical, snapshot: snapshot)
+        else { continue }
+        if var record = candidate.commander.savedEMPState?.records[logical] {
+          guard candidate.updateRecoveredEMPArchive(&record, pose: .init(), now: now) else { continue }
+          candidate.commander.savedEMPState?.records[logical] = record
+        }
+        guard candidate.commander.valid else { continue }
+        self = candidate
+      } else {
+        _ = commander.npcPersistence.updateUnbound(logicalIdentity: logical, snapshot: snapshot)
+      }
     }
   }
 
   mutating func admitPersistentNPCs() {
+    let newt = commander.npcPersistence.unboundSnapshots.filter { $0.value.currentNewtKitStock != nil }
+    guard !newt.isEmpty else {
+      admitPersistentNPCsInPlace()
+      return
+    }
+    var candidate = self
+    candidate.admitPersistentNPCsInPlace()
+    let now = candidate.commander.flightSimulation.physicalTime
+    for logical in newt.keys {
+      guard candidate.commander.npcPersistence.binding(for: logical) != nil,
+        var record = candidate.commander.savedEMPState?.records[logical] else { continue }
+      guard candidate.updateRecoveredEMPArchive(&record,
+        pose: candidate.commander.flightSimulation.pose, now: now) else { return }
+      candidate.commander.savedEMPState?.records[logical] = record
+    }
+    guard candidate.commander.valid else { return }
+    self = candidate
+  }
+
+  private mutating func admitPersistentNPCsInPlace() {
     guard let context = gameplayContext() else { return }
     let prior = commander.npcPersistence.unboundSnapshots
     let provider = nativeCrimboPersistenceSelection(context: context)

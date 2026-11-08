@@ -1,0 +1,1031 @@
+{
+  "actualObservations": [],
+  "compatibility": "Separate finite source reference; original engineering resource/pins and all runtime refusal paths unchanged. No implicit replacement of original point tensor or current actor state.",
+  "coordinateUnits": "metres",
+  "detailedTriangles": 688,
+  "detailedVertices": 368,
+  "emptyDryReference": {
+    "centreMetres": [
+      -2.825544588337585e-17,
+      -0.139242149620484,
+      -3.3938181246089636
+    ],
+    "id": "finite-intrinsic-empty-ox-mk-ii",
+    "inertiaAboutCentreOfMassKgM2": [
+      637679554.6962142,
+      -2.846715212789397,
+      -1.8132585955811523e-09,
+      -2.846715212789397,
+      790595539.1964977,
+      -5897465.594183018,
+      -1.8132585955811523e-09,
+      -5897465.594183018,
+      249135794.43245858
+    ],
+    "massKg": 515013.0
+  },
+  "emptyStateOnly": true,
+  "engineeringSHA256": "60a443b54ccbd7fc643c1775e62b601087dc8a0ab399c30aa5b2d4fe8e3bf797",
+  "finiteIntrinsicHardware": [
+    {
+      "centreMetres": [
+        -25.976427506093202,
+        0.0,
+        -52.09259290974946
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 7,
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "id": "port-propulsion",
+      "inertiaAboutCentreOfMassKgM2": [
+        74.99999999953434,
+        0.0,
+        0.0,
+        0.0,
+        74.99999999953434,
+        0.0,
+        0.0,
+        0.0,
+        53.999999999883585
+      ],
+      "massKg": 900.0,
+      "materialDensityKgPerCubicMetre": 3125.0000000000005,
+      "nativeComponentIndex": 7,
+      "originalHardwareAllocationIndex": 0,
+      "owningComponentName": "engine_pair/negative side/propulsion casing"
+    },
+    {
+      "centreMetres": [
+        25.976427506093202,
+        0.0,
+        -52.09259290974947
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999999,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 10,
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "id": "starboard-propulsion",
+      "inertiaAboutCentreOfMassKgM2": [
+        74.99999999953434,
+        0.0,
+        0.0,
+        0.0,
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        53.999999999883585
+      ],
+      "massKg": 900.0,
+      "materialDensityKgPerCubicMetre": 3125.0000000000005,
+      "nativeComponentIndex": 10,
+      "originalHardwareAllocationIndex": 1,
+      "owningComponentName": "engine_pair/positive side/propulsion casing"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -9.070074815991465,
+        -8.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000004,
+          1.0,
+          0.9999999999999997,
+          1.0000000000000007,
+          0.9999999999999997,
+          1.0000000000000007,
+          1.0000000000000007,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000004,
+          1.0,
+          0.9999999999999997,
+          1.0000000000000007,
+          0.9999999999999997,
+          1.0000000000000007,
+          1.0000000000000007,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.5,
+        1,
+        1.8
+      ],
+      "id": "electrical-plant",
+      "inertiaAboutCentreOfMassKgM2": [
+        265.0,
+        0.0,
+        0.0,
+        0.0,
+        343.125,
+        0.0,
+        0.0,
+        0.0,
+        203.125
+      ],
+      "massKg": 750.0,
+      "materialDensityKgPerCubicMetre": 277.77777777777777,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 2,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -9.070074815991465,
+        12.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000004,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000004,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.5,
+        0.8,
+        1.6
+      ],
+      "id": "empty-tank-plumbing",
+      "inertiaAboutCentreOfMassKgM2": [
+        48.0,
+        0.0,
+        0.0,
+        0.0,
+        72.15000000000146,
+        0.0,
+        0.0,
+        0.0,
+        43.350000000000364
+      ],
+      "massKg": 180.0,
+      "materialDensityKgPerCubicMetre": 93.74999999999999,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 3,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -8.0,
+        -8.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000007,
+          0.9999999999999997,
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000007,
+          0.9999999999999997,
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1,
+        0.4,
+        1
+      ],
+      "id": "controls-and-sensors",
+      "inertiaAboutCentreOfMassKgM2": [
+        8.700000000000728,
+        0.0,
+        0.0,
+        0.0,
+        15.00000000000091,
+        0.0,
+        0.0,
+        0.0,
+        8.700000000000728
+      ],
+      "massKg": 90.0,
+      "materialDensityKgPerCubicMetre": 225.0,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 5,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -10.7,
+        -8.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999997,
+          0.9999999999999994,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000007,
+          1.0,
+          1.0000000000000002,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999997,
+          0.9999999999999994,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000007,
+          1.0,
+          1.0000000000000002,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.6,
+        0.4,
+        1
+      ],
+      "id": "empty-equipment-interface",
+      "inertiaAboutCentreOfMassKgM2": [
+        13.533333333332848,
+        0.0,
+        0.0,
+        0.0,
+        41.53333333333285,
+        0.0,
+        0.0,
+        0.0,
+        31.733333333333576
+      ],
+      "massKg": 140.0,
+      "materialDensityKgPerCubicMetre": 218.74999999999997,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 6,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -9.070074815991465,
+        -16.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1,
+        1,
+        1.4
+      ],
+      "id": "empty-launcher-mechanism",
+      "inertiaAboutCentreOfMassKgM2": [
+        39.46666666666715,
+        0.0,
+        0.0,
+        0.0,
+        39.46666666667443,
+        0.0,
+        0.0,
+        0.0,
+        26.66666666666424
+      ],
+      "massKg": 160.0,
+      "materialDensityKgPerCubicMetre": 114.28571428571429,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 7,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        -5.0,
+        -9.070074815991465,
+        2.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000007,
+          1.0000000000000002,
+          1.0000000000000007,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000007,
+          1.0000000000000002,
+          1.0000000000000007,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-01",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.79999999999927,
+        0.0,
+        0.0,
+        0.0,
+        40.0
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        -3.0,
+        -9.070074815991465,
+        2.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000007,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000007,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-02",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.79999999999927,
+        0.0,
+        0.0,
+        0.0,
+        40.0
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        -1.0,
+        -9.070074815991465,
+        2.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999997,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000007,
+          1.0000000000000007,
+          1.0000000000000007,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999997,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000007,
+          1.0000000000000007,
+          1.0000000000000007,
+          1.0000000000000002,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-03",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.79999999999927,
+        0.0,
+        0.0,
+        0.0,
+        40.0
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        1.0,
+        -9.070074815991465,
+        2.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0000000000000007,
+          1.0000000000000004,
+          0.9999999999999999,
+          1.0000000000000004,
+          0.9999999999999997,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0000000000000007,
+          1.0000000000000004,
+          0.9999999999999999,
+          1.0000000000000004,
+          0.9999999999999997,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-04",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.79999999999927,
+        0.0,
+        0.0,
+        0.0,
+        40.0
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        3.0,
+        -9.070074815991465,
+        2.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000007,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000007,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-05",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.79999999999927,
+        0.0,
+        0.0,
+        0.0,
+        40.0
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        5.0,
+        -9.070074815991465,
+        2.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          1.0000000000000009,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          1.0000000000000009,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-06",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.79999999999927,
+        0.0,
+        0.0,
+        0.0,
+        40.0
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        -7.0,
+        -9.070074815991465,
+        2.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000004,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000004,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-07",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.79999999999927,
+        0.0,
+        0.0,
+        0.0,
+        40.0
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "twin deck pressure envelope"
+    },
+    {
+      "centreMetres": [
+        7.0,
+        -9.070074815991465,
+        2.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          0.9999999999999999,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          0.9999999999999999,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-08",
+      "inertiaAboutCentreOfMassKgM2": [
+        58.0,
+        0.0,
+        0.0,
+        0.0,
+        46.79999999999927,
+        0.0,
+        0.0,
+        0.0,
+        40.0
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "twin deck pressure envelope"
+    }
+  ],
+  "generatorSHA256": "a15e21c7b78376d0b37e1af62858cecad5091ed8e82e6cb87ff29b61a9c03d5c",
+  "id": "SH100",
+  "inputSHA256": {
+    "SH100-R3.toml": "51052443fd83b5480ab4b35a91cda57dc820284ed4b128430a567a1063d48ea3",
+    "SH100-engineering.json": "60a443b54ccbd7fc643c1775e62b601087dc8a0ab399c30aa5b2d4fe8e3bf797",
+    "SH100-model.json": "eeb0dd0b4ca0ae983d19bce2241b83b1b6a7cb436fe8edd45d270fddbdd9bfcc",
+    "SH100-ownership.json": "88782bdde90ffaea98517a3f4c32aedeb9184c092edaea6f40e924505441f7a2",
+    "SH100-resource.toml": "fbc34e8a189ef2e500633c7a89945b4e97596525bd94ce4ac6e61e30f34e9875"
+  },
+  "materialsOrMechanismFunctionQualified": false,
+  "metresPerSourceUnit": 26.67669063526901,
+  "metresPerSourceUnitExact": "2200000/82469",
+  "name": "Ox Mk II",
+  "nativeAdmissionBlocked": true,
+  "nativeComponents": [
+    {
+      "faceCount": 12,
+      "firstFace": 0,
+      "signedVolumeCubicMetres": 63678.53947120041
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 12,
+      "signedVolumeCubicMetres": 63678.53947120041
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 24,
+      "signedVolumeCubicMetres": 689.8689360891991
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 36,
+      "signedVolumeCubicMetres": 689.8689360892002
+    },
+    {
+      "faceCount": 116,
+      "firstFace": 48,
+      "signedVolumeCubicMetres": 839.0296416157493
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 164,
+      "signedVolumeCubicMetres": 4.518276601554831
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 176,
+      "signedVolumeCubicMetres": 247.25041778506156
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 188,
+      "signedVolumeCubicMetres": 1320.2026850984496
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 232,
+      "signedVolumeCubicMetres": 26.4474984100227
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 276,
+      "signedVolumeCubicMetres": 247.25041778506161
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 288,
+      "signedVolumeCubicMetres": 1320.202685098448
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 332,
+      "signedVolumeCubicMetres": 26.44749841002307
+    }
+  ],
+  "nativeEvidenceQualified": false,
+  "nativeFaceLimit": 512,
+  "nativeRefusalStage": "nativeEvidencePending",
+  "nativeSourceSHA256": "22cb04f635bcc998ad623853f1a147e087eade2fc3a0da0414d3c0a6b884f5e7",
+  "nativeTriangles": 376,
+  "nativeVertices": 212,
+  "operatingAuthorityGranted": false,
+  "originalPointAllocationReference": {
+    "centreMetres": [
+      2.8164366736908827e-17,
+      -0.13898607287437031,
+      -3.3815465840467405
+    ],
+    "inertiaAboutCentreOfMassKgM2": [
+      637585115.6338366,
+      -2.8467152127889896,
+      9.790682661002288e-12,
+      -2.8467152127889896,
+      790483723.8264565,
+      -5840413.637198848,
+      9.790682661002288e-12,
+      -5840413.637198848,
+      249112062.19012195
+    ],
+    "massKg": 515013
+  },
+  "ownershipSHA256": "88782bdde90ffaea98517a3f4c32aedeb9184c092edaea6f40e924505441f7a2",
+  "peopleOrFuelCargoEquipmentGranted": false,
+  "preservedR3": {
+    "cargoTonnes": 510,
+    "crewRequired": 8,
+    "equipmentBudgetUnits": 38,
+    "initialPurchasedCabins": 0,
+    "intrinsicCrewPlaces": 8,
+    "nativeAutonomous": false,
+    "utilityMounts": 3
+  },
+  "r3SHA256": "51052443fd83b5480ab4b35a91cda57dc820284ed4b128430a567a1063d48ea3",
+  "resourceSHA256": "fbc34e8a189ef2e500633c7a89945b4e97596525bd94ce4ac6e61e30f34e9875",
+  "roundingReserve": {
+    "centreMetres": [
+      -2.8255445883375855e-17,
+      -0.139242149620484,
+      -3.3938181246089636
+    ],
+    "id": "explicit-rounding-reserve-at-new-com",
+    "inertiaAboutCentreOfMassKgM2": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -4.0766001685454967e-17
+    ],
+    "massKg": 0.23791407234966755
+  },
+  "schemaVersion": 1,
+  "showroomSHA256": "eeb0dd0b4ca0ae983d19bce2241b83b1b6a7cb436fe8edd45d270fddbdd9bfcc",
+  "status": "FINITE_INTRINSIC_EMPTY_DRY_SOURCE_NOT_NATIVE_OR_OPERATIONAL_QUALIFICATION",
+  "stockModel": "Original approved area-mass lamina model retained. This slice makes intrinsic point allocations finite; it does not qualify material thickness, stock overlaps or whole pressure/cargo/free volume.",
+  "targetDetailedLengthMetres": 110,
+  "unchangedStock": {
+    "centreMetres": [
+      -2.848107678387541e-17,
+      -0.09962138754665474,
+      -3.2250290085282827
+    ],
+    "id": "unchanged-original-surface-stock",
+    "inertiaAboutCentreOfMassKgM2": [
+      633092859.3834981,
+      -2.8467152127890216,
+      -1.8157148004898295e-09,
+      -2.8467152127890216,
+      784959562.1717778,
+      -5918309.962859857,
+      -1.8157148004898295e-09,
+      -5918309.962859857,
+      247714778.36493668
+    ],
+    "massKg": 510932.76208592765
+  }
+}

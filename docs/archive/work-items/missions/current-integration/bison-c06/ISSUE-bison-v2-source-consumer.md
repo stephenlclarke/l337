@@ -1,0 +1,9 @@
+# Bison v2 full-material source and actual commissioning boundary
+
+The exact v2 source replaces the old candidate's shoes with tapered conformal prisms and revised full moments. Its commissioning definition binds two paid cap/shoe interfaces and two separate passive hollow-rod annulus/shoe pairs. All six tube/cap/catch members retain their mass and motion. Four material pairs cannot become four actuators, a pair exemption or an automatic brake for legitimate passive contact. Shared paid budgets remain 4000 N and 2400 J.
+
+The old source consumer used v1 configuration/profile pins and a flat carrier pressure/temperature/seal parser. V2 has thirteen distinct expected unit definitions, including an already-empty carrier cell 7 and an occupied portable cell. A flat common pressure is not that schema. More importantly, the v2 source explicitly denies that expected values prove actual pressure, gas, body temperature, seals or operative state.
+
+The current runtime issue wire has no private identity for each of thirteen units or retained nitrogen, connected free volume, physical body temperature, circulation, cryothermal, isolation and equalisation observations. There is no actual commissioning owner to establish those facts before the first body snapshot or preserve them through cold/custody. These are concrete missing state/owner joins; engineering declarations cannot fill them.
+
+The current native drive response also has a private unilateral solver limited to two contacts and a cap-surface constructor. A genuine four-material cluster must retain actual annular material points, redundant constraints and equal/opposite force/work/torque without using the bore centre as material. G4 owns the independent source-specific reference/controls; the actual native curve/cluster and cold/admission proofs remain separate owner work. This next slice must not gate current SH029/default-M01 validation.

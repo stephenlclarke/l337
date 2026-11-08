@@ -28,8 +28,15 @@ struct OriginalFleetCurrentHullSource: Sendable {
       throw OriginalFleetPhysicalData.Failure.unissued(id)
     }
     let source: OriginalFleetShowroomModel
-    if let model { source = model }
-    else { source = try OriginalFleetShowroomModels.model(for: id) }
+    if let model {
+      // Caller-supplied provenance strings cannot authenticate changed geometry or appearance.
+      guard model.nativeDesign == (try OriginalFleetShowroomModels.model(for: id)).nativeDesign else {
+        throw Failure.inconsistentNativeSource(id)
+      }
+      source = model
+    } else {
+      source = try OriginalFleetShowroomModels.model(for: id)
+    }
     let expectedUnits: String? = expected.calibration == .declaredMetres ? "metres" : nil
     guard source.id == definition.id, source.coordinateUnits == expectedUnits,
       source.sourcePath == expected.nativeSourcePath,

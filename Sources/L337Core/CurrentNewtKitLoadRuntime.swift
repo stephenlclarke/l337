@@ -76,3 +76,27 @@ extension Game {
     return result.structurallyValid ? result : nil
   }
 }
+
+
+extension Game {
+  /// The current original parent may have recovered electrical power. Its actual
+  /// NPC owner/binding then replaces the disabled marker, never its kit issue or
+  /// historical actuation actor. This grants no rights to an unjoined snapshot.
+  func currentNewtParentOwner(body: SpaceBody, stock: CurrentNewtKitStock) -> ActorIdentity? {
+    guard let physical = body.physical, physical.currentNewtKitStock == stock,
+      let record = commander.savedEMPState?.records[stock.issue.birthActor],
+      record.hull.binding == physical.identity,
+      record.hull.body.physical?.currentNewtKitStock == stock,
+      record.source == stock.issue.birthActor else { return nil }
+    if record.isRecovered {
+      guard physical.empSource == nil,
+        commander.npcPersistence.logicalIdentity(for: physical.identity) == record.source
+      else { return nil }
+    } else {
+      guard physical.empSource == record.source,
+        record.disableEpisodes.contains(where: { $0.actorBindings.contains(physical.identity) })
+      else { return nil }
+    }
+    return record.source
+  }
+}

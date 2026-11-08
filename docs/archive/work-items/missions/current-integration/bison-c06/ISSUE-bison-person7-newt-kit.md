@@ -1,0 +1,9 @@
+# Bison original-person-7 kit and spent restoration
+
+The large-person census fixture needs a real ordinary Bison birth with its twelve original people and exactly one independently issued Newt kit. A manually inserted hull, a relabelled SH029 profile or a decoded issue cannot supply that stock. Captures of original people 0 and 1 must leave original 7 in the actual kit until its real sampled start, and original 2 must retain physical mass while aboard or deceased with the hull.
+
+The Bison source has no rack drop. Its real sampled start is the independent-pod unlock, with zero mechanical work at that boundary. All subsequent rod/cap motion and pod acceleration require the normal native force/contact path and actual finite work. The source translates four tube/cap parts and two real 4 kg rod-head catches during the stroke. Only the two closed caps provide the authored shoe contacts. These roles differ from SH029. Actual catch unlock/joint validation remains part of the incomplete source/native dependency.
+
+When ship electricity recovers, the spent kit must survive actual NPC return, cull, full-tensor archive coast, rebind and cold load without a new issue, a historical actor alias, refill or stale archive stock. Existing unbound recovery and NPC paths used constant-omega motion and omitted kit stock when copying an unbound NPC snapshot into the recovered EMP archive.
+
+The authenticated G4 source at commit 508ef326 does not yet define numeric carrier-cell pressure, temperature, transfer seal and metabolism commissioning. The parser explicitly refuses that incomplete source. A complete supported source successor, exact source pins, G3 native consumers and the Researcher-owned genuine fixture are dependencies. No guessed commissioning defaults or native admission are provided by this packet.

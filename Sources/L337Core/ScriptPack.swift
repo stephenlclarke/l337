@@ -119,6 +119,7 @@ public enum ScriptCapabilities {
     "finance-obligations-basic-v2", "procurement-contracts-basic-v2", "freight-contracts-basic-v2",
     ScriptFinanceInterest.capability,
     "native-station-passengers-v1", "native-orbital-outlook-v1", "native-consented-survey-v1",
+    "native-tithe-commission-v1",
     NativeGlassMeridian.capability,
     NativeWayfarerInduction.capability,
     NativeFlightReception.capability,
@@ -429,6 +430,9 @@ public enum ScriptPackLibrary {
       models: assets.designs,
       resourceBytes: assets.bytes.merging(modules.resources) { first, _ in first },
       entryBytes: entry)
+    if NativeTitheCommissionDefinition.applies(pack), !NativeTitheCommissionDefinition.matches(pack) {
+      throw MissionPackError("Restore the exact original Tithe of Worlds manifest and module.")
+    }
     for scoped in OriginalScopedScriptedHull.allCases
     where pack.models[scoped.reference] != nil && !scoped.permits(pack) {
       throw MissionPackError("The pending hull is restricted to its original mission roles.")
@@ -453,6 +457,7 @@ public enum ScriptPackLibrary {
     // Finish common resource frames before entering the native declaration validators.
     try validateManifestCoreDeclarations(manifest)
     try NativeBorrowedVoiceDefinition.validateDeclaration(manifest)
+    try NativeTitheCommissionDefinition.validateDeclaration(manifest)
     try NativeQuietChoirDefinition.validateDeclaration(manifest)
     try NativeMemoryAtlasDefinition.validateDeclaration(manifest)
     try NativeSignedPassageOpening.validateDeclaration(manifest)

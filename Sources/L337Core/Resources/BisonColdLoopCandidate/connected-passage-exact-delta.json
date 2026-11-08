@@ -1,0 +1,260 @@
+{
+  "acceptedPlayableIncrement": 0,
+  "actualObservations": [],
+  "additionalSourceFields": [
+    "actualOpenStateObserved",
+    "baselineLayoutSHA256",
+    "baselineSourceSHA256",
+    "conductivityFloorQualified",
+    "connectedFixedAssemblies",
+    "criteriaWaived",
+    "fluidRedistributionRawMoments",
+    "pressureIntegrityQualified",
+    "pumpOrValveFunctionQualified",
+    "quietTransitionObserved"
+  ],
+  "authorParent": "0fe5e0abf8ba8fd9deb1426ef44eab5e6799c803",
+  "changedExistingSourceFields": [
+    "baseDry",
+    "extraWorkingFluid",
+    "generatorSHA256",
+    "hardware",
+    "layoutSHA256",
+    "peakRSSBytes",
+    "portableStates",
+    "radiatorPatchWallMassKg",
+    "status",
+    "wall"
+  ],
+  "changedLoadCases": 8,
+  "criteriaWaived": [],
+  "deltaGeneratorSHA256": "0a5f1ce9c50fe1cba9ee4ffc16b62228befff1398b3041a036d6088beff91a92",
+  "effectiveDensitiesAreNewUnqualifiedMaterialRequirements": true,
+  "firstCriteriaSHA256": "4d060987173cbd8a5690c1c245d59a1b7d24522766c5e073368ef6296c512ade",
+  "focusedTestSHA256": "ae99cf37f161fc17297f070e033eba9de54ce9c695b51c85bfd576263e7b59c8",
+  "geometry": [
+    {
+      "centralCavityDimensionsMetres": [
+        0.026,
+        0.026,
+        0.024060150375939855
+      ],
+      "fluidVolumeCubicMetres": 2.0000000000000052e-05,
+      "housingEffectiveDensityKgPerCubicMetre": 2857.1428571428523,
+      "id": "pump",
+      "paidFixedMassKg": 0.3,
+      "portInterfaces": [
+        {
+          "axis": 2,
+          "centreMetres": [
+            -0.07,
+            -0.38,
+            -0.42500000000000004
+          ],
+          "sideMetres": 0.012
+        },
+        {
+          "axis": 2,
+          "centreMetres": [
+            -0.07,
+            -0.38,
+            -0.375
+          ],
+          "sideMetres": 0.012
+        }
+      ]
+    },
+    {
+      "centralCavityDimensionsMetres": [
+        0.018,
+        0.018,
+        0.014049382716049386
+      ],
+      "fluidVolumeCubicMetres": 5.000000000000005e-06,
+      "housingEffectiveDensityKgPerCubicMetre": 7529.411764705875,
+      "id": "valve",
+      "paidFixedMassKg": 0.08,
+      "portInterfaces": [
+        {
+          "axis": 0,
+          "centreMetres": [
+            0.05750000000000001,
+            -0.27,
+            -0.135
+          ],
+          "sideMetres": 0.008
+        },
+        {
+          "axis": 1,
+          "centreMetres": [
+            0.07,
+            -0.2575,
+            -0.135
+          ],
+          "sideMetres": 0.008
+        }
+      ]
+    }
+  ],
+  "liquidRedistribution": {
+    "firstKgMetres": [
+      -1.5170400000019203e-06,
+      1.5170399999879792e-06,
+      -1.2073395871925983e-17
+    ],
+    "massKg": 3.46859991900636e-17,
+    "secondKgMetresSquared": [
+      [
+        -3.071291999995436e-07,
+        5.15793600000829e-07,
+        2.048004000008444e-07
+      ],
+      [
+        5.15793600000829e-07,
+        -9.139451999945685e-07,
+        -2.04800399995629e-07
+      ],
+      [
+        2.0480040000078187e-07,
+        -2.048003999953455e-07,
+        4.0109127096776865e-07
+      ]
+    ]
+  },
+  "maxDryCOMDeltaMetres": 2.688821387764051e-17,
+  "maxDryInertiaDeltaKgM2": 2.842170943040401e-14,
+  "nativeCompilerRendererRun": false,
+  "newPortableStates": [
+    {
+      "centreMetres": [
+        -0.0015531358537194046,
+        -0.04410195239838567,
+        -0.009776299437402651
+      ],
+      "id": "nominal-cold-loop-phase-state-0-connected-passages",
+      "inertiaAboutCentreOfMassKgM2": [
+        192.75115474281228,
+        0.00026438413946890463,
+        -0.0005344389681174446,
+        0.00026438413946890463,
+        193.22217417715515,
+        -0.29337917266024716,
+        -0.0005344389681174446,
+        -0.29337917266024716,
+        50.668029813265754
+      ],
+      "massKg": 372.45499999999987
+    },
+    {
+      "centreMetres": [
+        -0.0015531492747793767,
+        -0.04037822053713514,
+        0.02123160663345722
+      ],
+      "id": "nominal-cold-loop-phase-state-1-connected-passages",
+      "inertiaAboutCentreOfMassKgM2": [
+        203.36700272208859,
+        -0.0018914266039532501,
+        -0.01847563543683992,
+        -0.0018914266039532501,
+        204.49264869670813,
+        1.2658613880175216,
+        -0.01847563543683992,
+        1.2658613880175216,
+        50.11242196698665
+      ],
+      "massKg": 372.45499999999987
+    }
+  ],
+  "newWallEffectiveDensityRange": [
+    100.0,
+    5534.73871003336
+  ],
+  "oldWallEffectiveDensityRange": [
+    100.0,
+    5534.678961755765
+  ],
+  "physicalBase": "8bf154948fa0609e1bf01776959bb2fbbe6432dd",
+  "runtimeConsumerChanged": false,
+  "scope": "Finite connected fluid-port and hollow fixed-housing source correction; not an operating pump, moving valve or actual apparatus qualification",
+  "shippingResourceChanged": false,
+  "sourceGeneratorSHA256": "0c46a102d89cea4b7793739e93d91ff1d3eebc8eae3d301bb7b87099437fdc32",
+  "sourceSHA256": "284c1c1512589721943a6475c834cdb0e34bab016f0e7c59ba1210f6b95caa95",
+  "stillOpen": [
+    "185K finite-pressure CO2 conductivity/interface/spatial transfer floor; zero-density term is not that qualification",
+    "Actual pump curve/efficiency/rotor/seals, valve gate/actuation/control and pressure integrity",
+    "Fluid/rotor/diaphragm P/L, stop/dissipation/heat, dense trajectory and actual quiet state",
+    "Real materials/stock/people/custody/fitness/preparation/commissioning/birth",
+    "MC1 runtime/save and G1 native qualification"
+  ],
+  "tests": {
+    "actualObservations": [],
+    "errors": 0,
+    "failures": 0,
+    "nativeTestsRun": false,
+    "negativeControls": {
+      "omitFluidMomentRedistribution": "REJECTED_BY_CHANGED_FULL_TENSOR",
+      "priorSealedCavity": "REJECTED",
+      "removedPort": "REJECTED",
+      "wholeSolidBoxAsHousing": "REJECTED_BY_POSITIVE_FLUID_INTERSECTION"
+    },
+    "peakRSSBytes": 42369024,
+    "successful": true,
+    "testsRun": 6
+  },
+  "unchangedBudgets": {
+    "carrier7Empty": true,
+    "carrierBodies": 11,
+    "clockSeconds": 21600,
+    "cradleKg": 18,
+    "dewarKg": 5,
+    "dryKg": 248,
+    "electricWatts": 42,
+    "forceNewtons": 4000,
+    "initialElectricalJoules": 1500000,
+    "maxOccupiedKg": 372.5,
+    "maximumQuietSeconds": 1,
+    "minimumBoundaryConductanceWattsPerKelvin": 80,
+    "movingMassKg": 43.3376,
+    "nitrogenKg": 0.01,
+    "nominalOccupiedKg": 372.455,
+    "operatingRoles": 12,
+    "original7OnlyFrozenNewt": true,
+    "paidCaps": 2,
+    "passiveAnnuli": 2,
+    "propaneKg": 0.945,
+    "pumpFluidCubicMetres": 2e-05,
+    "pumpKg": 0.3,
+    "startupElectricalJoules": 120000,
+    "thermalCO2Kg": 14,
+    "valveFluidCubicMetres": 5e-06,
+    "valveKg": 0.08,
+    "workJoules": 2400
+  },
+  "unchangedConditionalRequirements": [
+    "Old whole-loop pressure-loss/fitting-K and pump-efficiency bounds must include the new port/cavity construction; no measured hydraulic or valve performance claimed",
+    "Existing continuous Cp/EOS/material/pressure/assembly bounds and preparation heat allowances still required",
+    "84.533411 W/K and existing thermal/phase/charge/preparation values reused conditionally, not requalified"
+  ],
+  "unchangedSourceFields": [
+    "actualDiaphragmOrFlowStateQualified",
+    "actualObservations",
+    "additionalPreparationElectricalJoules",
+    "additionalPreparationHeatJoules",
+    "additionalPreparationRejectJoules",
+    "bodyCoreOrContactQualified",
+    "dewar",
+    "freeRespiratoryGasCubicMetres",
+    "macroCertificates",
+    "microcellPopulationQualified",
+    "newMeteringCapacityKgPerSecond",
+    "nominalAccumulatorLiquidCubicMetres",
+    "nominalDiaphragmLocalZMetres",
+    "nominalLiquidDensityKgPerCubicMetre",
+    "phaseStates",
+    "preparation",
+    "rigidRuntimeConsumerUpdated",
+    "solidPoreDomainCubicMetres",
+    "sourceDesignSHA256"
+  ]
+}

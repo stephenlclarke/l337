@@ -42,6 +42,24 @@ public struct CurrentNewtKitIssue: Equatable, Codable, Sendable {
     let dimensionsMetres: Vector3
   }
 
+  public struct CarrierCell: Equatable, Codable, Sendable {
+    let componentID: String
+    let commissionedAt: Double
+    /// Startup has already been paid once at genuine birth.
+    let electricalJoules: Double
+    let oxygenKilograms: Double
+    let sorbentCapacityKilogramsCO2: Double
+    let pressurePascals: Double
+    let temperatureKelvin: Double
+    let transferSealClosed: Bool
+
+    var structurallyValid: Bool {
+      !componentID.isEmpty && commissionedAt.isFinite && commissionedAt >= 0
+        && [electricalJoules, oxygenKilograms, sorbentCapacityKilogramsCO2, pressurePascals,
+          temperatureKelvin].allSatisfy { $0.isFinite && $0 > 0 } && transferSealClosed
+    }
+  }
+
   let kitID: UUID
   let configuration: String
   let sourceSHA256: String
@@ -51,10 +69,12 @@ public struct CurrentNewtKitIssue: Equatable, Codable, Sendable {
   let personProfile: PersonProfile
   let issuedAt: Double
   let birthLoad: CurrentNewtKitLoad
+  let carrierCells: [CarrierCell]?
 
   fileprivate init(kitID: UUID, configuration: String, sourceSHA256: String,
     birthSpawn: SpawnIdentity, birthActor: ActorIdentity, person: EMPCrewIdentity,
-    personProfile: PersonProfile, issuedAt: Double, birthLoad: CurrentNewtKitLoad)
+    personProfile: PersonProfile, issuedAt: Double, birthLoad: CurrentNewtKitLoad,
+    carrierCells: [CarrierCell]?)
   {
     self.kitID = kitID
     self.configuration = configuration
@@ -65,10 +85,22 @@ public struct CurrentNewtKitIssue: Equatable, Codable, Sendable {
     self.personProfile = personProfile
     self.issuedAt = issuedAt
     self.birthLoad = birthLoad
+    self.carrierCells = carrierCells
   }
 
   var structurallyValid: Bool {
-    !configuration.isEmpty && Self.validHash(sourceSHA256)
+    switch configuration {
+    case CurrentNewtKitPhysicalSource.configurationID:
+      guard person.ordinal == 0, carrierCells == nil else { return false }
+    case CurrentBisonWideShoePhysicalSource.configurationID:
+      guard person.ordinal == CurrentBisonWideShoePhysicalSource.selectedPersonOrdinal,
+        let carrierCells, carrierCells.count == CurrentBisonWideShoePhysicalSource.originalNativeCrew,
+        carrierCells.allSatisfy(\.structurallyValid),
+        carrierCells.allSatisfy({ $0.commissionedAt == issuedAt }),
+        Set(carrierCells.map(\.componentID)).count == carrierCells.count else { return false }
+    default: return false
+    }
+    return !configuration.isEmpty && Self.validHash(sourceSHA256)
       && !personProfile.id.isEmpty && Self.validHash(personProfile.sourceSHA256)
       && personProfile.massKilograms == 100
       && personProfile.dimensionsMetres == .init(0.56, 0.38, 1.72)
@@ -77,7 +109,7 @@ public struct CurrentNewtKitIssue: Equatable, Codable, Sendable {
       && birthActor.entity > 1 && birthActor.entity < UInt64.max && birthActor.visit > 0
       && (0..<8).contains(birthActor.system.galaxy)
       && (0...256).contains(birthActor.system.system)
-      && person.source == birthActor && person.ordinal == 0
+      && person.source == birthActor && person.ordinal >= 0
       && issuedAt.isFinite && issuedAt >= 0 && birthLoad.structurallyValid
       && birthLoad.people.contains { $0.identity == person && $0.profile == personProfile }
   }
@@ -179,7 +211,7 @@ public struct CurrentNewtKitStock: Equatable, Codable, Sendable {
         actuation.parent.entity > 1, actuation.parent.visit >= actuation.source.visit,
         actuation.initialParent.structurallyValid, actuation.load.structurallyValid,
         actuation.startedAt.isFinite, actuation.startedAt >= issue.issuedAt,
-        actuation.unlockAt.isFinite, actuation.unlockAt > actuation.startedAt,
+        actuation.unlockAt.isFinite, actuation.unlockAt >= actuation.startedAt,
         actuation.completeAt.isFinite, actuation.completeAt > actuation.unlockAt,
         actuation.deadline.isFinite, actuation.unlockAt < actuation.deadline
       else { return false }
@@ -284,16 +316,18 @@ public struct CurrentNewtKitReceipt: Equatable, Codable, Sendable {
       && releasedAt < actuation.deadline
       && parent.structurallyValid && pod.structurallyValid
       && parentMass.structurallyValid && podMass.structurallyValid
-      && energyJoules.isFinite && energyJoules > 0 && remainingCharges.structurallyValid
+      && energyJoules.isFinite && energyJoules >= 0 && remainingCharges.structurallyValid
   }
 }
 
 extension CurrentNewtKitStock {
   func validForNPC(catalogueShipID: String?, actor: ActorIdentity, physicalTime: Double) -> Bool {
-    guard structurallyValid, catalogueShipID == "SH029", phase != .released,
+    guard structurallyValid,
       actor.system == issue.birthActor.system, actor.visit >= issue.birthActor.visit,
       actor.entity > 1, physicalTime.isFinite, physicalTime >= issue.issuedAt,
-      let source = CurrentNewtKitSource.current, source.matches(self, at: physicalTime)
+      let source = CurrentNewtKitSource.source(for: issue), catalogueShipID == source.parentCatalogueID,
+      phase != .released || source.originalNativeCrew > 1,
+      source.matches(self, at: physicalTime)
     else { return false }
     return actuation.map { $0.startedAt <= physicalTime } ?? true
   }
@@ -324,11 +358,12 @@ extension CurrentNewtKitStock {
     }
   }
 
-  mutating func beginActuation(_ start: Actuation, charges next: Charges) -> Bool {
+  mutating func beginActuation(_ start: Actuation, work initialWork: WorkState, charges next: Charges) -> Bool {
     guard phase == .stowed, actuation == nil, receipt == nil else { return false }
     var candidate = self
     candidate.phase = .actuating
     candidate.actuation = start
+    candidate.work = initialWork
     candidate.observedAt = start.startedAt
     guard next.doesNotExceed(charges) else { return false }
     candidate.charges = next
@@ -371,7 +406,7 @@ extension CurrentNewtKitStock {
     guard phase == .actuating, interruptedAt == nil, delivery.issue == issue,
       delivery.actuation == actuation, delivery.structurallyValid, receipt == nil,
       delivery.releasedAt == observedAt, delivery.remainingCharges == charges,
-      let source = CurrentNewtKitSource.current, source.matches(delivery),
+      let source = CurrentNewtKitSource.source(for: issue), source.matches(delivery),
       work == source.work(at: delivery.releasedAt, actuation: delivery.actuation)
     else { return false }
     var candidate = self
@@ -391,8 +426,7 @@ extension Game {
   func issueCurrentNewtKit(request: SpawnRequest, body: SpaceBody, actor: ActorIdentity,
     context: EncounterContext) -> CurrentNewtKitStock?
   {
-    guard let source = CurrentNewtKitSource.current,
-      source.permitsBirth(request, context: context),
+    guard let source = CurrentNewtKitSource.birthSource(for: request, context: context),
       actor.system == context.system, actor.visit == context.visit,
       actor.entity > 1, actor.entity < commander.flightSimulation.nextActor,
       !bodies.contains(where: { $0.physical?.identity == actor || $0.physical?.spawnIdentity == request.identity })
@@ -401,15 +435,16 @@ extension Game {
       let catalogue = body.physical?.catalogueShipID,
       let r3 = OriginalFleetR3Data.contract(for: catalogue)
     else { return nil }
-    let person = EMPCrewIdentity(source: actor, ordinal: 0)
+    let person = EMPCrewIdentity(source: actor, ordinal: source.selectedPersonOrdinal)
     let load = CurrentNewtKitLoad(catalogueShipID: catalogue, r3SHA256: r3.sourceSHA256,
       cargo: npc.ordinaryCargo, cargoProvenance: npc.cargoProvenance, resources: resources,
       missiles: body.missiles, ecmEnabled: body.ecmEnabled, hasFuelScoops: npc.hasFuelScoops,
-      people: [.init(identity: person, profile: source.personProfile)])
+      people: source.personSlots.map { .init(identity: .init(source: actor, ordinal: $0.ordinal), profile: $0.profile) })
     let issue = CurrentNewtKitIssue(kitID: UUID(), configuration: source.configuration,
       sourceSHA256: source.sourceSHA256, birthSpawn: request.identity, birthActor: actor,
       person: person, personProfile: source.personProfile,
-      issuedAt: context.physicalTime, birthLoad: load)
+      issuedAt: context.physicalTime, birthLoad: load,
+      carrierCells: source.initialCarrierCells(at: context.physicalTime))
     guard issue.structurallyValid, source.matches(issue) else { return nil }
     return .init(issue: issue, charges: source.initialCharges)
   }

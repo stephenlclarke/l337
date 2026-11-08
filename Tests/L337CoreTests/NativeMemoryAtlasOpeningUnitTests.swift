@@ -1210,3 +1210,54 @@ struct NativeMemoryAtlasEnvelopeCompositionUnitTests {
     }
   }
 }
+
+struct NativeSecondSaleEnvelopeCompositionUnitTests {
+  @Test(arguments: [false, true])
+  func secondSalePreservesTheActualWatcherInquiryAndOptionalAlienWorld(alien: Bool) async throws {
+    let files = try ScriptFreightFixture()
+    defer { files.clean() }
+    var game = try await MemoryAtlasOpeningFixture.beforeFirstArrival(files: files)
+    if alien {
+      try MemoryAtlasOpeningFixture.retainActualGeneratedWreckForAlienStorage(&game)
+      try MemoryAtlasOpeningFixture.returnToRerisBeforeActualEntry(&game)
+    }
+    let runtime = GameRuntime(game: game, saveURL: files.save)
+    for _ in 0..<100 {
+      if await runtime.snapshot().docked { break }
+      _ = await runtime.advance(delta: 0.05)
+    }
+    try await MemoryAtlasOpeningFixture.buyOne(runtime)
+    try await c01InquiryJournalActualWriterRollbackOracle(runtime: runtime, files: files)
+    let ready = await runtime.snapshot()
+    let watcher = try #require(ready.commander.savedMemoryAtlasWatcherSource)
+    let inquiry = try #require(ready.commander.scriptState.savedC01Inquiry)
+    let trade = try #require(ready.commander.scriptState.firstNativeCommodityTrade)
+    let index = trade.commodity
+    await runtime.nativeCommand {
+      $0.screen = .sell
+      $0.selection = index
+    }
+    await runtime.key("left")
+    await runtime.key("right")
+    await runtime.key("left")
+    let saved = await runtime.snapshot()
+    let second = try #require(saved.commander.scriptState.secondNativeCommoditySale)
+    #expect(saved.commander.savedMemoryAtlasWatcherSource == watcher)
+    #expect(saved.commander.scriptState.savedC01Inquiry == inquiry)
+    #expect(saved.commander.scriptState.firstNativeCommodityTrade == trade)
+    let bytes = try Data(contentsOf: files.save)
+    let pointer = try JSONDecoder().decode(ScriptSavePointer.self, from: bytes)
+    #expect(pointer.schemaVersion == (alien ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version))
+    #expect(pointer.hashes.count == (alien ? 5 : 4))
+    let (stored, world) = try ScriptSaveStore.read(bytes, from: files.save)
+    #expect(stored == saved.commander && world == saved.scriptWorldSave)
+    #expect(stored.scriptState.secondNativeCommoditySale == second)
+    try await runtime.load(from: files.save, persistMigrations: false)
+    let cold = await runtime.snapshot()
+    #expect(cold.commander.savedMemoryAtlasWatcherSource == watcher)
+    #expect(cold.commander.scriptState.savedC01Inquiry == inquiry)
+    #expect(cold.commander.scriptState.firstNativeCommodityTrade == trade)
+    #expect(cold.commander.scriptState.secondNativeCommoditySale == second)
+    #expect(cold.commander.alienStorageState?.current.snapshot == saved.commander.alienStorageState?.current.snapshot)
+  }
+}

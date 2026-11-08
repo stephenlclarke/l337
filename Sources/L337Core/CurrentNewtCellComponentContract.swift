@@ -23,7 +23,7 @@ extension Game {
   @inline(never)
   func currentNewtCellComponentContract(for body: borrowing SpaceBody) -> CurrentNewtCellComponentContract? {
     guard body.nativeGeometryHasPhysical(), let stock = body.nativeGeometryStock(),
-      let source = CurrentNewtKitSource.current, source.matches(stock.issue),
+      let source = CurrentNewtKitSource.source(for: stock.issue), source.matches(stock.issue),
       let load = currentNewtKitLoad(for: body) else { return nil }
     return currentNewtCellForObservedLoad(body, stock: stock, source: source, load: load)
   }
@@ -101,23 +101,9 @@ extension Game {
       commander.nativePeople?.admissions.filter({
         $0.person == .emp(person) && $0.origin == .capturedCrew && $0.valid(commander: commander)
       }).count == 1,
-      stock.issue.configuration == CurrentNewtEmptyCellPhysicalSource.configurationID,
-      stock.issue.sourceSHA256 == CurrentNewtEmptyCellPhysicalSource.configuredSourceSHA256,
-      person.ordinal == CurrentNewtEmptyCellPhysicalSource.removedOriginalPersonOrdinal,
-      let display = CurrentNewtEmptyCellDisplaySource.emptyDisplayMesh
+      let empty = source.emptyCellParts()
     else { return nil }
-    let parts = source.releasedParts.compactMap { part -> CurrentNewtKitSource.ReleasedPart? in
-      if part.id == CurrentNewtEmptyCellPhysicalSource.removedPersonComponentID { return nil }
-      return .init(id: part.id, mass: part.mass, collisionMesh: part.collisionMesh,
-        displayMesh: part.id == CurrentNewtEmptyCellPhysicalSource.displayComponentID ? display : part.displayMesh)
-    }
-    guard parts.count + 1 == source.releasedParts.count,
-      parts.map(\.id) == CurrentNewtEmptyCellPhysicalSource.retainedComponentIDs,
-      parts.map({ $0.mass.massKilograms }) == CurrentNewtEmptyCellPhysicalSource.retainedComponentMassKilograms,
-      let mass = CurrentNewtKitMass.combined(parts.map(\.mass)),
-      CurrentNewtEmptyCellPhysicalSource.cellWithoutSelectedPerson.matches(
-        massKilograms: mass.massKilograms, centreMetres: mass.centreOfMassMetres,
-        inertiaAboutCentreOfMassKgM2: mass.inertiaKgM2) else { return nil }
+    let (parts, mass) = empty
     return .init(stock: stock, occupied: false, parts: parts, mass: mass)
   }
 }

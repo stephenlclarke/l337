@@ -1,0 +1,31 @@
+{
+  "status": "ORIGINAL_CRITERIA_RETAINED_WITH_EXPLICIT_NEW_QUALIFICATION_INPUTS",
+  "sourceBase": "dd85bac509a0de7d98723918bcff5ec1eeafd024",
+  "firstCriteria": "FIRST-CRITERIA.json",
+  "unchangedAcceptance": {
+    "minimumBoundaryConductanceWattsPerKelvin": 80,
+    "maximumOccupiedMassKg": 372.5,
+    "fixedElectricalWatts": 42,
+    "canonicalDryMassCOMFullInertiaAndLidStock": true,
+    "thermalCO2StockKg": 14,
+    "maximumQuietSeconds": 1,
+    "nativeOrOperatingAuthorityFromSource": false
+  },
+  "finalConstruction": [
+    "Machine explicit passages through remaining cradle material, preserving its 18 kg total allocation",
+    "Pay cold plates/matrix/ribbed headers/adapters/jacket from the old 5 kg dewar allocation",
+    "Add finite paid 0.945 kg propane plus 0.010 kg nitrogen; no stock observation",
+    "Reserve gas columns and front collector from solid CO2 and matrix",
+    "Include finite ports, accumulator boss, rib-lane hydraulic diameters and panel internal spreading",
+    "Bound accumulator pressure with both circuit-volume endpoints and subtract pump head for cavitation margin",
+    "Use explicit nominal quiescent full tensors; retain actual flow/diaphragm/morphology/runtime qualification gaps"
+  ],
+  "scopeLimits": [
+    "84.533411 W/K is conditional on authored material, pore, spatial, flow and EOS requirements",
+    "NIST samples do not establish continuous envelope qualification",
+    "Distributed pad boundary does not establish actual body/core/contact heat transport",
+    "Static references and global budgets do not establish dense trajectories, valve stop, local transients or actual operations"
+  ],
+  "actualObservations": [],
+  "criteriaWaived": []
+}

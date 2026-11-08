@@ -98,6 +98,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     var savedGlassMeridian: Field<NativeGlassMeridianState>?
     var savedUnderTow: Field<NativeUnderTowState>?
     var savedBorrowedVoice: Field<NativeBorrowedVoiceState>?
+    var savedTitheCommission: Field<NativeTitheCommissionState>?
     var savedQuietChoir: Field<NativeQuietChoirState>?
     var savedMemoryAtlas: Field<NativeMemoryAtlasState>?
     var savedNativeSignedPassageOpening: Field<NativeSignedPassageOpeningState>?
@@ -157,6 +158,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       initializeSavedGlassMeridian()
       initializeSavedUnderTow()
       initializeSavedBorrowedVoice()
+      initializeSavedTitheCommission()
       initializeSavedQuietChoir()
       initializeSavedMemoryAtlas()
       initializeSavedNativeSignedPassageOpening()
@@ -221,6 +223,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func initializeSavedBorrowedVoice() {
       savedBorrowedVoice = Field<NativeBorrowedVoiceState>()
+    }
+    @inline(never)
+    private func initializeSavedTitheCommission() {
+      savedTitheCommission = Field<NativeTitheCommissionState>()
     }
     @inline(never)
     private func initializeSavedQuietChoir() {
@@ -344,6 +350,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       copySavedGlassMeridian(from: source)
       copySavedUnderTow(from: source)
       copySavedBorrowedVoice(from: source)
+      copySavedTitheCommission(from: source)
       copySavedQuietChoir(from: source)
       copySavedMemoryAtlas(from: source)
       copySavedNativeSignedPassageOpening(from: source)
@@ -473,6 +480,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func copySavedBorrowedVoice(from source: Storage) {
       savedBorrowedVoice = source.savedBorrowedVoice
+    }
+    @inline(never)
+    private func copySavedTitheCommission(from source: Storage) {
+      savedTitheCommission = source.savedTitheCommission
     }
     @inline(never)
     private func copySavedQuietChoir(from source: Storage) {
@@ -695,6 +706,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       try decodeSavedGlassMeridian(from: values)
       try decodeSavedUnderTow(from: values)
       try decodeSavedBorrowedVoice(from: values)
+      try decodeSavedTitheCommission(from: values)
       try decodeSavedQuietChoir(from: values)
       try decodeSavedMemoryAtlas(from: values)
       try decodeSavedNativeSignedPassageOpening(from: values)
@@ -856,6 +868,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func decodeSavedBorrowedVoice(from values: KeyedDecodingContainer<CodingKeys>) throws {
       savedBorrowedVoice = Field(try values.decodeIfPresent(NativeBorrowedVoiceState.self, forKey: .savedBorrowedVoice))
+    }
+    @inline(never)
+    private func decodeSavedTitheCommission(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedTitheCommission = Field(try values.decodeIfPresent(NativeTitheCommissionState.self, forKey: .savedTitheCommission))
     }
     @inline(never)
     private func decodeSavedQuietChoir(from values: KeyedDecodingContainer<CodingKeys>) throws {
@@ -1132,6 +1148,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       try encodeSavedGlassMeridian(to: &values)
       try encodeSavedUnderTow(to: &values)
       try encodeSavedBorrowedVoice(to: &values)
+      try encodeSavedTitheCommission(to: &values)
       try encodeSavedQuietChoir(to: &values)
       try encodeSavedMemoryAtlas(to: &values)
       try encodeSavedNativeSignedPassageOpening(to: &values)
@@ -1304,6 +1321,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func encodeSavedBorrowedVoice(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
       try values.encodeIfPresent(savedBorrowedVoice!.value, forKey: .savedBorrowedVoice)
+    }
+    @inline(never)
+    private func encodeSavedTitheCommission(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
+      try values.encodeIfPresent(savedTitheCommission!.value, forKey: .savedTitheCommission)
     }
     @inline(never)
     private func encodeSavedQuietChoir(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
@@ -1771,6 +1792,17 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     _modify {
       ensureUniqueStorage()
       yield &payload.savedBorrowedVoice!.value
+    }
+  }
+  var savedTitheCommission: NativeTitheCommissionState? {
+    _read { yield payload.savedTitheCommission!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedTitheCommission!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedTitheCommission!.value
     }
   }
   var savedQuietChoir: NativeQuietChoirState? {
@@ -2284,6 +2316,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     guard equalSavedGlassMeridian(lhs.payload, rhs.payload) else { return false }
     guard equalSavedUnderTow(lhs.payload, rhs.payload) else { return false }
     guard equalSavedBorrowedVoice(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedTitheCommission(lhs.payload, rhs.payload) else { return false }
     guard equalSavedQuietChoir(lhs.payload, rhs.payload) else { return false }
     guard equalSavedMemoryAtlas(lhs.payload, rhs.payload) else { return false }
     guard equalSavedNativeSignedPassageOpening(lhs.payload, rhs.payload) else { return false }
@@ -2443,6 +2476,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
   @inline(never)
   private static func equalSavedBorrowedVoice(_ lhs: Storage, _ rhs: Storage) -> Bool {
     lhs.savedBorrowedVoice!.value == rhs.savedBorrowedVoice!.value
+  }
+  @inline(never)
+  private static func equalSavedTitheCommission(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedTitheCommission!.value == rhs.savedTitheCommission!.value
   }
   @inline(never)
   private static func equalSavedQuietChoir(_ lhs: Storage, _ rhs: Storage) -> Bool {
@@ -2694,6 +2731,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     case savedGlassMeridian
     case savedUnderTow
     case savedBorrowedVoice
+    case savedTitheCommission
     case savedQuietChoir
     case savedMemoryAtlas
     case savedNativeSignedPassageOpening
@@ -2856,6 +2894,10 @@ public struct ScriptInstance: Codable, Sendable, Equatable, Identifiable {
   var savedBorrowedVoice: NativeBorrowedVoiceState? {
     _read { yield storage[0].savedBorrowedVoice }
     _modify { yield &storage[0].savedBorrowedVoice }
+  }
+  var savedTitheCommission: NativeTitheCommissionState? {
+    _read { yield storage[0].savedTitheCommission }
+    _modify { yield &storage[0].savedTitheCommission }
   }
   var savedQuietChoir: NativeQuietChoirState? {
     _read { yield storage[0].savedQuietChoir }
@@ -3118,6 +3160,7 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
   var savedWayfarerRepairLoopStock: WayfarerRepairLoopStockLedger?
   var savedFleetDiscovery: NativeFleetDiscovery?
   var firstNativeCommoditySale: NativeFirstCommoditySale?
+  var secondNativeCommoditySale: NativeSecondCommoditySale?
   var firstNativeCommodityTrade: NativeFirstCommodityTrade?
   var savedC01Inquiry: NativeC01InquiryState?
   var savedClueJournal: ScriptClueJournal?
@@ -3165,6 +3208,7 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     guard equalSavedWayfarerRepairLoopStock(lhs, rhs) else { return false }
     guard equalSavedFleetDiscovery(lhs, rhs) else { return false }
     guard equalFirstNativeCommoditySale(lhs, rhs) else { return false }
+    guard equalSecondNativeCommoditySale(lhs, rhs) else { return false }
     guard equalFirstNativeCommodityTrade(lhs, rhs) else { return false }
     guard equalSavedC01Inquiry(lhs, rhs) else { return false }
     guard equalSavedClueJournal(lhs, rhs) else { return false }
@@ -3241,6 +3285,13 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     -> Bool
   {
     lhs.firstNativeCommoditySale == rhs.firstNativeCommoditySale
+  }
+
+  @inline(never)
+  private static func equalSecondNativeCommoditySale(_ lhs: borrowing Self, _ rhs: borrowing Self)
+    -> Bool
+  {
+    lhs.secondNativeCommoditySale == rhs.secondNativeCommoditySale
   }
 
   @inline(never)
@@ -3371,6 +3422,9 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
   }
   var valid: Bool {
     guard firstNativeCommoditySale?.valid ?? true, firstNativeCommodityTrade?.valid ?? true,
+      secondNativeCommoditySale.map({ second in
+        firstNativeCommoditySale.map { second.valid(after: $0) } ?? false
+      }) ?? true,
       savedFleetDiscovery?.valid ?? true,
       savedC01Inquiry?.shapeValid ?? true,
       WayfarerFieldReliefSave.engineValid(self),
@@ -3481,6 +3535,7 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     guard instanceMeridianPrefixValid(instance) else { return false }
     guard NativeUnderTowSave.prefixValid(instance) else { return false }
     guard NativeBorrowedVoiceSave.prefixValid(instance) else { return false }
+    guard NativeTitheCommissionSave.prefixValid(instance) else { return false }
     guard NativeQuietChoirSave.prefixValid(instance) else { return false }
     guard NativeMemoryAtlasSave.prefixValid(instance) else { return false }
     guard NativeSignedPassageOpening.prefixValid(instance) else { return false }

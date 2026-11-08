@@ -1,0 +1,81 @@
+{
+  "acceptedIncrement": 0,
+  "actualObservations": [],
+  "artifacts": [
+    {
+      "bytes": 1076,
+      "path": "FIRST-CRITERIA.json",
+      "sha256": "6eb5c2fc789f4592cbe3f89c8f26c2a7d6aacc3717c79dab0d7ae2e15e956d1a"
+    },
+    {
+      "bytes": 1047,
+      "path": "ADOPTED-CRITERIA.json",
+      "sha256": "c263d20e29518fe05b5f17180b38c9c383733e355466b3bab793aca578a81b11"
+    },
+    {
+      "bytes": 5131,
+      "path": "INPUTS.json",
+      "sha256": "6012815ca370bae63f8953e030abfeae49850e5f15dbfe152f1220c10bb20b72"
+    },
+    {
+      "bytes": 1353,
+      "path": "PRIMARY-SOURCE-NOTES.json",
+      "sha256": "b268fede7aeab064af1009123d7c78bd507b7670f632ee841fc67550fb4eb4cb"
+    },
+    {
+      "bytes": 4015,
+      "path": "bed-feed-design.json",
+      "sha256": "13eaddb1bad8461fadcdccd5da65103f869dace23f36e79d0c26042046d81023"
+    },
+    {
+      "bytes": 29681,
+      "path": "build-bed-feed.py",
+      "sha256": "0cee2015df4ecff2b6504e7d6349fb35daaded4229cc3df413f2b6445d187144"
+    },
+    {
+      "bytes": 10614,
+      "path": "complete-rigid-source.py",
+      "sha256": "e51da7ad5347f57203176536f1aa4231d221e57604b136dfd2f2d65d664dd7aa"
+    },
+    {
+      "bytes": 15933,
+      "path": "test-bed-feed.py",
+      "sha256": "b3114a75fcc090682749ba853515e137b34ee19787d4e2fc9116bf5c3da08ac4"
+    },
+    {
+      "bytes": 12591,
+      "path": "bed-feed-results.json",
+      "sha256": "10853a75e688ab55ef919640ee63e1b14fa3238d527f3b9ef7d922c9d942305b"
+    },
+    {
+      "bytes": 7414,
+      "path": "rigid-source-delta.json",
+      "sha256": "5d0f03909e4c7899a40dac0f18a8a03e39b68afb0a18c293a9023997b3bbc84f"
+    },
+    {
+      "bytes": 4255,
+      "path": "changed-load-controls.json",
+      "sha256": "f837c13e5cfe040f7d04af7f6143b3d6914e9001554f8dc7c902162c358a88e7"
+    },
+    {
+      "bytes": 411,
+      "path": "bed-feed-test-results.json",
+      "sha256": "58f2d5cce86b496fd09b838f7dee60a359a604e79f70152c3178678d2de00675"
+    },
+    {
+      "bytes": 2286,
+      "path": "EXACT-DELTA.json",
+      "sha256": "0d28d14bacdfb20c6b978d9438d5958783a74503470c165b0906a545bcdb45c1"
+    },
+    {
+      "bytes": 11797,
+      "path": "README.md",
+      "sha256": "ce61e42830f988d6fe2a306ae23ec2bd934a17fb3ff93d63a6cdfe1da252c9a6"
+    }
+  ],
+  "baseThermalSourceCommit": "a81bba23c8114fd6441f01fe7afaa53d749be5fc",
+  "id": "SH005-finite-bed-feed-source-v4",
+  "parentCommit": "8fba148f2272e02ebd13377fc08f6487dc1f0c9e",
+  "qualifiedBirth": false,
+  "status": "NEW_SOURCE_NOT_QUALIFIED_OR_OBSERVED"
+}

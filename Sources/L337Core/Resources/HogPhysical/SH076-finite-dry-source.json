@@ -1,0 +1,995 @@
+{
+  "actualObservations": [],
+  "compatibility": "Separate finite source reference; original engineering resource/pins and all runtime refusal paths unchanged. No implicit replacement of original point tensor or current actor state.",
+  "coordinateUnits": "metres",
+  "detailedTriangles": 868,
+  "detailedVertices": 484,
+  "emptyDryReference": {
+    "centreMetres": [
+      0.0,
+      1.8541905982564624,
+      -4.124285099070623
+    ],
+    "id": "finite-intrinsic-empty-hog",
+    "inertiaAboutCentreOfMassKgM2": [
+      1252992960.8557167,
+      -7.754947316538164,
+      0.0,
+      -7.754947316538164,
+      1312649879.7978377,
+      -30229198.288982928,
+      0.0,
+      -30229198.288982928,
+      679452025.097226
+    ],
+    "massKg": 1011126.0
+  },
+  "emptyStateOnly": true,
+  "engineeringSHA256": "b38b9c87b12b236cb44d5ddcf8e5b5cadecd9029c33839691e23e24c8f59f871",
+  "finiteIntrinsicHardware": [
+    {
+      "centreMetres": [
+        -24.825538233110617,
+        0.0,
+        -54.137895988658535
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 20,
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "id": "port-propulsion",
+      "inertiaAboutCentreOfMassKgM2": [
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        54.000000000116415
+      ],
+      "massKg": 900.0,
+      "materialDensityKgPerCubicMetre": 3125.0000000000005,
+      "nativeComponentIndex": 11,
+      "originalHardwareAllocationIndex": 0,
+      "owningComponentName": "engine_pair/negative side/propulsion casing"
+    },
+    {
+      "centreMetres": [
+        24.825538233110617,
+        0.0,
+        -54.137895988658535
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 23,
+      "dimensionsMetres": [
+        0.6,
+        0.6,
+        0.8
+      ],
+      "id": "starboard-propulsion",
+      "inertiaAboutCentreOfMassKgM2": [
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        75.0,
+        0.0,
+        0.0,
+        0.0,
+        54.000000000116415
+      ],
+      "massKg": 900.0,
+      "materialDensityKgPerCubicMetre": 3125.0000000000005,
+      "nativeComponentIndex": 14,
+      "originalHardwareAllocationIndex": 1,
+      "owningComponentName": "engine_pair/positive side/propulsion casing"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -20.415738678544916,
+        -8.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999999,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.5,
+        1,
+        1.8
+      ],
+      "id": "electrical-plant",
+      "inertiaAboutCentreOfMassKgM2": [
+        265.0,
+        0.0,
+        0.0,
+        0.0,
+        343.125,
+        0.0,
+        0.0,
+        0.0,
+        203.125
+      ],
+      "massKg": 750.0,
+      "materialDensityKgPerCubicMetre": 277.77777777777777,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 2,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -20.415738678544916,
+        15.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0,
+          1.0000000000000002,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.5,
+        0.8,
+        1.6
+      ],
+      "id": "empty-tank-plumbing",
+      "inertiaAboutCentreOfMassKgM2": [
+        48.00000000001455,
+        0.0,
+        0.0,
+        0.0,
+        72.15000000001601,
+        0.0,
+        0.0,
+        0.0,
+        43.35000000002037
+      ],
+      "massKg": 180.0,
+      "materialDensityKgPerCubicMetre": 93.74999999999999,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 3,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -18.0,
+        -8.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000007
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000004,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000007
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1,
+        0.5,
+        1
+      ],
+      "id": "controls-and-sensors",
+      "inertiaAboutCentreOfMassKgM2": [
+        9.375,
+        0.0,
+        0.0,
+        0.0,
+        15.0,
+        0.0,
+        0.0,
+        0.0,
+        9.375
+      ],
+      "massKg": 90.0,
+      "materialDensityKgPerCubicMetre": 180.0,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 5,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -22.0,
+        -8.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          0.9999999999999996,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999997,
+          0.9999999999999999,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          0.9999999999999996,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999999,
+          0.9999999999999997,
+          0.9999999999999999,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.6,
+        0.4,
+        1
+      ],
+      "id": "empty-equipment-interface",
+      "inertiaAboutCentreOfMassKgM2": [
+        13.533333333340124,
+        0.0,
+        0.0,
+        0.0,
+        41.533333333340124,
+        0.0,
+        0.0,
+        0.0,
+        31.733333333337214
+      ],
+      "massKg": 140.0,
+      "materialDensityKgPerCubicMetre": 218.74999999999997,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 6,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -20.415738678544916,
+        -14.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000004,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000002,
+          1.0000000000000004,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1,
+        1,
+        1.4
+      ],
+      "id": "empty-launcher-mechanism",
+      "inertiaAboutCentreOfMassKgM2": [
+        39.46666666667443,
+        0.0,
+        0.0,
+        0.0,
+        39.46666666666715,
+        0.0,
+        0.0,
+        0.0,
+        26.666666666671517
+      ],
+      "massKg": 160.0,
+      "materialDensityKgPerCubicMetre": 114.28571428571429,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 7,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        -6.0,
+        -20.415738678544916,
+        4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999996,
+          1.0,
+          0.9999999999999997,
+          0.9999999999999996
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0,
+          0.9999999999999996,
+          1.0,
+          0.9999999999999997,
+          0.9999999999999996
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-01",
+      "inertiaAboutCentreOfMassKgM2": [
+        57.999999999992724,
+        0.0,
+        0.0,
+        0.0,
+        46.80000000000291,
+        0.0,
+        0.0,
+        0.0,
+        39.999999999992724
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        -4.0,
+        -20.415738678544916,
+        4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          1.0,
+          1.0000000000000002,
+          0.9999999999999999,
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-02",
+      "inertiaAboutCentreOfMassKgM2": [
+        57.999999999992724,
+        0.0,
+        0.0,
+        0.0,
+        46.80000000000291,
+        0.0,
+        0.0,
+        0.0,
+        39.999999999992724
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        -2.0,
+        -20.415738678544916,
+        4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000002,
+          0.9999999999999997,
+          1.0,
+          0.9999999999999994,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          1.0000000000000002,
+          0.9999999999999999,
+          1.0000000000000002,
+          0.9999999999999997,
+          1.0,
+          0.9999999999999994,
+          0.9999999999999999
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-03",
+      "inertiaAboutCentreOfMassKgM2": [
+        57.999999999992724,
+        0.0,
+        0.0,
+        0.0,
+        46.80000000000291,
+        0.0,
+        0.0,
+        0.0,
+        39.999999999992724
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        0.0,
+        -20.415738678544916,
+        4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999994,
+          1.0,
+          0.9999999999999996,
+          0.9999999999999999,
+          0.9999999999999997,
+          1.0,
+          0.9999999999999993,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999994,
+          1.0,
+          0.9999999999999996,
+          0.9999999999999999,
+          0.9999999999999997,
+          1.0,
+          0.9999999999999993,
+          1.0
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-04",
+      "inertiaAboutCentreOfMassKgM2": [
+        57.999999999992724,
+        0.0,
+        0.0,
+        0.0,
+        46.80000000000291,
+        0.0,
+        0.0,
+        0.0,
+        39.999999999992724
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        2.0,
+        -20.415738678544916,
+        4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          0.9999999999999997,
+          0.9999999999999997,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999996,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          0.9999999999999997,
+          0.9999999999999997,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002,
+          0.9999999999999996,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-05",
+      "inertiaAboutCentreOfMassKgM2": [
+        57.999999999992724,
+        0.0,
+        0.0,
+        0.0,
+        46.80000000000291,
+        0.0,
+        0.0,
+        0.0,
+        39.999999999992724
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        4.0,
+        -20.415738678544916,
+        4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999999,
+          1.0000000000000002,
+          1.0,
+          1.0000000000000002,
+          1.0,
+          0.9999999999999999,
+          1.0,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-06",
+      "inertiaAboutCentreOfMassKgM2": [
+        57.999999999992724,
+        0.0,
+        0.0,
+        0.0,
+        46.80000000000291,
+        0.0,
+        0.0,
+        0.0,
+        39.999999999992724
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "box_detail structural envelope"
+    },
+    {
+      "centreMetres": [
+        6.0,
+        -20.415738678544916,
+        4.0
+      ],
+      "certificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          0.9999999999999997,
+          0.9999999999999996,
+          0.9999999999999999,
+          0.9999999999999997,
+          1.0,
+          0.9999999999999996,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedCertificate": {
+        "cornerWinding": [
+          0.9999999999999996,
+          0.9999999999999997,
+          0.9999999999999996,
+          0.9999999999999999,
+          0.9999999999999997,
+          1.0,
+          0.9999999999999996,
+          1.0000000000000002
+        ],
+        "noBoundaryContact": true
+      },
+      "detailedComponentIndex": 0,
+      "dimensionsMetres": [
+        1.2,
+        1.6,
+        1.8
+      ],
+      "id": "empty-intrinsic-quarter-07",
+      "inertiaAboutCentreOfMassKgM2": [
+        57.999999999992724,
+        0.0,
+        0.0,
+        0.0,
+        46.80000000000291,
+        0.0,
+        0.0,
+        0.0,
+        39.999999999992724
+      ],
+      "massKg": 120.0,
+      "materialDensityKgPerCubicMetre": 34.72222222222222,
+      "nativeComponentIndex": 0,
+      "originalHardwareAllocationIndex": 4,
+      "owningComponentName": "box_detail structural envelope"
+    }
+  ],
+  "generatorSHA256": "925834b627d7a5e26463887a906c18b6f8a647c2a7ef78afbcc7814bdd5aa780",
+  "id": "SH076",
+  "inputSHA256": {
+    "SH076-R3.toml": "799045a816586eff2fe721601e0d5a8ab46a3acc1d7e09351d423b5b39087b0c",
+    "SH076-engineering.json": "b38b9c87b12b236cb44d5ddcf8e5b5cadecd9029c33839691e23e24c8f59f871",
+    "SH076-model.json": "f07b3ecdd974a00bca8ab3e42676c9acfa3678308ef56e5f20be0e17bd8a17bb",
+    "SH076-ownership.json": "225d89aad33691cb344dfe34975f9c1da108931fcde79bc1aa0427bbcadc380a",
+    "SH076-resource.toml": "2e41bcded4d3214b77b8379daa0ef6bb8f7cd1ba9f83163b0647bd0d0ee007b8"
+  },
+  "materialsOrMechanismFunctionQualified": false,
+  "metresPerSourceUnit": 40.83147735708983,
+  "metresPerSourceUnitExact": "55000/1347",
+  "name": "Hog",
+  "nativeAdmissionBlocked": true,
+  "nativeComponents": [
+    {
+      "faceCount": 12,
+      "firstFace": 0,
+      "signedVolumeCubicMetres": 82813.60272267715
+    },
+    {
+      "faceCount": 20,
+      "firstFace": 12,
+      "signedVolumeCubicMetres": 2490.8040104388715
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 32,
+      "signedVolumeCubicMetres": 82813.60272267705
+    },
+    {
+      "faceCount": 20,
+      "firstFace": 44,
+      "signedVolumeCubicMetres": 2490.804010438876
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 64,
+      "signedVolumeCubicMetres": 82813.60272267715
+    },
+    {
+      "faceCount": 20,
+      "firstFace": 76,
+      "signedVolumeCubicMetres": 2490.8040104388747
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 96,
+      "signedVolumeCubicMetres": 1642.2945632387919
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 108,
+      "signedVolumeCubicMetres": 1642.2945632388007
+    },
+    {
+      "faceCount": 116,
+      "firstFace": 120,
+      "signedVolumeCubicMetres": 1857.3611967698607
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 236,
+      "signedVolumeCubicMetres": 12.729955568987966
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 248,
+      "signedVolumeCubicMetres": 541.5073745864993
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 260,
+      "signedVolumeCubicMetres": 5091.178142739077
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 304,
+      "signedVolumeCubicMetres": 101.99105505910715
+    },
+    {
+      "faceCount": 12,
+      "firstFace": 348,
+      "signedVolumeCubicMetres": 541.5073745864997
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 360,
+      "signedVolumeCubicMetres": 5091.178142739075
+    },
+    {
+      "faceCount": 44,
+      "firstFace": 404,
+      "signedVolumeCubicMetres": 101.99105505910408
+    }
+  ],
+  "nativeEvidenceQualified": false,
+  "nativeFaceLimit": 512,
+  "nativeRefusalStage": "nativeEvidencePending",
+  "nativeSourceSHA256": "5e8fa307307bf36b5d5c52c556d92157091ed05f74765d06c241e386f14a72d5",
+  "nativeTriangles": 448,
+  "nativeVertices": 256,
+  "operatingAuthorityGranted": false,
+  "originalPointAllocationReference": {
+    "centreMetres": [
+      -9.610304710948854e-20,
+      1.8541949301644636,
+      -4.120309332646061
+    ],
+    "inertiaAboutCentreOfMassKgM2": [
+      1252876081.05595,
+      -7.754947316533185,
+      -1.1271624736426417e-10,
+      -7.754947316533185,
+      1312520574.1924534,
+      -30139656.179841846,
+      -1.1271624736426417e-10,
+      -30139656.179841846,
+      679436811.1528441
+    ],
+    "massKg": 1011126
+  },
+  "ownershipSHA256": "225d89aad33691cb344dfe34975f9c1da108931fcde79bc1aa0427bbcadc380a",
+  "peopleOrFuelCargoEquipmentGranted": false,
+  "preservedR3": {
+    "cargoTonnes": 450,
+    "crewRequired": 7,
+    "equipmentBudgetUnits": 38,
+    "initialPurchasedCabins": 0,
+    "intrinsicCrewPlaces": 7,
+    "nativeAutonomous": false,
+    "utilityMounts": 3
+  },
+  "r3SHA256": "799045a816586eff2fe721601e0d5a8ab46a3acc1d7e09351d423b5b39087b0c",
+  "resourceSHA256": "2e41bcded4d3214b77b8379daa0ef6bb8f7cd1ba9f83163b0647bd0d0ee007b8",
+  "roundingReserve": {
+    "centreMetres": [
+      0.0,
+      1.8541905982564626,
+      -4.124285099070623
+    ],
+    "id": "explicit-rounding-reserve-at-new-com",
+    "inertiaAboutCentreOfMassKgM2": [
+      -8.881784197001252e-16,
+      0.0,
+      0.0,
+      0.0,
+      -4.440892098500626e-16,
+      -2.220446049250313e-16,
+      0.0,
+      -2.220446049250313e-16,
+      -5.551115123125783e-16
+    ],
+    "massKg": 0.20167218893766403
+  },
+  "schemaVersion": 1,
+  "showroomSHA256": "f07b3ecdd974a00bca8ab3e42676c9acfa3678308ef56e5f20be0e17bd8a17bb",
+  "status": "FINITE_INTRINSIC_EMPTY_DRY_SOURCE_NOT_NATIVE_OR_OPERATIONAL_QUALIFICATION",
+  "stockModel": "Original approved area-mass lamina model retained. This slice makes intrinsic point allocations finite; it does not qualify material thickness, stock overlaps or whole pressure/cargo/free volume.",
+  "targetDetailedLengthMetres": 110,
+  "unchangedStock": {
+    "centreMetres": [
+      0.0,
+      1.905269547228023,
+      -4.039754782484599
+    ],
+    "id": "unchanged-original-surface-stock",
+    "inertiaAboutCentreOfMassKgM2": [
+      1247249641.5006595,
+      -7.754947316540324,
+      0.0,
+      -7.754947316540324,
+      1306864849.0657291,
+      -30166775.63778958,
+      0.0,
+      -30166775.63778958,
+      677247390.2694489
+    ],
+    "massKg": 1007165.7983278111
+  }
+}

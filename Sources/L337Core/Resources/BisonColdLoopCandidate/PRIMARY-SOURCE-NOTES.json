@@ -1,0 +1,38 @@
+{
+  "status": "PRIMARY_REFERENCE_CONTEXT_SEPARATE_FROM_NEW_QUALIFICATION_BOUNDS",
+  "sources": [
+    {
+      "url": "https://webbook.nist.gov/cgi/cbook.cgi?ID=C74986&Mask=4",
+      "role": "Propane phase data; melting near 85.5 K, normal boiling near 231.1 K, critical point near 369.9 K",
+      "limit": "No observed charge, purity, pressure or liquid state"
+    },
+    {
+      "url": "https://webbook.nist.gov/cgi/fluid.cgi?ID=C74986&Action=Data&Wide=on&Type=IsoBar&P=2&Digits=6&TLow=180&THigh=195&TInc=1&RefState=DEF&TUnit=K&PUnit=bar&DUnit=kg%2Fm3&HUnit=kJ%2Fkg&WUnit=m%2Fs&VisUnit=uPa*s&STUnit=N%2Fm",
+      "role": "Pinned primary fluid rows; equivalent P=15 and P=18 tables and actual returned saturation rows are in inputs",
+      "limit": "Cp J/g/K converted to J/kg/K; viscosity microPa.s converted to Pa.s. Samples do not certify a continuum interval. Saturation response returned 184.419..369.890 K regardless of the requested interval; use returned temperatures. Failed PLow/PHigh request retained."
+    },
+    {
+      "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=832438",
+      "role": "Primary propane equation-of-state reference context",
+      "limit": "No new claimed apparatus/EOS accuracy or nitrogen Z proof"
+    },
+    {
+      "url": "https://www.nist.gov/publications/measurement-and-correlation-thermal-conductivity-propane-86-k-600-k-pressures-70-mpa",
+      "role": "Primary propane conductivity reference context",
+      "limit": "Numeric outward model bounds are qualification inputs supported by the pinned fluid samples, not a universal bound extracted from the abstract"
+    },
+    {
+      "url": "https://www.nist.gov/publications/reference-correlation-thermal-conductivity-carbon-dioxide-triple-point-1100-k-and-200",
+      "role": "CO2 conductivity reference starts at the triple point",
+      "limit": "Does not support the authored gas conductivity floor 0.007 W/m/K at 185 K; that floor requires separate qualification"
+    }
+  ],
+  "newBoundsNotPublishedGuarantees": [
+    "All continuous property/EOS/compressibility/purity bounds",
+    "Material conductivity, effective wall/jacket densities, pressure strength and joints",
+    "Poiseuille/Darcy/pin/manifold loss envelopes and pump performance",
+    "Matrix active pore area, gas path shape/length, CO2 distribution and contact through depletion",
+    "Distributed boundary heat spreading, biological transport, control stability and local transients"
+  ],
+  "actualObservations": []
+}

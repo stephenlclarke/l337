@@ -28,11 +28,11 @@ extension Game {
 
   private mutating func interruptCurrentNewtMechanismForRemoval(_ parent: ActorIdentity) -> Bool {
     let time = commander.flightSimulation.physicalTime
-    guard let source = CurrentNewtKitSource.current,
-      let index = bodies.firstIndex(where: { $0.physical?.identity == parent }),
+    guard let index = bodies.firstIndex(where: { $0.physical?.identity == parent }),
       var stock = bodies[index].physical?.currentNewtKitStock,
+      let source = CurrentNewtKitSource.source(for: stock.issue),
       let a = stock.actuation, stock.observedAt == time, source.matches(stock, at: time),
-      let logical = bodies[index].physical?.empSource,
+      let logical = currentNewtParentOwner(body: bodies[index], stock: stock),
       var record = commander.savedEMPState?.records[logical], record.hull.binding == parent,
       record.hull.body.physical?.currentNewtKitStock == stock,
       let load = currentNewtKitLoad(for: bodies[index]) else { return false }

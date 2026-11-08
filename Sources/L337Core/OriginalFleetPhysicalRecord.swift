@@ -198,11 +198,11 @@ enum OriginalFleetPhysicalData {
     let files = try FileManager.default.contentsOfDirectory(
       at: directory, includingPropertiesForKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
     let expected = Set(registrations.keys.map { $0 + ".json" })
-      .union([CurrentNewtKitSource.resourceFileName])
+      .union(CurrentNewtKitSource.resourceFileNames)
     guard Set(files.map(\.lastPathComponent)) == expected else { throw Failure.unavailable }
     var result: [String: OriginalFleetPhysicalRecord] = [:]
     for file in files {
-      if file.lastPathComponent == CurrentNewtKitSource.resourceFileName {
+      if CurrentNewtKitSource.resourceFileNames.contains(file.lastPathComponent) {
         guard CurrentNewtKitSource.authenticResource(at: file) else { throw Failure.unavailable }
         continue
       }

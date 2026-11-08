@@ -91,6 +91,7 @@ extension Game {
     guard !NativeMemoryAtlasDefinition.applies(pack) else { return false }
     guard !NativeQuietChoirDefinition.applies(pack) else { return false }
     guard !NativeBorrowedVoiceDefinition.applies(pack) else { return false }
+    guard !NativeTitheCommissionDefinition.applies(pack) else { return false }
     guard !NativeUnderTowDefinition.applies(pack) else { return false }
     guard !NativeAssemblyOfOrbitsDefinition.applies(pack) else { return false }
     guard pack.manifest.stateID != NativeInductionSeedPack.stateID,
@@ -149,6 +150,9 @@ extension Game {
     guard !NativeBorrowedVoiceDefinition.applies(pack), !NativeBorrowedVoiceDefinition.marked(state) else {
       return false
     }
+    guard !NativeTitheCommissionDefinition.applies(pack), !NativeTitheCommissionDefinition.marked(state) else {
+      return false
+    }
     guard !NativeUnderTowDefinition.applies(pack), !NativeUnderTowDefinition.marked(state) else {
       return false
     }
@@ -183,6 +187,9 @@ extension Game {
     }
     guard !NativeBorrowedVoiceDefinition.applies(pack) else {
       throw MissionPackError("The Borrowed Voice uses the actual commander and native commissioning history.")
+    }
+    guard !NativeTitheCommissionDefinition.applies(pack) else {
+      throw MissionPackError("The Tithe of Worlds uses the actual commander, native desk and explicit permanent-mark commission.")
     }
     guard !NativeUnderTowDefinition.applies(pack) else {
       throw MissionPackError("Under Tow uses the actual commander, original loan and native custody.")

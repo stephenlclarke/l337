@@ -1,0 +1,37 @@
+{
+  "scope": "Proposed Bison finite pump rotor/shaft/bearings/seals and quarter-turn valve gate, with complete paid mass/volume/full-moment partition",
+  "sourceBase": "524e4f46192cbdfb350017c982633aebbb2365e8",
+  "physicalBase": "f7755ce0cc0226360afc341760c2c9e418443f93",
+  "captureBase": "f6765409e99146d3ecd54f299e4f901141c5f940",
+  "cpuSeconds": 30,
+  "peakRSSBytes": 536870912,
+  "success": [
+    "Exact original external50mm/25mm envelopes and connected12mm/8mm interface faces retained",
+    "Explicit proposed pitched rotor, shaft, ring/spokes, can/stator, journals/supports; valve flap/shaft/bearings/seat seals and actuator geometry",
+    "Disjoint positive solid/liquid/dry-void partition, continuous swept clearances and nominal contact pairs; inventories20ml/5ml retained by explicit cavity sizing",
+    "Each original0.3kg/0.08kg assembly paid exactly; component full moments and positive residual housing, no new stock/mass/electrical/preparation credit",
+    "One fixed positive wall refit at reference-open pose preserves canonical248kg dry COM/fullI/lid; affected nominal wet states updated, original372.455<=372.5 unchanged",
+    "Independent primitive quadrature/partition/clearance/configuration and full P/L/work/capture composition tests; only affected eight quiescent four-material references rerun",
+    "Manufactured motion requires explicit states; actual spin/flow/quiet duration/heat/pressure/function/material qualification remains open"
+  ],
+  "designChoices": [
+    "Canned axial impeller with four30degree pitched blades and wet bearings within original pump; unqualified authored effective densities",
+    "Quarter-turn hinged plate chosen because full-stroke sliding gate compromises25mm case wall margins; no user approval needed for routine proposed design",
+    "All density/material/clearance geometry values are authored candidate inputs, not qualified measurements or manufacturer allowables"
+  ],
+  "unchanged": [
+    "Original Newt mesh/frame/appearance and all old freezes",
+    "18kg cradle/5kg dewar;0.945kg propane/0.010kg nitrogen/14kg thermalCO2",
+    "1.5MJ initial/120kJ startup/fixed42W/6h and all existing power/preparation/role/custody/quiet limits",
+    "12roles/11carrierbodies/emptycarrier7/original7solelyfrozenNewt; no people/stock/preparation/commissioning/birth authority",
+    "MC1 runtime/save ownership; G1 sole native/compiler/renderer/CI; actual M01 primary"
+  ],
+  "qualificationOpen": [
+    "Continuous cold material/clearance/shaft-joint/bearing/seal/pressure-support and actuator force/torque allowables",
+    "Actual pump curve/efficiency and new obstructions/losses within original hydraulic bounds; no inherited performance acceptance",
+    "Actual fluid/rotor/gate/diaphragm initial motion, torque histories, coast-down/contact transfer, dissipation/local heat/pressure and <=1second quiet",
+    "Finite-pressure185K CO2/interface/spatial conductivity and actual assembly/stock/contents/preparation/commissioning"
+  ],
+  "actualObservations": [],
+  "nativeCompilerRenderer": false
+}

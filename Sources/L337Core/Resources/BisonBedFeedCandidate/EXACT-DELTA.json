@@ -1,0 +1,64 @@
+{
+  "acceptedIncrement": 0,
+  "actualObservations": [],
+  "allGasBoundKg": 0.023756573981538645,
+  "baseCommit": "8fba148f2272e02ebd13377fc08f6487dc1f0c9e",
+  "currentCarrierServiceHeatJoules": 67622400.0,
+  "id": "SH005-finite-bed-feed-source-v4",
+  "newRespiratoryFreeGasCubicMetres": 1.4518772072318467,
+  "oldFrozenSourcesUnchanged": true,
+  "portableStates": [
+    {
+      "centreMetres": [
+        -0.0015568906526117598,
+        -0.04374717462132792,
+        -0.00962210389165483
+      ],
+      "id": "finite-phase-feed-state-0",
+      "inertiaAboutCentreOfMassKgM2": [
+        192.51740838328902,
+        0.0011090598889882917,
+        0.005622491613562011,
+        0.0011090598889882917,
+        193.00988609466984,
+        -0.2740058217712469,
+        0.005622491613562011,
+        -0.2740058217712469,
+        50.62756043644681
+      ],
+      "massKg": 371.4999999999999
+    },
+    {
+      "centreMetres": [
+        -0.0015568906072256762,
+        -0.04001331835437668,
+        0.021436806328046523
+      ],
+      "id": "finite-phase-feed-state-1",
+      "inertiaAboutCentreOfMassKgM2": [
+        203.12238439505336,
+        -0.0010505412209253946,
+        -0.012341759752651591,
+        -0.0010505412209253946,
+        204.263329004684,
+        1.2867775164370465,
+        -0.012341759752651591,
+        1.2867775164370465,
+        50.061357097269784
+      ],
+      "massKg": 371.4999999999999
+    }
+  ],
+  "qualifiedBirth": false,
+  "shippingOrRuntimeFilesChanged": false,
+  "sourceChanges": [
+    "Finite27kg reactor replaces uniform lump with bed20kg+screens+divider+preheater+effective shell7kg",
+    "Interiorheight0.185to0.187within unchangedouterenvelope to pay sealedpreheater/diffuser separation and preserve12kgstresscapture",
+    "Closed feed wall0.364656842kg and0.025kgheater paid from existing5kgheatpath",
+    "Same14kg thermalCO2 now partitioned into finite solid/headspace/line/preheater/diffuser/outlet/bed gas",
+    "185Kideal saturated-choke capacity is not promoted; actual350..355Kpreheat required before primary pressure drop",
+    "All42W kept with explicit electrical/parasitic/latent/feed destinations",
+    "New gasvolume/fulltensors and compatible positive drywall material distribution"
+  ],
+  "status": "NEW_SOURCE_NOT_QUALIFIED_OR_OBSERVED"
+}

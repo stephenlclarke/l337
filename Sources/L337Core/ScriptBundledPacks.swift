@@ -204,6 +204,8 @@ extension ScriptPackLibrary {
     appendBundledPack(
       bundledBorrowedVoiceDirectory, errorPrefix: "Bundled Borrowed Voice investigation: ", to: &library)
     appendBundledPack(
+      bundledTitheOfWorldsDirectory, errorPrefix: "Bundled Tithe of Worlds definition: ", to: &library)
+    appendBundledPack(
       bundledQuietChoirDirectory, errorPrefix: "Bundled Quiet Choir investigation: ", to: &library)
     appendBundledPack(
       bundledMemoryAtlasDirectory, errorPrefix: "Bundled The Memory Atlas commission: ", to: &library)

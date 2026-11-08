@@ -54,7 +54,7 @@ extension CurrentNewtKitSource {
     else { return nil }
     let relative = parent.pose.orientation.apply(direction * work.rodVelocity)
     return parts.map { part in
-      guard part.id.hasPrefix("moving-rod-") else { return part }
+      guard movingDriveComponentIDs.contains(part.id) else { return part }
       return .init(id: part.id, collisionMesh: part.collisionMesh, displayMesh: part.displayMesh,
         pose: part.pose, massProperties: part.massProperties,
         velocity: part.velocity + relative, angularVelocity: part.angularVelocity)

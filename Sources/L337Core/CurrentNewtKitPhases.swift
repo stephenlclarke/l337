@@ -17,7 +17,7 @@ extension CurrentNewtKitSource {
 
   func phase(elapsed: Double, stopped: Bool = false) -> Phase {
     let time = max(0, min(duration, elapsed))
-    let u = min(1, time / dropDuration)
+    let u = dropDuration == 0 ? 1 : min(1, time / dropDuration)
     let lower = u <= 0.5 ? 2 * u * u : 1 - 2 * (1 - u) * (1 - u)
     let lowerRate = time >= dropDuration || stopped ? 0
       : (u <= 0.5 ? 4 * u : 4 * (1 - u)) / dropDuration
@@ -33,8 +33,8 @@ extension CurrentNewtKitSource {
       distance: distance, speed: speed)
   }
 
-  func movingMasses(_ p: Phase) -> [MovingMass] {
-    var result = [MovingMass(properties: bareParent, relativeVelocity: .init(0, 0, 0))]
+  func movingMasses(_ p: Phase, people: [Mass]? = nil) -> [MovingMass] {
+    var result = baseParts.map { MovingMass(properties: $0.mass, relativeVelocity: .init(0, 0, 0)) }
     result += retainedParts.map { part in
       let lower = part.lowered.centreOfMassMetres - part.stowed.centreOfMassMetres
       let rod = part.extended.centreOfMassMetres - part.lowered.centreOfMassMetres
@@ -42,6 +42,8 @@ extension CurrentNewtKitSource {
         by: lower * p.lower + rod * p.rod),
         relativeVelocity: lower * p.lowerRate + rod * p.rodRate)
     }
+    result += (people ?? personSlots.filter { $0.ordinal != selectedPersonOrdinal }.map(\.massInCarrier))
+      .map { .init(properties: $0, relativeVelocity: .init(0, 0, 0)) }
     result.append(.init(properties: CurrentNewtKitMass.translated(podMass,
       by: podOrigin + direction * p.distance),
       relativeVelocity: direction * p.speed))
@@ -69,8 +71,8 @@ extension CurrentNewtKitSource {
   }
 
   func matchesMass(_ a: Mass, _ b: Mass) -> Bool {
-    CurrentNewtKitMass.close(a, b, massTolerance: 1e-8, centreTolerance: 1e-9,
-      inertiaTolerance: 1e-6)
+    CurrentNewtKitMass.close(a, b, massTolerance: 1e-8, centreTolerance: centreTolerance,
+      inertiaTolerance: inertiaTolerance)
   }
 
   /// Time determines the attached rack motion only. After unlock the real
@@ -167,6 +169,7 @@ extension CurrentNewtKitSource {
     matches(issue) && a.source == issue.person.source && a.sequence > 0
       && a.initialParent.structurallyValid
       && loadModel?.matches(a.load, selectedPerson: issue.person) == true
+      && a.load.people.allSatisfy({ issue.birthLoad.people.contains($0) })
       && a.initialParent.angularVelocity.length <= maximumInitialAngularSpeed
       && a.startedAt.isFinite && a.startedAt >= issue.issuedAt
       && a.unlockAt.isFinite && abs(a.unlockAt - a.startedAt - dropDuration) <= 1e-9
@@ -189,13 +192,20 @@ extension CurrentNewtKitSource {
     guard validWork(work), parent.structurallyValid,
       let model = loadModel, model.matchesInventory(load),
       let allocations = model.allocations(load),
-      let hull = OriginalFleetRuntimeHullSource.source(for: "SH029")
+      let people = currentParentPeople(load)
     else { return nil }
     let p = phase(work: work, at: time, actuation: stock.actuation,
       interrupted: stock.interruptedAt != nil)
-    var result = [CurrentNewtKitComponent(id: "SH029-bare-carrier", collisionMesh: hull.mesh,
-      displayMesh: hull.mesh, pose: parent.pose, massProperties: bareParent,
-      velocity: parent.velocity, angularVelocity: parent.angularVelocity)]
+    var result = baseParts.map { part in
+      CurrentNewtKitComponent(id: part.id, collisionMesh: part.collisionMesh,
+        displayMesh: part.displayMesh, pose: parent.pose, massProperties: part.mass,
+        velocity: parent.velocity, angularVelocity: parent.angularVelocity)
+    }
+    result += people.map { slot in
+      .init(id: slot.componentID, collisionMesh: nil, displayMesh: nil, pose: parent.pose,
+        massProperties: slot.massInCarrier, velocity: parent.velocity,
+        angularVelocity: parent.angularVelocity)
+    }
     for part in retainedParts {
       let lower = part.lowered.centreOfMassMetres - part.stowed.centreOfMassMetres
       let rod = part.extended.centreOfMassMetres - part.lowered.centreOfMassMetres

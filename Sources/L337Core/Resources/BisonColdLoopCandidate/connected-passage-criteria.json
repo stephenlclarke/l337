@@ -1,0 +1,32 @@
+{
+  "scope": "Finite connected pump and bypass-valve passage/housing structural correction over immutable 8bf source; no apparatus or operating qualification",
+  "sourceBase": "0fe5e0abf8ba8fd9deb1426ef44eab5e6799c803",
+  "physicalBase": "8bf154948fa0609e1bf01776959bb2fbbe6432dd",
+  "cpuSeconds": 30,
+  "peakRSSBytes": 536870912,
+  "success": [
+    "Both pump ports reach existing 12mm square main bore interfaces, valve inlet/outlet reach existing 8mm bypass interfaces; connected positive-area fluid paths",
+    "Complete fluid domains excluded from finite positive housing material",
+    "Retain exactly 0.3kg pump and0.08kg valve;20ml pump and5ml valve workingfluid volumes and unchanged outer envelopes",
+    "New canonical positive wall refit preserves248kgdry COM/fullI/lidstock; update changed loaded full tensors with exact fluid redistribution",
+    "Independent cell quadrature/connectivity/partition controls and changed-load P/L/work checks, including baseline sealed-cavity and full-solid-overlap negatives",
+    "Reused thermal/hydraulic/phase/preparation/role/custody limits remain unchanged; no conductivity/quiet/pressure/function/commissioning qualification from source"
+  ],
+  "unchanged": [
+    "Original Newt source/scale/metreorigin/appearance",
+    "372.5kg maximum; current372.455kg nominal wet",
+    "18kg cradle/5kg dewar;0.945kg propane/0.010kg nitrogen;14kgthermalCO2",
+    "1.5MJ/120kJ/fixed42W/6h and all preparation budgets",
+    "6moving43.3376kg/2paid+2passive/4000N2400J",
+    "12roles/11carrierbodies/empty7/original7solelyfrozenNewt",
+    "MC1runtime/save ownership; G1primaryM01; all previous freezes"
+  ],
+  "qualificationOpen": [
+    "185K finite-pressure CO2 conductivity/interface/spatial transfer floor",
+    "Pump curve/efficiency/rotor/seals, actual valve actuation/control stability, continuous flow/pressure bounds",
+    "Material density/strength/pressure integrity/support and actual assembly/source stock",
+    "Actual fluid/rotor quiet transition, P/L/heat/dense history, preparation/commissioning/birth"
+  ],
+  "actualObservations": [],
+  "nativeCompilerRenderer": false
+}

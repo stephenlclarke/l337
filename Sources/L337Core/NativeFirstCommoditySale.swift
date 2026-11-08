@@ -75,16 +75,16 @@ extension Game {
   /// Called immediately after this exact ordinary sale, before any refuel or next trade.
   /// Missing native evidence never invents history or changes the ordinary market outcome.
   mutating func recordFirstNativeCommoditySale(
-    index: Int, before: NativeSaleBalance, unitPrice: Int
+    index: Int, before: NativeSaleBalance, unitPrice: Int, operation: UUID
   ) {
-    guard commander.scriptState.firstNativeCommoditySale == nil, !paused,
+    guard commander.scriptState.secondNativeCommoditySale == nil, !paused,
       nativeMainStationDockEvidenceIsCurrent,
       let dock = commander.nativeStations?.currentMainDock,
       let owner = commander.equipmentOwnerID,
       market.indices.contains(index), commander.cargo.indices.contains(index)
     else { return }
     let evidence = NativeFirstCommoditySale(
-      operation: UUID(), owner: owner, commodity: index, dock: dock,
+      operation: operation, owner: owner, commodity: index, dock: dock,
       physicalTime: commander.flightSimulation.physicalTime,
       calendarOperation: commander.scriptState.calendarLedger?.operation ?? 0,
       unitPrice: unitPrice, quantity: before.cargo - commander.cargo[index],
@@ -92,6 +92,6 @@ extension Game {
       after: .init(
         stock: market[index].quantity, cargo: commander.cargo[index], credits: commander.credits))
     guard evidence.valid else { return }
-    commander.scriptState.firstNativeCommoditySale = evidence
+    retainNativeOrdinarySale(evidence)
   }
 }

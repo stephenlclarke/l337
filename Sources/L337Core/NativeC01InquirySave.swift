@@ -105,7 +105,8 @@ extension ScriptSaveJSONPreflight {
   }
 
   static func validateCommodityTradeArchive(
-    _ data: Data, location: InquiryArchiveLocation, permitsRoot: Bool
+    _ data: Data, location: InquiryArchiveLocation, permitsRoot: Bool,
+    field: String = NativeFirstCommodityTradeSave.field
   ) throws -> Bool {
     try validate(data)
     let context: NativeC01InquiryLexicalInput.Context
@@ -116,7 +117,7 @@ extension ScriptSaveJSONPreflight {
     case .world: context = .world
     }
     var lexical = NativeC01InquiryLexicalInput(bytes: Array(data))
-    return try lexical.validateTradeArchive(context: context, permitsRoot: permitsRoot)
+    return try lexical.validateTradeArchive(context: context, permitsRoot: permitsRoot, field: field)
   }
 
   /// Conservative Under Tow presence only. Existing lexical bounds and duplicate-key checks
@@ -184,6 +185,13 @@ extension ScriptSaveJSONPreflight {
       context: location == .commander ? .commander : .opaque, permitsRoot: permitsRoot)
   }
 
+  /// Bison archive markers are independent of the existing feature envelopes.
+  static func validateBisonJournalFields(_ data: Data, location: BisonUnitJournalSave.Location) throws {
+    try validate(data)
+    var lexical = NativeC01InquiryLexicalInput(bytes: Array(data))
+    try lexical.validateBisonArchive(location: location)
+  }
+
   /// Conservative original C02 presence in the existing bounded lexical stream.
   static func quietChoirArchiveMayContainClaims(
     _ data: Data, part: ScriptFreightVersionedSave.Part
@@ -204,6 +212,16 @@ extension ScriptSaveJSONPreflight {
       part == .missions ? .missions : part == .commander ? .commander : .contracts
     var lexical = NativeC01InquiryLexicalInput(bytes: Array(data))
     return try lexical.originalArchiveMayContainClaims(context: context, archive: .borrowedVoice)
+  }
+
+  static func titheCommissionArchiveMayContainClaims(
+    _ data: Data, part: ScriptFreightVersionedSave.Part
+  ) throws -> Bool {
+    try validate(data)
+    let context: NativeC01InquiryLexicalInput.Context =
+      part == .missions ? .missions : part == .commander ? .commander : .contracts
+    var lexical = NativeC01InquiryLexicalInput(bytes: Array(data))
+    return try lexical.originalArchiveMayContainClaims(context: context, archive: .titheCommission)
   }
 
   static func validateCommodityTradeData(_ data: Data) throws {
@@ -229,11 +247,13 @@ private struct NativeC01InquiryLexicalInput {
   private var permitsRoot = false
   private var extracted: Data?
   private var validatingTradeArchive = false
+  private var tradeArchiveField = NativeFirstCommodityTradeSave.field
   private var permitsTradeRoot = false
   private var foundTradeRoot = false
   private var validatingNewtArchive = false
   private var permitsNewtClaims = false
   private var foundNewtClaims = false
+  private var bisonLocation: BisonUnitJournalSave.Location?
   private var extractingWatcherSource = false
   private var permitsWatcherRoot = false
   private var watcherSource: Data?
@@ -242,8 +262,8 @@ private struct NativeC01InquiryLexicalInput {
   private var foundOriginalMarker = false
 
   /// Closed presence selection only; neither branch decodes data or supplies authority.
-  enum OriginalArchive {
-    case underTow, assemblyOfOrbits, signedPassageOpening, memoryAtlas, quietChoir, borrowedVoice
+  enum OriginalArchive: Equatable {
+    case underTow, assemblyOfOrbits, signedPassageOpening, memoryAtlas, quietChoir, borrowedVoice, titheCommission
 
     func matchesMetadata(_ marker: String) -> Bool {
       switch self {
@@ -253,6 +273,8 @@ private struct NativeC01InquiryLexicalInput {
         marker == NativeAssemblyOfOrbitsDefinition.stateID || marker == NativeAssemblyOfOrbitsDefinition.digest
       case .borrowedVoice:
         marker == NativeBorrowedVoiceDefinition.stateID || marker == NativeBorrowedVoiceDefinition.digest
+      case .titheCommission:
+        marker == NativeTitheCommissionDefinition.stateID || marker == NativeTitheCommissionDefinition.digest
       case .quietChoir:
         marker == NativeQuietChoirDefinition.stateID || marker == NativeQuietChoirDefinition.digest
       case .memoryAtlas:
@@ -268,6 +290,8 @@ private struct NativeC01InquiryLexicalInput {
       case .assemblyOfOrbits: key == NativeAssemblyOfOrbitsSave.field || key == "assemblyOfOrbits"
       case .borrowedVoice:
         key == NativeBorrowedVoiceSave.field || key == "borrowedVoice"
+      case .titheCommission:
+        key == NativeTitheCommissionSave.field || key == "titheCommission" || key == "titheCommissionMarkEntitlement"
       case .quietChoir:
         key == NativeQuietChoirSave.field || key == "quietChoir"
       case .memoryAtlas:
@@ -349,7 +373,7 @@ private struct NativeC01InquiryLexicalInput {
   }
 
   enum Context: Equatable {
-    case inquiry, commodityTrade, opaque, commander, missions, embeddedMissions, world, bodies, body, physical, spawn
+    case inquiry, commodityTrade, titheCommission, opaque, commander, missions, embeddedMissions, world, bodies, body, physical, spawn
     case newtEMP, newtRecords, newtRecord, newtObject, newtObjects, newtCustody, newtLeaf
     case newtNPC, newtNPCEntries, newtNPCEntry, newtSnapshot
     case newtDirector, newtRequests, newtRequest
@@ -381,6 +405,7 @@ private struct NativeC01InquiryLexicalInput {
       case (.commander, "savedContracts"): return .contracts
       case (.missions, "instances"), (.embeddedMissions, "instances"): return .instances
       case (.instance, "contract"): return .contract
+      case (.instance, NativeTitheCommissionSave.field): return .titheCommission
       case (.contract, "offer"): return .offer
       case (.contracts, "boards"): return .boards
       case (.board, "offers"): return .offers
@@ -391,6 +416,7 @@ private struct NativeC01InquiryLexicalInput {
         switch self {
         case .inquiry: return .inquiry
         case .commodityTrade: return .commodityTrade
+        case .titheCommission: return .titheCommission
         case .watcherSource(let object):
           if let field = object.fields[key], case .object(let nested) = field {
             return .watcherSource(nested)
@@ -436,6 +462,9 @@ private struct NativeC01InquiryLexicalInput {
     "sequence", "sourceRevision", "visit", "entity", "member", "galaxy", "system",
     "bountyTenths", "value", "id", "index", "detent", "appliedDetent", "emissionID",
   ]
+  private static let titheIntegerFields: Set<String> = [
+    "inventoryRevision", "sequence", "visit", "entity", "galaxy", "system",
+  ]
   private static let tradeIntegerFields: Set<String> = [
     "commodity", "calendarOperation", "unitPrice", "quantity", "stock", "cargo", "credits",
     "sequence", "visit", "entity", "galaxy", "system",
@@ -473,6 +502,17 @@ private struct NativeC01InquiryLexicalInput {
     return foundNewtClaims
   }
 
+  mutating func validateBisonArchive(location: BisonUnitJournalSave.Location) throws {
+    bisonLocation = location
+    let context: Context = location == .commander || location == .pointer ? .commander
+      : location == .world ? .world : .opaque
+    whitespace()
+    guard cursor < bytes.count, bytes[cursor] == 123 else { throw SaveError.invalidCommander }
+    try value(field: nil, context: context)
+    whitespace()
+    guard cursor == bytes.count else { throw SaveError.invalidCommander }
+  }
+
   mutating func extractWatcherSource(context: Context, permitsRoot: Bool) throws -> Data? {
     extractingWatcherSource = true
     permitsWatcherRoot = permitsRoot
@@ -484,7 +524,10 @@ private struct NativeC01InquiryLexicalInput {
     return watcherSource
   }
 
-  mutating func validateTradeArchive(context: Context, permitsRoot: Bool) throws -> Bool {
+  mutating func validateTradeArchive(context: Context, permitsRoot: Bool, field: String) throws -> Bool {
+    guard field == NativeFirstCommodityTradeSave.field || field == NativeSecondCommoditySaleSave.field
+    else { throw SaveError.invalidCommander }
+    tradeArchiveField = field
     validatingTradeArchive = true
     permitsTradeRoot = permitsRoot
     whitespace()
@@ -550,6 +593,7 @@ private struct NativeC01InquiryLexicalInput {
     let integer = (context == .newtLeaf && (field.map(Self.newtIntegerFields.contains) ?? false))
       || (context == .inquiry && (field.map(Self.integerFields.contains) ?? false))
       || (context == .commodityTrade && (field.map(Self.tradeIntegerFields.contains) ?? false))
+      || (context == .titheCommission && (field.map(Self.titheIntegerFields.contains) ?? false))
       || (context.watcherObject != nil && (field.map(Self.watcherIntegerFields.contains) ?? false))
     let floating = context == .inquiry && (field.map(Self.floatingFields.contains) ?? false)
     if context == .inquiry && (field == "lowerBits" || field == "upperBits") {
@@ -578,6 +622,7 @@ private struct NativeC01InquiryLexicalInput {
       guard !integer && !floating else { throw SaveError.invalidCommander }
       try literal(Array("false".utf8))
     case 110 where context != .inquiry && context != .commodityTrade && context != .newtLeaf
+      && context != .titheCommission
       && context.watcherObject == nil:
       try literal(Array("null".utf8))
     default:
@@ -611,7 +656,36 @@ private struct NativeC01InquiryLexicalInput {
         // This is stock history, never an independent commander, pod or custody claim.
         throw SaveError.invalidCommander
       }
-      if validatingNewtArchive && key == "currentNewtKitConfiguration" {
+      if (validatingNewtArchive || bisonLocation != nil) && key == BisonUnitJournalSave.journalField {
+        guard context == .commander, bisonLocation == nil || bisonLocation == .commander else {
+          throw SaveError.invalidCommander
+        }
+        whitespace()
+        let start = cursor
+        guard cursor < bytes.count, bytes[cursor] == 123 else { throw SaveError.invalidCommander }
+        // The exact typed namespace owns its requests. Duplicate-key/depth
+        // checks remain active; full leaf re-encoding rejects discarded fields.
+        let previousNewtMode = validatingNewtArchive
+        validatingNewtArchive = false
+        try value(field: nil, context: .opaque)
+        validatingNewtArchive = previousNewtMode
+        guard cursor - start <= 4_194_304 else { throw SaveError.invalidCommander }
+        try BisonUnitJournalSave.validateLeaf(Data(bytes[start..<cursor]))
+      } else if (validatingNewtArchive || bisonLocation != nil) && key == BisonUnitJournalSave.checkpointField {
+        guard context == .commander || context == .world,
+          bisonLocation == nil || bisonLocation == .pointer || bisonLocation == .world else {
+          throw SaveError.invalidCommander
+        }
+        whitespace()
+        let start = cursor
+        guard cursor < bytes.count, bytes[cursor] == 123 else { throw SaveError.invalidCommander }
+        let previousNewtMode = validatingNewtArchive
+        validatingNewtArchive = false
+        try value(field: nil, context: .opaque)
+        validatingNewtArchive = previousNewtMode
+        guard cursor - start <= CurrentNewtKitSave.maximumLeafBytes else { throw SaveError.invalidCommander }
+        try BisonUnitJournalSave.validateCheckpointLeaf(Data(bytes[start..<cursor]))
+      } else if validatingNewtArchive && key == "currentNewtKitConfiguration" {
         guard permitsNewtClaims, context == .newtRequest else { throw SaveError.invalidCommander }
         let selector = try string(decodeKey: true)
         guard !selector.isEmpty, selector.utf8.count <= 256 else { throw SaveError.invalidCommander }
@@ -630,6 +704,17 @@ private struct NativeC01InquiryLexicalInput {
         }
         try CurrentNewtKitSave.validateLeaf(Data(bytes[start..<cursor]), field: key)
         foundNewtClaims = true
+      } else if checkingOriginalArchive && queriedOriginalArchive == .titheCommission
+        && key == NativeTitheCommissionSave.field
+      {
+        guard context == .instance else { throw SaveError.invalidCommander }
+        whitespace()
+        let start = cursor
+        guard cursor < bytes.count, bytes[cursor] == 123 else { throw SaveError.invalidCommander }
+        try value(field: nil, context: .titheCommission)
+        guard cursor - start <= NativeTitheCommissionSave.maximumLeafBytes else {
+          throw SaveError.invalidCommander
+        }
       } else if extractingWatcherSource && key == NativeMemoryAtlasWatcherSourceSave.field {
         guard context == .commander, permitsWatcherRoot, watcherSource == nil else {
           throw SaveError.invalidCommander
@@ -642,7 +727,7 @@ private struct NativeC01InquiryLexicalInput {
           throw SaveError.invalidCommander
         }
         watcherSource = Data(bytes[start..<cursor])
-      } else if validatingTradeArchive && key == NativeFirstCommodityTradeSave.field
+      } else if validatingTradeArchive && key == tradeArchiveField
         && context != .opaque && context != .commodityTrade
       {
         guard context == .missions, permitsTradeRoot, !foundTradeRoot else {
@@ -655,7 +740,7 @@ private struct NativeC01InquiryLexicalInput {
         try value(field: nil, context: .commodityTrade)
         guard cursor - start <= 32768 else { throw SaveError.invalidCommander }
       } else if !validatingTradeArchive && !checkingOriginalArchive && !extractingWatcherSource
-        && !validatingNewtArchive
+        && !validatingNewtArchive && bisonLocation == nil
         && key == "savedC01Inquiry"
         && context != .opaque && context != .inquiry
       {
@@ -819,15 +904,18 @@ struct NativeC01InquiryArchiveComposition {
   let hasInquiryClaims: Bool
   let hasTradeClaims: Bool
   let hasWatcherClaims: Bool
+  let hasNewtClaims: Bool
 
   static func prepare(_ pointer: ScriptSavePointer, from url: URL) throws -> Self? {
+    let secondEnvelope = NativeSecondCommoditySaleSave.contains(pointer.schemaVersion)
     let newtEnvelope = CurrentNewtKitSave.contains(pointer.schemaVersion)
     let tradeEnvelope = NativeFirstCommodityTradeSave.contains(pointer.schemaVersion)
     let watcherEnvelope = NativeMemoryAtlasWatcherEnvelope.contains(pointer.schemaVersion)
     guard NativeC01InquirySave.contains(pointer.schemaVersion) || tradeEnvelope || watcherEnvelope
-      || newtEnvelope
+      || newtEnvelope || secondEnvelope
     else { return nil }
-    let alien = pointer.schemaVersion == CurrentNewtKitSave.alienVersion
+    let alien = pointer.schemaVersion == NativeSecondCommoditySaleSave.alienVersion
+      || pointer.schemaVersion == CurrentNewtKitSave.alienVersion
       || pointer.schemaVersion == NativeC01InquirySave.alienVersion
       || pointer.schemaVersion == NativeFirstCommodityTradeSave.alienVersion
       || pointer.schemaVersion == NativeMemoryAtlasWatcherEnvelope.alienVersion
@@ -864,15 +952,20 @@ struct NativeC01InquiryArchiveComposition {
         name == "missions.json" ? .missions
         : name == "commander.json" ? .commander
         : name == "contracts.json" ? .contracts : .world
-      try CurrentNewtKitSave.validateFields(
+      try NativeSecondCommoditySaleSave.validateFields(
         data, location: inquiryLocation, schema: pointer.schemaVersion)
+      try CurrentNewtKitSave.validateFields(
+        data, location: inquiryLocation,
+        schema: secondEnvelope
+          ? (alien ? CurrentNewtKitSave.alienVersion : CurrentNewtKitSave.version)
+          : pointer.schemaVersion)
       try NativeMemoryAtlasWatcherEnvelope.validateFields(
         data, location: inquiryLocation,
-        schema: newtEnvelope
+        schema: newtEnvelope || secondEnvelope
           ? (alien ? NativeMemoryAtlasWatcherEnvelope.alienVersion : NativeMemoryAtlasWatcherEnvelope.version)
           : pointer.schemaVersion,
-        requireClaims: !newtEnvelope)
-      if watcherEnvelope || newtEnvelope {
+        requireClaims: !newtEnvelope && !secondEnvelope)
+      if watcherEnvelope || newtEnvelope || secondEnvelope {
         let found = try ScriptSaveJSONPreflight.validateCommodityTradeArchive(
           data, location: inquiryLocation, permitsRoot: inquiryLocation == .missions)
         if found {
@@ -883,7 +976,7 @@ struct NativeC01InquiryArchiveComposition {
         try NativeFirstCommodityTradeSave.validateFields(
           data, location: inquiryLocation, schema: pointer.schemaVersion)
       }
-      if tradeEnvelope || watcherEnvelope || newtEnvelope {
+      if tradeEnvelope || watcherEnvelope || newtEnvelope || secondEnvelope {
         let inquiry = try ScriptSaveJSONPreflight.extractInquiryData(
           data, location: inquiryLocation, permitsRoot: inquiryLocation == .missions)
         if let inquiry { _ = try NativeC01InquirySave.decodeData(inquiry) }
@@ -894,6 +987,7 @@ struct NativeC01InquiryArchiveComposition {
       if name == "missions.json" {
         try NativeUnderTowSave.validateFields(data, part: .missions)
         try NativeBorrowedVoiceSave.validateFields(data, part: .missions)
+        try NativeTitheCommissionSave.validateFields(data, part: .missions)
         try NativeQuietChoirSave.validateFields(data, part: .missions)
         try NativeMemoryAtlasSave.validateFields(data, part: .missions)
         try NativeSignedPassageOpeningSave.validateFields(data, part: .missions)
@@ -903,6 +997,7 @@ struct NativeC01InquiryArchiveComposition {
       } else if name == "commander.json" {
         try NativeUnderTowSave.validateFields(data, part: .commander)
         try NativeBorrowedVoiceSave.validateFields(data, part: .commander)
+        try NativeTitheCommissionSave.validateFields(data, part: .commander)
         try NativeQuietChoirSave.validateFields(data, part: .commander)
         try NativeMemoryAtlasSave.validateFields(data, part: .commander)
         try NativeSignedPassageOpeningSave.validateFields(data, part: .commander)
@@ -912,6 +1007,7 @@ struct NativeC01InquiryArchiveComposition {
       } else {
         try NativeUnderTowSave.validateFields(data, part: .contracts)
         try NativeBorrowedVoiceSave.validateFields(data, part: .contracts)
+        try NativeTitheCommissionSave.validateFields(data, part: .contracts)
         try NativeQuietChoirSave.validateFields(data, part: .contracts)
         try NativeMemoryAtlasSave.validateFields(data, part: .contracts)
         try NativeSignedPassageOpeningSave.validateFields(data, part: .contracts)
@@ -938,7 +1034,8 @@ struct NativeC01InquiryArchiveComposition {
       ScriptContractState.self, from: contracts)
     let semantic = JSONEncoder()
     let hasInquiry = NativeC01InquirySave.hasClaims(commander)
-    guard (newtEnvelope ? CurrentNewtKitSave.hasClaims(commander)
+    guard (secondEnvelope ? NativeSecondCommoditySaleSave.hasClaims(commander)
+      : newtEnvelope ? CurrentNewtKitSave.hasClaims(commander)
       : watcherEnvelope ? NativeMemoryAtlasWatcherEnvelope.hasClaims(commander)
       : tradeEnvelope ? NativeFirstCommodityTradeSave.hasClaims(commander) : hasInquiry),
       try semantic.encode(commander.scriptState).count <= 33_554_432,
@@ -950,6 +1047,7 @@ struct NativeC01InquiryArchiveComposition {
       featureSchema: ScriptSaveStore.featurePublicationSchema(commander, alien: alien),
       hasInquiryClaims: hasInquiry,
       hasTradeClaims: NativeFirstCommodityTradeSave.hasClaims(commander),
-      hasWatcherClaims: NativeMemoryAtlasWatcherEnvelope.hasClaims(commander))
+      hasWatcherClaims: NativeMemoryAtlasWatcherEnvelope.hasClaims(commander),
+      hasNewtClaims: CurrentNewtKitSave.hasClaims(commander))
   }
 }
