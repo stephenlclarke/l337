@@ -217,3 +217,121 @@ struct GameplayPhysicalAdoptionTests {
     return game
   }
 }
+
+extension GameplayPhysicalAdoptionTests {
+  @Test(arguments: [false, true])
+  func actualContextPreservesEveryProtectionFlagAndPopulationCountWithoutMutation(blockNaval: Bool) throws {
+    var game = prepared()
+    game.bodies = []
+    _ = try appendProtectionReadBody("station", id: 0, blockNaval: blockNaval, to: &game)
+    let modes = ["naval", "blackjack", "mission-npc", "mission-instance", "pod", "combined",
+      "ordinary", "unphysical-protected"]
+    var protected: Set<ActorIdentity> = []
+    for (index, mode) in modes.enumerated() {
+      let identity = try appendProtectionReadBody(mode, id: 80 + index, blockNaval: blockNaval, to: &game)
+      if index < 6, let identity { protected.insert(identity) }
+    }
+    let before = game
+    let context = try #require(game.gameplayContext())
+    #expect(context.protection.protectedActors == protected && protected.count == 6)
+    #expect(context.protection.protectedPayloads.isEmpty)
+    #expect(!context.protection.suppressAmbientShips && context.protection.reservedSlots == 4)
+    #expect(context.protection.blocksNavalEncounter == blockNaval)
+    // Nine actual component values include the station and an unphysical value.
+    // The station consumes total capacity but no population slot; a missing
+    // physical value remains in total capacity without inventing a population.
+    #expect(context.budget.total == 9 && context.actors.count == 8)
+    #expect(context.budget.active == [.civilian: 4, .police: 1, .mission: 1, .cargo: 1])
+    #expect(context.budget.maximum == 128 && context.budget.policeReserve == 8)
+    #expect(context.budget.missionReserve == 4)
+    #expect(game.commander == before.commander && game.bodies == before.bodies)
+    #expect(game.commander.savedEMPState == nil && game.commander.nativePeople == nil)
+  }
+
+  /// Controlled read-only component tags use real allocator identities. They
+  /// grant no mission, person, installed kit, admission, rescue or save authority.
+  @inline(never)
+  private func appendProtectionReadBody(
+    _ mode: String, id: Int, blockNaval: Bool, to game: inout Game
+  ) throws -> ActorIdentity? {
+    var body = SpaceBody(id: id, hull: id == 0 ? .station : .cobra,
+      position: .init(Double(id) * 100, 0, 2000))
+    if mode == "unphysical-protected" {
+      body.navalTarget = true
+      #expect(body.gameplayProtectionReasons == .navalTarget)
+      game.bodies.append(body)
+      return nil
+    }
+    let actor: ActorIdentity
+    if mode == "station" { actor = try #require(game.commander.flightSimulation.anchors?.station.identity) }
+    else {
+      let allocated = game.commander.flightSimulation.allocateActor()
+      actor = try #require(allocated)
+    }
+    let population: PopulationClass = mode == "station" || mode == "mission-npc" ? .mission
+      : mode == "blackjack" ? .police : mode == "pod" ? .cargo : .civilian
+    var physical = PhysicalActorState(identity: actor, population: population)
+    let expected: GameplayActorProtectionReasons
+    switch mode {
+    case "naval":
+      body.navalTarget = true
+      expected = .navalTarget
+    case "blackjack":
+      body.blackjackRole = .witness
+      physical.blocksNavalEncounter = blockNaval
+      expected = .blackjackRole
+    case "mission-npc":
+      physical.npc = .init(role: .mission, origin: actor.system, destination: actor.system)
+      expected = .missionNPC
+    case "mission-instance":
+      body.missionInstanceID = UUID()
+      expected = .missionInstance
+    case "pod":
+      physical.empCrewPod = .init(source: actor, ordinal: 0)
+      expected = .empCrewPod
+    case "combined":
+      body.navalTarget = true
+      body.blackjackRole = .witness
+      body.missionInstanceID = UUID()
+      physical.empCrewPod = .init(source: actor, ordinal: 0)
+      physical.npc = .init(role: .mission, origin: actor.system, destination: actor.system)
+      expected = [.empCrewPod, .navalTarget, .blackjackRole, .missionNPC, .missionInstance]
+    default: expected = []
+    }
+    body.physical = physical
+    #expect(body.gameplayProtectionReasons == expected)
+    game.bodies.append(body)
+    return actor
+  }
+
+  @Test func genuineRuntimeAdvanceReachesTheOrdinaryPersistenceAndContextReadChain() async throws {
+    let runtime = try launchedProtectionReadRuntime()
+    let before = await runtime.snapshot()
+    let opening = try #require(before.gameplayContext())
+    let start = before.commander.flightSimulation.physicalTime
+    _ = await runtime.advance(delta: 0.02)
+    let after = await runtime.snapshot()
+    let current = try #require(after.gameplayContext())
+    // Enter the genuine actor executor/tick/persistence/context chain from the
+    // matched crash, rather than directly invoking a scalar projection helper.
+    #expect(after.commander.flightSimulation.physicalTime == start + 0.02)
+    #expect(current.physicalTime == start + 0.02 && current.visit == opening.visit)
+    #expect(current.system == opening.system && current.seed == opening.seed)
+    #expect(current.protection.reservedSlots == 4)
+    #expect(current.budget.maximum == 128 && current.budget.policeReserve == 8)
+    #expect(current.budget.missionReserve == 4)
+    #expect(after.commander.equipmentOwnerID == before.commander.equipmentOwnerID)
+    #expect(after.commander.hullInstanceID == before.commander.hullInstanceID)
+    #expect(after.commander.nativePeople == before.commander.nativePeople)
+  }
+
+  @inline(never)
+  private func launchedProtectionReadRuntime() throws -> GameRuntime {
+    var game = Game(executive: false)
+    try game.commander.prepareEquipment(legacy: false)
+    game.launch()
+    let alive = !game.docked && !game.paused && game.screen.isFlight
+    try #require(alive)
+    return GameRuntime(game: game)
+  }
+}

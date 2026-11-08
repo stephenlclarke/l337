@@ -13,10 +13,10 @@ struct GameplayActorProtectionReasons: OptionSet, Sendable {
 extension SpaceBody {
   var gameplayProtectionReasons: GameplayActorProtectionReasons {
     var reasons: GameplayActorProtectionReasons = []
-    if physical?.empCrewPod != nil { reasons.insert(.empCrewPod) }
+    if nativeGeometryCrew() != nil { reasons.insert(.empCrewPod) }
     if navalTarget { reasons.insert(.navalTarget) }
     if blackjackRole != nil { reasons.insert(.blackjackRole) }
-    if physical?.npc?.role == .mission { reasons.insert(.missionNPC) }
+    if nativeLaunchNPCRole() == .mission { reasons.insert(.missionNPC) }
     if missionInstanceID != nil { reasons.insert(.missionInstance) }
     return reasons
   }
