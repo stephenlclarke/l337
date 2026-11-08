@@ -143,6 +143,16 @@ extension ScriptSaveJSONPreflight {
     return try lexical.originalArchiveMayContainClaims(context: context, archive: .assemblyOfOrbits)
   }
 
+  /// Conservative original C37 presence in the existing bounded lexical stream.
+  static func publicRecordArchiveMayContainClaims(
+    _ data: Data, part: ScriptFreightVersionedSave.Part
+  ) throws -> Bool {
+    try validate(data)
+    let context: NativeC01InquiryLexicalInput.Context =
+      part == .missions ? .missions : part == .commander ? .commander : .contracts
+    var lexical = NativeC01InquiryLexicalInput(bytes: Array(data))
+    return try lexical.originalArchiveMayContainClaims(context: context, archive: .publicRecord)
+  }
   /// Conservative original C38 presence in the existing bounded lexical stream.
   static func nativeSignedPassageOpeningArchiveMayContainClaims(
     _ data: Data, part: ScriptFreightVersionedSave.Part
@@ -263,6 +273,7 @@ private struct NativeC01InquiryLexicalInput {
 
   /// Closed presence selection only; neither branch decodes data or supplies authority.
   enum OriginalArchive: Equatable {
+    case publicRecord
     case underTow, assemblyOfOrbits, signedPassageOpening, memoryAtlas, quietChoir, borrowedVoice, titheCommission
 
     func matchesMetadata(_ marker: String) -> Bool {
@@ -279,6 +290,8 @@ private struct NativeC01InquiryLexicalInput {
         marker == NativeQuietChoirDefinition.stateID || marker == NativeQuietChoirDefinition.digest
       case .memoryAtlas:
         marker == NativeMemoryAtlasDefinition.stateID || marker == NativeMemoryAtlasDefinition.digest
+      case .publicRecord:
+        marker == NativePublicRecordDefinition.stateID || marker == NativePublicRecordDefinition.digest
       case .signedPassageOpening:
         marker == NativeSignedPassageOpening.stateID || marker == NativeSignedPassageOpening.digest
       }
@@ -296,6 +309,8 @@ private struct NativeC01InquiryLexicalInput {
         key == NativeQuietChoirSave.field || key == "quietChoir"
       case .memoryAtlas:
         key == NativeMemoryAtlasSave.field || key == "memoryAtlas"
+      case .publicRecord:
+        key == NativePublicRecordSave.field || key == "publicRecord"
       case .signedPassageOpening:
         key == NativeSignedPassageOpeningSave.field || key == "signedPassageOpening"
       }
@@ -1020,6 +1035,7 @@ struct NativeC01InquiryArchiveComposition {
         try NativeQuietChoirSave.validateFields(data, part: .missions)
         try NativeMemoryAtlasSave.validateFields(data, part: .missions)
         try NativeSignedPassageOpeningSave.validateFields(data, part: .missions)
+        try NativePublicRecordSave.validateFields(data, part: .missions)
         try NativeAssemblyOfOrbitsSave.validateFields(data, part: .missions)
         try NativeIsolationWorkParentSave.validateFields(data, part: .missions)
         try NativeIsolationWorkSave.validateFields(data, part: .missions)
@@ -1030,6 +1046,7 @@ struct NativeC01InquiryArchiveComposition {
         try NativeQuietChoirSave.validateFields(data, part: .commander)
         try NativeMemoryAtlasSave.validateFields(data, part: .commander)
         try NativeSignedPassageOpeningSave.validateFields(data, part: .commander)
+        try NativePublicRecordSave.validateFields(data, part: .commander)
         try NativeAssemblyOfOrbitsSave.validateFields(data, part: .commander)
         try NativeIsolationWorkParentSave.validateFields(data, part: .commander)
         try NativeIsolationWorkSave.validateFields(data, part: .commander)
@@ -1040,6 +1057,7 @@ struct NativeC01InquiryArchiveComposition {
         try NativeQuietChoirSave.validateFields(data, part: .contracts)
         try NativeMemoryAtlasSave.validateFields(data, part: .contracts)
         try NativeSignedPassageOpeningSave.validateFields(data, part: .contracts)
+        try NativePublicRecordSave.validateFields(data, part: .contracts)
         try NativeAssemblyOfOrbitsSave.validateFields(data, part: .contracts)
         try NativeIsolationWorkParentSave.validateFields(data, part: .contracts)
         try NativeIsolationWorkSave.validateFields(data, part: .contracts)

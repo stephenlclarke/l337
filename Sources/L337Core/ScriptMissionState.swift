@@ -119,6 +119,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     var savedTitheCommission: Field<NativeTitheCommissionState>?
     var savedQuietChoir: Field<NativeQuietChoirState>?
     var savedMemoryAtlas: Field<NativeMemoryAtlasState>?
+    var savedPublicRecord: Field<NativePublicRecordState>?
     var savedNativeSignedPassageOpening: Field<NativeSignedPassageOpeningState>?
     var savedAssemblyOfOrbits: Field<NativeAssemblyOfOrbitsState>?
     var savedArkReserve: Field<NativeInductionArkReserve>?
@@ -180,6 +181,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       initializeSavedTitheCommission()
       initializeSavedQuietChoir()
       initializeSavedMemoryAtlas()
+      initializeSavedPublicRecord()
       initializeSavedNativeSignedPassageOpening()
       initializeSavedAssemblyOfOrbits()
       initializeSavedArkReserve()
@@ -259,6 +261,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func initializeSavedMemoryAtlas() {
       savedMemoryAtlas = Field<NativeMemoryAtlasState>()
+    }
+    @inline(never)
+    private func initializeSavedPublicRecord() {
+      savedPublicRecord = Field<NativePublicRecordState>()
     }
     @inline(never)
     private func initializeSavedNativeSignedPassageOpening() {
@@ -378,6 +384,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       copySavedTitheCommission(from: source)
       copySavedQuietChoir(from: source)
       copySavedMemoryAtlas(from: source)
+      copySavedPublicRecord(from: source)
       copySavedNativeSignedPassageOpening(from: source)
       copySavedAssemblyOfOrbits(from: source)
       copySavedArkReserve(from: source)
@@ -522,6 +529,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func copySavedMemoryAtlas(from source: Storage) {
       savedMemoryAtlas = source.savedMemoryAtlas
+    }
+    @inline(never)
+    private func copySavedPublicRecord(from source: Storage) {
+      savedPublicRecord = source.savedPublicRecord
     }
     @inline(never)
     private func copySavedNativeSignedPassageOpening(from source: Storage) {
@@ -740,6 +751,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       try decodeSavedTitheCommission(from: values)
       try decodeSavedQuietChoir(from: values)
       try decodeSavedMemoryAtlas(from: values)
+      try decodeSavedPublicRecord(from: values)
       try decodeSavedNativeSignedPassageOpening(from: values)
       try decodeSavedAssemblyOfOrbits(from: values)
       try decodeSavedArkReserve(from: values)
@@ -918,6 +930,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func decodeSavedMemoryAtlas(from values: KeyedDecodingContainer<CodingKeys>) throws {
       savedMemoryAtlas = Field(try values.decodeIfPresent(NativeMemoryAtlasState.self, forKey: .savedMemoryAtlas))
+    }
+    @inline(never)
+    private func decodeSavedPublicRecord(from values: KeyedDecodingContainer<CodingKeys>) throws {
+      savedPublicRecord = Field(try values.decodeIfPresent(NativePublicRecordState.self, forKey: .savedPublicRecord))
     }
     @inline(never)
     private func decodeSavedNativeSignedPassageOpening(from values: KeyedDecodingContainer<CodingKeys>) throws {
@@ -1190,6 +1206,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
       try encodeSavedTitheCommission(to: &values)
       try encodeSavedQuietChoir(to: &values)
       try encodeSavedMemoryAtlas(to: &values)
+      try encodeSavedPublicRecord(to: &values)
       try encodeSavedNativeSignedPassageOpening(to: &values)
       try encodeSavedAssemblyOfOrbits(to: &values)
       try encodeSavedArkReserve(to: &values)
@@ -1379,6 +1396,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     @inline(never)
     private func encodeSavedMemoryAtlas(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
       try values.encodeIfPresent(savedMemoryAtlas!.value, forKey: .savedMemoryAtlas)
+    }
+    @inline(never)
+    private func encodeSavedPublicRecord(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
+      try values.encodeIfPresent(savedPublicRecord!.value, forKey: .savedPublicRecord)
     }
     @inline(never)
     private func encodeSavedNativeSignedPassageOpening(to values: inout KeyedEncodingContainer<CodingKeys>) throws {
@@ -1880,6 +1901,17 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     _modify {
       ensureUniqueStorage()
       yield &payload.savedMemoryAtlas!.value
+    }
+  }
+  var savedPublicRecord: NativePublicRecordState? {
+    _read { yield payload.savedPublicRecord!.value }
+    set {
+      ensureUniqueStorage()
+      payload.savedPublicRecord!.value = newValue
+    }
+    _modify {
+      ensureUniqueStorage()
+      yield &payload.savedPublicRecord!.value
     }
   }
   var savedNativeSignedPassageOpening: NativeSignedPassageOpeningState? {
@@ -2387,6 +2419,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     guard equalSavedTitheCommission(lhs.payload, rhs.payload) else { return false }
     guard equalSavedQuietChoir(lhs.payload, rhs.payload) else { return false }
     guard equalSavedMemoryAtlas(lhs.payload, rhs.payload) else { return false }
+    guard equalSavedPublicRecord(lhs.payload, rhs.payload) else { return false }
     guard equalSavedNativeSignedPassageOpening(lhs.payload, rhs.payload) else { return false }
     guard equalSavedAssemblyOfOrbits(lhs.payload, rhs.payload) else { return false }
     guard equalSavedArkReserve(lhs.payload, rhs.payload) else { return false }
@@ -2556,6 +2589,10 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
   @inline(never)
   private static func equalSavedMemoryAtlas(_ lhs: Storage, _ rhs: Storage) -> Bool {
     lhs.savedMemoryAtlas!.value == rhs.savedMemoryAtlas!.value
+  }
+  @inline(never)
+  private static func equalSavedPublicRecord(_ lhs: Storage, _ rhs: Storage) -> Bool {
+    lhs.savedPublicRecord!.value == rhs.savedPublicRecord!.value
   }
   @inline(never)
   private static func equalSavedNativeSignedPassageOpening(_ lhs: Storage, _ rhs: Storage) -> Bool {
@@ -2808,6 +2845,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     case savedTitheCommission
     case savedQuietChoir
     case savedMemoryAtlas
+    case savedPublicRecord
     case savedNativeSignedPassageOpening
     case savedAssemblyOfOrbits
     case savedArkReserve
@@ -2990,6 +3028,10 @@ public struct ScriptInstance: Codable, Sendable, Equatable, Identifiable {
   var savedMemoryAtlas: NativeMemoryAtlasState? {
     _read { yield storage[0].savedMemoryAtlas }
     _modify { yield &storage[0].savedMemoryAtlas }
+  }
+  var savedPublicRecord: NativePublicRecordState? {
+    _read { yield storage[0].savedPublicRecord }
+    _modify { yield &storage[0].savedPublicRecord }
   }
   var savedNativeSignedPassageOpening: NativeSignedPassageOpeningState? {
     _read { yield storage[0].savedNativeSignedPassageOpening }
@@ -3628,6 +3670,7 @@ public struct ScriptEngineState: Codable, Sendable, Equatable {
     guard NativeTitheCommissionSave.prefixValid(instance) else { return false }
     guard NativeQuietChoirSave.prefixValid(instance) else { return false }
     guard NativeMemoryAtlasSave.prefixValid(instance) else { return false }
+    guard NativePublicRecordSave.prefixValid(instance) else { return false }
     guard NativeSignedPassageOpening.prefixValid(instance) else { return false }
     guard NativeAssemblyOfOrbitsSave.prefixValid(instance) else { return false }
     guard instanceReceptionPrefixValid(instance) else { return false }

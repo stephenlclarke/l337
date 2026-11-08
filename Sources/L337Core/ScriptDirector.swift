@@ -161,6 +161,9 @@ extension Game {
     if NativeHollowManifestCommission.applies(pack) {
       if let reason = hollowManifestContentUnavailable(pack) { return reason }
     }
+    if NativePublicRecordDefinition.applies(pack) {
+      if let reason = publicRecordUnavailable(pack) { return reason }
+    }
     if NativeSignedPassageOpening.applies(pack) {
       if let reason = signedPassageOpeningUnavailable(pack) { return reason }
     }
@@ -625,6 +628,9 @@ extension Game {
     drainAccepted: Bool = true, freightAdmission: ScriptFreightIssueAdmission? = nil,
     navigationBinding: ScriptNavigationTradeBinding? = nil
   ) throws -> UUID {
+    guard !NativePublicRecordDefinition.applies(pack) else {
+      throw MissionPackError("Review Sol's actual Public Record case at Fenias; collect the original reference instrument separately.")
+    }
     guard !NativeSignedPassageOpening.applies(pack) else {
       throw MissionPackError("Review Senn's actual Signed Passage commission at Neron; collect the original separately.")
     }
@@ -1728,6 +1734,7 @@ extension Game {
   }
   private func scriptGalleryEntry(_ pack: ScriptPack, stateID: UUID?) -> GalleryMission {
     if let native = hollowManifestGalleryEntry(pack) { return native }
+    if let entry = publicRecordGalleryEntry(pack) { return entry }
     if let entry = signedPassageOpeningGalleryEntry(pack) { return entry }
     if let entry = memoryAtlasGalleryEntry(pack) { return entry }
     if let entry = quietChoirGalleryEntry(pack) { return entry }
@@ -1900,6 +1907,7 @@ extension Game {
     guard let state = commander.scriptState.instances[id], scriptPack(for: state) == nil else {
       return nil
     }
+    if let entry = publicRecordMissingGalleryEntry(state) { return entry }
     if let entry = signedPassageOpeningMissingGalleryEntry(state) { return entry }
     if let entry = memoryAtlasMissingGalleryEntry(state) { return entry }
     if let entry = quietChoirMissingGalleryEntry(state) { return entry }

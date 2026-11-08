@@ -86,7 +86,9 @@ class ScriptInstanceStorageInventoryTests(unittest.TestCase):
         self.source = SOURCE.read_text()
         self.fields = inspect_instance_storage(self.source)
         self.wrapped = set(re.findall(r"^    var (\w+): Field<[^\n]+>\?", self.source, re.M))
-        self.assertEqual(len(self.fields), 64)
+        self.assertEqual(len(self.fields), 65)
+        self.assertIn("savedPublicRecord", self.fields)
+        self.assertIn("savedPublicRecord", self.wrapped)
         self.assertIn("savedHollowManifest", self.fields)
         self.assertIn("savedTitheCommission", self.fields)
 
@@ -163,6 +165,21 @@ class ScriptInstanceStorageInventoryTests(unittest.TestCase):
                 "lhs.savedGlassMeridian!.value == rhs.savedGlassMeridian!.value",
                 "lhs.savedGlassMeridian == rhs.savedGlassMeridian"))
 
+    def test_public_record_storage_requires_detach_clone_and_optional_wire_semantics(self):
+        for before, after, reason in [
+            ("      ensureUniqueStorage()\n      payload.savedPublicRecord!.value = newValue",
+             "      payload.savedPublicRecord!.value = newValue", "detach before"),
+            ("      ensureUniqueStorage()\n      yield &payload.savedPublicRecord!.value",
+             "      yield &payload.savedPublicRecord!.value", "detach before"),
+            ("      copySavedPublicRecord(from: source)\n", "", "allocate first"),
+            ("      initializeSavedPublicRecord()\n", "", "Default construction"),
+            ("values.decodeIfPresent(NativePublicRecordState.self, forKey: .savedPublicRecord)",
+             "values.decode(NativePublicRecordState.self, forKey: .savedPublicRecord)", "Codec"),
+            ("    case savedPublicRecord\n", "", "Codec"),
+        ]:
+            with self.subTest(before=before, after=after), self.assertRaisesRegex(ValueError, reason):
+                inspect_instance_storage(self.changed(before, after))
+
     def test_optional_tag_reader_requires_borrowed_presence_without_payload_projection(self):
         for before, after in [
             ("    @inline(never)\n    func hasValue()", "    func hasValue()"),
@@ -203,6 +220,7 @@ class ScriptInstanceStorageInventoryTests(unittest.TestCase):
         for field, value_type in [
             ("savedHollowManifest", "NativeHollowManifestState"),
             ("savedTitheCommission", "NativeTitheCommissionState"),
+            ("savedPublicRecord", "NativePublicRecordState"),
         ]:
             for before, after, reason in [
                 (f"lhs.{field}!.value == rhs.{field}!.value",

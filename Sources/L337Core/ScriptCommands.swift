@@ -9,6 +9,7 @@ extension Game {
       throw MissionPackError("Invalid script command.")
     }
     try validateUnderTowScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
+    try validatePublicRecordScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
     try validateBorrowedVoiceScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
     try validateQuietChoirScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)
     try validateMemoryAtlasScriptCommand(fields, event: event, pack: pack, state: state, candidate: candidate)

@@ -37,6 +37,8 @@ extension Display {
       rows = game.quietChoirDetail()
     } else if row.memoryAtlas != nil {
       rows = game.memoryAtlasDetail()
+    } else if row.publicRecord != nil {
+      rows = game.publicRecordDetail()
     } else if row.signedPassageOpening != nil {
       rows = game.signedPassageOpeningDetail()
     } else if row.assemblyOfOrbits != nil {
@@ -154,6 +156,7 @@ extension Display {
     var detailReason: String? {
       if let reason = game.contractBoard.hollowManifestQuote?.issues.first { return reason }
       if let reason = game.contractBoard.signedPassageOpeningQuote?.issues.first { return reason }
+      if let reason = game.contractBoard.publicRecordQuote?.issues.first { return reason }
       if let reason = game.contractBoard.memoryAtlasQuote?.issues.first { return reason }
       if let reason = game.contractBoard.quietChoirQuote?.issues.first { return reason }
       if let reason = game.contractBoard.borrowedVoiceQuote?.issues.first { return reason }
@@ -210,6 +213,7 @@ extension Display {
         let borrowedVoice = game.contractBoard.borrowedVoiceQuote
         let quietChoir = game.contractBoard.quietChoirQuote
         let memoryAtlas = game.contractBoard.memoryAtlasQuote
+        let publicRecord = game.contractBoard.publicRecordQuote
         let signedPassageOpening = game.contractBoard.signedPassageOpeningQuote
         let assemblyOfOrbits = game.contractBoard.assemblyOfOrbitsQuote
         let glassMeridian = game.contractBoard.glassMeridianQuote
@@ -225,6 +229,7 @@ extension Display {
           || (borrowedVoice != nil && action == .accept && borrowedVoice?.allowed == true)
           || (quietChoir != nil && action == .accept && quietChoir?.allowed == true)
           || (memoryAtlas != nil && action == .accept && memoryAtlas?.allowed == true)
+          || (publicRecord != nil && action == .accept && publicRecord?.allowed == true)
           || (signedPassageOpening != nil && action == .accept && signedPassageOpening?.allowed == true)
           || (assemblyOfOrbits != nil && action == .accept && assemblyOfOrbits?.allowed == true)
           || (utility != nil && action == .accept && utility?.allowed == true)
@@ -254,7 +259,7 @@ extension Display {
         frame.label(
           (game.contractBoard.action == action ? "> " : "  ")
             + (action == .accept
-              && (borrowedVoice != nil || quietChoir != nil || memoryAtlas != nil || signedPassageOpening != nil || assemblyOfOrbits != nil || underTow != nil || inquiry != nil || wayfarerInduction != nil || glassMeridian != nil || flightReception != nil
+              && (publicRecord != nil || borrowedVoice != nil || quietChoir != nil || memoryAtlas != nil || signedPassageOpening != nil || assemblyOfOrbits != nil || underTow != nil || inquiry != nil || wayfarerInduction != nil || glassMeridian != nil || flightReception != nil
                 || measuredExtraction != nil
                 || recordRecovery != nil
                 || identifiedSalvage != nil
@@ -316,6 +321,11 @@ extension Display {
           preferredSummary = action == .progress
             ? "The Memory Atlas / original case and watcher custody"
             : "The Memory Atlas / commission and separate original watcher"
+        }
+        if preferredSummary == nil, let action = row.publicRecord {
+          preferredSummary = action == .progress
+            ? "Public Record / retained case / reference instrument pickup unavailable"
+            : "Public Record / case commission / original reference instrument pickup separate"
         }
         if preferredSummary == nil, let action = row.signedPassageOpening {
           preferredSummary = action == .progress

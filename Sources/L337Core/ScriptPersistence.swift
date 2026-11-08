@@ -568,6 +568,7 @@ enum ScriptSaveStore {
       NativeSecondCommoditySaleSave.validateClaims(commander),
       NativeFirstCommodityTradeSave.validateClaims(commander),
       NativeUnderTowSave.validateClaims(commander),
+      NativePublicRecordSave.validateClaims(commander),
       NativeBorrowedVoiceSave.validateClaims(commander),
       NativeTitheCommissionSave.validateClaims(commander),
       NativeC03PublicationPreflight.validateClaims(commander),
@@ -848,6 +849,7 @@ enum ScriptSaveStore {
     try NativeQuietChoirSave.validateFields(pointerBytes, part: .contracts)
     try NativeMemoryAtlasSave.validateFields(pointerBytes, part: .contracts)
     try NativeSignedPassageOpeningSave.validateFields(pointerBytes, part: .contracts)
+    try NativePublicRecordSave.validateFields(pointerBytes, part: .contracts)
     try NativeAssemblyOfOrbitsSave.validateFields(pointerBytes, part: .contracts)
     try NativeIsolationWorkParentSave.validateFields(pointerBytes, part: .contracts)
     try NativeIsolationWorkSave.validateFields(pointerBytes, part: .contracts)
@@ -1028,6 +1030,7 @@ enum ScriptSaveStore {
         try NativeQuietChoirSave.validateFields(data, part: nativePart ?? .contracts)
         try NativeMemoryAtlasSave.validateFields(data, part: nativePart ?? .contracts)
         try NativeSignedPassageOpeningSave.validateFields(data, part: nativePart ?? .contracts)
+        try NativePublicRecordSave.validateFields(data, part: nativePart ?? .contracts)
         try NativeAssemblyOfOrbitsSave.validateFields(data, part: nativePart ?? .contracts)
         try NativeIsolationWorkParentSave.validateFields(data, part: nativePart ?? .contracts)
         try NativeIsolationWorkSave.validateFields(data, part: nativePart ?? .contracts)
@@ -1329,6 +1332,7 @@ enum ScriptSaveStore {
       NativeSecondCommoditySaleSave.validateClaims(commander),
       NativeFirstCommodityTradeSave.validateClaims(commander),
       NativeUnderTowSave.validateClaims(commander),
+      NativePublicRecordSave.validateClaims(commander),
       NativeBorrowedVoiceSave.validateClaims(commander),
       NativeTitheCommissionSave.validateClaims(commander),
       NativeC03PublicationPreflight.validateClaims(commander),
