@@ -36,6 +36,7 @@ public enum ScriptPageIdentity: Codable, Sendable, Equatable {
   case journal(NativeC01InquiryJournalPageIdentity)
   case inductionUtility(UUID)
   case isolationWork(UUID)
+  case assemblyCapacity(UUID)
   var valid: Bool {
     switch self {
     case .legacy(let page): page.valid
@@ -46,6 +47,7 @@ public enum ScriptPageIdentity: Codable, Sendable, Equatable {
     case .journal(let page): page.valid
     case .inductionUtility: true
     case .isolationWork: true
+    case .assemblyCapacity: true
     }
   }
 }
@@ -85,6 +87,8 @@ extension Game {
           committed: offer.committed))
     } else if screen == .gallery {
       page = .gallery(scriptGalleryPageIdentity)
+    } else if screen == .inventory, let editor = nativeAssemblyCapacityEditorDisplay {
+      page = .assemblyCapacity(editor.nonce)
     } else if screen == .journal {
       page = .journal(scriptC01InquiryJournalPageIdentity)
     } else if screen == .contracts {
@@ -132,7 +136,9 @@ extension GameRuntime {
       game.notify("CONTACT CHANGED - REVIEW THE CURRENT PAGE")
       return
     }
-    if case .journal? = expected.page {
+    if case .assemblyCapacity? = expected.page {
+      return
+    } else if case .journal? = expected.page {
       return
     } else if case .gallery? = expected.page {
       galleryClick(x: x, y: y)

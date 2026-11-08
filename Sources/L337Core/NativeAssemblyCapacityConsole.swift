@@ -56,3 +56,95 @@ extension Game {
     return try draft.assess()
   }
 }
+
+
+extension Game {
+  /// Recall only through the same actual carried console. A saved proposal is not a
+  /// surveyed register and cannot authorize the physical capacity tests.
+  func savedAssemblyCapacityDraft(_ side: NativeAssemblyCapacityDraft.Side,
+    context: NativeAssemblyCapacityContext) throws -> NativeAssemblyCapacityDraft?
+  {
+    guard context.isCurrent(in: self),
+      let state = assemblyOfOrbitsMission?.savedAssemblyOfOrbits
+    else { throw MissionPackError("Use the current original Assembly console to recall a player proposal.") }
+    return state.capacityDrafts?[side.rawValue]
+  }
+
+  /// Conflicting but structurally valid choices remain editable. Saving them neither
+  /// dispatches a crew nor increments a mission milestone, clock, event or work receipt.
+  @discardableResult
+  mutating func saveAssemblyCapacityDraft(_ draft: NativeAssemblyCapacityDraft,
+    context: NativeAssemblyCapacityContext) throws -> Bool
+  {
+    try updateAssemblyCapacityDraft(draft, side: draft.side, context: context)
+  }
+
+  @discardableResult
+  mutating func clearAssemblyCapacityDraft(_ side: NativeAssemblyCapacityDraft.Side,
+    context: NativeAssemblyCapacityContext) throws -> Bool
+  {
+    try updateAssemblyCapacityDraft(nil, side: side, context: context)
+  }
+
+  private mutating func updateAssemblyCapacityDraft(_ draft: NativeAssemblyCapacityDraft?,
+    side: NativeAssemblyCapacityDraft.Side, context: NativeAssemblyCapacityContext) throws -> Bool
+  {
+    guard scriptDurabilityAvailable else {
+      throw MissionPackError("Choose a bound commander save before changing an Assembly proposal.")
+    }
+    guard context.isCurrent(in: self), !scriptDispatching, !scriptEventsDeferred,
+      var instance = assemblyOfOrbitsMission, instance.id == context.mission,
+      var state = instance.savedAssemblyOfOrbits, state.collection != nil
+    else { throw MissionPackError("The original Assembly case, console or fitting changed; review again.") }
+    if let draft {
+      guard draft.shapeValid, draft.side == side, draft.register.mission == instance.id
+      else { throw NativeAssemblyCapacityDraft.Failure.invalidDraft }
+    }
+    var drafts = state.capacityDrafts ?? [:]
+    if let draft {
+      if drafts[side.rawValue] == draft { return false }
+      drafts[side.rawValue] = draft
+    } else {
+      guard drafts.removeValue(forKey: side.rawValue) != nil else { return false }
+    }
+    guard instance.revision < UInt64(Int64.max) - 1 else { throw SaveError.invalidCommander }
+    state.capacityDrafts = drafts.isEmpty ? nil : drafts
+    guard state.shapeValid else { throw SaveError.invalidCommander }
+    instance.savedAssemblyOfOrbits = state
+    instance.revision += 1
+    var candidate = commander
+    candidate.scriptState.instances[instance.id] = instance
+    guard NativeAssemblyOfOrbitsSave.validateClaims(candidate) else { throw SaveError.invalidCommander }
+    commander = candidate
+    return true
+  }
+}
+
+extension GameRuntime {
+  func assemblyCapacityContext() throws -> NativeAssemblyCapacityContext {
+    try game.assemblyCapacityContext()
+  }
+  func savedAssemblyCapacityDraft(_ side: NativeAssemblyCapacityDraft.Side,
+    context: NativeAssemblyCapacityContext) throws -> NativeAssemblyCapacityDraft?
+  {
+    try game.savedAssemblyCapacityDraft(side, context: context)
+  }
+  @discardableResult
+  func saveAssemblyCapacityDraft(_ draft: NativeAssemblyCapacityDraft,
+    context: NativeAssemblyCapacityContext) throws -> Bool
+  {
+    guard game.scriptDurabilityAvailable, scriptPublisher() != nil else {
+      throw MissionPackError("Choose a bound commander save before changing an Assembly proposal.")
+    }
+    return try scriptCommand { try $0.saveAssemblyCapacityDraft(draft, context: context) }
+  }
+  @discardableResult
+  func clearAssemblyCapacityDraft(_ side: NativeAssemblyCapacityDraft.Side,
+    context: NativeAssemblyCapacityContext) throws -> Bool
+  {
+    guard game.scriptDurabilityAvailable, scriptPublisher() != nil else {
+      throw MissionPackError("Choose a bound commander save before changing an Assembly proposal.")
+    }
+    return try scriptCommand { try $0.clearAssemblyCapacityDraft(side, context: context) }
+  }
+}

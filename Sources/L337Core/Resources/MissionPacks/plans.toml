@@ -14,7 +14,7 @@ initialStage = "not-started"
 binding = "naval"
 briefing = "Naval Intelligence needs a courier for captured Thargoid defence plans. Reach Nerith for collection, then deliver to Veyara. Expect Thargoid opposition while carrying the plans."
 destination = "Galaxy 3: Nerith (50.0099,8.1737), then Veyara (63.0828,31.2786). Dock at each destination."
-reward = "Naval Energy Unit and 256 combat points on delivery. The unit replaces a standard energy unit."
+reward = "Naval Energy Unit and 256 combat points on delivery. A better current fit remains fitted; displaced or unfitted equipment stays owned in storage."
 prerequisites = ["Constrictor Hunt: {constrictor}.", "Combat points: {kills} of 1280 required to receive orders.", "Receive orders in Galaxy 3. Current: {galaxy}."]
 milestones = ["Receive orders to report to Nerith", "Dock at Nerith and collect plans", "Dock at Veyara for delivery and reward"]
 
@@ -60,7 +60,7 @@ delaySeconds = 2.0
 
 [[dialogs]]
 id = "plansdebriefing"
-text = "COMMANDER {commander},\n\nTHE PLANS HAVE REACHED OUR VEYARA BASE. YOUR SERVICE WILL BE REMEMBERED.\n\nWE HAVE FITTED A NAVAL ENERGY UNIT IN RECOGNITION OF YOUR WORK. IT REPLACES A STANDARD ENERGY UNIT AND RECHARGES AT THREE TIMES THE UNUPGRADED RATE.\n\nYOUR COMBAT TALLY HAS INCREASED BY 256 POINTS.\n\nMESSAGE ENDS"
+text = "COMMANDER {commander},\n\nTHE PLANS HAVE REACHED OUR VEYARA BASE. YOUR SERVICE WILL BE REMEMBERED.\n\nWE HAVE AWARDED A NAVAL ENERGY UNIT IN RECOGNITION OF YOUR WORK. IT RECHARGES AT THREE TIMES THE UNUPGRADED RATE. A BETTER CURRENT FIT REMAINS FITTED; DISPLACED OR UNFITTED EQUIPMENT STAYS OWNED IN STORAGE.\n\nYOUR COMBAT TALLY HAS INCREASED BY 256 POINTS.\n\nMESSAGE ENDS"
 ship = false
 delaySeconds = 2.0
 
@@ -88,7 +88,7 @@ from = "carrying"
 event = "dock"
 to = "complete"
 conditions = [{ field = "galaxy", op = "eq", value = 2 }, { field = "system", op = "eq", value = 36 }]
-actions = [{ kind = "equipmentRemove", key = "Extra Energy Unit" }, { kind = "equipmentAdd", key = "Naval Energy Unit" }, { kind = "killsWrapped", amount = 256 }]
+actions = [{ kind = "equipmentAdd", key = "Naval Energy Unit" }, { kind = "killsWrapped", amount = 256 }]
 dialog = "plansdebriefing"
 
 [[encounters]]

@@ -282,6 +282,9 @@ extension Display {
     return frame
   }
   public static func information(_ game: Game, width: Double, height: Double) -> Frame {
+    if game.screen == .inventory, game.nativeAssemblyCapacityEditorDisplay != nil {
+      return assemblyCapacityConsole(game, width: width, height: height)
+    }
     var frame = cockpit(game, width: width, height: height)
     let layout = StationLayout(game: game, width: width, height: height, footer: 28)
     frame.label(

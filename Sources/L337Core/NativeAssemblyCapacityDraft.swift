@@ -36,8 +36,8 @@ struct NativeAssemblyCapacityChoice: Codable, Equatable, Sendable {
   let allocation: Allocation
 }
 
-/// Editable candidate state. Codable round trips remain untrusted; this is not a saved
-/// native work receipt or a new shipping save field. Both tests have distinct identities.
+/// Editable PLAYER candidate state. Its saved case field and Codable round trips remain
+/// untrusted model input, never native work receipts. Both sides have distinct identities.
 struct NativeAssemblyCapacityDraft: Codable, Equatable, Sendable {
   enum Side: String, Codable, Equatable, Sendable, CaseIterable {
     case port, starboard

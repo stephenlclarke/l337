@@ -130,7 +130,7 @@ enum NativeAssemblyOfOrbitsSave {
         let claimed = value.keys.contains(field)
         guard named == pinned, named == claimed else { throw SaveError.invalidCommander }
         guard named else { continue }
-        guard !embedded, let leaf = value[field] as? [String: Any], leaf.count <= 3 else {
+        guard !embedded, let leaf = value[field] as? [String: Any], leaf.count <= 4 else {
           throw SaveError.invalidCommander
         }
         let bytes = try JSONSerialization.data(withJSONObject: leaf)

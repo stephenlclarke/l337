@@ -50,7 +50,11 @@ struct NativeTitheCommissionHistory: Equatable, Sendable {
       visitedSystems: Set(observations.map(\.station.system)),
       firstSale: game.commander.scriptState.firstNativeCommoditySale,
       secondSale: game.commander.scriptState.secondNativeCommoditySale,
-      atRakenorMainBerth: game.systemIdentity == SystemIdentity(galaxy: 6, system: 105)
-        && game.nativeMainStationDockEvidenceIsCurrent)
+      atRakenorMainBerth: isAtRakenorMainBerth(in: game))
+  }
+
+  private static func isAtRakenorMainBerth(in game: borrowing Game) -> Bool {
+    guard game.systemIdentity == SystemIdentity(galaxy: 6, system: 105) else { return false }
+    return game.nativeMainStationDockEvidenceIsCurrent
   }
 }

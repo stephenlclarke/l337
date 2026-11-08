@@ -13,6 +13,7 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
   case library = "library-open"
   case assemblyCalibrationStart = "assembly-calibration-start"
   case assemblyCalibrationCancel = "assembly-calibration-cancel"
+  case assemblyCapacityConsole = "assembly-capacity-open"
   case journal = "journal-open"
 
   public var title: String {
@@ -29,6 +30,7 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
     case .library: "Mission Library"
     case .assemblyCalibrationStart: "Start Surface Calibration"
     case .assemblyCalibrationCancel: "Stop Surface Calibration"
+    case .assemblyCapacityConsole: "Assembly Planning Console"
     case .journal: "Journal"
     }
   }
@@ -41,6 +43,7 @@ public enum MissionUIAction: String, CaseIterable, Sendable {
     switch self {
     case .assemblyCalibrationStart: return game.canStartAssemblyCalibration
     case .assemblyCalibrationCancel: return game.canCancelAssemblyCalibration
+    case .assemblyCapacityConsole: return game.canOpenAssemblyCapacityEditor
     case .contracts:
       return game.docked && (game.dockedAtMainStation || game.nativeStationBoardContext != nil)
         && !game.paused && !game.showroom.trading
