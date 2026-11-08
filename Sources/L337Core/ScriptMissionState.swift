@@ -82,7 +82,7 @@ private struct ScriptInstanceValue: Codable, Sendable, Equatable {
     }
 
     @inline(never)
-    private static func isPresent(_ value: borrowing Value?) -> Bool {
+    private static func isPresent<Payload: ~Copyable>(_ value: borrowing Payload?) -> Bool {
       switch value {
       case .none: false
       case .some: true
