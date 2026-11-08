@@ -108,17 +108,27 @@ extension NativeC01TimingStandard {
     return .init(id: encounter, galaxy: 0, system: 162, actors: actors)
   }
 
+  @inline(never)
   static func original(
-    _ value: ScriptOwnedActor, source: NativeC01TimingStandardSource, part: Part
+    _ value: borrowing ScriptOwnedActor, source: borrowing NativeC01TimingStandardSource, part: Part
   ) -> Bool {
     guard value.valid, value.alias == part.rawValue,
-      value.identity == actor(source: source, part: part),
-      value.body.missionActorID == value.identity, value.body.missionInstanceID == source.mission,
-      value.body.hull == .cobra, !value.body.hostile, value.body.missiles == 0,
-      !value.body.ecmEnabled, value.body.rotationRate == 0,
-      value.body.scriptNPC?.fit.definition == part.profile,
+      value.identity == actor(source: source, part: part)
+    else { return false }
+    return originalBody(value.body, identity: value.identity, source: source, part: part)
+  }
+
+  @inline(never)
+  private static func originalBody(
+    _ body: borrowing SpaceBody, identity: UUID,
+    source: borrowing NativeC01TimingStandardSource, part: Part
+  ) -> Bool {
+    guard body.missionActorID == identity, body.missionInstanceID == source.mission,
+      body.hull == .cobra, !body.hostile, body.missiles == 0,
+      !body.ecmEnabled, body.rotationRate == 0,
+      body.scriptNPC?.fit.definition == part.profile,
       let hashes = try? modelHashes.get(), let hash = hashes[part],
-      value.body.scriptNPC?.fit.models == [part.model: hash]
+      body.scriptNPC?.fit.models == [part.model: hash]
     else { return false }
     return true
   }

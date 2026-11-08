@@ -146,11 +146,24 @@ enum NativeC01LaneRepairSave {
     return true
   }
 
+  @inline(never)
   static func historyJoins(
     _ state: borrowing NativeC01LaneRepairState, mission: borrowing ScriptInstance,
     commander: borrowing Commander
   ) -> Bool {
-    guard shapeValid(state), mission.id == state.source.mission,
+    guard shapeValid(state), sourceHistoryJoins(state, mission: mission, commander: commander),
+      NativeC01SurveyorSave.valid(mission, commander: commander),
+      NativeC01ReservationAuditSave.valid(mission, commander: commander)
+    else { return false }
+    return timingHistoryJoins(mission, commander: commander)
+  }
+
+  @inline(never)
+  private static func sourceHistoryJoins(
+    _ state: borrowing NativeC01LaneRepairState, mission: borrowing ScriptInstance,
+    commander: borrowing Commander
+  ) -> Bool {
+    guard mission.id == state.source.mission,
       mission.definition == NativeGlassMeridian.stateID, mission.digest == NativeGlassMeridian.digest,
       mission.version == NativeGlassMeridian.version,
       let opening = mission.savedGlassMeridian,
@@ -161,13 +174,17 @@ enum NativeC01LaneRepairSave {
       opening.surveyor?.capture?.operation == state.source.recorder,
       let standard = opening.timingStandard,
       standardCaptureHistoryJoins(state, standard: standard, commander: commander),
-      NativeGlassMeridian.readingsValid(opening), NativeGlassMeridian.lossesValid(opening),
-      NativeC01SurveyorSave.valid(mission, commander: commander),
-      NativeC01ReservationAuditSave.valid(mission, commander: commander),
-      NativeC01TimingStandardSave.valid(
-        standard, mission: mission, commander: commander)
+      NativeGlassMeridian.readingsValid(opening), NativeGlassMeridian.lossesValid(opening)
     else { return false }
     return true
+  }
+
+  @inline(never)
+  private static func timingHistoryJoins(
+    _ mission: borrowing ScriptInstance, commander: borrowing Commander
+  ) -> Bool {
+    guard let standard = mission.savedGlassMeridian?.timingStandard else { return false }
+    return NativeC01TimingStandardSave.valid(standard, mission: mission, commander: commander)
   }
 
   static func valid(

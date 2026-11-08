@@ -748,3 +748,61 @@ struct NativeC01LaneRepairUnitTests {
   }
 
 }
+
+
+extension NativeC01LaneRepairUnitTests {
+  @Test
+  func actualArmedLaneAdvanceRetainsCompleteTimingHistoryAndRejectsForeignRevision() async throws {
+    // Reuse the maintained controlled earlier history and actual pickup/arming.
+    // This is a regression for the matched executor chain, not an M01 route claim.
+    let fixture = try await C01LaneRepairJourneyFixture()
+    defer { fixture.clean() }
+    let game = try await fixture.atRelays()
+    let runtime = try await fixture.runtime(at: .inner, game: game)
+    let before = await runtime.snapshot()
+    let mission = try #require(before.glassMeridianMission)
+    let opening = try #require(mission.savedGlassMeridian)
+    let timing = try #require(opening.timingStandard)
+    let lane = try #require(opening.laneRepair)
+    let capture = try #require(timing.capture)
+    let binding = try #require(before.c01LaneRepairWorkRuntime.arm?.binding)
+    let beforeTime = before.commander.flightSimulation.physicalTime
+    let timingValid = NativeC01TimingStandardSave.valid(
+      timing, mission: mission, commander: before.commander)
+    let laneHistory = NativeC01LaneRepairSave.historyJoins(
+      lane, mission: mission, commander: before.commander)
+    try #require(timingValid && laneHistory)
+    try #require(timing.held && lane.installation == nil && binding.target == .inner)
+    var foreign = mission
+    foreign.revision = 0
+    let foreignTiming = NativeC01TimingStandardSave.valid(
+      timing, mission: foreign, commander: before.commander)
+    let foreignLane = NativeC01LaneRepairSave.historyJoins(
+      lane, mission: foreign, commander: before.commander)
+    #expect(!foreignTiming && !foreignLane)
+    // Keep the actual fixture.work -> actor.advance -> finishPreparedFrame ->
+    // lane endpoint -> complete timing/actor validation chain from crash 22962.
+    await fixture.work(runtime, intervals: 3)
+    let after = await runtime.snapshot()
+    let afterMission = try #require(after.glassMeridianMission)
+    let afterOpening = try #require(afterMission.savedGlassMeridian)
+    let afterTiming = try #require(afterOpening.timingStandard)
+    let afterLane = try #require(afterOpening.laneRepair)
+    let afterCapture = try #require(afterTiming.capture)
+    #expect(abs(after.commander.flightSimulation.physicalTime - beforeTime - 0.15) < 1e-9)
+    #expect(afterTiming.source == timing.source && afterCapture == capture)
+    #expect(afterTiming.held && afterLane.installation == nil)
+    #expect(after.c01LaneRepairWorkRuntime.arm?.binding == binding)
+    let completeTiming = NativeC01TimingStandardSave.valid(
+      afterTiming, mission: afterMission, commander: after.commander)
+    let completeLane = NativeC01LaneRepairSave.historyJoins(
+      afterLane, mission: afterMission, commander: after.commander)
+    #expect(completeTiming && completeLane)
+    let oldSeconds = lane.progress.first { $0.target == .inner }?.seconds ?? 0
+    let newSeconds = afterLane.progress.first { $0.target == .inner }?.seconds ?? 0
+    #expect(newSeconds >= oldSeconds)
+    let encoded = try JSONEncoder().encode(afterTiming)
+    let roundTrip = try NativeC01TimingStandardSave.decodeClosed(encoded)
+    #expect(roundTrip == afterTiming)
+  }
+}

@@ -15,8 +15,14 @@ enum NativeC01TimingStandardSave {
     return state
   }
 
+  @inline(never)
   static func shapeValid(_ state: borrowing NativeC01TimingStandardState) -> Bool {
     guard state.source.valid else { return false }
+    return captureShapeValid(state) && useShapeValid(state) && lossShapeValid(state)
+  }
+
+  @inline(never)
+  private static func captureShapeValid(_ state: borrowing NativeC01TimingStandardState) -> Bool {
     if let capture = state.capture {
       let radius = NativeC01TimingStandard.Part.standard.design.rawMesh.vertices.map(\.length)
         .max()!
@@ -42,6 +48,11 @@ enum NativeC01TimingStandardSave {
       else { return false }
 
     }
+    return true
+  }
+
+  @inline(never)
+  private static func useShapeValid(_ state: borrowing NativeC01TimingStandardState) -> Bool {
     if let used = state.used {
       guard let capture = state.capture, state.loss == nil,
         used.mission == state.source.mission, used.permission == state.source.permission,
@@ -53,6 +64,11 @@ enum NativeC01TimingStandardSave {
         used.physicalTime <= 1e12
       else { return false }
     }
+    return true
+  }
+
+  @inline(never)
+  private static func lossShapeValid(_ state: borrowing NativeC01TimingStandardState) -> Bool {
     guard let loss = state.loss else { return true }
     let sourceTime = state.source.physicalTime
     guard loss.physicalTime.isFinite,
@@ -84,11 +100,24 @@ enum NativeC01TimingStandardSave {
     return true
   }
 
+  @inline(never)
   static func historyJoins(
     _ state: borrowing NativeC01TimingStandardState, mission: borrowing ScriptInstance,
     commander: borrowing Commander
   ) -> Bool {
-    guard shapeValid(state), mission.id == state.source.mission,
+    guard shapeValid(state), sourceHistoryJoins(state, mission: mission, commander: commander),
+      openingHistoryJoins(mission), NativeC01SurveyorSave.valid(mission, commander: commander),
+      NativeC01ReservationAuditSave.valid(mission, commander: commander)
+    else { return false }
+    return true
+  }
+
+  @inline(never)
+  private static func sourceHistoryJoins(
+    _ state: borrowing NativeC01TimingStandardState, mission: borrowing ScriptInstance,
+    commander: borrowing Commander
+  ) -> Bool {
+    guard mission.id == state.source.mission,
       mission.definition == NativeGlassMeridian.stateID,
       mission.digest == NativeGlassMeridian.digest,
       mission.version == NativeGlassMeridian.version,
@@ -101,22 +130,47 @@ enum NativeC01TimingStandardSave {
       state.source.physicalTime >= audit.physicalTime,
       state.source.visit >= audit.pin.dock.actor.visit,
       state.source.visit <= commander.flightSimulation.visit,
-      state.source.physicalTime <= commander.flightSimulation.physicalTime,
-      NativeGlassMeridian.readingsValid(opening), NativeGlassMeridian.lossesValid(opening),
-      NativeC01SurveyorSave.valid(mission, commander: commander),
-      NativeC01ReservationAuditSave.valid(mission, commander: commander)
+      state.source.physicalTime <= commander.flightSimulation.physicalTime
     else { return false }
     return true
   }
 
+  @inline(never)
+  private static func openingHistoryJoins(_ mission: borrowing ScriptInstance) -> Bool {
+    guard let opening = mission.savedGlassMeridian else { return false }
+    return NativeGlassMeridian.readingsValid(opening) && NativeGlassMeridian.lossesValid(opening)
+  }
+
   /// Joins historical facts to retained native actors. It never grants a live token.
+  @inline(never)
   static func valid(
     _ state: borrowing NativeC01TimingStandardState, mission: borrowing ScriptInstance,
     commander: borrowing Commander
   ) -> Bool {
+    // Each complete read finishes before the next deeper validation frame starts.
     guard historyJoins(state, mission: mission, commander: commander),
-      carrierLossJoins(state, recorder: mission.savedGlassMeridian?.surveyor),
-      let group = mission.ownedEncounters[NativeC01TimingStandard.encounter],
+      carrierHistoryJoins(state, mission: mission),
+      actorHistoryJoins(state, mission: mission, commander: commander),
+      captureHistoryJoins(state, mission: mission, commander: commander),
+      useHistoryJoins(state, mission: mission, commander: commander),
+      lossHistoryJoins(state, commander: commander)
+    else { return false }
+    return true
+  }
+
+  @inline(never)
+  private static func carrierHistoryJoins(
+    _ state: borrowing NativeC01TimingStandardState, mission: borrowing ScriptInstance
+  ) -> Bool {
+    carrierLossJoins(state, recorder: mission.savedGlassMeridian?.surveyor)
+  }
+
+  @inline(never)
+  private static func actorHistoryJoins(
+    _ state: borrowing NativeC01TimingStandardState, mission: borrowing ScriptInstance,
+    commander: borrowing Commander
+  ) -> Bool {
+    guard let group = mission.ownedEncounters[NativeC01TimingStandard.encounter],
       group.valid, group.admitted, group.galaxy == 0, group.system == 162,
       Set(group.actors.keys) == Set(NativeC01TimingStandard.Part.allCases.map(\.rawValue))
     else { return false }
@@ -141,6 +195,15 @@ enum NativeC01TimingStandardSave {
         }
       }
     }
+    return true
+  }
+
+  @inline(never)
+  private static func captureHistoryJoins(
+    _ state: borrowing NativeC01TimingStandardState, mission: borrowing ScriptInstance,
+    commander: borrowing Commander
+  ) -> Bool {
+    guard let group = mission.ownedEncounters[NativeC01TimingStandard.encounter] else { return false }
     if let capture = state.capture {
       let expectedMilestones: Set<Int> = state.used == nil
         ? [0, 1, 2, 3, 4]
@@ -162,6 +225,14 @@ enum NativeC01TimingStandardSave {
           .allSatisfy({ !mission.receipts.contains($0) })
       else { return false }
     }
+    return true
+  }
+
+  @inline(never)
+  private static func useHistoryJoins(
+    _ state: borrowing NativeC01TimingStandardState, mission: borrowing ScriptInstance,
+    commander: borrowing Commander
+  ) -> Bool {
     if let used = state.used {
       guard let lane = mission.savedGlassMeridian?.laneRepair, lane.installation == used,
         NativeC01LaneRepairSave.shapeValid(lane),
@@ -170,6 +241,13 @@ enum NativeC01TimingStandardSave {
         used.physicalTime <= commander.flightSimulation.physicalTime
       else { return false }
     }
+    return true
+  }
+
+  @inline(never)
+  private static func lossHistoryJoins(
+    _ state: borrowing NativeC01TimingStandardState, commander: borrowing Commander
+  ) -> Bool {
     if let loss = state.loss {
       guard loss.physicalTime <= commander.flightSimulation.physicalTime,
         loss.collector.visit <= commander.flightSimulation.visit

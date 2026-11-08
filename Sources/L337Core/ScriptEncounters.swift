@@ -178,7 +178,17 @@ public struct ScriptOwnedActor: Codable, Sendable, Equatable {
     transitLocation ?? .init(galaxy: encounter.galaxy, system: encounter.system)
   }
   var valid: Bool {
-    PackValidation.localID(alias) && body.missionActorID == identity
+    guard PackValidation.localID(alias) else { return false }
+    // Borrow the one stored body; do not repeatedly materialize its full value
+    // while deeper C01 source/history validators remain on the executor stack.
+    return Self.bodyValid(storage[0].body, identity: storage[0].identity, presence: storage[0].presence)
+  }
+
+  @inline(never)
+  private static func bodyValid(
+    _ body: borrowing SpaceBody, identity: UUID, presence: ScriptActorPresence
+  ) -> Bool {
+    body.missionActorID == identity
       && body.position.finite && body.position.length <= 1e9 && body.orientation.validRotation
       && body.energy.isFinite && (0...10_000_000).contains(body.energy)
       && Self.npcValid(body)
