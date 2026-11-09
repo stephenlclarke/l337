@@ -68,9 +68,9 @@ private final class AssemblyOpticalInstrumentFixture {
     }
     await runtime.nativeCommand { $0.screen = .status }
     await runtime.key("0")
-    try await runtime.scriptCommand { game in
+    try await runtime.scriptCommand { @Sendable game in
       try #require(!game.docked)
-      try Self.frameCalibrationStation(&game)
+      try AssemblyOpticalInstrumentFixture.frameCalibrationStation(&game)
     }
     ready = true
   }
