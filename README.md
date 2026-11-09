@@ -348,7 +348,7 @@ Download the signed, notarized **L337 1.6.0** app for Apple silicon and Intel Ma
 ### Download L337 1.6.0 directly
 
 <!-- current-release:start -->
-The latest signed release is [L337 1.6.0](https://github.com/stephenlclarke/l337/releases/tag/v1.6.0). Its [universal Mac download](https://github.com/stephenlclarke/l337/releases/download/v1.6.0/L337-1.6.0-universal.zip) includes the matching checksum, signing manifest, release plan and Apple notarization report. Use the direct download for this release.
+The latest signed release is [L337 1.6.0](https://github.com/stephenlclarke/l337/releases/tag/v1.6.0). Its [universal Mac download](https://github.com/stephenlclarke/l337/releases/download/v1.6.0/L337-1.6.0-universal.zip) is published alongside the matching checksum, signing manifest, release plan and Apple notarization report.
 <!-- current-release:end -->
 
 Download the universal ZIP and its matching checksum from that release, verify the checksum, extract the ZIP and move **L337.app** into **Applications**. Open **L337** from Applications. Keep the release manifest and notarization report with the archive when checking its source and signing identity.
@@ -523,7 +523,7 @@ Local normal-coverage and leak phases select SwiftPM's native backend with one c
 
 The default `make ci` leaves sanitizers off. `make threads-full` is a compatibility alias for `make threads`. These local targets invoke `swift test` directly, use separate `.build/tsan` and `.build/asan` directories, and require no runner authorization, shard plan, checkpoint, counters or proof files. ASan retains `ASAN_OPTIONS=detect_leaks=0`; the separate `make leaks` gate checks leaks. No test filter, suite partition or reduced assertion set is used. Run from a clean checkout on the other Mac; select its Xcode with `xcode-select` first if needed. A failed sanitizer command returns failure; old checkpoint results are historical evidence and are not reused by these targets.
 
-`Tools/distribution/check_readme_downloads.py --readme README.md --repo stephenlclarke/elite` checks public release-link reachability. Its result does not establish signing, notarization or installation readiness.
+`Tools/distribution/check_readme_downloads.py --readme README.md --repo stephenlclarke/l337` checks public release-link reachability. Its result does not establish signing, notarization or installation readiness.
 
 The [composed native validation report](docs/archive/checkpoints/COMPOSED-NATIVE-VALIDATION.md) records the fresh original two-cycle salvage/save-reload acceptance, strict observer precision, geometry parity and renderer evidence at its tested source. Full quality-gate and release results require their own evidence and final-head checks.
 
@@ -555,7 +555,7 @@ The SonarQube project is public so its metrics and badges are readable. Analysis
 
 Automatic analysis is disabled, including on the legacy duplicate `stephenlclarke_elite2` project. The authoritative project is `stephenlclarke_elite`, linked by the badges above; its main-only scanner verifies this setting before analysis.
 
-The README screenshot and animated tape use deterministic scenes and the live game drawing commands, following the Pacman and Defender README media convention. Regenerate both with `make readme-media`. The 1024x768 tape has 6,375 frames: 48 startup frames followed by 37 rotation samples for each of the 171 gallery ships. Each ship makes one and a half rotations with its authored mesh, materials and canonical name. The tape lasts 640.38 seconds and is a 95.5 MB download. The docking screenshot uses four real admitted hostile actors and accepted incoming laser emissions. Playable hull support is recorded separately in the [completion ledger](docs/COMPLETION-LEDGER.md).
+The README screenshot uses a deterministic scene and the game renderer. Regenerate it with `make readme-media`.
 
 ## Development references
 
