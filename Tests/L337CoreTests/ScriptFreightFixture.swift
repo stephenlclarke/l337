@@ -5,7 +5,7 @@ import Testing
 @testable import L337Core
 @testable import L337TestSupport
 
-struct ScriptFreightFixture {
+struct ScriptFreightFixture: Sendable {
   let root: URL
   let pack: ScriptPack
   var save: URL { root.appendingPathComponent("save/commander.json") }

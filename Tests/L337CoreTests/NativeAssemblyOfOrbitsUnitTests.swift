@@ -6,7 +6,7 @@ import Testing
 /// Controlled remote location, NOT a flown route. Bootstrap, swept native berth entry,
 /// ordinary purchase, board confirmation and current writer use their real producers.
 /// No trade, item, stock, acceptance or live contact receipt is injected. UNRUN.
-final class AssemblyOpeningFixture {
+final class AssemblyOpeningFixture: Sendable {
   let files: ScriptFreightFixture
   let runtime: GameRuntime
 

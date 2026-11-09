@@ -2589,8 +2589,12 @@ extension GameRuntime {
           var decisionContact: UtilityCombatTargetContact? = nil
           var sourceFirst = false
           if !work.controller.active, own.stopped {
-            let candidate = try pendingContact
-              ?? utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+            let candidate: UtilityCombatTargetContact
+            if let pendingContact = pendingContact {
+              candidate = pendingContact
+            } else {
+              candidate = try utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+            }
             decisionContact = candidate
             sourceFirst = candidate.contact?.hit.target == .body(candidate.body.id)
             if own.weaponReady && sourceFirst && !rearIsStronger {
@@ -2636,8 +2640,12 @@ extension GameRuntime {
           if !wasActive && work.controller.active { work.maneuveredForPendingFire = true }
           // A fresh native hit can pay for this exact control step as F rather than R.
           if own.weaponReady {
-            let candidate = try decisionContact
-              ?? utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+            let candidate: UtilityCombatTargetContact
+            if let decisionContact = decisionContact {
+              candidate = decisionContact
+            } else {
+              candidate = try utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+            }
             if candidate.body.id == work.controller.sourceBodyID,
               candidate.body.physical?.identity == work.controller.source,
               candidate.contact?.hit.target == .body(candidate.body.id),
@@ -2670,8 +2678,12 @@ extension GameRuntime {
             return nil
           }
           // Reuse an accepted pre-movement contact; no step has expired its native projection.
-          let frame = try work.maneuverContact
-            ?? utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+          let frame: UtilityCombatTargetContact
+          if let retainedContact = work.maneuverContact {
+            frame = retainedContact
+          } else {
+            frame = try utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+          }
           work.maneuverContact = nil
           work.phase = .contact(frame)
         case .contact(let frame):
