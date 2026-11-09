@@ -8,10 +8,8 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[2]
-THREAD = ['test', '--scratch-path', '.build/tsan', '--sanitize=thread',
-          '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
-ADDRESS = ['test', '--scratch-path', '.build/asan', '--sanitize=address',
-           '--jobs', '1', '-Xswiftc', '-disable-batch-mode', '--no-parallel']
+THREAD = ['test', '--scratch-path', '.build/tsan', '--sanitize=thread']
+ADDRESS = ['test', '--scratch-path', '.build/asan', '--sanitize=address']
 
 
 class OptionalSanitizerTests(unittest.TestCase):
@@ -46,7 +44,7 @@ sys.exit(int(os.environ.get('SANITIZER_TEST_EXIT', '0')))
         self.assertEqual(self.calls(), [{'args': THREAD, 'asan': None}])
         self.assertNotIn('python3', result.stdout)
 
-    def test_address_keeps_original_serial_and_leak_options(self):
+    def test_address_runs_whole_suite_with_explicit_leak_options(self):
         self.environment['ASAN_OPTIONS'] = 'external-options'
         result = self.make('address')
         self.assertEqual(result.returncode, 0, result.stderr)
