@@ -24,7 +24,7 @@ On `main` at `3702fe5a98b3ae8a651a9a32cb97e2857a7057b0`, validation session 7500
 
 ### Public Record commissioning
 
-PR #329 integrated the commissioning, briefing and current save source. The Contract Board checks a genuine ordinary commodity purchase or sale and a living Fenias main berth. Review and Confirm record acceptance and the briefing. Current-build gameplay and cold-save acceptance remain open. [Commissioning merge](https://github.com/stephenlclarke/l337/pull/329)
+PR #329 integrated the commissioning, briefing and current save source. The Contract Board checks a genuine ordinary commodity purchase or sale and a living Fenias main berth. Confirm attempts commissioning. On `main` at `3702fe5a`, mandatory local-ID validation rejects the generated receipt `l337.public-record/accept` because it contains a slash. The diagnostic confirmed refusal before the commission or briefing was saved. Current-build gameplay and cold-save acceptance remain open. [Commissioning merge](https://github.com/stephenlclarke/l337/pull/329)
 
 The separate pickup still needs Sol's live case authority, finite stock and the calibrated recorder's issued serial. It takes one free tonne and must track the same instrument through return. Route observations, controller measurements, witness receiving, branch proofs and final settlement still need their physical implementations.
 

@@ -1022,7 +1022,7 @@ After an ordinary commodity purchase or sale, Rowan reviews and confirms Neris S
 
 With the arrived delegates, Rowan chooses **Release the complete anonymised evidence set** or **Use a witnessed right-of-reply hearing**. The reply must leave the original measurements intact, and the selected publication/hearing needs its own physical and receiving proof. Returning the reference to Fenias settles **6,300 CR** and the unreported-frequency clue.
 
-The commissioning and briefing source is on `main`. Gameplay acceptance is open, and the recorder loan and later stages still need implementation. [Public Record evidence](INTENDED-GAME-STORY-NOTES.md#public-record-commissioning)
+The commissioning and briefing source is on `main`. Confirm attempts commissioning, but the audited `main` revision rejects the generated acceptance receipt before the commission is saved. Gameplay acceptance is open, and the recorder loan and later stages still need implementation. [Public Record evidence](INTENDED-GAME-STORY-NOTES.md#public-record-commissioning)
 
 <details>
 <summary>Mission flow</summary>
