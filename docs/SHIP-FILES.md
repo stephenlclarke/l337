@@ -1,6 +1,6 @@
 # Ship definitions and generation
 
-The schema and generation paths remain live. Predecessor calibration/name examples below describe their original implementation checkpoint; use [original hull bindings](player/ORIGINAL-FLEET.md) for current mission and player guidance. A generated catalogue or legacy fitting example does not activate an original replacement hull.
+Use the [L337 fleet guide](player/ORIGINAL-FLEET.md) for current ship identities and qualification. This page covers the source schema and generation workflow.
 
 Every catalogue record lives in one authoritative, self-contained [TOML file](../Sources/L337Core/Resources/Ships), named by its stable `SHnnn` save ID. The folder contains 171 catalogue entries. Source presence does not mean a hull is flyable, purchasable or natively qualified. The current starting SH025 uses the same loader. SwiftPM copies the complete folder into the app resource bundle; development and packaged builds both decode it with pinned [TOMLDecoder 0.4.5](https://github.com/dduan/TOMLDecoder/tree/0.4.5). Invalid geometry, gameplay ranges, IDs or filenames fail loading explicitly. There is no separately maintained JSON catalogue or model pool.
 
@@ -26,7 +26,7 @@ The showroom compares both hulls with the same carried equipment and XYZZY polic
 
 ## Economics and power sorting
 
-Prices are the current per-ID R3 authored choices. The old Cobra-based cargo/price formula and research balance overlay are not current authoring inputs.
+Prices are the current per-ID R3 authored choices. The per-hull design contract is the pricing input.
 
 The actual editable result is the TOML `game.price` in credits. Commander accounts store tenths of a credit. Trade-in is 75% of the owned hull's current listed price; equipment transfers rather than being sold or credited. There is no free stock or refuel on exchange. The quote shows gross price, allowance, net cost/credit, resulting balance and compatibility before confirmation. Back is selected initially. Insufficient funds, oversized cargo (including reserved mission cargo), unsupported paid mounts/bay, excess fuel/missiles and incompatible active routes block the exchange without loss. Compatible mission state and property persist unchanged. XYZZY follows the same exchange rules; its existing cash policy is respected.
 

@@ -10,11 +10,11 @@ Start with the [player guides](player/README.md) or the illustrated [commanderâ€
 | Understand simulation, actor and mission interfaces | [Architecture and authoring](development/architecture/README.md) |
 | Find original mission requirements, fleet bindings and acceptance gaps | [Milestones and original design](milestones/README.md) |
 | Read design/audit inputs without treating them as implemented | [Design contracts](design/README.md) |
-| Follow recovered historical source or frozen handoffs | [Research](research/README.md), [frozen fleet packet](fleet-design-v2/README.md), [approved journey snapshots](gameplay-design/approved/README.md) |
+| Read frozen L337 design handoffs | [Fleet design packet](fleet-design-v2/README.md), [approved journey snapshots](gameplay-design/approved/README.md) |
 | Find outstanding work or unresolved integration | [Current work records](milestones/WORK-ITEMS.md) |
 | Find historical failure/checkpoint evidence | [Archive](archive/README.md) and [evidence](evidence) |
-| Browse renderer output and generated controls | [Ship catalogue](SHIP-CATALOGUE.md), [provenance](SHIP-PROVENANCE.md), [shared controls](FLIGHT-CONTROLS.generated.md) |
+| Browse the L337 fleet and shared controls | [Fleet guide](player/ORIGINAL-FLEET.md), [shared controls](FLIGHT-CONTROLS.generated.md) |
 
-Use [current original hull bindings](player/ORIGINAL-FLEET.md) before applying an old ship name or mission instruction. Research, generated predecessor profiles and archived work records retain their original facts; they do not authorise a superseded hull or campaign in the original journey.
+Use the [L337 fleet guide](player/ORIGINAL-FLEET.md) for current ship identities. The [completion ledger](COMPLETION-LEDGER.md) tracks what has been qualified in-game.
 
 Generated media and its sibling references remain at their tool-defined paths. [Ship definitions](SHIP-FILES.md) explains generation; README media must come from `make readme-media`. [Review coverage and relocation rationale](development/DOCUMENTATION-REVIEW.md) records this organisation pass and its limits.
