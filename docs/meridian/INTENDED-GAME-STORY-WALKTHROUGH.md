@@ -81,9 +81,11 @@ Before taking durable work, Rowan chooses the commander save destination. A late
 
 The board and gallery show work Rowan can inspect before accepting. Each offer makes its journey, capacity, equipment, costs and any armed incident clock visible. Back closes the conversation; Confirm makes the displayed decision. The gallery follows discovered work and earned history, keeping later revelations concealed.
 
-One introductory opportunity gives Rowan a concrete first promise: **eight original one-tonne Machinery units from Avenor to Renas main station**, carried as one eight-tonne consignment. Rowan reviews the supply and receiving terms, accepts those exact units, makes the journey and docks at the genuine **Renas main orbital**. The actual utility receiver must take all eight originals before the **once-only 730 CR** settlement and the consented-freight family's clue are earned. It is the beginning of the working career, separate from Captain Venn's full Glass Meridian investigation.
+One introductory opportunity gives Rowan a concrete first promise: **eight original one-tonne Machinery units from Avenor to Renas main station**, carried as one eight-tonne consignment. Rowan reviews Arlen's terms, accepts those exact units, makes the journey and docks at the genuine **Renas main orbital**. Rowan confirms one handoff of all eight originals to the utility crew. Actual receiving settles **730 CR** once and earns the consented-freight family's clue. Captain Venn's Glass Meridian investigation is a separate job.
 
 After that handoff, Rowan can Save, Quit and Continue. The returned career has the same completed delivery, the same cash and clue, and the same units already owned by the receiver. Continuing does not pay again or put the Machinery back in the hold. It leaves Rowan free to trade, practise or follow another offer from that exact point.
+
+An earlier local build demonstrated the complete opening through cold Continue. The same end-to-end check remains open on current `main`. [Opening evidence](INTENDED-GAME-STORY-NOTES.md#opening-at-avenor-and-renas)
 
 ![The introductory eight-tonne Avenor to Renas supply delivery](assets/missions/services/consented-freight-perform.png)
 
@@ -280,8 +282,8 @@ Larger jobs reserve **eight tonnes** of identified utility parts from the actual
 flowchart TD
   %% mission G02 | l337.contract/consented-freight
   G02_accept["Reserve eight tonnes of identified utility parts from<br/>actual supplier stock."]
-  G02_perform["Deliver the same eight tonnes to the consenting<br/>utility receiving crew."]
-  G02_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G02_perform["Carry the same eight tonnes to the consenting<br/>utility receiving crew."]
+  G02_receive["Confirm handoff of all eight originals to the actual<br/>receiver. Receiving and settlement commit together."]
   G02_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G02_receive --> G02_complete
   G02_perform --> G02_receive
@@ -1012,13 +1014,15 @@ flowchart TD
 
 ### Public Record
 
-🔵 Planned
+🟡 Partial
 
 ![Public Record - mission artwork](assets/missions/illustrations/public-record.png)
 
-At **Fenias, Galaxy 5**, Neris Sol lends Rowan a reference after a trade. A news service needs to report dangerous cargo routing, but its sponsor owns the accepted recording instrument. Rowan observes three real decisions at **Fenel** with the observers' consent, then compares both **Heroeth** controllers against the independent recorder and preserves the measured evidence version. The technical witness travels to the newsroom berth at **Voron**.
+After an ordinary commodity purchase or sale, Rowan reviews and confirms Neris Sol's commission at the living **Fenias main orbital station, Galaxy 5**. A news service needs to report dangerous cargo routing, but its sponsor owns the accepted recording instrument. Rowan needs one free tonne to collect Sol's original reference as a separate loan before departure. Rowan observes three real decisions at **Fenel** with the observers' consent, then compares both **Heroeth** controllers against the independent recorder and preserves the measured evidence version. The technical witness travels to the newsroom berth at **Voron**.
 
 With the arrived delegates, Rowan chooses **Release the complete anonymised evidence set** or **Use a witnessed right-of-reply hearing**. The reply must leave the original measurements intact, and the selected publication/hearing needs its own physical and receiving proof. Returning the reference to Fenias settles **6,300 CR** and the unreported-frequency clue.
+
+The commissioning and briefing source is on `main`. Confirm attempts commissioning, but the audited `main` revision rejects the generated acceptance receipt before the commission is saved. Gameplay acceptance is open, and the recorder loan and later stages still need implementation. [Public Record evidence](INTENDED-GAME-STORY-NOTES.md#public-record-commissioning)
 
 <details>
 <summary>Mission flow</summary>
@@ -1026,8 +1030,8 @@ With the arrived delegates, Rowan chooses **Release the complete anonymised evid
 ```mermaid
 flowchart TD
   %% mission C37 | l337.public-record
-  C37_accept["Fenias: Accept Public Record at Fenias."]
-  C37_collect_reference["Fenias: Collect the identified one-tonne reference<br/>instrument from Dispatcher Neris Sol."]
+  C37_accept["After an ordinary commodity purchase or sale, review<br/>and confirm at Fenias main orbital."]
+  C37_collect_reference["Fenias: With one free tonne, collect the original<br/>reference on loan from Dispatcher Neris Sol."]
   C37_survey["Fenel: Observe three actual cargo-routing decisions<br/>under the source observers consent."]
   C37_field_work["Heroeth: Compare two external route controllers with<br/>the original public recorder; freeze the independently<br/>measured evidence version."]
   C37_independent_witness["Voron: Verify actual safe transit and living reception<br/>of the consenting technical witness to the newsroom<br/>receiving berth."]

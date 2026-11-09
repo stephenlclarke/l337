@@ -1,14 +1,14 @@
 # The commander’s story: companion notes
 
-This appendix accompanies [the narrative](INTENDED-GAME-STORY-WALKTHROUGH.md). It keeps source, status and uncertainty outside the main story. Status snapshot: 8 November 2026. This is an intended-game account, not an actual playthrough report.
+This appendix accompanies [the narrative](INTENDED-GAME-STORY-WALKTHROUGH.md). It keeps source, status and uncertainty outside the main story. The story status snapshot is dated 8 November 2026. The Avenor–Renas opening and Public Record commissioning were checked again on 9 November against `main` at `3702fe5a98b3ae8a651a9a32cb97e2857a7057b0`.
 
 ## Status and evidence scope
 
 The main document uses only compact lozenges. 🟢 Verified would require accepted gameplay on a named exact build; ⚪ Unverified would mean an established complete implementation without that acceptance; 🟡 Partial means relevant current machinery exists with full mission acceptance still open; 🔵 Planned means the intended complete feature is not established in the composed current game; 🟣 Gap marks an unspecified or conflicting part of the intended design. No whole mission in this document is labelled verified or completely implemented.
 
-All 64 original mission acceptances remain open for actual-game acceptance. The 189 non-C01 roles remain UNISSUED. Narrative appearances grant no character life, consent, source authority, physical observation, receiving or payment. Relevant current code and authored tests justify only the limited partial labels below. They do not prove a full mission is playable.
+Current-build acceptance of the full 64-source set remains open. The 189 non-C01 roles remain UNISSUED. Narrative appearances grant no character life, consent, source authority, physical observation, receiving or payment. Partial labels describe specific source or gameplay evidence.
 
-Current implementation basis is immutable `a5ce21614777e327be835a54ab8650f18b959e3d`, together with the orchestrator's explicit status at assignment. M01 startup/current save and the ordinary main-path qualification remain open. Its actual runtime correction and execution belong to G3/G1; this document changes neither their code nor their acceptance. Current C01, C02, C04, C08, C23, C24, C25 and C38 machinery warrants partial scene labels, not complete mission claims. The current general/tutorial/service machinery likewise leaves individual original acceptances open. The older `project.crimbo` material is not evidence that the original `l337.guiding-light` mission is delivered.
+The original implementation snapshot used `a5ce21614777e327be835a54ab8650f18b959e3d` and the orchestrator's status at assignment. Its partial scene labels cover C01, C02, C04, C08, C23, C24, C25 and C38, alongside partial general, tutorial and service machinery. Public Record is now also partial. The older `project.crimbo` material is not evidence that the original `l337.guiding-light` mission is delivered.
 
 C06's frozen source proposal is `/private/tmp/l337-c06-original-content-commission-a5ce-frozen-_vu9jnss/SOURCE.json`, SHA-256 `60dc359b4a009738c6948fc7976f2e058b8a3018105cfd43f6f8943c311cbb67`. G2 source-cleared it; 58 selected methods/160 configured cases are UNCOMPILED and UNRUN. It includes a locked original fourteen-stage definition and guarded current commission/save composition. It is not integrated playable C06: the desk provider remains nil, historical recognition false and the contact constructor private; all fourteen physical stages remain unfinished. Hence its story badge remains Planned.
 
@@ -16,9 +16,23 @@ C03's full original authoring remains preserved at `ea4ac053416099ced933ef6ef3f1
 
 The document itself receives only source/coverage/link/Markdown checks. No compiler, native game, renderer, numerical model, project helper or gameplay test was run for this documentation. Source clearance and document publication do not close any mission acceptance. The main completion ledger remains Root's single source of work status; this is not another work ledger.
 
+### Opening at Avenor and Renas
+
+The 7 November local run completed ordinary default startup, accepted Arlen's eight original one-tonne Machinery units from a finite stock of sixteen, docked at Renas main orbital and transferred all eight in one explicit handoff. The same career retained one 730 CR settlement, one trusted `consented-freight-family-trace` clue and no freight in the hold after Save, Quit and cold Continue. The accepted candidate was `cf5eedc14ba33ec1abecc856fe847b79f113d6e6`, using a signed local debug app built at `0677291cee48773467a9d9d150dc51f33d6d6364`. The ledger records the independent review of the process and save evidence. [Ordinary delivery and cold Continue](https://github.com/stephenlclarke/l337/blob/3702fe5a98b3ae8a651a9a32cb97e2857a7057b0/docs/COMPLETION-LEDGER.md#L8337)
+
+On `main` at `3702fe5a98b3ae8a651a9a32cb97e2857a7057b0`, validation session 75000 passed build and test discovery, then stopped with a runtime SIGBUS. The full ordinary opening and cold Continue still need qualification on the current product revision. The public v1.6.0 release predates the verified local journey. [Published v1.6.0](https://github.com/stephenlclarke/l337/releases/tag/v1.6.0)
+
+### Public Record commissioning
+
+PR #329 integrated the commissioning, briefing and current save source. The Contract Board checks a genuine ordinary commodity purchase or sale and a living Fenias main berth. Confirm attempts commissioning. On `main` at `3702fe5a`, mandatory local-ID validation rejects the generated receipt `l337.public-record/accept` because it contains a slash. The diagnostic confirmed refusal before the commission or briefing was saved. Current-build gameplay and cold-save acceptance remain open. [Commissioning merge](https://github.com/stephenlclarke/l337/pull/329)
+
+The separate pickup still needs Sol's live case authority, finite stock and the calibrated recorder's issued serial. It takes one free tonne and must track the same instrument through return. Route observations, controller measurements, witness receiving, branch proofs and final settlement still need their physical implementations.
+
 ## Authority and progression
 
-The original intended-game authority is `c70110b292077588a0855fb48127adfb1b611c9d`, specifically the exact files linked below. That commit supplies 39 story definitions, 15 general families, four tutorials, six Wayfarer templates and the separate seven-step finale. Current M01 startup overrides superseded starting-ship prose: Rowan Calder, Avenor G01-S007, SH025 Peregrine Mk V, full fitted fuel and 720 CR. The introductory delivery is G02 `l337.contract/consented-freight`, not another source or completed C01: eight original 1t Machinery units from Avenor to genuine Renas MAIN, actual receiving, 730 CR once and the `consented-freight-family-trace` clue. `OriginalConsentedFreightSupply.swift` fixes Machinery, source system7, receiver185 and eight-unit disjoint allocations; `OriginalConsentedFreightSupplyLifecycleTests.swift` and `OriginalConsentedFreightSupplyNativeTests.swift` specify complete receiving and 7,300 internal tenths; `ScriptBaseClueCatalog.swift` binds the original family clue. These are source requirements, not a claim that pending ordinary M01 Quit/Continue qualification passed. Current source anchors are `Sources/L337Core/Game.swift` and `Tests/L337CoreTests/NewCommanderDefaultsTests.swift` at `a5ce21614777e327be835a54ab8650f18b959e3d`.
+The original intended-game authority is `c70110b292077588a0855fb48127adfb1b611c9d`, specifically the exact files linked below. That commit supplies 39 story definitions, 15 general families, four tutorials, six Wayfarer templates and the separate seven-step finale. M01 starts Rowan Calder at Avenor G01-S007 with the SH025 Peregrine Mk V, full fitted fuel and 720 CR. The introductory delivery belongs to G02 `l337.contract/consented-freight`. C01 is Captain Venn's separate investigation.
+
+`OriginalConsentedFreightSupply.swift` defines the Machinery source at system 7, the receiving station at system 185 and the disjoint eight-unit allocations. `OriginalConsentedFreightSupplyLifecycleTests.swift` and `OriginalConsentedFreightSupplyNativeTests.swift` specify complete receiving and 7,300 internal tenths. `ScriptBaseClueCatalog.swift` binds the family clue. Startup source anchors are `Sources/L337Core/Game.swift` and `Tests/L337CoreTests/NewCommanderDefaultsTests.swift`.
 
 Later explicit human decisions control: the new L337 ships; space-only play with station handoffs for former planet-side elements; lawful EMP/salvage acquisition; the beatable limited-fit mission Medusa and paid/upgraded flagship; nine independently purchasable anthologies; and unconditional main-mystery continuity for every living playable commander. The story describes those intended rules without claiming their missing producers exist.
 
@@ -79,7 +93,7 @@ Each row maps one distinct original source to its narrative scene. G/T/W codes i
 | C34 | `l337.open-measure` - Open Measure | [Read](INTENDED-GAME-STORY-WALKTHROUGH.md#open-measure) | 🔵 Planned | `open-measure.json` |
 | C35 | `l337.shared-pulse` - The Shared Pulse | [Read](INTENDED-GAME-STORY-WALKTHROUGH.md#the-shared-pulse) | 🔵 Planned | `shared-pulse.json` |
 | C36 | `l337.witness-window` - The Witness Window | [Read](INTENDED-GAME-STORY-WALKTHROUGH.md#the-witness-window) | 🔵 Planned | `witness-window.json` |
-| C37 | `l337.public-record` - Public Record | [Read](INTENDED-GAME-STORY-WALKTHROUGH.md#public-record) | 🔵 Planned | `public-record.json` |
+| C37 | `l337.public-record` - Public Record | [Read](INTENDED-GAME-STORY-WALKTHROUGH.md#public-record) | 🟡 Partial | `public-record.json` |
 | C38 | `l337.courier` - Signed Passage | [Read](INTENDED-GAME-STORY-WALKTHROUGH.md#signed-passage) | 🟡 Partial | `courier.json` |
 | C39 | `l337.guiding-light` - The Guiding Light | [Read](INTENDED-GAME-STORY-WALKTHROUGH.md#the-guiding-light) | 🔵 Planned | `guiding-light.json` |
 | G01 | `l337.contract/sealed-dispatch` - Sealed dispatch | [Read](INTENDED-GAME-STORY-WALKTHROUGH.md#sealed-dispatch) | 🟡 Partial | `original-families.json` |
