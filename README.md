@@ -56,7 +56,7 @@ The Run action builds and opens `dist/L337.app`. You can also open that app from
 
 ## Licence
 
-Original code and documentation: [MIT](LICENSE), copyright 2026 Stephen Clarke. Imported ship models retain their individual CC-BY-NC-SA-3.0, CC-BY-NC-SA-4.0, CC-BY-SA-3.0 or author-declared public-domain terms. Included NonCommercial artwork limits commercial use. See [licensing and third-party notices](NOTICE.md) and [model attribution and fidelity](docs/player/SHIP-SHOWROOM.md). Full licence texts and original credits are included in the built app.
+Original code and documentation: [MIT](LICENSE), copyright 2026 Stephen Clarke. Imported ship models retain their individual CC-BY-NC-SA-3.0, CC-BY-NC-SA-4.0, CC-BY-SA-3.0 or author-declared public-domain terms. Included NonCommercial artwork limits commercial use. The MIT licence excludes the bundled BBC-derived blueprint and narrative material. The source provides no reuse licence for that material. See [licensing and third-party notices](NOTICE.md) and [model attribution and fidelity](docs/player/SHIP-SHOWROOM.md). Full licence texts and original credits are included in the built app.
 
 ## First flight in current development builds
 
