@@ -28,43 +28,47 @@ struct ShowroomUnitCompatibilityUnitTests {
   }
 
   @Test func differentCharterUnitsNeverGainBenefitsFromTheirSharedProfileGroup() throws {
-    for (baseline, selected) in [("SH023", "SH169"), ("SH169", "SH023")] {
+    for (baseline, selected) in [("SH023", "SH013"), ("SH013", "SH023")] {
       let game = try sourceComparison(baseline: baseline, selected: selected)
       let before = game.commander
-      let a = try #require(
-        game.showroomBaselineProfile?.fields.first {
-          $0.key == "initial_charter_passenger_berths"
-        })
-      let b = try #require(
-        game.showroomProfile?.fields.first {
-          $0.key == "initial_charter_passenger_berths"
-        })
-      #expect(a.unit != b.unit && a.number != b.number)
-      #expect(game.showroomBaselineProfile?.group == game.showroomProfile?.group)
-      #expect(
-        !game.comparableShowroomField(
-          a, b, baseline: game.showroomBaselineProfile, selected: game.showroomProfile))
-      let row = try #require(game.showroomComparison.first { $0.label == b.label })
-      #expect(row.rating == .unavailable && row.difference.isEmpty)
-      #expect(row.baseline.hasPrefix(a.text) && row.selected.hasPrefix(b.text))
+      let baselineProfile = try #require(game.showroomBaselineProfile)
+      let selectedProfile = try #require(game.showroomProfile)
+      #expect(baselineProfile.group == selectedProfile.group)
+      for key in ["hull_energy", "initial_charter_passenger_berths"] {
+        let a = try #require(baselineProfile.fields.first { $0.key == key })
+        let b = try #require(selectedProfile.fields.first { $0.key == key })
+        #expect(a.unit != b.unit)
+        if key == "hull_energy" {
+          #expect(a.number == (baseline == "SH023" ? 320.0 : 710.0))
+          #expect(b.number == (selected == "SH023" ? 320.0 : 710.0))
+        } else {
+          #expect(a.number == 0 && b.number == 0)
+        }
+        #expect(!game.comparableShowroomField(a, b, baseline: baselineProfile, selected: selectedProfile))
+        let row = try #require(game.showroomComparison.first { $0.label == b.label })
+        #expect(row.rating == .unavailable && row.difference.isEmpty)
+        #expect(row.baseline.hasPrefix(a.text) && row.selected.hasPrefix(b.text))
+      }
       #expect(game.commander == before)
     }
   }
 
   @Test func matchingBlankAndExplicitSourceUnitsKeepTheirExistingComparisons() throws {
-    for (baseline, selected, unit, rating, difference) in [
-      ("SH023", "SH013", "", ComparisonRating.same, "Diff +0"),
-      ("SH170", "SH169", "berths", .better, "Diff +1 berths"),
-      ("SH169", "SH170", "berths", .worse, "Diff -1 berths"),
+    let charter = "initial_charter_passenger_berths"
+    for (baseline, selected, key, unit, rating, difference) in [
+      ("SH025", "SH013", charter, "", ComparisonRating.same, "Diff +0"),
+      ("SH002", "SH029", charter, "berths", .same, "Diff +0 berths"),
+      ("SH169", "SH170", "cargo_tonnes", "t", .better, "Diff +6 t"),
+      ("SH170", "SH169", "cargo_tonnes", "t", .worse, "Diff -6 t"),
     ] {
       let game = try sourceComparison(baseline: baseline, selected: selected)
       let a = try #require(
         game.showroomBaselineProfile?.fields.first {
-          $0.key == "initial_charter_passenger_berths"
+          $0.key == key
         })
       let b = try #require(
         game.showroomProfile?.fields.first {
-          $0.key == "initial_charter_passenger_berths"
+          $0.key == key
         })
       #expect(a.unit == unit && b.unit == unit)
       #expect(
@@ -72,6 +76,20 @@ struct ShowroomUnitCompatibilityUnitTests {
           a, b, baseline: game.showroomBaselineProfile, selected: game.showroomProfile))
       let row = try #require(game.showroomComparison.first { $0.label == b.label })
       #expect(row.rating == rating && row.difference == difference)
+    }
+
+    // Current original hulls all start with zero charter berths. Exercise nonzero
+    // matching berth differences directly without changing a catalogue field.
+    let game = Game(executive: false)
+    let source = profile("project-refit-v1")
+    let one = field(1, unit: "berths"), two = field(2, unit: "berths")
+    for (a, b, rating, difference) in [
+      (one, two, ComparisonRating.better, "Diff +1 berths"),
+      (two, one, .worse, "Diff -1 berths"),
+    ] {
+      let compatible = game.comparableShowroomField(a, b, baseline: source, selected: source)
+      #expect(compatible && ComparisonRating.compare(a, b, compatible: compatible) == rating)
+      #expect(ShipComparisonRow.difference(a, b, comparable: compatible) == difference)
     }
   }
 

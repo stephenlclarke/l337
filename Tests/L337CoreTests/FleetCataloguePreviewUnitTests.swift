@@ -6,7 +6,10 @@ import Testing
 struct FleetCataloguePreviewUnitTests {
   private func eligible() throws -> CatalogueShip {
     try #require(
-      ShipCatalogue.all.first { $0.originalDefinition != nil && $0.catalogue.discoveryEligible })
+      ShipCatalogue.all.first {
+        $0.originalDefinition != nil && $0.catalogue.discoveryEligible
+          && !OriginalDetailedHullStage.blocksRuntime($0.id)
+      })
   }
   private func evidence(_ ship: CatalogueShip, owner: UUID) -> FleetDiscoveryEvidence {
     let system = SystemIdentity(galaxy: 0, system: 7)
@@ -38,6 +41,12 @@ struct FleetCataloguePreviewUnitTests {
     let ship = try eligible()
     let owner = UUID()
     var discovery = NativeFleetDiscovery(owner: owner)
+    let pending = try #require(ShipCatalogue.ship("SH001"))
+    try #require(pending.catalogue.discoveryEligible && OriginalDetailedHullStage.blocksRuntime(pending.id))
+    #expect(throws: SaveError.invalidCommander) {
+      try discovery.record(evidence(pending, owner: owner))
+    }
+    #expect(discovery.entries.isEmpty)
     #expect(
       FleetCataloguePreview.mode(ship: ship, owner: owner, ownedShip: "", discovery: nil)
         == .silhouette)
