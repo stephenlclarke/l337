@@ -1,4 +1,5 @@
 """Observe the existing unit child and retain failure evidence; never launch a test."""
+from hashlib import sha256
 from pathlib import Path
 import json
 import os
@@ -8,7 +9,7 @@ import shutil
 import subprocess
 import threading
 
-from crash_artifacts import (ArtifactBudget, collect_reports, report_snapshot,
+from crash_artifacts import (ArtifactBudget, arguments, collect_reports, report_snapshot,
                              retain_test_images, same_process)
 
 
@@ -20,6 +21,7 @@ def hosted_validation_binding(environment, source):
     repository = environment.get('GITHUB_REPOSITORY')
     ref = environment.get('GITHUB_REF', '')
     workflow = environment.get('GITHUB_WORKFLOW_REF')
+    workflow_sha = environment.get('GITHUB_WORKFLOW_SHA')
     run_id = environment.get('GITHUB_RUN_ID', '')
     attempt = environment.get('GITHUB_RUN_ATTEMPT', '')
     if (environment.get('GITHUB_ACTIONS') != 'true'
@@ -33,11 +35,36 @@ def hosted_validation_binding(environment, source):
             or workflow != f'{repository}/.github/workflows/unit-tests.yml@{ref}'
             or not re.fullmatch(r'[0-9a-f]{40}', source)
             or environment.get('GITHUB_SHA') != source
+            or workflow_sha != source
             or not re.fullmatch(r'[1-9][0-9]*', run_id)
             or not re.fullmatch(r'[1-9][0-9]*', attempt)):
         return None
-    return {'repository': repository, 'workflowRef': workflow, 'ref': ref, 'source': source,
+    return {'repository': repository, 'workflowRef': workflow, 'workflowSHA': workflow_sha,
+            'ref': ref, 'source': source,
             'runID': run_id, 'runAttempt': attempt, 'job': 'isolated-units'}
+
+
+def exact_test_helper(history, image, selector, swift_xml):
+    """Use the original ps text for the selector and refuse competing helper identities."""
+    helpers = {
+        (pid, record['parent'], record['start'], record['command'])
+        for pid, records in history.items()
+        for record in records
+        if (argv := arguments(record)) and Path(argv[0]).name == 'swiftpm-testing-helper'
+    }
+    if len(helpers) != 1 or not selector or swift_xml is None:
+        return None
+    pid, parent, start, command = next(iter(helpers))
+    helper = arguments({'command': command})[0]
+    expected = ' '.join([
+        helper, '--test-bundle-path', image['image'], '--enable-code-coverage',
+        '--filter', selector, '--xunit-output', str(swift_xml), image['image'],
+        '--testing-library', 'swift-testing',
+    ])
+    if (not Path(helper).is_absolute() or command != expected or pid != image['pid']
+            or start != image['start'] or os.path.realpath(helper) != image['helperExecutable']):
+        return None
+    return {pid: [{'parent': parent, 'start': start, 'command': command}]}
 
 
 def snapshot():
@@ -77,7 +104,8 @@ def observe_descendants(rows, root, known, history, *, root_alive):
 
 class IsolatedCrashEvidence:
     """Read-only process observation; no debugger, signalling, retry or changed test budget."""
-    def __init__(self, workspace, evidence, roots=None, read_snapshot=snapshot):
+    def __init__(self, workspace, evidence, roots=None, read_snapshot=snapshot, *,
+                 selector=None, swift_xml=None):
         self.workspace, self.evidence = Path(workspace), Path(evidence)
         resolved = self.evidence.resolve()
         if (self.evidence.is_symlink() or resolved == self.workspace.resolve()
@@ -90,6 +118,7 @@ class IsolatedCrashEvidence:
             Path('/Library/Logs/DiagnosticReports')]
         self.baseline = report_snapshot(self.roots)
         self.read_snapshot = read_snapshot
+        self.selector, self.swift_xml = selector, swift_xml
         self.known, self.history, self.errors = {}, {}, []
         self.stop = threading.Event()
         self.watcher = None
@@ -149,18 +178,23 @@ class IsolatedCrashEvidence:
             budget = ArtifactBudget()
             images = retain_test_images(self.history, self.workspace, self.evidence, source, budget)
             hosted = hosted_validation_binding(os.environ, source)
-            window = {}
+            report_history, options = self.history, {}
             if hosted is not None and len(images) == 1:
                 image = images[0]
                 uuid = image.get('imageUUID', {}).get('uuids', {}).get('arm64')
                 if image['status'] == 'retained-image' and uuid:
-                    hosted['observedImage'] = {'pid': image['pid'], 'start': image['start'],
-                                               'helper': image['helperExecutable'],
-                                               'sha256': image['imageSHA256'], 'uuid': uuid}
-                    window['window'] = HOSTED_REPORT_WINDOW_SECONDS
-                    result['hostedValidation'] = hosted
-            records, audit = collect_reports(self.roots, self.baseline, self.history,
-                                            self.evidence, budget, **window)
+                    helper_history = exact_test_helper(self.history, image, self.selector, self.swift_xml)
+                    if helper_history is not None:
+                        helper = helper_history[image['pid']][0]
+                        hosted['observedImage'] = {'pid': image['pid'], 'parent': helper['parent'],
+                                                   'start': image['start'], 'helper': image['helperExecutable'],
+                                                   'commandSHA256': sha256(helper['command'].encode()).hexdigest(),
+                                                   'sha256': image['imageSHA256'], 'uuid': uuid}
+                        report_history = helper_history
+                        options = {'window': HOSTED_REPORT_WINDOW_SECONDS, 'exact_launch_second': True}
+                        result['hostedValidation'] = hosted
+            records, audit = collect_reports(self.roots, self.baseline, report_history,
+                                            self.evidence, budget, **options)
             # Retain full reports only after exact observed PID/start/executable attribution.
             # The collector's unrelated candidates remain metadata internally, never uploaded.
             records = [record for record in records if record.get('matchedActualProcess')]

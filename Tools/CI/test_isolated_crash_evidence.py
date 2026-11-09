@@ -1,5 +1,6 @@
 """Synthetic processes/files only; no Swift child, native test, debugger or ps is executed."""
 from datetime import datetime, timedelta
+from hashlib import sha256
 import io
 import json
 from pathlib import Path
@@ -165,28 +166,50 @@ class IsolatedCrashEvidenceTests(unittest.TestCase):
             'GITHUB_EVENT_NAME': 'workflow_dispatch', 'GITHUB_JOB': 'isolated-units',
             'GITHUB_REPOSITORY': 'stephenlclarke/l337', 'GITHUB_REF': ref,
             'GITHUB_WORKFLOW_REF': f'stephenlclarke/l337/.github/workflows/unit-tests.yml@{ref}',
-            'GITHUB_SHA': 'a' * 40, 'GITHUB_RUN_ID': '123', 'GITHUB_RUN_ATTEMPT': '1',
+            'GITHUB_SHA': 'a' * 40, 'GITHUB_WORKFLOW_SHA': 'a' * 40,
+            'GITHUB_RUN_ID': '123', 'GITHUB_RUN_ATTEMPT': '1',
         }
 
     def retained_image(self):
         return {
             'status': 'retained-image', 'pid': 11, 'start': 'Thu Oct 22 01:00:00 2026',
             'helperExecutable': '/tool/swiftpm-testing-helper', 'imageSHA256': 'b' * 64,
+            'image': str(self.root.resolve() / '.build/Tests.xctest/Contents/MacOS/Tests'),
             'imageUUID': {'uuids': {'arm64': '8DC3D7A8-EFE3-39F0-9F57-E2FC2AA81C6A'}},
         }
 
-    def test_hosted_validation_retains_a_late_owned_report_and_ignores_a_reused_pid(self):
+    def hosted_capture(self, roots=()):
         workspace = self.root.resolve()
-        directory = workspace / 'DiagnosticReports'
+        return evidence.IsolatedCrashEvidence(
+            workspace, workspace / 'evidence', roots=roots,
+            selector=r'(?:^|\.)Example/test\(',
+            swift_xml=workspace / 'reports/isolated-units/tests-swift-testing.xml')
+
+    def helper_row(self, capture, image):
+        command = ' '.join([
+            image['helperExecutable'], '--test-bundle-path', image['image'],
+            '--enable-code-coverage', '--filter', capture.selector,
+            '--xunit-output', str(capture.swift_xml), image['image'],
+            '--testing-library', 'swift-testing',
+        ])
+        return row(10, command, image['start'])
+
+    def test_hosted_validation_retains_late_owned_report_but_refuses_adjacent_launch_second(self):
+        directory = self.root.resolve() / 'DiagnosticReports'
         directory.mkdir()
-        capture = evidence.IsolatedCrashEvidence(workspace, workspace / 'evidence', roots=[directory])
-        helper = '/tool/swiftpm-testing-helper'
+        capture = self.hosted_capture([directory])
         image = self.retained_image()
-        capture.history = {11: [row(10, helper, image['start'])]}
+        helper = self.helper_row(capture, image)
+        # Repeated snapshots are one helper identity. Other owned children do not qualify.
+        capture.history = {11: [helper, dict(helper)], 12: [row(10, '/tool/dsymutil', image['start'])]}
         launch = datetime.strptime(image['start'], '%a %b %d %H:%M:%S %Y').astimezone()
-        raw = json.dumps({'pid': 11, 'procPath': helper, 'procLaunch': launch.isoformat()})
-        foreign = json.dumps({'pid': 11, 'procPath': helper,
-                              'procLaunch': (launch + timedelta(seconds=30)).isoformat()})
+        report = {'pid': 11, 'procPath': image['helperExecutable'],
+                  'procLaunch': (launch + timedelta(milliseconds=125)).isoformat()}
+        adjacent = report | {'procLaunch': (launch + timedelta(seconds=1)).isoformat()}
+        self.assertTrue(crash_artifacts.attributed_report(adjacent, capture.history))
+        other_owned = report | {'pid': 12, 'procPath': '/tool/dsymutil'}
+        self.assertTrue(crash_artifacts.attributed_report(other_owned, capture.history))
+        raw = json.dumps(report)
         elapsed = 0.0
 
         def sleep(seconds):
@@ -194,7 +217,8 @@ class IsolatedCrashEvidenceTests(unittest.TestCase):
             elapsed += seconds
             if elapsed == 4.0:
                 (directory / 'owned.ips').write_text(raw)
-                (directory / 'reused.ips').write_text(foreign)
+                (directory / 'adjacent.ips').write_text(json.dumps(adjacent))
+                (directory / 'other-owned.ips').write_text(json.dumps(other_owned))
 
         with patch.dict(evidence.os.environ, self.hosted_environment(), clear=True), \
                 patch.object(evidence, 'retain_test_images', return_value=[image]), \
@@ -204,15 +228,47 @@ class IsolatedCrashEvidenceTests(unittest.TestCase):
         self.assertEqual(elapsed, evidence.HOSTED_REPORT_WINDOW_SECONDS)
         self.assertEqual(result['hostedValidation']['runID'], '123')
         self.assertEqual(result['hostedValidation']['runAttempt'], '1')
+        self.assertEqual(result['hostedValidation']['workflowSHA'], 'a' * 40)
         self.assertEqual(result['hostedValidation']['observedImage'], {
-            'pid': 11, 'start': image['start'], 'helper': helper,
+            'pid': 11, 'parent': 10, 'start': image['start'], 'helper': image['helperExecutable'],
+            'commandSHA256': sha256(helper['command'].encode()).hexdigest(),
             'sha256': image['imageSHA256'], 'uuid': image['imageUUID']['uuids']['arm64'],
         })
         self.assertEqual(result['matchedReports'], 1)
         records = json.loads((capture.evidence / 'crash-originals.json').read_text())
         self.assertEqual([record['identity']['pid'] for record in records], [11])
         self.assertEqual((capture.evidence / records[0]['retained']).read_text(), raw)
-        self.assertFalse(list(capture.evidence.rglob('*reused.ips')))
+        self.assertFalse(list(capture.evidence.rglob('*adjacent.ips')))
+        self.assertFalse(list(capture.evidence.rglob('*other-owned.ips')))
+
+    def test_same_bundle_with_another_helper_or_wrong_argv_stays_on_ordinary_collection(self):
+        image = self.retained_image()
+        capture = self.hosted_capture()
+        helper = self.helper_row(capture, image)
+        wrong = row(10, f"{image['helperExecutable']} --test-bundle-path {image['image']}", image['start'])
+        for history in ({11: [wrong]}, {11: [helper], 12: [helper]}, {11: [helper], 12: [wrong]}):
+            with self.subTest(history=history):
+                capture = self.hosted_capture()
+                capture.history = history
+                with patch.dict(evidence.os.environ, self.hosted_environment(), clear=True), \
+                        patch.object(evidence, 'retain_test_images', return_value=[image]), \
+                        patch.object(evidence, 'collect_reports', return_value=([], {})) as collect:
+                    result = capture.finish('a' * 40, failed=True)
+                self.assertEqual(collect.call_args.args[2], history)
+                self.assertEqual(collect.call_args.kwargs, {})
+                self.assertNotIn('hostedValidation', result)
+
+    def test_different_workflow_sha_stays_on_ordinary_collection(self):
+        capture = self.hosted_capture()
+        image = self.retained_image()
+        capture.history = {11: [self.helper_row(capture, image)]}
+        environment = self.hosted_environment() | {'GITHUB_WORKFLOW_SHA': 'd' * 40}
+        with patch.dict(evidence.os.environ, environment, clear=True), \
+                patch.object(evidence, 'retain_test_images', return_value=[image]), \
+                patch.object(evidence, 'collect_reports', return_value=([], {})) as collect:
+            result = capture.finish('a' * 40, failed=True)
+        self.assertEqual(collect.call_args.kwargs, {})
+        self.assertNotIn('hostedValidation', result)
 
     def test_extended_collection_refuses_other_events_revisions_or_unbound_images(self):
         for label, changes, images in (
@@ -224,7 +280,8 @@ class IsolatedCrashEvidenceTests(unittest.TestCase):
                 ('no arm64 UUID', {}, [self.retained_image() | {'imageUUID': {'uuids': {}}}]),
                 ('ambiguous images', {}, [self.retained_image(), self.retained_image()])):
             with self.subTest(label=label):
-                capture = evidence.IsolatedCrashEvidence(self.root, self.root / 'evidence', roots=[])
+                capture = self.hosted_capture()
+                capture.history = {11: [self.helper_row(capture, self.retained_image())]}
                 with patch.dict(evidence.os.environ, self.hosted_environment() | changes, clear=True), \
                         patch.object(evidence, 'retain_test_images', return_value=images), \
                         patch.object(evidence, 'collect_reports', return_value=([], {})) as collect:

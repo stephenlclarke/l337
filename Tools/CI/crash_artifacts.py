@@ -767,7 +767,7 @@ def report_identity(raw, suffix):
                  and isinstance(value.get('procPath'), str)), {})
 
 
-def attributed_report(payload, history):
+def attributed_report(payload, history, *, exact_launch_second=False):
     """Join exact observed PID, launch second and executable path, including PID reuse."""
     pid = payload.get('pid')
     binary = payload.get('procPath')
@@ -780,7 +780,9 @@ def attributed_report(payload, history):
             observed = datetime.strptime(record['start'], '%a %b %d %H:%M:%S %Y').timestamp()
         except (KeyError, ValueError):
             continue
-        if (argv and abs(launch - observed) < 1.1
+        launch_matches = (observed <= launch < observed + 1 if exact_launch_second
+                          else abs(launch - observed) < 1.1)
+        if (argv and launch_matches
                 and os.path.realpath(argv[0]) == os.path.realpath(binary)):
             return True
     return False
@@ -813,8 +815,11 @@ def helper_diagnostic_context(name, history, observed_images, evidence):
 
 
 def collect_reports(roots, baseline, history, evidence, budget, window=3.5, interval=0.5,
-                    observed_images=()):
+                    observed_images=(), *, exact_launch_second=False):
     """Drain report creation only; never rerun a command or alter its execution budget."""
+    def matches(identity):
+        return attributed_report(identity, history, exact_launch_second=exact_launch_second)
+
     started = time.monotonic()
     records = {}
     retained = {}
@@ -830,7 +835,7 @@ def collect_reports(roots, baseline, history, evidence, budget, window=3.5, inte
             saved = retained.get((name, digest))
             if saved is not None:
                 detail = dict(saved)
-                if not saved['matchedActualProcess'] and attributed_report(saved['identity'], history):
+                if not saved['matchedActualProcess'] and matches(saved['identity']):
                     try:
                         previous_reference = saved['retained']
                         original = confined(Path(evidence) / previous_reference, evidence)
@@ -854,7 +859,7 @@ def collect_reports(roots, baseline, history, evidence, budget, window=3.5, inte
                             if reference.get('retained') != previous_reference:
                                 continue
                             reference['retained'] = current_reference
-                            if attributed_report(reference.get('identity', {}), history):
+                            if matches(reference.get('identity', {})):
                                 reference.update(
                                     matchedActualProcess=True, attribution='proved-pid-start-path',
                                     reason='later exact observed PID/start/path attribution',
@@ -887,7 +892,7 @@ def collect_reports(roots, baseline, history, evidence, budget, window=3.5, inte
                     continue
                 identity = report_identity(raw.decode(errors='replace'), original.suffix)
                 detail['identity'] = {key: identity.get(key) for key in ('pid', 'procPath', 'procLaunch')}
-                matched = attributed_report(identity, history)
+                matched = matches(identity)
                 initial = baseline['candidates'].get(name)
                 changed = initial is None or initial.get('sha256') is not None
                 context = (helper_diagnostic_context(name, history, observed_images, evidence)

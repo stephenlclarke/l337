@@ -1017,7 +1017,8 @@ def main() -> int:
         "--enable-code-coverage", "--xunit-output", str(xml), "--filter", selection(),
     ]
     result = {"commit": sha, "command": command, "status": "failed"}
-    evidence = IsolatedCrashEvidence(ROOT, report / "failure-evidence")
+    evidence = IsolatedCrashEvidence(ROOT, report / "failure-evidence",
+                                     selector=command[-1], swift_xml=swift_xml)
     try:
         with (report / "output.log").open("w", encoding="utf-8") as log:
             with subprocess.Popen(
