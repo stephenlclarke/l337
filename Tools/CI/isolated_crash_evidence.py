@@ -1,6 +1,8 @@
 """Observe the existing unit child and retain failure evidence; never launch a test."""
 from pathlib import Path
 import json
+import os
+import re
 import shlex
 import shutil
 import subprocess
@@ -8,6 +10,34 @@ import threading
 
 from crash_artifacts import (ArtifactBudget, collect_reports, report_snapshot,
                              retain_test_images, same_process)
+
+
+HOSTED_REPORT_WINDOW_SECONDS = 15
+
+
+def hosted_validation_binding(environment, source):
+    """Recognize only this repository's exact hosted validation checkout."""
+    repository = environment.get('GITHUB_REPOSITORY')
+    ref = environment.get('GITHUB_REF', '')
+    workflow = environment.get('GITHUB_WORKFLOW_REF')
+    run_id = environment.get('GITHUB_RUN_ID', '')
+    attempt = environment.get('GITHUB_RUN_ATTEMPT', '')
+    if (environment.get('GITHUB_ACTIONS') != 'true'
+            or environment.get('RUNNER_ENVIRONMENT') != 'github-hosted'
+            or environment.get('RUNNER_OS') != 'macOS'
+            or environment.get('RUNNER_ARCH') != 'ARM64'
+            or environment.get('GITHUB_EVENT_NAME') != 'workflow_dispatch'
+            or environment.get('GITHUB_JOB') != 'isolated-units'
+            or repository != 'stephenlclarke/l337'
+            or not re.fullmatch(r'refs/heads/validation/[a-z0-9][a-z0-9-]*', ref)
+            or workflow != f'{repository}/.github/workflows/unit-tests.yml@{ref}'
+            or not re.fullmatch(r'[0-9a-f]{40}', source)
+            or environment.get('GITHUB_SHA') != source
+            or not re.fullmatch(r'[1-9][0-9]*', run_id)
+            or not re.fullmatch(r'[1-9][0-9]*', attempt)):
+        return None
+    return {'repository': repository, 'workflowRef': workflow, 'ref': ref, 'source': source,
+            'runID': run_id, 'runAttempt': attempt, 'job': 'isolated-units'}
 
 
 def snapshot():
@@ -118,8 +148,19 @@ class IsolatedCrashEvidence:
                 raise ValueError('Process observer did not finish; attribution unavailable.')
             budget = ArtifactBudget()
             images = retain_test_images(self.history, self.workspace, self.evidence, source, budget)
+            hosted = hosted_validation_binding(os.environ, source)
+            window = {}
+            if hosted is not None and len(images) == 1:
+                image = images[0]
+                uuid = image.get('imageUUID', {}).get('uuids', {}).get('arm64')
+                if image['status'] == 'retained-image' and uuid:
+                    hosted['observedImage'] = {'pid': image['pid'], 'start': image['start'],
+                                               'helper': image['helperExecutable'],
+                                               'sha256': image['imageSHA256'], 'uuid': uuid}
+                    window['window'] = HOSTED_REPORT_WINDOW_SECONDS
+                    result['hostedValidation'] = hosted
             records, audit = collect_reports(self.roots, self.baseline, self.history,
-                                            self.evidence, budget)
+                                            self.evidence, budget, **window)
             # Retain full reports only after exact observed PID/start/executable attribution.
             # The collector's unrelated candidates remain metadata internally, never uploaded.
             records = [record for record in records if record.get('matchedActualProcess')]

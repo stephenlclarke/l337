@@ -1,4 +1,5 @@
 """Synthetic processes/files only; no Swift child, native test, debugger or ps is executed."""
+from datetime import datetime, timedelta
 import io
 import json
 from pathlib import Path
@@ -7,6 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
+import crash_artifacts
 import isolated_crash_evidence as evidence
 import isolated_units as units
 
@@ -154,6 +156,81 @@ class IsolatedCrashEvidenceTests(unittest.TestCase):
         self.assertEqual(saved, [matched])
         self.assertNotIn('observed_images', reports.call_args.kwargs)
         self.assertEqual(images.call_args.args[0], capture.history)
+
+    def hosted_environment(self):
+        ref = 'refs/heads/validation/swift-612-isolated-fault'
+        return {
+            'GITHUB_ACTIONS': 'true', 'RUNNER_ENVIRONMENT': 'github-hosted',
+            'RUNNER_OS': 'macOS', 'RUNNER_ARCH': 'ARM64',
+            'GITHUB_EVENT_NAME': 'workflow_dispatch', 'GITHUB_JOB': 'isolated-units',
+            'GITHUB_REPOSITORY': 'stephenlclarke/l337', 'GITHUB_REF': ref,
+            'GITHUB_WORKFLOW_REF': f'stephenlclarke/l337/.github/workflows/unit-tests.yml@{ref}',
+            'GITHUB_SHA': 'a' * 40, 'GITHUB_RUN_ID': '123', 'GITHUB_RUN_ATTEMPT': '1',
+        }
+
+    def retained_image(self):
+        return {
+            'status': 'retained-image', 'pid': 11, 'start': 'Thu Oct 22 01:00:00 2026',
+            'helperExecutable': '/tool/swiftpm-testing-helper', 'imageSHA256': 'b' * 64,
+            'imageUUID': {'uuids': {'arm64': '8DC3D7A8-EFE3-39F0-9F57-E2FC2AA81C6A'}},
+        }
+
+    def test_hosted_validation_retains_a_late_owned_report_and_ignores_a_reused_pid(self):
+        workspace = self.root.resolve()
+        directory = workspace / 'DiagnosticReports'
+        directory.mkdir()
+        capture = evidence.IsolatedCrashEvidence(workspace, workspace / 'evidence', roots=[directory])
+        helper = '/tool/swiftpm-testing-helper'
+        image = self.retained_image()
+        capture.history = {11: [row(10, helper, image['start'])]}
+        launch = datetime.strptime(image['start'], '%a %b %d %H:%M:%S %Y').astimezone()
+        raw = json.dumps({'pid': 11, 'procPath': helper, 'procLaunch': launch.isoformat()})
+        foreign = json.dumps({'pid': 11, 'procPath': helper,
+                              'procLaunch': (launch + timedelta(seconds=30)).isoformat()})
+        elapsed = 0.0
+
+        def sleep(seconds):
+            nonlocal elapsed
+            elapsed += seconds
+            if elapsed == 4.0:
+                (directory / 'owned.ips').write_text(raw)
+                (directory / 'reused.ips').write_text(foreign)
+
+        with patch.dict(evidence.os.environ, self.hosted_environment(), clear=True), \
+                patch.object(evidence, 'retain_test_images', return_value=[image]), \
+                patch.object(crash_artifacts.time, 'monotonic', side_effect=lambda: elapsed), \
+                patch.object(crash_artifacts.time, 'sleep', side_effect=sleep):
+            result = capture.finish('a' * 40, failed=True)
+        self.assertEqual(elapsed, evidence.HOSTED_REPORT_WINDOW_SECONDS)
+        self.assertEqual(result['hostedValidation']['runID'], '123')
+        self.assertEqual(result['hostedValidation']['runAttempt'], '1')
+        self.assertEqual(result['hostedValidation']['observedImage'], {
+            'pid': 11, 'start': image['start'], 'helper': helper,
+            'sha256': image['imageSHA256'], 'uuid': image['imageUUID']['uuids']['arm64'],
+        })
+        self.assertEqual(result['matchedReports'], 1)
+        records = json.loads((capture.evidence / 'crash-originals.json').read_text())
+        self.assertEqual([record['identity']['pid'] for record in records], [11])
+        self.assertEqual((capture.evidence / records[0]['retained']).read_text(), raw)
+        self.assertFalse(list(capture.evidence.rglob('*reused.ips')))
+
+    def test_extended_collection_refuses_other_events_revisions_or_unbound_images(self):
+        for label, changes, images in (
+                ('pull request', {'GITHUB_EVENT_NAME': 'pull_request'}, [self.retained_image()]),
+                ('self-hosted', {'RUNNER_ENVIRONMENT': 'self-hosted'}, [self.retained_image()]),
+                ('wrong workflow', {'GITHUB_WORKFLOW_REF': 'other'}, [self.retained_image()]),
+                ('wrong checkout', {'GITHUB_SHA': 'd' * 40}, [self.retained_image()]),
+                ('no image', {}, []),
+                ('no arm64 UUID', {}, [self.retained_image() | {'imageUUID': {'uuids': {}}}]),
+                ('ambiguous images', {}, [self.retained_image(), self.retained_image()])):
+            with self.subTest(label=label):
+                capture = evidence.IsolatedCrashEvidence(self.root, self.root / 'evidence', roots=[])
+                with patch.dict(evidence.os.environ, self.hosted_environment() | changes, clear=True), \
+                        patch.object(evidence, 'retain_test_images', return_value=images), \
+                        patch.object(evidence, 'collect_reports', return_value=([], {})) as collect:
+                    result = capture.finish('a' * 40, failed=True)
+                self.assertNotIn('window', collect.call_args.kwargs)
+                self.assertNotIn('hostedValidation', result)
 
     def test_live_observer_and_capture_failures_keep_full_error_details_in_raw_evidence(self):
         detail='fixture observer: '+('\u754c'*5000)+' exact-final-detail'
