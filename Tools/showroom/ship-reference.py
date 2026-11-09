@@ -61,7 +61,7 @@ TEXTURE_FOLDERS = (
 # Only this view transform is read from Game.swift by that fixed drawing path.
 # Missing, renamed, duplicate or reversed declaration boundaries fail closed.
 VIEW_START = '  public func viewPosition(_ p: Vector3) -> Vector3 {\n'
-VIEW_END = '  private mutating func moveBodies(dt: Double, c01MotionStartTime: Double) {\n'
+VIEW_END = '  @inline(never)\n  private mutating func moveBodies(\n'
 
 
 def view_transform(root):
