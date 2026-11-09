@@ -39,7 +39,6 @@ public struct BlackjackMission: Sendable, Codable, Equatable {
   }
 }
 extension Commander {
-  public var markedFirearms: Int { blackjack.carriesFirearm ? 1 : 0 }
   public func sellableCargo(_ index: Int) -> Int {
     max(
       0,

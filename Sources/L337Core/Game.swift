@@ -861,6 +861,23 @@ public struct Commander: Sendable, Equatable, Codable {
     get { blackjackMission ?? BlackjackMission() }
     set { blackjackMission = newValue }
   }
+  public var markedFirearms: Int {
+    Self.hasMarkedFirearm(blackjackMission) { $0.carriesFirearm } ? 1 : 0
+  }
+
+  // Match the optional in place so this cargo read borrows a retained encounter.
+  @inline(never)
+  private static func hasMarkedFirearm<Stored: ~Copyable>(
+    _ mission: borrowing Stored?, _ carriesFirearm: (borrowing Stored) -> Bool
+  ) -> Bool {
+    switch mission {
+    case .some(let retained):
+      return carriesFirearm(retained)
+    case .none:
+      return false
+    }
+  }
+
   private var displayStyle: ShipDisplayStyle?
   private var navalMission: NavalMissionStage?
   private var xyzzyEnabled: Bool?
@@ -3373,9 +3390,18 @@ public struct Game: Sendable {
     _ read: (borrowing Commander) throws -> Result
   ) rethrows -> Result {
     try commanderStorage.withUnsafeBufferPointer { storage in
-      try read(storage.baseAddress!.pointee)
+      try Self.withBorrowedPointee(storage.baseAddress!, read)
     }
   }
+
+  // A potentially noncopyable pointee keeps the address projection borrowed.
+  @inline(never)
+  private static func withBorrowedPointee<Value: ~Copyable, Result>(
+    _ pointer: UnsafePointer<Value>, _ read: (borrowing Value) throws -> Result
+  ) rethrows -> Result {
+    try read(pointer.pointee)
+  }
+
   /// Native station reads borrow current storage without an owned Game receiver temporary.
   /// The synchronous buffer borrow and pointer cannot escape this call.
   @inline(never)
