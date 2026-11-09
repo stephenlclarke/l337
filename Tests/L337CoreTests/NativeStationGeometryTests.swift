@@ -89,11 +89,14 @@ import Testing
       let geometry = source.geometry
       let aperture = geometry.docking.aperture
       // Independent convex half-plane test on the actual effective player vertices.
-      let fits = aperture.indices.allSatisfy { index in
+      let fits: Bool = aperture.indices.allSatisfy { index in
         let a = aperture[index]
         let b = aperture[(index + 1) % aperture.count]
-        return player.vertices.allSatisfy { point in
-          (b.x - a.x) * (point.y - a.y) - (b.y - a.y) * (point.x - a.x) > 0
+        return player.vertices.allSatisfy { (point: Vector3) -> Bool in
+          let firstProduct: Double = (b.x - a.x) * (point.y - a.y)
+          let secondProduct: Double = (b.y - a.y) * (point.x - a.x)
+          let crossProduct: Double = firstProduct - secondProduct
+          return crossProduct > 0
         }
       }
       #expect(geometry.docking.fits(player) == fits, "\(source.site) / \(ship.id) docking")

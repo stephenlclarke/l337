@@ -335,3 +335,56 @@ extension GameplayPhysicalAdoptionTests {
     return GameRuntime(game: game)
   }
 }
+
+extension GameplayPhysicalAdoptionTests {
+  @Test(arguments: ["absent", "stored-empty", "marked", "marked-only", "handoff"])
+  func playerCargoReadPreservesBlackjackReservationAndSavedCommander(scenario: String) throws {
+    let game = try markedCargoReadGame(scenario)
+    let before = try markedCargoCommanderBytes(game)
+    let fields = try #require(JSONSerialization.jsonObject(with: before) as? [String: Any])
+    #expect((fields["blackjackMission"] == nil) == (scenario == "absent"))
+    let observed = game.gameplayContext()
+    let context = try #require(observed)
+    let expectedMark = scenario == "marked" || scenario == "marked-only" ? 1 : 0
+    var expected: [CommodityAmount] = [
+      .init(commodity: .food, quantity: 2), .init(commodity: .slaves, quantity: 1),
+    ]
+    if scenario != "marked-only" {
+      expected.append(.init(commodity: .firearms, quantity: scenario == "marked" ? 2 : 3))
+    }
+    expected.append(.init(commodity: .gold, quantity: 7))
+    #expect(context.player.ordinaryCargo == expected)
+    #expect(game.withReadOnlyCommander { $0.markedFirearms } == expectedMark)
+    #expect(try markedCargoCommanderBytes(game) == before)
+  }
+
+  // Controlled retained records exercise the read of both encounter fields.
+  @inline(never)
+  private func markedCargoReadGame(_ scenario: String) throws -> Game {
+    var game = prepared()
+    game.commander.cargo[CommodityIdentity.food.rawValue] = 2
+    game.commander.cargo[CommodityIdentity.slaves.rawValue] = 1
+    game.commander.cargo[CommodityIdentity.firearms.rawValue] = scenario == "marked-only" ? 1 : 3
+    game.commander.cargo[CommodityIdentity.gold.rawValue] = 7
+    if scenario != "absent" {
+      var mission = BlackjackMission()
+      if scenario != "stored-empty" {
+        mission.stage = scenario == "handoff" ? .huntWitness : .deliverFirearm
+        mission.transfers = [.contact, .goldAward, .goldDelivery, .report, .firearmPickup]
+        if scenario == "handoff" { mission.transfers.insert(.robberyHandoff) }
+        mission.bolts = BlackjackEncounter(role: .bolts, id: 71)
+        mission.witness = BlackjackEncounter(role: .witness, id: 72)
+      }
+      try #require(mission.valid)
+      game.commander.blackjack = mission
+    }
+    return game
+  }
+
+  @inline(never)
+  private func markedCargoCommanderBytes(_ game: borrowing Game) throws -> Data {
+    let encoder = JSONEncoder()
+    encoder.outputFormatting = [.sortedKeys]
+    return try game.withReadOnlyCommander { try encoder.encode(copy $0) }
+  }
+}
