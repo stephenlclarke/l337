@@ -79,8 +79,17 @@ import Testing
 }
 
 @Test func originalStationAperturesAndExitsCheckEveryEffectiveFlyableHull() throws {
-  let ships = ShipCatalogue.all.filter { $0.game != nil }
-  #expect(ships.count == 162)
+  // Performance profiles also cover hulls whose runtime meshes are still pending.
+  let profiles = ShipCatalogue.all.filter { $0.game != nil }
+  let pending = profiles.filter { OriginalDetailedHullStage.blocksRuntime($0.id) }
+  let ships = profiles.filter { !OriginalDetailedHullStage.blocksRuntime($0.id) }
+  #expect(profiles.count == 163)
+  #expect(pending.count == 140)
+  #expect(ships.count == 23)
+  #expect(pending.contains { $0.id == "SH001" })
+  for ship in pending {
+    #expect(ShipCatalogue.rawMesh(ship.id) == nil, "\(ship.id) pending runtime mesh")
+  }
   for ship in ships {
     var commander = Commander()
     commander.shipID = ship.id
