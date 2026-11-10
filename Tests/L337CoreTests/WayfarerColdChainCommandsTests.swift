@@ -478,7 +478,33 @@ private func custodySequence(_ state: ScriptInstance) -> UInt64 {
   let repeated = await runtime.snapshot()
   #expect(repeated.commander == complete.commander)
   let (cold, _) = try ScriptSaveStore.read(Data(contentsOf: fixture.save), from: fixture.save)
-  try NativeColdChainFixture.checkTerminalAnchors(try #require(cold.scriptState.instances[id]))
+  let delivered = try #require(cold.scriptState.instances[id])
+  try NativeColdChainFixture.checkTerminalAnchors(delivered)
+  let completion = try #require(delivered.completionReceipt)
+  let receivingDock = try #require(completion.cause?.nativeMainDock)
+  let prior = try #require(delivered.savedWayfarerColdChain?.objective)
+  try #require(completion.committed.nativeMainDock == receivingDock)
+  try #require(prior.dock.station != receivingDock.station)
+  let encodedDock = try JSONSerialization.jsonObject(with: JSONEncoder().encode(prior.dock))
+  try fixture.rejectCorruption { root in
+    try NativeColdChainFixture.mutateInstance(id, root: &root) { instance in
+      var receipt = try #require(instance["completionReceipt"] as? [String: Any])
+      var committed = try #require(receipt["committed"] as? [String: Any])
+      // Preserve the receiving cause, integrity clocks and payout but commit at the old berth.
+      committed["galaxy"] = prior.context.galaxy
+      committed["system"] = prior.context.system
+      committed["nativeMainDock"] = encodedDock
+      receipt["committed"] = committed
+      let forged = try JSONDecoder().decode(
+        ScriptCompletionReceipt.self, from: JSONSerialization.data(withJSONObject: receipt))
+      try #require(forged.valid(for: delivered, engine: cold.scriptState))
+      try #require(cold.freightHistoricalContextValid(forged.committed, requiresDock: true))
+      var historical = cold
+      historical.scriptState.instances[id]?.completionReceipt = forged
+      #expect(!WayfarerColdChainSave.validateClaims(historical))
+      instance["completionReceipt"] = receipt
+    }
+  }
 }
 
 @Test func nativeColdChainActualExpiryKeepsOriginalTombstoneAndRetryNeedsNewStock() async throws {
@@ -729,6 +755,48 @@ private func custodySequence(_ state: ScriptInstance) -> UInt64 {
   _ = try await runtime.initializeWayfarerColdChainStock(packDigest: fixture.pack.digest)
   let quote = try await runtime.wayfarerColdChainQuote(sourceID: source)
   #expect(quote.stockUnit != custody.unit)
+}
+
+@Test func nativeColdChainEscapeAfterObjectiveRequiresDistinctLossEvent() async throws {
+  let fixture = try NativeColdChainFixture(quietReceiverRoute: true)
+  defer { fixture.files.clean() }
+  let runtime = try await fixture.runtime(escapeReady: true)
+  let (_, id) = try await fixture.pickup(runtime)
+  try await fixture.atObjective(runtime, id: id)
+  await runtime.key("0")
+  await runtime.key("escape-pod")
+
+  let (cold, _) = try ScriptSaveStore.read(Data(contentsOf: fixture.save), from: fixture.save)
+  let state = try #require(cold.scriptState.instances[id])
+  let custody = try #require(state.savedWayfarerColdChain)
+  let objective = try #require(custody.objective)
+  let loss = try #require(custody.loss)
+  try #require(state.outcome == .failed && loss.cause == .escapePod)
+  try #require(loss.sequence > objective.sequence && state.hasAcknowledged(objective.sequence))
+  try #require(WayfarerColdChainSave.validateClaims(cold))
+
+  try fixture.rejectCorruption { root in
+    try NativeColdChainFixture.mutateInstance(id, root: &root) { instance in
+      var savedCustody = try #require(instance["savedWayfarerColdChain"] as? [String: Any])
+      var savedLoss = try #require(savedCustody["loss"] as? [String: Any])
+      var receipt = try #require(instance["completionReceipt"] as? [String: Any])
+      savedLoss["sequence"] = objective.sequence
+      receipt["sequence"] = objective.sequence
+      let aliasedLoss = try JSONDecoder().decode(
+        WayfarerColdChainPhysicalLoss.self, from: JSONSerialization.data(withJSONObject: savedLoss))
+      let aliasedReceipt = try JSONDecoder().decode(
+        ScriptCompletionReceipt.self, from: JSONSerialization.data(withJSONObject: receipt))
+      try #require(aliasedLoss.valid && aliasedReceipt.valid(for: state, engine: cold.scriptState))
+      var altered = cold
+      altered.scriptState.instances[id]?.savedWayfarerColdChain = custody.replacing(
+        integrity: custody.integrity, loss: aliasedLoss)
+      altered.scriptState.instances[id]?.completionReceipt = aliasedReceipt
+      #expect(!WayfarerColdChainSave.validateClaims(altered))
+      savedCustody["loss"] = savedLoss
+      instance["savedWayfarerColdChain"] = savedCustody
+      instance["completionReceipt"] = receipt
+    }
+  }
 }
 
 @Test func nativeColdChainActualFatalHitAndWriterRefusalPreserveStockUntilPublication() async throws

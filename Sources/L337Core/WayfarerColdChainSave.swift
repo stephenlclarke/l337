@@ -166,6 +166,7 @@ enum WayfarerColdChainSave {
       guard loss.valid, case .none = custody.integrity.terminal, unit.status == .failed,
         state.outcome == .failed, state.payloads.isEmpty, state.timers.isEmpty,
         state.milestones.isEmpty, loss.sequence > custody.issue.sequence,
+        custody.definition.isSeedTransfer || loss.sequence > (custody.objective?.sequence ?? 0),
         loss.sequence <= engine.nextEvent, state.hasAcknowledged(loss.sequence),
         loss.visit >= custody.issue.dock.actor.visit,
         let completion = state.completionReceipt,
@@ -189,6 +190,7 @@ enum WayfarerColdChainSave {
           let objective = custody.objective, let completion = state.completionReceipt,
           let cause = completion.cause, let dock = cause.nativeMainDock,
           custody.definition.receiver.matches(dock.station),
+          custody.definition.isSeedTransfer || completion.committed.nativeMainDock == dock,
           dock.commanderOwner == custody.owner, dock.sequence >= objective.dock.sequence,
           cause.flightSeconds < custody.timer.due,
           receipt.item == custody.unit,
@@ -242,14 +244,15 @@ enum WayfarerColdChainSave {
       contacts.release.contact == custody.issue
     else { return false }
     if state.outcome != .complete { return contacts.acceptance == nil }
-    guard let accepted = contacts.acceptance,
+    guard let objective = custody.objective, let accepted = contacts.acceptance,
       seedContactValid(accepted, custody: custody, state: state, role: .acceptance),
+      accepted.contact.dock.actor.visit >= objective.dock.actor.visit,
       let completion = state.completionReceipt, completion.sequence == accepted.contact.sequence,
       completion.cause == accepted.contact.context,
       case .some(.received(let receipt)) = custody.integrity.terminal,
       receipt.proof.sequence == accepted.contact.sequence, receipt.proof.epoch == accepted.epoch
     else { return false }
-    return true
+    return completion.committed.nativeMainDock == accepted.contact.dock
   }
   private static func seedContactValid(
     _ receipt: WayfarerSeedCustodianContact,

@@ -541,6 +541,28 @@ extension Game {
       returnedEquipment: [], settlementAmount: nil, choices: nil)
   }
 
+  func wayfarerColdChainReceptionDock(_ custody: WayfarerColdChainCustody) throws
+    -> NativeMainStationDockReceipt
+  {
+    guard let objective = custody.objective else {
+      throw MissionPackError("Verify the objective before receiving this consignment.")
+    }
+    let dock = try wayfarerDock(custody.definition.receiver)
+    guard dock.sequence >= objective.dock.sequence,
+      dock.actor.visit >= objective.dock.actor.visit
+    else {
+      throw MissionPackError("Use the actual receiver at or after the recorded objective visit.")
+    }
+    guard case .living(let receiver) = nativeOriginalMainStationDestination,
+      receiver.identity == dock.station, receiver.observation.actor == dock.actor
+    else { throw MissionPackError("Dock with the currently observed living receiver.") }
+    let credits = withReadOnlyCommander { $0.credits }
+    guard (0...4_294_967_295).contains(credits),
+      credits <= 4_294_967_295 - custody.definition.rewardNative
+    else { throw MissionPackError("Spend credits before collecting this service payment.") }
+    return dock
+  }
+
   mutating func receiveWayfarerColdChain(
     _ id: UUID, clueTrust: ScriptClueTrustCatalog = .production
   ) throws {
@@ -554,17 +576,12 @@ extension Game {
   ) throws {
     var state = try wayfarerHeldState(id)
     let previous = state
-    guard var custody = state.savedWayfarerColdChain, let objective = custody.objective,
+    guard var custody = state.savedWayfarerColdChain,
       var ledger = commander.scriptState.savedWayfarerColdChainStock,
       var source = ledger.sources[custody.source.uuidString],
       var unit = source.units[custody.unit.uuidString], unit.status == .held, unit.instance == id
-    else { throw MissionPackError("Actual original objective and stock custody are required.") }
-    let dock = try wayfarerDock(custody.definition.receiver)
-    guard dock.sequence >= objective.dock.sequence,
-      dock.actor.visit >= objective.dock.actor.visit,
-      (0...4_294_967_295).contains(commander.credits),
-      commander.credits <= 4_294_967_295 - custody.definition.rewardNative
-    else { throw MissionPackError("Reopen the actual receiver without overflowing credits.") }
+    else { throw MissionPackError("Actual original stock custody is required.") }
+    let dock = try wayfarerColdChainReceptionDock(custody)
     let sequence = try nextWayfarerSequence()
     let contact = wayfarerContact(state: state, dock: dock, sequence: sequence)
     // This reuses a descriptive receipt shape, never the closed G02 contract authority.

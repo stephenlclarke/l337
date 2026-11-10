@@ -157,13 +157,7 @@ extension Game {
             throw MissionPackError("Bring this sample to its declared objective after pickup.")
           }
         } else {
-          guard let objective = custody.objective,
-            custody.definition.receiver.matches(dock.station),
-            dock.sequence >= objective.dock.sequence,
-            commander.credits <= 4_294_967_295 - custody.definition.rewardNative
-          else {
-            throw MissionPackError("Verify the objective, then use the actual named receiver.")
-          }
+          _ = try wayfarerColdChainReceptionDock(custody)
         }
       case .retryExpiry(let id):
         guard let state = commander.scriptState.instances[id], state.digest == row.digest,

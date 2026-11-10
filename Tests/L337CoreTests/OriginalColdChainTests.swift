@@ -86,13 +86,13 @@ private struct OriginalColdChainFixture {
     return (id, offer)
   }
 
-  func arrive(_ runtime: GameRuntime) async throws {
+  func arrive(_ runtime: GameRuntime, path: [Int] = [85, 241]) async throws {
     let snapshot = await runtime.snapshot()
     if snapshot.screen == .contracts {
       if snapshot.contractBoard.detail { await runtime.key("escape") }
       await runtime.key("escape")
     }
-    try await ScriptProcurementFixture.travel(runtime, path: [85, 241], verifyDeparture: true)
+    try await ScriptProcurementFixture.travel(runtime, path: path, verifyDeparture: true)
   }
 
   func objective(_ runtime: GameRuntime, id: UUID) async throws {
@@ -254,6 +254,7 @@ struct OriginalColdChainTests {
     let objective = await runtime.snapshot()
     #expect(objective.commander.credits == before.commander.credits)
     #expect(objective.commander.scriptState.savedClueJournal == nil)
+    try checkReceiverRefusesEarlierVisit(objective, instance: first)
     try await fixture.receive(runtime, id: first)
     let paid = await runtime.snapshot()
     let award = try #require(
@@ -278,6 +279,77 @@ struct OriginalColdChainTests {
       try await runtime.receiveWayfarerColdChain(instance: first)
     }
     #expect(await runtime.snapshot().commander.credits == repeated.commander.credits)
+  }
+
+  private func checkReceiverRefusesEarlierVisit(_ snapshot: borrowing Game, instance: UUID) throws {
+    let originalMission = snapshot.withReadOnlyScriptState { $0.instances[instance] }
+    let originalCredits = snapshot.withReadOnlyCommander { $0.credits }
+    let mission = try #require(originalMission)
+    let dock = try #require(mission.savedWayfarerColdChain?.objective?.dock)
+    try #require(dock.actor.visit > 1)
+    let row = WayfarerColdChainBoardRow(digest: mission.digest, action: .receive(instance))
+    let allowed = snapshot.wayfarerColdChainReview(row).allowed
+    try #require(allowed)
+
+    // Isolate visit chronology. Keep the real receiver, its sequence and the held original.
+    var stale = copy snapshot
+    stale.commander.nativeStations?.currentMainDock = .init(
+      station: dock.station,
+      actor: .init(
+        system: dock.actor.system, visit: dock.actor.visit - 1, entity: dock.actor.entity),
+      commanderOwner: dock.commanderOwner, sequence: dock.sequence,
+      calendarSeconds: dock.calendarSeconds)
+    try stale.rebindNativeStationsAfterLoad()
+    try #require(stale.nativeMainStationDockEvidenceIsCurrent)
+
+    let review = stale.wayfarerColdChainReview(row)
+    #expect(review.issues == ["Use the actual receiver at or after the recorded objective visit."])
+    #expect(throws: (any Error).self) { try stale.confirmWayfarerColdChainBoard(review) }
+    #expect(stale.commander.credits == originalCredits)
+    #expect(stale.commander.scriptState.instances[instance] == mission)
+    #expect(stale.commander.scriptState.savedClueJournal == nil)
+  }
+
+  @Test func laterSameSiteReceiverRejectsObjectiveActorInAuthenticReturnReceipt() async throws {
+    let fixture = try OriginalColdChainFixture()
+    defer { fixture.files.clean() }
+    let runtime = try await fixture.runtime()
+    let (id, _) = try await fixture.pickup(runtime)
+    try await fixture.arrive(runtime)
+    try await fixture.objective(runtime, id: id)
+    let objectiveDock = try #require(
+      await runtime.snapshot().commander.scriptState.instances[id]?.savedWayfarerColdChain?
+        .objective?.dock)
+
+    try await fixture.arrive(runtime, path: [241, 85, 241])
+    let quote = try await fixture.review(runtime) { $0 == .receive(id) }
+    try #require(quote.allowed)
+    let laterDock = try #require(quote.dock)
+    try #require(laterDock.station == objectiveDock.station)
+    try #require(laterDock.actor.visit > objectiveDock.actor.visit)
+    try #require(laterDock.sequence > objectiveDock.sequence)
+    try #require(laterDock.calendarSeconds > objectiveDock.calendarSeconds)
+
+    let before = await runtime.snapshot().commander
+    let directory = fixture.save.deletingLastPathComponent()
+    let files = try ScriptFinanceTestFixture.files(directory)
+    await #expect(throws: MissionPackError.self) {
+      do {
+        try await runtime.receiveColdChainWithSubstitutedActor(quote, actor: objectiveDock.actor)
+      } catch let error as MissionPackError {
+        #expect(error.localizedDescription == "Dock with the currently observed living receiver.")
+        throw error
+      }
+    }
+    #expect(await runtime.snapshot().commander == before)
+    #expect(try ScriptFinanceTestFixture.files(directory) == files)
+
+    try await fixture.receive(runtime, id: id)
+    let received = await runtime.snapshot()
+    #expect(received.commander.credits == before.credits + 4050)
+    #expect(
+      received.commander.scriptState.savedClueJournal?.awards[WayfarerColdChainDefinition.stateID]?
+        .completion.instance == id)
   }
 
   @Test func actualReceiverWriterFailureRollsBackPaymentCustodyAndAcknowledgement() async throws {
@@ -422,5 +494,37 @@ struct OriginalColdChainTests {
     #expect(
       cold.scriptState.instances[id]?.savedWayfarerColdChain
         == prepared.commander.scriptState.instances[id]?.savedWayfarerColdChain)
+  }
+}
+
+extension GameRuntime {
+  fileprivate func receiveColdChainWithSubstitutedActor(
+    _ quote: WayfarerColdChainBoardReview, actor: ActorIdentity
+  ) throws {
+    try scriptCommand { candidate in
+      let dock = try #require(candidate.retainedNativeMainStationDockReceipt)
+      try #require(dock == quote.dock)
+      let instance = try #require(quote.row.action.instance)
+      // Only the receipt actor changes. The actual arrival and its station observation remain.
+      candidate.commander.nativeStations?.currentMainDock = .init(
+        station: dock.station, actor: actor, commanderOwner: dock.commanderOwner,
+        sequence: dock.sequence, calendarSeconds: dock.calendarSeconds)
+      try candidate.rebindNativeStationsAfterLoad()
+      try #require(candidate.nativeMainStationDockEvidenceIsCurrent)
+      let observedActor = candidate.withReadOnlyCommander {
+        $0.nativeStations?.mainObservations.first { $0.station == dock.station }?.actor
+      }
+      try #require(observedActor == dock.actor)
+      let substituted = try #require(candidate.retainedNativeMainStationDockReceipt)
+      try #require(substituted.actor == actor && substituted.sequence == dock.sequence)
+      try #require(substituted.calendarSeconds == dock.calendarSeconds)
+
+      let refused = candidate.wayfarerColdChainReview(quote.row)
+      #expect(refused.issues == ["Dock with the currently observed living receiver."])
+      #expect(throws: MissionPackError.self) {
+        try candidate.confirmWayfarerColdChainBoard(refused)
+      }
+      try candidate.receiveWayfarerColdChain(instance)
+    }
   }
 }
