@@ -23,7 +23,10 @@ struct WayfarerSeedTransferNativeFixture {
       pack = try ScriptPackLibrary.read(ScriptPackLibrary.bundledSeedTransferDirectory)
     }
   }
-  func runtime(escapeReady: Bool = false, mixedServices: Bool = false) async throws -> GameRuntime {
+  func runtime(
+    escapeReady: Bool = false, mixedServices: Bool = false,
+    endpointDiagnostic: GameplayEncounterBirthDiagnostic? = nil
+  ) async throws -> GameRuntime {
     var game = try ScriptProcurementFixture.freshG03FlightGame(escapeReady: escapeReady)
     try game.prepareG03FlightEquipment()
     if escapeReady {
@@ -43,6 +46,7 @@ struct WayfarerSeedTransferNativeFixture {
         try ScriptPackLibrary.read(ScriptPackLibrary.bundledRepairLoopDirectory),
       ]
     }
+    if let endpointDiagnostic { game.nativeEncounterBirthDiagnostic = endpointDiagnostic }
     let runtime = GameRuntime(game: game, saveURL: save)
     try await runtime.save(to: save)
     await runtime.key("0")

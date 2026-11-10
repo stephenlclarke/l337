@@ -55,6 +55,29 @@ private struct OriginalSeedTransferBoardFixture {
   }
 }
 
+// These are formatter inputs only. They are never installed on the live runtime observer.
+private func verifySeedEndpointEvidenceFormatting() {
+  let absent = ScriptProcurementFixture.endpointBirthFailureEvidence(
+    endpoint: nil, observations: [], context: "targetID=nil")
+  #expect(absent.contains("endpoint=[not-observed]") && absent.contains("producer=[not-observed]"))
+  let observation = GameplayEncounterBirthDiagnostic.Observation(
+    openingDecision: 7, decision: 8, admitted: 1, time: 12.5, requests: [], receipts: [])
+  let retained = ScriptProcurementFixture.endpointBirthFailureEvidence(
+    endpoint: "stage=endpoint-query actor=formatter-only component=fixture budget=1 result=refused",
+    observations: [observation], context: "status=AUTO\nfixture")
+  #expect(retained.contains("stage=endpoint-query actor=formatter-only component=fixture"))
+  #expect(
+    retained.contains("budget=1 result=refused") && retained.contains("time=12.5,decisions=7->8"))
+  #expect(retained.contains("retainedObservations=1") && retained.contains("producerWindow=last"))
+  #expect(!retained.contains("\n") && retained.contains("status=AUTO?fixture"))
+  let limited = ScriptProcurementFixture.endpointBirthFailureEvidence(
+    endpoint: String(repeating: "x", count: 20000), observations: [],
+    context: String(repeating: "y", count: 10000))
+  #expect(limited.contains("endpointBytes=20000 endpointTruncated=true"))
+  #expect(limited.contains("contextBytes=10000 contextTruncated=true"))
+  #expect(limited.utf8.count < 16384 + 8192 + 512)
+}
+
 struct OriginalSeedTransferTests {
   @Test func productionSeedProfileTermsAndNamedCustodiansDeduplicateExactContent() throws {
     let fixture = try WayfarerSeedTransferNativeFixture()
@@ -122,7 +145,10 @@ struct OriginalSeedTransferTests {
   @Test func actualSeedBoardNamedReceptionPaysItsOwnClueOnceAcrossTwoLots() async throws {
     let fixture = try OriginalSeedTransferBoardFixture()
     defer { fixture.native.files.clean() }
-    let runtime = try await fixture.native.runtime()
+    verifySeedEndpointEvidenceFormatting()
+    let endpoint = GameplayEncounterBirthDiagnostic()
+    try #require(endpoint.endpointRefusal == nil && endpoint.observations.isEmpty)
+    let runtime = try await fixture.native.runtime(endpointDiagnostic: endpoint)
     let first = try await fixture.pickup(runtime)
     let second = try await fixture.pickup(runtime)
     let source = await runtime.snapshot()

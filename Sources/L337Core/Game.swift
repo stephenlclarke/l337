@@ -6992,10 +6992,26 @@ public struct Game: Sendable {
       end.advanceView(
         pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt,
         translation: pilot.velocity * dt + Vector3(0, 0, speed * dt * 18))
-      guard let radius = commander.playerMesh.vertices.map(\.length).max(),
-        let motion = debrisRigidMotion(from: start, to: end, duration: dt, radius: radius),
-        workBirthEndpointIsClear(motion, bornAtEnd: newtBirths)
+      guard let radius = commander.playerMesh.vertices.map(\.length).max() else {
+        nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+          "stage=player-radius radius=nil duration=\(dt) start=\(start) end=\(end)"
+            + " actorsTotal=\(newtBirths.actors.count)"
+            + " actorsRetained=\(Array(newtBirths.actors.prefix(32)))")
+        paused = true
+        notify("NEW CONTACT AT FLIGHT ENDPOINT - PAUSED", voiced: false)
+        return false
+      }
+      guard let motion = debrisRigidMotion(from: start, to: end, duration: dt, radius: radius)
       else {
+        nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+          "stage=rigid-motion radius=\(radius) duration=\(dt) start=\(start) end=\(end)"
+            + " actorsTotal=\(newtBirths.actors.count)"
+            + " actorsRetained=\(Array(newtBirths.actors.prefix(32)))")
+        paused = true
+        notify("NEW CONTACT AT FLIGHT ENDPOINT - PAUSED", voiced: false)
+        return false
+      }
+      guard workBirthEndpointIsClear(motion, bornAtEnd: newtBirths) else {
         paused = true
         notify("NEW CONTACT AT FLIGHT ENDPOINT - PAUSED", voiced: false)
         return false
