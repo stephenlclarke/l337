@@ -132,7 +132,7 @@ extension Game {
     do {
       let patch = try prepareC03FreighterRoutePatch(
         pin: pin, originals: inputs.originals, recognizedBodyIDs: inputs.recognizedBodyIDs,
-        flight: commander.flightSimulation,
+        flight: storedFlightSimulation(),
         station: bodies.first { $0.id == 0 && $0.hull == .station }, delta: delta)
       return .init(recognizedBodyIDs: inputs.recognizedBodyIDs, patch: patch)
     } catch {
@@ -152,7 +152,7 @@ extension Game {
     guard current.pin != nil,
       current.recognizedBodyIDs == preparation.recognizedBodyIDs,
       Set(current.originals.map { $0.owned.body.id }) == prepared,
-      acceptsHollowManifestInstalledCase(patch.pin), commander.flightSimulation == patch.flight,
+      acceptsHollowManifestInstalledCase(patch.pin), storedFlightSimulation() == patch.flight,
       !docked, !paused, prepared == recognizedLive,
       bodies.first(where: { $0.id == 0 && $0.hull == .station }) == patch.station,
       patch.updates.allSatisfy({
@@ -233,7 +233,7 @@ extension Game {
   func c03NativeRouteIntentIsCurrent(_ body: borrowing SpaceBody, delta: Double) -> Bool {
     let preparation = prepareC03FreighterRouteSteering(delta: delta)
     guard let patch = preparation.patch, acceptsHollowManifestInstalledCase(patch.pin),
-      commander.scriptState.instances[patch.pin.missionID] == patch.instance
+      nativeGuidanceStoredMission(id: patch.pin.missionID) == patch.instance
     else { return false }
     let bodyID = body.id
     guard let update = patch.updates.first(where: { $0.expected.id == bodyID }),
@@ -265,7 +265,7 @@ extension Game {
         actor: original.owned.identity, actorAlias: original.owned.alias,
         physicalActor: original.admission.original.actor, slot: slot,
         endpoints: .init(first: original.route.first, second: original.route.second))
-      var projected = commander.flightSimulation
+      var projected = storedFlightSimulation()
       projected.pose = path.motion.end
       return try NativeC03FreighterRouteRuntime.projectIntent(binding: binding,
         target: original.route.target == .first ? .first : .second,

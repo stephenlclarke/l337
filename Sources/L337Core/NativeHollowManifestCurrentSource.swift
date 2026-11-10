@@ -66,19 +66,25 @@ extension NativeHollowManifestCommission {
 extension Game {
   /// Recognition can refuse stale control only. It cannot authorize a body or source operation.
   func c03RecognizedBodyIDs() -> Set<Int> {
-    guard let owner = commander.equipmentOwnerID,
-      let instance = commander.scriptState.instances[
-        NativeHollowManifestCommission.mission(owner: owner)],
-      NativeHollowManifestCommission.marked(instance)
-    else { return [] }
+    guard let missionID = c03RecognizedMissionID() else { return [] }
     let logical = Set(
       NativeHollowManifestState.Slot.allCases.map {
-        NativeHollowManifestCommission.logicalActor(mission: instance.id, slot: $0)
+        NativeHollowManifestCommission.logicalActor(mission: missionID, slot: $0)
       })
     return Set(
       bodies.lazy.filter {
-        $0.missionInstanceID == instance.id && $0.missionActorID.map(logical.contains) == true
+        $0.missionInstanceID == missionID && $0.missionActorID.map(logical.contains) == true
       }.map(\.id))
+  }
+
+  @inline(never)
+  private func c03RecognizedMissionID() -> UUID? {
+    guard let owner = storedEquipmentOwnerID(),
+      let instance = nativeGuidanceStoredMission(
+        id: NativeHollowManifestCommission.mission(owner: owner)),
+      NativeHollowManifestCommission.marked(instance)
+    else { return nil }
+    return instance.id
   }
 
   @inline(never)
@@ -102,7 +108,7 @@ extension Game {
           slot: NativeHollowManifestState.Slot, owned: ScriptOwnedActor,
           admission: NativeHollowManifestState.Admission, route: NativeHollowManifestState.Route
         )] = []
-      let flight = commander.flightSimulation
+      let flight = storedFlightSimulation()
       for slot in NativeHollowManifestState.Slot.allCases {
         guard let owned = encounter.actors[slot.rawValue] else { return (nil, recognized, []) }
         if owned.presence != .present
@@ -168,7 +174,7 @@ extension Game {
       let latest = pin.state.latestAdmissions.first(where: { $0.slot == slot }),
       let admission = pin.state.admissions.first(where: { $0.reference == latest })
     else { return false }
-    let flight = commander.flightSimulation
+    let flight = storedFlightSimulation()
     do {
       if owned.presence == .present {
         let matches = bodies.filter { $0.missionActorID == owned.identity }
@@ -224,13 +230,15 @@ extension Game {
     slot: NativeHollowManifestState.Slot, stagedFlight: FlightSimulationState
   ) throws -> ScriptOwnedActor {
     guard let current = c03CurrentOriginalBinding(pin, slot: slot),
-      let reference = pin.state.sourceFrame,
-      stagedFlight.pose == commander.flightSimulation.pose,
-      stagedFlight.system == commander.flightSimulation.system,
-      stagedFlight.visit == commander.flightSimulation.visit,
-      stagedFlight.physicalTime == commander.flightSimulation.physicalTime,
-      stagedFlight.nextActor == commander.flightSimulation.nextActor,
-      stagedFlight.nextSpawn == commander.flightSimulation.nextSpawn
+      let reference = pin.state.sourceFrame
+    else { throw NativeMissionActorAdmissionError.stalePlan }
+    let flight = storedFlightSimulation()
+    guard stagedFlight.pose == flight.pose,
+      stagedFlight.system == flight.system,
+      stagedFlight.visit == flight.visit,
+      stagedFlight.physicalTime == flight.physicalTime,
+      stagedFlight.nextActor == flight.nextActor,
+      stagedFlight.nextSpawn == flight.nextSpawn
     else { throw NativeMissionActorAdmissionError.stalePlan }
     var owned = current.owned
     owned.body = try NativeC03RetainedMotion.capture(

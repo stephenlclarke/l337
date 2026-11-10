@@ -22,6 +22,8 @@ class RetiredHullWiringTests(unittest.TestCase):
         self.source = self.root / "Sources/L337Core/Resources"
         self.app = self.root / "L337.app"
         self.bundle = self.app / "Contents/Resources/L337_L337Core.bundle"
+        self.write(self.root / "Package.swift",
+                   b'.target(name: "L337Core", resources: [.copy("Resources/Ships")])\n')
         rows = json.loads(Path(__file__).with_name("fixtures")
                           .joinpath("retired_hull_meshes.json").read_bytes())
         row = next(row for row in rows if row["id"] == "SH023")
@@ -41,7 +43,10 @@ class RetiredHullWiringTests(unittest.TestCase):
         makefile = (repository / "Makefile").read_text()
         prerequisites = next(line.partition(":")[2].split() for line in makefile.splitlines()
                              if line.startswith("ci: "))
-        self.assertEqual(prerequisites[0], "retired-hulls-check")
+        source_gate = "retired-hulls-check"
+        next_gate = "sanitizers-check"
+        self.assertLess(prerequisites.index("change-scope-check"), prerequisites.index(source_gate))
+        self.assertLess(prerequisites.index(source_gate), prerequisites.index(next_gate))
         self.write(self.root / "Makefile", makefile.encode())
         for name in ["retired_hull_resources.py", "retired_hull_policy.json"]:
             self.write(self.root / "Tools/distribution" / name,
@@ -49,15 +54,19 @@ class RetiredHullWiringTests(unittest.TestCase):
         binary = self.root / "bin"
         binary.mkdir()
         (binary / "python3").symlink_to(sys.executable)
-        environment = {**os.environ, "PATH": str(binary), "PYTHONDONTWRITEBYTECODE": "1"}
-        # The only eligible recipe is the gate. This fixture has no native tool path.
-        skip = [option for target in prerequisites[1:] for option in ("-o", target)]
+        environment = {key: value for key, value in os.environ.items()
+                       if key not in ("MAKEFLAGS", "MFLAGS", "MAKEOVERRIDES", "GNUMAKEFLAGS")}
+        environment.update(PATH=str(binary), PYTHONDONTWRITEBYTECODE="1")
+        # Leave the next real recipe eligible to prove the source failure stops CI.
+        skip = [option for target in (*prerequisites, "tutorial-readme-check")
+                if target not in (source_gate, next_gate) for option in ("-o", target)]
         result = subprocess.run([shutil.which("make"), "--no-print-directory", "ci",
                                  "ELITE_SANITIZERS=0", *skip], cwd=self.root,
                                 env=environment, capture_output=True, text=True, timeout=30)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Tools/distribution/retired_hull_resources.py", result.stdout)
         self.assertIn("Retired mesh", result.stderr)
+        self.assertNotIn("test_optional_sanitizers.py", result.stdout)
         self.assertNotIn("swift ", result.stdout)
 
     def test_package_verification_rejects_real_retired_source_before_copy_equality(self):
