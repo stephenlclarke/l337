@@ -15,3 +15,9 @@ G1 owns only save/publication error hooks, the existing bounded refusal recorder
 ## Acceptance
 
 The changed source must compile. The existing four ordinary methods must execute with the new recorder/rollback controls inside W03. Any remaining failure must preserve the complete ordinary first-refusal context. A source-backed cause correction, successful receiving/payment/clue/current-save journey and required broader release gates remain necessary for functional completion.
+
+## Actual chunk-publication gap
+
+The changed a469 candidate compiled and ran the original four methods with the publisher controls. Three W01 methods passed; W03 still failed at the first receiving row. The fresh recorder proved objective sequence 9, acknowledgement and revision 1 in the rejected candidate, with the second lot unchanged. Its first `storeChunks / save.invalidCommander` observation did not identify the encoded chunk or the specific raw gate. No source contradiction was established by the independent G2/G3 read-only decisions. The committed objective and receiving/payment remain unproved.
+
+Complete this one boundary by recording the actual first named C03/matching, commodity, Newt, Bison, alien, data-write and pointer checkpoint/encode/write call. Preserve the actual selected schemas, chunk name, typed presence and bounded raw field-placement census. Do not run a validator twice, select another envelope on assumption or dump the world/whole chunk.

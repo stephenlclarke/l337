@@ -829,6 +829,83 @@ enum ScriptSaveStore {
     ]
   }
 
+  /// This is the writer's original per-chunk gate order, shared with focused unit controls.
+  /// Capture the actual selected inputs only on failure, without evaluating a gate twice.
+  static func validateEncodedPublicationChunk(
+    _ data: Data, name: String, schema: Int, alien: Bool,
+    commander: borrowing Commander, diagnostics: ScriptRefusalDiagnostic? = nil,
+    diagnosticBoundary: ScriptRefusalBoundary = .publication
+  ) throws {
+    var stage = ScriptRefusalStage.chunkC03
+    var predicate: Int?
+    var secondSchema: Int?
+    var kitSchema: Int?
+    var publicationIdentity: UUID?
+    do {
+      let location: ScriptSaveJSONPreflight.InquiryArchiveLocation =
+        name == "commander.json"
+        ? .commander
+        : name == "world.json"
+          ? .world
+          : name == "missions.json" ? .missions : .contracts
+      let c03Envelope = NativeC03PublicationNamespace.contains(schema)
+      let publications = try NativeC03PublicationPreflight.validate(
+        data,
+        part: name == "missions.json"
+          ? .missions
+          : name == "commander.json" ? .commander : .contracts,
+        schema: schema,
+        currentSchema: alien
+          ? NativeC03PublicationNamespace.alienVersion : NativeC03PublicationNamespace.version,
+        owner: commander.equipmentOwnerID)
+      stage = .chunkC03Match
+      predicate = 1
+      for publication in publications {
+        publicationIdentity = publication.mission
+        guard NativeC03PublicationNamespace.matches(publication, commander: commander) else {
+          throw SaveError.invalidCommander
+        }
+      }
+      predicate = nil
+      publicationIdentity = nil
+      let selectedSecondSchema =
+        c03Envelope && NativeSecondCommoditySaleSave.hasClaims(commander)
+        ? (alien
+          ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version)
+        : schema
+      secondSchema = selectedSecondSchema
+      stage = .chunkCommodity
+      try NativeSecondCommoditySaleSave.validateFields(
+        data, location: location, schema: selectedSecondSchema)
+      let selectedKitSchema =
+        (NativeSecondCommoditySaleSave.contains(schema) || c03Envelope)
+          && CurrentNewtKitSave.hasClaims(commander)
+        ? (alien ? CurrentNewtKitSave.alienVersion : CurrentNewtKitSave.version)
+        : schema
+      kitSchema = selectedKitSchema
+      stage = .chunkNewt
+      try CurrentNewtKitSave.validateFields(data, location: location, schema: selectedKitSchema)
+      stage = .chunkBison
+      try BisonUnitJournalSave.validateFields(
+        data,
+        location: name == "commander.json"
+          ? .commander
+          : name == "world.json" ? .world : .other)
+    } catch {
+      if let diagnostics, !diagnostics.contains(diagnosticBoundary) {
+        let facts = ScriptChunkRefusalFacts.render(
+          name: name, outer: schema, second: secondSchema, kit: kitSchema, data: data,
+          commander: commander, gate: stage, publication: publicationIdentity)
+        diagnostics.record(
+          diagnosticBoundary,
+          .init(
+            stage: stage, error: error, commander: commander, predicate: predicate,
+            chunkFacts: facts))
+      }
+      throw error
+    }
+  }
+
   @inline(never)
   private static func publishEncodedChunks(
     commander: Commander, chunks encoded: [String: Data], encoder: JSONEncoder,
@@ -837,79 +914,108 @@ enum ScriptSaveStore {
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary
   ) throws -> AlienStoragePublication? {
     var chunks = encoded
-    if let alienPublication {
-      let store = try AlienStoragePageStore(directory: directory)
-      let rootData = try store.readGenerationRoot()
-      guard ScriptPackLibrary.hash(rootData) == alienPublication.after.reference?.rootHash else {
-        throw AlienStorageError.hashMismatch
+    var stage = ScriptRefusalStage.chunkAlienStore
+    var observedName = AlienStorageVersionedSave.rootName
+    var observedData: Data?
+    var observedSchema: Int?
+    var predicate: Int?
+    do {
+      if let alienPublication {
+        let store = try AlienStoragePageStore(directory: directory)
+        stage = .chunkAlienRead
+        let rootData = try store.readGenerationRoot()
+        observedData = rootData
+        stage = .chunkAlienHash
+        predicate = 1
+        guard ScriptPackLibrary.hash(rootData) == alienPublication.after.reference?.rootHash else {
+          throw AlienStorageError.hashMismatch
+        }
+        chunks[AlienStorageVersionedSave.rootName] = rootData
       }
-      chunks[AlienStorageVersionedSave.rootName] = rootData
-    }
-    guard chunks["commander.json"]!.count <= 4_194_304,
-      chunks["missions.json"]!.count <= 134_217_728,
-      chunks["world.json"]!.count <= 8_388_608
-        && chunks["contracts.json"]!.count <= 134_217_728
-    else {
-      diagnostics?.record(
-        diagnosticBoundary,
-        .init(stage: .storeSize, error: SaveError.invalidCommander, commander: commander))
-      throw SaveError.invalidCommander
-    }
-    let schema = publicationSchema(commander, alien: alienPublication != nil)
-    for (name, data) in chunks {
-      let location: ScriptSaveJSONPreflight.InquiryArchiveLocation =
-        name == "commander.json" ? .commander : name == "world.json" ? .world
-        : name == "missions.json" ? .missions : .contracts
-      let c03Envelope = NativeC03PublicationNamespace.contains(schema)
-      let publications = try NativeC03PublicationPreflight.validate(
-        data, part: name == "missions.json" ? .missions
-          : name == "commander.json" ? .commander : .contracts,
-        schema: schema,
-        currentSchema: alienPublication != nil
-          ? NativeC03PublicationNamespace.alienVersion : NativeC03PublicationNamespace.version,
-        owner: commander.equipmentOwnerID)
-      for publication in publications {
-        guard NativeC03PublicationNamespace.matches(publication, commander: commander) else {
-          throw SaveError.invalidCommander
+      stage = .storeSize
+      predicate = 1
+      guard chunks["commander.json"]!.count <= 4_194_304,
+        chunks["missions.json"]!.count <= 134_217_728,
+        chunks["world.json"]!.count <= 8_388_608
+          && chunks["contracts.json"]!.count <= 134_217_728
+      else {
+        diagnostics?.record(
+          diagnosticBoundary,
+          .init(
+            stage: .storeSize, error: SaveError.invalidCommander, commander: commander,
+            chunkFacts: "commanderBytes=\(chunks["commander.json"]!.count)"
+              + ",missionsBytes=\(chunks["missions.json"]!.count)"
+              + ",worldBytes=\(chunks["world.json"]!.count)"
+              + ",contractsBytes=\(chunks["contracts.json"]!.count)"))
+        throw SaveError.invalidCommander
+      }
+      predicate = nil
+      let schema = publicationSchema(commander, alien: alienPublication != nil)
+      observedSchema = schema
+      for (name, data) in chunks {
+        observedName = name
+        observedData = data
+        stage = .chunkC03
+        try validateEncodedPublicationChunk(
+          data, name: name, schema: schema,
+          alien: alienPublication != nil, commander: commander, diagnostics: diagnostics,
+          diagnosticBoundary: diagnosticBoundary)
+      }
+      // Never replace an old generation; a failed publication leaves the previous pointer valid.
+      if alienPublication != nil {
+        stage = .chunkAlienStore
+        observedName = AlienStorageVersionedSave.rootName
+        observedData = nil
+        let store = try AlienStoragePageStore(directory: directory)
+        for key in chunks.keys.sorted() where key != AlienStorageVersionedSave.rootName {
+          let limit =
+            key == "commander.json" ? 4_194_304 : key == "world.json" ? 8_388_608 : 134_217_728
+          observedName = key
+          observedData = chunks[key]
+          stage = .chunkAlienWrite
+          try store.writeGenerationChunk(chunks[key]!, name: key, maximumBytes: limit)
+        }
+      } else {
+        for key in chunks.keys.sorted() {
+          observedName = key
+          observedData = chunks[key]
+          stage = .chunkWrite
+          try chunks[key]!.write(to: directory.appendingPathComponent(key), options: .atomic)
         }
       }
-      let secondSchema = c03Envelope && NativeSecondCommoditySaleSave.hasClaims(commander)
-        ? (alienPublication != nil
-          ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version)
-        : schema
-      try NativeSecondCommoditySaleSave.validateFields(
-        data, location: location, schema: secondSchema)
-      let kitSchema = (NativeSecondCommoditySaleSave.contains(schema) || c03Envelope)
-        && CurrentNewtKitSave.hasClaims(commander)
-        ? (alienPublication != nil ? CurrentNewtKitSave.alienVersion : CurrentNewtKitSave.version)
-        : schema
-      try CurrentNewtKitSave.validateFields(data, location: location, schema: kitSchema)
-      try BisonUnitJournalSave.validateFields(data, location: name == "commander.json" ? .commander
-        : name == "world.json" ? .world : .other)
-    }
-    // Never replace an old generation; a failed publication leaves the previous pointer valid.
-    if alienPublication != nil {
-      let store = try AlienStoragePageStore(directory: directory)
-      for key in chunks.keys.sorted() where key != AlienStorageVersionedSave.rootName {
-        let limit =
-          key == "commander.json" ? 4_194_304 : key == "world.json" ? 8_388_608 : 134_217_728
-        try store.writeGenerationChunk(chunks[key]!, name: key, maximumBytes: limit)
+      stage = .chunkPointerCheckpoint
+      observedName = "pointer-checkpoint"
+      observedData = chunks["commander.json"]
+      let pointerSchema = publicationSchema(commander, alien: alienPublication != nil)
+      observedSchema = pointerSchema
+      let pointer = ScriptSavePointer(
+        format: "elite-script-save",
+        schemaVersion: pointerSchema,
+        generation: generation,
+        hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: scope,
+        valueCodec: ScriptValueStorage.codec,
+        bisonUnitJournalCheckpoint: try BisonUnitJournalSave.checkpoint(commander))
+      stage = .chunkPointerEncode
+      observedName = "pointer"
+      observedData = nil
+      let bytes = try encoder.encode(pointer)
+      observedData = bytes
+      stage = .chunkPointerWrite
+      try CommanderSavePublication.write(bytes, to: url, exclusive: exclusive)
+      return alienPublication
+    } catch {
+      if let diagnostics, !diagnostics.contains(diagnosticBoundary) {
+        let facts = ScriptChunkRefusalFacts.render(
+          name: observedName, outer: observedSchema, second: nil, kit: nil,
+          data: observedData, commander: commander, gate: stage)
+        diagnostics.record(
+          diagnosticBoundary,
+          .init(
+            stage: stage, error: error, commander: commander, predicate: predicate,
+            chunkFacts: facts))
       }
-    } else {
-      for key in chunks.keys.sorted() {
-        try chunks[key]!.write(to: directory.appendingPathComponent(key), options: .atomic)
-      }
+      throw error
     }
-    let pointer = ScriptSavePointer(
-      format: "elite-script-save",
-      schemaVersion: publicationSchema(commander, alien: alienPublication != nil),
-      generation: generation,
-      hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: scope,
-      valueCodec: ScriptValueStorage.codec,
-      bisonUnitJournalCheckpoint: try BisonUnitJournalSave.checkpoint(commander))
-    let bytes = try encoder.encode(pointer)
-    try CommanderSavePublication.write(bytes, to: url, exclusive: exclusive)
-    return alienPublication
   }
   static func generationDirectory(_ generation: String, from url: URL) throws -> URL {
     guard UUID(uuidString: generation)?.uuidString == generation else {

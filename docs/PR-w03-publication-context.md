@@ -13,3 +13,11 @@ Focused controls cover first-only retention, error-data exclusion, native and st
 ## Limits
 
 This closes missing ordinary failure context. It does not establish or repair the underlying save refusal, complete W03, qualify full CI or deliver a release. No guard, receipt, save schema or rollback policy is weakened. Any actual failure stops the attempt and is used for one causal source decision; there is no automatic retry or separate diagnostic workload.
+
+## Complete chunk boundary
+
+The writer's per-chunk checks now share one helper with focused rejection controls, in their original order and with their original input expressions. Each throwing boundary records its exact named gate before the original Error is rethrown. Effective schemas are captured where actually selected; `not-used` marks inputs not selected at that boundary. The C03 matching guard retains its publication identity. Error tokens preserve C03 and Alien enum cases and decoding categories without Error payload text.
+
+On the first failure only, a narrow byte census reads the already-supplied encoded chunk. It counts ten known claim field names, records at most four relevant field paths/offsets/value tokens, and keeps at most 128 nearby raw bytes as base64. String values are not mistaken for keys; escaped keys and nonzero Data offsets are covered. The census does not build a JSON object graph or decide admission. Depth/key/path limits and omitted placements/samples are explicit. Candidate facts stay within 4,096 bytes; raw facts stay within 1,536 bytes per observation, keeping both existing first-only slots under the unchanged 12 KiB detail and 128 KiB outer assertion ceilings. No whole chunk or world is logged or retained in the recorder.
+
+The ordinary W03 control packet adds wrong-schema, misplaced Newt/Bison/C03, original Error preservation, census/escaping/slice/overflow and exclusive-pointer failure checks. Pointer refusal must leave the old pointer bytes intact. These new Swift checks are uncompiled and unrun until the reviewed changed qualification. The original W03 assertions, four selectors, save guards, rollback and publisher control packet remain.
