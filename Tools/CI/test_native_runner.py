@@ -2,6 +2,7 @@
 
 import copy
 import unittest
+from pathlib import Path
 from native_runner import require_trusted_job
 
 SHA = "a" * 40
@@ -2010,3 +2011,353 @@ class OwnedQualityAuthorizationTests(unittest.TestCase):
             policy['recoverable_shards']['cache'] = str(path.parent)
             with self.assertRaisesRegex(ValueError, 'overlaps mutable CI'):
                 native.read_local_components_binding(policy)
+
+
+class StaleSessionReuseTests(unittest.TestCase):
+    """Only temporary homes, fake archives and mocked remote/process fingerprints."""
+
+    def reuse_fixture(self):
+        import hashlib, json
+        from pathlib import Path
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        import prepare_native_runner as install
+        from native_runner import policy_digest
+        stack, home, archive, archive_hash, reviewed, checksum, policy = RecoverableAuthorizationTests.recoverable_installation_fixture(self)
+        a = policy['recoverable_activation']
+        a.update(workflow_ref='stephenlclarke/l337/.github/workflows/ci.yml@refs/pull/341/merge', pr_head='b' * 40)
+        manifest = {k: a[k] for k in ('schema', 'enabled', 'revoked', 'expires_at', 'head', 'workflow_sha256',
+                                    'reusable_workflow_sha256', 'runners', 'assignment_root')}
+        manifest.update(ref='refs/pull/341/merge', workflow_file='ci.yml', pr_head='b' * 40)
+        a['manifest_sha256'] = policy_digest(manifest)
+        def write(path, value, mode=0o400):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            if path.exists():
+                path.chmod(0o600)
+            path.write_text(json.dumps(value, sort_keys=True) + '\n')
+            path.chmod(mode)
+        def digest(path):
+            return hashlib.sha256(path.read_bytes()).hexdigest()
+        def ref(path):
+            return dict(path=str(path), sha256=digest(path))
+        write(reviewed, policy)
+        checksum = digest(reviewed)
+        install.prepare(SHA, archive, archive_hash, reviewed, checksum)
+        runner = install.RUNNER
+        old_policy = copy.deepcopy(policy)
+        old_policy['approved_head'] = 'c' * 40
+        old_policy['recoverable_activation'].update(head='c' * 40, pr_head='d' * 40)
+        old_policy['runner_archive_sha256'] = 'e' * 64  # Updated archive, same retained registration.
+        old_path = install.AUTHORIZATION_ROOT / ('c' * 40) / 'old/policy.json'
+        write(old_path, old_policy)
+        old_hook = old_path.parent / 'job-started.sh'
+        old_hook.write_bytes(install.session_hook(old_path, old_path.parent / 'native_runner.py'))
+        old_hook.chmod(0o500)
+        write(runner / '.runner', dict(agentId=134, agentName='elite-mbp-native',
+              gitHubUrl='https://github.com/stephenlclarke/l337', workFolder='_work'), 0o600)
+        for name in ('.credentials', '.credentials_rsaparams'):
+            (runner / name).write_bytes(b'fake opaque vendor credential bytes\n')
+            (runner / name).chmod(0o600)
+        (runner / '.env').write_text('KEEP=unchanged\nACTIONS_RUNNER_HOOK_JOB_STARTED=' + str(old_hook)
+                                    + '\nDEVELOPER_DIR=' + install.DEVELOPER + '\n')
+        root = home / 'recoverable-sessions'
+        old_digest = policy_digest(old_policy)
+        old_binding_path = root / (old_digest + '-111-2.json')
+        old_binding = dict(schema=1, policy_sha256=old_digest, head='c' * 40,
+                           run_id='111', run_attempt='2', max_jobs=1, expires_at=90)
+        write(old_binding_path, old_binding)
+        write(old_binding_path.with_suffix('.state'), dict(used=1, phase='idle'), 0o600)
+        write(root / 'ticket.json', dict(binding=str(old_binding_path), binding_sha256=digest(old_binding_path),
+                                        ordinal=1, policy_sha256=old_digest))
+        new = dict(policy_sha256=checksum, head=SHA, pr_head='b' * 40,
+                   run_id='222', run_attempt='2', max_jobs=1, expires_at=9000)
+        installed_new = install.AUTHORIZATION_ROOT / SHA / ('recoverable-' + checksum) / 'policy.json'
+        new['hook'] = dict(path=str(installed_new.parent / 'job-started.sh'),
+                           sha256=hashlib.sha256(install.session_hook(installed_new, installed_new.parent / 'native_runner.py')).hexdigest())
+        remote = dict(id=134, name='elite-mbp-native', os='macOS', labels=[dict(name='elite-native')], status='online', busy=False)
+        def vendor_ref(path):
+            info = path.lstat()
+            return dict(sha256=digest(path), device=info.st_dev, inode=info.st_ino,
+                        uid=info.st_uid, mode=info.st_mode & 0o777)
+        plan = dict(schema=1, kind='stale-session-reuse-v1' , new=new, runner=remote,
+                    old=dict(policy=ref(old_path), hook=ref(old_hook), ticket=ref(root / 'ticket.json'),
+                             binding=ref(old_binding_path), state=ref(old_binding_path.with_suffix('.state')),
+                             files={name:vendor_ref(runner / name) for name in install.STALE_VENDOR_FILES}))
+        plan_path = home.parent / 'reuse-plan.json'
+        write(plan_path, plan)
+        review_path = home.parent / 'whole-tooling-review.json'
+        write(review_path, dict(status='CLEAR', plan_sha256=digest(plan_path)))
+        grant = dict(schema=1, kind='reviewed-stale-session-reuse-grant-v1', plan_sha256=digest(plan_path),
+                     review=ref(review_path), new=new, expires_at=9500, revoked=False)
+        grant_path = home.parent / 'root-grant.json'
+        write(grant_path, grant)
+        args = SimpleNamespace(approved_head=SHA, runner_archive=archive, archive_sha256=archive_hash,
+                               recoverable_policy=reviewed, recoverable_policy_sha256=checksum,
+                               stale_session_plan=plan_path, stale_session_plan_sha256=digest(plan_path),
+                               stale_session_grant=grant_path, stale_session_grant_sha256=digest(grant_path),
+                               session_run_id='222', session_run_attempt='2', max_jobs=1, session_expires_at=9000)
+        fingerprint = install.output.side_effect
+        def output(*command, **kwargs):
+            install._require_provisioning(executor=True)
+            if command[0] == 'ps':
+                return '17 /usr/bin/idle-fake-observer'
+            if command[:2] == ('git', 'ls-remote'):
+                return SHA + '\trefs/pull/341/merge\n' + 'b' * 40 + '\trefs/pull/341/head'
+            return fingerprint(*command, **kwargs)
+        old_run = dict(id=111, run_attempt=2, head_sha='d' * 40, status='completed', conclusion='failure',
+                       event='pull_request', path='.github/workflows/ci.yml',
+                       repository=dict(full_name='stephenlclarke/l337', id=1416155405),
+                       actor=dict(id=22142777), triggering_actor=dict(id=22142777))
+        def api(path, expires):
+            install._require_provisioning(executor=True)
+            if path.startswith('actions/runners/'):
+                return remote
+            if '/attempts/' in path:
+                return old_run
+            return dict(repository=dict(id=1416155405))
+        stack.enter_context(patch.object(install, 'output', side_effect=output))
+        stack.enter_context(patch.object(install, '_stale_remote', side_effect=api))
+        stack.enter_context(patch.object(install, 'session_run_active', return_value=True))
+        stack.enter_context(patch.object(install.subprocess, 'run', side_effect=AssertionError('No actual command is allowed')))
+        stack.enter_context(patch.object(install.subprocess, 'Popen', side_effect=AssertionError('No listener is allowed')))
+        originals = {name:(runner / name).read_bytes() for name in install.STALE_VENDOR_FILES}
+        return SimpleNamespace(stack=stack, install=install, home=home, runner=runner, args=args,
+                               policy=policy, plan=plan, grant=grant, old_run=old_run, remote=remote,
+                               root=root, old_binding_path=old_binding_path, originals=originals,
+                               write=write, digest=digest, output=output, api=api)
+
+    def assert_vendor_preserved(self, f):
+        for name, raw in f.originals.items():
+            if name != '.env':
+                self.assertEqual((f.runner / name).read_bytes(), raw, name)
+
+    def test_same_remote_registration_is_reused_once_with_only_exact_hook_line_changed(self):
+        import json
+        f = self.reuse_fixture()
+        with f.stack:
+            result = f.install.reuse_stale_session(f.args)
+            self.assertEqual(result['reason'], 'same registration reused; no listener started')
+            self.assert_vendor_preserved(f)
+            expected = f.originals['.env'].replace(str(f.plan['old']['hook']['path']).encode(),
+                        str(Path(result['policy']).parent / 'job-started.sh').encode())
+            self.assertEqual((f.runner / '.env').read_bytes(), expected)
+            ticket = json.loads((f.root / 'ticket.json').read_text())
+            state = json.loads(Path(ticket['binding']).with_suffix('.state').read_text())
+            self.assertEqual(state, dict(used=1, phase='registered'))
+            with f.install.recoverable_control(), f.install.quiescent_legacy():
+                f.install._registered_slot_proof(f.policy)
+            # The existing resume path must accept the exact preserved environment,
+            # without erasing any unrelated key or creating another registration.
+            environment = (f.runner / '.env').read_bytes()
+            resumed = f.install.prepare(SHA, f.args.runner_archive, f.args.archive_sha256,
+                                        f.args.recoverable_policy, f.args.recoverable_policy_sha256, registered=True)
+            self.assertEqual(str(resumed), result['policy'])
+            self.assertEqual((f.runner / '.env').read_bytes(), environment)
+            with self.assertRaises(ValueError):
+                f.install.reuse_stale_session(f.args)
+            self.assertEqual(json.loads(Path(ticket['binding']).with_suffix('.state').read_text()), state)
+
+    def test_remote_busy_missing_changed_or_old_run_active_uncertain_refuses_before_claim(self):
+        mutations = [lambda f:f.remote.update(busy=True), lambda f:f.remote.update(status='offline'),
+                     lambda f:f.remote.update(id=135), lambda f:f.remote.update(labels=[]),
+                     lambda f:f.old_run.update(status='in_progress'), lambda f:f.old_run.update(conclusion=None),
+                     lambda f:f.old_run.update(run_attempt=3), lambda f:f.old_run.update(head_sha='e' * 40),
+                     lambda f:f.old_run['repository'].update(id=42), lambda f:f.old_run['actor'].update(id=42)]
+        for mutate in mutations:
+            with self.subTest(mutation=mutate):
+                f = self.reuse_fixture()
+                with f.stack:
+                    mutate(f)
+                    with self.assertRaises(ValueError):
+                        f.install.reuse_stale_session(f.args)
+                    self.assertFalse(list(f.root.glob('reuse-*.json')))
+                    self.assertEqual((f.runner / '.env').read_bytes(), f.originals['.env'])
+                    self.assert_vendor_preserved(f)
+
+    def test_review_grant_policy_session_and_local_pins_cannot_drift(self):
+        mutations = [lambda f:setattr(f.args, 'stale_session_grant_sha256', '0' * 64),
+                     lambda f:setattr(f.args, 'max_jobs', 2), lambda f:setattr(f.args, 'session_run_attempt', '3'),
+                     lambda f:setattr(f.args, 'session_expires_at', 9999),
+                     lambda f:(f.runner / '.credentials').write_bytes(b'changed'),
+                     lambda f:f.write(f.old_binding_path.with_suffix('.state'), dict(used=1, phase='running'), 0o600),
+                     lambda f:f.write(Path(f.grant['review']['path']), dict(status='changed')),
+                     lambda f:f.write(f.args.stale_session_grant, {**f.grant, 'revoked':True})]
+        for mutate in mutations:
+            with self.subTest(mutation=mutate):
+                f = self.reuse_fixture()
+                with f.stack:
+                    mutate(f)
+                    with self.assertRaises(ValueError):
+                        f.install.reuse_stale_session(f.args)
+                    self.assertFalse(list(f.root.glob('reuse-*.json')))
+                    self.assertEqual((f.runner / '.env').read_bytes(), f.originals['.env'])
+
+    def test_actual_held_controller_or_executor_lease_refuses_before_any_fingerprint(self):
+        import fcntl
+        for relative in ('recoverable-control.lock', 'sanitizer-checkpoints/executor.lock'):
+            f = self.reuse_fixture()
+            with f.stack, (f.home / relative).open('a') as held:
+                fcntl.flock(held, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                before = f.install.output.call_count
+                with self.assertRaises(BlockingIOError):
+                    f.install.reuse_stale_session(f.args)
+                self.assertEqual(f.install.output.call_count, before)
+                self.assertFalse(list(f.root.glob('reuse-*.json')))
+                self.assert_vendor_preserved(f)
+
+    def test_listener_census_new_run_and_actual_merge_refuse_ambiguity(self):
+        from unittest.mock import patch
+        for reason in ('listener', 'worker', 'malformed', 'merge', 'new-run', 'remote-error'):
+            f = self.reuse_fixture()
+            with f.stack:
+                def output(*command, **kwargs):
+                    if command[0] == 'ps' and reason in ('listener', 'worker', 'malformed'):
+                        return {'listener':'27 /x/Runner.Listener run', 'worker':'28 /x/Runner.Worker', 'malformed':'unknown'}[reason]
+                    if command[:2] == ('git', 'ls-remote') and reason == 'merge':
+                        return 'changed ref'
+                    return f.output(*command, **kwargs)
+                with patch.object(f.install, 'output', side_effect=output), patch.object(
+                        f.install, 'session_run_active', return_value=reason != 'new-run'):
+                    if reason == 'remote-error':
+                        f.install._stale_remote.side_effect = ValueError('unavailable')
+                    with self.assertRaises(ValueError):
+                        f.install.reuse_stale_session(f.args)
+                self.assertFalse(list(f.root.glob('reuse-*.json')))
+                self.assert_vendor_preserved(f)
+
+    def test_second_census_catches_hook_drift_before_atomic_write_and_replay_is_blocked(self):
+        from unittest.mock import patch
+        f = self.reuse_fixture()
+        with f.stack:
+            original = f.install._replace_stale_hook
+            def drift(*args):
+                (f.runner / '.env').write_bytes(f.originals['.env'] + b'EXTERNAL=changed\n')
+                return original(*args)
+            with patch.object(f.install, '_replace_stale_hook', side_effect=drift), self.assertRaises(ValueError):
+                f.install.reuse_stale_session(f.args)
+            self.assertTrue(list(f.root.glob('reuse-*.json')))
+            self.assert_vendor_preserved(f)
+            (f.runner / '.env').write_bytes(f.originals['.env'])
+            with self.assertRaises(ValueError):
+                f.install.reuse_stale_session(f.args)
+            self.assertEqual((f.runner / '.env').read_bytes(), f.originals['.env'])
+
+    def test_interrupted_transition_never_exposes_a_registered_slot_or_replays(self):
+        import json
+        from unittest.mock import patch
+        for boundary in ('claim', 'binding', 'state', 'install', 'ticket', 'receipt', 'commit'):
+            f = self.reuse_fixture()
+            with f.stack:
+                original_exclusive, original_publish = f.install._exclusive_json, f.install.publish_json
+                def exclusive(path, value):
+                    if ((boundary == 'claim' and path.name.startswith('reuse-'))
+                            or (boundary == 'binding' and path.name.endswith('-222-2.json'))
+                            or (boundary == 'state' and path.suffix == '.state')
+                            or (boundary == 'receipt' and path.name.endswith('.reuse.json'))):
+                        raise OSError('simulated durable boundary refusal')
+                    return original_exclusive(path, value)
+                def publish(path, value, **kwargs):
+                    if (boundary == 'ticket' and path.name == 'ticket.json') or (boundary == 'commit' and path.suffix == '.state'):
+                        raise OSError('simulated atomic publication refusal')
+                    return original_publish(path, value, **kwargs)
+                with patch.object(f.install, '_exclusive_json', side_effect=exclusive), patch.object(f.install, 'publish_json', side_effect=publish):
+                    if boundary == 'install':
+                        with patch.object(f.install, '_prepare_locked', side_effect=OSError('simulated install interruption')), self.assertRaises(OSError):
+                            f.install.reuse_stale_session(f.args)
+                    else:
+                        with self.assertRaises(OSError):
+                            f.install.reuse_stale_session(f.args)
+                self.assert_vendor_preserved(f)
+                for path in f.root.glob('*-222-2.state'):
+                    self.assertEqual(json.loads(path.read_text()), dict(used=1, phase='stopped'))
+                with f.install.recoverable_control(), f.install.quiescent_legacy(), self.assertRaises(ValueError):
+                    f.install._registered_slot_proof(f.policy)
+                if boundary != 'claim':
+                    with self.assertRaises((ValueError, FileExistsError)):
+                        f.install.reuse_stale_session(f.args)
+
+    def test_racing_transition_cannot_acquire_controller_custody_or_consume_twice(self):
+        from threading import Event
+        from concurrent.futures import ThreadPoolExecutor
+        from unittest.mock import patch
+        f = self.reuse_fixture()
+        entered, release = Event(), Event()
+        with f.stack:
+            original = f.install._stale_live
+            def pause(context, **kwargs):
+                entered.set()
+                if not release.wait(5):
+                    raise AssertionError('fake race barrier timeout')
+                return original(context, **kwargs)
+            with patch.object(f.install, '_stale_live', side_effect=pause), ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(f.install.reuse_stale_session, f.args)
+                try:
+                    self.assertTrue(entered.wait(5))
+                    with self.assertRaises(BlockingIOError):
+                        f.install.reuse_stale_session(f.args)
+                finally:
+                    release.set()
+                self.assertEqual(future.result(timeout=5)['reason'], 'same registration reused; no listener started')
+            self.assertEqual(len(list(f.root.glob('reuse-*.json'))), 1)
+            self.assert_vendor_preserved(f)
+
+    def test_rehashed_transition_still_refuses_revocation_expiry_hook_or_registration_expansion(self):
+        mutations = [lambda f:f.grant.update(revoked=True), lambda f:f.grant.update(expires_at=80),
+                     lambda f:f.plan['new']['hook'].update(sha256='0' * 64),
+                     lambda f:f.plan['runner'].update(id=135),
+                     lambda f:f.plan['old']['files'].pop('.credentials')]
+        for mutate in mutations:
+            f = self.reuse_fixture()
+            with f.stack:
+                mutate(f)
+                f.write(f.args.stale_session_plan, f.plan)
+                f.args.stale_session_plan_sha256 = f.digest(f.args.stale_session_plan)
+                f.grant['plan_sha256'] = f.args.stale_session_plan_sha256
+                f.write(f.args.stale_session_grant, f.grant)
+                f.args.stale_session_grant_sha256 = f.digest(f.args.stale_session_grant)
+                with self.assertRaises(ValueError):
+                    f.install.reuse_stale_session(f.args)
+                self.assertFalse(list(f.root.glob('reuse-*.json')))
+                self.assert_vendor_preserved(f)
+                self.assertEqual((f.runner / '.env').read_bytes(), f.originals['.env'])
+
+    def test_replaced_inode_or_mode_with_identical_vendor_bytes_is_not_the_reviewed_identity(self):
+        for change in ('inode', 'mode', 'symlink'):
+            f = self.reuse_fixture()
+            with f.stack:
+                path = f.runner / '.credentials'
+                if change == 'inode':
+                    pending = path.with_name('.replacement')
+                    pending.write_bytes(path.read_bytes())
+                    pending.chmod(0o600)
+                    pending.replace(path)
+                elif change == 'mode':
+                    path.chmod(0o400)
+                else:
+                    target = path.with_name('.credential-target')
+                    path.rename(target)
+                    path.symlink_to(target)
+                with self.assertRaises(ValueError):
+                    f.install.reuse_stale_session(f.args)
+                self.assertFalse(list(f.root.glob('reuse-*.json')))
+                self.assertEqual((f.runner / '.env').read_bytes(), f.originals['.env'])
+
+    def test_cli_reuse_requires_complete_pinned_inputs_and_never_falls_through_to_run_or_registration(self):
+        import io
+        from contextlib import redirect_stderr, redirect_stdout
+        from unittest.mock import patch
+        import prepare_native_runner as install
+        base = ['prepare_native_runner.py', '--approved-head', SHA, '--runner-archive', '/fake/archive', '--archive-sha256', '1' * 64]
+        exact = ['--recoverable-policy', '/fake/policy', '--recoverable-policy-sha256', '2' * 64,
+                 '--stale-session-plan', '/fake/plan', '--stale-session-plan-sha256', '3' * 64,
+                 '--stale-session-grant', '/fake/grant', '--stale-session-grant-sha256', '4' * 64]
+        for suffix in (['--stale-session-plan', '/fake/plan'], exact + ['--run'], exact + ['--register']):
+            with patch('sys.argv', base + suffix), patch.object(install, 'reuse_stale_session') as reuse, patch.object(install, 'prepare') as prepare, redirect_stderr(io.StringIO()), self.assertRaises(SystemExit) as error:
+                install.main()
+            self.assertEqual(error.exception.code, 2)
+            reuse.assert_not_called()
+            prepare.assert_not_called()
+        with patch('sys.argv', base + exact), patch.object(install, 'reuse_stale_session', return_value={'reason':'fake reviewed transition'}) as reuse, patch.object(install, 'prepare') as prepare, redirect_stdout(io.StringIO()):
+            install.main()
+            reuse.assert_called_once()
+            prepare.assert_not_called()
