@@ -29,9 +29,7 @@
 </p>
 <!-- markdownlint-enable MD033 -->
 
-L337 is a native Swift macOS space trading game with keyboard and trackpad flight, shaded ship panels, a colour cockpit scanner and eight authored original galaxies. Its historical reference is the BBC Micro 6502 Second Processor Executive version of Elite. A fresh current-source game starts as Commander Rowan Calder at Avenor in an SH025 with 720 CR and full fuel. Restoring a current save preserves its commander identity. Entering XYZZY in current development source preserves that name, refits an SH025 Peregrine Mk V with maximum hardware and grants 1,000,000 CR on first activation; white and coloured wireframes remain selectable. These replacement bindings describe the development candidate and await its release. The [signed L337 1.6.0 download](#install-on-macos) is built from the qualified source recorded in its release manifest. Historical Elite downloads and later source-only proposals remain separate deliveries.
-
-For historical comparison, Elite 1.4.0 starts normal games as Commander Jameson with a standard Cobra Mk III and 100 credits; its XYZZY identity is Commander Clarke. Its Right-On Commander title and release verification belong to that [historical delivery](docs/development/MACOS-DISTRIBUTION.md#historical-elite-delivery-evidence).
+L337 is a native Swift macOS space trading game with keyboard and trackpad flight, shaded ship panels, a colour cockpit scanner and eight authored original galaxies. Its historical reference is the BBC Micro 6502 Second Processor Executive version of Elite. A fresh current-source game starts as Commander Rowan Calder at Avenor in an SH025 with 720 CR and full fuel. Restoring a current save preserves its commander identity. Entering XYZZY in current development source names the commander Clarke, refits an SH025 Peregrine Mk V with maximum hardware and grants 1,000,000 CR on first activation; white and coloured wireframes remain selectable. These replacement bindings describe the development candidate and await its release. The [signed L337 1.6.0 download](#install-on-macos) is built from the qualified source recorded in its release manifest. Historical Elite downloads and later source-only proposals remain separate deliveries.
 
 During pre-App-Store development, saves are disposable. We remove backward compatibility, migrations, historical save readers, obsolete aliases and superseded-content fallbacks. Current-format save/load, purchases and transaction correctness remain required. Loading or refitting equipment never fills missing ownership; new commanders and trials create it explicitly. File loading requires a native save envelope and rejects retired prototype formats below 21. See the [completion ledger](docs/COMPLETION-LEDGER.md) for validation status and remaining work.
 
@@ -166,7 +164,39 @@ Mission flags retain the original TP low-nibble states and default to unstarted 
 
 ## XYZZY
 
-Type `xyzzy` in the game to become Commander Clarke, refit the starter Peregrine Mk V and open the secret menu. On first activation you receive 1,000,000 CR, with finite cash accounting, maximum supported hardware, four additional fuel units (41 LY total capacity on the Peregrine), an Advanced navigation module, a full missile rack, fuel, shields and energy. The 21-LY stock Advanced jump cap and remaining fuel still limit each jump. Unlimited missiles, fuel replenishment, cargo, auto-trade, speech, AUTO targeting, automatic ECM and Military retaliation start enabled; shaded panels are selected. Current development source fits Naval lasers, the Elite Shield Module, Military targeting and the Advanced energy module (legacy Naval Energy Unit), with ECM, scoops and compatible work equipment.
+Type `xyzzy` in the game to become **Commander Clarke**, refit the starter **Peregrine Mk V (SH025)** and open the secret menu. The first activation grants **1,000,000 CR**. The maximum-hardware refit supplies the following equipment wherever the hull supports its fitting:
+
+| System | XYZZY equipment and upgrade |
+| --- | --- |
+| Combat lasers | **Naval Lasers** on every supported combat mounting. Work tools use separate fittings. |
+| Shields | **Elite Shield Module**, the top stock shield grade, with 9.2 times the hull's stock front and rear shield capacity. |
+| Energy | **Elite Energy Unit**, with four times the hull's stock energy recharge. |
+| Navigation | **Advanced navigation computer**, with a stock 21-LY jump cap and whole-galaxy route planning. Fuel and the actual fitted navigation component still limit each jump. |
+| Hyperspace drive | **Advanced Hyperspace Drive**, with a one-second activation time and reduced mass-lock range. |
+| Targeting | **Military targeting computer**, plus separate **Mining** and **Salvage targeting modules** for their specialist automatic holds. |
+| EMP weapon | **EMP Pirate Blaster**, selected as **EMP Blaster** on the flight display. It uses its own energy bank and the normal charging and firing rules. |
+| Cutting and salvage | **Salvage Cutter**, fitted as a separate work tool. It cuts recoverable sections without replacing the combat lasers. |
+| Mining | A separate **Mining Laser** when the hull has a compatible mining-tool mount. The specialist targeting module does not itself provide a laser or a mount. |
+| Collection | **Fuel Scoops**, also used to collect reachable material released by mining and cutting. |
+| Defence and emergency equipment | **E.C.M. System**, **Energy Bomb** and **Escape Pod**. |
+| Intergalactic travel | **Galactic Hyperdrive**. |
+| Cargo | **Large Cargo Bay** when the hull supports cargo expansion. Unlimited cargo capacity is a separate XYZZY switch. |
+| Fuel | **Four Fuel Storage Units**, adding 28 LY of fuel storage: 41 LY total on the starter Peregrine. The refit fills the tanks. |
+| Missiles | All free compatible pylons receive standard missiles; already fitted missiles are retained. |
+
+The refit restores shields and ship energy. A newly granted EMP module starts with an empty bank and base power, capacity and recharge grades; it must charge from ship energy. Existing purchased EMP grades remain with their module. To buy further grade upgrades, fit a normally purchased EMP module; the free XYZZY grant is ineligible. The three additional EMP upgrade tracks are bought separately through the equipment shop:
+
+| EMP axis | Base → grade 1 → grade 2 → grade 3 |
+| --- | --- |
+| Pulse power | 1× → 2× → 4× → 8× |
+| Bank capacity | 8 → 16 → 32 → 64 MJ |
+| Bank recharge | 0.4 → 0.8 → 1.6 → 3.2 MJ/s |
+
+Each EMP pulse uses 8 MJ. XYZZY fuel and missile switches do not bypass the EMP bank. Passenger cabins and mission-specific kits retain their ordinary acquisition rules.
+
+In flight, press **W** to cycle the fitted Main Laser, Mining Laser, Salvage Cutter and EMP Blaster. Hold **Return** to operate the selected weapon or tool; release it to stop. Changing weapons requires a fresh press. **Tab** selects the next target, **F** cycles target filters and **Q** releases automatic hold. Selecting a weapon never fires it automatically.
+
+Unlimited missiles, fuel replenishment, cargo, auto-trade, profit scanning, speech, AUTO targeting, automatic ECM and Military retaliation start enabled; shaded panels are selected. Cash remains finite, and the normal jump, tool-fitting and targeting requirements still apply.
 
 Auto-trade immediately sells and restocks when activation happens while docked, so the initial grant can be spent immediately. Cash then changes through ordinary purchases, sales, fuel and rewards. Reopening XYZZY or loading a save never replenishes cash; re-entry retains switch choices and restores the Peregrine Mk V with maximum hardware. C repeats this free refit without granting cash or running auto-trade; excess cargo enables unlimited capacity to preserve it. Old XYZZY saves with unlimited cash receive the finite starting balance once, then persist the migration; finite old balances and ordinary commanders are preserved. Old unlimited-jump flags cannot bypass current jump limits. Location and mission progress remain intact. A new L337 game starts as Rowan Calder.
 
