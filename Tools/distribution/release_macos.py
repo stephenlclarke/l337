@@ -139,8 +139,7 @@ def readme_text(text: str, plan: dict, manifest: dict) -> str:
     block = ("<!-- current-release:start -->\n"
              f"The latest signed release is [L337 {plan['version']}](https://github.com/{REPO}/releases/tag/{plan['tag']}). "
              f"Its [universal Mac download](https://github.com/{REPO}/releases/download/{plan['tag']}/{manifest['archive']}) "
-             "includes the matching checksum, signing manifest, release plan and Apple notarization report. "
-             "The Homebrew badge links to the actual published tap cask; tap updates pass review separately.\n"
+             "is published alongside the matching checksum, signing manifest, release plan and Apple notarization report.\n"
              "<!-- current-release:end -->")
     pattern = r"<!-- current-release:start -->[\s\S]*?<!-- current-release:end -->"
     if re.search(pattern, text):
