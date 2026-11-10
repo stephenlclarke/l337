@@ -1,0 +1,33 @@
+# G02 · Consented freight supply
+
+[Illustrated story](../../INTENDED-GAME-STORY-WALKTHROUGH.md#consented-freight-supply) · [Mission walkthrough checklist](../README.md)
+
+Design walkthrough complete against `19a177e66093716928947f7246e0b664e4a6ad07`. The original G02 native pack, finite supplier, saved custody and real receiver are on main. G1 flew and completed the ordinary opening and cold Continue on candidate `cf5eedc14ba33ec1abecc856fe847b79f113d6e6` using app build `0677291cee48773467a9d9d150dc51f33d6d6364`. It retained exact goods, one 730 CR payment and the trusted clue. Exact current-main and public-release acceptance remain separate. [Ordinary journey evidence](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/COMPLETION-LEDGER.md#L8337), [Current status notes](../../INTENDED-GAME-STORY-NOTES.md#opening-at-avenor-and-renas)
+
+## Offer, route and fit
+
+Captain Suri Arlen's Avenor main orbital Contract Board offers eight original one-tonne Machinery units from the actual sixteen-unit utility-parts batch. The Renas utility crew needs those same identified parts. Review the live supplier, actual ship and reach, **8 t free** and true destination before Confirm. The family requires zero cabins, deposit and donation, with no rank or prior mission gate. Its closed quote is **620 + 110 per actual native leg + 80 per hazard unit CR**. The current route is one leg, **H0**, **730 CR**, untimed. The board refresh never makes a previously accepted job late. [Current pack](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/ScriptPacks/l337-consented-freight/manifest.toml#L13)
+
+The fixed route is **Avenor G01-S007 → Renas G01-S185**, 3.365 LY from catalogue coordinates, displayed as 3.4 LY in the recorded run. It fits a fuelled nominal 7 LY hull and the default SH025 Peregrine Mk V's design of 92 t nominal hold, one operating place, 9 LY hull reach and 13 LY tank. Check actual fitted fuel, cargo, hull and live main-orbital aperture. The ordinary starting Commander Rowan Calder begins at Avenor in SH025 with fitted full fuel and 720 CR. G02 is the opening ordinary delivery. C01 is a separate investigation. A ship that fits the Avenor main berth still needs its real Renas approach. [World catalogue](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/OriginalWorlds/catalogue.json), [Peregrine design](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/fleet-design-v2/ships/SH025.toml), [Peregrine art](../../assets/ships/SH025.png)
+
+## Play the three authored stages
+
+| Stage | Player action and qualifying evidence |
+| --- | --- |
+| 1. `accept` | Confirm Arlen's current offer at the actual Avenor main orbital. Allocate exactly eight previously unallocated serials from the one sixteen-unit batch. Atomically publish source allocation, owned cargo and accepted job. A review, Back or failed writer leaves stock available. |
+| 2. `perform` | Fly the actual fuel-paid jump and dock through the true Renas main-orbital aperture with the same eight original units. Ordinary Machinery, a secondary berth, a different receiver or coordinates cannot substitute. |
+| 3. `receive` | Confirm **Receive one original tonne** or **Receive all remaining original tonnes** with the consenting Renas crew. Validate current real docking and exact held unit identities. The eighth accepted unit closes the job, pays 730 CR once and can grant the first trusted `l337.unwritten-route/clue/consented-freight-family-trace`. One through seven accepted tonnes remain active and unpaid. |
+
+The native profile uses batch `avenor-utility-parts-01`, two possible disjoint allocations of eight per commander and one held or transferred history per unit. No replacement stock, commodity substitution or second debit can qualify. Confirm and Back are separate. No combat, salvage or passenger fit is required. [Supplier allocation](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/OriginalConsentedFreightSupplyCommands.swift#L17), [Actual receiver](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/OriginalConsentedFreightSupplyCommands.swift#L54), [Receiving choices](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/ScriptPacks/l337-consented-freight/manifest.toml#L50)
+
+[Offer artwork](../../assets/missions/services/consented-freight-accept.png) · [Carriage artwork](../../assets/missions/services/consented-freight-perform.png) · [Receiving artwork](../../assets/missions/services/consented-freight-receive.png) · [Completed clue art](../../assets/missions/clues/consented-freight-family-trace.svg)
+
+## Failure, cold Continue and owners
+
+Loss or confirmed abandonment yields no fee or original clue and never restores allocated stock. A new job needs eight genuinely remaining units. Continue preserves source allocation, held, lost and transferred IDs, frozen terms and current partial or terminal receipts. Writer refusal at allocation or receiving cannot consume or pay anything. Verify remaining custody after seven, final settlement, duplicate Confirm, loss, both disjoint allocations and exhausted stock. Retain the previously recorded ordinary receipt as exact-candidate evidence. The free independent core inquiry can always earn only the missing clue.
+
+- **G4 physical requirement.** Preserve the actual SH025 and Avenor/Renas main docking fit. Use the measured real aperture and approved hull, departure, fuel and normal station approach in current qualification.
+- **MC1 mission requirement, via Root and G1.** Preserve finite original stock and atomic publication. Qualify ordinary current board/accept/jump/receiving/save/cold flow and both native partial choices. Test expiry refusal on the untimed family, exact failure/no restock and once-only payment and clue.
+- **Root source decisions.** The current source, stock and Renas authority are already declared. Route full current acceptance through G1 and retain distinct verification for first delivery, exhaustion and public release.
+
+Historical source is `docs/meridian/missions/definitions/original-families.json#/templates/1` at `c70110b292077588a0855fb48127adfb1b611c9d`, SHA-256 `abf67f6506e9f392014913b3c9e9d08672283e9a8f830a7e4621f178fe8a40f5`. The historical prerequisite brief is `docs/meridian/missions/gameplay/contracts/ux/G02-FINITE-SUPPLIER-STOCK-PREREQUISITE-BRIEF-20261020.md` at the same commit.

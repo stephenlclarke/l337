@@ -1,4 +1,8 @@
-# Quiet Choir commissioning and current save contract
+# C02 · A Choir Beneath the Static
+
+[Illustrated story](../../INTENDED-GAME-STORY-WALKTHROUGH.md#a-choir-beneath-the-static) · [Mission walkthrough checklist](../README.md)
+
+Design walkthrough complete against source at `19a177e66093716928947f7246e0b664e4a6ad07`. Only the commissioning path is in current source. Genuine positive commissioning and all eight field and terminal stages remain open.
 
 This is the C02 opening contract for **A Choir Beneath the Static**. The original story and nine objectives come from `docs/meridian/missions/definitions/quiet-choir.json` at authored commit `c70110b292077588a0855fb48127adfb1b611c9d` (SHA256 `41c9d24ae171e09f4b0bb43c5bbbdae602544d6b80bf86ec3e9da0c7ab2f0e60`). That immutable definition is included verbatim in the implementation artifact; this checkout does not recreate the superseded complete oracle tree.
 
@@ -58,3 +62,49 @@ The positive tests below remain mandatory and are **BLOCKED / NOT IMPLEMENTED AS
 6. Show exactly one original nine-objective gallery row. Only Accept is complete; all eight physical stages remain unavailable, with no trial digest or generic retry. Remove the content and preserve the genuine commission as unavailable; restoring exact current content must not pay or issue anything.
 
 These are acceptance criteria, not completed tests. The existing main ledger remains the only work-packet authority; this document is an implementation contract, not a second ledger.
+
+## Offer, fit and ordinary route
+
+Holt wants to restore safe mining navigation without ordering an attack based on interference alone. Vale distinguishes the damaged probe's pauses for its missing companions from the imitation that human smugglers use to conceal their traffic. The player's evidence must justify that distinction before the fleet negotiates a greeting or supervised relay.
+
+Reach Galaxy 4 through ordinary travel. A Galactic Hyperdrive is consumed on a genuine galactic transfer. Budget access to that equipment and a reachable launch point for each necessary transfer. Once in Galaxy 4, dock at Omdogan after four distinct native system observations and one genuine Larvaal vessel identification. The qualification checks a native ship with alien origin and Larvaal family, and can use a valid historical identification after refitting. An illustration, script NPC, archive clue or SH162 environment object does not establish this proof. [Galactic transfer](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Game.swift#L6293), [Native identification gate](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/NativeQuietChoirTravelHistory.swift#L49), [Fleet observation refusals](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/NativeFleetDiscovery.swift#L145)
+
+| Objective in Galaxy 4 | From the preceding objective |
+| --- | --- |
+| Omdogan (G04-S040) | Actual Holt main-orbital commission. |
+| Lobagom (G04-S249) | 1.945 LY |
+| Lodogom (G04-S078) | 3.382 LY |
+| Balmabol (G04-S109) | 2.643 LY. Actual Vale orbital receiving is required. |
+| Balgodan (G04-S184) | 6.106 LY. Use the agreed probe receiving path. |
+| Dalonom (G04-S127) | 6.837 LY |
+| Fobolan (G04-S132) | 7.349 LY direct. For a 7 LY fit, refuel via Lodogom at 2.485 + 5.051 LY. |
+| Omdogan (G04-S040) | 4.748 LY. Return for the corrected reply and final actual berth. |
+
+The original world coordinates support these distances. Refuel at an actual accessible orbital and verify fitted reach at departure. The nominal 9 LY SH025 can cover every listed direct leg with fuel. This is route geometry and a planning fit. Physical docking and actor placement still need their own proof. [World catalogue](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/OriginalWorlds/catalogue.json), [Jump and fuel checks](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/FuelStorage.swift#L8), [SH025 authored jump fit](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/Ships/SH025.toml#L194)
+
+The player needs native Identification targeting for the opening identification and a qualified receiving and observation fit for the fieldwork. Reserve one free tonne after installed modules and ordinary cargo. Vale receives the original 1 t collector and issues the separate 1 t culture in one transaction, so they do not require 2 t simultaneously. The probe receives that same culture. The authored stages carry no player passengers. Exact collector tool and capture envelope, calibration geometry, safe listening volumes and the emitter isolation method require mission-specific sources. C01's numeric observation rules do not establish these values.
+
+| Authored craft | Exact design and physical limit |
+| --- | --- |
+| **Larvaal Warship (SH124)** | Original source and native candidate data exist. The fleet accommodation design calls for four intrinsic and native crew places. A genuine placed ship could furnish a qualifying identification. Its current placement and mechanics remain pending and C02 supplies no roster or authority to admit one. |
+| **Larvaal Drone (SH125)** | Original source and native candidate data exist. The fleet specifies zero native crew for autonomous operation and one crew place for a separate player conversion. It remains a possible identification subject after real placement. An armed or hostile drone is not a required target in this campaign. |
+| **Larvaal Probe (SH162)** | Exact original 8 × 4 × 12 m mission environment object, player-flyable and purchase flags false. It has no ordinary crew/drive performance model and discovery is disabled. Its dedicated damaged source and culture receiving port, consent or control authority, repair state and actual response must be issued for Balgodan. |
+
+[Warship design](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/fleet-design-v2/ships/SH124.toml), [Drone design](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/fleet-design-v2/ships/SH125.toml), [Exact runtime candidate records](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/OriginalFleetLarvaalPendingSourceRegistrations.swift#L114), [Probe configuration](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/Ships/SH162.toml#L3), [Probe reference image](../../assets/ships/SH162.png)
+
+## Evidence, choices and closure
+
+- **Lobagom and Lodogom.** Require distinct actual `reference-low`, `reference-mid` and `reference-high` observations. Their common pause after every third pulse distinguishes the signal from receiver drift. Recover the same original phase collector from the dead relay under its owner's authority. The relay remains intact and no ship needs disabling.
+- **Balmabol and Balgodan.** Vale must receive and actually analyse the original collector. Her interpretation opens the repair-culture handoff. The same one-tonne culture must reach the original stranded probe and physically restore the resonator. Its short gold reply is evidence of repair, rather than a reward for targeting the prop.
+- **Dalonom and Fobolan.** Measure `choir-near`, `choir-above` and `choir-aft` around the actual gathering without attacking it. Match the imitation's unbroken signal and the copied certificate to the specific Fobolan emitter. Choose **Broadcast the forged certificate and demand shutdown** and verify that the operator shuts down the exact emitter, or **Disable the unmanned transmitter** through a qualified physical action. Both branches need the same evidence of actual silence. An EMP pulse alone, unrelated combat, or a cut into an occupied hull cannot substitute.
+- **Omdogan.** Transmit the corrected reply before choosing **Publish the civilian greeting** or **Establish a supervised listening relay**. Preserve which protocol and emitter branch were chosen. Holt closes only after the accord and proper orbital receiving. Commit 6,400 CR and `l337.unwritten-route/clue/choir-silent-voice` once with the same durable terminal action. Offer the resonance filter only for a compatible fit, with a separate reoffer if fitting must wait. It improves this campaign's signal identification. It grants no general immunity or energy increase and does not delay the clue.
+
+There is no overall authored countdown. Any specific field timer must be defined and shown before a source arms it. Retain the actual mission actors, completed measurements, consent, item transfers, repair and loss outcomes, both branch receipts and final award on cold Continue. A fresh review must follow a stale quote. Lost originals and casualties remain recorded. Retry requires actual remaining authority and source property. The separate no-fee continuity design may award the missing clue only, with original failure and paid chapter rewards unchanged. No native C02 continuity or terminal path is issued on this head.
+
+## Owners and unresolved source inputs
+
+- **G4 physical requirement.** Qualify one real Larvaal ship, either the correctly crewed SH124 or independently authorized autonomous SH125, as a native Identification target. Validate the Balgodan SH162 repair port/approach as a separate object geometry and the actual Omdogan/Balmabol receiving berths for the selected player fit. Pin field-emitter geometry, collector approach and the three safe listening volumes once issued. The current fleet records provide suitability inputs without creating mission placement.
+- **MC1 mission requirement, via Root and G1.** Retain the current opening and implement the first missing stage, the exact three Lobagom emitters and independent calibration receipts, before issuing the collector. Later work needs Vale's transactional receiving, one real probe repair, distinct safe listening measurements, evidence of actual emitter shutdown through either path, corrected signal/protocol and atomic original payment/clue. Exercise cold Continue after each transfer, each branch and terminal publication.
+- **Root source decisions.** The real native vessel placement for opening eligibility, the three emitters' custody and physical envelopes, collector and culture stock/issuer, the probe's receiving authority and the allowed emitter shutdown action remain unissued. The authors specify the outcomes and leave those physical parameters open. The Voices in the Static entitlement and the independent core clue recovery are separate from C02's native commission.
+
+The immutable story prose is `docs/meridian/missions/C02.md` and the definition is `docs/meridian/missions/definitions/quiet-choir.json` at `c70110b292077588a0855fb48127adfb1b611c9d`. The main story links here for flight, custody and implementation details. [Authored status on main](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/COMPLETION-LEDGER.md#L8129), [Current opening manifest](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/ScriptPacks/l337-quiet-choir/manifest.toml)
