@@ -99,7 +99,7 @@ The four practice jobs are available as lessons Rowan can take in a useful order
 
 ![Flight and reception practice - mission artwork](assets/missions/services/flight-reception-perform.png)
 
-Rowan accepts practice at a safe orbital training berth, reviews throttle, pitch, roll and view controls, then flies the bounded alignment exercise. The lesson ends by bringing the ship through the approved entrance and receiving an actual debrief. It establishes the pattern Rowan will meet again: a flight is complete when the promised receiver genuinely receives it.
+Rowan accepts a free lesson at the current orbital berth and launches with the same ship and fit. Rowan aims at that berth from **1,000–1,500 centre flight units**, closes while aligned in the front view, then makes an actual safe doorway arrival. The issuing berth records the debrief only after Rowan confirms reception. [Flight practice gameplay walkthrough](missions/gameplay/T01-FLIGHT-RECEPTION.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -109,14 +109,14 @@ flowchart TD
   %% mission T01 | l337.training/flight-reception
   T01_accept["Choose a safe orbital training berth; review throttle,<br/>roll, pitch and the shared view controls."]
   T01_perform["Complete a bounded flight alignment, safe approach and<br/>actual training-berth reception."]
-  T01_receive["Confirm the actual completed practice or trade<br/>evidence with the training berth."]
+  T01_receive["Confirm the actual measured approach and later<br/>doorway arrival at the issuing berth."]
   T01_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   T01_receive --> T01_complete
   T01_perform --> T01_receive
   T01_accept --> T01_perform
   T01_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
   T01_perform -.-> |"If the original instance fails"| T01_failed
-  T01_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
+  T01_new_offer["Review a new attempt at an eligible training berth"]
   T01_failed -.-> |"If a qualifying new job is available"| T01_new_offer
   T01_new_offer -.-> T01_accept
   T01_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
@@ -133,7 +133,7 @@ flowchart TD
 
 ![Safe gunnery practice - mission artwork](assets/missions/services/safe-gunnery-perform.png)
 
-Three clearly marked uncrewed targets wait in an isolated practice volume. Rowan identifies them, records three distinct hits and ceases fire safely before returning for confirmation. Aim, heat and energy become practical limits. Ordinary civilian traffic stays outside the exercise.
+At **Avenor**, Rowan consents to a clear native range and uses the current ship to hit **three distinct uncrewed beacons**. After the last hit and outstanding projectile, Rowan holds fire for three native seconds, then docks and confirms the debrief. An actual hit on ordinary traffic fails the attempt and retains its ordinary consequences. [Safe gunnery gameplay walkthrough](missions/gameplay/T02-SAFE-GUNNERY.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -143,14 +143,14 @@ flowchart TD
   %% mission T02 | l337.training/safe-gunnery
   T02_accept["Review three clearly marked uncrewed simulated gunnery<br/>targets in an isolated orbital practice volume."]
   T02_perform["Verify three distinct practice hits and a safe<br/>cease-fire receipt."]
-  T02_receive["Confirm the actual completed practice or trade<br/>evidence with the training berth."]
+  T02_receive["Confirm all three hits, quiet proof and the actual<br/>Avenor return."]
   T02_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   T02_receive --> T02_complete
   T02_perform --> T02_receive
   T02_accept --> T02_perform
   T02_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
   T02_perform -.-> |"If the original instance fails"| T02_failed
-  T02_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
+  T02_new_offer["Review a fresh attempt and real range at Avenor"]
   T02_failed -.-> |"If a qualifying new job is available"| T02_new_offer
   T02_new_offer -.-> T02_accept
   T02_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
@@ -167,7 +167,7 @@ flowchart TD
 
 ![Defensive flight practice - mission artwork](assets/missions/services/defensive-flight-perform.png)
 
-With a consenting uncrewed training actor, Rowan practises target acquisition, controlled evasion and safe disengagement across the published break-off envelope. The lesson measures actual flight without pretending the actor attacked or awarding an artificial kill. The debrief records the manoeuvre Rowan really performed.
+At **Avenor**, Rowan enters a cleared, non-firing course in the current ship. Rowan sights the centre beacon, passes the right gate, reverses across the centreline to the left gate and withdraws under measured control. Actual firing or unsafe contact fails the attempt. Rowan returns to Avenor and confirms the debrief after the actual docking approach. [Defensive flight gameplay walkthrough](missions/gameplay/T03-DEFENSIVE-FLIGHT.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -177,14 +177,14 @@ flowchart TD
   %% mission T03 | l337.training/defensive-flight
   T03_accept["Review an uncrewed consenting training actor and the<br/>published break-off envelope."]
   T03_perform["Demonstrate target acquisition, controlled evasion and<br/>safe disengagement without harming ordinary traffic."]
-  T03_receive["Confirm the actual completed practice or trade<br/>evidence with the training berth."]
+  T03_receive["Confirm the four measured phases and real later<br/>Avenor arrival."]
   T03_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   T03_receive --> T03_complete
   T03_perform --> T03_receive
   T03_accept --> T03_perform
   T03_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
   T03_perform -.-> |"If the original instance fails"| T03_failed
-  T03_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
+  T03_new_offer["Review a fresh eligible native course at Avenor"]
   T03_failed -.-> |"If a qualifying new job is available"| T03_new_offer
   T03_new_offer -.-> T03_accept
   T03_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
@@ -201,7 +201,7 @@ flowchart TD
 
 ![Navigation and trade practice - mission artwork](assets/missions/services/navigation-trade-perform.png)
 
-Rowan buys one tonne of a real legal commodity, previews a reachable route and carries the same consignment to an actual sale. Fuel and the buying/selling difference remain in the account. The receiving debrief confirms the journey and trade evidence. That ordinary sale can also help satisfy the stated preparation for later investigations.
+Rowan chooses a reachable original world and stocked legal commodity, then confirms the one-tonne plan with Senn before buying. Rowan sells the same tonne at the selected destination, pays real fuel costs and returns to the issuing berth to confirm the debrief. The actual trade difference remains in the account even if it is a loss. [Navigation and trade gameplay walkthrough](missions/gameplay/T04-NAVIGATION-TRADE.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -211,7 +211,7 @@ flowchart TD
   %% mission T04 | l337.training/navigation-trade
   T04_accept["Reserve one tonne of a real legal commodity and<br/>preview a reachable original-world route."]
   T04_perform["Complete the selected journey and an actual sale,<br/>accounting for fuel and the real buy/sell difference."]
-  T04_receive["Confirm the actual completed practice or trade<br/>evidence with the training berth."]
+  T04_receive["Confirm the real buy, flight, sale and fuel account<br/>at the actual issuing berth."]
   T04_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   T04_receive --> T04_complete
   T04_perform --> T04_receive
@@ -239,7 +239,9 @@ The contract board gives Rowan parallel ways to earn, travel and specialise. The
 
 ![Sealed dispatch - mission artwork](assets/missions/services/sealed-dispatch-perform.png)
 
-With one tonne free, Rowan can take a sender's unique sealed record to its named receiver. The actual intact handoff earns the quoted fee. A second copy of the message cannot discharge the sender's custody obligation, and looking at the destination on the chart does not deliver it.
+With **1 t free**, Rowan takes a sender's unique sealed record on an untimed, H0 Contract Board route. The quote pays **410, 500 or 590 CR** for one, two or three legs. Rowan docks at the quoted living main orbital and confirms the intact original record with its actual receiving officer. The handoff settles once. The first successful delivery earns the sealed-dispatch trace.
+
+[Sealed dispatch gameplay walkthrough](missions/gameplay/G01-SEALED-DISPATCH.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -248,7 +250,7 @@ With one tonne free, Rowan can take a sender's unique sealed record to its named
 flowchart TD
   %% mission G01 | l337.contract/sealed-dispatch
   G01_accept["Carry the unique sealed record from its actual sender<br/>to its named receiver."]
-  G01_perform["Complete the exact consignment's physical receiving<br/>handoff."]
+  G01_perform["Dock at the quoted main orbital with the same intact<br/>record and obtain actual receiving authority."]
   G01_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
   G01_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G01_receive --> G01_complete
@@ -273,7 +275,9 @@ flowchart TD
 
 ![Consented freight supply - mission artwork](assets/missions/services/consented-freight-perform.png)
 
-Larger jobs reserve **eight tonnes** of identified utility parts from the actual supplier. Rowan carries those same parts to a consenting receiving crew. Finite stock and the promised delivery remain distinct from ordinary trade cargo; the utility receives the goods before the earnings settle.
+At **Avenor's main orbital**, Rowan confirms Arlen's offer for **eight original tonnes** from a **sixteen-tonne** utility-parts batch. Rowan jumps to **Renas** and docks at its living main orbital. The consenting crew can receive one original tonne or all remaining units. Only the eighth actual unit settles the **730 CR** fee and first consented-freight trace. Loss or abandonment leaves the original allocation recorded.
+
+[Consented freight supply gameplay walkthrough](missions/gameplay/G02-CONSENTED-FREIGHT.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -283,7 +287,7 @@ flowchart TD
   %% mission G02 | l337.contract/consented-freight
   G02_accept["Reserve eight tonnes of identified utility parts from<br/>actual supplier stock."]
   G02_perform["Carry the same eight tonnes to the consenting<br/>utility receiving crew."]
-  G02_receive["Confirm handoff of all eight originals to the actual<br/>receiver. Receiving and settlement commit together."]
+  G02_receive["Receive one original tonne or all remaining units.<br/>The eighth settles the 730 CR fee once."]
   G02_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G02_receive --> G02_complete
   G02_perform --> G02_receive
@@ -307,7 +311,7 @@ flowchart TD
 
 ![Bonded freight passage - mission artwork](assets/missions/services/bonded-freight-perform.png)
 
-A **three-tonne machinery** consignment asks Rowan for a published **75 CR refundable bond**. The named workshop must receive the complete manifest. The returned bond is Rowan's own money, separate from the earned fee, and its treatment after failure follows the displayed custody terms.
+TOREN entrusts Rowan with **three original tonnes of Machinery** against a **75 CR refundable bond**. Rowan checks the live hold, fuel and full quoted route, then flies to the named orbital workshop. The workshop accepts one original tonne or all that remain. The last original tonne earns the frozen fee, returns the full bond and records the first family clue. The passage is untimed. Abandonment or loss forfeits the bond. [Bonded freight gameplay walkthrough](missions/gameplay/G03-BONDED-FREIGHT.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -316,13 +320,13 @@ A **three-tonne machinery** consignment asks Rowan for a published **75 CR refun
 flowchart TD
   %% mission G03 | l337.contract/bonded-freight
   G03_accept["Accept a published three-tonne machinery custody bond<br/>with a 75 CR refundable deposit."]
-  G03_perform["Return custody to the named workshop, with the<br/>complete physical three-tonne manifest."]
-  G03_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G03_perform["Fly the quoted route and dock at the named workshop<br/>with the original three tonnes."]
+  G03_receive["Confirm one original tonne or all remaining.<br/>Final receiving pays the fee and returns the bond."]
   G03_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G03_receive --> G03_complete
   G03_perform --> G03_receive
   G03_accept --> G03_perform
-  G03_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G03_failed["Loss or abandonment forfeits the bond.<br/>No fee or clue."]
   G03_perform -.-> |"If the original instance fails"| G03_failed
   G03_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
   G03_failed -.-> |"If a qualifying new job is available"| G03_new_offer
@@ -341,7 +345,7 @@ flowchart TD
 
 ![Consented cabin journey - mission artwork](assets/missions/services/cabin-journey-perform.png)
 
-At Avenor, **Mira Talen and Oren Vey** request passage to **Renas**. Rowan fits two free compatible life-supported places and asks for each person's actual reply. Only two genuine acceptances and two real places permit boarding. Those same living passengers then travel to Renas care reception for the original one-leg **610 CR** fee. The passage is untimed and needs no deposit or extra cargo. Cancellation returns them to their actual Avenor custodian without payment; a loss stays in the history.
+At Avenor, **Mira Talen and Oren Vey** request passage to **Renas**. Rowan fits two separate empty cabins with working life support, asks for each person's reply and confirms boarding only after both agree. Rowan flies the one-leg journey with those same two passengers and hands them over to Renas care for **610 CR**. The passage is untimed and needs no deposit or extra mission cargo. Cancellation returns both to their Avenor custodian without payment. Cancellation or loss closes this finite offer, and the independent inquiry remains available for its clue. [Cabin journey gameplay walkthrough](missions/gameplay/G04-CABIN-JOURNEY.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -349,18 +353,15 @@ At Avenor, **Mira Talen and Oren Vey** request passage to **Renas**. Rowan fits 
 ```mermaid
 flowchart TD
   %% mission G04 | l337.contract/cabin-journey
-  G04_accept["Board two consenting named passengers into real<br/>compatible fitted berths."]
-  G04_perform["Receive the same living passengers at their agreed<br/>orbital destination."]
-  G04_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G04_accept["Request two genuine replies and board both into<br/>separate working cabins."]
+  G04_perform["Carry the same two living people to Renas and<br/>enter its actual main orbital."]
+  G04_receive["Renas care receives both people together and<br/>pays 610 CR once."]
   G04_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G04_receive --> G04_complete
   G04_perform --> G04_receive
   G04_accept --> G04_perform
-  G04_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G04_failed["Avenor cancellation or recorded loss closes the<br/>finite job without payment."]
   G04_perform -.-> |"If the original instance fails"| G04_failed
-  G04_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G04_failed -.-> |"If a qualifying new job is available"| G04_new_offer
-  G04_new_offer -.-> G04_accept
   G04_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G04_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   G04_failed -.-> |"If this original source clue is unavailable"| G04_continuity_inquiry
@@ -375,7 +376,7 @@ flowchart TD
 
 ![Orbital outlook journey - mission artwork](assets/missions/services/orbital-outlook-perform.png)
 
-Two consenting passengers book three ordered viewing points. Rowan reserves their fitted places, completes the observations in order and returns the same living travellers to the agreed receiver. The itinerary combines navigation with passenger care: three empty-ship scans cannot stand in for their journey.
+**Lysa Renn and Tovan Hale** book an Avenor return tour with three ordered Renas views. Rowan obtains both replies, fits each passenger a separate working cabin and boards them together. At Renas, Rowan holds each marker in the forward targeting view for 12 qualified seconds. Returning those same two travellers to Avenor care after all three observations pays **870 CR**. If an unread marker is destroyed, Rowan can still return the passengers safely and close the booking through Avenor care. [Orbital outlook gameplay walkthrough](missions/gameplay/G05-ORBITAL-OUTLOOK.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -383,18 +384,15 @@ Two consenting passengers book three ordered viewing points. Rowan reserves thei
 ```mermaid
 flowchart TD
   %% mission G05 | l337.contract/orbital-outlook
-  G05_accept["Board a consented two-passenger itinerary containing<br/>three ordered orbital viewing points."]
-  G05_perform["Verify all three target scans in order and the actual<br/>living passenger return."]
-  G05_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G05_accept["Board Lysa and Tovan with two genuine replies and<br/>two separate working cabins."]
+  G05_perform["Observe three Renas markers in order, then return<br/>both living passengers to Avenor."]
+  G05_receive["Avenor receives both passengers after the three<br/>views and pays 870 CR once."]
   G05_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G05_receive --> G05_complete
   G05_perform --> G05_receive
   G05_accept --> G05_perform
-  G05_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G05_failed["Return for care and cancel if an unread marker is<br/>destroyed. Actual passenger loss also ends the job."]
   G05_perform -.-> |"If the original instance fails"| G05_failed
-  G05_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G05_failed -.-> |"If a qualifying new job is available"| G05_new_offer
-  G05_new_offer -.-> G05_accept
   G05_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G05_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   G05_failed -.-> |"If this original source clue is unavailable"| G05_continuity_inquiry
@@ -409,7 +407,9 @@ flowchart TD
 
 ![Verified hostile warrant - mission artwork](assets/missions/services/verified-warrant-perform.png)
 
-A currently valid warrant names one identified armed aggressor. Rowan verifies the target before engaging and can fulfil the mandate through actual attributed destruction or **secured EMP capture**. A temporary disable is only part of a capture. The same once-only outcome must reach the reporting receiver before the fee is earned.
+Voss at Avenor names one armed aggressor near **Renas**, flying a **Peregrine Mk III**. Rowan verifies the exact target before engaging. The mandate allows lawful player-attributed destruction or **secured EMP capture**. Capture requires a real disable followed by authorised custody that keeps the aggressor from returning to combat. Rowan returns to Voss at Avenor with the verified outcome for **1,120 CR**. The current source qualifies destruction, while secured capture still needs its native warrant binding. [Verified warrant gameplay walkthrough](missions/gameplay/G06-VERIFIED-WARRANT.md)
+
+![Peregrine Mk III ship reference](assets/ships/SH023.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -417,16 +417,16 @@ A currently valid warrant names one identified armed aggressor. Rowan verifies t
 ```mermaid
 flowchart TD
   %% mission G06 | l337.contract/verified-warrant
-  G06_accept["Accept one currently verified warrant on a<br/>specifically identified armed aggressor."]
+  G06_accept["Accept the identified Renas warrant from Voss at<br/>the Avenor main orbital."]
   G06_perform["Obtain the actual player-attributed destruction OR<br/>secured EMP-capture receipt for this aggressor; report<br/>that same once-only outcome."]
-  G06_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G06_receive["Confirm the outcome with Voss at Avenor.<br/>The report pays 1,120 CR once."]
   G06_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G06_receive --> G06_complete
   G06_accept --> G06_perform
   G06_hostile_method{"Resolve each specifically registered hostile"}
   G06_perform --> G06_hostile_method
   G06_lawful_destruction["Lawful player-attributed destruction"]
-  G06_secured_capture["Actually secure the EMP-disabled hostile"]
+  G06_secured_capture["Designed path secures the EMP-disabled hostile"]
   G06_hostile_method --> G06_lawful_destruction
   G06_hostile_method --> G06_secured_capture
   G06_all_outcomes["Report that same once-only warranted outcome"]
@@ -452,7 +452,7 @@ flowchart TD
 
 ![Registered corridor defence - mission artwork](assets/missions/services/corridor-defence-perform.png)
 
-A threatened corridor names **three distinct registered hostile raiders**. Rowan protects it by securing a lawful attributed destruction or EMP-capture outcome for each, then obtaining the actual corridor reception record. A replacement actor or repeated count of one target cannot supply the other two.
+Voss identifies **three distinct armed raiders** attacking the Renas corridor. Rowan tracks the three separately and returns to Voss at Avenor with all three outcomes for **1,400 CR**. The journal shows the count as each verified outcome is recorded. The finished design allows a mix of lawful destruction and secured EMP capture. Current settlement counts three player-attributed destructions, with the capture and mixed paths still awaiting their native binding. [Corridor defence gameplay walkthrough](missions/gameplay/G07-CORRIDOR-DEFENCE.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -462,14 +462,14 @@ flowchart TD
   %% mission G07 | l337.contract/corridor-defence
   G07_accept["Protect a declared corridor against three specifically<br/>registered hostile raiders."]
   G07_perform["Settle three distinct registered hostiles through<br/>lawful player-attributed destruction or actually<br/>secured EMP capture, then verify corridor reception."]
-  G07_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G07_receive["Voss confirms all three at Avenor and pays<br/>1,400 CR once."]
   G07_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G07_receive --> G07_complete
   G07_accept --> G07_perform
   G07_hostile_method{"Resolve each specifically registered hostile"}
   G07_perform --> G07_hostile_method
   G07_lawful_destruction["Lawful player-attributed destruction"]
-  G07_secured_capture["Actually secure the EMP-disabled hostile"]
+  G07_secured_capture["Designed path secures the EMP-disabled hostile"]
   G07_hostile_method --> G07_lawful_destruction
   G07_hostile_method --> G07_secured_capture
   G07_all_outcomes["Resolve all three distinct raiders and verify corridor<br/>reception"]
@@ -495,7 +495,9 @@ flowchart TD
 
 ![Consented custody rescue - mission artwork](assets/missions/services/custody-rescue-perform.png)
 
-Rowan reserves **two fitted berths and one tonne** for the survivors' unique emergency record. Identified living capsules are recovered safely, the people board voluntarily and the same survivors and record reach their receiver. This rescue gives Rowan no authority to attack people with EMP or cut occupied hull sections. Partial arrival and casualties remain real consequences.
+Outside **Cedamar**, **Neri Voss and Ilan Rook** wait in two registered capsules that use the **Newt Escape Pod** hull. Rowan reserves two working private cabins and one protected cargo tonne. Each capsule gets its own local trip to Cedamar care. Only after both people agree to travel does Rowan board them, recover their original emergency record in the same cargo slot and carry all three originals to **Celalen**. Actual care reception there pays **1,020 CR**. [Custody rescue gameplay walkthrough](missions/gameplay/G08-CUSTODY-RESCUE.md)
+
+![Newt Escape Pod geometry reference](assets/ships/SH040.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -504,17 +506,14 @@ Rowan reserves **two fitted berths and one tonne** for the survivors' unique eme
 flowchart TD
   %% mission G08 | l337.contract/custody-rescue
   G08_accept["Reserve two fitted berths for registered living<br/>evacuees and one tonne for their unique emergency<br/>record."]
-  G08_perform["Recover the identified living capsules safely, obtain<br/>voluntary boarding and complete their real reception."]
-  G08_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G08_perform["Recover one capsule per Cedamar care trip. After<br/>both consent and board, collect their record last."]
+  G08_receive["Deliver both living people and their original<br/>record to Celalen for 1,020 CR."]
   G08_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G08_receive --> G08_complete
   G08_perform --> G08_receive
   G08_accept --> G08_perform
-  G08_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G08_failed["Safe Cedamar cancellation or actual loss closes<br/>the finite incident without payment."]
   G08_perform -.-> |"If the original instance fails"| G08_failed
-  G08_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G08_failed -.-> |"If a qualifying new job is available"| G08_new_offer
-  G08_new_offer -.-> G08_accept
   G08_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G08_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   G08_failed -.-> |"If this original source clue is unavailable"| G08_continuity_inquiry
@@ -529,7 +528,11 @@ flowchart TD
 
 ![Identified salvage return - mission artwork](assets/missions/services/identified-salvage-perform.png)
 
-Two tonnes of uniquely registered equipment await permitted recovery in an orbital wreck cradle. Rowan uses the appropriate tools and returns those exact items to their consenting owner. This already disabled source needs no invented attack, and recovering its owner's property does not transfer the owner's ship title or blueprint.
+**PELL** authorises Rowan to recover two detached one-tonne packages outside a Renas wreck cradle. The cradle uses **Salamander Station** geometry and the sealed controller and regulator packages use scaled **Muskox** geometry. Rowan fits salvage targeting and Fuel Scoops, collects both exact serials and returns them to their owner at Avenor for **880 CR**. PELL keeps title to its property. If a package is lost, Rowan can still return the survivor without payment. [Identified salvage gameplay walkthrough](missions/gameplay/G09-IDENTIFIED-SALVAGE.md)
+
+![Salamander Station reference used by the cradle](assets/ships/SH141.png)
+
+![Muskox reference used by the scaled package](assets/ships/SH058.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -537,18 +540,15 @@ Two tonnes of uniquely registered equipment await permitted recovery in an orbit
 ```mermaid
 flowchart TD
   %% mission G09 | l337.contract/identified-salvage
-  G09_accept["Locate two tonnes of uniquely registered recoverable<br/>equipment in an orbital wreck cradle."]
-  G09_perform["Recover those exact physical items and hand them to<br/>their consenting owner."]
-  G09_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G09_accept["Accept PELL permission at Avenor and reserve two<br/>real tonnes for the originals."]
+  G09_perform["Scoop both registered loose packages outside the<br/>Renas cradle."]
+  G09_receive["Return both serials to actual PELL at Avenor<br/>for 880 CR."]
   G09_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G09_receive --> G09_complete
   G09_perform --> G09_receive
   G09_accept --> G09_perform
-  G09_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G09_failed["Return any surviving held original to PELL after<br/>loss. The finite batch stays closed."]
   G09_perform -.-> |"If the original instance fails"| G09_failed
-  G09_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G09_failed -.-> |"If a qualifying new job is available"| G09_new_offer
-  G09_new_offer -.-> G09_accept
   G09_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G09_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   G09_failed -.-> |"If this original source clue is unavailable"| G09_continuity_inquiry
@@ -563,7 +563,7 @@ flowchart TD
 
 ![Consented orbital survey - mission artwork](assets/missions/services/consented-survey-perform.png)
 
-Three registered calibration points each need a separate **12-second qualified scan** at the advertised safe range. Rowan keeps the actual target in view through the unobstructed dwell and returns the signed measurements. An interrupted unfinished observation has to be made again; completed readings remain part of the job.
+The **Avenor survey office** commissions three ordered readings from registered **Renas** calibration markers. Rowan uses a fitted targeting computer to hold each clear forward sightline for **12 qualified seconds**, then returns in the same survey ship to submit the signed measurements for **730 CR**. Completed readings survive interruptions. If an unread marker is destroyed, Rowan can return to Avenor to cancel even after changing ships. [Orbital survey gameplay walkthrough](missions/gameplay/G10-CONSENTED-SURVEY.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -571,18 +571,15 @@ Three registered calibration points each need a separate **12-second qualified s
 ```mermaid
 flowchart TD
   %% mission G10 | l337.contract/consented-survey
-  G10_accept["Survey three registered ship-accessible calibration<br/>points at their advertised safe ranges."]
-  G10_perform["Complete three distinct 12-second scans and return the<br/>signed measurements."]
-  G10_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G10_accept["Accept Avenor permission with a fitted targeting<br/>computer and the survey carrier."]
+  G10_perform["Measure calibration-a, -b and -c in order for<br/>12 qualified seconds each."]
+  G10_receive["Return in the original carrier to Avenor and<br/>submit all three for 730 CR."]
   G10_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G10_receive --> G10_complete
   G10_perform --> G10_receive
   G10_accept --> G10_perform
-  G10_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G10_failed["Unread marker destruction permits cancellation<br/>at Avenor without payment."]
   G10_perform -.-> |"If the original instance fails"| G10_failed
-  G10_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G10_failed -.-> |"If a qualifying new job is available"| G10_new_offer
-  G10_new_offer -.-> G10_accept
   G10_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G10_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   G10_failed -.-> |"If this original source clue is unavailable"| G10_continuity_inquiry
@@ -597,7 +594,7 @@ flowchart TD
 
 ![External isolation work - mission artwork](assets/missions/services/isolation-work-perform.png)
 
-Rowan takes a uniquely loaned **one-tonne programmer** to two named unmanned external control modules. Both isolation states must be made physical and verified. The same programmer returns to its issuer before settlement. Shooting a control box or buying a similar instrument cannot replace the promised safe work and return.
+**Lerr at Avenor** lends Rowan the original **one-tonne programmer** for the two unmanned Renas feeders. Rowan holds close to each enclosure, opens its contact and then independently verifies zero flow. The same tool must return through a later Avenor arrival for **970 CR**. Abandonment can end the job while the tool is still owed. The source pair and tool are finite. [External isolation gameplay walkthrough](missions/gameplay/G11-ISOLATION-WORK.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -606,17 +603,14 @@ Rowan takes a uniquely loaned **one-tonne programmer** to two named unmanned ext
 flowchart TD
   %% mission G11 | l337.contract/isolation-work
   G11_accept["Take a one-tonne uniquely loaned programmer to two<br/>named unmanned external control modules."]
-  G11_perform["Verify both physical isolation states and return the<br/>same programmer to its issuer."]
-  G11_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G11_perform["Open each actual feeder contact, then verify zero<br/>flow independently on both."]
+  G11_receive["Return the same programmer to Lerr after a later<br/>Avenor arrival for 970 CR."]
   G11_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G11_receive --> G11_complete
   G11_perform --> G11_receive
   G11_accept --> G11_perform
-  G11_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G11_failed["Unpaid closure preserves work and any remaining<br/>programmer return obligation."]
   G11_perform -.-> |"If the original instance fails"| G11_failed
-  G11_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G11_failed -.-> |"If a qualifying new job is available"| G11_new_offer
-  G11_new_offer -.-> G11_accept
   G11_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G11_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   G11_failed -.-> |"If this original source clue is unavailable"| G11_continuity_inquiry
@@ -631,7 +625,7 @@ flowchart TD
 
 ![Measured asteroid extraction - mission artwork](assets/missions/services/measured-extraction-perform.png)
 
-With **twelve tonnes** of free hold and the installed mining/refining equipment, Rowan identifies the consented extraction body, physically mines and refines the required material, then delivers it with its original provenance. Purchasing twelve tonnes elsewhere cannot certify this extraction.
+Avenor's mining office reserves **twelve tonnes** from one natural asteroid in field five. Rowan mines the actual rock and collects all twelve protected originals before leaving. The other eight tonnes are ordinary yield. **Renas processing** grades the twelve into individually linked products of the same total mass. Rowan then confirms a separate handoff at the Renas receiver for **890 CR**. [Measured extraction gameplay walkthrough](missions/gameplay/G12-MEASURED-EXTRACTION.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -639,18 +633,15 @@ With **twelve tonnes** of free hold and the installed mining/refining equipment,
 ```mermaid
 flowchart TD
   %% mission G12 | l337.contract/measured-extraction
-  G12_accept["Reserve twelve tonnes of hold and identify a consented<br/>orbital extraction body."]
-  G12_perform["Mine and refine twelve tonnes with this job's verified<br/>extraction provenance, then deliver them."]
-  G12_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G12_accept["At Avenor reserve twelve real tonnes for the<br/>natural field-five rock."]
+  G12_perform["Mine the actual rock, scoop all twelve originals<br/>and grade them at Renas."]
+  G12_receive["Separately deliver all twelve linked products at<br/>the Renas receiver for 890 CR."]
   G12_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G12_receive --> G12_complete
   G12_perform --> G12_receive
   G12_accept --> G12_perform
-  G12_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G12_failed["After failure, return any held survivors to<br/>Avenor unpaid. The original rock stays finite."]
   G12_perform -.-> |"If the original instance fails"| G12_failed
-  G12_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G12_failed -.-> |"If a qualifying new job is available"| G12_new_offer
-  G12_new_offer -.-> G12_accept
   G12_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G12_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   G12_failed -.-> |"If this original source clue is unavailable"| G12_continuity_inquiry
@@ -665,7 +656,7 @@ flowchart TD
 
 ![Mutual relief contribution - mission artwork](assets/missions/services/mutual-contribution-perform.png)
 
-When earnings permit, Rowan can review a voluntary **500 CR** contribution to a named orbital relief reserve. One explicit payment reaches the actual recipient and receives its verified acknowledgement. There is no cash prize, although the first legitimate contribution has its own source clue.
+At **Cedamar**, Rowan can choose to give **500 CR** to the **Cedamar Orbital Relief Reserve**. The board names the fund before Rowan selects Donate. The same operation debits the full amount and records the reserve's acknowledgement. The first contribution records a clue. A later hourly offer can accept another gift, while the original clue remains in Rowan's journal. [Mutual contribution gameplay walkthrough](missions/gameplay/G13-MUTUAL-CONTRIBUTION.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -673,17 +664,17 @@ When earnings permit, Rowan can review a voluntary **500 CR** contribution to a 
 ```mermaid
 flowchart TD
   %% mission G13 | l337.contract/mutual-contribution
-  G13_accept["Review a voluntary 500 CR contribution to a named<br/>orbital relief reserve."]
-  G13_perform["Commit exactly 500 CR to its real recipient and<br/>receive the verified fund acknowledgement."]
-  G13_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G13_accept["Review the exact 500 CR and named Cedamar reserve."]
+  G13_perform["Confirm Donate at the live Cedamar berth and<br/>debit exactly 500 CR."]
+  G13_receive["The same transfer records the reserve acknowledgement<br/>and zero-reward completion."]
   G13_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G13_receive --> G13_complete
   G13_perform --> G13_receive
   G13_accept --> G13_perform
-  G13_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
-  G13_perform -.-> |"If the original instance fails"| G13_failed
-  G13_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G13_failed -.-> |"If a qualifying new job is available"| G13_new_offer
+  G13_failed["Decline or refused donation transfers nothing."]
+  G13_perform -.-> |"If the offer is declined or refused"| G13_failed
+  G13_new_offer["Later hourly offers can accept another voluntary gift"]
+  G13_failed -.-> |"When the next hourly offer appears"| G13_new_offer
   G13_new_offer -.-> G13_accept
   G13_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G13_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
@@ -699,7 +690,7 @@ flowchart TD
 
 ![Registered orbital evacuation - mission artwork](assets/missions/services/orbital-evacuation-perform.png)
 
-A registered evacuation group needs **four real compatible fitted places**. Rowan obtains consent, boards the survivors and brings the same people to the agreed receiving berth. Operating crew quarters and an empty hold cannot be counted as passenger places. The record preserves the people who reached safety and any genuine losses.
+During a life-support overhaul, **Sera Venn, Tavi Noll, Eren Pell and Mara Quill** wait at Avenor for passage to **Renas**. Rowan fits four separate working private cabins, asks each person to agree and boards all four together. Actual Renas care receives those same people for **1,065 CR**. The roster is finite. Withdrawal, safe return and genuine loss remain in the record. [Orbital evacuation gameplay walkthrough](missions/gameplay/G14-ORBITAL-EVACUATION.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -707,18 +698,15 @@ A registered evacuation group needs **four real compatible fitted places**. Rowa
 ```mermaid
 flowchart TD
   %% mission G14 | l337.contract/orbital-evacuation
-  G14_accept["Reserve four fitted berths for a registered living<br/>orbital evacuation group."]
-  G14_perform["Bring the same consenting survivors to the verified<br/>receiving berth; preserve real losses."]
-  G14_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G14_accept["Obtain four individual replies and board all four<br/>into separate working private cabins."]
+  G14_perform["Fly the occupied ship from Avenor to the<br/>actual Renas main orbital."]
+  G14_receive["Renas receives the same four living people<br/>and pays 1,065 CR once."]
   G14_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G14_receive --> G14_complete
   G14_perform --> G14_receive
   G14_accept --> G14_perform
-  G14_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
+  G14_failed["Record actual withdrawal, safe Avenor return or loss.<br/>The original group stays finite."]
   G14_perform -.-> |"If the original instance fails"| G14_failed
-  G14_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  G14_failed -.-> |"If a qualifying new job is available"| G14_new_offer
-  G14_new_offer -.-> G14_accept
   G14_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   G14_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   G14_failed -.-> |"If this original source clue is unavailable"| G14_continuity_inquiry
@@ -733,7 +721,11 @@ flowchart TD
 
 ![Designated hostile Larvaal defence - mission artwork](assets/missions/services/hostile-larvaal-defence-perform.png)
 
-Two registered armed hostile Larvaal actors threaten a civilian corridor. Rowan verifies each actual aggressor, secures the two distinct lawful destruction or EMP-capture outcomes and obtains the civilians' safe-arrival record. The mandate concerns those attackers. It does not make every Larvaal a target or undo a first-contact agreement.
+**Holt** verifies two armed Larvaal aggressors threatening a civilian corridor. Rowan secures one lawful destruction or capture for each and protects the same civilian until actual orbital reception. Neutral and consenting Larvaal remain protected. The proposed flight runs from **Omdogan** to **Lobagom**, with a **Larvaal Lancer** and **Larvaal Reaver** as the two candidate attackers. The route and hull bindings await approval. [Larvaal defence gameplay walkthrough](missions/gameplay/G15-HOSTILE-LARVAAL-DEFENCE.md)
+
+![Larvaal Lancer ship reference](assets/ships/SH115.png)
+
+![Larvaal Reaver ship reference](assets/ships/SH118.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -743,7 +735,7 @@ flowchart TD
   %% mission G15 | l337.contract/hostile-larvaal-defence
   G15_accept["Accept a verified corridor threat involving two<br/>registered armed hostile Larvaal actors."]
   G15_perform["Obtain two distinct player-attributed destruction or<br/>secured EMP-capture receipts and the actual civilian<br/>safe-arrival record."]
-  G15_receive["Confirm the exact receiver, actual returned custody<br/>and the advertised settlement."]
+  G15_receive["Confirm both hostile outcomes and the civilian's<br/>actual safe-arrival receipt with the agreed office."]
   G15_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   G15_receive --> G15_complete
   G15_accept --> G15_perform
@@ -820,7 +812,9 @@ At **Enmadan**, the convoy booking audit points towards duplicate reservations s
 
 At **Enlirin**, Rowan recovers the **one-tonne timing standard** from the abandoned maintenance cradle. The recorder remains aboard too, making the peak protected hold **1.008 tonnes**. Rowan uses the standard to recalibrate all **three Lareria relay nodes**, then escorts the actual clinic tender through the corrected lane to main-station reception.
 
-Back at Avenor, the evidence can be handled through **Publish the full safety report** or **Submit the ledger to crew arbitration**. Venn receives the same recorder in the station archive before **4,800 CR**, the lane-safety commendation and the missing-instant clue close the case. The selected evidence outcome stays in the regional reports.
+The return route goes via Renas when Rowan is flying a 9-light-year ship. Back at Avenor, Rowan can **Publish the full safety report** to warn crews or **Submit the ledger to crew arbitration** to protect them while compensation is assessed. Both preserve the complete ledger. Venn receives the same recorder in the station archive before **4,800 CR**, the lane-safety commendation and the missing-instant clue close the case. The selected evidence outcome stays in the regional reports.
+
+The independent charter inquiry keeps the intended clue route open if the original evidence is lost. The current intake can open a case. Fixture admission and a replacement desk after host loss are still pending. [Glass Meridian gameplay walkthrough](missions/gameplay/C01-GLASS-MERIDIAN.md) · [All missions](missions/README.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -862,15 +856,17 @@ flowchart TD
 
 ### The Hollow Manifest
 
-🔵 Planned
+🟡 Partial
 
 ![The Hollow Manifest - mission artwork](assets/missions/illustrations/hollow-manifest.png)
 
 After one ordinary sale, Rowan meets **Nia Toren at Narargan, Galaxy 2**. A freight mutual has paid twice for machinery that never left its warehouse. At **Garrivek**, each original captain's consent precedes inspection of the actual cargo seal. Matching relief scratches point to a reused physical master. Rowan takes both observations to **Marek Iven at Torenran**, where the laboratory examines them and lends its original **one-tonne inspection kit**.
 
-Three cargo-handler wake marks at **Haldator** lead towards the transfer operation. Rowan recovers the **original custody register at Durenran**, then guides the carrier's damaged evacuation launch to actual Haldator reception. At Garrivek, the real crew log, seals and register can finally be reconciled.
+Three cargo-handler wake marks at **Haldator** lead towards the transfer operation. Rowan recovers the **original custody register at Durenran**, then guides the carrier's damaged evacuation launch to actual Haldator care. The ward must then authorize Rowan to take the original unaltered crew log. At Garrivek, the real crew log, seals and register can finally be reconciled.
 
 At Torenran, Rowan chooses **Publish the complete custody ledger** or **Submit the case to the restitution tribunal**. The witnesses remain protected. The same kit and remaining evidence return to **Narargan** before **5,600 CR** and the inward-mark clue are settled. Expense reimbursement is separate, existing legal status persists, and the public-report or restitution outcome becomes part of the local record.
+
+The commission and bounded fieldwork have native source. The loaded rescue, institutional receiving and full journey remain open. [Hollow Manifest gameplay walkthrough](missions/gameplay/C03-HOLLOW-MANIFEST.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -883,7 +879,7 @@ flowchart TD
   C03_analyse_seals["Torenran: Have the seals examined at Torenran and<br/>collect a loaned one-tonne inspection kit."]
   C03_follow_carrier["Haldator: Follow three cargo-handler wake marks to the<br/>hidden transfer cradle at Haldator."]
   C03_recover_register["Durenran: Recover the cradle's original custody<br/>register at Durenran."]
-  C03_rescue_crew["Haldator: Guide the damaged carrier's evacuation<br/>launch to Haldator station."]
+  C03_rescue_crew["Haldator: Escort the original launch to real care;<br/>then obtain the ward’s witnessed crew-log transfer."]
   C03_reconstruct_ledger["Garrivek: Dock at Garrivek and reconcile the register,<br/>seals and rescued crew's log."]
   C03_choose_remedy{"Torenran: Choose public disclosure or a crew<br/>restitution tribunal at Torenran."}
   C03_return_equipment["Narargan: Return the inspection kit and seal the<br/>remaining evidence at Narargan."]
@@ -918,9 +914,13 @@ flowchart TD
 
 ![False Colours - mission artwork](assets/missions/illustrations/false-colours.png)
 
-At **Heroran, Galaxy 5**, an ordinary trade prepares Rowan for Nia Toren's reference loan. A recycler's duplicate transponder keys have made a lawful hauler appear to be a patrol ship. Rowan reads the three cooperative repeaters at **Firerur**, challenges the real transmitters and compares both keys and manufacturing traces at **Norenul**. The accused hauler then needs an actual escort to **Seluer's independent berth**.
+At **Heroran, Galaxy 5**, an ordinary trade prepares Rowan for Nia Toren's reference loan. A recycler's duplicate transponder keys have made a lawful hauler appear to be a patrol ship. Rowan reads three cooperative repeaters at **Firerur**, then challenges each actual transmitter with a fresh nonce and compares both replies against the physical manufacturing seals at **Norenul**. The accused hauler, its pilot and its cargo need a real escort to **Seluer's independent berth** under a limited verification clearance.
 
-With the arrived delegates, Rowan chooses **Publish a simultaneous revocation and safe-conduct notice** or **Reissue both keys under independent supervision**. The Norenul tests must prove both retired keys revoked and both safe-conduct notices acknowledged, or two distinct new identities and rejection of an old-key replay. Rowan returns the reference to Heroran for **6,200 CR** and the seal-before-the-key clue.
+With the arrived delegates, Rowan chooses **Publish a simultaneous revocation and safe-conduct notice** or **Reissue both keys under independent supervision**. In Norenul the public option needs both retired keys revoked together and both notices acknowledged. Supervised reissue needs two distinct new identities, with both retired packets rejected during a **12-second replay test**. Rowan returns the original comparator to Heroran for **6,200 CR** and the seal-before-the-key clue.
+
+[False Colours gameplay walkthrough](missions/gameplay/C13-FALSE-COLOURS.md)
+
+![False Colours signature challenge and retired-key replay](assets/missions/revisions/false-colours-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -931,8 +931,8 @@ flowchart TD
   C13_accept["Heroran: Accept False Colours at Heroran."]
   C13_collect_reference["Heroran: Collect the identified one-tonne reference<br/>instrument from Nia Toren."]
   C13_survey["Firerur: Read three cooperative repeaters and match<br/>their signed issuing chain, not scanner colour."]
-  C13_field_work["Norenul: Present each of the two duplicate keys to the<br/>onboard seal comparator and verify the independent<br/>manufacturing trace."]
-  C13_independent_witness["Seluer: Escort the accused hauler to the independent<br/>verification berth."]
+  C13_field_work["Norenul: Challenge both transmitters with fresh nonces<br/>and verify both against the actual manufacturing seals."]
+  C13_independent_witness["Seluer: Escort the actual hauler, pilot and cargo under<br/>verification clearance to the independent berth."]
   C13_choose_settlement{"Seluer: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C13_return_and_audit["Heroran: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C13_close_case["Heroran: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -946,7 +946,7 @@ flowchart TD
   C13_apply_settlement_choice_1 --> C13_return_and_audit
   C13_choose_settlement_choice_2["Reissue both keys under independent supervision"]
   C13_choose_settlement --> C13_choose_settlement_choice_2
-  C13_apply_settlement_choice_2["Norenul: Verify two distinct replacement identities<br/>and the retired-key ledger. All 2 stated proofs are<br/>required."]
+  C13_apply_settlement_choice_2["Norenul: Verify two distinct new identities and reject both<br/>retired key replays in 12 seconds. Verify the retired ledger."]
   C13_choose_settlement_choice_2 --> C13_apply_settlement_choice_2
   C13_apply_settlement_choice_2 --> C13_return_and_audit
   C13_independent_witness --> C13_choose_settlement
@@ -968,9 +968,13 @@ flowchart TD
 
 ![The Warrant Ledger - mission artwork](assets/missions/illustrations/warrant-ledger.png)
 
-At **Iaririn, Galaxy 8**, Voss lends Rowan the reference after a trade. Bounty issuers have reused casualty evidence for incompatible warrants. Three signed records at **Faera** and two victim records checked against the independent incident seal at **Neraen** distinguish one real armed suspect from two wrongly listed witnesses. The consenting witness tender travels to **Lorion's protected hearing berth**.
+At **Iaririn, Galaxy 8**, Voss lends Rowan the original verifier after a trade. Three signed warrant records at **Faera** lead to two victim challenges at the independent incident seal at **Neraen**. Dates and provenance expose a duplicated casualty claim. Rowan keeps both original statements under their consent restrictions and distinguishes the actual suspect from two wrongly listed witnesses. The consenting tender travels independently to **Lorion's protected hearing berth** while Rowan works on the evidence.
 
-Rowan and the arrived delegates choose **Publish corrected warrants simultaneously** or **Use protected restitution hearings**. Public correction needs both issuers' revocation acknowledgements and witness safe conduct. Restitution needs the sealed hearing and funded matching compensation transfers. The same evidence cannot be counted or spent twice. Rowan returns the loan to Iaririn for **8,200 CR** and the unwritten-warrant clue.
+After actual living reception, Rowan and the arrived delegates choose **Publish corrected warrants simultaneously** or **Use protected restitution hearings**. Public correction needs both affected issuers' revocation acknowledgements before witness safe conduct is recorded. Restitution requires the sealed hearing and a funded debit for every actual recipient credit. Rowan returns the original verifier to Iaririn for **8,200 CR** and the unwritten-warrant clue.
+
+[The Warrant Ledger gameplay walkthrough](missions/gameplay/C16-WARRANT-LEDGER.md)
+
+![The Warrant Ledger evidence reconciliation operation](assets/missions/revisions/warrant-ledger-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -981,8 +985,8 @@ flowchart TD
   C16_accept["Iaririn: Accept The Warrant Ledger at Iaririn."]
   C16_collect_reference["Iaririn: Collect the identified one-tonne reference<br/>instrument from Marshal Nera Voss."]
   C16_survey["Faera: Read three actual issuer-signed warrant<br/>records; compare their distinct evidence references."]
-  C16_field_work["Neraen: Compare both victim records against the<br/>original independent incident seal and retain both<br/>conflicting claims."]
-  C16_independent_witness["Lorion: Verify actual safe transit and living<br/>reception of the consenting witness tender to the<br/>protected hearing berth."]
+  C16_field_work["Neraen: Test both victim records against the independent<br/>seal. Preserve both claims and reject duplicate use."]
+  C16_independent_witness["Lorion: Verify living reception of the independently<br/>travelling tender at the protected hearing berth."]
   C16_choose_settlement{"Lorion: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C16_return_and_audit["Iaririn: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C16_close_case["Iaririn: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1018,11 +1022,15 @@ flowchart TD
 
 ![Public Record - mission artwork](assets/missions/illustrations/public-record.png)
 
-After an ordinary commodity purchase or sale, Rowan reviews and confirms Neris Sol's commission at the living **Fenias main orbital station, Galaxy 5**. A news service needs to report dangerous cargo routing, but its sponsor owns the accepted recording instrument. Rowan needs one free tonne to collect Sol's original reference as a separate loan before departure. Rowan observes three real decisions at **Fenel** with the observers' consent, then compares both **Heroeth** controllers against the independent recorder and preserves the measured evidence version. The technical witness travels to the newsroom berth at **Voron**.
+After an ordinary commodity purchase or sale, Rowan reviews and confirms Neris Sol's commission at the living **Fenias main orbital station, Galaxy 5**. A news service needs to report dangerous cargo routing, but its sponsor owns the accepted recording instrument. Rowan needs one free tonne to collect Sol's original reference as a separate loan before departure. Rowan observes three real decisions at **Fenel** with the observers' consent, then compares both **Heroeth** controllers against the independent recorder and preserves the measured evidence version. The technical witness travels independently to **Voron's newsroom berth**.
 
-With the arrived delegates, Rowan chooses **Release the complete anonymised evidence set** or **Use a witnessed right-of-reply hearing**. The reply must leave the original measurements intact, and the selected publication/hearing needs its own physical and receiving proof. Returning the reference to Fenias settles **6,300 CR** and the unreported-frequency clue.
+After actual living reception, Rowan and the delegates choose **Release the complete anonymised evidence set** or **Use a witnessed right-of-reply hearing**. Public release requires actual archive receiving and no private identity fields. The hearing's **120-second** reply period starts only on explicit receiver confirmation. Expiry permits publication, and a reply leaves the original evidence unchanged. Rowan returns the original reference to Fenias for **6,300 CR** and the unreported-frequency clue.
 
 The commissioning and briefing source is on `main`. Confirm attempts commissioning, but the audited `main` revision rejects the generated acceptance receipt before the commission is saved. Gameplay acceptance is open, and the recorder loan and later stages still need implementation. [Public Record evidence](INTENDED-GAME-STORY-NOTES.md#public-record-commissioning)
+
+[Public Record gameplay walkthrough](missions/gameplay/C37-PUBLIC-RECORD.md)
+
+![Public Record independent routing and right-of-reply operation](assets/missions/revisions/public-record-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1034,7 +1042,7 @@ flowchart TD
   C37_collect_reference["Fenias: With one free tonne, collect the original<br/>reference on loan from Dispatcher Neris Sol."]
   C37_survey["Fenel: Observe three actual cargo-routing decisions<br/>under the source observers consent."]
   C37_field_work["Heroeth: Compare two external route controllers with<br/>the original public recorder; freeze the independently<br/>measured evidence version."]
-  C37_independent_witness["Voron: Verify actual safe transit and living reception<br/>of the consenting technical witness to the newsroom<br/>receiving berth."]
+  C37_independent_witness["Voron: Verify actual living reception of the independently<br/>travelling technical witness at the newsroom berth."]
   C37_choose_settlement{"Voron: At the actual witness receiving station, choose<br/>the settlement with the arrived authorised operator<br/>delegates."}
   C37_return_and_audit["Fenias: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C37_close_case["Fenias: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1081,6 +1089,8 @@ After identifying a real Larvaal vessel and visiting four systems, Rowan meets *
 *Larvaal Probe (SH162).*
 
 Rowan listens from three safe positions around the gathering at **Dalonom**. At **Fobolan**, the smugglers' imitation can be stopped through **Broadcast the forged certificate and demand shutdown** or **Disable the unmanned transmitter**. At Omdogan, Rowan then chooses **Publish the civilian greeting** or **Establish a supervised listening relay**. The actual signal accord earns **6,400 CR**, the campaign-specific resonance-filter fitting and the silent-voice clue.
+
+Holt’s opening is present in current source. The original investigation still needs a genuine identifiable Larvaal ship and the later field and receiving stages. The damaged probe is the object Rowan repairs, while a genuine Larvaal ship provides the prior identification. [Quiet Choir gameplay walkthrough](missions/gameplay/QUIET-CHOIR-COMMISSIONING.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -1134,9 +1144,13 @@ flowchart TD
 
 ![The Listening Frontier - mission artwork](assets/missions/illustrations/listening-frontier.png)
 
-At **Lailaven, Galaxy 6**, Holt lends Rowan the reference after a trade. Human survey bursts are narrowing a Larvaal migration crossing, and both sides have mistaken collisions for attacks. Rowan observes three independent listeners at **Eriara** without rebroadcasting the pulses. At **Leimaeli**, the two emitters are tuned to their actual human, Larvaal and quiet windows; Rowan transmits only in the allocated reply window. The neutral listening tender reaches its protected receiver at **Saesiara**.
+At **Lailaven, Galaxy 6**, Holt lends Rowan the original passive reference. Human survey bursts are narrowing a Larvaal migration crossing, and both sides have mistaken collisions for attacks. Rowan observes three consented listeners at **Eriara** without rebroadcasting a migration pulse. At **Leimaeli**, Rowan calibrates both emitters and runs **three 12-second cycles**, with four seconds each for human signals, Larvaal signals and silence. Rowan replies only within the actual authorized slot.
 
-Rowan and the arrived delegates choose **Publish independent quiet windows** or **Establish a jointly witnessed migration relay**. Independent withdrawal and the Larvaal acknowledgement prove the first route. The bounded relay and each participant's separate permission prove the second. Returning the reference to Lailaven earns **9,100 CR** and the voice-outside-the-channel clue.
+The neutral tender travels independently to **Saesiara's protected berth**. After its actual living reception, Rowan and the delegates choose **Publish independent quiet windows** or **Establish a jointly witnessed migration relay**. The first route needs real human withdrawal and a separate Larvaal acknowledgement. The relay needs the full cycle limit and a real permission reply from each group. Rowan returns the original reference to Lailaven for **9,100 CR** and the voice-outside-the-channel clue.
+
+[The Listening Frontier gameplay walkthrough](missions/gameplay/C22-LISTENING-FRONTIER.md)
+
+![The Listening Frontier reciprocal quiet-window operation](assets/missions/revisions/listening-frontier-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1147,8 +1161,8 @@ flowchart TD
   C22_accept["Lailaven: Accept The Listening Frontier at Lailaven."]
   C22_collect_reference["Lailaven: Collect the identified one-tonne reference<br/>instrument from Captain Tamsin Holt."]
   C22_survey["Eriara: Observe three human/Larvaal boundary listeners<br/>independently without rebroadcasting a migration<br/>pulse."]
-  C22_field_work["Leimaeli: Calibrate the two quiet-window emitters<br/>against the onboard passive reference and run the12s<br/>cycle."]
-  C22_independent_witness["Saesiara: Verify actual safe transit and living<br/>reception of the neutral listening tender to its<br/>protected receiving berth."]
+  C22_field_work["Leimaeli: Calibrate both emitters, then verify three<br/>12-second cycles with separate human, Larvaal and<br/>quiet windows."]
+  C22_independent_witness["Saesiara: Verify the independently travelling tender<br/>and its actual living reception at the protected berth."]
   C22_choose_settlement{"Saesiara: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C22_return_and_audit["Lailaven: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C22_close_case["Lailaven: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1184,9 +1198,13 @@ flowchart TD
 
 ![The Magnetic Orchard - mission artwork](assets/missions/illustrations/magnetic-orchard.png)
 
-At **Laris, Galaxy 1**, Mara Vale lends Rowan the isolated field reference after a trade. Human tethers disturb a Larvaal structure growing living magnetic fronds. Rowan observes three boundaries at **Nevedor** from outside the protected contour, then flies the low-field approach at **Nesel** and releases both consented human tethers only in the measured safe window. The living organs remain intact. The neutral observation tender travels to **Erron's protected cradle**.
+At **Laris, Galaxy 1**, Mara Vale lends Rowan the original isolated field reference after a trade. Human tethers disturb a Larvaal structure growing living magnetic fronds. Rowan reads three boundaries at **Nevedor**, then flies the measured low-field approach at **Nesel**. Rowan releases only the two consented human tethers at **30 field units or below**, accounts for their mass and verifies the contour stays clear for **18 simulation seconds** with no living harvest.
 
-With the arrived delegates, Rowan chooses **Protect independent human and Larvaal growth boundaries** or **Establish a jointly observed growth reserve**. Separate envelopes require both custodians' replies; a shared reserve requires both consents and rejection of an out-of-bounds survey tether. The reference returns to Laris for **9,200 CR** and the root-without-a-stem clue.
+The neutral tender independently travels through the measured safe gap to **Erron's protected cradle**. After living reception, Rowan and the delegates choose **Protect independent human and Larvaal growth boundaries** or **Establish a jointly observed growth reserve**. Independent boundaries need both custodians' replies. A shared reserve needs both consents and actual rejection of an out-of-bounds tether. Rowan returns the original reference to Laris for **9,200 CR** and the root-without-a-stem clue.
+
+[The Magnetic Orchard gameplay walkthrough](missions/gameplay/C33-MAGNETIC-ORCHARD.md)
+
+![The Magnetic Orchard low-field tether operation](assets/missions/revisions/magnetic-orchard-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1197,8 +1215,8 @@ flowchart TD
   C33_accept["Laris: Accept The Magnetic Orchard at Laris."]
   C33_collect_reference["Laris: Collect the identified one-tonne reference<br/>instrument from Agent Mara Vale."]
   C33_survey["Nevedor: Observe three field boundaries from outside<br/>the marked30-unit exposure contour."]
-  C33_field_work["Nesel: Use the isolated field reference to release the<br/>two consented human tethers; keep the living fronds<br/>intact."]
-  C33_independent_witness["Erron: Verify actual safe transit and living reception<br/>of the neutral observation tender to the protected<br/>receiving cradle."]
+  C33_field_work["Nesel: Release both consented human tethers in the<br/>safe field and prove 18 seconds with no living harvest."]
+  C33_independent_witness["Erron: Verify the independent tender passed through<br/>the measured safe gap and was received alive."]
   C33_choose_settlement{"Erron: At the actual witness receiving station, choose<br/>the settlement with the arrived authorised operator<br/>delegates."}
   C33_return_and_audit["Laris: Return the reference instrument and confirm all<br/>physical receiving and settlement receipts."]
   C33_close_case["Laris: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1234,9 +1252,13 @@ flowchart TD
 
 ![The Shared Pulse - mission artwork](assets/missions/illustrations/shared-pulse.png)
 
-At **Elaith, Galaxy 3**, Vale lends Rowan the reference after a trade. A human beacon and a Larvaal maintenance organ keep answering each other faster, creating a feedback hazard. Rowan observes three points at **Siaseven** without amplifying their replies. At **Elasil**, both real handshake couplers are connected and their cutoffs set; three controlled cycles must retain their full quiet windows. The relay tender reaches **Varioria**.
+At **Elaith, Galaxy 3**, Vale lends Rowan the original repair reference. A human beacon and a Larvaal maintenance organ keep answering each other faster. Rowan observes three points at **Siaseven** without rebroadcasting, then connects both actual couplers at **Elasil** and sets their reply cutoffs. Each of **three 10-second test cycles** needs one real reply per side, no repeat and at least **four continuous seconds** of acknowledgement silence. Ordinary collision signals remain available.
 
-The choice with the arrived delegates is **Separate human and Larvaal acknowledgement windows** or **Adopt a shared bounded handshake**. Independent windows must enforce their limits without suppressing legitimate custody replies. The shared route needs both custodians' acknowledgements and a duplicate-reply rejection that keeps the feedback cutoff closed. Rowan returns the reference to Elaith for **8,600 CR** and the pulse-before-the-reply clue.
+The relay tender travels independently to **Varioria's protected berth**. After living reception, Rowan and the delegates choose **Separate human and Larvaal acknowledgement windows** or **Adopt a shared bounded handshake**. Separate windows preserve each reply budget and a genuine custody response. The shared route needs both custodians' acknowledgements and real rejection of a duplicate without reopening the feedback cutoff. Rowan returns the original reference to Elaith for **8,600 CR** and the pulse-before-the-reply clue.
+
+[The Shared Pulse gameplay walkthrough](missions/gameplay/C35-SHARED-PULSE.md)
+
+![The Shared Pulse bounded acknowledgement operation](assets/missions/revisions/shared-pulse-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1247,8 +1269,8 @@ flowchart TD
   C35_accept["Elaith: Accept The Shared Pulse at Elaith."]
   C35_collect_reference["Elaith: Collect the identified one-tonne reference<br/>instrument from Agent Mara Vale."]
   C35_survey["Siaseven: Observe three independent points without<br/>rebroadcasting their repeated acknowledgements."]
-  C35_field_work["Elasil: Connect the repair reference at two actual<br/>handshake couplers and arm the controlled three-cycle<br/>test."]
-  C35_independent_witness["Varioria: Verify actual safe transit and living<br/>reception of the neutral relay tender to the protected<br/>verification berth."]
+  C35_field_work["Elasil: Set both cutoffs and verify three 10-second<br/>cycles, one real reply per side and four seconds quiet."]
+  C35_independent_witness["Varioria: Verify living reception of the independently<br/>travelling neutral tender at the protected berth."]
   C35_choose_settlement{"Varioria: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C35_return_and_audit["Elaith: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C35_close_case["Elaith: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1288,9 +1310,13 @@ The Rubble Covenant, The Tithe of Worlds, A Fleet of Neighbours and Cold Reserve
 
 ![The Rubble Covenant - mission artwork](assets/missions/illustrations/rubble-covenant.png)
 
-At **Leiven, Galaxy 6**, Geologist **Jalen Orr** lends Rowan the reference after a trade. Rival insurers block a cooperative's attempt to reopen a debris corridor. Rowan measures three masses and velocity vectors at **Noaraena**, then attaches the two source-owned tug anchors at **Irasaori** to change the two identified clearance trajectories. The actual masses and momentum still have to balance, and the survey tender must reach **Loaliel** through the proven corridor.
+At **Leiven, Galaxy 6**, Geologist **Jalen Orr** lends Rowan the original calibration instrument after a trade. Rival insurers block a cooperative's attempt to reopen a debris corridor. Rowan measures three masses and velocity vectors at **Noaraena**, then attaches two source-owned tug anchors at **Irasaori** and tests the changing trajectories. The **5,000 kg** ledger must balance and the predicted and actual corridor clearance must stay at least **500 m** in the test.
 
-Rowan and the arrived delegates choose **Pool the clearance work under the cooperative** or **Bond individual salvage sections**. The cooperative ledger and tug release must preserve clearance; individual section boundaries must reject overlapping claims and permit a real safe pass. Rowan returns the reference to Leiven for **6,600 CR** and the hollow-mass clue.
+The survey tender travels independently. Its crew waits outside the corridor until clearance is proved, then makes the actual pass and reaches **Loaliel**. Rowan and the arrived delegates choose **Pool the clearance work under the cooperative** or **Bond individual salvage sections**. The cooperative ledger and a witnessed tug release must preserve clearance. Individually bonded boundaries must reject overlapping claims and permit a real safe pass. Rowan returns the original instrument to Leiven for **6,600 CR** and the hollow-mass clue.
+
+[The Rubble Covenant gameplay walkthrough](missions/gameplay/C14-RUBBLE-COVENANT.md)
+
+![The Rubble Covenant tug and trajectory operation](assets/missions/revisions/rubble-covenant-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1301,8 +1327,8 @@ flowchart TD
   C14_accept["Leiven: Accept The Rubble Covenant at Leiven."]
   C14_collect_reference["Leiven: Collect the identified one-tonne reference<br/>instrument from Geologist Jalen Orr."]
   C14_survey["Noaraena: Measure each of three actual debris masses<br/>and velocity vectors. A scan alone clears none of<br/>them."]
-  C14_field_work["Irasaori: Attach two source-owned tug anchors; use<br/>their bounded thrust to change the two identified<br/>clearance trajectories."]
-  C14_independent_witness["Loaliel: Verify actual safe transit and living<br/>reception of the survey tender through the proven<br/>clearance corridor."]
+  C14_field_work["Irasaori: Attach two source-owned anchors, change both<br/>trajectories, balance the mass and test 500 m clearance."]
+  C14_independent_witness["Loaliel: Verify the independent survey tender made the<br/>real cleared passage and its living crew was received."]
   C14_choose_settlement{"Loaliel: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C14_return_and_audit["Leiven: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C14_close_case["Leiven: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1334,7 +1360,7 @@ flowchart TD
 
 ### The Tithe of Worlds
 
-🔵 Planned
+🟡 Partial
 
 ![The Tithe of Worlds - mission artwork](assets/missions/illustrations/tithe-of-worlds.png)
 
@@ -1345,6 +1371,8 @@ Tithe was built to coordinate emergency supplies. It now treats its expansion as
 Rowan escorts the real Wayfarer convoy to **Arkarin's civilian reception berth**, restores local access to **Zordaik's three ore collars** and **Arkarin's three water points**, then reads the **three foundry links at Ravdek**. Back at Rakenor, the choice is **Bind Tithe to a verified voluntary charter** or **Sever the acquisition and replication network**.
 
 The same chosen settlement must be made physical at all three ore, water and foundry junctions. Rowan returns the original programmer to Rakenor, verifies those three controls and the actual Union delivery, then closes the final audit for **9,600 CR** and the unclaimed-reserve clue. The resource records and local reports keep the charter or severed-network outcome.
+
+The current main contains the commission and permanent-mark checks. Voss’s actual Rakenor desk is unissued, so the commission cannot yet be confirmed. [Tithe of Worlds gameplay walkthrough](missions/gameplay/C06-TITHE-OF-WORLDS.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -1406,9 +1434,13 @@ flowchart TD
 
 ![A Fleet of Neighbours - mission artwork](assets/missions/illustrations/fleet-of-neighbours.png)
 
-At **Morvasen, Galaxy 2**, Voss lends Rowan the reference after a trade. Three settlements offer protection ships after pirates close a relief corridor, but hulls, fuel, people and escort windows are finite. At **Vornetor**, Rowan verifies the three manifests and consented departure commitments. Both relays at **Talnevan** are repaired while the offered ships make their actual journeys. Rowan escorts the dispatch tender to **Arvek**.
+At **Morvasen, Galaxy 2**, Voss lends Rowan the original dispatch beacon after a trade. Three settlements offer protection after pirates close a relief corridor. Rowan verifies three actual hull manifests, living crews and fuel commitments at **Vornetor**, repairs both relays at **Talnevan** and records which ships actually complete their routes. Rowan then escorts the same civilian dispatch tender to **Arvek's relief berth**.
 
-With the arrived delegates, the choice is **Rotate arrived protection ships across settlements** or **Retain local reserve pairs with mutual callouts**. The rota can use only arrived living hulls within its duty bound. The reserve route must retain a real local ship while the callout makes its actual departure, transit and receiving. Rowan returns the reference to Morvasen for **9,400 CR** and the formation-with-no-centre clue.
+After living reception, Rowan and the delegates choose **Rotate arrived protection ships across settlements** or **Retain local reserve pairs with mutual callouts**. The rota uses only eligible arrived hulls and ends each duty within **120 simulation seconds**. The reserve route keeps its local ships while one distinct responder makes an actual finite-fuel callout. Rowan returns the original beacon to Morvasen for **9,400 CR** and the formation-with-no-centre clue.
+
+[A Fleet of Neighbours gameplay walkthrough](missions/gameplay/C26-FLEET-OF-NEIGHBOURS.md)
+
+![A Fleet of Neighbours finite dispatch operation](assets/missions/revisions/fleet-of-neighbours-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1419,8 +1451,8 @@ flowchart TD
   C26_accept["Morvasen: Accept A Fleet of Neighbours at Morvasen."]
   C26_collect_reference["Morvasen: Collect the identified one-tonne reference<br/>instrument from Marshal Nera Voss."]
   C26_survey["Vornetor: Verify three actual offered hull manifests,<br/>crew consent, fuel and departure commitments."]
-  C26_field_work["Talnevan: Repair the two relief-lane relays and<br/>observe the actual offered ships completing their<br/>routes."]
-  C26_independent_witness["Arvek: Escort the registered civilian dispatch tender<br/>to relief reception."]
+  C26_field_work["Talnevan: Repair both actual relays and verify the<br/>offered ships' real route outcomes."]
+  C26_independent_witness["Arvek: Accompany the same civilian dispatch tender<br/>on its real route and verify living relief reception."]
   C26_choose_settlement{"Arvek: At the actual witness receiving station, choose<br/>the settlement with the arrived authorised operator<br/>delegates."}
   C26_return_and_audit["Morvasen: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C26_close_case["Morvasen: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1456,9 +1488,13 @@ flowchart TD
 
 ![Cold Reserve - mission artwork](assets/missions/illustrations/cold-reserve.png)
 
-At **Fanerin, Galaxy 8**, Voss lends Rowan the reference after a trade. A former defence reserve still obeys expired cargo orders. Rowan accounts for all **twelve finite stock units** at **Allaeth**, then isolates both **Illaven** dispatch couplers and challenges them with their obsolete orders. Neither should launch cargo. The inspection tender reaches **Saleir**.
+At **Fanerin, Galaxy 8**, Voss lends Rowan the original dispatch reference. A former defence reserve still obeys expired cargo orders. Rowan reconciles **12 actual stock units** at **Allaeth**, isolates both **Illaven** couplers and submits two obsolete test orders. Neither may launch any stock.
 
-Rowan and the arrived delegates choose **Convert the finite reserve to civilian emergency use** or **Dismantle and reclaim the reserve**. Civilian use must obey its signed quota and end in actual receiving. Dismantling must keep both couplers isolated and send all reclaimed material to a real store. The original reference returns to Fanerin for **8,800 CR** and the unused-order clue.
+The inspection tender travels independently to **Saleir's safe reserve berth**. Actual living receiving and inspection of the isolated path let Rowan and the delegates choose **Convert the finite reserve to civilian emergency use** or **Dismantle and reclaim the reserve**. Conversion needs a signed cap and actual physical stock receiving. Dismantling keeps both couplers isolated and sends accounted material to a real store. Rowan returns the original instrument to Fanerin for **8,800 CR** and the unused-order clue.
+
+[Cold Reserve gameplay walkthrough](missions/gameplay/C32-COLD-RESERVE.md)
+
+![Cold Reserve obsolete dispatch and finite stock operation](assets/missions/revisions/cold-reserve-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1469,8 +1505,8 @@ flowchart TD
   C32_accept["Fanerin: Accept Cold Reserve at Fanerin."]
   C32_collect_reference["Fanerin: Collect the identified one-tonne reference<br/>instrument from Marshal Nera Voss."]
   C32_survey["Allaeth: Observe three real reserve store ledgers and<br/>account for all12 finite stock units."]
-  C32_field_work["Illaven: Isolate the two external dispatch couplers<br/>and submit both obsolete test orders."]
-  C32_independent_witness["Saleir: Verify actual safe transit and living<br/>reception of the independent inspection tender to the<br/>safe reserve berth."]
+  C32_field_work["Illaven: Isolate both real couplers. Submit both<br/>obsolete orders and verify zero dispatch."]
+  C32_independent_witness["Saleir: Verify independent living reception and<br/>actual inspection of the isolated dispatch path."]
   C32_choose_settlement{"Saleir: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C32_return_and_audit["Fanerin: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C32_close_case["Fanerin: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1510,9 +1546,13 @@ Signed Passage, Wayfarer Exchange, Uncounted Names and The Long Return form a re
 
 ![Signed Passage - mission artwork](assets/missions/illustrations/courier.png)
 
-At **Neron, Galaxy 1**, Dispatcher **Evi Senn** lends Rowan the reference after a trade. No calibration shipment is missing, yet the signatures claim delivery before a receiving cradle is assigned. Rowan watches three actual cradles at **Lalen** and compares allocation and signing times. At **Illalis**, the same identified source-owned test crate passes through two prepared physical handoffs in order. The receiving witness travels to **Aetaria's archive berth**.
+At **Neron, Galaxy 1**, Dispatcher **Evi Senn** lends Rowan the reference after a trade. No calibration shipment is missing, yet the signatures claim delivery before a receiving cradle is assigned. Rowan watches three actual cradles at **Lalen** and compares allocation and signing times. At **Illalis**, the same identified source-owned test crate passes through two prepared physical handoffs in order. The receiving witness travels independently to **Aetaria's archive berth**, where the same living witness and actual custody chain must be received.
 
-With the arrived delegates, Rowan chooses **Use independently signed receiving locks** or **Create a shared bounded custody register**. Sender/receiver locks must bind the same consignment and reject an early receipt. The common register must reject a duplicate claim while retaining each actual receiving proof. The reference returns to Neron for **4,300 CR** and the empty-destination clue. This is a separate story from ordinary repeated courier jobs.
+With the arrived delegates, Rowan chooses **Use independently signed receiving locks** or **Create a shared bounded custody register**. Sender/receiver locks must bind the same consignment and reject an early receipt. The common register must reject a duplicate claim while retaining each actual receiving proof. The reference returns to Neron for **4,300 CR** and the empty-destination clue. Signed Passage is a separate story from ordinary repeated courier jobs.
+
+Main contains commissioning and stage-zero history. Senn's original separate reference loan and the physical crate transfers still require source providers. [Signed Passage gameplay walkthrough](missions/gameplay/C38-COURIER.md)
+
+![Signed Passage one-crate custody operation](assets/missions/revisions/courier-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1523,7 +1563,7 @@ flowchart TD
   C38_accept["Neron: Accept Signed Passage at Neron."]
   C38_collect_reference["Neron: Collect the identified one-tonne reference<br/>instrument from Dispatcher Evi Senn."]
   C38_survey["Lalen: Observe three actual receiving cradles and<br/>compare allocation time with receipt-signing time."]
-  C38_field_work["Illalis: Move the same identified source-owned test<br/>crate through two actual cradle transfers under the<br/>onboard reference."]
+  C38_field_work["Illalis: Move the same source-owned crate through<br/>two actual atomic transfers. Preserve one custodian."]
   C38_independent_witness["Aetaria: Verify actual safe transit and living<br/>reception of the independent receiving witness to the<br/>archive berth."]
   C38_choose_settlement{"Aetaria: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C38_return_and_audit["Neron: Return the reference instrument and confirm all<br/>physical receiving and settlement receipts."]
@@ -1560,11 +1600,13 @@ flowchart TD
 
 ![Wayfarer Exchange - mission artwork](assets/missions/illustrations/wayfarer-exchange.png)
 
-At **Avenor, Galaxy 1**, the openly advertised Union induction becomes available after an ordinary delivery or sale. Rowan needs **one tonne** for the serial loans. A clinic cold crate is collected at **Renas** and delivered intact to **Navidor**. Enmadan's failed workshop cassette goes through the **Renas repair desk**. With the seed custodians' consent and vault key from **Enlirin**, Rowan escorts the registered seed ark to **Lareria** and returns that key.
+At **Avenor, Galaxy 1**, the openly advertised Union induction becomes available after an ordinary delivery or sale. Rowan needs **one tonne** for the serial loans. A clinic cold crate is collected at **Renas** and must reach **Navidor** intact before its 30 minutes of armed flight expire. Enmadan's failed workshop cassette goes through the **Renas repair desk**. With the seed custodians' consent and vault key from **Enlirin**, Rowan escorts the registered seed ark to **Lareria** and returns that key.
 
 At **Cevilis**, Rowan recovers the original crew custody recorder beside the disabled service tender. The actual rescue launch and its survivors reach **Enmadan**, where the recorder is returned too. **Three external service handoffs at Enron** then make the final utility route viable.
 
-Back at Avenor, Rowan chooses **Pool unused route windows with a published local minimum** or **Protect local reservations and share only released capacity**. Three real operators sign that chosen charter. Veil audits all induction receiving and the working utility route before accreditation, **7,600 CR** and the unbooked-window clue are recorded. Advanced variants on the six-service board become available.
+Back at Avenor, Rowan chooses **Pool unused route windows with a published local minimum** or **Protect local reservations and share only released capacity**. Three real operators sign that chosen charter at their own stations. Rowan returns to Avenor to audit the actual protected or shared windows. Veil audits all induction receiving and the working utility route before accreditation, **7,600 CR** and the unbooked-window clue are recorded. Advanced variants on the six-service board become available.
+
+The native induction and accreditation source is present. A complete ordinary career through all fourteen stages and both charter outcomes remains open. [Wayfarer Exchange gameplay walkthrough](missions/gameplay/C08-WAYFARER-EXCHANGE.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -1622,7 +1664,7 @@ flowchart TD
 
 ![Cold-chain clinic service - mission artwork](assets/missions/services/cold-chain-deliver.png)
 
-Rowan carries the actual **one-tonne sealed medical sample** from its registered source to the qualifying clinic receiver. The quoted integrity budget and any explicit simulation deadline remain real throughout pause, Save and Continue. A failed sample stays lost or spoiled; a later job needs a new unique consignment from genuine stock.
+Rowan collects one of six original **one-tonne sealed samples** at **Cedamar**. Pickup starts 45 minutes of flight integrity. Rowan docks at **Celalen**, confirms arrival, then separately confirms the clinic handoff for **405 CR**. A lost or spoiled sample stays recorded and leaves only the genuinely unissued stock. [Cold-chain gameplay walkthrough](missions/gameplay/W01-COLD-CHAIN.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -1632,7 +1674,7 @@ flowchart TD
   %% mission W01 | l337.wayfarer-service/cold-chain
   W01_collect["Confirm the registered source custody."]
   W01_deliver["Carry a sealed medical sample with an advertised<br/>integrity budget."]
-  W01_receive["Commit the exact qualifying receiver and payment<br/>receipt."]
+  W01_receive["At Celalen confirm arrival, then confirm clinic<br/>reception for 405 CR."]
   W01_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   W01_receive --> W01_complete
   W01_deliver --> W01_receive
@@ -1656,7 +1698,7 @@ flowchart TD
 
 ![Closed repair exchange - mission artwork](assets/missions/services/repair-loop-service.png)
 
-With **two tonnes** reserved, Rowan takes the identified failed unit to its workshop, then brings the serviced unit to its registered owner. The outward delivery is only half the promise. The returned original/service result and real owner receiving close the loop.
+Rowan takes one of six failed scoop-control units from its **Cedamar** owner, using **two tonnes** of hold. The actual **Celalen** workshop repairs that serial. Rowan carries it back to the same Cedamar owner and confirms the return for **610 CR**. The repair and payment are separate operations. [Repair exchange gameplay walkthrough](missions/gameplay/W02-REPAIR-LOOP.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -1666,7 +1708,7 @@ flowchart TD
   %% mission W02 | l337.wayfarer-service/repair-loop
   W02_collect["Confirm the registered source custody."]
   W02_service["Carry an identified failed unit to its workshop and<br/>return the serviced unit to its registered owner."]
-  W02_receive["Commit the exact qualifying receiver and payment<br/>receipt."]
+  W02_receive["Return the exact serviced serial to the actual<br/>Cedamar owner for 610 CR."]
   W02_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   W02_receive --> W02_complete
   W02_service --> W02_receive
@@ -1690,7 +1732,7 @@ flowchart TD
 
 ![Seed-bank transfer - mission artwork](assets/missions/services/seed-transfer-deliver.png)
 
-Rowan reserves **three tonnes** and moves a consented seed consignment between independent custodians. The condition and custody history travel with the actual consignment. A protected reference culture or another bank's stock cannot be substituted for the seeds entrusted to Rowan.
+**Custodian Lysa Verin** releases one of six sealed **three-tonne** lots at **Celalen**. Rowan carries that exact viable lot to **Cedamar** within 45 minutes of native flight time, confirms arrival and then hands it to **Custodian Oren Hale** for **605 CR**. The two custodian records travel with the lot. [Seed-bank gameplay walkthrough](missions/gameplay/W03-SEED-TRANSFER.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -1700,7 +1742,7 @@ flowchart TD
   %% mission W03 | l337.wayfarer-service/seed-transfer
   W03_collect["Confirm the registered source custody."]
   W03_deliver["Transfer a consented seed consignment between<br/>independent custodians."]
-  W03_receive["Commit the exact qualifying receiver and payment<br/>receipt."]
+  W03_receive["Confirm arrival, then hand the original lot to<br/>Oren Hale at Cedamar for 605 CR."]
   W03_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   W03_receive --> W03_complete
   W03_deliver --> W03_receive
@@ -1724,7 +1766,9 @@ flowchart TD
 
 ![Remote utility relief - mission artwork](assets/missions/services/field-relief-install.png)
 
-Rowan carries **four tonnes** of real repair material to the named remote utility crew. The crew's actual receiving and resulting service handoff complete the work. The goods leave Rowan's custody when they enter the receiver's; they cannot still be sold from the hold.
+Rowan collects **four original tonnes** at Avenor and flies the quoted route to **Dhole Haven**, Mamanar's remote utility. The actual installation consumes the materials and adds working recharge to the station. Its resident engineer then inspects that regulator and confirms the separate payment. [Remote utility gameplay walkthrough](missions/gameplay/W04-FIELD-RELIEF.md)
+
+![Dhole Haven station reference](assets/ships/SH102.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1734,7 +1778,7 @@ flowchart TD
   %% mission W04 | l337.wayfarer-service/field-relief
   W04_collect["Confirm the registered source custody."]
   W04_install["Deliver actual repair materials to a remote utility<br/>receiving crew and verify their service handoff."]
-  W04_receive["Commit the exact qualifying receiver and payment<br/>receipt."]
+  W04_receive["The current Dhole Haven engineer inspects the<br/>original installation and pays the frozen fee."]
   W04_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   W04_receive --> W04_complete
   W04_install --> W04_receive
@@ -1758,7 +1802,9 @@ flowchart TD
 
 ![Crew record recovery - mission artwork](assets/missions/services/record-recovery-recover.png)
 
-The job identifies one physical flight/custody recorder in a wreck cradle. With **one tonne** free, Rowan locates it, recovers that same original and returns it to the qualifying receiver. Its recorded crew history is evidence. The recorder and surrounding wreckage cannot be counted as living survivors.
+Senn at **Cedamar** issues one permit for **CDR-001**, a finite, archive-owned flight and custody recorder in the exterior wreck cradle at **Celalen**. With **one tonne** free and the fitted targeting and scoop equipment, Rowan identifies it while it remains in the cradle, then makes a separate physical scoop pass. The same collecting ship returns that original to Senn at Cedamar for **650 CR** and the first-success trace. The recorded crew history is evidence. Losing the recorder ends this attempt, and the independent archive inquiry can still recover the missing trace.
+
+[Complete W05 gameplay specification](missions/gameplay/W05-RECORD-RECOVERY.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -1766,18 +1812,15 @@ The job identifies one physical flight/custody recorder in a wreck cradle. With 
 ```mermaid
 flowchart TD
   %% mission W05 | l337.wayfarer-service/record-recovery
-  W05_locate["Locate and identify the unique physical recorder;<br/>leave it in the wreck cradle until recovery."]
-  W05_recover["Recover a specific flight/custody recorder without<br/>treating cargo wreckage as a living survivor."]
-  W05_receive["Commit the exact qualifying receiver and payment<br/>receipt."]
-  W05_complete(["This source's first-success clue; retain it on later<br/>jobs"])
+  W05_locate["Identify CDR-001 in the Celalen cradle;<br/>the recorder stays in place."]
+  W05_recover["Fly a separate safe scoop pass;<br/>hold the same protected one-tonne original."]
+  W05_receive["Return in the same ship to Senn at Cedamar;<br/>receive 650 CR and the first-success trace."]
+  W05_complete(["Record the first-success archive trace"])
   W05_receive --> W05_complete
   W05_recover --> W05_receive
   W05_locate --> W05_recover
   W05_failed["Actual loss or failed work: consequences remain; no<br/>fee or clue"]
   W05_recover -.-> |"If the original instance fails"| W05_failed
-  W05_new_offer["Retry only through a new original offer with actual<br/>available stock or actors"]
-  W05_failed -.-> |"If a qualifying new job is available"| W05_new_offer
-  W05_new_offer -.-> W05_locate
   W05_continuity_inquiry["Complete this source's independent no-cost continuity<br/>inquiry"]
   W05_continuity_trace(["Missing source clue only; original outcome and rewards<br/>unchanged"])
   W05_failed -.-> |"If this original source clue is unavailable"| W05_continuity_inquiry
@@ -1792,9 +1835,11 @@ flowchart TD
 
 ![Registered convoy watch - mission artwork](assets/missions/services/convoy-watch-escort.png)
 
-Rowan registers the exact convoy, escorts its journey and obtains the receiver's real cargo and arrival record. The convoy carries its own people and cargo in properly crewed craft. Rowan needs no invented passenger allocation aboard the escort ship. A same-class replacement or a destroyed consignment cannot fulfil the original promised arrival.
+In the proposed first watch, Senn asks Rowan to escort two registered Peregrines from **Avenor** to **Navidor**. One pilot and two sealed tonnes travel aboard each carrier. Rowan watches both tracks, rejoins a separated carrier by flying back into formation and answers actual threats. The watch is complete when both living ships dock and Navidor records their four original tonnes. The proposed one-leg fee is **820 CR**.
 
-Each service family's first genuine success supplies its own clue, separate from the induction clue. Subsequent jobs carry their own displayed route, hazard and fee. Failure earns no payment or clue, and a retry preserves the old loss while reserving real new stock.
+Each service family's first genuine success supplies its own clue, separate from the induction clue. A loss keeps its recorded consequences, and any later watch needs new available carriers and cargo. The free charter inquiry still supplies a missing trace.
+
+[Complete W06 gameplay specification and proposed first route](missions/gameplay/W06-CONVOY-WATCH.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -1802,9 +1847,9 @@ Each service family's first genuine success supplies its own clue, separate from
 ```mermaid
 flowchart TD
   %% mission W06 | l337.wayfarer-service/convoy-watch
-  W06_register["Confirm the registered source custody."]
-  W06_escort["Escort the exact registered convoy and require the<br/>receiver's real cargo and arrival record."]
-  W06_receive["Commit the exact qualifying receiver and payment<br/>receipt."]
+  W06_register["Register both actual pilots, carriers and cargo<br/>with Senn at Avenor."]
+  W06_escort["Escort both carriers and physically rejoin as needed;<br/>verify two live arrivals and all four tonnes."]
+  W06_receive["Confirm the watch report at Navidor;<br/>settle the frozen fee once."]
   W06_complete(["This source's first-success clue; retain it on later<br/>jobs"])
   W06_receive --> W06_complete
   W06_escort --> W06_receive
@@ -1828,9 +1873,13 @@ flowchart TD
 
 ![Uncounted Names - mission artwork](assets/missions/illustrations/uncounted-names.png)
 
-At **Oranisil, Galaxy 3**, Sera Dain lends Rowan the reference after a trade. Equipment-only forms have caused displaced workers to be recorded as transferable property. At **Lyraven**, three people give their separate permissions and Rowan reads only the consented identities. Both receiver permissions at **Sialasil** are corrected and tested against unauthorised access. The workers' consenting tender reaches **Aenisil**.
+At **Oranisil, Galaxy 3**, Sera Dain lends Rowan the original consent verifier after a trade. Equipment forms have caused three displaced workers to be recorded as transferable property. At **Lyraven**, Rowan obtains each person's separate permission. At **Sialasil**, Rowan corrects both physical receiver interfaces, proves actual access and denial, and keeps private names out of public records.
 
-With the arrived delegates, Rowan chooses **Repair individual records under protected custody** or **Publish a systematic register repair**. Private corrections need each person's acknowledgement and receiver validation. The public audit must be anonymised and reject equipment-only transfers for every registered person. Rowan returns the reference to Oranisil for **6,500 CR** and the unnamed-entry clue.
+The workers' tender travels independently to the chosen safe berth at **Aenisil**. Actual living reception lets Rowan and the delegates choose **Repair individual records under protected custody** or **Publish a systematic register repair**. Private correction needs each person's acknowledgement and receiver validation. The public audit must be anonymised and the corrected form must refuse equipment-only transfers for every registered person. Rowan returns the original verifier to Oranisil for **6,500 CR** and the unnamed-entry clue.
+
+[Uncounted Names gameplay walkthrough](missions/gameplay/C27-UNCOUNTED-NAMES.md)
+
+![Uncounted Names private consent and receiving-permission operation](assets/missions/revisions/uncounted-names-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1841,8 +1890,8 @@ flowchart TD
   C27_accept["Oranisil: Accept Uncounted Names at Oranisil."]
   C27_collect_reference["Oranisil: Collect the identified one-tonne reference<br/>instrument from Coordinator Sera Dain."]
   C27_survey["Lyraven: Read three consented native identity<br/>receipts, redacting private names in public views."]
-  C27_field_work["Sialasil: Apply two actual receiver permission<br/>corrections with the onboard reference as independent<br/>witness."]
-  C27_independent_witness["Aenisil: Verify actual safe transit and living<br/>reception of the consenting worker tender to its<br/>chosen safe receiving berth."]
+  C27_field_work["Sialasil: Correct both actual receiver permissions.<br/>Verify allowed access and denial without exporting<br/>private identities."]
+  C27_independent_witness["Aenisil: Verify the independently travelling workers<br/>are actually received at their chosen safe berth."]
   C27_choose_settlement{"Aenisil: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C27_return_and_audit["Oranisil: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C27_close_case["Oranisil: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1878,9 +1927,13 @@ flowchart TD
 
 ![The Long Return - mission artwork](assets/missions/illustrations/long-return.png)
 
-At **Zankakor, Galaxy 2**, Dain lends Rowan the reference after a trade. Three carriers each hold part of the history of a missed rendezvous. Rowan reads their actual consenting records at **Darvan** and performs two neutral handoff tests at **Halridor**, preserving custody and continuing consent. The named reunion tender then needs an escort to **Elaris's agreed berth**.
+At **Zankakor, Galaxy 2**, Dain lends Rowan the original receiver instrument after a trade. Three carriers each hold part of the record of a missed rendezvous. Rowan reads their consented records at **Darvan**, then flies between all three carriers at **Halridor** for two neutral handoff tests. Each receiver confirms capacity before the transfer, and custody changes as one transaction. No passengers take part in the rehearsal.
 
-With the arrived delegates, Rowan chooses **Use a witnessed shared return handoff** or **Give the reunion tender a direct return corridor**. Shared signatures must bind the same consenting group and real berth. The direct grant must name the actual tender, and the home berth must acknowledge that same living group. The reference returns to Zankakor for **7,800 CR** and the passenger-never-booked clue. The group retains its right to decide where to go.
+Rowan escorts the named reunion tender and the consenting group to **Elaris's agreed berth**. The arrived delegates choose **Use a witnessed shared return handoff** or **Give the reunion tender a direct return corridor**. Shared signatures must bind the same group and real receiver. The direct grant must name the actual tender, and the home berth must receive that same living group under the grant. Rowan returns the original instrument to Zankakor for **7,800 CR** and the passenger-never-booked clue. The group retains its right to decide where to go.
+
+[The Long Return gameplay walkthrough](missions/gameplay/C18-LONG-RETURN.md)
+
+![The Long Return two-transfer custody operation](assets/missions/revisions/long-return-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1891,8 +1944,8 @@ flowchart TD
   C18_accept["Zankakor: Accept The Long Return at Zankakor."]
   C18_collect_reference["Zankakor: Collect the identified one-tonne reference<br/>instrument from Coordinator Sera Dain."]
   C18_survey["Darvan: Read each consenting carrier rendezvous record<br/>and its actual named-party custody."]
-  C18_field_work["Halridor: Run two neutral receiver handoff tests with<br/>the original onboard witness instrument."]
-  C18_independent_witness["Elaris: Escort the named reunion tender to its<br/>consented receiving berth."]
+  C18_field_work["Halridor: Fly between three carriers and perform two<br/>atomic neutral handoffs using the original instrument."]
+  C18_independent_witness["Elaris: Accompany the named tender on a common route<br/>and verify actual living reception."]
   C18_choose_settlement{"Elaris: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C18_return_and_audit["Zankakor: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C18_close_case["Zankakor: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1932,9 +1985,13 @@ The emergencies in this anthology grow from a stranded tender to the danger faci
 
 ![Under Tow - mission artwork](assets/missions/illustrations/under-tow.png)
 
-At **Luera, Galaxy 8**, an ordinary trade brings Rowan within the terms of Tug Lead **Mira Penn's** offer. The emergency network has standardised its forms without standardising the physical couplings. A stranded work tender cannot accept the tug sent to help it. Rowan collects Penn's one-tonne service reference and measures three collar geometries and their independent load limits at **Allion**.
+At **Luera, Galaxy 8**, Tug Lead **Mira Penn** lends Rowan the original service reference after a trade. The rescue network standardized its forms, but its first tug cannot fit a stranded work tender. Rowan measures three real collars and signed load limits at **Allion**. At **Ealaera** Rowan matches the **2 m** and **3 m** coupler pairs on an empty rig. Each pair holds **50 load units for 15 simulation seconds**. The rig rejects a **61-unit** command against its **60-unit** ceiling.
 
-At **Ealaera**, Rowan directs the real source-owned couplers into two low-load mechanical tests. Compatible collars must actually engage, hold the measured test load and release/refuse an excessive command. The rescued tender then needs an escorted journey to a genuinely compatible berth at **Rivain**. There, the arrived delegates choose with Rowan between **Accredit interoperable local rescue pairs** and **Establish a shared specialist rescue tender**. The first requires both local pairs' separate tests and real reception; the second requires a specialist that can take the actual tender and a receiver that accepts its load envelope. The same reference returns to Luera before **8,300 CR** and the coupling-without-a-vessel clue are settled.
+Rowan escorts the same occupied tender through an authorized rescue movement to **Rivain's compatible berth**. After actual living reception, Rowan and the delegates choose **Accredit interoperable local rescue pairs** or **Establish a shared specialist rescue tender**. The local route requires both tested pairs and actual reception. The specialist must accept the original interface and secure the station's acknowledgement of the load envelope. Rowan returns the original reference to Luera for **8,300 CR** and the coupling-without-a-vessel clue.
+
+Main currently supports the commission and original loan pickup. The Allion survey still needs its actual collar sources. [Under Tow gameplay walkthrough](missions/gameplay/C24-UNDER-TOW.md)
+
+![Under Tow mechanical coupler and load operation](assets/missions/revisions/under-tow-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -1945,8 +2002,8 @@ flowchart TD
   C24_accept["Luera: Accept Under Tow at Luera."]
   C24_collect_reference["Luera: Collect the identified one-tonne reference<br/>instrument from Tug Lead Mira Penn."]
   C24_survey["Allion: Measure three actual collar geometries and<br/>their signed independent load limits."]
-  C24_field_work["Ealaera: Run two low-load mechanical tests through the<br/>source-owned test rig using the original service<br/>reference."]
-  C24_independent_witness["Rivain: Escort the identified rescued work tender to<br/>an actually compatible berth."]
+  C24_field_work["Ealaera: Test both matching coupler pairs on the empty<br/>rig. Hold 50 load for 15 seconds and reject 61."]
+  C24_independent_witness["Rivain: Escort the same occupied tender and verify<br/>actual reception at its compatible berth."]
   C24_choose_settlement{"Rivain: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C24_return_and_audit["Luera: Return the reference instrument and confirm all<br/>physical receiving and settlement receipts."]
   C24_close_case["Luera: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -1986,7 +2043,9 @@ After an ordinary trade, Rowan answers the utility survey notice at **Valrator, 
 
 The next journey brings the identified technicians' tender through Karrakor's safe corridor to real reception. Three feedline observations at **Mortor** expose an obsolete commissioning order: reclamation machines keep restoring conductive dust bridges because they still obey that order. Rowan positions three insulated baffles at Karrakor, then returns to the operators at Valrator to choose **Commission a bounded community energy buffer** or **Recover the stored energy and dismantle the collectors**.
 
-The selected future must be made physical. Rowan revokes the old authority, applies the collector settlement at Karrakor and accounts for all stored charge at Mortor. The original programmer returns to Valrator for the final energy-balance audit. **8,400 CR**, the recorded utility settlement and the resting-arc clue close the survey.
+The selected future must be made physical. Rowan revokes the old authority, applies the collector settlement at Karrakor and accounts for all 900 units at Mortor. The community branch delivers 300 and retains 600 in the tested buffer. The recovery branch empties the reservoir into verified recovery and controlled discharge. The original programmer returns to Valrator for the final energy-balance audit. **8,400 CR**, the recorded utility settlement and the resting-arc clue close the survey.
+
+The original opening has reviewed source outside current main. The lattice, rescue and both settlements still need their real field and receiving producers. [Still Current gameplay walkthrough](missions/gameplay/C07-STILL-CURRENT.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -2042,9 +2101,13 @@ flowchart TD
 
 ![Small Lights - mission artwork](assets/missions/illustrations/small-lights.png)
 
-At **Duniler, Galaxy 5**, Dispatcher **Evi Senn** lends Rowan a reference after an ordinary trade. Several utility failures are each too small for an insurer's dispatch threshold, yet together they have isolated a neighbourhood. Three readings at **Delenir** reveal their shared dependency. At **Siluel**, Rowan isolates the fault and fits **two real repair kits**, one to each failed external module. **Two other kits remain separate physical reserve stock**; the repairs cannot consume those as well.
+At **Duniler, Galaxy 5**, Dispatcher **Evi Senn** lends Rowan the original utility lantern after a trade. Three small failures have isolated an orbital neighbourhood. At **Delenir**, Rowan reads their shared dependency. At **Siluel**, Rowan isolates it, fits one registered repair kit to each failed module and verifies that service returns under real load. The two other registered kits remain in reserve stock.
 
-The consenting maintenance tender reaches the neighbourhood berth at **Ashilun**, where Rowan and the arrived delegates choose **Pool local callouts across utilities** or **Keep independently funded service reserves**. A pooled callout has to reach its receiver within the explicitly armed test's deadline. The reserve route has to demonstrate both funded kits actually present before the receiving drill. Rowan returns the reference to Duniler for **6,400 CR** and the light-before-the-fault clue. The neighbourhood's response comes from its real working links and stock.
+The maintenance tender travels independently to **Ashilun's neighbourhood berth**. After actual living reception, Rowan and the delegates choose **Pool local callouts across utilities** or **Keep independently funded service reserves**. A pooled callout must reach its actual receiver within **30 simulation seconds** of explicit arming. The independent route must show both funded kits physically in stock before the receiving drill. Rowan returns the original lantern to Duniler for **6,400 CR** and the light-before-the-fault clue.
+
+[Small Lights gameplay walkthrough](missions/gameplay/C29-SMALL-LIGHTS.md)
+
+![Small Lights dependency and four-kit operation](assets/missions/revisions/small-lights-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2055,8 +2118,8 @@ flowchart TD
   C29_accept["Duniler: Accept Small Lights at Duniler."]
   C29_collect_reference["Duniler: Collect the identified one-tonne reference<br/>instrument from Dispatcher Evi Senn."]
   C29_survey["Delenir: Read three actual utility faults and their<br/>shared physical dependency graph."]
-  C29_field_work["Siluel: Use one source-owned repair kit on each of the<br/>two external failed modules; verify the upstream<br/>dependency."]
-  C29_independent_witness["Ashilun: Verify actual safe transit and living<br/>reception of the consenting maintenance tender to the<br/>neighbourhood berth."]
+  C29_field_work["Siluel: Isolate the actual dependency, fit two repair kits<br/>and verify load. Keep the two reserve kits separate."]
+  C29_independent_witness["Ashilun: Verify the independently travelling tender<br/>and living reception at the neighbourhood berth."]
   C29_choose_settlement{"Ashilun: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C29_return_and_audit["Duniler: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C29_close_case["Duniler: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2094,11 +2157,13 @@ flowchart TD
 
 Controller **Edda Rell at Loalaila, Galaxy 6** offers Rowan the emergency commission after three system visits. An abandoned orbital mass driver above **Aermiori** has restarted. Its spoil stream crosses a fractured moonlet, sending large bodies and dense gravel towards **Spindle Anchorage**. Rowan scans three outer watchers, compares the approaching impact bands and docks at the Anchorage to collect its **one-tonne impulse coupler**.
 
-Rowan shuts down the mass driver and records the fracture boundary. Through the emergency radio, the defence choice is **Deflect the heavy bodies with tug anchors** or **Catch the gravel with a fragment screen**. The chosen three-node arrangement must be physically installed before Rowan explicitly confirms readiness and arms the passage. Neighbouring systems can be visited with a verified warning to recruit their actually available tugs, patrols and evacuation craft. These helpers bring finite ships, people and fuel.
+Rowan shuts down the mass driver and records the fracture boundary. Through the emergency radio, the defence choice is **Deflect the heavy bodies with tug anchors** or **Catch the gravel with a fragment screen**. The chosen three-node arrangement must be physically installed before Rowan explicitly confirms readiness and starts the 15-minute passage. Docking or leaving the system does not stop the simulation clock. Neighbouring systems can be visited with a verified warning to recruit their actually available tugs, patrols and evacuation craft. These helpers bring finite ships, people and fuel.
 
 During the passage, Rowan redirects the marked threats and keeps the evacuation corridor open. The Anchorage's shields can be exhausted by successive impacts; its survival is an outcome of the actual defence. Afterwards, Rowan escorts the registered relief tender and its recovered survivors and incident records to **Shelter Dock**, then carries the relief manifest and event record to **Loalaila**. Jalen Orr's inquiry compares the saved trajectories, shutdown and defence telemetry.
 
 The completed relief and inquiry earns **1,800 CR**. A surviving Anchorage adds **6,000 CR**; a lost station with every registered evacuee safely received adds **3,000 CR** instead. Other station-loss outcomes have no bonus. The curve-before-the-fall clue follows the qualifying relief and inquiry. The history retains destroyed homes, casualties, rescued people and the actual chosen defence.
+
+The emergency commission is frozen for integration. The original station, response and physical passage work remain open on current main. [Shattered Wake gameplay walkthrough](missions/gameplay/C05-SHATTERED-WAKE.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -2176,7 +2241,11 @@ The Quiet Nursery, The Measure of Care, The Blue Reservoir and A Garden in Trans
 
 At **Maran, Galaxy 1**, Physicist **Anja Kest** lends Rowan the reference after a trade. Nursery roots are failing under reports that show perfect average conditions. At **Naviven**, Rowan records the actual pressure waveforms and their minima; brief harmful pulses have been averaged away. At **Larinar**, the sealed onboard culture reference is compared at both cradles, then Rowan selects and latches the two pulse dampers and watches the live three-cycle pressure test.
 
-The horticulture tender's journey ends at **Lelaven's test berth**. With the arrived delegates, Rowan chooses **Give each nursery cell an independent air regulator** or **Establish a shared grower-controlled ventilation schedule**. Each independent damper must reject an outside close order while maintaining safe minima, or the grower-signed shared schedule must pass while either local stop can independently halt it. Rowan returns the original reference to Maran for **4,600 CR** and the breath-between-readings clue.
+While Rowan works at Larinar, the horticulture tender travels independently to **Lelaven's test berth**. Only the actual arrival of its crew and authorized delegate opens the choice. With the arrived delegates, Rowan chooses **Give each nursery cell an independent air regulator** or **Establish a shared grower-controlled ventilation schedule**. Each independent damper must reject an outside close order while maintaining safe minima, or the grower-signed shared schedule must pass while either local stop can independently halt it. Rowan returns the original reference to Maran for **4,600 CR** and the breath-between-readings clue.
+
+![Quiet Nursery pressure waveform and damper operation](assets/missions/revisions/quiet-nursery-operation.png)
+
+The original commission is frozen outside executable main. [Quiet Nursery gameplay walkthrough](missions/gameplay/C09-QUIET-NURSERY.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -2224,9 +2293,13 @@ flowchart TD
 
 ![The Measure of Care - mission artwork](assets/missions/illustrations/measure-of-care.png)
 
-At **Veron, Galaxy 1**, Kest's next independent case concerns two clinics reporting incompatible storage conditions for the same treatment. Rowan takes the sealed reference and reads three signed refrigeration monitors at **Almadan**, leaving patient names private. At both external calibration cradles at **Envesen**, Rowan adjusts the real offsets and tests the three independent thermometer channels against the published tolerance. The apparent shortage must be distinguished from a bad reference.
+At **Veron, Galaxy 1**, Kest lends Rowan a sealed reference after an ordinary trade. Two clinics report incompatible storage readings for the same treatment. Rowan reads three signed refrigeration monitors at **Almadan** within the consent scope, then adjusts both external calibration cradles at **Envesen**. Each cradle must read three independent sealed channels within **0.5 °C of 4 °C** after its **18-second** test. A corrected display cannot restore a spoiled sample.
 
-The clinic crew travels to **Betaven's independent test berth**. Rowan and the arrived delegates choose **Keep independent clinic calibration references** or **Establish a shared clinical calibration service**. Separate references require their measured histories and acknowledged custody; the shared service must let each clinic stop it independently without rewriting the sample's history. The sealed original returns to Veron before **5,900 CR** and the temperature-of-silence clue close the case.
+The clinic crew travels independently to **Betaven's test berth** while Rowan works. After actual living reception, Rowan and the arrived delegates choose **Keep independent clinic calibration references** or **Establish a shared clinical calibration service**. Separate references need verified calibration and actual custody. Shared service must let each clinic stop it independently while preserving the sealed sample history. The original returns to Veron for **5,900 CR** and the temperature-of-silence clue.
+
+[The Measure of Care gameplay walkthrough](missions/gameplay/C17-MEASURE-OF-CARE.md)
+
+![The Measure of Care sealed thermometer calibration operation](assets/missions/revisions/measure-of-care-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2237,8 +2310,8 @@ flowchart TD
   C17_accept["Veron: Accept The Measure of Care at Veron."]
   C17_collect_reference["Veron: Collect the identified one-tonne reference<br/>instrument from Physicist Anja Kest."]
   C17_survey["Almadan: Read three signed refrigeration monitors<br/>without requesting patient names."]
-  C17_field_work["Envesen: Run the sealed onboard reference against both<br/>external calibration cradles; adjust the actual<br/>offsets."]
-  C17_independent_witness["Betaven: Verify actual safe transit and living<br/>reception of the clinic service crew to the<br/>independent test berth."]
+  C17_field_work["Envesen: Adjust both actual offsets. Test three sealed<br/>channels at each cradle against 4 °C ± 0.5 °C."]
+  C17_independent_witness["Betaven: Verify actual living reception of the independently<br/>travelling clinic crew at the test berth."]
   C17_choose_settlement{"Betaven: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C17_return_and_audit["Veron: Return the reference instrument and confirm all<br/>physical receiving and settlement receipts."]
   C17_close_case["Veron: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2274,9 +2347,13 @@ flowchart TD
 
 ![The Blue Reservoir - mission artwork](assets/missions/illustrations/blue-reservoir.png)
 
-At **Bornolom, Galaxy 4**, Engineer **Cato Lerr** lends Rowan the reference for a water commons losing oxygen even though its intakes are clean. The new pump has trapped part of the living filter behind a one-way lease boundary. At **Galton**, Rowan reads inlet, oxygen and return meters. At **Bornalan**, two sealed bypass valves are opened and closed within their containment limits. The test has to preserve the total water while sustaining the required flow and oxygen.
+At **Bornolom, Galaxy 4**, Engineer **Cato Lerr** lends Rowan the original reference. A new pump has trapped part of the living filter behind a one-way lease boundary, and the water commons is losing oxygen despite clean intakes. Rowan reads the three meters at **Galton**, then adjusts two sealed bypass valves at **Bornalan**. The closed test retains **1,000 water units** while sustaining **return flow of at least 10** and **oxygen of at least 60** for **24 simulation seconds**.
 
-The inspection tender reaches **Dorbogan's safe laboratory berth**. Rowan joins the arrived delegates to choose **Distribute the living filter among independent cradles** or **Create a jointly supervised reservoir**. The distributed route needs both containment/receiving records and adequate return flow. The shared route must reject an over-capacity command and allow either local stop to close the bypass safely. Rowan returns the reference to Bornolom for **7,300 CR** and the dry-current clue.
+The inspection tender travels independently to **Dorbogan's laboratory berth**. Its living crew must be received and observe the actual flow before Rowan and the delegates choose **Distribute the living filter among independent cradles** or **Create a jointly supervised reservoir**. Distribution needs both consented containment receipts and balanced flows. Shared control must reject over-capacity commands and allow either local stop to close the bypass safely. Rowan returns the original reference to Bornolom for **7,300 CR** and the dry-current clue.
+
+[The Blue Reservoir gameplay walkthrough](missions/gameplay/C20-BLUE-RESERVOIR.md)
+
+![The Blue Reservoir sealed bypass and flow-balancing operation](assets/missions/revisions/blue-reservoir-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2287,8 +2364,8 @@ flowchart TD
   C20_accept["Bornolom: Accept The Blue Reservoir at Bornolom."]
   C20_collect_reference["Bornolom: Collect the identified one-tonne reference<br/>instrument from Engineer Cato Lerr."]
   C20_survey["Galton: Observe the three real inlet, oxygen and<br/>return meters on the closed reservoir."]
-  C20_field_work["Bornalan: Open the two identified bypass locks only<br/>inside their measured containment limits."]
-  C20_independent_witness["Dorbogan: Verify actual safe transit and living<br/>reception of the water-commons inspection tender to<br/>the safe laboratory berth."]
+  C20_field_work["Bornalan: Adjust both sealed bypasses. Hold the 1,000<br/>water, flow and oxygen targets for 24 seconds."]
+  C20_independent_witness["Dorbogan: Receive the independently travelling tender<br/>and verify its operators observed the actual flow."]
   C20_choose_settlement{"Dorbogan: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C20_return_and_audit["Bornolom: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C20_close_case["Bornolom: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2324,9 +2401,13 @@ flowchart TD
 
 ![A Garden in Transit - mission artwork](assets/missions/illustrations/garden-in-transit.png)
 
-The ending lease of a seed archive brings Rowan to Custodian **Tomas Veil at Kurenash, Galaxy 7**. Two destinations want the same collection, while its growers insist that living custody must be deliberate. With the one-tonne reference aboard, Rowan observes three real receiving environments at **Zorgadek** and adjusts the isolated thermal/humidity controls at both **Vektaor** cradles. Both receiving climates have to remain stable before the live tender is routed; the tests consume no seed or reference culture.
+The ending lease of a seed archive brings Rowan to Custodian **Tomas Veil at Kurenash, Galaxy 7**. Two destinations want the same collection. With the original sealed sampler aboard, Rowan observes three consented receiving environments at **Zorgadek** and adjusts both isolated climate cradles at **Vektaor**. Both must hold **18–24 °C and 45–65% relative humidity for 20 continuous simulation seconds** before the tender can depart. The tests consume no seed or reference culture.
 
-Rowan escorts the actual seed tender to **Drelor's agreed quarantine berth**. There the choice is **Create distributed seed custody** or **Establish a shared orbital archive**. A split requires two passing cradles and the source's actual consent to that division. A shared archive must keep quarantine locked against unapproved opening while its joint custodians acknowledge access. Rowan returns the original reference to Kurenash for **6,100 CR** and the dormant-season clue.
+Rowan escorts the actual seed tender, its custodians and its sealed collection to **Drelor's agreed quarantine berth**. Once the quarantine receiver confirms the living collection, Rowan and the delegates choose **Create distributed seed custody** or **Establish a shared orbital archive**. A split needs two passing cradles and an actual consented transfer of the existing lots. A shared archive must reject unapproved opening while joint custodians acknowledge access without breaching quarantine. Rowan returns the original sampler to Kurenash for **6,100 CR** and the dormant-season clue.
+
+[A Garden in Transit gameplay walkthrough](missions/gameplay/C15-GARDEN-IN-TRANSIT.md)
+
+![A Garden in Transit sealed climate control operation](assets/missions/revisions/garden-in-transit-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2337,8 +2418,8 @@ flowchart TD
   C15_accept["Kurenash: Accept A Garden in Transit at Kurenash."]
   C15_collect_reference["Kurenash: Collect the identified one-tonne reference<br/>instrument from Custodian Tomas Veil."]
   C15_survey["Zorgadek: Observe three real receiving cradle<br/>environments under the archive consent token."]
-  C15_field_work["Vektaor: Use the sealed onboard reference at both<br/>isolated cradles; run their actual thermal and<br/>humidity controls."]
-  C15_independent_witness["Drelor: Escort the identified seed tender to its<br/>agreed quarantine berth."]
+  C15_field_work["Vektaor: Adjust both isolated cradles and prove 20<br/>continuous seconds inside both climate ranges."]
+  C15_independent_witness["Drelor: Escort the actual seed tender to quarantine.<br/>Require the custodian and collection receipt."]
   C15_choose_settlement{"Drelor: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C15_return_and_audit["Kurenash: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C15_close_case["Kurenash: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2380,7 +2461,11 @@ Borrowed Dawn, Harbour Without Orders, Mutual Shelter and An Assembly of Orbits 
 
 After an ordinary trade at **Zannekor, Galaxy 2**, Controller **Edda Rell** lends Rowan the reference for three homes dependent on an expired reflector lease. Automatic parking will leave one cold and another overheated. Rowan observes each real photometer and the moving sweep at **Varratar**, then steers the source-owned reflectors and latches both actuator travel stops at **Durkaesh**. The illumination stop and thermal trip have to work during the commanded sweep.
 
-The mirror crew's actual journey ends at **Vorvan's shadow-side berth**. Rowan chooses with the arrived delegates between **Give each habitat its own bounded reflector segment** and **Publish a joint illumination rota**. The first must reject over-travel and provide each owner a separate limit record; the second allocates actual sweep intervals and proves the overheat shutter trips. Returning the reference to Zannekor settles **6,800 CR** and the unlit-interval clue.
+While Rowan aligns the reflectors, the mirror crew travels independently to **Vorvan's shadow-side berth**. The actual living arrival and delegation open the choice. Rowan chooses with the arrived delegates between **Give each habitat its own bounded reflector segment** and **Publish a joint illumination rota**. The first must reject over-travel and provide each owner a separate limit record; the second allocates actual sweep intervals and proves the overheat shutter trips. Returning the reference to Zannekor settles **6,800 CR** and the unlit-interval clue.
+
+![Borrowed Dawn reflector-stop and thermal-cutoff operation](assets/missions/revisions/borrowed-dawn-operation.png)
+
+The original opening is frozen outside executable main. [Borrowed Dawn gameplay walkthrough](missions/gameplay/C10-BORROWED-DAWN.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -2428,9 +2513,13 @@ flowchart TD
 
 ![Harbour Without Orders - mission artwork](assets/missions/illustrations/harbour-without-orders.png)
 
-At **Gallodor, Galaxy 4**, Rell's independent harbour case follows an ordinary trade. A maintenance dispute has left the arrival allocator without valid signing authority. Every berth refuses every ship, although no attack is under way. With the loaned reference, Rowan compares the actual refusal signatures and one-berth capacity at **Ombolom**. At **Emdor**, two identified test requests are submitted together to the real allocator. The losing lease must be revoked while mutual exclusion is physically proved.
+At **Gallodor, Galaxy 4**, Rell's independent harbour case follows an ordinary trade. A maintenance dispute has left the arrival allocator without valid signing authority. Every berth refuses every ship. With the original instrument on loan, Rowan compares the three actual refusal signatures against the one-berth capacity at **Ombolom**. At **Emdor**, Rowan arms both approach relays and submits two identified requests together. One holds the berth. The other waits at least **20 simulation seconds** with no duplicate capacity before its losing lease is revoked.
 
-The neutral traffic witness arrives at **Emron's emergency berth**. Rowan and the arrived delegates choose **Return authority to independent berth operators** or **Create a time-limited public harbour office**. Independent keys must resolve competing requests without granting one berth twice. The temporary office must expire only its own test grant while preserving genuinely occupied berths. The reference returns to Gallodor for **7,600 CR** and the unsigned-berth clue.
+The neutral witness travels independently while Rowan tests the allocator. At **Emron's emergency berth**, actual reception of the living witness and original mandate lets Rowan and the arrived delegate choose **Return authority to independent berth operators** or **Create a time-limited public harbour office**. Independent keys must resolve competing requests without a dual grant. The temporary office's lease expires after **120 simulation seconds**, revoking only its own test grant and preserving genuinely occupied berths. Rowan returns the original instrument to Gallodor for **7,600 CR** and the unsigned-berth clue.
+
+[Harbour Without Orders gameplay walkthrough](missions/gameplay/C12-HARBOUR-WITHOUT-ORDERS.md)
+
+![Harbour Without Orders allocator exclusion operation](assets/missions/revisions/harbour-without-orders-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2441,8 +2530,8 @@ flowchart TD
   C12_accept["Gallodor: Accept Harbour Without Orders at Gallodor."]
   C12_collect_reference["Gallodor: Collect the identified one-tonne reference<br/>instrument from Controller Edda Rell."]
   C12_survey["Ombolom: Read each real allocator refusal signature<br/>and compare it with its current one-berth capacity."]
-  C12_field_work["Emdor: Arm two external approach relays, then submit<br/>the two identified test requests together."]
-  C12_independent_witness["Emron: Verify actual safe transit and living reception<br/>of the neutral traffic witness to the emergency<br/>receiving berth."]
+  C12_field_work["Emdor: Arm both relays and submit both test requests<br/>together. Prove one grant and 20 seconds of exclusion."]
+  C12_independent_witness["Emron: Verify the independently travelling Saiga<br/>and its living delegate at the emergency berth."]
   C12_choose_settlement{"Emron: At the actual witness receiving station, choose<br/>the settlement with the arrived authorised operator<br/>delegates."}
   C12_return_and_audit["Gallodor: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C12_close_case["Gallodor: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2456,7 +2545,7 @@ flowchart TD
   C12_apply_settlement_choice_1 --> C12_return_and_audit
   C12_choose_settlement_choice_2["Create a time-limited public harbour office"]
   C12_choose_settlement --> C12_choose_settlement_choice_2
-  C12_apply_settlement_choice_2["Emdor: Verify the public key register and its<br/>automatic authority expiry. All 2 stated proofs are<br/>required."]
+  C12_apply_settlement_choice_2["Emdor: Prove the 120-second public lease expires<br/>without evicting a genuine occupant. Obtain receiving<br/>proof."]
   C12_choose_settlement_choice_2 --> C12_apply_settlement_choice_2
   C12_apply_settlement_choice_2 --> C12_return_and_audit
   C12_independent_witness --> C12_choose_settlement
@@ -2478,9 +2567,13 @@ flowchart TD
 
 ![Mutual Shelter - mission artwork](assets/missions/illustrations/mutual-shelter.png)
 
-At **Ashoes, Galaxy 5**, Nia Toren lends Rowan the reference for a mutual that has insured more shelter than its docks can hold. The legal claim on a disabled hauler exposes the shortfall. Three claim registers at **Voron** have to be compared with **two real emergency berths**. At **Ranues**, Rowan reserves those two places, presents the third competing claim and witnesses its honest refusal before releasing a real reservation.
+At **Ashoes, Galaxy 5**, Nia Toren lends Rowan the original shelter reference. The mutual has insured more shelter than its docks can hold. A legal claim on a disabled hauler exposes the shortage. Rowan compares three actual claim registers at **Voron** with **two real emergency berths**. At **Ranues**, Rowan reserves both places, submits the third claim while both grants exist and verifies the refusal. Rowan then releases one test reservation without displacing an occupant.
 
-The original cooperative hauler and its crew must reach **Peloen's verified repair berth**. There Rowan chooses **Pool member-funded emergency capacity** or **Bond independent shelter obligations** with the arrived delegates. The pooled ledger must fund both actual grants and protect occupied allocations from withdrawal; independent providers must present real funded bonds and complete the receiving drill. Rowan returns the reference to Ashoes for **7,100 CR** and the ownerless-reserve clue.
+The original cooperative hauler and its crew reach **Peloen's verified repair berth** through an authorized source-owned operation. The crew keeps its title. After actual reception, Rowan and the delegates choose **Pool member-funded emergency capacity** or **Bond independent shelter obligations**. The pool must fund both real grants and protect occupied allocations. Independent providers must show funded bonds and complete a real receiving drill with the original hauler. Rowan returns the original loan to Ashoes for **7,100 CR** and the ownerless-reserve clue.
+
+[Mutual Shelter gameplay walkthrough](missions/gameplay/C21-MUTUAL-SHELTER.md)
+
+![Mutual Shelter two-berth capacity operation](assets/missions/revisions/mutual-shelter-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2491,8 +2584,8 @@ flowchart TD
   C21_accept["Ashoes: Accept Mutual Shelter at Ashoes."]
   C21_collect_reference["Ashoes: Collect the identified one-tonne reference<br/>instrument from Nia Toren."]
   C21_survey["Voron: Measure three actual claim registers against<br/>the two physical emergency berths."]
-  C21_field_work["Ranues: Reserve the two real berths and present the<br/>third test claim without occupying an imaginary slot."]
-  C21_independent_witness["Peloen: Verify actual safe transit and living<br/>reception of the disabled cooperative hauler to its<br/>verified repair berth."]
+  C21_field_work["Ranues: Reserve two real berths, prove the third claim<br/>is refused, then safely release one test reservation."]
+  C21_independent_witness["Peloen: Verify actual repair reception of the original<br/>hauler and crew with their title intact."]
   C21_choose_settlement{"Peloen: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C21_return_and_audit["Ashoes: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C21_close_case["Ashoes: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2528,9 +2621,13 @@ flowchart TD
 
 ![An Assembly of Orbits - mission artwork](assets/missions/illustrations/assembly-of-orbits.png)
 
-At **Irkenan, Galaxy 7**, Marshal Voss's reference supports a dispute over a single transfer corridor. Old voting records count property shares but omit the working crews. Rowan reads three consented occupancy/work registers at **Darik**, then uses the assembly console for both independent capacity tests at **Brekudek**. Five proposals compete for **four physical corridor slots**, with one slot protected as free capacity. A signed form cannot create another slot.
+At **Irkenan, Galaxy 7**, Marshal Voss lends Rowan the original assembly instrument. Old voting records count property shares but omit the crews operating the transfer corridor. Rowan reads three consented registers at **Darik** and runs two real capacity tests at **Brekudek**. Each test accounts for five proposals, allows at most three simultaneous working movements and preserves the fourth slot for emergencies.
 
-The consenting delegate tender travels to **Kagakon's neutral assembly berth**. Rowan and the arrived operators choose **Rotate corridor stewardship among working crews** or **Use bounded public berth representation**. The rotation has to name the three working crews and limit each stop right to its own movement. The public register must reject excess capacity claims while preserving the protected slot. The loan returns to Irkenan before **7,700 CR** and the absent-seat clue are recorded.
+The tender travels independently to **Kagakon's neutral berth**. After actual living reception, Rowan and the delegates choose **Rotate corridor stewardship among working crews** or **Use bounded public berth representation**. The rotation names all three crews and lets each stop only its own movement. The public register refuses a fifth capacity claim and keeps the protected slot free. The original returns to Irkenan for **7,700 CR** and the absent-seat clue.
+
+The current planning editor stores proposals. The actual Darik readings and live capacity trials still need their source providers. [An Assembly of Orbits gameplay walkthrough](missions/gameplay/C23-ASSEMBLY-OF-ORBITS.md)
+
+![An Assembly of Orbits corridor scheduling operation](assets/missions/revisions/assembly-of-orbits-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2541,8 +2638,8 @@ flowchart TD
   C23_accept["Irkenan: Accept An Assembly of Orbits at Irkenan."]
   C23_collect_reference["Irkenan: Collect the identified one-tonne reference<br/>instrument from Marshal Nera Voss."]
   C23_survey["Darik: Compare three consented occupancy/work<br/>registers with real corridor-slot use."]
-  C23_field_work["Brekudek: Run two independent capacity tests with the<br/>onboard assembly console; submit all five identified<br/>proposals."]
-  C23_independent_witness["Kagakon: Verify actual safe transit and living<br/>reception of the consenting delegate tender to the<br/>neutral assembly berth."]
+  C23_field_work["Brekudek: Test both real interfaces with five proposals.<br/>Allow at most three working movements and protect<br/>the fourth slot."]
+  C23_independent_witness["Kagakon: Verify actual living reception of the<br/>independently travelling delegates and their mandates."]
   C23_choose_settlement{"Kagakon: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C23_return_and_audit["Irkenan: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C23_close_case["Irkenan: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2582,9 +2679,11 @@ The Borrowed Voice, The Open Shadow, The Passenger's Horizon, The Kind Distance 
 
 ![The Borrowed Voice - mission artwork](assets/missions/illustrations/borrowed-voice.png)
 
-After five distinct system visits, Rowan meets rescue coordinator **Sera Dain at Taledea, Galaxy 3**. Empty distress calls are diverting rescue tenders while real casualties wait. Rowan compares the three beacons with their local casualty sensors at **Ilasaeli**, then collects **Ivo Renn's one-tonne independent verifier at Noserin**. A private rescue terminal lets Dispatcher **Neris Sol** describe the duplicate enrollment that was made under a dispatcher's credentials. Rowan escorts Sol's actual marked ship from the refuge to Noserin reception.
+After five distinct system visits, Rowan meets rescue coordinator **Sera Dain at Taledea, Galaxy 3**. Empty distress calls are diverting rescue tenders while real casualties wait. Rowan compares the three beacons with their local casualty sensors at **Ilasaeli**, then collects **Ivo Renn's one-tonne independent verifier at Noserin**. A private rescue terminal lets Dispatcher **Neris Sol** describe the duplicate enrollment that was made under a dispatcher's credentials. Rowan escorts Sol's marked Harrier (SH026) from the refuge to Noserin's protected berth. If it is lost, rescue control must recover Sol's actual capsule before offering another extraction.
 
 Back at Taledea, Rowan chooses **Revoke the compromised key openly** or **Identify the observer with an empty decoy**. The selected operation at Ilasaeli must yield its own authenticated access proof; the decoy is empty, protecting the witness from being used as bait. At **Aiven**, Renn receives the same verifier and authenticated record. Rowan then rekeys all three marked rescue beacons at Ilasaeli and proves the clean service test before returning to Taledea for **7,200 CR** and the unclaimed-channel clue. The region remembers the open-revocation or protected-witness outcome.
+
+The native commission and current-save tests passed on an earlier exact source. The later distress, witness and countermeasure stages still require their native sources. [Borrowed Voice gameplay walkthrough](missions/gameplay/C04-BORROWED-VOICE.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -2637,9 +2736,13 @@ flowchart TD
 
 ![The Open Shadow - mission artwork](assets/missions/illustrations/open-shadow.png)
 
-At **Oralaora, Galaxy 3**, Mara Vale's reference helps Rowan investigate a privacy update that hides collision warnings along with identities. After the ordinary-trade prerequisite, Rowan observes three cooperative senders at **Elavaeth**, recording warnings separately from private fields. At **Oravaessa**, the independent receiver is connected to both actual safety couplers. The volunteer tender makes three real crossing passes, then Rowan guides it through the measured corridor to **Maidea**.
+At **Oralaora, Galaxy 3**, Mara Vale's reference helps Rowan investigate a privacy update that hides collision warnings along with identities. After the ordinary-trade prerequisite, Rowan observes three cooperative senders at **Elavaeth**, recording warnings separately from private fields. At **Oravaessa**, the independent receiver is connected to both actual safety couplers. Rowan conducts three real crossing passes with consenting traffic. The witness tender travels independently to **Maidea** while the trial runs, and its actual living arrival opens the choice.
 
 With the arrived delegates, the choice is **Publish anonymous collision telemetry** or **Use a witnessed identity escrow with a safety channel**. All three passes must retain warnings while the anonymous output contains no identity fields, or while the witnessed escrow keeps those fields private. Rowan returns the reference to Oralaora for **7,400 CR** and the shadow-with-no-hull clue. Safety and privacy are tested as separate channels.
+
+![Open Shadow controlled traffic and privacy operation](assets/missions/revisions/open-shadow-operation.png)
+
+The original opening is frozen outside executable main. [Open Shadow gameplay walkthrough](missions/gameplay/C11-OPEN-SHADOW.md)
 
 <details>
 <summary>Mission flow</summary>
@@ -2651,7 +2754,7 @@ flowchart TD
   C11_collect_reference["Oralaora: Collect the identified one-tonne reference<br/>instrument from Agent Mara Vale."]
   C11_survey["Elavaeth: Observe three cooperative calibration<br/>senders; record collision warnings separately from<br/>private identity fields."]
   C11_field_work["Oravaessa: Connect the onboard reference receiver to<br/>each external safety-channel coupler and run three<br/>actual test passes."]
-  C11_independent_witness["Maidea: Guide the volunteer test tender through the<br/>measured crossing corridor."]
+  C11_independent_witness["Maidea: Verify the independently travelling witness<br/>tender and its actual living delegate."]
   C11_choose_settlement{"Maidea: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C11_return_and_audit["Oralaora: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C11_close_case["Oralaora: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2687,9 +2790,13 @@ flowchart TD
 
 ![The Passenger's Horizon - mission artwork](assets/missions/illustrations/passengers-horizon.png)
 
-At **Aelara, Galaxy 6**, Captain **Orin Sorel** lends Rowan the reference after a trade. A scenic cooperative's standard form excludes travellers whose access needs differ from it. Rowan examines three actual sites at **Izaeth** against the **two volunteers' declared needs**. At **Evanieri**, directional controls adjust both boarding/viewing interfaces while the source-owned empty test chair and consenting volunteers test clearance, sightline and independent stop controls.
+At **Aelara, Galaxy 6**, Captain **Orin Sorel** lends Rowan the original access console after a trade. A scenic cooperative's standard form excludes travellers with different access needs. Rowan examines three actual sites at **Izaeth** against each of the two volunteers' declared needs. At **Evanieri**, Rowan adjusts both actual interfaces and first sweeps an empty chair through the route. The tested path needs at least **2 m** of clearance before volunteers can safely test sightlines and independent stop controls.
 
-The assessment tender must reach **Noaliena's independently verified berth**. Rowan and the arrived delegates choose **Provide adaptable shared journey cabins** or **Guarantee individual accessible journey slots**. The shared fit must pass both needs and receive each volunteer's separate itinerary consent. Individual allocations must reserve genuinely compatible places and verify the viewing stop while preserving the right not to join. The reference returns to Aelara for **7,500 CR** and the horizon-without-a-world clue.
+The assessment tender travels independently to **Noaliena's verified berth**. After actual living reception, Rowan and the delegates choose **Provide adaptable shared journey cabins** or **Guarantee individual accessible journey slots**. Shared fit needs both people's separate itinerary consent. Separate allocations need compatible real places and a verified **12-second viewing stop**. Both preserve the right to decline. Rowan returns the original console to Aelara for **7,500 CR** and the horizon-without-a-world clue.
+
+[The Passenger's Horizon gameplay walkthrough](missions/gameplay/C30-PASSENGERS-HORIZON.md)
+
+![The Passenger's Horizon boarding and sightline operation](assets/missions/revisions/passengers-horizon-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2700,8 +2807,8 @@ flowchart TD
   C30_accept["Aelara: Accept The Passenger's Horizon at Aelara."]
   C30_collect_reference["Aelara: Collect the identified one-tonne reference<br/>instrument from Captain Orin Sorel."]
   C30_survey["Izaeth: Observe three orbital sites against the two<br/>volunteers real declared access needs."]
-  C30_field_work["Evanieri: Test both actual boarding/viewing interfaces<br/>with the onboard access console and the source-owned<br/>empty test chair."]
-  C30_independent_witness["Noaliena: Verify actual safe transit and living<br/>reception of the consenting assessment tender to its<br/>independently verified berth."]
+  C30_field_work["Evanieri: Adjust both interfaces and first verify the<br/>empty chair path. Then test sightlines and stop controls."]
+  C30_independent_witness["Noaliena: Verify living reception of the independent<br/>assessment tender at its verified berth."]
   C30_choose_settlement{"Noaliena: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C30_return_and_audit["Aelara: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C30_close_case["Aelara: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2737,9 +2844,13 @@ flowchart TD
 
 ![The Kind Distance - mission artwork](assets/missions/illustrations/kind-distance.png)
 
-At **Ravgakon, Galaxy 7**, Neris Sol's reference supports two separated households who want contact but disagree over disclosure of their locations. Rowan has completed an ordinary trade before taking the case. Three private reply relays at **Rakdek** are tested without requesting addresses. At **Ravvaesh**, two independent invitation exchanges pass through the passive receiver; Rowan revokes a live reply lease and checks that the old invitation no longer works.
+At **Ravgakon, Galaxy 7**, Neris Sol lends Rowan the original passive receiver after a trade. Two households want contact while keeping their locations private. Rowan reads three real relays at **Rakdek**, then tests two independent consented exchanges at **Ravvaesh**. Revoking one invitation must block it while the unrelated reply still works. No public record exposes an address.
 
-The consenting relay custodian reaches the privacy hearing at **Zoraresh**. Rowan chooses **Use an anonymous shared reply relay** or **Issue individually revocable invitations** with the arrived delegates. Both households must control their own withdrawal in the shared route. The individual route must reject expired invitation replays. The households can decline a meeting in either ending. Rowan returns the reference to Ravgakon for **5,600 CR** and the reply-with-no-sender clue.
+The custodian travels independently to **Zoraresh's privacy hearing**. After actual living reception, Rowan and the delegates choose **Use an anonymous shared reply relay** or **Issue individually revocable invitations**. A shared relay must respect either household's independent withdrawal. Individual invitations expire after **120 simulation seconds** and reject a later replay. Either household can decline a meeting. Rowan returns the original receiver to Ravgakon for **5,600 CR** and the reply-with-no-sender clue.
+
+[The Kind Distance gameplay walkthrough](missions/gameplay/C31-KIND-DISTANCE.md)
+
+![The Kind Distance revocable anonymous reply operation](assets/missions/revisions/kind-distance-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2750,8 +2861,8 @@ flowchart TD
   C31_accept["Ravgakon: Accept The Kind Distance at Ravgakon."]
   C31_collect_reference["Ravgakon: Collect the identified one-tonne reference<br/>instrument from Dispatcher Neris Sol."]
   C31_survey["Rakdek: Test three actual private reply relays without<br/>requesting household address disclosure."]
-  C31_field_work["Ravvaesh: Run two distinct challenge/reply exchanges<br/>through the onboard passive receiver and revoke one<br/>test invitation."]
-  C31_independent_witness["Zoraresh: Verify actual safe transit and living<br/>reception of the consenting relay custodian to the<br/>independent privacy hearing berth."]
+  C31_field_work["Ravvaesh: Verify two consented exchanges, revoke one<br/>invitation and confirm the other reply still works."]
+  C31_independent_witness["Zoraresh: Verify actual living reception of the<br/>independently travelling custodian and mandate."]
   C31_choose_settlement{"Zoraresh: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C31_return_and_audit["Ravgakon: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C31_close_case["Ravgakon: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2789,9 +2900,13 @@ flowchart TD
 
 At **Fonogom, Galaxy 4**, Rowan verifies an existing witness-consented preservation hold before accepting Dain's inquiry and reference after a trade. A shift worker recorded an avoidable docking injury, and the original recording would otherwise have reached routine privacy expiry. The preservation order keeps the evidence while the worker retains control of future testimony.
 
-Rowan reads three authorised copy receipts at **Anlanom** without exposing the witness's location. At **Borbovar**, both independent custody keys face their actual challenge-packet tests. The witness tender reaches the protected hearing berth at **Bogolan**, where Rowan and the arrived delegates choose **Keep testimony in an independently witnessed sealed archive** or **Publish an anonymised safety finding**.
+Rowan reads three authorised copy receipts at **Anlanom** without exposing the witness's location. At **Borbovar**, both independent custody keys face their actual challenge-packet tests. The witness tender travels independently to **Bogolan's protected hearing berth**. After actual living reception, Rowan and the arrived delegates choose **Keep testimony in an independently witnessed sealed archive** or **Publish an anonymised safety finding**.
 
 Both custody principals must sign the sealed archive, preserving the witness's right to revoke later disclosure while retaining the inquiry record. The public route must contain no private fields and prove that the corrected docking procedure rejects the recorded unsafe allocation. Rowan returns the verifier to Fonogom for **8,100 CR** and the frame-nobody-recorded clue.
+
+[The Witness Window gameplay walkthrough](missions/gameplay/C36-WITNESS-WINDOW.md)
+
+![The Witness Window independent custody operation](assets/missions/revisions/witness-window-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2802,8 +2917,8 @@ flowchart TD
   C36_accept["Fonogom: Accept The Witness Window at Fonogom. Verify<br/>the existing consented preservation-hold receipt<br/>before accepting."]
   C36_collect_reference["Fonogom: Collect the identified one-tonne reference<br/>instrument from Coordinator Sera Dain."]
   C36_survey["Anlanom: Read three authorised copy receipts without<br/>exposing the witness location; verify the<br/>preservation-hold identity."]
-  C36_field_work["Borbovar: Verify the two actual independent custody<br/>keys using the onboard witness verifier, then replay<br/>both challenge packets."]
-  C36_independent_witness["Bogolan: Verify actual safe transit and living<br/>reception of the consenting witness tender to the<br/>protected hearing berth."]
+  C36_field_work["Borbovar: Challenge both independent custody keys.<br/>Replay both test packets and prove revoked keys fail."]
+  C36_independent_witness["Bogolan: Verify actual living reception of the<br/>independently travelling witness tender and mandate."]
   C36_choose_settlement{"Bogolan: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C36_return_and_audit["Fonogom: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C36_close_case["Fonogom: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2843,9 +2958,13 @@ The Unfinished Map, The Memory Atlas, The Honest Circuit, Open Measure and The G
 
 ![The Unfinished Map - mission artwork](assets/missions/illustrations/unfinished-map.png)
 
-At **Sareith, Galaxy 3**, Mara Vale lends Rowan the reference after a trade. A dead surveyor's incomplete archive is being sold as a complete safe-navigation map. Rowan collects authorised copies through the ordinary visible receivers, records three separately dated boundary archives at **Iosaira** and keeps their unmeasured portions explicitly unknown. At **Sanaena**, separated physical baselines and the two actual boundary measurements establish the real uncertainty envelope.
+At **Sareith, Galaxy 3**, Mara Vale lends Rowan the original register after a trade. A deceased surveyor's incomplete archive is being sold as a safe-navigation map. Rowan receives three authorized, independently dated records at **Iosaira**, keeping their unmeasured portions explicitly unknown. At **Sanaena**, Rowan takes two separated baselines against three actual landmarks, measuring each boundary point for **15 qualified seconds** with an uncertainty radius of **25 m or less**.
 
-The archive custodian reaches **Naleara's publication berth**. Rowan chooses **Publish a bounded atlas with explicit gaps** or **Preserve a witnessed research archive** with the arrived delegates. The public route needs the measured uncertainty layer and signed public-use permission. The restricted route needs real archive receiving and a public hazard notice limited to independently measured hazards. Rowan returns the reference to Sareith for **6,900 CR** and the margin-beyond-the-map clue. The deceased surveyor is not replaced to fill an evidential gap.
+The custodian travels independently with the original rights register to **Naleara's publication berth**. After actual reception, Rowan and the delegates choose **Publish a bounded atlas with explicit gaps** or **Preserve a witnessed research archive**. The public option needs the measured uncertainty layer and signed public-use permission. Restricted custody needs real archive receiving and a public notice limited to independently measured hazards. Rowan returns the original register to Sareith for **6,900 CR** and the margin-beyond-the-map clue.
+
+[The Unfinished Map gameplay walkthrough](missions/gameplay/C19-UNFINISHED-MAP.md)
+
+![The Unfinished Map separated baseline operation](assets/missions/revisions/unfinished-map-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2856,8 +2975,8 @@ flowchart TD
   C19_accept["Sareith: Accept The Unfinished Map at Sareith."]
   C19_collect_reference["Sareith: Collect the identified one-tonne reference<br/>instrument from Agent Mara Vale."]
   C19_survey["Iosaira: Record three separately dated boundary<br/>archives; preserve their unmeasured portions."]
-  C19_field_work["Sanaena: Measure two actual boundary points for15s<br/>each with the onboard reference, then compare against<br/>the archive."]
-  C19_independent_witness["Naleara: Verify actual safe transit and living<br/>reception of the consenting archive custodian to the<br/>publication berth."]
+  C19_field_work["Sanaena: Take two separated baselines. Measure both<br/>points for 15 seconds each and verify ≤25 m uncertainty."]
+  C19_independent_witness["Naleara: Receive the independently travelling custodian<br/>and original rights register at the publication berth."]
   C19_choose_settlement{"Naleara: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C19_return_and_audit["Sareith: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C19_close_case["Sareith: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2893,9 +3012,13 @@ flowchart TD
 
 ![The Memory Atlas - mission artwork](assets/missions/illustrations/memory-atlas.png)
 
-At **Reris, Galaxy 1**, Rowan takes Vale's reference after a trade. A publisher has mixed voluntary diaries with instrument surveys and advertised recollection as exact measurement. Three actual landmarks at **Nedasen** are observed independently of the diaries. At **Cemalis**, Rowan flies separated baselines and compares both landmark instruments against the original reference watcher, retaining the measured error.
+At **Reris, Galaxy 1**, Rowan takes Vale's original Atlas Reference Watcher after a trade. A publisher has mixed voluntary diaries with instrument surveys and sold recollection as exact measurement. Rowan observes three actual landmarks at **Nedasen** independently of the diaries. At **Cemalis**, Rowan flies separated baselines and compares both actual instruments to the Watcher. Each result needs a measured error of **20 m or less**.
 
-The consenting diary custodian reaches **Ledanor's archive berth**. Rowan chooses **Publish a separated evidence-and-memory atlas** or **Keep the diaries with their custodians**. Publication needs each contributor's consent to their actual excerpt and clear separation of testimony from measurement. Custodian-held diaries need actual private receiving and a public layer containing only measured hazards. The reference returns to Reris for **7,200 CR** and the place-nobody-remembers clue.
+The custodian travels independently to **Ledanor's archive berth**. After actual living reception, Rowan and the delegates choose **Publish a separated evidence-and-memory atlas** or **Keep the diaries with their custodians**. Publication needs each contributor's permission for the exact excerpt and separate labels for testimony and measurement. Restricted custody needs actual diary receiving and a public layer with zero private diary fields. Rowan returns the original Watcher to Reris for **7,200 CR** and the place-nobody-remembers clue.
+
+Main currently supports the commission and finite Watcher pickup. The five physical survey and instrument sources still need admission. [The Memory Atlas gameplay walkthrough](missions/gameplay/C25-MEMORY-ATLAS.md)
+
+![The Memory Atlas measured landmarks and private testimony operation](assets/missions/revisions/memory-atlas-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2906,8 +3029,8 @@ flowchart TD
   C25_accept["Reris: Accept The Memory Atlas at Reris."]
   C25_collect_reference["Reris: Collect the identified one-tonne reference<br/>instrument from Agent Mara Vale."]
   C25_survey["Nedasen: Observe three actual orbital landmarks<br/>independently of the consented travel diaries."]
-  C25_field_work["Cemalis: Compare two landmark instruments with the<br/>onboard reference watcher."]
-  C25_independent_witness["Ledanor: Verify actual safe transit and living<br/>reception of the consenting diary custodian to the<br/>archive receiving berth."]
+  C25_field_work["Cemalis: Fly separated baselines and verify both<br/>actual instruments within 20 m of calibrated truth."]
+  C25_independent_witness["Ledanor: Verify actual living reception of the<br/>independently travelling custodian and mandate."]
   C25_choose_settlement{"Ledanor: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C25_return_and_audit["Reris: Return the reference instrument and confirm all<br/>physical receiving and settlement receipts."]
   C25_close_case["Reris: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2943,9 +3066,13 @@ flowchart TD
 
 ![The Honest Circuit - mission artwork](assets/missions/illustrations/honest-circuit.png)
 
-After a trade at **Lonomon, Galaxy 4**, Captain **Elara Venn** lends Rowan the timing reference. A new certification circuit rewards speed without accounting for dangerous passes or offloaded fuel. Rowan compares the three independent beacon epochs at **Mobarum**, then flies the two ordered physical gates at **Lobagom** in the current ship. The gate envelope, speed and real traffic separation matter. Dumped fuel remains in the budget, and resetting a run cannot erase its elapsed time or spent fuel.
+After a trade at **Lonomon, Galaxy 4**, Captain **Elara Venn** lends Rowan the original timing reference. The certification circuit rewards apparent speed while overlooking fuel disposal and unsafe passes. Rowan compares three real beacon epochs at **Mobarum**, then flies the two **80 m-radius** gates at **Lobagom** in the current ship. Both crossings must be in order at **5–30 m/s**, with at least **100 m** from actual traffic. Dumped fuel remains in the budget. A reset preserves spent fuel and elapsed time.
 
-The consenting calibration tender completes the same certified corridor and reaches **Balmabol**. Rowan and the arrived delegates choose **Certify measured route efficiency** or **Certify a minimum safety margin**. The first publishes the actual receiving time and total fuel use. The second proves a real abort within its stated window while retaining the observed closest-pass envelope. The reference returns to Lonomon for **7,000 CR** and the tick-outside-the-circuit clue. An unsafe pass does not receive certification.
+The calibration tender independently flies the same certified corridor to **Balmabol**. After actual living reception, Rowan and the delegates choose **Certify measured route efficiency** or **Certify a minimum safety margin**. Efficiency publishes actual receiving time and accounted fuel. Safety proves a genuine abort within **3 simulation seconds** of the controlled cue and retains the closest-pass measurement. Rowan returns the original reference to Lonomon for **7,000 CR** and the tick-outside-the-circuit clue.
+
+[The Honest Circuit gameplay walkthrough](missions/gameplay/C28-HONEST-CIRCUIT.md)
+
+![The Honest Circuit ordered physical gate operation](assets/missions/revisions/honest-circuit-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -2956,8 +3083,8 @@ flowchart TD
   C28_accept["Lonomon: Accept The Honest Circuit at Lonomon."]
   C28_collect_reference["Lonomon: Collect the identified one-tonne reference<br/>instrument from Captain Elara Venn."]
   C28_survey["Mobarum: Observe three independent timing beacons and<br/>compare their actual sample epochs."]
-  C28_field_work["Lobagom: Fly two ordered80m-radius gates at5-30m/s<br/>with the reference timing instrument aboard; retain<br/>fuel before/after."]
-  C28_independent_witness["Balmabol: Verify actual safe transit and living<br/>reception of the consenting calibration tender through<br/>the same certified corridor."]
+  C28_field_work["Lobagom: Fly both 80 m gates in order at 5–30 m/s.<br/>Keep 100 m from actual traffic and retain fuel accounting."]
+  C28_independent_witness["Balmabol: Verify the independent tender flew the same<br/>certified corridor and its living crew was received."]
   C28_choose_settlement{"Balmabol: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C28_return_and_audit["Lonomon: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C28_close_case["Lonomon: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -2993,9 +3120,13 @@ flowchart TD
 
 ![Open Measure - mission artwork](assets/missions/illustrations/open-measure.png)
 
-At **Valtor, Galaxy 2**, Cato Lerr lends Rowan the tolerance programmer after an ordinary trade. Three workshops cannot exchange parts because their certificates refer to incompatible loads. Rowan compares the signed loads with real fittings at **Vorvakar**, then applies the known reference load to both independently manufactured parts at **Voransen**. The measured fit and tolerance decide whether they work together.
+At **Valtor, Galaxy 2**, Cato Lerr lends Rowan the original tolerance programmer. Three workshops cannot exchange parts because their certificates refer to incompatible loads. Rowan compares three signed loads with real fittings at **Vorvakar**, then applies **100 load units** to both independently manufactured parts at **Voransen**. Both must physically fit and show **no more than one unit of error**.
 
-The independent calibration tender reaches the common test berth at **Morkador**. Rowan chooses **Publish an open physical measurement standard** or **Establish a witnessed interoperable calibration service** with the arrived delegates. An independent part must fit the published reference and its manufacturer must sign the measurements; alternatively, each workshop must be able to reject a bad part while accepting the reciprocal bounded service. Returning the same reference to Valtor earns **7,900 CR** and the reference-without-a-load clue.
+The neutral technician travels independently to **Morkador's test berth**, with a separate instrument and signing key. After actual living reception, Rowan and the delegates choose **Publish an open physical measurement standard** or **Establish a witnessed interoperable calibration service**. The public option needs an actual independent fit and the manufacturer's signature. The reciprocal service must demonstrate each workshop's independent refusal and both parties' consent. Rowan returns the original programmer to Valtor for **7,900 CR** and the reference-without-a-load clue.
+
+[Open Measure gameplay walkthrough](missions/gameplay/C34-OPEN-MEASURE.md)
+
+![Open Measure independent load and fit operation](assets/missions/revisions/open-measure-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -3006,8 +3137,8 @@ flowchart TD
   C34_accept["Valtor: Accept Open Measure at Valtor."]
   C34_collect_reference["Valtor: Collect the identified one-tonne reference<br/>instrument from Engineer Cato Lerr."]
   C34_survey["Vorvakar: Compare three signed workshop loads against<br/>the actual external test fittings."]
-  C34_field_work["Voransen: Test the two independently manufactured<br/>parts with the original onboard tolerance programmer."]
-  C34_independent_witness["Morkador: Verify actual safe transit and living<br/>reception of the independent calibration tender to the<br/>common test berth."]
+  C34_field_work["Voransen: Fit two independent parts. Apply 100 load<br/>units to each and verify no more than 1 unit error."]
+  C34_independent_witness["Morkador: Verify living reception of the independent<br/>technician, separate instrument and signing mandate."]
   C34_choose_settlement{"Morkador: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C34_return_and_audit["Valtor: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
   C34_close_case["Valtor: Confirm successful completion, the recorded<br/>settlement and the once-only fee."]
@@ -3043,9 +3174,13 @@ flowchart TD
 
 ![The Guiding Light - mission artwork](assets/missions/illustrations/guiding-light.png)
 
-After a trade at **Crimbo, Galaxy 8**, Evi Senn's reference lantern helps Rowan investigate the long winter shadow. The light-sharing contract has routed a maintenance crew towards an unlit pier. From the accessible orbital observation volume above Crimbo, Rowan measures three real sightlines, aligns both external relays and tests their overlapping light cones against the current shadow geometry. The work is available in ordinary play without waiting for a real-world season or planetary day.
+After a trade at **Crimbo, Galaxy 8**, Evi Senn's reference lantern helps Rowan investigate the long winter shadow. The light-sharing contract has routed a maintenance crew towards an unlit pier. From the accessible orbital observation volume above Crimbo, Rowan measures three real sightlines, aligns both external relays and tests their cones against the actual shadow. The receiving lane needs **at least 5° of overlap for 12 continuous simulation seconds** without an unlit gap. The work is available in ordinary play without waiting for a real-world season or planetary day.
 
-The maintenance tender makes its actual journey to the now-lit winter service berth. Rowan and the arrived delegates choose **Maintain independent winter lantern segments** or **Publish a jointly maintained winter rota**. Both local repair records and real shadow-side overlap must be proved, or the signed shared rota must preserve that overlap while the tender reaches the lit berth. The original lantern returns to Senn before **5,700 CR** and the extra-lantern clue are recorded.
+The maintenance tender travels independently and enters the winter lane only after actual safe coverage. The living crew must reach the lit service berth. Rowan and the arrived delegates choose **Maintain independent winter lantern segments** or **Publish a jointly maintained winter rota**. Both local repair records and real shadow-side overlap must be proved, or the signed shared rota must preserve that overlap while the tender reaches the lit berth. The original lantern returns to Senn before **5,700 CR** and the extra-lantern clue are recorded.
+
+The older Crimbo convoy is a separate implementation. [The Guiding Light gameplay walkthrough](missions/gameplay/C39-GUIDING-LIGHT.md)
+
+![The Guiding Light overlapping lantern and shadow operation](assets/missions/revisions/guiding-light-operation.png)
 
 <details>
 <summary>Mission flow</summary>
@@ -3056,7 +3191,7 @@ flowchart TD
   C39_accept["Crimbo: Accept The Guiding Light at Crimbo."]
   C39_collect_reference["Crimbo: Collect the identified one-tonne reference<br/>instrument from Dispatcher Evi Senn."]
   C39_survey["Crimbo: Measure three actual winter-shadow sight lines<br/>from the accessible marked observation volume above<br/>Crimbo."]
-  C39_field_work["Crimbo: Use the onboard reference lantern to restore<br/>the two external relays and test their actual<br/>overlapping beam cones."]
+  C39_field_work["Crimbo: Restore both relays and prove 5° actual<br/>shadow-side overlap for 12 continuous seconds."]
   C39_independent_witness["Crimbo: Verify actual safe transit and living<br/>reception of the consenting maintenance tender to the<br/>now-lit winter service berth."]
   C39_choose_settlement{"Crimbo: At the actual witness receiving station,<br/>choose the settlement with the arrived authorised<br/>operator delegates."}
   C39_return_and_audit["Crimbo: Return the reference instrument and confirm<br/>all physical receiving and settlement receipts."]
