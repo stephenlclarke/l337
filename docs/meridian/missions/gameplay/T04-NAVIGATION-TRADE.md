@@ -1,0 +1,33 @@
+# T04 · Navigation and trade practice
+
+[Illustrated story](../../INTENDED-GAME-STORY-WALKTHROUGH.md#navigation-and-trade-practice) · [Mission walkthrough checklist](../README.md)
+
+Design walkthrough complete against `19a177e66093716928947f7246e0b664e4a6ad07`. Default bundled delivery and native accounting integrated at `fc214b89`, with an aggregate of 11 methods and 12 cases. The owner flow used normal Contacts, a real market and native travel and docking, with controlled near-door framing. Current whole manual app and release acceptance remain open. [Source scope](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/COMPLETION-LEDGER.md#L3011), [Owner flow and fixture limits](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/archive/work-items/fleet/PR-original-navigation-trade-delivery.md#L11)
+
+## Offer, route and fit
+
+Senn's tutorial uses an actual **original-world main orbital** as training berth. On the chart choose a different reachable original world and on the market select a stocked legal commodity sold in tonnes. The confirmed trade leg is direct and the commander returns to the actual issuing berth. PLUGH falls outside these ordinary endpoint bindings. A verified design example is **Avenor G01-S007 ↔ Renas G01-S185**, 3.365 LY and 34 stock fuel tenths each way. Actual prices, stock and route come from the current ship and world. The tutorial has no cash reward, deposit, donation, cabins or deadline. [Bundled briefing and choices](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/ScriptPacks/l337-navigation-trade/manifest.toml#L13), [Endpoint and player guide](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/ScriptPacks/l337-navigation-trade/README.md), [World coordinates](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/OriginalWorlds/catalogue.json)
+
+The fit review checks **1 t free hold**, actual stocked legal selection, available purchase credits and usable jump fuel. SH025 has a 92 t nominal hold, one intrinsic operating place, 9 LY hull reach and 13 LY tank. Recheck the actual fit and swept station entry at both endpoints. Reserve the one tonne through the confirmed plan. The ship's fitted navigation and fuel values govern actual travel. Buy fuel through normal equipment service where necessary, at the actual quoted price. [Current fit and route gate](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/ScriptNavigationTradeRuntime.swift#L110), [Peregrine design](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/fleet-design-v2/ships/SH025.toml#L39)
+
+## Play the three authored stages
+
+| Stage | Player action and qualifying evidence |
+| --- | --- |
+| 1. `accept` | Choose the destination and market commodity before opening **Mission Contacts**. Accept the bundled lesson, reopen Contacts and Confirm Senn's actual fitting, stock and route review. It reserves 1 t without buying cargo. Back transfers nothing. |
+| 2. `perform` | Buy exactly one identified tonne through the normal market. Fly the selected real route, pay its actual fuel and dock at the selected destination. Sell that same tonne there through the ordinary single-tonne sale. Return to the issuing station. |
+| 3. `receive` | At that actual berth select **Confirm training reception**. Join original purchase, admitted travel, selected-destination sale, fuel and the live return. Retain actual net cash change and settle zero tutorial money. The first verified terminal grants `l337.unwritten-route/clue/navigation-trade-family-trace`. |
+
+Use **4/5** to select the route, **7** for Market and its buy/sell controls, **H** to jump in flight and **3** to buy real fuel when needed. The practice guards single-tonne admission and records matching original cargo, station, fitting and transaction facts. Net cash is sale revenue less purchase and paid fuel. A real loss qualifies. An unrelated sale or bought replacement tonne cannot complete the lesson. [Ordinary controls](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/docs/player/CONTROLS.md#L69), [Market and journey checks](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/ScriptNavigationTradeRuntime.swift#L197), [Native cold journey fixture](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Tests/L337CoreTests/OriginalNavigationTradeDeliveryTests.swift#L182)
+
+[Offer artwork](../../assets/missions/services/navigation-trade-accept.png) · [Trade artwork](../../assets/missions/services/navigation-trade-perform.png) · [Debrief artwork](../../assets/missions/services/navigation-trade-receive.png) · [Completed clue art](../../assets/missions/clues/navigation-trade-family-trace.svg)
+
+## Failure, cold Continue and owners
+
+Cancellation releases the surviving tonne and reservation without refunding expenditure or recreating stock. The native loss contact acknowledges an original lost with the abandoned ship and grants no clue. Stale pre-purchase fit or stock requires a fresh plan. Continue preserves the identified tonne, actual transaction and fuel receipts, plan, terminal and clue under closed Normal 33/Alien 34 and its current composite envelope. The independent no-cost core inquiry can recover only the missing clue. [Cancellation and loss rules](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/Resources/ScriptPacks/l337-navigation-trade/manifest.toml#L34), [Save profile](https://github.com/stephenlclarke/l337/blob/19a177e66093716928947f7246e0b664e4a6ad07/Sources/L337Core/ScriptNavigationTradeSave.swift#L4)
+
+- **G4 physical requirement.** Witness actual current fit, both paid jumps and swept entry at both real market berths.
+- **MC1 mission requirement, via Root and G1.** Qualify ordinary controls, exact one-tonne purchase/sale with fuel and genuine return, loss or stale review, Gallery state and cold Continue on current source.
+- **Root source decisions.** Preserve the player's route, normal accounting and genuine loss result. Retain historical bounded flow evidence separately from current manual acceptance.
+
+Historical source is `docs/meridian/missions/definitions/original-families.json#/templates/18` at `c70110b292077588a0855fb48127adfb1b611c9d`, SHA-256 `abf67f6506e9f392014913b3c9e9d08672283e9a8f830a7e4621f178fe8a40f5`.

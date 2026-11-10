@@ -358,7 +358,7 @@ extension Game {
     return result
   }
 
-  private static func currentNewtReleasedPartsMatchSource(
+  static func currentNewtReleasedPartsMatchSource(
     _ parts: [CurrentNewtKitComponent], expected: [CurrentNewtKitSource.ReleasedPart],
     source: CurrentNewtKitSource
   ) -> Bool {
@@ -366,9 +366,12 @@ extension Game {
       parts.count == expected.count,
       Set(parts.map(\.id)) == Set(expected.map(\.id))
     else { return false }
+    // Valid source components can include exact point allocations. The
+    // tolerance check still requires positive-definite whole-body inertia.
     for reference in expected {
       guard let part = parts.first(where: { $0.id == reference.id }),
-        source.matchesMass(part.massProperties, reference.mass),
+        part.massProperties == reference.mass
+          || source.matchesMass(part.massProperties, reference.mass),
         (part.collisionMesh == nil) == (reference.collisionMesh == nil),
         (part.displayMesh == nil) == (reference.displayMesh == nil),
         part.collisionMesh?.vertices == reference.collisionMesh?.vertices,
