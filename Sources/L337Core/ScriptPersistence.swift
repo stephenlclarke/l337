@@ -868,8 +868,10 @@ enum ScriptSaveStore {
       }
       predicate = nil
       publicationIdentity = nil
+      var hasSecondClaim = false
+      if c03Envelope { hasSecondClaim = NativeSecondCommoditySaleSave.hasClaims(commander) }
       let selectedSecondSchema =
-        c03Envelope && NativeSecondCommoditySaleSave.hasClaims(commander)
+        hasSecondClaim
         ? (alien
           ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version)
         : schema
@@ -877,9 +879,11 @@ enum ScriptSaveStore {
       stage = .chunkCommodity
       try NativeSecondCommoditySaleSave.validateFields(
         data, location: location, schema: selectedSecondSchema)
+      let higherKitEnvelope = NativeSecondCommoditySaleSave.contains(schema) || c03Envelope
+      var hasKitClaim = false
+      if higherKitEnvelope { hasKitClaim = CurrentNewtKitSave.hasClaims(commander) }
       let selectedKitSchema =
-        (NativeSecondCommoditySaleSave.contains(schema) || c03Envelope)
-          && CurrentNewtKitSave.hasClaims(commander)
+        hasKitClaim
         ? (alien ? CurrentNewtKitSave.alienVersion : CurrentNewtKitSave.version)
         : schema
       kitSchema = selectedKitSchema
