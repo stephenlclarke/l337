@@ -112,6 +112,77 @@ private struct OriginalColdChainFixture {
   }
 }
 
+// Refusal fixtures are copies of an actual pre-acceptance docked game. They
+// never install content, grant consent or write a receipt into the live runtime.
+private func verifyOriginalColdChainBorrowedReadRefusals(
+  _ game: Game, pack: ScriptPack, pickup: WayfarerColdChainBoardReview
+) async throws {
+  let offer = try #require(pickup.offer)
+  var absent = game
+  absent.scriptPacks = []
+  #expect(
+    absent.wayfarerColdChainReview(pickup.row).issues
+      == ["Restore the original native cold-chain provider."])
+  #expect(throws: MissionPackError.self) {
+    try absent.wayfarerColdChainQuote(sourceID: offer.sourceID)
+  }
+  #expect(absent.currentNewtNativeCommanderMatches(game))
+
+  // A missing declaration on the first matching digest cannot fall through to
+  // a later duplicate. The mismatched fixture is used only to require refusal.
+  var incomplete = pack.manifest
+  incomplete.coldChain = nil
+  let refused = ScriptPack(
+    manifest: incomplete, source: pack.source, manifestBytes: pack.manifestBytes,
+    digest: pack.digest)
+  var duplicate = game
+  duplicate.scriptPacks = [refused, pack]
+  #expect(
+    duplicate.wayfarerColdChainReview(pickup.row).issues
+      == ["Restore the original native cold-chain provider."])
+  #expect(throws: MissionPackError.self) {
+    try duplicate.wayfarerColdChainQuote(sourceID: offer.sourceID)
+  }
+  var visits = 0
+  let selected: Int?? = duplicate.withWayfarerInstalledPack(digest: pack.digest) { _ -> Int? in
+    visits += 1
+    return nil
+  }
+  try #require(visits == 1)
+  switch selected {
+  case .some(.none): break
+  default: Issue.record("First matching nil result was lost.")
+  }
+  #expect(duplicate.currentNewtNativeCommanderMatches(game))
+
+  var exhausted = game
+  exhausted.commander.scriptState.savedWayfarerColdChainStock = nil
+  let exhaustedBefore = exhausted
+  #expect(
+    exhausted.wayfarerColdChainReview(pickup.row).issues
+      == ["Original source terms changed; restore the exact provider."])
+  #expect(throws: MissionPackError.self) {
+    try exhausted.wayfarerColdChainQuote(sourceID: offer.sourceID)
+  }
+  #expect(exhausted.currentNewtNativeCommanderMatches(exhaustedBefore))
+
+  var emptyTank = game
+  emptyTank.commander.fuel = 0
+  try #require(emptyTank.withReadOnlyCommander({ $0.maximumJumpDistance }) == 0)
+  let emptyTankBefore = emptyTank
+  #expect(throws: MissionPackError.self) {
+    do { _ = try emptyTank.wayfarerColdChainQuote(sourceID: offer.sourceID) } catch let error
+      as MissionPackError
+    {
+      #expect(
+        error.localizedDescription == "The complete quoted itinerary must be natively reachable.")
+      throw error
+    }
+  }
+  #expect(emptyTank.currentNewtNativeCommanderMatches(emptyTankBefore))
+  #expect(!game.wayfarerColdChainPickupFits(Int.max))
+}
+
 struct OriginalColdChainTests {
   @Test func productionResourcePinsNativeTermsAndDeduplicatesItsExactDigest() throws {
     let fixture = try OriginalColdChainFixture()
@@ -325,6 +396,11 @@ struct OriginalColdChainTests {
     let previewFiles = try ScriptFinanceTestFixture.files(fixture.save.deletingLastPathComponent())
     let repeated = try await fixture.review(runtime) { $0 == pickup.row.action }
     #expect(repeated.allowed && repeated.offer == pickup.offer)
+    #expect(await runtime.snapshot().commander == previewCommander)
+    #expect(
+      try ScriptFinanceTestFixture.files(fixture.save.deletingLastPathComponent()) == previewFiles)
+    try await verifyOriginalColdChainBorrowedReadRefusals(
+      await runtime.snapshot(), pack: fixture.pack, pickup: pickup)
     #expect(await runtime.snapshot().commander == previewCommander)
     #expect(
       try ScriptFinanceTestFixture.files(fixture.save.deletingLastPathComponent()) == previewFiles)

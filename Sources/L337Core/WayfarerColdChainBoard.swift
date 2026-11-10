@@ -44,12 +44,15 @@ struct WayfarerColdChainBoardReview: Sendable {
 
 extension Game {
   mutating func prepareWayfarerColdChainBoard(failures: inout [String: String]) {
-    for pack in scriptPacks {
-      guard let terms = pack.manifest.coldChain,
-        terms.source.galaxy == commander.galaxy, terms.source.system == commander.system
+    for header in wayfarerColdChainPackHeaders() {
+      let terms = header.definition
+      guard
+        withReadOnlyCommander({
+          terms.source.galaxy == $0.galaxy && terms.source.system == $0.system
+        })
       else { continue }
-      do { _ = try initializeWayfarerColdChainStock(packDigest: pack.digest) } catch {
-        failures[pack.digest] = String(error.localizedDescription.prefix(512))
+      do { _ = try initializeWayfarerColdChainStock(packDigest: header.digest) } catch {
+        failures[header.digest] = String(error.localizedDescription.prefix(512))
       }
     }
   }
@@ -57,45 +60,20 @@ extension Game {
   func wayfarerColdChainRows(failures: [String: String]) -> [ContractBoardRow] {
     guard dockedAtMainStation else { return [] }
     var rows: [ContractBoardRow] = []
-    for pack in scriptPacks where pack.manifest.coldChain != nil {
-      guard let terms = pack.manifest.coldChain else { continue }
-      let source = commander.equipmentOwnerID.map {
-        WayfarerColdChainStockSource.identity(owner: $0, terms: terms).uuidString
-      }
-      var action = WayfarerColdChainBoardAction.unavailable
-      if let source, let stock = commander.scriptState.savedWayfarerColdChainStock?.sources[source],
-        let unit = stock.units.values.filter({ $0.status == .available })
-          .sorted(by: { $0.id.uuidString < $1.id.uuidString }).first
-      {
-        action = .pickup(source: source, unit: unit.id)
-      }
-      let row = WayfarerColdChainBoardRow(digest: pack.digest, action: action)
-      let reason = failures[pack.digest] ?? wayfarerColdChainReview(row).issues.first
+    for header in wayfarerColdChainPackHeaders() {
+      let action = wayfarerColdChainPickupAction(header.definition)
+      let row = WayfarerColdChainBoardRow(digest: header.digest, action: action)
+      let reason = failures[header.digest] ?? wayfarerColdChainReview(row).issues.first
       rows.append(
         .init(
-          board: row.key, offer: nil, title: pack.manifest.mission.title,
+          board: row.key, offer: nil, title: header.title,
           reason: reason, coldChain: row))
     }
-    for state in commander.scriptState.instances.values.sorted(by: {
-      $0.id.uuidString < $1.id.uuidString
-    }) {
-      guard state.outcome == .active, let custody = state.savedWayfarerColdChain else { continue }
-      let action: WayfarerColdChainBoardAction
-      if state.suspension != nil,
-        WayfarerColdChainSave.pendingExpiry(state, engine: commander.scriptState) != nil
-      {
-        action = .retryExpiry(state.id)
-      } else {
-        action = custody.objective == nil ? .objective(state.id) : .receive(state.id)
-      }
-      let row = WayfarerColdChainBoardRow(digest: state.digest, action: action)
+    for header in wayfarerColdChainActiveRowHeaders() {
       rows.append(
         .init(
-          board: row.key, offer: nil,
-          title: (custody.definition.isSeedTransfer
-            ? "Seed-bank consignment: " : "Cold-chain sample: ")
-            + (custody.objective == nil ? "verify arrival" : "receive and pay"),
-          reason: wayfarerColdChainReview(row).issues.first, coldChain: row))
+          board: header.row.key, offer: nil, title: header.title,
+          reason: wayfarerColdChainReview(header.row).issues.first, coldChain: header.row))
     }
     return rows
   }
@@ -103,11 +81,10 @@ extension Game {
   func wayfarerColdChainReview(_ row: WayfarerColdChainBoardRow) -> WayfarerColdChainBoardReview {
     var issues: [String] = []
     var offer: WayfarerColdChainOffer?
-    let dock = commander.nativeStations?.currentMainDock
+    let dock = retainedNativeMainStationDockReceipt
     if !scriptDurabilityAvailable { issues.append("Choose a writable commander save first.") }
     do {
-      guard let pack = scriptPacks.first(where: { $0.digest == row.digest }),
-        let terms = pack.manifest.coldChain, scriptUnavailable(pack) == nil
+      guard let terms = wayfarerColdChainBoardDefinition(row.digest)
       else {
         throw MissionPackError("Restore the original native cold-chain provider.")
       }
@@ -117,7 +94,9 @@ extension Game {
       switch row.action {
       case .pickup(let source, let unit):
         guard
-          commander.scriptState.savedWayfarerColdChainStock?.sources[source]?.digest == row.digest
+          withReadOnlyScriptState({
+            $0.savedWayfarerColdChainStock?.sources[source]?.digest
+          }) == row.digest
         else {
           throw MissionPackError("Original source terms changed; restore the exact provider.")
         }
@@ -127,23 +106,17 @@ extension Game {
             "Original available stock changed. Review the current consignment.")
         }
         offer = current
-        guard let occupied = commander.checkedCargoTonnes,
-          terms.tonnes <= commander.standardCargoCapacity,
-          occupied <= commander.standardCargoCapacity - terms.tonnes,
-          commander.scriptState.instances.count < 128
+        guard wayfarerColdChainPickupFits(terms.tonnes)
         else {
           throw MissionPackError(
             "\(terms.tonnes) actual free cargo tonnes and mission space are required.")
         }
       case .objective(let id), .receive(let id):
-        guard let state = commander.scriptState.instances[id], state.digest == row.digest,
-          state.outcome == .active, state.suspension == nil,
-          let custody = state.savedWayfarerColdChain,
-          let pack = scriptPacks.first(where: { $0.digest == row.digest }),
-          pack.manifest.coldChain == custody.definition, scriptUnavailable(pack) == nil,
+        guard let custody = wayfarerColdChainReviewCustody(id, digest: row.digest),
+          wayfarerColdChainProviderMatches(row.digest, definition: custody.definition),
           !paused, docked, nativeMainStationDockEvidenceIsCurrent,
           let dock, dock.commanderOwner == custody.owner,
-          commander.scriptState.stationResources[dock.station.key]?.destroyed != true
+          withReadOnlyScriptState({ $0.stationResources[dock.station.key]?.destroyed }) != true
         else {
           throw MissionPackError("Restore the original service at its actual living station.")
         }
@@ -160,13 +133,15 @@ extension Game {
           _ = try wayfarerColdChainReceptionDock(custody)
         }
       case .retryExpiry(let id):
-        guard let state = commander.scriptState.instances[id], state.digest == row.digest,
-          state.suspension != nil,
-          WayfarerColdChainSave.pendingExpiry(state, engine: commander.scriptState) != nil
+        guard wayfarerColdChainHasPendingExpiry(id, digest: row.digest)
         else { throw MissionPackError("No original suspended expiry remains to record.") }
       case .unavailable:
-        if let terms = scriptPacks.first(where: { $0.digest == row.digest })?.manifest.coldChain {
-          if terms.source.galaxy != commander.galaxy || terms.source.system != commander.system {
+        if let terms = withWayfarerInstalledPack(digest: row.digest, { $0.manifest.coldChain })
+          ?? nil
+        {
+          if withReadOnlyCommander({
+            terms.source.galaxy != $0.galaxy || terms.source.system != $0.system
+          }) {
             throw MissionPackError(
               "Collect at "
                 + Universe.systemsIncludingPlugh(
@@ -181,7 +156,9 @@ extension Game {
     } catch { issues.append(String(error.localizedDescription.prefix(512))) }
     return .init(
       row: row, offer: offer, epoch: ecmControl.epoch, dock: dock,
-      revision: row.action.instance.flatMap { commander.scriptState.instances[$0]?.revision },
+      revision: row.action.instance.flatMap { id in
+        withReadOnlyScriptState { $0.instances[id]?.revision }
+      },
       issues: issues)
   }
 
@@ -258,13 +235,13 @@ extension Game {
   // the entire retained save under every row/page read exhausts the ordinary key stack.
   // Confirm still enters the unchanged native command and its full claim validation.
   private func wayfarerColdChainDisplayRemaining(_ id: UUID) throws -> Double {
-    guard let state = commander.scriptState.instances[id],
+    guard let state = withReadOnlyScriptState({ $0.instances[id] }),
       let custody = state.savedWayfarerColdChain,
       state.definition == custody.definition.instanceDefinition,
-      custody.owner == commander.equipmentOwnerID
+      custody.owner == withReadOnlyCommander({ $0.equipmentOwnerID })
     else { throw SaveError.invalidCommander }
     if state.outcome != .active { return custody.integrity.remaining }
-    if commander.scriptState.clock(.flight) >= custody.timer.due { return 0 }
+    if withReadOnlyScriptState({ $0.clock(.flight) }) >= custody.timer.due { return 0 }
     guard state.timers[custody.timer.id] == custody.timer else { throw SaveError.invalidCommander }
     return try custody.integrity.observing(
       .init(

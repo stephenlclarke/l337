@@ -3396,7 +3396,7 @@ public struct Game: Sendable {
 
   // A potentially noncopyable pointee keeps the address projection borrowed.
   @inline(never)
-  private static func withBorrowedPointee<Value: ~Copyable, Result>(
+  static func withBorrowedPointee<Value: ~Copyable, Result>(
     _ pointer: UnsafePointer<Value>, _ read: (borrowing Value) throws -> Result
   ) rethrows -> Result {
     try read(pointer.pointee)

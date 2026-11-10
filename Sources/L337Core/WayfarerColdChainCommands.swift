@@ -254,22 +254,35 @@ public struct WayfarerColdChainOffer: Codable, Sendable, Equatable {
 }
 
 extension Game {
-  private func wayfarerPack(_ digest: String) throws -> ScriptPack {
-    guard let pack = scriptPacks.first(where: { $0.digest == digest }),
-      let terms = pack.manifest.coldChain, terms.valid,
-      pack.manifest.stateID == terms.instanceDefinition, scriptUnavailable(pack) == nil
+  private func withWayfarerPack<Result>(
+    _ digest: String, _ read: (borrowing ScriptPack) -> Result
+  ) throws -> Result {
+    guard
+      let result = try withWayfarerInstalledPack(
+        digest: digest,
+        { pack in
+          guard let terms = pack.manifest.coldChain, terms.valid,
+            pack.manifest.stateID == terms.instanceDefinition, scriptUnavailable(pack) == nil
+          else { throw MissionPackError("Install the exact native cold-chain declaration.") }
+          return read(pack)
+        })
     else { throw MissionPackError("Install the exact native cold-chain declaration.") }
-    return pack
+    return result
+  }
+
+  private func wayfarerPack(_ digest: String) throws -> ScriptPack {
+    try withWayfarerPack(digest) { copy $0 }
   }
 
   private func wayfarerDock(_ site: WayfarerColdChainSite) throws -> NativeMainStationDockReceipt {
     guard !paused, docked, screen != .gameOver, energy.isFinite, energy > 0,
       nativeMainStationDockEvidenceIsCurrent,
-      let dock = commander.nativeStations?.currentMainDock, dock.valid,
-      dock.commanderOwner == commander.equipmentOwnerID, site.matches(dock.station),
-      commander.scriptState.stationResources[site.resourceKey]?.destroyed != true
+      let dock = retainedNativeMainStationDockReceipt, dock.valid,
+      dock.commanderOwner == withReadOnlyCommander({ $0.equipmentOwnerID }),
+      site.matches(dock.station),
+      withReadOnlyScriptState({ $0.stationResources[site.resourceKey]?.destroyed }) != true
     else { throw MissionPackError("Use the actual declared living station contact.") }
-    if let resource = commander.scriptState.stationResources[site.resourceKey] {
+    if let resource = withReadOnlyScriptState({ $0.stationResources[site.resourceKey] }) {
       guard resource.valid, resource.identity == dock.station.resource,
         resource.key == site.resourceKey, !resource.destroyed
       else { throw SaveError.invalidCommander }
@@ -321,20 +334,22 @@ extension Game {
   }
 
   func wayfarerColdChainQuote(sourceID: String) throws -> WayfarerColdChainOffer {
-    try OriginalServiceReservationPolicy.requireAvailableSlot(commander.scriptState)
-    guard let ledger = commander.scriptState.savedWayfarerColdChainStock,
-      ledger.owner == commander.equipmentOwnerID, let source = ledger.sources[sourceID],
+    try withReadOnlyScriptState { try OriginalServiceReservationPolicy.requireAvailableSlot($0) }
+    guard let source = wayfarerColdChainQuoteSource(sourceID),
       source.valid,
       let unit = source.units.values.filter({ $0.status == .available })
         .sorted(by: { $0.id.uuidString < $1.id.uuidString }).first
     else { throw MissionPackError("No original medical sample remains available.") }
-    let pack = try wayfarerPack(source.digest)
-    guard pack.manifest.coldChain == source.definition else { throw SaveError.invalidCommander }
+    guard try withWayfarerPack(source.digest, { $0.manifest.coldChain == source.definition }) else {
+      throw SaveError.invalidCommander
+    }
     let dock = try wayfarerDock(source.definition.source)
     let terms = source.definition
     let systems = Universe.systemsIncludingPlugh(number: terms.source.galaxy)
     for (index, edge) in zip(terms.route, terms.route.dropFirst()).enumerated() {
-      let cap = index == 0 ? commander.maximumJumpDistance : commander.fullTankJumpDistance
+      let cap = withReadOnlyCommander {
+        index == 0 ? $0.maximumJumpDistance : $0.fullTankJumpDistance
+      }
       guard systems[edge.0].distance(to: systems[edge.1]) <= cap else {
         throw MissionPackError("The complete quoted itinerary must be natively reachable.")
       }
