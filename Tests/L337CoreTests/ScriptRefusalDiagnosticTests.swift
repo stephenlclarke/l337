@@ -93,6 +93,7 @@ private func refusalChecks(_ detail: String, boundary: ScriptRefusalBoundary) ->
   #expect(retainedNativeChecks == nativeChecks)
   let storeChecks = try #require(refusalChecks(storeDetail, boundary: .publication))
   #expect(storeChecks & 1 == 1 && storeChecks & 2 == 0 && storeChecks & 96 == 96)
+  #expect(storeDetail.contains("predicate=4"))
   let pointerExists = FileManager.default.fileExists(atPath: target.path)
   #expect(!pointerExists)
 }
@@ -135,4 +136,64 @@ private func refusalChecks(_ detail: String, boundary: ScriptRefusalBoundary) ->
   #expect(detail.contains("publication=sceneUnadmittedJump,error=save.invalidCommander"))
   let pointerExists = FileManager.default.fileExists(atPath: target.path)
   #expect(!pointerExists)
+}
+
+extension GameRuntime {
+  /// Freeze only the completed confirmation turn; later board-open commands cannot pollute it.
+  func finishSeedPublicationRefusalObservation() -> String? {
+    let detail = scriptRefusalDiagnostic?.detail()
+    scriptRefusalDiagnostic = nil
+    return detail
+  }
+
+  /// Unit control: reject a staged commander through the real publisher, then compare rollback.
+  fileprivate func verifySeedPublicationRollbackControl() throws -> String {
+    let before = game
+    let observation = ScriptRefusalDiagnostic()
+    scriptRefusalDiagnostic = observation
+    var refused = false
+    do {
+      try scriptCommand { candidate in
+        candidate.commander.cargo = []
+        candidate.commander.credits += 17
+      }
+    } catch {
+      refused = error is SaveError
+    }
+    #expect(refused)
+    #expect(game.commander == before.commander && game.bodies == before.bodies)
+    let detail = try #require(observation.detail())
+    #expect(detail.contains("publication=nativeSaveValidation,error=save.invalidCommander"))
+    #expect(detail.contains("cargoCount=0"))
+    #expect(refusalChecks(detail, boundary: .publication).map { $0 & 4 == 0 } == true)
+    // Later outer catches must never overwrite the first native failure.
+    observation.record(
+      .publication, .init(stage: .commandPublish, error: SaveError.invalidCommander, game: game))
+    #expect(observation.detail() == detail)
+    return detail
+  }
+}
+
+/// These are ordinary small unit controls, called inside the existing W03 method so the
+/// four-selector qualification also executes the new recorder/rollback regression checks.
+func verifySeedPublicationRefusalControls() async throws {
+  try scriptRefusalObservationIsBoundedFirstOnlyAndDoesNotRenderErrorData()
+  try scriptRefusalObservationPreservesNativeAndStoreValidationRefusals()
+  var game = Game(executive: false)
+  game.screen = .status
+  game.ensureScriptCalendar(origin: .newCommander)
+  try game.commander.prepareEquipment(legacy: false)
+  let url = FileManager.default.temporaryDirectory
+    .appendingPathComponent("seed-publication-control-" + UUID().uuidString)
+  defer { try? FileManager.default.removeItem(at: url) }
+  defer { try? FileManager.default.removeItem(at: url.appendingPathExtension("missions")) }
+  let runtime = GameRuntime(game: game, saveURL: url)
+  try #require(await runtime.snapshot().requiresScriptDurability)
+  await runtime.beginScriptRefusalObservation()
+  #expect(await runtime.finishSeedPublicationRefusalObservation() == nil)
+  let detail = try await runtime.verifySeedPublicationRollbackControl()
+  #expect(await runtime.finishSeedPublicationRefusalObservation() == detail)
+  #expect(await runtime.scriptRefusalObservationDetail() == nil)
+  #expect(detail.utf8.count < 12288)
+  #expect(!FileManager.default.fileExists(atPath: url.path))
 }

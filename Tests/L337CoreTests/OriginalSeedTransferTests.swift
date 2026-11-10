@@ -12,7 +12,7 @@ private struct OriginalSeedTransferBoardFixture {
 
   func review(
     _ runtime: GameRuntime,
-    request: String, file: StaticString = #fileID, line: UInt = #line,
+    request: String, publication: String? = nil, file: StaticString = #fileID, line: UInt = #line,
     matching predicate: (WayfarerColdChainBoardAction) -> Bool
   ) async throws -> WayfarerColdChainBoardReview {
     let beforeOpen = seedBoardOpenEvidence(await runtime.snapshot())
@@ -32,7 +32,7 @@ private struct OriginalSeedTransferBoardFixture {
           rawValue: match == nil
             ? seedBoardLookupEvidence(
               request: request, file: file, line: line, digest: native.pack.digest,
-              beforeOpen: beforeOpen, game: game)
+              beforeOpen: beforeOpen, game: game, publication: publication)
             : ""))
       selection = board.selection
     }
@@ -209,7 +209,7 @@ private func seedBoardOpenEvidence(_ game: borrowing Game) -> [String: String] {
 
 private func seedBoardLookupEvidence(
   request: String, file: StaticString, line: UInt, digest: String,
-  beforeOpen: [String: String], game: borrowing Game
+  beforeOpen: [String: String], game: borrowing Game, publication: String?
 ) -> String {
   let rows = SeedBoardEvidenceSection(
     total: game.contractBoard.rows.count,
@@ -292,6 +292,7 @@ private func seedBoardLookupEvidence(
     var evidence: [String: Any] = [
       "request": seedEvidenceText(request), "callSite": seedEvidenceText("\(file):\(line)"),
       "expectedDigest": seedEvidenceText(digest), "beforeOpen": beforeOpen,
+      "objectivePublicationRefusal": seedEvidenceText(publication ?? "not-observed", limit: 12288),
       "afterOpen": afterOpen,
       "outputUTF8Limit": SeedBoardEvidenceLimit.outputBytes,
       "outputBudgetTruncated": outputTruncated,
@@ -414,6 +415,7 @@ struct OriginalSeedTransferTests {
     let fixture = try OriginalSeedTransferBoardFixture()
     defer { fixture.native.files.clean() }
     verifySeedEndpointEvidenceFormatting()
+    try await verifySeedPublicationRefusalControls()
     let endpoint = GameplayEncounterBirthDiagnostic()
     try #require(endpoint.endpointRefusal == nil && endpoint.observations.isEmpty)
     let runtime = try await fixture.native.runtime(endpointDiagnostic: endpoint)
@@ -433,11 +435,14 @@ struct OriginalSeedTransferTests {
         runtime, request: "objective lot=\(index) instance=\(id)"
       ) { $0 == .objective(id) }
       try #require(objective.allowed, Comment(rawValue: objective.issues.joined(separator: "; ")))
+      // Fresh first-only slots belong to this ordinary right/return confirmation, not earlier flight.
+      await runtime.beginScriptRefusalObservation()
       await fixture.confirm(runtime)
+      let objectivePublication = await runtime.finishSeedPublicationRefusalObservation()
       let verified = await runtime.snapshot()
       #expect(verified.commander.credits == source.commander.credits + 6050 * index)
       let receiving = try await fixture.review(
-        runtime, request: "receive lot=\(index) instance=\(id)"
+        runtime, request: "receive lot=\(index) instance=\(id)", publication: objectivePublication
       ) { $0 == .receive(id) }
       try #require(receiving.allowed, Comment(rawValue: receiving.issues.joined(separator: "; ")))
       await fixture.confirm(runtime)

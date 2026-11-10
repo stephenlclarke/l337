@@ -62,35 +62,40 @@ extension GameRuntime {
   /// Captures value paths and a bounded Sendable, non-authoritative observation reference.
   /// No writer, actor or interpreter callback escapes this turn.
   func scriptPublisher(
-    requireNativeSalvage: Bool = false, requireNativeMainArrival: Bool = false, diagnosticBoundary: ScriptRefusalBoundary = .publication,
+    requireNativeSalvage: Bool = false, requireNativeMainArrival: Bool = false,
+    diagnosticBoundary: ScriptRefusalBoundary = .publication,
     navigationBinding: ScriptNavigationTradeBinding? = nil
   ) -> ScriptPublisher? {
     guard game.requiresScriptDurability || requireNativeSalvage || requireNativeMainArrival,
-      let url = scriptSaveURL else {
+      let url = scriptSaveURL
+    else {
       return nil
     }
     let namespace = galleryNamespace
     let diagnostics = scriptRefusalDiagnostic
     let c03History = NativeC03PublicationHistory(game.commander)
     return { candidate in
-      try c03History.requirePreserved(in: candidate.commander)
-      let prepared = try Self.prepareScriptPublication(
-        &candidate, to: url, namespace: namespace, diagnostics: diagnostics,
-        diagnosticBoundary: diagnosticBoundary)
-      try c03History.requirePreserved(in: prepared.commander)
-      let alienPublication: AlienStoragePublication?
+      var stage = ScriptRefusalStage.publicationHistory
       do {
-        alienPublication = try Self.writeScriptPublication(
+        try c03History.requirePreserved(in: candidate.commander)
+        stage = .publicationActors
+        let prepared = try Self.prepareScriptPublication(
+          &candidate, to: url, namespace: namespace, diagnostics: diagnostics,
+          diagnosticBoundary: diagnosticBoundary)
+        stage = .preparedHistory
+        try c03History.requirePreserved(in: prepared.commander)
+        stage = .storeWorld
+        let alienPublication = try Self.writeScriptPublication(
           prepared, to: url, namespace: namespace,
           exclusive: candidate.pendingNewSaveDestination == url, diagnostics: diagnostics,
           diagnosticBoundary: diagnosticBoundary, navigationBinding: navigationBinding)
+        Self.commitScriptPublication(
+          prepared, alienPublication: alienPublication, to: url, candidate: &candidate)
       } catch {
-        Self.recordScriptPublicationFailure(
-          prepared, error: error, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+        diagnostics?.record(
+          diagnosticBoundary, .init(stage: stage, error: error, game: candidate))
         throw error
       }
-      Self.commitScriptPublication(
-        prepared, alienPublication: alienPublication, to: url, candidate: &candidate)
     }
   }
 
@@ -100,27 +105,40 @@ extension GameRuntime {
     _ candidate: inout Game, to url: URL, namespace: URL?,
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary
   ) throws -> NativeSavePreparation {
-    try Self.requireGalleryFileAccess(url, namespace: namespace)
-    let originalJournal = candidate.commander.savedBisonUnitAllocations
-    // Both publication paths pin current policy before choosing the save schema.
-    try candidate.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
-    if candidate.commander.scriptState.calendarLedger == nil {
-      let legacy =
-        candidate.commander.legacyOwnedEquipment != nil || candidate.jumpCountdown != nil
-      candidate.ensureScriptCalendar(origin: legacy ? .inactiveLegacyMigration : .newCommander)
-      if candidate.jumpCountdown != nil {
-        candidate.commander.scriptState.calendarLedger?.legacyUntrackedJourney = true
+    var stage = ScriptRefusalStage.publicationAccess
+    do {
+      try Self.requireGalleryFileAccess(url, namespace: namespace)
+      let originalJournal = candidate.commander.savedBisonUnitAllocations
+      // Both publication paths pin current policy before choosing the save schema.
+      stage = .publicationMining
+      try candidate.migrateMiningPresence(legacyMissing: false, persistCurrentPolicy: true)
+      if candidate.commander.scriptState.calendarLedger == nil {
+        let legacy =
+          candidate.commander.legacyOwnedEquipment != nil || candidate.jumpCountdown != nil
+        candidate.ensureScriptCalendar(origin: legacy ? .inactiveLegacyMigration : .newCommander)
+        if candidate.jumpCountdown != nil {
+          candidate.commander.scriptState.calendarLedger?.legacyUntrackedJourney = true
+        }
       }
+      stage = .publicationActors
+      try candidate.persistScriptActorsChecked()
+      candidate.inductionArkDockPublicationPending = false
+      candidate.inductionRescueDockPublicationPending = false
+      candidate.inductionUtilityWorkRuntime.dirty = false
+      candidate.inductionUtilityWorkRuntime.publishedSeconds =
+        candidate.inductionUtilityQualifiedSeconds
+      stage = .publicationJournal
+      guard candidate.commander.savedBisonUnitAllocations == originalJournal else {
+        throw SaveError.invalidCommander
+      }
+      stage = .nativePeople
+      return try Self.prepareNativeSaveState(
+        candidate, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    } catch {
+      diagnostics?.record(
+        diagnosticBoundary, .init(stage: stage, error: error, game: candidate))
+      throw error
     }
-    try candidate.persistScriptActorsChecked()
-    candidate.inductionArkDockPublicationPending = false
-    candidate.inductionRescueDockPublicationPending = false
-    candidate.inductionUtilityWorkRuntime.dirty = false
-    candidate.inductionUtilityWorkRuntime.publishedSeconds =
-      candidate.inductionUtilityQualifiedSeconds
-    guard candidate.commander.savedBisonUnitAllocations == originalJournal else { throw SaveError.invalidCommander }
-    return try Self.prepareNativeSaveState(
-      candidate, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
   }
 
   @inline(never)
@@ -129,12 +147,26 @@ extension GameRuntime {
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary,
     navigationBinding: ScriptNavigationTradeBinding?
   ) throws -> AlienStoragePublication? {
-    try ScriptSaveStore.write(
-      commander: prepared.commander,
-      world: try BisonUnitJournalSave.preparedWorld(prepared.game.scriptWorldSave, commander: prepared.commander), to: url,
-      scope: namespace == nil ? "commander" : "gallery",
-      exclusive: exclusive, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary,
-      navigationBinding: navigationBinding)
+    let world: ScriptWorldSave
+    do {
+      world = try BisonUnitJournalSave.preparedWorld(
+        prepared.game.scriptWorldSave, commander: prepared.commander)
+    } catch {
+      diagnostics?.record(
+        diagnosticBoundary, .init(stage: .storeWorld, error: error, game: prepared.game))
+      throw error
+    }
+    do {
+      return try ScriptSaveStore.write(
+        commander: prepared.commander, world: world, to: url,
+        scope: namespace == nil ? "commander" : "gallery",
+        exclusive: exclusive, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary,
+        navigationBinding: navigationBinding)
+    } catch {
+      Self.recordScriptPublicationFailure(
+        prepared, error: error, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+      throw error
+    }
   }
 
   @inline(never)
@@ -167,6 +199,7 @@ extension GameRuntime {
     do {
       let c03History = NativeC03PublicationHistory(before.commander)
       guard game.flushNativeSalvageWork() else { throw SaveError.invalidCommander }
+      stage = .commandHistory
       try c03History.requirePreserved(in: game.commander)
       let ownsPersistentState =
         before.requiresScriptDurability || game.requiresScriptDurability

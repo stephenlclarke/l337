@@ -396,15 +396,25 @@ enum ScriptSaveStore {
     clueTrust: ScriptClueTrustCatalog = .production,
     navigationBinding: ScriptNavigationTradeBinding? = nil
   ) throws -> AlienStoragePublication? {
-    try BisonUnitJournalSave.validateArchive(commander: commander, world: world,
-      pointer: world.bisonUnitJournalCheckpoint)
-    try validateForPublication(
-      commander: commander, world: world, scope: scope, diagnostics: diagnostics,
-      diagnosticBoundary: diagnosticBoundary, clueTrust: clueTrust,
-      navigationBinding: navigationBinding)
-    return try publishValidated(
-      commander: commander, world: world, to: url, scope: scope, exclusive: exclusive,
-      diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    var stage = ScriptRefusalStage.storeArchive
+    do {
+      try BisonUnitJournalSave.validateArchive(
+        commander: commander, world: world,
+        pointer: world.bisonUnitJournalCheckpoint)
+      stage = .storeValidation
+      try validateForPublication(
+        commander: commander, world: world, scope: scope, diagnostics: diagnostics,
+        diagnosticBoundary: diagnosticBoundary, clueTrust: clueTrust,
+        navigationBinding: navigationBinding)
+      stage = .storeChunks
+      return try publishValidated(
+        commander: commander, world: world, to: url, scope: scope, exclusive: exclusive,
+        diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    } catch {
+      diagnostics?.record(
+        diagnosticBoundary, .init(stage: stage, error: error, commander: commander))
+      throw error
+    }
   }
   /// Select only the current native mission envelopes; older families retain their fallback.
   static func nativeMissionPublicationVersion(_ commander: borrowing Commander, alien: Bool) -> Int?
@@ -554,48 +564,96 @@ enum ScriptSaveStore {
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary,
     clueTrust: ScriptClueTrustCatalog, navigationBinding: ScriptNavigationTradeBinding?
   ) throws {
-    guard ["commander", "gallery"].contains(scope), commander.scriptState.calendarLedger != nil,
-      commander.valid, world.valid, NativePracticeSave.sceneValid(world, commander: commander),
-      NativeC01InquirySave.retainedSourceAndWorldValid(commander, world: world),
-      ScriptFreightVersionedSave.validateClaims(commander),
-      NativeDefensiveFlightSave.validateClaims(commander),
-      NativeSafeGunnerySave.validateClaims(commander),
-      NativePracticeSave.validateClaims(commander),
-      NativeInductionCrewLogSave.validateClaims(commander),
-      NativeInductionArkSave.validateClaims(commander),
-      NativeWayfarerInductionSave.validateClaims(commander),
-      NativeFirstCommoditySaleSave.validateClaims(commander),
-      NativeSecondCommoditySaleSave.validateClaims(commander),
-      NativeFirstCommodityTradeSave.validateClaims(commander),
-      NativeUnderTowSave.validateClaims(commander),
-      NativePublicRecordSave.validateClaims(commander),
-      NativeBorrowedVoiceSave.validateClaims(commander),
-      NativeTitheCommissionSave.validateClaims(commander),
-      NativeC03PublicationPreflight.validateClaims(commander),
-      NativeQuietChoirSave.validateClaims(commander),
-      NativeMemoryAtlasSave.validateClaims(commander),
-      NativeMemoryAtlasWatcherSourceSave.validateClaims(commander),
-      NativeSignedPassageOpeningSave.validateClaims(commander),
-      NativeAssemblyOfOrbitsSave.validateClaims(commander),
-      NativeGlassMeridianSave.validateClaims(commander),
-      NativeFleetDiscoverySave.validateClaims(commander),
-      NativeFlightReceptionSave.validateClaims(commander),
-      WayfarerFieldReliefSave.validateClaims(commander, requireRecordedLoss: true),
-      NativeMeasuredExtractionSave.validateClaims(commander, requireRecordedLoss: true),
-      WayfarerRecordRecoverySave.validateClaims(commander, requireRecordedLoss: true),
-      NativeIdentifiedSalvageSave.validateClaims(commander, requireRecordedLoss: true),
-      NativeOriginalSurveySave.validateClaims(commander),
-      NativeOriginalEvacuationSave.validateClaims(commander),
-      NativeOriginalRescueJourneySave.validateClaims(commander),
-      NativeOrbitalOutlookJourneySave.validateClaims(commander),
-      NativeStationPassengerJourneySave.validateClaims(commander),
-      OriginalConsentedFreightSupplySave.validateClaims(commander),
-      NativeIsolationWorkParentSave.validateClaims(commander),
-      NativeIsolationWorkSave.validateClaims(commander),
-      NativeIsolationContractSave.validateClaims(commander),
-      commander.usesFreightNativeSaveVersion || !commander.usesProviderContractSaveVersion,
-      world.consistent(
-        with: commander, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    var predicate = 0
+    guard Self.publicationPredicate(["commander", "gallery"].contains(scope), cursor: &predicate),
+      Self.publicationPredicate(commander.scriptState.calendarLedger != nil, cursor: &predicate),
+      Self.publicationPredicate(commander.valid, cursor: &predicate),
+      Self.publicationPredicate(world.valid, cursor: &predicate),
+      Self.publicationPredicate(
+        NativePracticeSave.sceneValid(world, commander: commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeC01InquirySave.retainedSourceAndWorldValid(commander, world: world),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        ScriptFreightVersionedSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeDefensiveFlightSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeSafeGunnerySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(NativePracticeSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeInductionCrewLogSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeInductionArkSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeWayfarerInductionSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeFirstCommoditySaleSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeSecondCommoditySaleSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeFirstCommodityTradeSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(NativeUnderTowSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativePublicRecordSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeBorrowedVoiceSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeTitheCommissionSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeC03PublicationPreflight.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(NativeQuietChoirSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeMemoryAtlasSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeMemoryAtlasWatcherSourceSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeSignedPassageOpeningSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeAssemblyOfOrbitsSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeGlassMeridianSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeFleetDiscoverySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeFlightReceptionSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        WayfarerFieldReliefSave.validateClaims(commander, requireRecordedLoss: true),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        NativeMeasuredExtractionSave.validateClaims(commander, requireRecordedLoss: true),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        WayfarerRecordRecoverySave.validateClaims(commander, requireRecordedLoss: true),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        NativeIdentifiedSalvageSave.validateClaims(commander, requireRecordedLoss: true),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        NativeOriginalSurveySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeOriginalEvacuationSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeOriginalRescueJourneySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeOrbitalOutlookJourneySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeStationPassengerJourneySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        OriginalConsentedFreightSupplySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeIsolationWorkParentSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeIsolationWorkSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeIsolationContractSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        commander.usesFreightNativeSaveVersion || !commander.usesProviderContractSaveVersion,
+        cursor: &predicate),
+      Self.publicationPredicate(
+        world.consistent(
+          with: commander, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary),
+        cursor: &predicate)
     else {
       if let diagnostics, !diagnostics.contains(diagnosticBoundary) {
         // True guard prefix; bits 32/64/1/2/4/8/16: scope, calendar, commander, world, claims,
@@ -605,39 +663,71 @@ enum ScriptSaveStore {
           diagnosticBoundary,
           .init(
             stage: .storeValidation, error: SaveError.invalidCommander, commander: commander,
-            checks: checks))
+            checks: checks, predicate: predicate))
       }
       throw SaveError.invalidCommander
     }
-    guard ScriptClueVersionedSave.validateClaims(commander, trust: clueTrust),
-      ScriptNavigationTradeSave.validateClaims(commander, binding: navigationBinding),
-      WayfarerColdChainSave.validateClaims(commander),
-      WayfarerRepairLoopSave.validateClaims(commander),
-      OriginalConsentedFreightSupplySave.validateClaims(commander)
+    predicate = 0
+    guard
+      Self.publicationPredicate(
+        ScriptClueVersionedSave.validateClaims(commander, trust: clueTrust), cursor: &predicate),
+      Self.publicationPredicate(
+        ScriptNavigationTradeSave.validateClaims(commander, binding: navigationBinding),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        WayfarerColdChainSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        WayfarerRepairLoopSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        OriginalConsentedFreightSupplySave.validateClaims(commander), cursor: &predicate)
     else {
+      diagnostics?.record(
+        diagnosticBoundary,
+        .init(
+          stage: .storeValidation, error: SaveError.invalidCommander, commander: commander,
+          checks: 127, predicate: 1000 + predicate))
       throw SaveError.invalidCommander
     }
   }
+  /// Evaluated once in the original guard order, including when observation is disabled.
+  /// The cursor names the attempted predicate; it never grants admission.
+  @inline(__always)
+  private static func publicationPredicate(_ valid: Bool, cursor: inout Int) -> Bool {
+    cursor += 1
+    return valid
+  }
+
   // The original deliberate header copy and all encoding/file work begin only after validation returns.
   @inline(never)
   private static func publishValidated(
     commander: Commander, world: ScriptWorldSave, to url: URL, scope: String, exclusive: Bool,
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary
   ) throws -> AlienStoragePublication? {
-    try validateSemanticPublicationSizes(
-      commander: commander, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
-    let generation = UUID().uuidString
-    let root = url.appendingPathExtension("missions")
-    let directory = root.appendingPathComponent(generation, isDirectory: true)
-    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-    let alienPublication = try AlienStorageVersionedSave.stage(commander, in: directory)
-    let encoder = ScriptValueStorage.encoder()
-    let chunks = try encodePublicationChunks(
-      commander: commander, world: world, alienPublication: alienPublication, encoder: encoder)
-    return try publishEncodedChunks(
-      commander: commander, chunks: chunks, encoder: encoder, alienPublication: alienPublication,
-      directory: directory, generation: generation, to: url, scope: scope, exclusive: exclusive,
-      diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    var stage = ScriptRefusalStage.storeSemanticSize
+    do {
+      try validateSemanticPublicationSizes(
+        commander: commander, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+      let generation = UUID().uuidString
+      let root = url.appendingPathExtension("missions")
+      let directory = root.appendingPathComponent(generation, isDirectory: true)
+      stage = .storeDirectory
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      stage = .storeAlienStage
+      let alienPublication = try AlienStorageVersionedSave.stage(commander, in: directory)
+      let encoder = ScriptValueStorage.encoder()
+      stage = .storeEncode
+      let chunks = try encodePublicationChunks(
+        commander: commander, world: world, alienPublication: alienPublication, encoder: encoder)
+      stage = .storeChunks
+      return try publishEncodedChunks(
+        commander: commander, chunks: chunks, encoder: encoder, alienPublication: alienPublication,
+        directory: directory, generation: generation, to: url, scope: scope, exclusive: exclusive,
+        diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    } catch {
+      diagnostics?.record(
+        diagnosticBoundary, .init(stage: stage, error: error, commander: commander))
+      throw error
+    }
   }
 
   @inline(never)
