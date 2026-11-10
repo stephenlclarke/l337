@@ -739,9 +739,18 @@ extension Game {
     updated.nextMainDockSequence += 1
     guard updated.valid else { return }
     commander.nativeStations = updated
+    bindNativeMainArrivalAuthority(receipt)
+    observeFleetDocking(body: station, main: receipt)
+  }
+
+  private mutating func bindNativeMainArrivalAuthority(_ receipt: NativeMainStationDockReceipt) {
+    let pending = nativeFlightReceptionPending
+    let priorEpoch = nativeStationRuntimeEpoch
     invalidateNativeStationAuthority()
     nativeMainStationDockEvidence = .init(receipt: receipt, runtimeEpoch: nativeStationRuntimeEpoch)
-    observeFleetDocking(body: station, main: receipt)
+    if let pending {
+      retainFlightReceptionPendingAfterArrival(pending, priorEpoch: priorEpoch)
+    }
   }
 
   /// This is evaluated by native movement, with the real effective hull at both sweep endpoints.
@@ -2040,9 +2049,7 @@ extension Game {
     world.nextMainDockSequence += 1
     guard world.valid else { throw NativeStationRuntimeError.invalidState }
     candidate.commander.nativeStations = world
-    candidate.invalidateNativeStationAuthority()
-    candidate.nativeMainStationDockEvidence = .init(
-      receipt: proof.receipt, runtimeEpoch: candidate.nativeStationRuntimeEpoch)
+    candidate.bindNativeMainArrivalAuthority(proof.receipt)
     guard candidate.nativeMainStationDockEvidenceIsCurrent else {
       throw NativeStationRuntimeError.invalidState
     }

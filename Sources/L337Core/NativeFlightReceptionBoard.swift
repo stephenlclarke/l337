@@ -244,18 +244,43 @@ extension Game {
     guard let pending = nativeFlightReceptionPending else { return false }
     guard let active = activeFlightReception, active.state.reading == nil,
       pending.reading.first.permission == active.state.permission.operation,
-      pending.reading.first.mission == active.instance.id,
-      pending.reading.first.epoch == nativeStationRuntimeEpoch,
-      NativeFlightReception.readingValid(pending.reading)
+      pending.reading.first.mission == active.instance.id
     else { throw SaveError.invalidCommander }
     var state = active.state
-    var mission = active.instance
     state.reading = pending.reading
+    let authorized =
+      pending.reading.first.epoch == nativeStationRuntimeEpoch
+      ? NativeFlightReception.readingValid(pending.reading)
+      : pendingFlightReceptionMatchesArrival(state)
+    guard authorized else { throw SaveError.invalidCommander }
+    var mission = active.instance
     mission.savedFlightReception = state
     mission.milestones.insert(1)
     commander.scriptState.instances[mission.id] = mission
     nativeFlightReceptionPending = nil
     return true
+  }
+
+  /// Only the native doorway handoff can carry the same immutable proposal through renewal.
+  mutating func retainFlightReceptionPendingAfterArrival(
+    _ pending: NativeFlightReceptionPending, priorEpoch: UUID
+  ) {
+    guard pending.reading.first.epoch == priorEpoch,
+      let active = activeFlightReception, active.state.reading == nil,
+      pending.reading.first.mission == active.instance.id
+    else { return }
+    var state = active.state
+    state.reading = pending.reading
+    guard pendingFlightReceptionMatchesArrival(state) else { return }
+    nativeFlightReceptionPending = pending
+  }
+
+  private func pendingFlightReceptionMatchesArrival(_ state: NativeFlightReceptionState) -> Bool {
+    guard let reading = state.reading,
+      let arrival = nativeMainStationArrivalContext(for: state.permission.dock.station),
+      arrival.receipt.actor == reading.last.actor
+    else { return false }
+    return NativeFlightReception.returnReady(state, dock: arrival.receipt)
   }
 
   mutating func recordFlightReceptionFailureIfNeeded() throws {
