@@ -58,7 +58,9 @@ struct ScriptRefusalObservation: Sendable {
   /// Raw rejected-candidate fields only; never re-run validation or retain Game/Commander.
   /// Three active service instances are the native maximum. Count every omitted record.
   private static func seedCandidateFacts(_ commander: borrowing Commander) -> String {
-    commander.withReadOnlyScriptState { engine in
+    let owner = commander.equipmentOwnerID
+    let cargoCount = commander.cargo.count
+    return commander.withReadOnlyScriptState { engine in
       var records: [(UUID, String)] = []
       var total = 0
       for id in engine.instances.keys {
@@ -83,19 +85,19 @@ struct ScriptRefusalObservation: Sendable {
         text += ",payload=\(state.payloads[leaf.definition.payloadID] ?? 0)"
         text += ",timerMatch=\(state.timers[leaf.timer.id] == leaf.timer)"
         text += ",due=\(leaf.timer.due),integrityRemaining=\(leaf.integrity.remaining)"
-        text += ",ownerMatch=\(leaf.owner == commander.equipmentOwnerID)"
+        text += ",ownerMatch=\(leaf.owner == owner)"
         text += ",accepted=\(leaf.seedTransfer?.acceptance != nil)"
         records.append((id, text))
         records.sort { $0.0.uuidString < $1.0.uuidString }
         if records.count > 3 { records.removeLast() }
       }
       guard total > 0 else {
-        return "seedTotal=0,cargoCount=\(commander.cargo.count),instances=\(engine.instances.count)"
+        return "seedTotal=0,cargoCount=\(cargoCount),instances=\(engine.instances.count)"
       }
       let text =
         "total=\(total),retained=\(records.count),truncated=\(total > records.count)"
         + ",nextEvent=\(engine.nextEvent),flight=\(engine.flightSeconds)"
-        + ",cargoCount=\(commander.cargo.count);" + records.map { $0.1 }.joined(separator: ";")
+        + ",cargoCount=\(cargoCount);" + records.map { $0.1 }.joined(separator: ";")
       guard text.utf8.count <= 4096, text.utf8.allSatisfy({ (32...126).contains($0) }) else {
         return "incomplete=bound,total=\(total),retained=0"
       }
