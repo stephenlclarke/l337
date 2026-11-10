@@ -46,3 +46,14 @@ and non-commander locations must refuse. Forged binding/hull/time records remain
 invalid under the existing typed validator. No receipts or stock are fabricated.
 New controls are authored; Swift execution remains pending the combined review
 and fresh exact Root grant. Original four selectors and existing controls remain.
+
+
+The first f91c8a18 run built and discovered all four methods, then the helper
+received SIGBUS in its stack guard during the newly added synchronous fixture
+setup. Its XML is incomplete and establishes no case outcomes. The matched crash
+PID/image and native call chain are retained. Split native birth from capture and
+encoding with an async return boundary; pass only the ledger, career, stock,
+actor and encoded header to the assertion helper. Preserve every control,
+assertion and selector, the genuine native fixture and all production bytes.
+No stack limits, resources, threads or test selection change. Execution remains
+pending combined delta review and a fresh grant.

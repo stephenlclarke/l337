@@ -3,9 +3,30 @@ import Testing
 
 @testable import L337Core
 
+private struct WantedNewtCarrierInput {
+  let ledger: WantedCareerLedger
+  let career: WantedCareer
+  let stock: CurrentNewtKitStock
+  let actor: ActorIdentity
+  let header: Data
+}
+
 /// Runs in the existing W03 qualification, using an actually born kit and captured NPC.
-func verifyWantedNewtCarrierControls() throws {
-  var game = try NativePagedSalvageFixture.equippedNewtStowedGame()
+func verifyWantedNewtCarrierControls() async throws {
+  let input = try await wantedNewtCarrierInput()
+  try verifyWantedNewtCarrierClaims(input)
+}
+
+// Return into the suspended caller's async storage before it captures or encodes
+// the game. The native birth runs without the control helper's value temporaries
+// and assertion captures occupying its synchronous stack.
+@inline(never)
+private func bornWantedNewtCarrierGame() async throws -> Game {
+  try NativePagedSalvageFixture.equippedNewtStowedGame()
+}
+
+private func wantedNewtCarrierInput() async throws -> WantedNewtCarrierInput {
+  var game = try await bornWantedNewtCarrierGame()
   let candidate = game.bodies.first { $0.physical?.currentNewtKitStock != nil }
   let body = try #require(candidate)
   let context = try #require(game.gameplayContext())
@@ -22,6 +43,18 @@ func verifyWantedNewtCarrierControls() throws {
   try #require(career.parked?.currentNewtKitStock == stock)
   game.commander.wantedCareers = ledger
 
+  let original = game.commander
+  let fullHeader = try JSONEncoder().encode(game.commander)
+  #expect(game.commander == original)
+  return .init(
+    ledger: ledger, career: career, stock: stock, actor: snapshot.actor, header: fullHeader)
+}
+
+private func verifyWantedNewtCarrierClaims(_ input: WantedNewtCarrierInput) throws {
+  let ledger = input.ledger
+  let career = input.career
+  let stock = input.stock
+  let fullHeader = input.header
   func encoded(_ value: some Encodable) throws -> Any {
     try JSONSerialization.jsonObject(with: JSONEncoder().encode(value))
   }
@@ -36,8 +69,6 @@ func verifyWantedNewtCarrierControls() throws {
   let objectHeader: [String: Any] = [
     "savedWantedCareers": ["careers": ["codec-only-key": ["parked": parked]]]
   ]
-  let fullHeader = try JSONEncoder().encode(game.commander)
-  let original = game.commander
   for schema in [CurrentNewtKitSave.version, CurrentNewtKitSave.alienVersion] {
     for header in [arrayHeader, objectHeader] {
       #expect(
@@ -47,14 +78,13 @@ func verifyWantedNewtCarrierControls() throws {
     #expect(
       try CurrentNewtKitSave.validateFields(fullHeader, location: .commander, schema: schema))
   }
-  #expect(game.commander == original)
 
   // A raw carrier is not authority to create a career, substitute its actor, or
   // detach the captured kit from the current flight counters and physical clock.
   var forged = career
   forged.binding = .init(
-    system: snapshot.actor.system, visit: snapshot.actor.visit,
-    entity: snapshot.actor.entity + 1)
+    system: input.actor.system, visit: input.actor.visit,
+    entity: input.actor.entity + 1)
   #expect(!forged.valid)
   forged = career
   forged.ship = "SH025"
