@@ -3396,7 +3396,7 @@ public struct Game: Sendable {
 
   // A potentially noncopyable pointee keeps the address projection borrowed.
   @inline(never)
-  private static func withBorrowedPointee<Value: ~Copyable, Result>(
+  static func withBorrowedPointee<Value: ~Copyable, Result>(
     _ pointer: UnsafePointer<Value>, _ read: (borrowing Value) throws -> Result
   ) rethrows -> Result {
     try read(pointer.pointee)
@@ -6992,10 +6992,26 @@ public struct Game: Sendable {
       end.advanceView(
         pitch: pitch * dt, roll: roll * dt, yaw: yaw * dt,
         translation: pilot.velocity * dt + Vector3(0, 0, speed * dt * 18))
-      guard let radius = commander.playerMesh.vertices.map(\.length).max(),
-        let motion = debrisRigidMotion(from: start, to: end, duration: dt, radius: radius),
-        workBirthEndpointIsClear(motion, bornAtEnd: newtBirths)
+      guard let radius = commander.playerMesh.vertices.map(\.length).max() else {
+        nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+          "stage=player-radius radius=nil duration=\(dt) start=\(start) end=\(end)"
+            + " actorsTotal=\(newtBirths.actors.count)"
+            + " actorsRetained=\(Array(newtBirths.actors.prefix(32)))")
+        paused = true
+        notify("NEW CONTACT AT FLIGHT ENDPOINT - PAUSED", voiced: false)
+        return false
+      }
+      guard let motion = debrisRigidMotion(from: start, to: end, duration: dt, radius: radius)
       else {
+        nativeEncounterBirthDiagnostic?.recordEndpointRefusal(
+          "stage=rigid-motion radius=\(radius) duration=\(dt) start=\(start) end=\(end)"
+            + " actorsTotal=\(newtBirths.actors.count)"
+            + " actorsRetained=\(Array(newtBirths.actors.prefix(32)))")
+        paused = true
+        notify("NEW CONTACT AT FLIGHT ENDPOINT - PAUSED", voiced: false)
+        return false
+      }
+      guard workBirthEndpointIsClear(motion, bornAtEnd: newtBirths) else {
         paused = true
         notify("NEW CONTACT AT FLIGHT ENDPOINT - PAUSED", voiced: false)
         return false
@@ -7765,39 +7781,62 @@ public actor GameRuntime {
   ) throws -> NativeSavePreparation {
     var candidate = value
     var stage = ScriptRefusalStage.nativePeople
+    var operation = 0
     do {
+      operation = 1
       try candidate.recordFlightReceptionFailureIfNeeded()
+      operation = 2
       _ = try candidate.applyGlassMeridianPending()
+      operation = 3
       _ = try candidate.applyFlightReceptionPending()
+      operation = 4
       try candidate.recordNativePeopleLossIfNeeded()
       candidate.stageMeasuredHullLoss()
+      operation = 5
       try candidate.applyMeasuredPending()
+      operation = 6
       _ = try candidate.recordRecoveryLossIfNeeded()
+      operation = 7
       _ = try candidate.recordIdentifiedSalvageLossIfNeeded()
+      operation = 8
       try candidate.retryRecordRecoveryIdentification()
+      operation = 9
       try candidate.retryRecordRecoveryCapture()
+      operation = 10
       try candidate.retryInductionCrewLogCapture()
+      operation = 11
       try candidate.retryIdentifiedSalvageCapture()
       stage = .nativeDock
+      operation = 12
       try validateNativeDockEvidenceForSave(&candidate)
       stage = .nativeStations
+      operation = 13
       try candidate.persistNativeStationConditions()
+      operation = 14
       try candidate.failFieldReliefAtDestroyedTarget()
       stage = .equipment
+      operation = 15
       try candidate.commander.prepareEquipment()
       candidate.commander.mirrorFittedEquipment()
       stage = .nativeDestruction
       candidate.resolveDestroyed()
+      operation = 16
       try candidate.recordFlightReceptionFailureIfNeeded()
       candidate.stageMeasuredHullLoss()
+      operation = 17
       try candidate.applyMeasuredPending()
+      operation = 18
       _ = try candidate.recordRecoveryLossIfNeeded()
+      operation = 19
       _ = try candidate.recordIdentifiedSalvageLossIfNeeded()
+      operation = 20
       try BisonUnitJournalSave.validatePreservation(from: value, to: candidate)
+      operation = 21
       return try finishNativeSaveState(
         &candidate, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
     } catch {
-      diagnostics?.record(diagnosticBoundary, .init(stage: stage, error: error, game: candidate))
+      diagnostics?.record(
+        diagnosticBoundary, .init(stage: stage, error: error, game: candidate, count: operation))
       throw error
     }
   }
@@ -7857,7 +7896,12 @@ public actor GameRuntime {
     }
     candidate.persistBlackjackTargets()
     let refusedNPCs = candidate.persistNPCStates()
-    try candidate.captureC01InquiryCurrentLife()
+    do { try candidate.captureC01InquiryCurrentLife() } catch {
+      diagnostics?.record(
+        diagnosticBoundary,
+        .init(stage: .nativeSaveValidation, error: error, game: candidate, count: -1))
+      throw error
+    }
     guard refusedNPCs.isEmpty, !candidate.hasUnsettledWreckDeaths, candidate.commander.valid,
       !candidate.bodies.contains(where: {
         $0.energy <= 0 && $0.hull.isTargetShip && $0.physical?.npc != nil

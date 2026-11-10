@@ -396,15 +396,25 @@ enum ScriptSaveStore {
     clueTrust: ScriptClueTrustCatalog = .production,
     navigationBinding: ScriptNavigationTradeBinding? = nil
   ) throws -> AlienStoragePublication? {
-    try BisonUnitJournalSave.validateArchive(commander: commander, world: world,
-      pointer: world.bisonUnitJournalCheckpoint)
-    try validateForPublication(
-      commander: commander, world: world, scope: scope, diagnostics: diagnostics,
-      diagnosticBoundary: diagnosticBoundary, clueTrust: clueTrust,
-      navigationBinding: navigationBinding)
-    return try publishValidated(
-      commander: commander, world: world, to: url, scope: scope, exclusive: exclusive,
-      diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    var stage = ScriptRefusalStage.storeArchive
+    do {
+      try BisonUnitJournalSave.validateArchive(
+        commander: commander, world: world,
+        pointer: world.bisonUnitJournalCheckpoint)
+      stage = .storeValidation
+      try validateForPublication(
+        commander: commander, world: world, scope: scope, diagnostics: diagnostics,
+        diagnosticBoundary: diagnosticBoundary, clueTrust: clueTrust,
+        navigationBinding: navigationBinding)
+      stage = .storeChunks
+      return try publishValidated(
+        commander: commander, world: world, to: url, scope: scope, exclusive: exclusive,
+        diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    } catch {
+      diagnostics?.record(
+        diagnosticBoundary, .init(stage: stage, error: error, commander: commander))
+      throw error
+    }
   }
   /// Select only the current native mission envelopes; older families retain their fallback.
   static func nativeMissionPublicationVersion(_ commander: borrowing Commander, alien: Bool) -> Int?
@@ -554,48 +564,96 @@ enum ScriptSaveStore {
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary,
     clueTrust: ScriptClueTrustCatalog, navigationBinding: ScriptNavigationTradeBinding?
   ) throws {
-    guard ["commander", "gallery"].contains(scope), commander.scriptState.calendarLedger != nil,
-      commander.valid, world.valid, NativePracticeSave.sceneValid(world, commander: commander),
-      NativeC01InquirySave.retainedSourceAndWorldValid(commander, world: world),
-      ScriptFreightVersionedSave.validateClaims(commander),
-      NativeDefensiveFlightSave.validateClaims(commander),
-      NativeSafeGunnerySave.validateClaims(commander),
-      NativePracticeSave.validateClaims(commander),
-      NativeInductionCrewLogSave.validateClaims(commander),
-      NativeInductionArkSave.validateClaims(commander),
-      NativeWayfarerInductionSave.validateClaims(commander),
-      NativeFirstCommoditySaleSave.validateClaims(commander),
-      NativeSecondCommoditySaleSave.validateClaims(commander),
-      NativeFirstCommodityTradeSave.validateClaims(commander),
-      NativeUnderTowSave.validateClaims(commander),
-      NativePublicRecordSave.validateClaims(commander),
-      NativeBorrowedVoiceSave.validateClaims(commander),
-      NativeTitheCommissionSave.validateClaims(commander),
-      NativeC03PublicationPreflight.validateClaims(commander),
-      NativeQuietChoirSave.validateClaims(commander),
-      NativeMemoryAtlasSave.validateClaims(commander),
-      NativeMemoryAtlasWatcherSourceSave.validateClaims(commander),
-      NativeSignedPassageOpeningSave.validateClaims(commander),
-      NativeAssemblyOfOrbitsSave.validateClaims(commander),
-      NativeGlassMeridianSave.validateClaims(commander),
-      NativeFleetDiscoverySave.validateClaims(commander),
-      NativeFlightReceptionSave.validateClaims(commander),
-      WayfarerFieldReliefSave.validateClaims(commander, requireRecordedLoss: true),
-      NativeMeasuredExtractionSave.validateClaims(commander, requireRecordedLoss: true),
-      WayfarerRecordRecoverySave.validateClaims(commander, requireRecordedLoss: true),
-      NativeIdentifiedSalvageSave.validateClaims(commander, requireRecordedLoss: true),
-      NativeOriginalSurveySave.validateClaims(commander),
-      NativeOriginalEvacuationSave.validateClaims(commander),
-      NativeOriginalRescueJourneySave.validateClaims(commander),
-      NativeOrbitalOutlookJourneySave.validateClaims(commander),
-      NativeStationPassengerJourneySave.validateClaims(commander),
-      OriginalConsentedFreightSupplySave.validateClaims(commander),
-      NativeIsolationWorkParentSave.validateClaims(commander),
-      NativeIsolationWorkSave.validateClaims(commander),
-      NativeIsolationContractSave.validateClaims(commander),
-      commander.usesFreightNativeSaveVersion || !commander.usesProviderContractSaveVersion,
-      world.consistent(
-        with: commander, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    var predicate = 0
+    guard Self.publicationPredicate(["commander", "gallery"].contains(scope), cursor: &predicate),
+      Self.publicationPredicate(commander.scriptState.calendarLedger != nil, cursor: &predicate),
+      Self.publicationPredicate(commander.valid, cursor: &predicate),
+      Self.publicationPredicate(world.valid, cursor: &predicate),
+      Self.publicationPredicate(
+        NativePracticeSave.sceneValid(world, commander: commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeC01InquirySave.retainedSourceAndWorldValid(commander, world: world),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        ScriptFreightVersionedSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeDefensiveFlightSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeSafeGunnerySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(NativePracticeSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeInductionCrewLogSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeInductionArkSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeWayfarerInductionSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeFirstCommoditySaleSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeSecondCommoditySaleSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeFirstCommodityTradeSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(NativeUnderTowSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativePublicRecordSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeBorrowedVoiceSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeTitheCommissionSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeC03PublicationPreflight.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(NativeQuietChoirSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeMemoryAtlasSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeMemoryAtlasWatcherSourceSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeSignedPassageOpeningSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeAssemblyOfOrbitsSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeGlassMeridianSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeFleetDiscoverySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeFlightReceptionSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        WayfarerFieldReliefSave.validateClaims(commander, requireRecordedLoss: true),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        NativeMeasuredExtractionSave.validateClaims(commander, requireRecordedLoss: true),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        WayfarerRecordRecoverySave.validateClaims(commander, requireRecordedLoss: true),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        NativeIdentifiedSalvageSave.validateClaims(commander, requireRecordedLoss: true),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        NativeOriginalSurveySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeOriginalEvacuationSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeOriginalRescueJourneySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeOrbitalOutlookJourneySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeStationPassengerJourneySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        OriginalConsentedFreightSupplySave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeIsolationWorkParentSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeIsolationWorkSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        NativeIsolationContractSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        commander.usesFreightNativeSaveVersion || !commander.usesProviderContractSaveVersion,
+        cursor: &predicate),
+      Self.publicationPredicate(
+        world.consistent(
+          with: commander, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary),
+        cursor: &predicate)
     else {
       if let diagnostics, !diagnostics.contains(diagnosticBoundary) {
         // True guard prefix; bits 32/64/1/2/4/8/16: scope, calendar, commander, world, claims,
@@ -605,39 +663,71 @@ enum ScriptSaveStore {
           diagnosticBoundary,
           .init(
             stage: .storeValidation, error: SaveError.invalidCommander, commander: commander,
-            checks: checks))
+            checks: checks, predicate: predicate))
       }
       throw SaveError.invalidCommander
     }
-    guard ScriptClueVersionedSave.validateClaims(commander, trust: clueTrust),
-      ScriptNavigationTradeSave.validateClaims(commander, binding: navigationBinding),
-      WayfarerColdChainSave.validateClaims(commander),
-      WayfarerRepairLoopSave.validateClaims(commander),
-      OriginalConsentedFreightSupplySave.validateClaims(commander)
+    predicate = 0
+    guard
+      Self.publicationPredicate(
+        ScriptClueVersionedSave.validateClaims(commander, trust: clueTrust), cursor: &predicate),
+      Self.publicationPredicate(
+        ScriptNavigationTradeSave.validateClaims(commander, binding: navigationBinding),
+        cursor: &predicate),
+      Self.publicationPredicate(
+        WayfarerColdChainSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        WayfarerRepairLoopSave.validateClaims(commander), cursor: &predicate),
+      Self.publicationPredicate(
+        OriginalConsentedFreightSupplySave.validateClaims(commander), cursor: &predicate)
     else {
+      diagnostics?.record(
+        diagnosticBoundary,
+        .init(
+          stage: .storeValidation, error: SaveError.invalidCommander, commander: commander,
+          checks: 127, predicate: 1000 + predicate))
       throw SaveError.invalidCommander
     }
   }
+  /// Evaluated once in the original guard order, including when observation is disabled.
+  /// The cursor names the attempted predicate; it never grants admission.
+  @inline(__always)
+  private static func publicationPredicate(_ valid: Bool, cursor: inout Int) -> Bool {
+    cursor += 1
+    return valid
+  }
+
   // The original deliberate header copy and all encoding/file work begin only after validation returns.
   @inline(never)
   private static func publishValidated(
     commander: Commander, world: ScriptWorldSave, to url: URL, scope: String, exclusive: Bool,
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary
   ) throws -> AlienStoragePublication? {
-    try validateSemanticPublicationSizes(
-      commander: commander, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
-    let generation = UUID().uuidString
-    let root = url.appendingPathExtension("missions")
-    let directory = root.appendingPathComponent(generation, isDirectory: true)
-    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-    let alienPublication = try AlienStorageVersionedSave.stage(commander, in: directory)
-    let encoder = ScriptValueStorage.encoder()
-    let chunks = try encodePublicationChunks(
-      commander: commander, world: world, alienPublication: alienPublication, encoder: encoder)
-    return try publishEncodedChunks(
-      commander: commander, chunks: chunks, encoder: encoder, alienPublication: alienPublication,
-      directory: directory, generation: generation, to: url, scope: scope, exclusive: exclusive,
-      diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    var stage = ScriptRefusalStage.storeSemanticSize
+    do {
+      try validateSemanticPublicationSizes(
+        commander: commander, diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+      let generation = UUID().uuidString
+      let root = url.appendingPathExtension("missions")
+      let directory = root.appendingPathComponent(generation, isDirectory: true)
+      stage = .storeDirectory
+      try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+      stage = .storeAlienStage
+      let alienPublication = try AlienStorageVersionedSave.stage(commander, in: directory)
+      let encoder = ScriptValueStorage.encoder()
+      stage = .storeEncode
+      let chunks = try encodePublicationChunks(
+        commander: commander, world: world, alienPublication: alienPublication, encoder: encoder)
+      stage = .storeChunks
+      return try publishEncodedChunks(
+        commander: commander, chunks: chunks, encoder: encoder, alienPublication: alienPublication,
+        directory: directory, generation: generation, to: url, scope: scope, exclusive: exclusive,
+        diagnostics: diagnostics, diagnosticBoundary: diagnosticBoundary)
+    } catch {
+      diagnostics?.record(
+        diagnosticBoundary, .init(stage: stage, error: error, commander: commander))
+      throw error
+    }
   }
 
   @inline(never)
@@ -739,6 +829,87 @@ enum ScriptSaveStore {
     ]
   }
 
+  /// This is the writer's original per-chunk gate order, shared with focused unit controls.
+  /// Capture the actual selected inputs only on failure, without evaluating a gate twice.
+  static func validateEncodedPublicationChunk(
+    _ data: Data, name: String, schema: Int, alien: Bool,
+    commander: borrowing Commander, diagnostics: ScriptRefusalDiagnostic? = nil,
+    diagnosticBoundary: ScriptRefusalBoundary = .publication
+  ) throws {
+    var stage = ScriptRefusalStage.chunkC03
+    var predicate: Int?
+    var secondSchema: Int?
+    var kitSchema: Int?
+    var publicationIdentity: UUID?
+    do {
+      let location: ScriptSaveJSONPreflight.InquiryArchiveLocation =
+        name == "commander.json"
+        ? .commander
+        : name == "world.json"
+          ? .world
+          : name == "missions.json" ? .missions : .contracts
+      let c03Envelope = NativeC03PublicationNamespace.contains(schema)
+      let publications = try NativeC03PublicationPreflight.validate(
+        data,
+        part: name == "missions.json"
+          ? .missions
+          : name == "commander.json" ? .commander : .contracts,
+        schema: schema,
+        currentSchema: alien
+          ? NativeC03PublicationNamespace.alienVersion : NativeC03PublicationNamespace.version,
+        owner: commander.equipmentOwnerID)
+      stage = .chunkC03Match
+      predicate = 1
+      for publication in publications {
+        publicationIdentity = publication.mission
+        guard NativeC03PublicationNamespace.matches(publication, commander: commander) else {
+          throw SaveError.invalidCommander
+        }
+      }
+      predicate = nil
+      publicationIdentity = nil
+      var hasSecondClaim = false
+      if c03Envelope { hasSecondClaim = NativeSecondCommoditySaleSave.hasClaims(commander) }
+      let selectedSecondSchema =
+        hasSecondClaim
+        ? (alien
+          ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version)
+        : schema
+      secondSchema = selectedSecondSchema
+      stage = .chunkCommodity
+      try NativeSecondCommoditySaleSave.validateFields(
+        data, location: location, schema: selectedSecondSchema)
+      let higherKitEnvelope = NativeSecondCommoditySaleSave.contains(schema) || c03Envelope
+      var hasKitClaim = false
+      if higherKitEnvelope { hasKitClaim = CurrentNewtKitSave.hasClaims(commander) }
+      let selectedKitSchema =
+        hasKitClaim
+        ? (alien ? CurrentNewtKitSave.alienVersion : CurrentNewtKitSave.version)
+        : schema
+      kitSchema = selectedKitSchema
+      stage = .chunkNewt
+      try CurrentNewtKitSave.validateFields(data, location: location, schema: selectedKitSchema)
+      stage = .chunkBison
+      try BisonUnitJournalSave.validateFields(
+        data,
+        location: name == "commander.json"
+          ? .commander
+          : name == "world.json" ? .world : .other)
+    } catch {
+      if let diagnostics, !diagnostics.contains(diagnosticBoundary) {
+        let facts = ScriptChunkRefusalFacts.render(
+          name: name, outer: schema, second: secondSchema, kit: kitSchema, data: data,
+          commander: commander, gate: stage, publication: publicationIdentity)
+        diagnostics.record(
+          diagnosticBoundary,
+          .init(
+            stage: stage, error: error, commander: commander, predicate: predicate,
+            chunkFacts: facts))
+      }
+      throw error
+    }
+  }
+
   @inline(never)
   private static func publishEncodedChunks(
     commander: Commander, chunks encoded: [String: Data], encoder: JSONEncoder,
@@ -747,79 +918,108 @@ enum ScriptSaveStore {
     diagnostics: ScriptRefusalDiagnostic?, diagnosticBoundary: ScriptRefusalBoundary
   ) throws -> AlienStoragePublication? {
     var chunks = encoded
-    if let alienPublication {
-      let store = try AlienStoragePageStore(directory: directory)
-      let rootData = try store.readGenerationRoot()
-      guard ScriptPackLibrary.hash(rootData) == alienPublication.after.reference?.rootHash else {
-        throw AlienStorageError.hashMismatch
+    var stage = ScriptRefusalStage.chunkAlienStore
+    var observedName = AlienStorageVersionedSave.rootName
+    var observedData: Data?
+    var observedSchema: Int?
+    var predicate: Int?
+    do {
+      if let alienPublication {
+        let store = try AlienStoragePageStore(directory: directory)
+        stage = .chunkAlienRead
+        let rootData = try store.readGenerationRoot()
+        observedData = rootData
+        stage = .chunkAlienHash
+        predicate = 1
+        guard ScriptPackLibrary.hash(rootData) == alienPublication.after.reference?.rootHash else {
+          throw AlienStorageError.hashMismatch
+        }
+        chunks[AlienStorageVersionedSave.rootName] = rootData
       }
-      chunks[AlienStorageVersionedSave.rootName] = rootData
-    }
-    guard chunks["commander.json"]!.count <= 4_194_304,
-      chunks["missions.json"]!.count <= 134_217_728,
-      chunks["world.json"]!.count <= 8_388_608
-        && chunks["contracts.json"]!.count <= 134_217_728
-    else {
-      diagnostics?.record(
-        diagnosticBoundary,
-        .init(stage: .storeSize, error: SaveError.invalidCommander, commander: commander))
-      throw SaveError.invalidCommander
-    }
-    let schema = publicationSchema(commander, alien: alienPublication != nil)
-    for (name, data) in chunks {
-      let location: ScriptSaveJSONPreflight.InquiryArchiveLocation =
-        name == "commander.json" ? .commander : name == "world.json" ? .world
-        : name == "missions.json" ? .missions : .contracts
-      let c03Envelope = NativeC03PublicationNamespace.contains(schema)
-      let publications = try NativeC03PublicationPreflight.validate(
-        data, part: name == "missions.json" ? .missions
-          : name == "commander.json" ? .commander : .contracts,
-        schema: schema,
-        currentSchema: alienPublication != nil
-          ? NativeC03PublicationNamespace.alienVersion : NativeC03PublicationNamespace.version,
-        owner: commander.equipmentOwnerID)
-      for publication in publications {
-        guard NativeC03PublicationNamespace.matches(publication, commander: commander) else {
-          throw SaveError.invalidCommander
+      stage = .storeSize
+      predicate = 1
+      guard chunks["commander.json"]!.count <= 4_194_304,
+        chunks["missions.json"]!.count <= 134_217_728,
+        chunks["world.json"]!.count <= 8_388_608
+          && chunks["contracts.json"]!.count <= 134_217_728
+      else {
+        diagnostics?.record(
+          diagnosticBoundary,
+          .init(
+            stage: .storeSize, error: SaveError.invalidCommander, commander: commander,
+            chunkFacts: "commanderBytes=\(chunks["commander.json"]!.count)"
+              + ",missionsBytes=\(chunks["missions.json"]!.count)"
+              + ",worldBytes=\(chunks["world.json"]!.count)"
+              + ",contractsBytes=\(chunks["contracts.json"]!.count)"))
+        throw SaveError.invalidCommander
+      }
+      predicate = nil
+      let schema = publicationSchema(commander, alien: alienPublication != nil)
+      observedSchema = schema
+      for (name, data) in chunks {
+        observedName = name
+        observedData = data
+        stage = .chunkC03
+        try validateEncodedPublicationChunk(
+          data, name: name, schema: schema,
+          alien: alienPublication != nil, commander: commander, diagnostics: diagnostics,
+          diagnosticBoundary: diagnosticBoundary)
+      }
+      // Never replace an old generation; a failed publication leaves the previous pointer valid.
+      if alienPublication != nil {
+        stage = .chunkAlienStore
+        observedName = AlienStorageVersionedSave.rootName
+        observedData = nil
+        let store = try AlienStoragePageStore(directory: directory)
+        for key in chunks.keys.sorted() where key != AlienStorageVersionedSave.rootName {
+          let limit =
+            key == "commander.json" ? 4_194_304 : key == "world.json" ? 8_388_608 : 134_217_728
+          observedName = key
+          observedData = chunks[key]
+          stage = .chunkAlienWrite
+          try store.writeGenerationChunk(chunks[key]!, name: key, maximumBytes: limit)
+        }
+      } else {
+        for key in chunks.keys.sorted() {
+          observedName = key
+          observedData = chunks[key]
+          stage = .chunkWrite
+          try chunks[key]!.write(to: directory.appendingPathComponent(key), options: .atomic)
         }
       }
-      let secondSchema = c03Envelope && NativeSecondCommoditySaleSave.hasClaims(commander)
-        ? (alienPublication != nil
-          ? NativeSecondCommoditySaleSave.alienVersion : NativeSecondCommoditySaleSave.version)
-        : schema
-      try NativeSecondCommoditySaleSave.validateFields(
-        data, location: location, schema: secondSchema)
-      let kitSchema = (NativeSecondCommoditySaleSave.contains(schema) || c03Envelope)
-        && CurrentNewtKitSave.hasClaims(commander)
-        ? (alienPublication != nil ? CurrentNewtKitSave.alienVersion : CurrentNewtKitSave.version)
-        : schema
-      try CurrentNewtKitSave.validateFields(data, location: location, schema: kitSchema)
-      try BisonUnitJournalSave.validateFields(data, location: name == "commander.json" ? .commander
-        : name == "world.json" ? .world : .other)
-    }
-    // Never replace an old generation; a failed publication leaves the previous pointer valid.
-    if alienPublication != nil {
-      let store = try AlienStoragePageStore(directory: directory)
-      for key in chunks.keys.sorted() where key != AlienStorageVersionedSave.rootName {
-        let limit =
-          key == "commander.json" ? 4_194_304 : key == "world.json" ? 8_388_608 : 134_217_728
-        try store.writeGenerationChunk(chunks[key]!, name: key, maximumBytes: limit)
+      stage = .chunkPointerCheckpoint
+      observedName = "pointer-checkpoint"
+      observedData = chunks["commander.json"]
+      let pointerSchema = publicationSchema(commander, alien: alienPublication != nil)
+      observedSchema = pointerSchema
+      let pointer = ScriptSavePointer(
+        format: "elite-script-save",
+        schemaVersion: pointerSchema,
+        generation: generation,
+        hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: scope,
+        valueCodec: ScriptValueStorage.codec,
+        bisonUnitJournalCheckpoint: try BisonUnitJournalSave.checkpoint(commander))
+      stage = .chunkPointerEncode
+      observedName = "pointer"
+      observedData = nil
+      let bytes = try encoder.encode(pointer)
+      observedData = bytes
+      stage = .chunkPointerWrite
+      try CommanderSavePublication.write(bytes, to: url, exclusive: exclusive)
+      return alienPublication
+    } catch {
+      if let diagnostics, !diagnostics.contains(diagnosticBoundary) {
+        let facts = ScriptChunkRefusalFacts.render(
+          name: observedName, outer: observedSchema, second: nil, kit: nil,
+          data: observedData, commander: commander, gate: stage)
+        diagnostics.record(
+          diagnosticBoundary,
+          .init(
+            stage: stage, error: error, commander: commander, predicate: predicate,
+            chunkFacts: facts))
       }
-    } else {
-      for key in chunks.keys.sorted() {
-        try chunks[key]!.write(to: directory.appendingPathComponent(key), options: .atomic)
-      }
+      throw error
     }
-    let pointer = ScriptSavePointer(
-      format: "elite-script-save",
-      schemaVersion: publicationSchema(commander, alien: alienPublication != nil),
-      generation: generation,
-      hashes: chunks.mapValues(ScriptPackLibrary.hash), scope: scope,
-      valueCodec: ScriptValueStorage.codec,
-      bisonUnitJournalCheckpoint: try BisonUnitJournalSave.checkpoint(commander))
-    let bytes = try encoder.encode(pointer)
-    try CommanderSavePublication.write(bytes, to: url, exclusive: exclusive)
-    return alienPublication
   }
   static func generationDirectory(_ generation: String, from url: URL) throws -> URL {
     guard UUID(uuidString: generation)?.uuidString == generation else {

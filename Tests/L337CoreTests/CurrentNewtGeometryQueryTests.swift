@@ -5,6 +5,56 @@ import Testing
 
 struct CurrentNewtGeometryQueryTests {
   @Test
+  func authoredAtmospherePointMassRequiresAnExactMatch() throws {
+    let source = try #require(CurrentNewtKitSource.current)
+    let atmosphere = try #require(source.releasedParts.first { $0.id == "charged-free-atmosphere" })
+    let mass = atmosphere.mass
+    try #require(mass.massKilograms == 2.5 && mass.inertiaKgM2 == Array(repeating: 0, count: 9))
+    try #require(atmosphere.collisionMesh == nil && atmosphere.displayMesh == nil)
+    #expect(!source.matchesMass(mass, mass))
+
+    func component(_ properties: CurrentNewtKitSource.Mass, collisionMesh: Mesh? = nil)
+      -> CurrentNewtKitComponent
+    {
+      .init(
+        id: atmosphere.id, collisionMesh: collisionMesh, displayMesh: nil,
+        pose: ShipPose(), massProperties: properties, velocity: .init(0, 0, 0),
+        angularVelocity: .init(0, 0, 0))
+    }
+
+    let exact = component(mass)
+    try #require(exact.validForCurrentNewtQuery)
+    #expect(
+      Game.currentNewtReleasedPartsMatchSource([exact], expected: [atmosphere], source: source))
+
+    let changedMass = component(
+      .init(
+        massKilograms: mass.massKilograms + 1e-9,
+        centreOfMassMetres: mass.centreOfMassMetres, inertiaKgM2: mass.inertiaKgM2))
+    try #require(changedMass.validForCurrentNewtQuery)
+    #expect(
+      !Game.currentNewtReleasedPartsMatchSource(
+        [changedMass], expected: [atmosphere], source: source))
+
+    let malformedMass = CurrentNewtKitSource.Mass(
+      massKilograms: mass.massKilograms,
+      centreOfMassMetres: mass.centreOfMassMetres, inertiaKgM2: [1, 0, 0, 0, 0, 0, 0, 0, 0])
+    let malformedReference = CurrentNewtKitSource.ReleasedPart(
+      id: atmosphere.id, mass: malformedMass,
+      collisionMesh: nil, displayMesh: nil)
+    #expect(
+      !Game.currentNewtReleasedPartsMatchSource(
+        [component(malformedMass)], expected: [malformedReference], source: source))
+
+    let mesh = try #require(source.releasedParts.compactMap(\.collisionMesh).first)
+    let substitutedGeometry = component(mass, collisionMesh: mesh)
+    try #require(substitutedGeometry.validForCurrentNewtQuery)
+    #expect(
+      !Game.currentNewtReleasedPartsMatchSource(
+        [substitutedGeometry], expected: [atmosphere], source: source))
+  }
+
+  @Test
   func actualSystemComponentsRoundTripThroughBodyModelExactlyOnce() throws {
     let game = try NativePagedSalvageFixture.equippedNewtStowedGame()
     try verifyActualSystemComponentsRoundTripThroughBodyModelExactlyOnce(game)
@@ -196,7 +246,7 @@ private func expectOriginalGeometryMesh(_ a: Mesh?, _ b: Mesh?) {
   }
 }
 
-// Descriptive test data only. The unchanged original policy below may return
+// Descriptive test data only. The independent parity checks below may return
 // these fields; only the real source factory constructs a production contract.
 fileprivate struct OriginalGeometryCellDescription {
   let kitID: UUID
@@ -350,8 +400,11 @@ extension Game {
       Set(parts.map(\.id)) == Set(expected.map(\.id))
     else { return false }
     for reference in expected {
+      let pointMass = reference.mass.inertiaKgM2.allSatisfy { $0 == 0 }
       guard let part = parts.first(where: { $0.id == reference.id }),
-        source.matchesMass(part.massProperties, reference.mass),
+        pointMass
+          ? part.massProperties == reference.mass
+          : source.matchesMass(part.massProperties, reference.mass),
         (part.collisionMesh == nil) == (reference.collisionMesh == nil),
         (part.displayMesh == nil) == (reference.displayMesh == nil),
         part.collisionMesh?.vertices == reference.collisionMesh?.vertices,

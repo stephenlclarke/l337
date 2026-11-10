@@ -242,6 +242,39 @@ struct ScriptProcurementFixture {
     try #require(game.commander.energyRechargeMultiplier == 2)
     try #require(game.commander.performance.energy == game.commander.nativePerformance.energy)
   }
+  /// Test-only retained observations. This does not repeat a clearance query or advance the game.
+  static func endpointBirthFailureEvidence(
+    endpoint: String?, observations: [GameplayEncounterBirthDiagnostic.Observation], context: String
+  ) -> String {
+    func bounded(_ field: String, _ text: String, limit: Int) -> String {
+      let bytes = text.utf8
+      let retained = bytes.prefix(limit)
+      let printable = String(
+        decoding: retained.map { (32...126).contains($0) ? $0 : 63 }, as: UTF8.self)
+      return
+        "\(field)Bytes=\(bytes.count) \(field)Truncated=\(bytes.count > limit) \(field)=[\(printable)]"
+    }
+    let producer: String
+    if let latest = observations.last {
+      let requests = latest.requests.map {
+        "spawn=\($0.identity),ship=\($0.catalogueShipID ?? "nil"),kit=\($0.configuration ?? "nil")"
+      }.joined(separator: ";")
+      let receipts = latest.receipts.map {
+        "spawn=\($0.request),actor=\(String(describing: $0.actor)),refusal=\(String(describing: $0.refusal))"
+      }.joined(separator: ";")
+      producer =
+        "time=\(latest.time),decisions=\(latest.openingDecision)->\(latest.decision)"
+        + ",admitted=\(latest.admitted),retainedRequests=\(latest.requests.count)"
+        + ",retainedReceipts=\(latest.receipts.count),requests=[\(requests)],receipts=[\(receipts)]"
+    } else {
+      producer = "not-observed"
+    }
+    return "Endpoint evidence: retainedObservations=\(observations.count) producerWindow=last "
+      + bounded("endpoint", endpoint ?? "not-observed", limit: 16384) + " "
+      + bounded("producer", producer, limit: 32768) + " "
+      + bounded("context", context, limit: 8192)
+  }
+
   static func dock(
     _ runtime: GameRuntime, diagnostic: ScriptProcurementFlightDiagnostic? = nil,
     phase: String = "dock", defensivePreflight: Bool = false,
@@ -278,6 +311,9 @@ struct ScriptProcurementFixture {
         let detail = await runtime.procurementJumpRefusalDetail(destination: system)
         let label = String((selectionDiagnostic?.label ?? phase).prefix(80))
         failureDetails = "Dock stopped, phase=\(label), steps=\(steps): \(detail)"
+        if let endpoint = await runtime.procurementEndpointPauseDetail() {
+          failureDetails += " | " + endpoint
+        }
       }
       try #require(facts.live && !facts.paused, Comment(rawValue: failureDetails))
       if let prepareScene { try await prepareScene(runtime) }
@@ -1381,6 +1417,27 @@ extension GameRuntime {
   func procurementTargetIsMain() -> Bool { game.autoTargetBody?.id == 0 }
   func procurementFlightFacts() -> (docked: Bool, live: Bool, paused: Bool) {
     (game.docked, game.screen != .gameOver && game.energy > 0, game.paused)
+  }
+  /// Failure-only current facts plus the original predicate observation, never a replay.
+  func procurementEndpointPauseDetail() -> String? {
+    guard let observer = game.nativeEncounterBirthDiagnostic else { return nil }
+    let pilot = game.autoPilot
+    let hostiles = game.bodies.filter { $0.hostile }
+    let hostileDetails = hostiles.prefix(16).map {
+      "body=\($0.id),actor=\(String(describing: $0.physical?.identity))"
+        + ",energy=\($0.energy),position=\($0.position)"
+        + ",intention=\(String(describing: $0.physical?.npc?.intention))"
+    }.joined(separator: ";")
+    let context =
+      "targetID=\(String(describing: pilot.targetID))"
+      + " targetActor=\(String(describing: pilot.targetActor)) status=\(pilot.status)"
+      + " defencePhase=\(pilot.stationDefencePhase) finalApproach=\(pilot.finalApproach)"
+      + " dockingComputer=\(game.dockingComputer) velocity=\(pilot.velocity)"
+      + " workGuidance=\(game.workGuidance != nil) workBraking=\(game.workBraking != nil)"
+      + " hostilesTotal=\(hostiles.count) hostilesRetained=\(min(16, hostiles.count))"
+      + " hostiles=[\(hostileDetails)]"
+    return ScriptProcurementFixture.endpointBirthFailureEvidence(
+      endpoint: observer.endpointRefusal, observations: observer.observations, context: context)
   }
   func procurementNativeDockIsCurrent() -> Bool { game.nativeMainStationDockEvidenceIsCurrent }
   func procurementMassLocked() -> Bool { game.massLocked }

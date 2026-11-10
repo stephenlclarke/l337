@@ -23,7 +23,10 @@ struct WayfarerSeedTransferNativeFixture {
       pack = try ScriptPackLibrary.read(ScriptPackLibrary.bundledSeedTransferDirectory)
     }
   }
-  func runtime(escapeReady: Bool = false, mixedServices: Bool = false) async throws -> GameRuntime {
+  func runtime(
+    escapeReady: Bool = false, mixedServices: Bool = false,
+    endpointDiagnostic: GameplayEncounterBirthDiagnostic? = nil
+  ) async throws -> GameRuntime {
     var game = try ScriptProcurementFixture.freshG03FlightGame(escapeReady: escapeReady)
     try game.prepareG03FlightEquipment()
     if escapeReady {
@@ -43,6 +46,7 @@ struct WayfarerSeedTransferNativeFixture {
         try ScriptPackLibrary.read(ScriptPackLibrary.bundledRepairLoopDirectory),
       ]
     }
+    if let endpointDiagnostic { game.nativeEncounterBirthDiagnostic = endpointDiagnostic }
     let runtime = GameRuntime(game: game, saveURL: save)
     try await runtime.save(to: save)
     await runtime.key("0")
@@ -260,6 +264,36 @@ struct WayfarerSeedTransferNativeTests {
       try await runtime.receiveWayfarerColdChain(instance: id)
     }
     try seedCurrentEnvelopes(paid, root: fixture.files.root)
+
+    let objective = try #require(custody.objective)
+    await runtime.key("0")
+    try await ScriptProcurementFixture.dock(runtime)
+    let returned = await runtime.snapshot()
+    let laterDock = try #require(returned.commander.nativeStations?.currentMainDock)
+    try #require(laterDock.station == objective.dock.station)
+    try #require(laterDock.actor.visit > acceptance.contact.dock.actor.visit)
+    try await runtime.save(to: fixture.save)
+    let (loaded, _) = try ScriptSaveStore.read(Data(contentsOf: fixture.save), from: fixture.save)
+    #expect(loaded.scriptState.instances[id]?.savedWayfarerColdChain == custody)
+
+    // Give both objective dock copies the later real visit while retaining the original sequence.
+    let dock = NativeMainStationDockReceipt(
+      station: objective.dock.station, actor: laterDock.actor,
+      commanderOwner: objective.dock.commanderOwner, sequence: objective.dock.sequence,
+      calendarSeconds: objective.dock.calendarSeconds)
+    var context = objective.context
+    context.nativeMainDock = dock
+    let forged = WayfarerColdChainContact(
+      sequence: objective.sequence, dock: dock, context: context)
+    try #require(forged.valid && loaded.freightHistoricalContextValid(context, requiresDock: true))
+    let encoded = try JSONSerialization.jsonObject(with: JSONEncoder().encode(forged))
+    try fixture.rejectMissionsChange { raw in
+      try seedMutateInstance(id, raw: &raw) { state in
+        var custody = try #require(state["savedWayfarerColdChain"] as? [String: Any])
+        custody["objective"] = encoded
+        state["savedWayfarerColdChain"] = custody
+      }
+    }
   }
 
   @Test func rehashedSeedStrippingCrossProfileQuantityAndOldEnvelopeClaimsAreRejected() async throws
@@ -330,6 +364,80 @@ struct WayfarerSeedTransferNativeTests {
     #expect(
       oldTerms.valid && oldTerms.profile == nil
         && oldTerms.instanceDefinition == WayfarerColdChainDefinition.stateID)
+  }
+
+  @Test func currentSeedSaveRequiresCommittedDockFromNamedAcceptance() async throws {
+    let fixture = try WayfarerSeedTransferNativeFixture()
+    defer { fixture.files.clean() }
+    let runtime = try await fixture.runtime()
+    let (id, _) = try await fixture.pickup(runtime)
+    try await fixture.arrive(runtime, path: [241, 85])
+    try await runtime.confirmWayfarerColdChainObjective(instance: id)
+    await runtime.key("0")
+    try await ScriptProcurementFixture.dock(runtime)
+    try await runtime.receiveWayfarerColdChain(instance: id)
+    let paid = await runtime.snapshot().commander.scriptState.instances[id]
+    let custody = try #require(paid?.savedWayfarerColdChain)
+
+    try await runtime.load(from: fixture.save, persistMigrations: false)
+    let loaded = await runtime.snapshot().commander.scriptState.instances[id]
+    try #require(loaded?.savedWayfarerColdChain == custody)
+    try requireSeedCompletionAtEarlierBankDockRefused(fixture, missionID: id)
+  }
+
+  @inline(never)
+  private func requireSeedCompletionAtEarlierBankDockRefused(
+    _ fixture: WayfarerSeedTransferNativeFixture, missionID: UUID
+  ) throws {
+    let (commander, _) = try ScriptSaveStore.read(
+      Data(contentsOf: fixture.save), from: fixture.save)
+    var engine = commander.scriptState
+    var state = try #require(engine.instances[missionID])
+    let custody = try #require(state.savedWayfarerColdChain)
+    let objective = try #require(custody.objective)
+    let acceptance = try #require(custody.seedTransfer?.acceptance)
+    let completion = try #require(state.completionReceipt)
+    let bankDock = acceptance.contact.dock
+    try #require(
+      objective.dock.station == bankDock.station && objective.dock.sequence < bankDock.sequence)
+    try #require(
+      completion.cause == acceptance.contact.context
+        && completion.committed.nativeMainDock == bankDock)
+
+    var committed = completion.committed
+    committed.nativeMainDock = objective.dock
+    let altered = ScriptCompletionReceipt(
+      instance: completion.instance, definition: completion.definition, version: completion.version,
+      digest: completion.digest, outcome: completion.outcome, sequence: completion.sequence,
+      causeKind: completion.causeKind, cause: completion.cause, committed: committed,
+      revision: completion.revision, milestones: completion.milestones,
+      destroyedEncounters: completion.destroyedEncounters,
+      deliveredParties: completion.deliveredParties,
+      returnedEquipment: completion.returnedEquipment,
+      settlementAmount: completion.settlementAmount, choices: completion.choices)
+    state.completionReceipt = altered
+    engine.instances[missionID] = state
+
+    let journal = try #require(engine.savedClueJournal)
+    let sourceID = WayfarerColdChainDefinition.seedStateID
+    try #require(journal.awards.count == 1 && journal.awards[sourceID]?.completion == completion)
+    let source = try #require(ScriptBaseClueCatalog.bySource[sourceID])
+    var alteredJournal = ScriptClueJournal(owner: journal.owner)
+    alteredJournal.record(altered, source: source)
+    engine.savedClueJournal = alteredJournal
+    try #require(alteredJournal.valid(engine: engine))
+    try #require(commander.freightHistoricalContextValid(committed, requiresDock: true))
+    #expect(!WayfarerColdChainSave.engineValid(engine))
+
+    let encoder = JSONEncoder()
+    let savedCompletion = try JSONSerialization.jsonObject(with: encoder.encode(altered))
+    let savedJournal = try JSONSerialization.jsonObject(with: encoder.encode(alteredJournal))
+    try fixture.rejectMissionsChange { raw in
+      try seedMutateInstance(missionID, raw: &raw) { state in
+        state["completionReceipt"] = savedCompletion
+      }
+      raw["savedClueJournal"] = savedJournal
+    }
   }
 
   @Test func seedPauseCurrentReloadAndOriginalSuspendedExpiryKeepReleaseWithoutAcceptance()

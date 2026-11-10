@@ -5,7 +5,13 @@ import os
 enum ScriptRefusalBoundary: String, Sendable, Hashable { case resolver, publication }
 enum ScriptRefusalStage: String, Sendable {
   case freightGuard, freightFinish, completionEnqueue, freightCommander, freightPublish
-  case commandFlush, commandPublish, nativePeople, nativeDock, nativeStations, equipment
+  case commandFlush, commandHistory, commandPublish, publicationHistory, preparedHistory
+  case publicationAccess, publicationMining, publicationActors, publicationJournal, storeWorld
+  case storeArchive, storeSemanticSize, storeDirectory, storeAlienStage, storeEncode, storeChunks
+  case chunkAlienStore, chunkAlienRead, chunkAlienHash, chunkC03, chunkC03Match
+  case chunkCommodity, chunkNewt, chunkBison, chunkWrite, chunkAlienWrite
+  case chunkPointerCheckpoint, chunkPointerEncode, chunkPointerWrite
+  case nativePeople, nativeDock, nativeStations, equipment
   case nativeDestruction, salvagePoses, nativeSaveValidation, storeValidation, storeSize, storeWrite
   case sceneSalvage, sceneEMP, sceneEMPUnowned, sceneStations, sceneStationUnowned
   case sceneCapacity, sceneLibrary, sceneCourierFatal, sceneFreightFatal, sceneMainDestroyed
@@ -24,19 +30,23 @@ struct ScriptRefusalObservation: Sendable {
   let physicalTime: Double
   let checks: UInt16?
   let count: Int?
+  let predicate: Int?
+  let candidateFacts: String
+  let chunkFacts: String
 
   init(
-    stage: ScriptRefusalStage, error: any Error, game: Game,
-    checks: UInt16? = nil, count: Int? = nil
+    stage: ScriptRefusalStage, error: any Error, game: borrowing Game,
+    checks: UInt16? = nil, count: Int? = nil, predicate: Int? = nil, chunkFacts: String = "none"
   ) {
     self.init(
       stage: stage, error: error, commander: game.commander, revision: game.gameplayRevision,
-      checks: checks, count: count)
+      checks: checks, count: count, predicate: predicate, chunkFacts: chunkFacts)
   }
 
   init(
-    stage: ScriptRefusalStage, error: any Error, commander: Commander,
-    revision: UInt64? = nil, checks: UInt16? = nil, count: Int? = nil
+    stage: ScriptRefusalStage, error: any Error, commander: borrowing Commander,
+    revision: UInt64? = nil, checks: UInt16? = nil, count: Int? = nil, predicate: Int? = nil,
+    chunkFacts: String = "none"
   ) {
     self.stage = stage
     self.error = Self.errorToken(error)
@@ -46,6 +56,61 @@ struct ScriptRefusalObservation: Sendable {
     physicalTime = commander.flightSimulation.physicalTime
     self.checks = checks
     self.count = count
+    self.predicate = predicate
+    self.chunkFacts =
+      chunkFacts.utf8.count <= 1536
+        && chunkFacts.utf8.allSatisfy({ (32...126).contains($0) }) ? chunkFacts : "incomplete-bound"
+    candidateFacts = Self.seedCandidateFacts(commander)
+  }
+
+  /// Raw rejected-candidate fields only; never re-run validation or retain Game/Commander.
+  /// Three active service instances are the native maximum. Count every omitted record.
+  private static func seedCandidateFacts(_ commander: borrowing Commander) -> String {
+    let owner = commander.equipmentOwnerID
+    let cargoCount = commander.cargo.count
+    return commander.withReadOnlyScriptState { engine in
+      var records: [(UUID, String)] = []
+      var total = 0
+      for id in engine.instances.keys {
+        guard let index = engine.instances.index(forKey: id),
+          let leaf = engine.instances[index].value.savedWayfarerColdChain,
+          leaf.definition.isSeedTransfer
+        else { continue }
+        total += 1
+        // Keep only the three lowest IDs, without sorting/copying all instance payloads.
+        if records.count == 3, let last = records.last, id.uuidString >= last.0.uuidString {
+          continue
+        }
+        let state = engine.instances[index].value
+        var text = "id=\(id),revision=\(state.revision),active=\(state.outcome == .active)"
+        text += ",suspended=\(state.suspension != nil),issue=\(leaf.issue.sequence)"
+        text += ",objective=\(leaf.objective?.sequence.description ?? "nil")"
+        text +=
+          ",objectiveAck=\(leaf.objective.map { state.hasAcknowledged($0.sequence) } ?? false)"
+        text += ",issueDock=\(leaf.issue.dock.sequence)"
+        text += ",objectiveDock=\(leaf.objective?.dock.sequence.description ?? "nil")"
+        text += ",objectiveVisit=\(leaf.objective?.dock.actor.visit.description ?? "nil")"
+        text += ",payload=\(state.payloads[leaf.definition.payloadID] ?? 0)"
+        text += ",timerMatch=\(state.timers[leaf.timer.id] == leaf.timer)"
+        text += ",due=\(leaf.timer.due),integrityRemaining=\(leaf.integrity.remaining)"
+        text += ",ownerMatch=\(leaf.owner == owner)"
+        text += ",accepted=\(leaf.seedTransfer?.acceptance != nil)"
+        records.append((id, text))
+        records.sort { $0.0.uuidString < $1.0.uuidString }
+        if records.count > 3 { records.removeLast() }
+      }
+      guard total > 0 else {
+        return "seedTotal=0,cargoCount=\(cargoCount),instances=\(engine.instances.count)"
+      }
+      let text =
+        "total=\(total),retained=\(records.count),truncated=\(total > records.count)"
+        + ",nextEvent=\(engine.nextEvent),flight=\(engine.flightSeconds)"
+        + ",cargoCount=\(cargoCount);" + records.map { $0.1 }.joined(separator: ";")
+      guard text.utf8.count <= 4096, text.utf8.allSatisfy({ (32...126).contains($0) }) else {
+        return "incomplete=bound,total=\(total),retained=0"
+      }
+      return text
+    }
   }
 
   private static func errorToken(_ error: any Error) -> String {
@@ -59,6 +124,43 @@ struct ScriptRefusalObservation: Sendable {
       case .capacity: return "station.capacity"
       case .unsafeEntry: return "station.unsafeEntry"
       case .unsafeExit: return "station.unsafeExit"
+      }
+    }
+    if let failure = error as? NativeC03PublicationPreflight.Failure {
+      switch failure {
+      case .invalidJSON: return "c03.invalidJSON"
+      case .resourceLimit: return "c03.resourceLimit"
+      case .duplicateField: return "c03.duplicateField"
+      case .unknownField: return "c03.unknownField"
+      case .misplacedClaim: return "c03.misplacedClaim"
+      case .invalidInstance: return "c03.invalidInstance"
+      case .wrongSchema: return "c03.wrongSchema"
+      case .missingOwner: return "c03.missingOwner"
+      case .invalidCrewCompanion: return "c03.invalidCrewCompanion"
+      }
+    }
+    if let failure = error as? AlienStorageError {
+      switch failure {
+      case .invalidSnapshot: return "alien.invalidSnapshot"
+      case .wrongOwner: return "alien.wrongOwner"
+      case .invalidJoin: return "alien.invalidJoin"
+      case .arithmeticOverflow: return "alien.arithmeticOverflow"
+      case .historyChanged: return "alien.historyChanged"
+      case .invalidReference: return "alien.invalidReference"
+      case .invalidPage: return "alien.invalidPage"
+      case .hashMismatch: return "alien.hashMismatch"
+      case .duplicateKey: return "alien.duplicateKey"
+      case .aliasedPage: return "alien.aliasedPage"
+      case .oversizedRecord: return "alien.oversizedRecord"
+      }
+    }
+    if let failure = error as? DecodingError {
+      switch failure {
+      case .typeMismatch: return "decoding.typeMismatch"
+      case .valueNotFound: return "decoding.valueNotFound"
+      case .keyNotFound: return "decoding.keyNotFound"
+      case .dataCorrupted: return "decoding.dataCorrupted"
+      @unknown default: return "decoding.unknown"
       }
     }
     if error is MissionPackError { return "missionPack" }
@@ -124,10 +226,12 @@ final class ScriptRefusalDiagnostic: Sendable {
         + ",revision=\(value.revision.map { String($0) } ?? "nil")"
         + ",time=\(value.physicalTime),checks=\(value.checks.map { String($0) } ?? "nil")"
         + ",count=\(value.count.map { String($0) } ?? "nil")"
+        + ",predicate=\(value.predicate.map { String($0) } ?? "nil")"
+        + ",candidate=[\(value.candidateFacts)],chunk=[\(value.chunkFacts)]"
     }
     let text = "SCRIPT_REFUSAL " + pieces.joined(separator: ";")
     // Fixed tokens and numeric scalars only; includes one eventual presentation newline.
-    guard text.utf8.count < 2048, text.utf8.allSatisfy({ (32...126).contains($0) }) else {
+    guard text.utf8.count < 12288, text.utf8.allSatisfy({ (32...126).contains($0) }) else {
       return "SCRIPT_REFUSAL refused=bound"
     }
     return text
