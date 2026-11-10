@@ -21,3 +21,28 @@ The writer's per-chunk checks now share one helper with focused rejection contro
 On the first failure only, a narrow byte census reads the already-supplied encoded chunk. It counts ten known claim field names, records at most four relevant field paths/offsets/value tokens, and keeps at most 128 nearby raw bytes as base64. String values are not mistaken for keys; escaped keys and nonzero Data offsets are covered. The census does not build a JSON object graph or decide admission. Depth/key/path limits and omitted placements/samples are explicit. Candidate facts stay within 4,096 bytes; raw facts stay within 1,536 bytes per observation, keeping both existing first-only slots under the unchanged 12 KiB detail and 128 KiB outer assertion ceilings. No whole chunk or world is logged or retained in the recorder.
 
 The ordinary W03 control packet adds wrong-schema, misplaced Newt/Bison/C03, original Error preservation, census/escaping/slice/overflow and exclusive-pointer failure checks. Pointer refusal must leave the old pointer bytes intact. These new Swift checks are uncompiled and unrun until the reviewed changed qualification. The original W03 assertions, four selectors, save guards, rollback and publisher control packet remain.
+
+
+## Evidenced parked-career carrier correction
+
+The complete four-method qualification on 734ecee9 built successfully. Three W01
+methods passed; W03 refused its objective publication at `chunkNewt` with
+`save.invalidCommander`. The actual commander chunk selected schema 145 and
+contained two stock claims: the existing NPC snapshot and the retained
+`savedWantedCareers/careers/[5]/parked/currentNewtKitStock`. The lexical context
+recognized only the former carrier. This is a missing carrier, not a schema defect.
+
+Add only the wanted-ledger, careers and career contexts, ending `parked` at the
+existing snapshot context. Preserve the stock-only snapshot whitelist, current
+145/146 envelope, bounded exact leaf validation and every typed career/actor/hull/
+legal/time join. Do not change claim selection or admit opaque locations.
+
+Controls execute in the existing W03 method: a native equipped Newt birth is
+captured as an NPC, retained through the actual wanted ledger and encoded in both
+its genuine Codable array carrier and a codec-only object carrier. Both current
+schemas and the full commander header must pass. Wrong roots, siblings, opaque
+aliases, receipt/configuration claims, null/malformed stock, predecessor schemas
+and non-commander locations must refuse. Forged binding/hull/time records remain
+invalid under the existing typed validator. No receipts or stock are fabricated.
+New controls are authored; Swift execution remains pending the combined review
+and fresh exact Root grant. Original four selectors and existing controls remain.

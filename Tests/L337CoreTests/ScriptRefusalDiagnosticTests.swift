@@ -184,6 +184,7 @@ func verifySeedPublicationRefusalControls() async throws {
   game.ensureScriptCalendar(origin: .newCommander)
   try game.commander.prepareEquipment(legacy: false)
   try verifyChunkBoundaryControls(game)
+  try verifyWantedNewtCarrierControls()
   let url = FileManager.default.temporaryDirectory
     .appendingPathComponent("seed-publication-control-" + UUID().uuidString)
   defer { try? FileManager.default.removeItem(at: url) }

@@ -21,3 +21,28 @@ The changed source must compile. The existing four ordinary methods must execute
 The changed a469 candidate compiled and ran the original four methods with the publisher controls. Three W01 methods passed; W03 still failed at the first receiving row. The fresh recorder proved objective sequence 9, acknowledgement and revision 1 in the rejected candidate, with the second lot unchanged. Its first `storeChunks / save.invalidCommander` observation did not identify the encoded chunk or the specific raw gate. No source contradiction was established by the independent G2/G3 read-only decisions. The committed objective and receiving/payment remain unproved.
 
 Complete this one boundary by recording the actual first named C03/matching, commodity, Newt, Bison, alien, data-write and pointer checkpoint/encode/write call. Preserve the actual selected schemas, chunk name, typed presence and bounded raw field-placement census. Do not run a validator twice, select another envelope on assumption or dump the world/whole chunk.
+
+
+## Evidenced parked-career carrier correction
+
+The complete four-method qualification on 734ecee9 built successfully. Three W01
+methods passed; W03 refused its objective publication at `chunkNewt` with
+`save.invalidCommander`. The actual commander chunk selected schema 145 and
+contained two stock claims: the existing NPC snapshot and the retained
+`savedWantedCareers/careers/[5]/parked/currentNewtKitStock`. The lexical context
+recognized only the former carrier. This is a missing carrier, not a schema defect.
+
+Add only the wanted-ledger, careers and career contexts, ending `parked` at the
+existing snapshot context. Preserve the stock-only snapshot whitelist, current
+145/146 envelope, bounded exact leaf validation and every typed career/actor/hull/
+legal/time join. Do not change claim selection or admit opaque locations.
+
+Controls execute in the existing W03 method: a native equipped Newt birth is
+captured as an NPC, retained through the actual wanted ledger and encoded in both
+its genuine Codable array carrier and a codec-only object carrier. Both current
+schemas and the full commander header must pass. Wrong roots, siblings, opaque
+aliases, receipt/configuration claims, null/malformed stock, predecessor schemas
+and non-commander locations must refuse. Forged binding/hull/time records remain
+invalid under the existing typed validator. No receipts or stock are fabricated.
+New controls are authored; Swift execution remains pending the combined review
+and fresh exact Root grant. Original four selectors and existing controls remain.

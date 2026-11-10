@@ -391,6 +391,7 @@ private struct NativeC01InquiryLexicalInput {
     case inquiry, commodityTrade, titheCommission, opaque, commander, missions, embeddedMissions, world, bodies, body, physical, spawn
     case newtEMP, newtRecords, newtRecord, newtObject, newtObjects, newtCustody, newtLeaf
     case newtNPC, newtNPCEntries, newtNPCEntry, newtSnapshot
+    case newtWanted, newtCareers, newtCareer
     case newtDirector, newtRequests, newtRequest
     case watcherSource(WatcherObject)
     case instances, instance, contract, offer, contracts, boards, board, offers
@@ -406,6 +407,9 @@ private struct NativeC01InquiryLexicalInput {
       case (.newtDirector, "pendingRequests"): return .newtRequests
       case (.commander, "savedEMPState"): return .newtEMP
       case (.commander, "savedNPCPersistence"): return .newtNPC
+      case (.commander, "savedWantedCareers"): return .newtWanted
+      case (.newtWanted, "careers"): return .newtCareers
+      case (.newtCareer, "parked"): return .newtSnapshot
       case (.newtEMP, "records"): return .newtRecords
       case (.newtRecord, "hull"): return .newtObject
       case (.newtRecord, "pods"): return .newtObjects
@@ -440,6 +444,7 @@ private struct NativeC01InquiryLexicalInput {
         case .newtLeaf: return .newtLeaf
         case .newtRecords: return .newtRecord
         case .newtNPCEntries: return .newtNPCEntry
+        case .newtCareers: return .newtCareer
         case .instances: return .instance
         case .boards: return .board
         case .offers: return .offer
@@ -454,6 +459,7 @@ private struct NativeC01InquiryLexicalInput {
       case .newtRequests: return .newtRequest
       case .newtRecords: return .newtRecord
       case .newtNPCEntries: return .newtNPCEntry
+      case .newtCareers: return .newtCareer
       case .newtObjects: return .newtObject
       case .instances: return .instance
       case .boards: return .board
