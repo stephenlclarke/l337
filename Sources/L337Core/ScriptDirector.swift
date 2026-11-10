@@ -154,6 +154,8 @@ extension Game {
       }
     }
   }
+  // Keep availability dispatch borrowed: unrelated native branches must not reserve
+  // one owned pack temporary each on the ordinary Contracts call stack.
   @inline(never)
   func scriptUnavailable(
     _ pack: borrowing ScriptPack, navigationBinding: ScriptNavigationTradeBinding? = nil
@@ -186,48 +188,48 @@ extension Game {
       if let reason = assemblyOfOrbitsUnavailable(pack) { return reason }
     }
     if Self.scriptInductionSeedApplies(pack) {
-      if let reason = scriptInductionSeedUnavailable(copy pack) { return reason }
+      if let reason = scriptInductionSeedUnavailable(pack) { return reason }
     }
     if Self.scriptInductionWorkshopApplies(pack) {
-      if let reason = scriptInductionWorkshopUnavailable(copy pack) { return reason }
+      if let reason = scriptInductionWorkshopUnavailable(pack) { return reason }
     }
     if Self.scriptInductionClinicApplies(pack) {
-      if let reason = scriptInductionClinicUnavailable(copy pack) { return reason }
+      if let reason = scriptInductionClinicUnavailable(pack) { return reason }
     }
     if Self.scriptInductionUtilityApplies(pack) {
-      if let reason = scriptInductionUtilityUnavailable(copy pack) { return reason }
+      if let reason = scriptInductionUtilityUnavailable(pack) { return reason }
     }
     if NativeIsolationAdmission.applies(pack) {
       if let reason = isolationContentUnavailable(pack) { return reason }
     }
     if Self.scriptInductionCrewLogApplies(pack) {
-      if let reason = scriptInductionCrewLogUnavailable(copy pack) { return reason }
+      if let reason = scriptInductionCrewLogUnavailable(pack) { return reason }
     }
     if Self.scriptInductionArkApplies(pack) {
-      if let reason = scriptInductionArkUnavailable(copy pack) { return reason }
+      if let reason = scriptInductionArkUnavailable(pack) { return reason }
     }
     if Self.scriptWayfarerInductionApplies(pack) {
-      if let reason = scriptWayfarerInductionUnavailable(copy pack) { return reason }
+      if let reason = scriptWayfarerInductionUnavailable(pack) { return reason }
     }
     if Self.scriptGlassMeridianApplies(pack) {
-      if let reason = scriptGlassMeridianUnavailable(copy pack) { return reason }
+      if let reason = scriptGlassMeridianUnavailable(pack) { return reason }
     }
     if pack.manifest.stateID == NativeDefensiveFlight.stateID {
-      if let reason = scriptDefensiveFlightContentUnavailable(copy pack) { return reason }
+      if let reason = scriptDefensiveFlightContentUnavailable(pack) { return reason }
     }
     if pack.manifest.stateID == NativeSafeGunnery.stateID {
-      if let reason = scriptSafeGunneryContentUnavailable(copy pack) { return reason }
+      if let reason = scriptSafeGunneryContentUnavailable(pack) { return reason }
     }
     if Self.scriptFlightReceptionApplies(pack) {
-      if let reason = scriptFlightReceptionUnavailable(copy pack) { return reason }
+      if let reason = scriptFlightReceptionUnavailable(pack) { return reason }
     }
     if Self.scriptFieldReliefApplies(pack) {
-      if let reason = scriptFieldReliefUnavailable(copy pack) { return reason }
+      if let reason = scriptFieldReliefUnavailable(pack) { return reason }
     }
     // Unrelated missions do not use a navigation binding; decide that before resolving one.
     if Self.scriptNavigationTradeApplies(pack) {
       if let reason = scriptNavigationTradeUnavailable(
-        copy pack, navigationBinding: navigationBinding)
+        pack, navigationBinding: navigationBinding)
       {
         return reason
       }
@@ -236,7 +238,7 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptDefensiveFlightContentUnavailable(_ pack: ScriptPack) -> String? {
+  private func scriptDefensiveFlightContentUnavailable(_ pack: borrowing ScriptPack) -> String? {
     guard pack.digest == NativeDefensiveFlight.digest else {
       return "Restore approved manual defensive flight content."
     }
@@ -249,7 +251,7 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptSafeGunneryContentUnavailable(_ pack: ScriptPack) -> String? {
+  private func scriptSafeGunneryContentUnavailable(_ pack: borrowing ScriptPack) -> String? {
     guard pack.digest == NativeSafeGunnery.digest else {
       return "Restore approved safe gunnery content."
     }
@@ -271,7 +273,7 @@ extension Game {
     if pack.manifest.capabilities.contains("durable-commands-v2"), !scriptDurabilityAvailable {
       return "Choose a commander save before running this mission."
     }
-    return scriptDependenciesUnavailable(copy pack)
+    return scriptDependenciesUnavailable(pack)
   }
 
   @inline(never)
@@ -341,8 +343,8 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptInductionSeedUnavailable(_ pack: ScriptPack) -> String? {
-    guard NativeInductionSeedPack.matches(pack) else {
+  private func scriptInductionSeedUnavailable(_ pack: borrowing ScriptPack) -> String? {
+    guard NativeInductionSeedPack.matches(copy pack) else {
       return "Restore the original Enlirin seed family content."
     }
     guard
@@ -355,8 +357,8 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptInductionWorkshopUnavailable(_ pack: ScriptPack) -> String? {
-    guard NativeInductionWorkshopPack.matches(pack) else {
+  private func scriptInductionWorkshopUnavailable(_ pack: borrowing ScriptPack) -> String? {
+    guard NativeInductionWorkshopPack.matches(copy pack) else {
       return "Restore the original Enmadan workshop family content."
     }
     guard
@@ -369,8 +371,8 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptInductionClinicUnavailable(_ pack: ScriptPack) -> String? {
-    guard NativeInductionClinicPack.matches(pack) else {
+  private func scriptInductionClinicUnavailable(_ pack: borrowing ScriptPack) -> String? {
+    guard NativeInductionClinicPack.matches(copy pack) else {
       return "Restore the original Renas clinic family content."
     }
     guard
@@ -383,8 +385,8 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptInductionUtilityUnavailable(_ pack: ScriptPack) -> String? {
-    guard NativeInductionUtilityPack.matches(pack) else {
+  private func scriptInductionUtilityUnavailable(_ pack: borrowing ScriptPack) -> String? {
+    guard NativeInductionUtilityPack.matches(copy pack) else {
       return "Restore the original Enron utility source."
     }
     guard
@@ -397,8 +399,8 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptInductionCrewLogUnavailable(_ pack: ScriptPack) -> String? {
-    guard NativeInductionCrewLogPack.matches(pack) else {
+  private func scriptInductionCrewLogUnavailable(_ pack: borrowing ScriptPack) -> String? {
+    guard NativeInductionCrewLogPack.matches(copy pack) else {
       return "Restore the original Cevilis custody source."
     }
     guard
@@ -411,8 +413,8 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptInductionArkUnavailable(_ pack: ScriptPack) -> String? {
-    guard NativeInductionArkPack.matches(pack) else {
+  private func scriptInductionArkUnavailable(_ pack: borrowing ScriptPack) -> String? {
+    guard NativeInductionArkPack.matches(copy pack) else {
       return "Restore the registered original seed-ark service."
     }
     guard
@@ -425,7 +427,7 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptWayfarerInductionUnavailable(_ pack: ScriptPack) -> String? {
+  private func scriptWayfarerInductionUnavailable(_ pack: borrowing ScriptPack) -> String? {
     guard pack.digest == NativeWayfarerInduction.digest,
       pack.manifest.wayfarerInduction?.valid == true
     else { return "Restore the approved Wayfarer Exchange opening." }
@@ -438,9 +440,9 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptGlassMeridianUnavailable(_ pack: ScriptPack) -> String? {
+  private func scriptGlassMeridianUnavailable(_ pack: borrowing ScriptPack) -> String? {
     if let reason = NativeGlassMeridian.availability(
-      pack,
+      copy pack,
       accepted: commander.scriptState.instances.values.contains(where: {
         $0.definition == NativeGlassMeridian.stateID && $0.digest == pack.digest
       }))
@@ -451,7 +453,7 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptFlightReceptionUnavailable(_ pack: ScriptPack) -> String? {
+  private func scriptFlightReceptionUnavailable(_ pack: borrowing ScriptPack) -> String? {
     guard pack.digest == NativeFlightReception.digest,
       pack.manifest.flightReception?.valid == true
     else {
@@ -466,8 +468,8 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptFieldReliefUnavailable(_ pack: ScriptPack) -> String? {
-    guard WayfarerFieldRelief.matches(pack) else {
+  private func scriptFieldReliefUnavailable(_ pack: borrowing ScriptPack) -> String? {
+    guard WayfarerFieldRelief.matches(copy pack) else {
       return "Restore the original field-relief mission content."
     }
     if !commander.scriptState.instances.values.contains(where: {
@@ -480,10 +482,10 @@ extension Game {
 
   @inline(never)
   private func scriptNavigationTradeUnavailable(
-    _ pack: ScriptPack, navigationBinding: ScriptNavigationTradeBinding?
+    _ pack: borrowing ScriptPack, navigationBinding: ScriptNavigationTradeBinding?
   ) -> String? {
     if let reason = navigationTradeUnavailable(
-      pack, binding: navigationBinding ?? ScriptNavigationTradeBinding.production(in: self))
+      copy pack, binding: navigationBinding ?? ScriptNavigationTradeBinding.production(in: self))
     {
       return reason
     }
@@ -491,7 +493,7 @@ extension Game {
   }
 
   @inline(never)
-  private func scriptDependenciesUnavailable(_ pack: ScriptPack) -> String? {
+  private func scriptDependenciesUnavailable(_ pack: borrowing ScriptPack) -> String? {
     let versions = Set(scriptPacks.map { $0.manifest.id + "@" + $0.manifest.version })
       .union(missionPacks.entries.map { $0.pack.id + "@" + $0.pack.version })
     let missing = Set(pack.manifest.dependencies ?? []).subtracting(versions)

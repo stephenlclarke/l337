@@ -314,6 +314,20 @@ struct OriginalColdChainTests {
     let fixture = try OriginalColdChainFixture()
     defer { fixture.files.clean() }
     let runtime = try await fixture.runtime()
+    // Reopening the ordinary pickup preview must remain a read-only availability
+    // check before acceptance, including the complete Rows/Review/Quote path.
+    let pickup = try await fixture.review(runtime) {
+      if case .pickup = $0 { return true }
+      return false
+    }
+    try #require(pickup.allowed && pickup.offer != nil)
+    let previewCommander = await runtime.snapshot().commander
+    let previewFiles = try ScriptFinanceTestFixture.files(fixture.save.deletingLastPathComponent())
+    let repeated = try await fixture.review(runtime) { $0 == pickup.row.action }
+    #expect(repeated.allowed && repeated.offer == pickup.offer)
+    #expect(await runtime.snapshot().commander == previewCommander)
+    #expect(
+      try ScriptFinanceTestFixture.files(fixture.save.deletingLastPathComponent()) == previewFiles)
     let (id, _) = try await fixture.pickup(runtime)
     try await fixture.arrive(runtime)
     try await fixture.objective(runtime, id: id)
