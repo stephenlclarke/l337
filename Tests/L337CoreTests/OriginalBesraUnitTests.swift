@@ -11,6 +11,43 @@ struct OriginalBesraUnitTests {
       from: Data(contentsOf: ShipCatalogue.folder.appendingPathComponent(id + ".toml")))
   }
 
+  private func fieldsOutsideBisonDelivery(_ ship: CatalogueShip) throws -> Data {
+    var fields = try #require(
+      JSONSerialization.jsonObject(with: JSONEncoder().encode(ship)) as? [String: Any])
+    var metadata = try #require(fields["catalogue"] as? [String: Any])
+    for key in ["normalPurchaseEligible", "purchasePolicy", "mechanicsStatus", "basis"] {
+      metadata.removeValue(forKey: key)
+    }
+    fields["catalogue"] = metadata
+    return try JSONSerialization.data(withJSONObject: fields, options: .sortedKeys)
+  }
+
+  private func requireIndependentBisonDelivery(_ raw: CatalogueShip) throws {
+    let expectedSHA256 =
+      raw.id == "SH005"
+      ? "a1592e007d95c8608f5bcc893d3ecf450fa94e9b4437d15f5fddc593f4d6e9fb"
+      : "1fcf843a53ef11d4b0f6c503219cebfebf81ef6b97051a9b395ddbd4acec46c8"
+    try #require(raw.id == "SH005" || raw.id == "SH006")
+    let bytes = try Data(contentsOf: ShipCatalogue.folder.appendingPathComponent(raw.id + ".toml"))
+    try #require(ScriptPackLibrary.hash(bytes) == expectedSHA256)
+    let expected = try OriginalBisonFixture.expected(raw.id)
+    let canonical = try #require(ShipCatalogue.ship(raw.id))
+    #expect(canonical.id == raw.id && canonical.name == expected.name)
+    #expect(raw.game == expected.performance && canonical.game == expected.performance)
+    #expect(
+      !raw.catalogue.normalPurchaseEligible && raw.catalogue.purchasePolicy == .pendingFabrication)
+    #expect(raw.catalogue.mechanicsStatus == .pending)
+    #expect(canonical.catalogue.normalPurchaseEligible)
+    #expect(canonical.catalogue.purchasePolicy == .blueprintFabrication)
+    #expect(canonical.catalogue.mechanicsStatus == .ready)
+    #expect(canonical.catalogue.minimumBuildTechLevel == (raw.id == "SH005" ? 9 : 11))
+    #expect(
+      canonical.catalogue.basis.hasPrefix(raw.id + " current adopted r3 source " + expectedSHA256))
+    let unchangedFields =
+      try fieldsOutsideBisonDelivery(canonical) == fieldsOutsideBisonDelivery(raw)
+    #expect(unchangedFields, "Only the four declared Bison delivery metadata fields may change.")
+  }
+
   @Test func exactMetreContractRejectsOtherHullIdentityUnitsPathAndHash() throws {
     let definition = try #require(OriginalFleetDefinitionData.definition(for: "SH108"))
     let model = try OriginalFleetShowroomModels.model(for: "SH108")
@@ -92,7 +129,11 @@ struct OriginalBesraUnitTests {
           && !foreignDefinition.runtimeReady)
       #expect(try OriginalBesraActivation.resolve(foreign) == foreign)
       #expect(try OriginalPlayerHullActivation.resolve(foreign) == foreign)
-      #expect(ShipCatalogue.ship(id) == foreign)
+      if id == "SH005" || id == "SH006" {
+        try requireIndependentBisonDelivery(foreign)
+      } else {
+        #expect(ShipCatalogue.ship(id) == foreign)
+      }
       #expect(throws: (any Error).self) {
         try OriginalPlayerHullActivation.resolve(
           foreign, definition: foreignDefinition, physical: contract)

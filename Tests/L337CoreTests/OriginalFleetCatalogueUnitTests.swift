@@ -80,9 +80,17 @@ struct OriginalFleetCatalogueUnitTests {
       #expect(!original.runtimeReady)
     }
     let final = try #require(ShipCatalogue.originalDefinition(for: "SH171"))
+    let authoredAccess = try #require(final.authored["access"])
+    guard case .object(let access) = authoredAccess else {
+      Issue.record("The original Medusa source must retain its authored access object.")
+      return
+    }
+    #expect(access["purchasePolicy"] == .string("plughQuestFabrication"))
+    #expect(final.purchasePolicy == "plughQuestFabrication" && !final.runtimeReady)
     #expect(
       final.sourceProfile.fields.contains {
-        $0.key == "original.purchasePolicy" && $0.text.contains("plughQuestFabrication")
+        $0.key == "original.access" && $0.text == authoredAccess.sourceText
+          && $0.text.contains("plughQuestFabrication")
       })
   }
   @Test func neverPurchaseAvailabilityDoesNotAdvertiseExchangeOrReleasePendingHulls() throws {
