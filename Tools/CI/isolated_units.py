@@ -965,6 +965,25 @@ METHODS = {
 }
 
 
+# These existing consumers qualify the hosted compiler-isolation correction.
+COMPILER_ISOLATION_METHODS = {
+    "NativeViewTests": (
+        "actualPaintedInventorySubpageReturnReachesEditorAndWritesPlayerPlan",
+    ),
+    "NativeAssemblyOfOrbitsUnitTests": (
+        "purchaseOnlyCommissionAndSeparateOriginalCollectionSurviveCurrentColdLoad",
+        "noTradeBackAndStalePurchaseReviewCannotAccept",
+    ),
+    "NativeUtilityRuntimeTests": (
+        "destroyedActualTargetNeverRestoresHeldOrInstalledMaterials",
+        "outwardHoldPulseUsesOneFundedBrakeBeforeTheOriginalReturn",
+        "insufficientTwoReleaseReserveRetainsTheOriginalStationaryHold",
+    ),
+}
+for suite, methods in COMPILER_ISOLATION_METHODS.items():
+    METHODS[suite] = (*METHODS.get(suite, ()), *methods)
+
+
 def selection() -> str:
     """Use exact suite/method boundaries; never expand to whole mixed suites."""
     return "|".join(
@@ -999,6 +1018,41 @@ def inspect_report(path: Path) -> dict:
     if list(root.iter("skipped")):
         raise ValueError("A selected isolated unit was skipped.")
     return {"methods": sum(map(len, METHODS.values())), "reported_testcases": len(cases)}
+
+
+def inspect_compiler_isolation_report(path: Path, console_path: Path) -> dict:
+    """Require six owning methods and both actual Boolean argument cases."""
+    parameterized = "destroyedActualTargetNeverRestoresHeldOrInstalledMaterials"
+    expected = {
+        (suite, method + ("(installed:)" if method == parameterized else "()"))
+        for suite, methods in COMPILER_ISOLATION_METHODS.items()
+        for method in methods
+    }
+    rows = [
+        (case.attrib.get("classname", "").rsplit(".", 1)[-1],
+         case.attrib.get("name", ""))
+        for case in ET.parse(path).getroot().iter("testcase")
+    ]
+    if any(rows.count(identity) != 1 for identity in expected):
+        raise ValueError("Compiler-isolation report needs each owning method exactly once.")
+    lines = console_path.read_text(encoding="utf-8").splitlines()
+    if any(line.startswith("\u2718") for line in lines):
+        raise ValueError("Compiler-isolation console contains a failure.")
+    for _, method in expected:
+        aggregate = " with 2 test cases" if method.startswith(parameterized + "(") else ""
+        pattern = rf"\u2714 Test {re.escape(method)}{aggregate} passed after [0-9.]+ seconds?\."
+        if sum(re.fullmatch(pattern, line) is not None for line in lines) != 1:
+            raise ValueError("Missing or duplicate compiler-isolation passing method: " + method)
+    suffix = f" to {parameterized}(installed:) started."
+    arguments = [line for line in lines if line.startswith("\u25c7 Test case passing ")
+                 and line.endswith(suffix)]
+    expected_arguments = [
+        "\u25c7 Test case passing 1 argument installed \u2192 " + value + suffix
+        for value in ("false", "true")
+    ]
+    if sorted(arguments) != sorted(expected_arguments):
+        raise ValueError("Compiler-isolation run needs installed:false and installed:true exactly once.")
+    return {"compiler_isolation_methods": 6, "compiler_isolation_configured_cases": 7}
 
 
 def main() -> int:
@@ -1038,6 +1092,7 @@ def main() -> int:
         # from any XCTest report produced for the requested base filename.
         actual_xml = swift_xml if swift_xml.is_file() else xml
         result.update(inspect_report(actual_xml))
+        result.update(inspect_compiler_isolation_report(actual_xml, report / "output.log"))
         result["report"] = actual_xml.name
         result["status"] = "passed"
         return 0

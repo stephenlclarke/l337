@@ -20,7 +20,8 @@ class IsolatedReportTests(unittest.TestCase):
         suite = ET.SubElement(root, "testsuite")
         for name, methods in units.METHODS.items():
             for method in methods:
-                ET.SubElement(suite, "testcase", classname=name, name=method + "()")
+                suffix = "(installed:)" if method == "destroyedActualTargetNeverRestoresHeldOrInstalledMaterials" else "()"
+                ET.SubElement(suite, "testcase", classname=name, name=method + suffix)
         return root, suite
 
     def write(self, root):
@@ -30,7 +31,7 @@ class IsolatedReportTests(unittest.TestCase):
         root, suite = self.report()
         self.write(root)
         result = units.inspect_report(self.path)
-        self.assertEqual(result["methods"], 680)
+        self.assertEqual(result["methods"], 686)
         self.assertEqual(result["reported_testcases"], len(suite))
 
     def test_empty_report_does_not_pass_on_zero_process_exit(self):
@@ -75,6 +76,70 @@ class IsolatedReportTests(unittest.TestCase):
                 self.assertIsNone(pattern.search(f"L337CoreTests.OtherSuite/{method}()"))
                 self.assertIsNone(pattern.search(f"L337CoreTests.{suite}/{method}Journey()"))
         self.assertIsNone(pattern.search("L337CoreTests.NativeMeasuredExtractionJourneyTests/fullJourney()"))
+
+
+class CompilerIsolationReportTests(unittest.TestCase):
+    report = IsolatedReportTests.report
+    write = IsolatedReportTests.write
+
+    def setUp(self):
+        IsolatedReportTests.setUp(self)
+        self.console = Path(self.directory.name) / "output.log"
+        self.lines = []
+        for suite, methods in units.COMPILER_ISOLATION_METHODS.items():
+            for method in methods:
+                parameterized = method == "destroyedActualTargetNeverRestoresHeldOrInstalledMaterials"
+                signature = method + ("(installed:)" if parameterized else "()")
+                aggregate = " with 2 test cases" if parameterized else ""
+                self.lines.append("\u2714 Test " + signature + aggregate + " passed after 1.000 seconds.")
+                if parameterized:
+                    for value in ("false", "true"):
+                        self.lines.append("\u25c7 Test case passing 1 argument installed \u2192 "
+                                          + value + " to " + signature + " started.")
+        self.write(self.report()[0])
+
+    def inspect(self, lines=None):
+        self.console.write_text("\n".join(self.lines if lines is None else lines) + "\n")
+        return units.inspect_compiler_isolation_report(self.path, self.console)
+
+    def test_all_seven_cases_require_six_aggregate_xml_rows_and_console_arguments(self):
+        self.assertEqual(self.inspect(), {"compiler_isolation_methods": 6,
+                                        "compiler_isolation_configured_cases": 7})
+
+    def test_missing_duplicate_or_wrong_boolean_case_is_rejected(self):
+        argument = next(line for line in self.lines if "installed \u2192 true" in line)
+        variants = [
+            [line for line in self.lines if line != argument],
+            self.lines + [argument],
+            [line.replace("installed \u2192 true", "installed \u2192 1") for line in self.lines],
+        ]
+        for lines in variants:
+            with self.subTest(lines=lines), self.assertRaisesRegex(ValueError, "exactly once"):
+                self.inspect(lines)
+
+    def test_missing_duplicate_pass_and_wrong_case_count_are_rejected(self):
+        passing = self.lines[0]
+        variants = [self.lines[1:], self.lines + [passing],
+                    [line.replace("with 2 test cases", "with 1 test cases") for line in self.lines]]
+        for lines in variants:
+            with self.subTest(lines=lines), self.assertRaisesRegex(ValueError, "passing method"):
+                self.inspect(lines)
+
+    def test_missing_or_duplicate_owning_xml_method_is_rejected(self):
+        for duplicate in (False, True):
+            root, suite = self.report()
+            row = next(row for row in suite if row.get("name").startswith("noTradeBackAnd"))
+            if duplicate:
+                ET.SubElement(suite, "testcase", **row.attrib)
+            else:
+                suite.remove(row)
+            self.write(root)
+            with self.subTest(duplicate=duplicate), self.assertRaisesRegex(ValueError, "owning method exactly once"):
+                self.inspect()
+
+    def test_console_failure_cannot_be_hidden_by_passing_xml(self):
+        with self.assertRaisesRegex(ValueError, "contains a failure"):
+            self.inspect(self.lines + ["\u2718 Test anotherMethod() failed after 1.000 seconds."])
 
 
 if __name__ == "__main__":
