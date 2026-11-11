@@ -8,10 +8,8 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[2]
-THREAD = ['test', '--scratch-path', '.build/tsan', '--sanitize=thread',
-          '--jobs', '1', '-Xswiftc', '-disable-batch-mode']
-ADDRESS = ['test', '--scratch-path', '.build/asan', '--sanitize=address',
-           '--jobs', '1', '-Xswiftc', '-disable-batch-mode', '--no-parallel']
+THREAD = ['test', '--scratch-path', '.build/tsan', '--sanitize=thread']
+ADDRESS = ['test', '--scratch-path', '.build/asan', '--sanitize=address']
 
 
 class OptionalSanitizerTests(unittest.TestCase):
