@@ -10,6 +10,7 @@ import math
 import os
 from pathlib import Path
 import re
+import plistlib
 import shlex
 import signal
 import subprocess
@@ -173,28 +174,8 @@ def prepare(approved: str, archive: Path, archive_hash: str, reviewed_policy=Non
 
 
 def verify_installed_archive(root: Path, archive: Path) -> None:
-    """Bind every reused archive file/link to the verified installation, not just its marker."""
-    with tarfile.open(archive) as source:
-        for member in source.getmembers():
-            relative = Path(member.name)
-            if relative.is_absolute() or ".." in relative.parts:
-                raise ValueError("Runner archive has an unsafe member path.")
-            installed = root / relative
-            if member.isdir():
-                if installed.is_symlink() or not installed.is_dir():
-                    raise ValueError("Installed runner directory differs from archive.")
-            elif member.issym():
-                if (not installed.is_symlink() or os.readlink(installed) != member.linkname
-                        or not installed.resolve().is_relative_to(root.resolve())):
-                    raise ValueError("Installed runner link differs from archive.")
-            elif member.isfile() or member.islnk():
-                stream = source.extractfile(member)
-                if (stream is None or installed.is_symlink() or not installed.is_file()
-                        or hashlib.sha256(stream.read()).digest()
-                        != hashlib.sha256(installed.read_bytes()).digest()):
-                    raise ValueError("Installed runner bytes differ from verified archive.")
-            else:
-                raise ValueError("Runner archive has an unsupported member kind.")
+    """Use the same member validation at preparation and actual first-hook admission."""
+    native_runner.verify_runner_archive(root, archive)
 
 
 def _register_locked(runner_name="elite-mbp-native", deadline=None, descriptors=()) -> None:
@@ -745,6 +726,8 @@ def _stale_live(context, installed=False):
     """Recheck under both leases; online alone never proves listener custody."""
     _require_provisioning(executor=True)
     plan, policy = context['plan'], context['policy']
+    if context.get('lifecycle'):
+        return _lifecycle_live(context, installed)
     expires = plan['new']['expires_at']
     if not time.time() < expires <= context['grant_expiry'] <= policy['recoverable_activation']['expires_at']:
         raise ValueError('Transition or grant expired before activation.')
@@ -851,99 +834,111 @@ def _replace_stale_hook(context, policy_path, hook):
                                           inode=info.st_ino, uid=info.st_uid, mode=info.st_mode & 0o777)
 
 
+def _reuse_context(args, lifecycle=False):
+    plan = json.loads(_pinned_bytes(args.stale_session_plan, args.stale_session_plan_sha256, 0o400))
+    grant = json.loads(_pinned_bytes(args.stale_session_grant, args.stale_session_grant_sha256, 0o400))
+    if (set(plan) != ({'schema', 'kind', 'new', 'old', 'runner', 'service'} if lifecycle else {'schema', 'kind', 'new', 'old', 'runner'}) or type(plan['schema']) is not int or plan['schema'] != 1
+            or plan['kind'] != ('staged-service-handoff-v1' if lifecycle else 'stale-session-reuse-v1')
+            or set(grant) != ({'schema', 'kind', 'plan_sha256', 'review', 'new', 'expires_at', 'revoked', 'human'} if lifecycle else {'schema', 'kind', 'plan_sha256', 'review', 'new', 'expires_at', 'revoked'})
+            or type(grant['schema']) is not int or grant['schema'] != 1 or grant['kind'] != ('reviewed-service-handoff-grant-v1' if lifecycle else 'reviewed-stale-session-reuse-grant-v1')
+            or grant['plan_sha256'] != args.stale_session_plan_sha256 or grant['new'] != plan['new']
+            or grant['revoked'] is not False):
+        raise ValueError('Transition plan, review or Root grant differs.')
+    for path in (args.stale_session_plan, args.stale_session_grant, Path(grant['review']['path'])):
+        if path.is_relative_to(ROOT) or path.is_relative_to(RUNNER):
+            raise ValueError('Repository or runner data cannot supply transition approval.')
+    _pinned_ref(grant['review'])
+    new = plan['new']
+    expected = dict(policy_sha256=args.recoverable_policy_sha256, head=args.approved_head,
+                    run_id=args.session_run_id, run_attempt=args.session_run_attempt,
+                    max_jobs=args.max_jobs, expires_at=args.session_expires_at)
+    if (set(new) != set(expected) | ({'pr_head', 'hook', 'job_name'} if lifecycle else {'pr_head', 'hook'}) or any(new[k] != v for k, v in expected.items())
+            or type(new['max_jobs']) is not int or not 1 <= new['max_jobs'] <= 256
+            or any(not re.fullmatch(r'[1-9][0-9]*', new[k] or '') for k in ('run_id', 'run_attempt'))
+            or type(new['expires_at']) not in (int, float) or not math.isfinite(new['expires_at'])
+            or type(grant['expires_at']) not in (int, float) or not math.isfinite(grant['expires_at'])
+            or not time.time() < new['expires_at'] <= grant['expires_at']):
+        raise ValueError('Exact finite transition session bounds differ.')
+    policy = json.loads(_pinned_bytes(args.recoverable_policy, args.recoverable_policy_sha256, 0o400))
+    if (git_head := output('git', 'rev-parse', 'HEAD', environment=dict(os.environ))) != args.approved_head:
+        raise ValueError('Transition checkout differs from approved execution.')
+    if output('git', 'status', '--porcelain', environment=dict(os.environ)):
+        raise ValueError('Transition requires a clean committed checkout.')
+    archive = args.runner_archive.resolve(strict=True)
+    if hashlib.sha256(archive.read_bytes()).hexdigest() != args.archive_sha256:
+        raise ValueError('Transition archive differs.')
+    base = dict(approved_head=git_head, runner_root=str(RUNNER), developer_dir=DEVELOPER,
+                swift=output('swift', '--version', environment=dict(os.environ, DEVELOPER_DIR=DEVELOPER)),
+                sdk=output('xcrun', '--sdk', 'macosx', '--show-sdk-version', environment=dict(os.environ, DEVELOPER_DIR=DEVELOPER)),
+                guard_sha256=hashlib.sha256((ROOT / 'Tools/CI/native_runner.py').read_bytes()).hexdigest(),
+                runner_archive_sha256=args.archive_sha256)
+    reviewed_recoverable_policy(args.recoverable_policy, args.recoverable_policy_sha256, base)
+    if (policy['recoverable_activation'].get('pr_head') != new['pr_head']
+            or not new['expires_at'] <= grant['expires_at'] <= policy['recoverable_activation']['expires_at']):
+        raise ValueError('Policy/source/grant expiry differs.')
+    old = plan['old']
+    if set(old) != {'policy', 'hook', 'ticket', 'binding', 'state', 'files'} or set(old['files']) != set(STALE_VENDOR_FILES):
+        raise ValueError('Complete old registration pins are required.')
+    if not isinstance(old['files']['.env'], dict) or old['files']['.env'].get('mode') != 0o600:
+        raise ValueError('The reviewed hook environment must retain its private mode.')
+    root = HOME_ROOT / 'recoverable-sessions'
+    ticket = json.loads(_pinned_ref(old['ticket'], root / 'ticket.json'))
+    old_binding_path = Path(ticket['binding'])
+    old_binding = json.loads(_pinned_ref(old['binding'], old_binding_path))
+    old_state = json.loads(_pinned_ref(old['state'], old_binding_path.with_suffix('.state'), 0o600))
+    old_policy = json.loads(_pinned_ref(old['policy']))
+    old_digest = native_runner.policy_digest(old_policy)
+    if (set(old_binding) != {'schema', 'policy_sha256', 'head', 'run_id', 'run_attempt', 'max_jobs', 'expires_at'}
+            or type(old_binding.get('schema')) is not int or old_binding['schema'] != 1
+            or type(old_binding.get('max_jobs')) is not int or not 1 <= old_binding['max_jobs'] <= 256
+            or type(old_state.get('used')) is not int
+            or any(not isinstance(old_binding[k], str) or not re.fullmatch(r'[1-9][0-9]*', old_binding[k]) for k in ('run_id', 'run_attempt'))
+            or type(old_binding['expires_at']) not in (int, float) or not math.isfinite(old_binding['expires_at'])
+            or old_binding_path != root / (old_digest + '-' + old_binding['run_id'] + '-' + old_binding['run_attempt'] + '.json')
+            or (new['run_id'], new['run_attempt']) == (old_binding['run_id'], old_binding['run_attempt'])
+            or old_binding['head'] != old_policy['approved_head'] or old_binding['policy_sha256'] != old_digest
+            or ticket != dict(binding=str(old_binding_path), binding_sha256=old['binding']['sha256'], ordinal=old_binding['max_jobs'], policy_sha256=old_digest)
+            or old_state != {'used': old_binding['max_jobs'], 'phase': 'idle'}
+            or not old_binding['expires_at'] <= time.time() or new['max_jobs'] != old_binding['max_jobs']
+            or old_policy['recoverable_shards'] != policy['recoverable_shards']
+            or old_policy['recoverable_activation']['runners'] != policy['recoverable_activation']['runners']):
+        raise ValueError('Old session is not the exact expired exhausted idle registration.')
+    provenance = json.loads(_vendor_bytes(RUNNER / '.elite-native-installation.json', old['files']['.elite-native-installation.json']))
+    if provenance != {'archive_sha256': args.archive_sha256}:
+        raise ValueError('Installed archive provenance differs from reviewed archive.')
+    old_hook = Path(old['policy']['path']).parent / 'job-started.sh'
+    _pinned_ref(old['hook'], old_hook, 0o500)
+    if (set(plan['runner']) != {'id', 'name', 'os', 'labels', 'status', 'busy'}
+            or type(plan['runner']['id']) is not int or plan['runner']['id'] <= 0):
+        raise ValueError('Exact remote registration identity is required.')
+    binding = dict(schema=1, policy_sha256=native_runner.policy_digest(policy), head=args.approved_head,
+                   run_id=new['run_id'], run_attempt=new['run_attempt'], max_jobs=new['max_jobs'], expires_at=new['expires_at'])
+    installed_policy = AUTHORIZATION_ROOT / args.approved_head / ('recoverable-' + args.recoverable_policy_sha256) / 'policy.json'
+    expected_hook = installed_policy.parent / 'job-started.sh'
+    expected_hook_sha = hashlib.sha256(session_hook(installed_policy, installed_policy.parent / 'native_runner.py')).hexdigest()
+    if new['hook'] != {'path': str(expected_hook), 'sha256': expected_hook_sha}:
+        raise ValueError('Reviewed new policy hook path or bytes differ.')
+    context = dict(plan=plan, policy=policy, binding=binding, old_binding=old_binding, old_policy=old_policy,
+                   installed_policy=installed_policy, old_hook=old_hook, grant_expiry=grant['expires_at'],
+                   inputs=[(args.stale_session_plan, args.stale_session_plan_sha256),
+                           (args.stale_session_grant, args.stale_session_grant_sha256),
+                           (Path(grant['review']['path']), grant['review']['sha256']),
+                           (args.recoverable_policy, args.recoverable_policy_sha256)],
+                   old_refs={key: Path(old[key]['path']) for key in ('policy', 'hook', 'ticket', 'binding', 'state')})
+    context.update(grant=grant, archive=archive)
+    return context
+
+
 def reuse_stale_session(args):
     """Install one reviewed policy on the same idle registration, without starting it."""
     with recoverable_control(), quiescent_legacy():
-        plan = json.loads(_pinned_bytes(args.stale_session_plan, args.stale_session_plan_sha256, 0o400))
-        grant = json.loads(_pinned_bytes(args.stale_session_grant, args.stale_session_grant_sha256, 0o400))
-        if (set(plan) != {'schema', 'kind', 'new', 'old', 'runner'} or type(plan['schema']) is not int or plan['schema'] != 1
-                or plan['kind'] != 'stale-session-reuse-v1'
-                or set(grant) != {'schema', 'kind', 'plan_sha256', 'review', 'new', 'expires_at', 'revoked'}
-                or type(grant['schema']) is not int or grant['schema'] != 1 or grant['kind'] != 'reviewed-stale-session-reuse-grant-v1'
-                or grant['plan_sha256'] != args.stale_session_plan_sha256 or grant['new'] != plan['new']
-                or grant['revoked'] is not False):
-            raise ValueError('Transition plan, review or Root grant differs.')
-        for path in (args.stale_session_plan, args.stale_session_grant, Path(grant['review']['path'])):
-            if path.is_relative_to(ROOT) or path.is_relative_to(RUNNER):
-                raise ValueError('Repository or runner data cannot supply transition approval.')
-        _pinned_ref(grant['review'])
+        context = _reuse_context(args)
+        plan, policy, binding = (context[name] for name in ('plan', 'policy', 'binding'))
         new = plan['new']
-        expected = dict(policy_sha256=args.recoverable_policy_sha256, head=args.approved_head,
-                        run_id=args.session_run_id, run_attempt=args.session_run_attempt,
-                        max_jobs=args.max_jobs, expires_at=args.session_expires_at)
-        if (set(new) != set(expected) | {'pr_head', 'hook'} or any(new[k] != v for k, v in expected.items())
-                or type(new['max_jobs']) is not int or not 1 <= new['max_jobs'] <= 256
-                or any(not re.fullmatch(r'[1-9][0-9]*', new[k] or '') for k in ('run_id', 'run_attempt'))
-                or type(new['expires_at']) not in (int, float) or not math.isfinite(new['expires_at'])
-                or type(grant['expires_at']) not in (int, float) or not math.isfinite(grant['expires_at'])
-                or not time.time() < new['expires_at'] <= grant['expires_at']):
-            raise ValueError('Exact finite transition session bounds differ.')
-        policy = json.loads(_pinned_bytes(args.recoverable_policy, args.recoverable_policy_sha256, 0o400))
-        if (git_head := output('git', 'rev-parse', 'HEAD', environment=dict(os.environ))) != args.approved_head:
-            raise ValueError('Transition checkout differs from approved execution.')
-        if output('git', 'status', '--porcelain', environment=dict(os.environ)):
-            raise ValueError('Transition requires a clean committed checkout.')
-        archive = args.runner_archive.resolve(strict=True)
-        if hashlib.sha256(archive.read_bytes()).hexdigest() != args.archive_sha256:
-            raise ValueError('Transition archive differs.')
-        base = dict(approved_head=git_head, runner_root=str(RUNNER), developer_dir=DEVELOPER,
-                    swift=output('swift', '--version', environment=dict(os.environ, DEVELOPER_DIR=DEVELOPER)),
-                    sdk=output('xcrun', '--sdk', 'macosx', '--show-sdk-version', environment=dict(os.environ, DEVELOPER_DIR=DEVELOPER)),
-                    guard_sha256=hashlib.sha256((ROOT / 'Tools/CI/native_runner.py').read_bytes()).hexdigest(),
-                    runner_archive_sha256=args.archive_sha256)
-        reviewed_recoverable_policy(args.recoverable_policy, args.recoverable_policy_sha256, base)
-        if (policy['recoverable_activation'].get('pr_head') != new['pr_head']
-                or not new['expires_at'] <= grant['expires_at'] <= policy['recoverable_activation']['expires_at']):
-            raise ValueError('Policy/source/grant expiry differs.')
-        old = plan['old']
-        if set(old) != {'policy', 'hook', 'ticket', 'binding', 'state', 'files'} or set(old['files']) != set(STALE_VENDOR_FILES):
-            raise ValueError('Complete old registration pins are required.')
-        if not isinstance(old['files']['.env'], dict) or old['files']['.env'].get('mode') != 0o600:
-            raise ValueError('The reviewed hook environment must retain its private mode.')
         root = HOME_ROOT / 'recoverable-sessions'
-        ticket = json.loads(_pinned_ref(old['ticket'], root / 'ticket.json'))
-        old_binding_path = Path(ticket['binding'])
-        old_binding = json.loads(_pinned_ref(old['binding'], old_binding_path))
-        old_state = json.loads(_pinned_ref(old['state'], old_binding_path.with_suffix('.state'), 0o600))
-        old_policy = json.loads(_pinned_ref(old['policy']))
-        old_digest = native_runner.policy_digest(old_policy)
-        if (set(old_binding) != {'schema', 'policy_sha256', 'head', 'run_id', 'run_attempt', 'max_jobs', 'expires_at'}
-                or type(old_binding.get('schema')) is not int or old_binding['schema'] != 1
-                or type(old_binding.get('max_jobs')) is not int or not 1 <= old_binding['max_jobs'] <= 256
-                or type(old_state.get('used')) is not int
-                or any(not isinstance(old_binding[k], str) or not re.fullmatch(r'[1-9][0-9]*', old_binding[k]) for k in ('run_id', 'run_attempt'))
-                or type(old_binding['expires_at']) not in (int, float) or not math.isfinite(old_binding['expires_at'])
-                or old_binding_path != root / (old_digest + '-' + old_binding['run_id'] + '-' + old_binding['run_attempt'] + '.json')
-                or (new['run_id'], new['run_attempt']) == (old_binding['run_id'], old_binding['run_attempt'])
-                or old_binding['head'] != old_policy['approved_head'] or old_binding['policy_sha256'] != old_digest
-                or ticket != dict(binding=str(old_binding_path), binding_sha256=old['binding']['sha256'], ordinal=old_binding['max_jobs'], policy_sha256=old_digest)
-                or old_state != {'used': old_binding['max_jobs'], 'phase': 'idle'}
-                or not old_binding['expires_at'] <= time.time() or new['max_jobs'] != old_binding['max_jobs']
-                or old_policy['recoverable_shards'] != policy['recoverable_shards']
-                or old_policy['recoverable_activation']['runners'] != policy['recoverable_activation']['runners']):
-            raise ValueError('Old session is not the exact expired exhausted idle registration.')
-        provenance = json.loads(_vendor_bytes(RUNNER / '.elite-native-installation.json', old['files']['.elite-native-installation.json']))
-        if provenance != {'archive_sha256': args.archive_sha256}:
-            raise ValueError('Installed archive provenance differs from reviewed archive.')
-        old_hook = Path(old['policy']['path']).parent / 'job-started.sh'
-        _pinned_ref(old['hook'], old_hook, 0o500)
-        if (set(plan['runner']) != {'id', 'name', 'os', 'labels', 'status', 'busy'}
-                or type(plan['runner']['id']) is not int or plan['runner']['id'] <= 0):
-            raise ValueError('Exact remote registration identity is required.')
-        binding = dict(schema=1, policy_sha256=native_runner.policy_digest(policy), head=args.approved_head,
-                       run_id=new['run_id'], run_attempt=new['run_attempt'], max_jobs=new['max_jobs'], expires_at=new['expires_at'])
-        installed_policy = AUTHORIZATION_ROOT / args.approved_head / ('recoverable-' + args.recoverable_policy_sha256) / 'policy.json'
-        expected_hook = installed_policy.parent / 'job-started.sh'
-        expected_hook_sha = hashlib.sha256(session_hook(installed_policy, installed_policy.parent / 'native_runner.py')).hexdigest()
-        if new['hook'] != {'path': str(expected_hook), 'sha256': expected_hook_sha}:
-            raise ValueError('Reviewed new policy hook path or bytes differ.')
-        context = dict(plan=plan, policy=policy, binding=binding, old_binding=old_binding, old_policy=old_policy,
-                       installed_policy=installed_policy, old_hook=old_hook, grant_expiry=grant['expires_at'],
-                       inputs=[(args.stale_session_plan, args.stale_session_plan_sha256),
-                               (args.stale_session_grant, args.stale_session_grant_sha256),
-                               (Path(grant['review']['path']), grant['review']['sha256']),
-                               (args.recoverable_policy, args.recoverable_policy_sha256)],
-                       old_refs={key: Path(old[key]['path']) for key in ('policy', 'hook', 'ticket', 'binding', 'state')})
+        installed_policy = context['installed_policy']
+        expected_hook = Path(new['hook']['path'])
+        archive = context['archive']
         _stale_live(context)
         binding_path = root / (binding['policy_sha256'] + '-' + new['run_id'] + '-' + new['run_attempt'] + '.json')
         state_path = binding_path.with_suffix('.state')
@@ -984,6 +979,209 @@ def reuse_stale_session(args):
         return dict(policy=str(installed), receipt=str(receipt), reason='same registration reused; no listener started')
 
 
+
+def _lifecycle_service_context(context):
+    service = context["plan"]["service"]
+    label = "actions.runner.stephenlclarke-l337.elite-mbp-native"
+    expected = {"pointer", "plist", "pointer_identity", "plist_identity", "plist_mode", "domain", "label", "program", "generation", "processes"}
+    if (set(service) != expected or service["label"] != label
+            or service["domain"] != "gui/" + str(os.getuid())
+            or service["program"] != str(RUNNER / "runsvc.sh")
+            or service["pointer"]["path"] != str(RUNNER / ".service")
+            or service["plist"]["path"] != str(Path.home() / "Library/LaunchAgents" / (label + ".plist"))
+            or context["plan"]["runner"]["id"] != 134 or context["binding"]["max_jobs"] != 1
+            or int(context["binding"]["run_attempt"]) < 2
+            or set(service["generation"]) != {"loaded", "pid", "start_command"}
+            or service["generation"]["loaded"] is not True
+            or type(service["generation"]["pid"]) is not int or service["generation"]["pid"] <= 0
+            or not isinstance(service["generation"]["start_command"], str)
+            or not service["generation"]["start_command"]):
+        raise ValueError("The exact preserved runner134 service and next single slot are required")
+    if native_runner.lifecycle_read(service["pointer"], service["pointer_identity"]["mode"]).decode().strip() != label:
+        raise ValueError("Service pointer changed")
+    plist = plistlib.loads(native_runner.lifecycle_read(service["plist"], service["plist_mode"]))
+    if (plist.get("Label") != label or plist.get("ProgramArguments") != [service["program"]]
+            or plist.get("WorkingDirectory") != str(RUNNER) or plist.get("RunAtLoad") is not True
+            or plist.get("Disabled", False) is not False):
+        raise ValueError("Service plist command, path or enabled state changed")
+    grant = context["grant"]
+    human = json.loads(_pinned_ref(grant["human"]))
+    if Path(grant["human"]["path"]).is_relative_to(ROOT) or Path(grant["human"]["path"]).is_relative_to(RUNNER):
+        raise ValueError("Human operation decision must be external")
+    actions = [["/bin/launchctl", "bootout", service["domain"] + "/" + label],
+               ["/bin/launchctl", "bootstrap", service["domain"], service["plist"]["path"]]]
+    if human != dict(schema=1, kind="human-service-handoff-decision-v1", decision="APPROVED",
+                     plan_sha256=context["inputs"][0][1], actions=actions):
+        raise ValueError("Explicit human decision for both exact actions is missing")
+    context["inputs"].append((Path(grant["human"]["path"]), grant["human"]["sha256"]))
+    context.update(lifecycle=True, service=service, actions=actions, phase="online")
+
+
+def _lifecycle_live(context, installed=False):
+    """Revalidate archive, old generation, service, PR and predispatch attempt under both leases."""
+    _require_provisioning(executor=True)
+    plan, policy = context["plan"], context["policy"]
+    expiry = context["binding"]["expires_at"]
+    if not time.time() < expiry <= context["grant_expiry"] <= policy["recoverable_activation"]["expires_at"]:
+        raise ValueError("Lifecycle plan/grant/policy expired")
+    for path, digest in context["inputs"]:
+        _pinned_bytes(path, digest, 0o400)
+    for key, expected in context["old_refs"].items():
+        _pinned_ref(plan["old"][key], expected, 0o600 if key == "state" else 0o500 if key == "hook" else 0o400)
+    for name, reference in plan["old"]["files"].items():
+        if name == ".env" and installed:
+            reference = context["new_environment_pin"]
+        if reference is None:
+            if (RUNNER / name).exists() or (RUNNER / name).is_symlink():
+                raise ValueError("An absent vendor generation appeared")
+        else:
+            _vendor_bytes(RUNNER / name, reference)
+    verify_installed_archive(RUNNER, context["archive"])
+    require_registration(policy)
+    registration = json.loads((RUNNER / ".runner").read_text(encoding="utf-8-sig"))
+    if registration.get("agentId") != 134:
+        raise ValueError("Preserved registration changed")
+    old = _stale_remote("actions/runs/" + context["old_binding"]["run_id"] + "/attempts/"
+                        + context["old_binding"]["run_attempt"], expiry)
+    expected_source = context["old_policy"]["recoverable_activation"].get("pr_head",
+                        context["old_policy"]["approved_head"])
+    if (str(old.get("id")) != context["old_binding"]["run_id"]
+            or str(old.get("run_attempt")) != context["old_binding"]["run_attempt"]
+            or old.get("head_sha") != expected_source or old.get("status") != "completed"
+            or old.get("path") != ".github/workflows/ci.yml"
+            or old.get("event") != ("pull_request" if "pr_head" in context["old_policy"]["recoverable_activation"] else "push")
+            or old.get("conclusion") not in {"success", "failure", "cancelled", "timed_out", "skipped", "neutral", "action_required", "startup_failure"}
+            or old.get("repository", {}).get("id") != 1416155405
+            or old.get("repository", {}).get("full_name") != native_runner.REPOSITORY
+            or old.get("actor", {}).get("id") != int(native_runner.ACTOR)
+            or old.get("triggering_actor", {}).get("id") != int(native_runner.ACTOR)):
+        raise ValueError("Old terminal run generation differs")
+    stage = dict(binding=context["binding"], runner=plan["runner"], job_name=plan["new"]["job_name"])
+    remote = native_runner.require_lifecycle_run(policy, stage, {}, active=False)
+    expected_status = "online" if context["phase"] == "online" else "offline"
+    if remote.get("status") != expected_status or remote.get("busy") is not False:
+        raise ValueError("Runner is not in the required idle online/offline state")
+    observed = native_runner.lifecycle_service(context["service"], expiry)
+    expected_service = context["service"]["generation"] if context["phase"] == "online" else {"loaded": False}
+    if observed != expected_service:
+        raise ValueError("Service generation is not the reviewed lifecycle state")
+    census = output("ps", "-axo", "pid=,ppid=,pgid=,lstart=,command=", environment=dict(os.environ))
+    processes = []
+    for line in census.splitlines():
+        fields = line.strip().split(None, 8)
+        if len(fields) != 9 or not all(field.isdigit() for field in fields[:3]):
+            raise ValueError("Local runner census is uncertain")
+        words = shlex.split(fields[8])
+        if any(Path(word).name in {"Runner.Listener", "Runner.Worker", "RunnerService.js"}
+               or word in {str(RUNNER / "run.sh"), str(RUNNER / "runsvc.sh")} for word in words):
+            processes.append(line.strip())
+    expected_processes = context["service"]["processes"] if context["phase"] == "online" else []
+    if processes != expected_processes or (context["phase"] == "online"
+            and not any(row.split()[0] == str(observed["pid"]) for row in processes)):
+        raise ValueError("Local runner process generation differs")
+
+
+def _lifecycle_action(context, action):
+    """Execute only a precomputed service action after the exclusive claim."""
+    _require_provisioning(executor=True)
+    remaining = context["binding"]["expires_at"] - time.time()
+    if remaining <= 0 or action not in context["actions"]:
+        raise ValueError("Service operation expired or changed")
+    result = subprocess.run(action, capture_output=True, text=True, timeout=remaining)
+    if result.returncode:
+        raise ValueError("Service operation failed; retain its one-use claim")
+
+
+def stage_service_session(args):
+    """Stop one granted service and install a nonexecuting next-attempt generation."""
+    with recoverable_control(), quiescent_legacy():
+        context = _reuse_context(args, lifecycle=True)
+        _lifecycle_service_context(context)
+        _lifecycle_live(context)
+        root = HOME_ROOT / "recoverable-sessions"
+        stage_path = root / ("lifecycle-" + native_runner.policy_digest(context["policy"]) + ".json")
+        claim = stage_path.with_suffix(".stop-claim.json")
+        _exclusive_json(claim, dict(plan=context["inputs"][0][1], grant=context["inputs"][1][1]))
+        _lifecycle_live(context)
+        _lifecycle_action(context, context["actions"][0])
+        context["phase"] = "offline"
+        _lifecycle_live(context)
+        # Preserve the complete old public pointer and env bytes before changing the hook.
+        old_ticket = root / (stage_path.stem + ".old-ticket.json")
+        native_runner.lifecycle_publish_bytes(old_ticket, _pinned_ref(context["plan"]["old"]["ticket"]))
+        old_env = root / (stage_path.stem + ".old-env")
+        native_runner.lifecycle_publish_bytes(
+            old_env, _vendor_bytes(RUNNER / ".env", context["plan"]["old"]["files"][".env"]))
+        custody = _require_provisioning(executor=True)
+        custody.stale_reuse = context
+        try:
+            installed = _prepare_locked(args.approved_head, context["archive"], args.archive_sha256,
+                                        args.recoverable_policy, args.recoverable_policy_sha256,
+                                        registered=True, stale=context)
+        finally:
+            custody.stale_reuse = None
+        _lifecycle_live(context, installed=True)
+        preserved = [{"ref": dict(path=str(path), sha256=digest), "mode": 0o400}
+                     for path, digest in context["inputs"]]
+        preserved += [{"ref": native_runner.lifecycle_ref(RUNNER / name), "mode": reference["mode"],
+                       "identity": context["new_environment_pin"] if name == ".env" else reference}
+                      for name, reference in context["plan"]["old"]["files"].items()
+                      if reference is not None]
+        preserved += [{"ref": native_runner.lifecycle_ref(Path(value["path"])),
+                       "mode": 0o600 if key == "state" else 0o500 if key == "hook" else 0o400}
+                      for key, value in context["plan"]["old"].items() if key not in {"files", "ticket"}]
+        preserved += [{"ref": native_runner.lifecycle_ref(installed.parent / name), "mode": 0o400}
+                      for name in context["policy"]["recoverable_activation"]["guard_files"]]
+        for file in (installed, installed.parent / "job-started.sh", installed.parent / "native_runner.py"):
+            _pinned_bytes(file, hashlib.sha256(file.read_bytes()).hexdigest(), 0o500 if file.name != "policy.json" else 0o400)
+        stage = dict(schema=1, kind="staged-service-session-v1", phase="STAGED", binding=context["binding"],
+                     policy=native_runner.lifecycle_ref(installed),
+                     guard=native_runner.lifecycle_ref(installed.parent / "native_runner.py"),
+                     hook=context["plan"]["new"]["hook"], service=context["service"], runner=context["plan"]["runner"],
+                     archive=native_runner.lifecycle_ref(context["archive"]),
+                     archive_mode=context["archive"].stat().st_mode & 0o777,
+                     environment_pin=context["new_environment_pin"], job_name=context["plan"]["new"]["job_name"], preserved=preserved,
+                     old_ticket=context["plan"]["old"]["ticket"],
+                     old_ticket_snapshot=native_runner.lifecycle_ref(old_ticket),
+                     old_environment_snapshot=native_runner.lifecycle_ref(old_env))
+        _require_provisioning(executor=True)
+        if not time.time() < context["binding"]["expires_at"]:
+            raise ValueError("Staging deadline expired")
+        _exclusive_json(stage_path, stage)
+        return {"stage": native_runner.lifecycle_ref(stage_path), "phase": "STAGED", "workload": False}
+
+
+def start_service_session(args):
+    """One explicit bootstrap after stopped/offline verification; dispatch is separate."""
+    with recoverable_control(), quiescent_legacy():
+        context = _reuse_context(args, lifecycle=True)
+        _lifecycle_service_context(context)
+        context["phase"] = "offline"
+        path = HOME_ROOT / "recoverable-sessions" / ("lifecycle-" + native_runner.policy_digest(context["policy"]) + ".json")
+        stage = json.loads(native_runner.lifecycle_read(native_runner.lifecycle_ref(path)))
+        env = next(row["ref"] for row in stage["preserved"] if row["ref"]["path"] == str(RUNNER / ".env"))
+        context.update(new_environment_pin=stage["environment_pin"])
+        if env["sha256"] != context["new_environment_pin"]["sha256"]:
+            raise ValueError("Staged environment identity differs")
+        _lifecycle_live(context, installed=True)
+        if stage["phase"] != "STAGED" or stage["binding"] != context["binding"]:
+            raise ValueError("Stage is a different exact generation")
+        native_runner.require_lifecycle_preserved(stage)
+        _exclusive_json(path.with_suffix(".start-claim.json"), {"stage": native_runner.lifecycle_ref(path)})
+        _lifecycle_live(context, installed=True)
+        _lifecycle_action(context, context["actions"][1])
+        generation = native_runner.lifecycle_service(context["service"], context["binding"]["expires_at"])
+        if generation.get("loaded") is not True:
+            raise ValueError("Bootstrap generation is unresolved; preserve its claim")
+        _require_provisioning(executor=True)
+        if not time.time() < context["binding"]["expires_at"]:
+            raise ValueError("Bootstrap deadline expired; preserve its claim")
+        native_runner.require_lifecycle_preserved(stage)
+        _exclusive_json(path.with_suffix(".started.json"),
+                        dict(phase="STARTED", stage=native_runner.lifecycle_ref(path), service_generation=generation))
+        return {"phase": "STARTED", "stage": native_runner.lifecycle_ref(path), "workload": False}
+
+
 def main() -> None:
     """Prepare first; registration and listening require explicit operator flags."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -998,6 +1196,7 @@ def main() -> None:
     parser.add_argument("--session-expires-at", type=float)
     parser.add_argument("--register", action="store_true")
     parser.add_argument("--run", action="store_true")
+    parser.add_argument("--lifecycle", choices=("stage", "start"))
     parser.add_argument("--stale-session-plan", type=Path)
     parser.add_argument("--stale-session-plan-sha256")
     parser.add_argument("--stale-session-grant", type=Path)
@@ -1008,8 +1207,11 @@ def main() -> None:
     if any(value is not None for value in stale_values):
         if not all(value is not None for value in stale_values) or args.register or args.run or args.recoverable_policy is None:
             parser.error("Exact stale plan/grant and policy are required; reuse never registers or starts a listener.")
-        print(json.dumps(reuse_stale_session(args)))
+        operation = stage_service_session if args.lifecycle == "stage" else start_service_session if args.lifecycle == "start" else reuse_stale_session
+        print(json.dumps(operation(args)))
         return
+    if args.lifecycle:
+        parser.error("Lifecycle requires the exact reviewed plan and grant.")
     if args.recoverable_policy is not None:
         with recoverable_control() as lock:
             # Reading a reviewed policy is allowed; the old executor lease must be quiescent before installation.

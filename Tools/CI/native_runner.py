@@ -2,7 +2,8 @@
 
 import argparse
 import base64
-from contextlib import contextmanager
+import fcntl
+from contextlib import contextmanager, ExitStack
 import hashlib
 import importlib.util
 from functools import lru_cache
@@ -12,6 +13,9 @@ import os
 from pathlib import Path
 import platform
 import re
+import shlex
+import uuid
+import tarfile
 import subprocess
 import time
 
@@ -515,6 +519,7 @@ def require_recoverable_identity(policy: dict, environment: dict, event: dict, n
 def require_recoverable_job(policy: dict, environment: dict, event: dict, now=None, verify_assignment=True) -> dict:
     """Require the complete request and owned assignment before any checkout or native work."""
     current = time.time() if now is None else now
+    require_lifecycle_active(policy, environment)
     activation = require_recoverable_identity(policy, environment, event, current)
     if verify_assignment and environment.get("ELITE_RECOVERABLE_CODE_ENABLED") != "true":
         raise ValueError("Installed recoverable code was not activated by the owned hook.")
@@ -708,11 +713,320 @@ def require_owned_activation_file(path: Path) -> None:
         raise ValueError("Activation policy must belong to the runner owner.")
 
 
+
+def verify_runner_archive(root: Path, archive: Path) -> None:
+    """Bind every reused archive file/link to the verified installation, not just its marker."""
+    with tarfile.open(archive) as source:
+        for member in source.getmembers():
+            relative = Path(member.name)
+            if relative.is_absolute() or ".." in relative.parts:
+                raise ValueError("Runner archive has an unsafe member path.")
+            installed = root / relative
+            if member.isdir():
+                if installed.is_symlink() or not installed.is_dir():
+                    raise ValueError("Installed runner directory differs from archive.")
+            elif member.issym():
+                if (not installed.is_symlink() or os.readlink(installed) != member.linkname
+                        or not installed.resolve().is_relative_to(root.resolve())):
+                    raise ValueError("Installed runner link differs from archive.")
+            elif member.isfile() or member.islnk():
+                stream = source.extractfile(member)
+                if (stream is None or installed.is_symlink() or not installed.is_file()
+                        or hashlib.sha256(stream.read()).digest()
+                        != hashlib.sha256(installed.read_bytes()).digest()):
+                    raise ValueError("Installed runner bytes differ from verified archive.")
+            else:
+                raise ValueError("Runner archive has an unsupported member kind.")
+
+
+def session_root():
+    import pwd
+    return Path(pwd.getpwuid(os.getuid()).pw_dir) / "Library/EliteNativeCI/recoverable-sessions"
+
+
+def lifecycle_path(policy):
+    return session_root() / ("lifecycle-" + policy_digest(policy) + ".json")
+
+
+def lifecycle_read(reference, mode=0o400):
+    """Read one owned physical generation and verify its exact immutable bytes."""
+    path = Path(reference["path"])
+    if set(reference) != {"path", "sha256"} or path != path.resolve():
+        raise ValueError("Lifecycle material must name one physical generation")
+    require_owned_activation_file(path)
+    with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), "rb") as stream:
+        before = os.fstat(stream.fileno())
+        data = stream.read()
+        after = os.fstat(stream.fileno())
+    current = path.lstat()
+    identity = lambda info: (info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_mode)
+    if (identity(before) != identity(after) or identity(after) != identity(current)
+            or before.st_mode & 0o777 != mode
+            or hashlib.sha256(data).hexdigest() != reference["sha256"]):
+        raise ValueError("Lifecycle material changed")
+    return data
+
+
+def lifecycle_ref(path):
+    path = Path(path)
+    return {"path": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+
+
+def lifecycle_publish(path, value):
+    lifecycle_publish_bytes(path, (json.dumps(value, sort_keys=True, allow_nan=False) + "\n").encode())
+
+
+def lifecycle_publish_bytes(path, data):
+    """Exclusive durable records retain claims across failure and prohibit replay."""
+    path = Path(path)
+    pending = path.with_name(path.name + ".pending-" + str(uuid.uuid4()))
+    try:
+        with pending.open("xb") as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+        pending.chmod(0o400)
+        os.link(pending, path, follow_symlinks=False)
+        descriptor = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+    finally:
+        pending.unlink(missing_ok=True)
+
+
+@contextmanager
+def lifecycle_custody():
+    """The actual first hook takes both existing leases without operator provisioning."""
+    root = diagnostic_custody_root().parent
+    with ExitStack() as stack:
+        witnesses = []
+        paths = []
+        for path, role in ((root / "recoverable-control.lock", "controller"),
+                           (root / "sanitizer-checkpoints/executor.lock", "executor")):
+            require_owned_activation_file(path)
+            lock = stack.enter_context(os.fdopen(os.open(path, os.O_RDWR | os.O_NOFOLLOW), "r+"))
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            witnesses.append(stack.enter_context(_diagnostic_lease_context(lock, role)))
+            paths.append(path)
+        def verify():
+            for witness, path in zip(witnesses, paths):
+                witness.verify()
+                info = path.lstat()
+                if ((info.st_dev, info.st_ino) != (witness.identity.st_dev, witness.identity.st_ino)
+                        or info.st_uid != os.getuid() or info.st_mode & 0o022):
+                    raise ValueError("Lifecycle lease path was replaced")
+            require_diagnostic_custody_clear()
+        verify()
+        yield verify
+        verify()
+
+
+def lifecycle_api(path, deadline):
+    remaining = deadline - time.time()
+    if remaining <= 0:
+        raise ValueError("Lifecycle deadline expired")
+    result = subprocess.run(["gh", "api", "repos/" + REPOSITORY + "/" + path],
+                            capture_output=True, text=True, timeout=remaining)
+    if result.returncode:
+        raise ValueError("Lifecycle remote state is unavailable")
+    return json.loads(result.stdout)
+
+
+def lifecycle_service(service, deadline):
+    """Observe only the exact preserved LaunchAgent and its enabled state."""
+    for key in ("pointer", "plist"):
+        lifecycle_read(service[key], service[key + "_identity"]["mode"])
+        info = Path(service[key]["path"]).lstat()
+        pin = service[key + "_identity"]
+        if (info.st_dev, info.st_ino, info.st_uid, info.st_mode & 0o777) != (
+                pin["device"], pin["inode"], pin["uid"], pin["mode"]):
+            raise ValueError("Service file generation changed")
+    disabled = subprocess.run(["/bin/launchctl", "print-disabled", service["domain"]],
+                              capture_output=True, text=True, timeout=max(0, deadline - time.time()))
+    if disabled.returncode or re.search(re.escape('"' + service["label"] + '"') + r'\s*=>\s*true', disabled.stdout):
+        raise ValueError("The preserved service is disabled or unobservable")
+    result = subprocess.run(["/bin/launchctl", "print", service["domain"] + "/" + service["label"]],
+                            capture_output=True, text=True, timeout=max(0, deadline - time.time()))
+    if result.returncode:
+        if result.returncode == 113 and "Could not find service" in result.stderr:
+            return {"loaded": False}
+        raise ValueError("Service absence is uncertain")
+    def field(name):
+        values = re.findall(r"^\s*" + name + r" = (.+)$", result.stdout, re.MULTILINE)
+        if len(values) != 1:
+            raise ValueError("Service generation is ambiguous")
+        return values[0].strip()
+    if (field("path") != service["plist"]["path"] or field("program") != service["program"]
+            or field("state") != "running"):
+        raise ValueError("A different service generation is loaded")
+    pid = field("pid")
+    if not pid.isdigit() or int(pid) <= 0:
+        raise ValueError("Service PID is unavailable")
+    census = subprocess.run(["ps", "-p", pid, "-o", "lstart=,command="],
+                            capture_output=True, text=True, timeout=max(0, deadline - time.time()))
+    if census.returncode or len(census.stdout.splitlines()) != 1:
+        raise ValueError("Service process generation is unavailable")
+    return {"loaded": True, "pid": int(pid), "start_command": census.stdout.strip()}
+
+
+def require_lifecycle_run(policy, stage, environment, *, active):
+    """Bind actual run, attempt, actors, PR refs and assigned physical runner."""
+    new, deadline = stage["binding"], stage["binding"]["expires_at"]
+    run = lifecycle_api("actions/runs/" + new["run_id"], deadline)
+    expected_attempt = int(new["run_attempt"]) if active else int(new["run_attempt"]) - 1
+    activation = policy["recoverable_activation"]
+    if (str(run.get("id")) != new["run_id"] or run.get("run_attempt") != expected_attempt
+            or run.get("head_sha") != activation["pr_head"] or run.get("event") != "pull_request"
+            or run.get("path") != ".github/workflows/ci.yml"
+            or run.get("repository", {}).get("id") != 1416155405
+            or run.get("repository", {}).get("full_name") != REPOSITORY
+            or run.get("actor", {}).get("id") != int(ACTOR)
+            or run.get("triggering_actor", {}).get("id") != int(ACTOR)
+            or run.get("status") not in (("in_progress",) if active else ("completed",))
+            or (active and run.get("conclusion") is not None)
+            or (not active and run.get("conclusion") not in {"success", "failure", "cancelled", "timed_out",
+                                                          "skipped", "neutral", "action_required", "startup_failure"})):
+        raise ValueError("Lifecycle run/attempt/source/actor is different")
+    match = re.fullmatch(re.escape(REPOSITORY) + r"/.github/workflows/ci.yml@refs/pull/([1-9][0-9]*)/merge",
+                         activation["workflow_ref"])
+    if not match:
+        raise ValueError("Lifecycle requires the reviewed internal PR")
+    pr = lifecycle_api("pulls/" + match[1], deadline)
+    if (pr.get("state") != "open" or pr.get("merge_commit_sha") != policy["approved_head"]
+            or pr.get("head", {}).get("sha") != activation["pr_head"]
+            or pr.get("head", {}).get("repo", {}).get("id") != 1416155405
+            or pr.get("base", {}).get("repo", {}).get("id") != 1416155405):
+        raise ValueError("Lifecycle PR refs changed")
+    remote = lifecycle_api("actions/runners/" + str(stage["runner"]["id"]), deadline)
+    if any(remote.get(key) != stage["runner"][key] for key in ("id", "name", "os", "labels")):
+        raise ValueError("Lifecycle runner identity changed")
+    if active:
+        jobs = lifecycle_api("actions/runs/" + new["run_id"] + "/attempts/" + new["run_attempt"]
+                             + "/jobs?per_page=100", deadline)
+        if (type(jobs.get("total_count")) is not int or not 1 <= jobs["total_count"] <= 100
+                or jobs["total_count"] != len(jobs.get("jobs", []))):
+            raise ValueError("Lifecycle job enumeration is incomplete")
+        assigned = [job for job in jobs["jobs"] if job.get("runner_id") == stage["runner"]["id"]
+                    and job.get("status") == "in_progress"]
+        if (remote.get("status") != "online" or remote.get("busy") is not True or len(assigned) != 1
+                or assigned[0].get("runner_name") != stage["runner"]["name"]
+                or assigned[0].get("name") != stage["job_name"]
+                or environment.get("RUNNER_NAME") != stage["runner"]["name"]
+                or environment.get("GITHUB_RUN_ID") != new["run_id"]
+                or environment.get("GITHUB_RUN_ATTEMPT") != new["run_attempt"]):
+            raise ValueError("First hook is not the actual assigned physical job")
+    return remote
+
+
+def require_lifecycle_preserved(stage):
+    for reference in stage["preserved"]:
+        lifecycle_read(reference["ref"], reference["mode"])
+        if "identity" in reference:
+            info = Path(reference["ref"]["path"]).lstat()
+            pin = reference["identity"]
+            if (info.st_dev, info.st_ino, info.st_uid, info.st_mode & 0o777) != (
+                    pin["device"], pin["inode"], pin["uid"], pin["mode"]):
+                raise ValueError("Preserved runner file generation changed")
+
+
+def require_lifecycle_active(policy, environment):
+    path = lifecycle_path(policy)
+    if not path.exists() and not path.is_symlink():
+        return
+    stage = json.loads(lifecycle_read(lifecycle_ref(path)))
+    active_path = path.with_suffix(".active.json")
+    active = json.loads(lifecycle_read(lifecycle_ref(active_path)))
+    if (stage.get("kind") != "staged-service-session-v1" or stage["schema"] != 1
+            or stage["binding"]["max_jobs"] != 1 or stage["binding"]["policy_sha256"] != policy_digest(policy)
+            or stage["phase"] != "STAGED" or active["phase"] != "ACTIVE"
+            or active["stage"] != lifecycle_ref(path) or active["binding"] != stage["binding"]
+            or active["run_id"] != environment.get("GITHUB_RUN_ID")
+            or active["run_attempt"] != environment.get("GITHUB_RUN_ATTEMPT")
+            or active["runner"] != environment.get("RUNNER_NAME")
+            or not time.time() < stage["binding"]["expires_at"]):
+        raise ValueError("STAGED alone cannot authorize any workload")
+    binding_path = session_root() / (stage["binding"]["policy_sha256"] + "-" + active["run_id"] + "-" + active["run_attempt"] + ".json")
+    binding = json.loads(lifecycle_read(lifecycle_ref(binding_path)))
+    state = json.loads(lifecycle_read(lifecycle_ref(binding_path.with_suffix(".state")), 0o600))
+    ticket = json.loads(lifecycle_read(lifecycle_ref(session_root() / "ticket.json")))
+    if (binding != stage["binding"] or binding["policy_sha256"] != policy_digest(policy)
+            or state != {"used": 1, "phase": "running"}
+            or ticket != dict(binding=str(binding_path), binding_sha256=lifecycle_ref(binding_path)["sha256"],
+                              ordinal=1, policy_sha256=policy_digest(policy))):
+        raise ValueError("Lifecycle activation is partial or names another slot")
+
+
+def activate_staged_session(policy, policy_path, environment, event):
+    """Only the actual installed first hook may exchange STAGED for one ACTIVE slot."""
+    path = lifecycle_path(policy)
+    with lifecycle_custody() as verify:
+        stage = json.loads(lifecycle_read(lifecycle_ref(path)))
+        binding = stage["binding"]
+        if (stage["phase"] != "STAGED" or binding["policy_sha256"] != policy_digest(policy)
+                or binding["max_jobs"] != 1 or not time.time() < binding["expires_at"]
+                or str(Path(__file__).resolve()) != stage["guard"]["path"]
+                or str(Path(policy_path).resolve()) != stage["policy"]["path"]
+                or binding["head"] != policy["approved_head"]
+                or stage["guard"]["sha256"] != policy["guard_sha256"]
+                or stage["hook"]["path"] != str(Path(policy_path).parent / "job-started.sh")):
+            raise ValueError("Staged hook source, policy or finite slot differs")
+        lifecycle_read(stage["guard"], 0o500)
+        lifecycle_read(stage["hook"], 0o500)
+        lifecycle_read(stage["policy"])
+        lifecycle_read(stage["archive"], stage["archive_mode"])
+        verify_runner_archive(Path(policy["runner_root"]), Path(stage["archive"]["path"]))
+        started = json.loads(lifecycle_read(lifecycle_ref(path.with_suffix(".started.json"))))
+        if started["stage"] != lifecycle_ref(path) or started["phase"] != "STARTED":
+            raise ValueError("The staged service was not started by its exact operation")
+        if lifecycle_service(stage["service"], binding["expires_at"]) != started["service_generation"]:
+            raise ValueError("Loaded service generation differs from startup")
+        require_lifecycle_preserved(stage)
+        value = dict(environment, ELITE_NATIVE_POLICY=str(policy_path), ELITE_NATIVE_APPROVED_HEAD=policy["approved_head"],
+                     ELITE_RECOVERABLE_POLICY_SHA256=policy_digest(policy),
+                     ELITE_RECOVERABLE_WORKFLOW_SHA256=policy["recoverable_activation"]["workflow_sha256"],
+                     ELITE_RECOVERABLE_ACTIVATION_SHA256=policy["recoverable_activation"]["manifest_sha256"])
+        require_recoverable_identity(policy, value, event)
+        require_lifecycle_run(policy, stage, environment, active=True)
+        claim = path.with_suffix(".hook-claim.json")
+        verify()
+        lifecycle_publish(claim, {"stage": lifecycle_ref(path), "run_id": binding["run_id"],
+                                  "run_attempt": binding["run_attempt"]})
+        binding_path = session_root() / (binding["policy_sha256"] + "-" + binding["run_id"] + "-" + binding["run_attempt"] + ".json")
+        lifecycle_publish(binding_path, binding)
+        state_path = binding_path.with_suffix(".state")
+        lifecycle_publish(state_path, {"used": 1, "phase": "running"})
+        state_path.chmod(0o600)
+        receipt = dict(phase="ACTIVE", stage=lifecycle_ref(path), binding=binding,
+                       run_id=binding["run_id"], run_attempt=binding["run_attempt"], runner=stage["runner"]["name"])
+        verify()
+        lifecycle_read(stage["guard"], 0o500)
+        lifecycle_read(stage["hook"], 0o500)
+        lifecycle_read(stage["policy"])
+        require_lifecycle_run(policy, stage, environment, active=True)
+        # The old exact ticket was preserved under the staged generation before this replacement.
+        ticket = dict(binding=str(binding_path), binding_sha256=lifecycle_ref(binding_path)["sha256"],
+                      ordinal=1, policy_sha256=policy_digest(policy))
+        pending = session_root() / ("ticket.pending-" + str(uuid.uuid4()))
+        lifecycle_publish(pending, ticket)
+        lifecycle_read(stage["old_ticket"])
+        verify()
+        os.replace(pending, session_root() / "ticket.json")
+        directory = os.open(session_root(), os.O_RDONLY)
+        try:
+            os.fsync(directory)
+        finally:
+            os.close(directory)
+        verify()
+        lifecycle_publish(path.with_suffix(".active.json"), receipt)
+
+
 def require_recoverable_session(policy: dict, environment: dict, now=None) -> None:
     """Recheck the existing immutable session ticket in both admission and authorization."""
-    import pwd
+    require_lifecycle_active(policy, environment)
     current = time.time() if now is None else now
-    root = Path(pwd.getpwuid(os.getuid()).pw_dir) / "Library/EliteNativeCI/recoverable-sessions"
+    root = session_root()
 
     def read(path):
         require_owned_activation_file(path)
@@ -843,6 +1157,7 @@ def require_recoverable_host(policy: dict, environment: dict) -> Path:
 def validate(policy: dict, environment: dict) -> Path:
     """Validate the immutable pre-job metadata before any workflow checkout or action."""
     require_diagnostic_custody_clear()
+    require_lifecycle_active(policy, environment)
     event = json.loads(Path(environment["GITHUB_EVENT_PATH"]).read_text())
     if environment.get("GITHUB_JOB") in RECOVERABLE_JOBS:
         require_recoverable_job(policy, environment, event)
@@ -853,6 +1168,7 @@ def validate(policy: dict, environment: dict) -> Path:
 
 
 def require_recoverable_checkout(policy: dict, environment: dict, workspace: Path) -> None:
+    require_lifecycle_active(policy, environment)
     if environment.get("GITHUB_JOB") in RECOVERABLE_JOBS:
         path = workspace / workflow_path(environment)
         if (path.is_symlink() or hashlib.sha256(path.read_bytes()).hexdigest()
@@ -892,6 +1208,8 @@ def main() -> None:
         raise ValueError("Only reviewed recoverable jobs use split authorization.")
     if not args.checkout and recoverable:
         event = json.loads(Path(environment["GITHUB_EVENT_PATH"]).read_text())
+        if args.admit and lifecycle_path(policy).exists():
+            activate_staged_session(policy, policy_path, environment, event)
         workspace = admit_recoverable(policy, environment, event)
         if not args.admit:
             environment = authorize_recoverable(policy, environment, event)

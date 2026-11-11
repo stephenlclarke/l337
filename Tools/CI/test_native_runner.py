@@ -2361,3 +2361,407 @@ class StaleSessionReuseTests(unittest.TestCase):
             install.main()
             reuse.assert_called_once()
             prepare.assert_not_called()
+
+
+class StagedServiceLifecycleTests(unittest.TestCase):
+    """Temporary runner generations and mocked service/API calls only."""
+
+    def lifecycle_fixture(self):
+        import hashlib
+        import json
+        import os
+        from pathlib import Path
+        import plistlib
+        from unittest.mock import patch
+        import native_runner as native
+        f = StaleSessionReuseTests.reuse_fixture(self)
+        f.stack.enter_context(patch.object(native, "session_root", return_value=f.root))
+        fake_home = f.home.parent / "account"
+        f.stack.enter_context(patch.object(Path, "home", return_value=fake_home))
+        label = "actions.runner.stephenlclarke-l337.elite-mbp-native"
+        pointer = f.runner / ".service"
+        pointer.write_text(label + "\n")
+        pointer.chmod(0o600)
+        plist = fake_home / "Library/LaunchAgents" / (label + ".plist")
+        plist.parent.mkdir(parents=True)
+        plist.write_bytes(plistlib.dumps(dict(Label=label, ProgramArguments=[str(f.runner / "runsvc.sh")],
+                                              WorkingDirectory=str(f.runner), RunAtLoad=True)))
+        plist.chmod(0o600)
+        def reference(path):
+            return dict(path=str(path), sha256=f.digest(path))
+        def identity(path):
+            info = path.stat()
+            return dict(device=info.st_dev, inode=info.st_ino, uid=info.st_uid, mode=info.st_mode & 0o777)
+        generation = dict(loaded=True, pid=777, start_command="reviewed fake service generation")
+        service = dict(pointer=reference(pointer), plist=reference(plist), plist_mode=0o600,
+                       pointer_identity=identity(pointer), plist_identity=identity(plist),
+                       domain="gui/" + str(os.getuid()), label=label, program=str(f.runner / "runsvc.sh"),
+                       generation=generation,
+                       processes=["777 1 777 Tue Nov 10 00:00:00 2026 " + str(f.runner / "runsvc.sh")])
+        f.plan.update(kind="staged-service-handoff-v1", service=service)
+        f.plan["new"]["job_name"] = "Normal coverage, zero leaks and make-ci checks"
+        human = f.home.parent / "human-operation.json"
+        f.args.lifecycle = "stage"
+        def rebind():
+            f.write(f.args.stale_session_plan, f.plan)
+            f.args.stale_session_plan_sha256 = f.digest(f.args.stale_session_plan)
+            f.write(human, dict(schema=1, kind="human-service-handoff-decision-v1", decision="APPROVED",
+                plan_sha256=f.args.stale_session_plan_sha256,
+                actions=[["/bin/launchctl", "bootout", service["domain"] + "/" + label],
+                         ["/bin/launchctl", "bootstrap", service["domain"], str(plist)]]))
+            f.grant.update(kind="reviewed-service-handoff-grant-v1", new=f.plan["new"],
+                           plan_sha256=f.args.stale_session_plan_sha256, human=reference(human))
+            f.write(f.args.stale_session_grant, f.grant)
+            f.args.stale_session_grant_sha256 = f.digest(f.args.stale_session_grant)
+        rebind()
+        live = dict(loaded=True, active=False, generation=generation)
+        actions = []
+        def service_probe(value, deadline):
+            for key in ("pointer", "plist"):
+                native.lifecycle_read(value[key], 0o600)
+                self.assertEqual(identity(Path(value[key]["path"])), value[key + "_identity"])
+            return live["generation"] if live["loaded"] else dict(loaded=False)
+        def action(context, argv):
+            f.install._require_provisioning(executor=True)
+            actions.append(argv)
+            if argv[1] == "bootout":
+                live["loaded"] = False
+                f.remote["status"] = "offline"
+            elif argv[1] == "bootstrap":
+                live.update(loaded=True, generation=dict(loaded=True, pid=888, start_command="new fake generation"))
+                f.remote["status"] = "online"
+            else:
+                self.fail("Unexpected service command")
+        def api(path, deadline):
+            if path.startswith("actions/runners/"):
+                return f.remote
+            if path.startswith("pulls/"):
+                return dict(state="open", merge_commit_sha=SHA, head=dict(sha="b" * 40, repo=dict(id=1416155405)),
+                            base=dict(repo=dict(id=1416155405)))
+            if path.endswith("/jobs?per_page=100"):
+                return dict(total_count=1, jobs=[dict(status="in_progress", runner_id=134,
+                    runner_name=f.remote["name"], name=f.plan["new"]["job_name"])])
+            return dict(id=222, run_attempt=2 if live["active"] else 1, status="in_progress" if live["active"] else "completed",
+                        head_sha="b" * 40, event="pull_request", path=".github/workflows/ci.yml",
+                        conclusion=None if live["active"] else "failure",
+                        repository=dict(id=1416155405, full_name=native.REPOSITORY),
+                        actor=dict(id=int(native.ACTOR)), triggering_actor=dict(id=int(native.ACTOR)))
+        original_output = f.output
+        def census_output(*command, **kwargs):
+            if command[:2] == ("ps", "-axo"):
+                rows = service["processes"] if live["loaded"] else []
+                return "\n".join(rows) or "17 1 17 Tue Nov 10 00:00:00 2026 /usr/bin/idle-fake-observer"
+            return original_output(*command, **kwargs)
+        f.stack.enter_context(patch.object(f.install, "output", side_effect=census_output))
+        f.stack.enter_context(patch.object(native, "lifecycle_service", side_effect=service_probe))
+        f.stack.enter_context(patch.object(native, "lifecycle_api", side_effect=api))
+        f.stack.enter_context(patch.object(f.install, "_lifecycle_action", side_effect=action))
+        f.live, f.actions, f.native, f.rebind, f.human, f.service_probe, f.api = live, actions, native, rebind, human, service_probe, api
+        return f
+
+    def stage_and_start(self, f):
+        f.install.stage_service_session(f.args)
+        f.install.start_service_session(f.args)
+        f.live["active"] = True
+        f.remote["busy"] = True
+        return json_load(f.native.lifecycle_path(f.policy))
+
+    def test_inert_stage_preserves_old_generation_and_first_actual_hook_commits_once(self):
+        import json
+        from pathlib import Path
+        from unittest.mock import patch
+        f = self.lifecycle_fixture()
+        with f.stack:
+            before = {str(p): p.read_bytes() for p in (f.root / "ticket.json", f.old_binding_path,
+                       f.old_binding_path.with_suffix(".state"))}
+            result = f.install.stage_service_session(f.args)
+            self.assertFalse(result["workload"])
+            self.assertFalse(f.live["loaded"])
+            self.assertEqual({str(Path(p)): Path(p).read_bytes() for p in before}, before)
+            stage_path = f.native.lifecycle_path(f.policy)
+            stage = json_load(stage_path)
+            self.assertEqual(stage["phase"], "STAGED")
+            for reader in (f.native.require_lifecycle_active, f.native.require_recoverable_session):
+                with self.assertRaises((ValueError, FileNotFoundError)):
+                    reader(f.policy, dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2"))
+            f.install.start_service_session(f.args)
+            self.assertEqual([argv[1] for argv in f.actions], ["bootout", "bootstrap"])
+            self.assertFalse(stage_path.with_suffix(".active.json").exists())
+            f.live["active"] = True
+            f.remote["busy"] = True
+            env = dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2", RUNNER_NAME="elite-mbp-native")
+            with patch.object(f.native, "__file__", stage["guard"]["path"]), patch.object(f.native, "require_recoverable_identity"):
+                f.native.activate_staged_session(f.policy, stage["policy"]["path"], env, {})
+                f.native.require_lifecycle_active(f.policy, env)
+                with self.assertRaises(FileExistsError):
+                    f.native.activate_staged_session(f.policy, stage["policy"]["path"], env, {})
+            self.assertEqual(Path(stage["old_ticket_snapshot"]["path"]).read_bytes(), before[str(f.root / "ticket.json")])
+            self.assertEqual(Path(stage["old_environment_snapshot"]["path"]).read_bytes(), f.originals[".env"])
+            self.assertEqual(f.old_binding_path.read_bytes(), before[str(f.old_binding_path)])
+            self.assertEqual(f.old_binding_path.with_suffix(".state").read_bytes(), before[str(f.old_binding_path.with_suffix(".state"))])
+            StaleSessionReuseTests.assert_vendor_preserved(self, f)
+
+    def test_wrong_human_grant_service_archive_source_old_state_and_next_attempt_refuse_before_stop(self):
+        mutations = [
+            lambda f: f.write(f.human, {"decision": "NOT_GRANTED"}),
+            lambda f: setattr(f.args, "archive_sha256", "0" * 64),
+            lambda f: setattr(f.args, "approved_head", "0" * 40),
+            lambda f: f.write(f.old_binding_path.with_suffix(".state"), dict(used=0, phase="idle"), 0o600),
+            lambda f: f.plan["new"].update(run_attempt="1"),
+            lambda f: f.plan["service"].update(label="another-service"),
+            lambda f: f.grant.update(revoked=True),
+            lambda f: f.remote.update(busy=True),
+            lambda f: f.live.update(generation=dict(loaded=True, pid=999, start_command="foreign")),
+        ]
+        for mutate in mutations:
+            with self.subTest(mutate=mutate):
+                f = self.lifecycle_fixture()
+                with f.stack:
+                    mutate(f)
+                    # Keep hashes coherent for shape/identity controls; the decision itself remains negative.
+                    if mutate not in mutations[:4]:
+                        f.rebind()
+                    if mutate is mutations[0]:
+                        f.grant["human"]["sha256"] = f.digest(f.human)
+                        f.write(f.args.stale_session_grant, f.grant)
+                        f.args.stale_session_grant_sha256 = f.digest(f.args.stale_session_grant)
+                    with self.assertRaises((ValueError, KeyError)):
+                        f.install.stage_service_session(f.args)
+                    self.assertEqual(f.actions, [])
+
+    def test_partial_stop_replay_start_drift_and_lease_contention_refuse(self):
+        from unittest.mock import patch
+        import fcntl
+        f = self.lifecycle_fixture()
+        with f.stack:
+            with (f.root.parent / "sanitizer-checkpoints/executor.lock").open("r+") as lock:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                with self.assertRaises(BlockingIOError):
+                    f.install.stage_service_session(f.args)
+            original = f.install._lifecycle_live
+            def uncertain(context, installed=False):
+                if context.get("phase") == "offline":
+                    raise ValueError("Uncertain observed offline state")
+                return original(context, installed)
+            with patch.object(f.install, "_lifecycle_live", side_effect=uncertain), self.assertRaises(ValueError):
+                f.install.stage_service_session(f.args)
+            self.assertEqual([row[1] for row in f.actions], ["bootout"])
+            self.assertTrue(list(f.root.glob("*.stop-claim.json")))
+            with self.assertRaises((ValueError, FileExistsError)):
+                f.install.stage_service_session(f.args)
+        f = self.lifecycle_fixture()
+        with f.stack:
+            f.install.stage_service_session(f.args)
+            (f.runner / ".env").write_text("wrong staged hook\n")
+            with self.assertRaises(ValueError):
+                f.install.start_service_session(f.args)
+            self.assertEqual([row[1] for row in f.actions], ["bootout"])
+
+    def test_first_hook_wrong_loaded_path_active_identity_generation_expiry_and_partial_ticket_refuse(self):
+        from unittest.mock import patch
+        mutations = [
+            lambda f, s, e: e.update(GITHUB_RUN_ATTEMPT="3"),
+            lambda f, s, e: e.update(RUNNER_NAME="another-runner"),
+            lambda f, s, e: f.live.update(active=False),
+            lambda f, s, e: f.live.update(generation=dict(loaded=True, pid=999, start_command="other")),
+            lambda f, s, e: f.remote.update(busy=False),
+            lambda f, s, e: (f.runner / "bin/Runner.Listener").write_bytes(b"altered vendor"),
+        ]
+        for mutate in mutations:
+            f = self.lifecycle_fixture()
+            with f.stack, self.subTest(mutate=mutate):
+                stage = self.stage_and_start(f)
+                env = dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2", RUNNER_NAME="elite-mbp-native")
+                mutate(f, stage, env)
+                with (patch.object(f.native, "__file__", stage["guard"]["path"]),
+                      patch.object(f.native, "require_recoverable_identity"), self.assertRaises(ValueError)):
+                    f.native.activate_staged_session(f.policy, stage["policy"]["path"], env, {})
+                self.assertFalse(f.native.lifecycle_path(f.policy).with_suffix(".active.json").exists())
+        f = self.lifecycle_fixture()
+        with f.stack:
+            stage = self.stage_and_start(f)
+            env = dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2", RUNNER_NAME="elite-mbp-native")
+            with self.assertRaises(ValueError):
+                f.native.activate_staged_session(f.policy, stage["policy"]["path"], env, {})
+            with (patch.object(f.native, "__file__", stage["guard"]["path"]), patch.object(f.native, "require_recoverable_identity"),
+                  patch.object(f.native.time, "time", return_value=10000), self.assertRaises(ValueError)):
+                f.native.activate_staged_session(f.policy, stage["policy"]["path"], env, {})
+
+
+def json_load(path):
+    import json
+    return json.loads(path.read_text())
+
+
+class LifecycleAdmissionBoundaryTests(unittest.TestCase):
+    """Exercise the actual workload gates and all-or-nothing final publication."""
+
+    lifecycle_fixture = StagedServiceLifecycleTests.lifecycle_fixture
+    stage_and_start = StagedServiceLifecycleTests.stage_and_start
+
+    def test_all_execution_readers_refuse_staged_even_with_no_job_or_forged_step_flags(self):
+        from pathlib import Path
+        f = self.lifecycle_fixture()
+        with f.stack:
+            f.install.stage_service_session(f.args)
+            env = dict(GITHUB_JOB="native_checks", GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2",
+                       RUNNER_NAME="elite-mbp-native", ELITE_RECOVERABLE_CODE_ENABLED="true")
+            for role in ("native_checks", ""):
+                env["GITHUB_JOB"] = role
+                calls = [
+                    lambda: f.native.require_recoverable_job(f.policy, env, {}),
+                    lambda: f.native.require_recoverable_checkout(f.policy, env, Path("/unused")),
+                    lambda: f.native.validate(f.policy, env),
+                    lambda: f.native.authorize_recoverable(f.policy, env, {}),
+                    lambda: f.native.admit_recoverable(f.policy, env, {}),
+                ]
+                for call in calls:
+                    with self.subTest(role=role, call=call), self.assertRaises(FileNotFoundError):
+                        call()
+            self.assertFalse(f.native.lifecycle_path(f.policy).with_suffix(".active.json").exists())
+
+    def test_remote_actor_pr_and_assigned_job_identity_controls_use_actual_validator(self):
+        from unittest.mock import patch
+        mutations = [
+            lambda value: value.update(actor=dict(id=1)) if "head_sha" in value else None,
+            lambda value: value.update(triggering_actor=dict(id=1)) if "head_sha" in value else None,
+            lambda value: value.update(head_sha="f" * 40) if "head_sha" in value else None,
+            lambda value: value.update(merge_commit_sha="f" * 40) if "merge_commit_sha" in value else None,
+            lambda value: value.update(run_attempt=3) if "head_sha" in value else None,
+            lambda value: value["jobs"][0].update(runner_id=135) if "jobs" in value else None,
+            lambda value: value["jobs"][0].update(name="Other workflow job") if "jobs" in value else None,
+        ]
+        for mutation in mutations:
+            f = self.lifecycle_fixture()
+            with f.stack, self.subTest(mutation=mutation):
+                stage = self.stage_and_start(f)
+                def api(path, expiry):
+                    value = copy.deepcopy(f.api(path, expiry))
+                    mutation(value)
+                    return value
+                with patch.object(f.native, "lifecycle_api", side_effect=api), self.assertRaises(ValueError):
+                    f.native.require_lifecycle_run(f.policy, stage,
+                        dict(RUNNER_NAME="elite-mbp-native", GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2"), active=True)
+
+    def test_partial_first_hook_publication_refuses_every_reader_and_cannot_replay(self):
+        from unittest.mock import patch
+        f = self.lifecycle_fixture()
+        with f.stack:
+            stage = self.stage_and_start(f)
+            env = dict(RUNNER_NAME="elite-mbp-native", GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2")
+            original = f.native.lifecycle_publish
+            def stop(path, value):
+                if path.name.endswith(".active.json"):
+                    raise OSError("fake final receipt publication interrupted")
+                return original(path, value)
+            with (patch.object(f.native, "__file__", stage["guard"]["path"]),
+                  patch.object(f.native, "require_recoverable_identity")):
+                with patch.object(f.native, "lifecycle_publish", side_effect=stop), self.assertRaises(OSError):
+                    f.native.activate_staged_session(f.policy, stage["policy"]["path"], env, {})
+                with self.assertRaises(FileNotFoundError):
+                    f.native.require_lifecycle_active(f.policy, env)
+                with self.assertRaises(FileExistsError):
+                    f.native.activate_staged_session(f.policy, stage["policy"]["path"], env, {})
+            self.assertTrue(f.native.lifecycle_path(f.policy).with_suffix(".hook-claim.json").exists())
+
+    def test_service_observer_and_exact_action_never_interpret_unknown_absence_as_stopped(self):
+        import subprocess
+        from unittest.mock import patch
+        import native_runner
+        import prepare_native_runner
+        observe = native_runner.lifecycle_service
+        act = prepare_native_runner._lifecycle_action
+        f = self.lifecycle_fixture()
+        with f.stack:
+            service = f.plan["service"]
+            for code, message in ((1, "permission denied"), (113, "unrelated failure")):
+                responses = [subprocess.CompletedProcess([], 0, stdout="{}", stderr=""),
+                             subprocess.CompletedProcess([], code, stdout="", stderr=message)]
+                with patch.object(f.native.subprocess, "run", side_effect=responses), self.assertRaises(ValueError):
+                    observe(service, 9000)
+            responses = [subprocess.CompletedProcess([], 0, stdout="{}", stderr=""),
+                         subprocess.CompletedProcess([], 113, stdout="", stderr="Could not find service")]
+            with patch.object(f.native.subprocess, "run", side_effect=responses):
+                self.assertEqual(observe(service, 9000), dict(loaded=False))
+            with f.install.recoverable_control(), f.install.quiescent_legacy():
+                context = f.install._reuse_context(f.args, lifecycle=True)
+                f.install._lifecycle_service_context(context)
+                with patch.object(subprocess, "run") as run, self.assertRaises(ValueError):
+                    act(context, ["/bin/launchctl", "kill", "9", service["label"]])
+                run.assert_not_called()
+
+
+class LifecycleOperationProbeTests(unittest.TestCase):
+    lifecycle_fixture = StagedServiceLifecycleTests.lifecycle_fixture
+
+    def test_live_probe_boundaries_capture_exact_service_actions_and_finite_api_reads(self):
+        import json
+        import subprocess
+        from unittest.mock import patch
+        import native_runner
+        import prepare_native_runner
+        observe, api, action = native_runner.lifecycle_service, native_runner.lifecycle_api, prepare_native_runner._lifecycle_action
+        f = self.lifecycle_fixture()
+        with f.stack:
+            service = f.plan["service"]
+            listing = ("path = " + service["plist"]["path"] + "\nprogram = " + service["program"]
+                       + "\nstate = running\npid = 777\n")
+            responses = [subprocess.CompletedProcess([], 0, stdout="{}", stderr=""),
+                         subprocess.CompletedProcess([], 0, stdout=listing, stderr=""),
+                         subprocess.CompletedProcess([], 0, stdout="reviewed fake service generation\n", stderr="")]
+            with patch.object(subprocess, "run", side_effect=responses):
+                self.assertEqual(observe(service, 9000), service["generation"])
+            with patch.object(subprocess, "run", return_value=subprocess.CompletedProcess([], 0, stdout='{"id":134}', stderr="")) as run:
+                self.assertEqual(api("actions/runners/134", 9000), dict(id=134))
+                self.assertEqual(run.call_args.args[0], ["gh", "api", "repos/stephenlclarke/l337/actions/runners/134"])
+                self.assertEqual(run.call_args.kwargs["timeout"], 8900)
+            with patch.object(subprocess, "run", return_value=subprocess.CompletedProcess([], 1, stdout="", stderr="private failure")), self.assertRaises(ValueError):
+                api("actions/runners/134", 9000)
+            with patch.object(subprocess, "run") as run, self.assertRaises(ValueError):
+                api("actions/runners/134", 90)
+            run.assert_not_called()
+            with f.install.recoverable_control(), f.install.quiescent_legacy():
+                context = f.install._reuse_context(f.args, lifecycle=True)
+                f.install._lifecycle_service_context(context)
+                for argv in context["actions"]:
+                    with patch.object(subprocess, "run", return_value=subprocess.CompletedProcess([], 0, stdout="", stderr="")) as run:
+                        action(context, argv)
+                        self.assertEqual(run.call_args.args[0], argv)
+                        self.assertEqual(run.call_args.kwargs["timeout"], 8900)
+                with patch.object(subprocess, "run", return_value=subprocess.CompletedProcess([], 1, stdout="", stderr="")), self.assertRaises(ValueError):
+                    action(context, context["actions"][0])
+                with patch.object(f.install.time, "time", return_value=10000), patch.object(subprocess, "run") as run, self.assertRaises(ValueError):
+                    action(context, context["actions"][1])
+                run.assert_not_called()
+
+    def test_hook_digest_and_helper_drift_and_expired_bootstrap_retain_claims(self):
+        from pathlib import Path
+        from unittest.mock import patch
+        for select in ("guard", "hook", "helper"):
+            f = self.lifecycle_fixture()
+            with f.stack, self.subTest(select=select):
+                f.install.stage_service_session(f.args)
+                f.install.start_service_session(f.args)
+                stage = json_load(f.native.lifecycle_path(f.policy))
+                f.live["active"], f.remote["busy"] = True, True
+                target = Path(stage[select]["path"]) if select != "helper" else Path(stage["policy"]["path"]).parent / next(iter(f.policy["recoverable_activation"]["guard_files"]))
+                target.chmod(0o600)
+                target.write_text("altered installed source\n")
+                target.chmod(0o500 if select != "helper" else 0o400)
+                with (patch.object(f.native, "__file__", stage["guard"]["path"]), patch.object(f.native, "require_recoverable_identity"),
+                      self.assertRaises(ValueError)):
+                    f.native.activate_staged_session(f.policy, stage["policy"]["path"],
+                        dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2", RUNNER_NAME="elite-mbp-native"), {})
+        f = self.lifecycle_fixture()
+        with f.stack:
+            f.install.stage_service_session(f.args)
+            original = f.install._lifecycle_action
+            def late(context, argv):
+                original(context, argv)
+                # The external action returned after its reviewed slot expired.
+                f.install.time.time.return_value = 10000
+            with patch.object(f.install, "_lifecycle_action", side_effect=late), self.assertRaises(ValueError):
+                f.install.start_service_session(f.args)
+            path = f.native.lifecycle_path(f.policy)
+            self.assertTrue(path.with_suffix(".start-claim.json").exists())
+            self.assertFalse(path.with_suffix(".started.json").exists())
