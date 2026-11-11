@@ -27,12 +27,57 @@ class IsolatedReportTests(unittest.TestCase):
     def write(self, root):
         ET.ElementTree(root).write(self.path)
 
+    def optics_consumers(self):
+        """Read the actual optics file's literal suite and @Test declarations."""
+        path = units.ROOT / "Tests/L337CoreTests/NativeAssemblySurveyOpticsUnitTests.swift"
+        suite = None
+        consumers = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            declaration = re.match(r"struct (\w+)", line)
+            if declaration:
+                suite = declaration[1]
+            method = re.match(r"\s+@Test func (\w+)\(", line)
+            if method:
+                self.assertIsNotNone(suite)
+                consumers.append((suite, method[1]))
+        return consumers
+
     def test_complete_report_records_actual_cases(self):
         root, suite = self.report()
         self.write(root)
         result = units.inspect_report(self.path)
-        self.assertEqual(result["methods"], 686)
+        self.assertEqual(result["methods"], 697)
         self.assertEqual(result["reported_testcases"], len(suite))
+
+    def test_optics_fixture_consumers_have_exact_selection_boundaries(self):
+        suites = (
+            "NativeAssemblySurveyOpticsUnitTests",
+            "NativeAssemblySurveyInstrumentControlsUnitTests",
+            "NativeAssemblyCalibrationIntegrationUnitTests",
+            "NativeAssemblyCalibrationInputLifetimeUnitTests",
+        )
+        consumers = self.optics_consumers()
+        self.assertEqual(len(consumers), 11)
+        self.assertEqual(len(set(consumers)), 11)
+        selected = [(suite, method) for suite in suites for method in units.METHODS[suite]]
+        self.assertCountEqual(consumers, selected)
+        pattern = re.compile(units.selection())
+        for suite, method in consumers:
+            with self.subTest(suite=suite, method=method):
+                self.assertIsNotNone(pattern.search(f"L337CoreTests.{suite}/{method}()"))
+                self.assertIsNone(pattern.search(f"Other{suite}/{method}()"))
+                self.assertIsNone(pattern.search(f"{suite}/{method}Extra()"))
+
+    def test_missing_optics_fixture_consumer_cannot_pass_a_complete_report(self):
+        for name, method in self.optics_consumers():
+            with self.subTest(suite=name, method=method):
+                root, suite = self.report()
+                row = next(row for row in suite if row.get("classname") == name
+                           and row.get("name") == method + "()")
+                suite.remove(row)
+                self.write(root)
+                with self.assertRaisesRegex(ValueError, "Missing selected unit methods"):
+                    units.inspect_report(self.path)
 
     def test_empty_report_does_not_pass_on_zero_process_exit(self):
         self.write(ET.Element("testsuites"))

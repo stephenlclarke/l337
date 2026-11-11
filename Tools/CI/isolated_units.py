@@ -962,6 +962,25 @@ METHODS = {
         'specificationArrowHintsFollowActualWindowAndHelpReturnContext',
         'browseAndSearchKeepSelectionHintsInsteadOfInactiveSpecArrows',
     ),
+    "NativeAssemblySurveyOpticsUnitTests": (
+        "actualHeldInstrumentAndPurchasedTargetingAcquireOnlyReadOnlyOpticalData",
+        "actualAdjacentTicksProduceAnUnqualifiedExposureWithoutReplayOrPauseCredit",
+        "missingHardwareOrLoanAndInterruptedNativeFramesCannotSupplySurveyProgress",
+        "currentColdLoadInvalidatesPartialOpticsAndRetainsTheRealOriginalLoan",
+    ),
+    "NativeAssemblySurveyInstrumentControlsUnitTests": (
+        "explicitStartMotionBracketsAndCancelNeverPublishMissionEvidence",
+        "refusedRearmAndCurrentLoadDiscardUnfinishedControlState",
+    ),
+    "NativeAssemblyCalibrationIntegrationUnitTests": (
+        "typedMenuStartAndActualNativeFramesProduceOnlyCalibrationDisplay",
+        "capturedSelectionCannotDriftAndStopRemainsAvailableAfterTargetLoss",
+        "successfulCurrentLoadClearsProjectionAndFailedLoadPreservesLiveExposure",
+    ),
+    "NativeAssemblyCalibrationInputLifetimeUnitTests": (
+        "queuedStartAndStopCannotResetOrCancelALaterCalibrationRun",
+        "opticalRefusalConsumesTheStartInputAndCurrentLoadRequiresFreshCommands",
+    ),
 }
 
 
