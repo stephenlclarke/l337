@@ -2398,6 +2398,13 @@ class StagedServiceLifecycleTests(unittest.TestCase):
                        domain="gui/" + str(os.getuid()), label=label, program=str(f.runner / "runsvc.sh"),
                        generation=generation,
                        processes=["777 1 777 Tue Nov 10 00:00:00 2026 " + str(f.runner / "runsvc.sh")])
+        f.policy["runner_lifecycle"] = "staged-service-handoff-v1"
+        f.write(f.args.recoverable_policy, f.policy)
+        f.args.recoverable_policy_sha256 = f.digest(f.args.recoverable_policy)
+        f.plan["new"]["policy_sha256"] = f.args.recoverable_policy_sha256
+        installed = f.install.AUTHORIZATION_ROOT / SHA / ("recoverable-" + f.args.recoverable_policy_sha256) / "policy.json"
+        f.plan["new"]["hook"] = dict(path=str(installed.parent / "job-started.sh"),
+            sha256=hashlib.sha256(f.install.session_hook(installed, installed.parent / "native_runner.py")).hexdigest())
         f.plan.update(kind="staged-service-handoff-v1", service=service)
         f.plan["new"]["job_name"] = "Normal coverage, zero leaks and make-ci checks"
         human = f.home.parent / "human-operation.json"
@@ -2765,3 +2772,193 @@ class LifecycleOperationProbeTests(unittest.TestCase):
             path = f.native.lifecycle_path(f.policy)
             self.assertTrue(path.with_suffix(".start-claim.json").exists())
             self.assertFalse(path.with_suffix(".started.json").exists())
+
+
+class LifecycleEvidenceIntegrityTests(unittest.TestCase):
+    lifecycle_fixture = StagedServiceLifecycleTests.lifecycle_fixture
+    stage_and_start = StagedServiceLifecycleTests.stage_and_start
+
+    def assert_all_readers_refuse(self, f):
+        from pathlib import Path
+        env = dict(GITHUB_JOB="native_checks", GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2",
+                   RUNNER_NAME="elite-mbp-native", ELITE_RECOVERABLE_CODE_ENABLED="true")
+        calls = [
+            lambda: f.native.require_lifecycle_active(f.policy, env),
+            lambda: f.native.require_recoverable_session(f.policy, env),
+            lambda: f.native.require_recoverable_job(f.policy, env, {}),
+            lambda: f.native.require_recoverable_checkout(f.policy, env, Path("/unused")),
+            lambda: f.native.validate(f.policy, env),
+            lambda: f.native.authorize_recoverable(f.policy, env, {}),
+            lambda: f.native.admit_recoverable(f.policy, env, {}),
+        ]
+        for call in calls:
+            with self.subTest(reader=call), self.assertRaises((ValueError, FileNotFoundError)):
+                call()
+
+    def test_reviewed_lifecycle_mode_is_explicit_and_missing_stage_is_not_a_legacy_session(self):
+        from unittest.mock import patch
+        f = self.lifecycle_fixture()
+        with f.stack:
+            self.assertTrue(f.native.lifecycle_required(f.policy))
+            self.assert_all_readers_refuse(f)
+            event = f.home.parent / "hook-event.json"
+            f.write(event, {})
+            env = dict(GITHUB_JOB="native_checks", GITHUB_EVENT_PATH=str(event))
+            with (patch.dict("os.environ", env, clear=True),
+                  patch("sys.argv", ["native_runner.py", "--policy", str(f.args.recoverable_policy), "--admit"]),
+                  patch.object(f.native, "activate_staged_session", side_effect=ValueError("missing stage")) as activate,
+                  self.assertRaises(ValueError)):
+                f.native.main()
+            activate.assert_called_once()
+            with self.assertRaises(ValueError):
+                f.install.renew_recoverable(f.args.recoverable_policy, "222", "2", 1, 9000, True, True)
+            command = ["prepare_native_runner.py", "--approved-head", SHA,
+                       "--runner-archive", str(f.args.runner_archive), "--archive-sha256", f.args.archive_sha256,
+                       "--recoverable-policy", str(f.args.recoverable_policy),
+                       "--recoverable-policy-sha256", f.args.recoverable_policy_sha256]
+            with (patch("sys.argv", command), patch.object(f.install, "prepare") as prepare,
+                  self.assertRaises(ValueError)):
+                f.install.main()
+            prepare.assert_not_called()
+            for wrong in (None, "", False, "other"):
+                with self.subTest(mode=wrong), self.assertRaises(ValueError):
+                    f.native.lifecycle_required({**f.policy, "runner_lifecycle": wrong})
+            legacy = {key: value for key, value in f.policy.items() if key != "runner_lifecycle"}
+            self.assertFalse(f.native.lifecycle_required(legacy))
+            with patch.object(f.native, "lifecycle_path", side_effect=AssertionError("Legacy mode is policy-defined")):
+                f.native.require_lifecycle_active(legacy, {})
+
+    def test_every_partial_hook_boundary_keeps_lifecycle_required_when_stage_is_deleted_or_replaced(self):
+        from pathlib import Path
+        from unittest.mock import patch
+        for boundary in ("hook-claim", "binding", "state", "ticket", "ACTIVE"):
+            for stage_damage in ("missing", "changed"):
+                with self.subTest(boundary=boundary, stage=stage_damage):
+                    f = self.lifecycle_fixture()
+                    with f.stack:
+                        stage = self.stage_and_start(f)
+                        path = f.native.lifecycle_path(f.policy)
+                        before_ticket = (f.root / "ticket.json").read_bytes()
+                        original_publish = f.native.lifecycle_publish
+                        original_replace = f.native.os.replace
+                        def publish(destination, value):
+                            name = destination.name
+                            if ((boundary == "hook-claim" and name.endswith(".hook-claim.json"))
+                                    or (boundary == "binding" and destination.parent == f.root
+                                        and name.startswith(stage["binding"]["policy_sha256"] + "-"))
+                                    or (boundary == "state" and destination.suffix == ".state")
+                                    or (boundary == "ACTIVE" and name.endswith(".active.json"))):
+                                raise OSError("fake interrupted exact hook publication")
+                            return original_publish(destination, value)
+                        def replace(source, destination):
+                            if boundary == "ticket":
+                                raise OSError("fake interrupted ticket replacement")
+                            return original_replace(source, destination)
+                        with (patch.object(f.native, "__file__", stage["guard"]["path"]),
+                              patch.object(f.native, "require_recoverable_identity"),
+                              patch.object(f.native, "lifecycle_publish", side_effect=publish),
+                              patch.object(f.native.os, "replace", side_effect=replace), self.assertRaises(OSError)):
+                            f.native.activate_staged_session(f.policy, stage["policy"]["path"],
+                                dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2", RUNNER_NAME="elite-mbp-native"), {})
+                        if stage_damage == "missing":
+                            path.unlink()
+                        else:
+                            f.write(path, {**stage, "phase": "other"})
+                        self.assert_all_readers_refuse(f)
+                        if boundary == "ACTIVE":
+                            self.assertNotEqual((f.root / "ticket.json").read_bytes(), before_ticket)
+                        else:
+                            self.assertEqual((f.root / "ticket.json").read_bytes(), before_ticket)
+                        self.assertEqual(Path(stage["old_ticket_snapshot"]["path"]).read_bytes(), before_ticket)
+
+    def test_started_and_stage_evidence_replacement_refuses_after_an_actual_fake_activation(self):
+        from unittest.mock import patch
+        for suffix in (".json", ".started.json", ".active.json"):
+            for damage in ("missing", "changed"):
+                with self.subTest(suffix=suffix, damage=damage):
+                    f = self.lifecycle_fixture()
+                    with f.stack:
+                        stage = self.stage_and_start(f)
+                        with patch.object(f.native, "__file__", stage["guard"]["path"]), patch.object(f.native, "require_recoverable_identity"):
+                            f.native.activate_staged_session(f.policy, stage["policy"]["path"],
+                                dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2", RUNNER_NAME="elite-mbp-native"), {})
+                        target = f.native.lifecycle_path(f.policy).with_suffix(suffix)
+                        if damage == "missing":
+                            target.unlink()
+                        else:
+                            value = json_load(target)
+                            if suffix == ".started.json":
+                                value["service_generation"]["pid"] += 1
+                            elif suffix == ".active.json":
+                                value["binding"]["run_attempt"] = "3"
+                            else:
+                                value["binding"]["head"] = "f" * 40
+                            f.write(target, value)
+                        self.assert_all_readers_refuse(f)
+
+    def test_both_historical_snapshots_are_required_before_start_and_first_hook(self):
+        from pathlib import Path
+        from unittest.mock import patch
+        for field in ("old_ticket_snapshot", "old_environment_snapshot"):
+            for damage in ("missing", "changed"):
+                for boundary in ("start", "hook"):
+                    with self.subTest(snapshot=field, damage=damage, boundary=boundary):
+                        f = self.lifecycle_fixture()
+                        with f.stack:
+                            f.install.stage_service_session(f.args)
+                            path = f.native.lifecycle_path(f.policy)
+                            stage = json_load(path)
+                            if boundary == "hook":
+                                f.install.start_service_session(f.args)
+                                f.live["active"], f.remote["busy"] = True, True
+                            before_ticket = (f.root / "ticket.json").read_bytes()
+                            target = Path(stage[field]["path"])
+                            if damage == "missing":
+                                target.unlink()
+                            else:
+                                target.chmod(0o600)
+                                target.write_bytes(b"changed historical generation")
+                                target.chmod(0o400)
+                            with self.assertRaises((ValueError, FileNotFoundError)):
+                                if boundary == "start":
+                                    f.install.start_service_session(f.args)
+                                else:
+                                    with patch.object(f.native, "__file__", stage["guard"]["path"]), patch.object(f.native, "require_recoverable_identity"):
+                                        f.native.activate_staged_session(f.policy, stage["policy"]["path"],
+                                            dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2", RUNNER_NAME="elite-mbp-native"), {})
+                            self.assertEqual((f.root / "ticket.json").read_bytes(), before_ticket)
+                            self.assertFalse(path.with_suffix(".active.json").exists())
+                            if boundary == "start":
+                                self.assertEqual([row[1] for row in f.actions], ["bootout"])
+
+    def test_snapshot_loss_during_hook_refuses_before_ticket_replace_and_before_ACTIVE(self):
+        from pathlib import Path
+        from unittest.mock import patch
+        for moment in ("before-ticket", "before-ACTIVE"):
+            f = self.lifecycle_fixture()
+            with f.stack, self.subTest(moment=moment):
+                stage = self.stage_and_start(f)
+                before_ticket = (f.root / "ticket.json").read_bytes()
+                target = Path(stage["old_ticket_snapshot"]["path"])
+                original_publish, original_replace = f.native.lifecycle_publish, f.native.os.replace
+                def publish(destination, value):
+                    result = original_publish(destination, value)
+                    if moment == "before-ticket" and destination.name.startswith("ticket.pending-"):
+                        target.unlink()
+                    return result
+                def replace(source, destination):
+                    result = original_replace(source, destination)
+                    if moment == "before-ACTIVE":
+                        target.unlink()
+                    return result
+                with (patch.object(f.native, "__file__", stage["guard"]["path"]),
+                      patch.object(f.native, "require_recoverable_identity"),
+                      patch.object(f.native, "lifecycle_publish", side_effect=publish),
+                      patch.object(f.native.os, "replace", side_effect=replace),
+                      self.assertRaises(FileNotFoundError)):
+                    f.native.activate_staged_session(f.policy, stage["policy"]["path"],
+                        dict(GITHUB_RUN_ID="222", GITHUB_RUN_ATTEMPT="2", RUNNER_NAME="elite-mbp-native"), {})
+                self.assertFalse(f.native.lifecycle_path(f.policy).with_suffix(".active.json").exists())
+                self.assert_all_readers_refuse(f)
+                if moment == "before-ticket":
+                    self.assertEqual((f.root / "ticket.json").read_bytes(), before_ticket)

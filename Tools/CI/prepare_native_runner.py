@@ -272,9 +272,11 @@ def reviewed_recoverable_policy(path, checksum, base):
     value = owned_json(path)
     if (not re.fullmatch(r"[0-9a-f]{64}", checksum or "")
             or hashlib.sha256(path.read_bytes()).hexdigest() != checksum
-            or set(value) != set(base) | {"recoverable_activation", "recoverable_shards"}
+            or set(value) not in (set(base) | {"recoverable_activation", "recoverable_shards"},
+                                  set(base) | {"recoverable_activation", "recoverable_shards", "runner_lifecycle"})
             or any(value[name] != expected for name, expected in base.items())):
         raise ValueError("Reviewed recoverable policy differs from source/archive/toolchain.")
+    native_runner.lifecycle_required(value)
     activation, config = value["recoverable_activation"], value["recoverable_shards"]
     required = {"schema", "enabled", "revoked", "expires_at", "head", "workflow_ref", "workflow_sha256",
                 "reusable_workflow_sha256", "manifest_sha256", "runners", "assignment_root", "guard_files"}
@@ -477,6 +479,8 @@ def _renew_locked(policy_path, run_id, attempt, maximum, expires, register, list
     """Consume a finite durable slot before registration; preserve ambiguous listeners."""
     from native_runner import policy_digest
     policy = owned_json(policy_path)
+    if native_runner.lifecycle_required(policy):
+        raise ValueError("Reviewed service lifecycle cannot use ordinary registration or listener renewal.")
     if (not re.fullmatch(r"[1-9][0-9]*", run_id or "") or not re.fullmatch(r"[1-9][0-9]*", attempt or "")
             or type(maximum) is not int or not 1 <= maximum <= 256 or type(expires) not in (int, float)
             or not math.isfinite(expires) or not time.time() < expires <= policy["recoverable_activation"]["expires_at"]):
@@ -860,6 +864,8 @@ def _reuse_context(args, lifecycle=False):
             or not time.time() < new['expires_at'] <= grant['expires_at']):
         raise ValueError('Exact finite transition session bounds differ.')
     policy = json.loads(_pinned_bytes(args.recoverable_policy, args.recoverable_policy_sha256, 0o400))
+    if lifecycle != native_runner.lifecycle_required(policy):
+        raise ValueError("Operation differs from the immutable reviewed lifecycle mode")
     if (git_head := output('git', 'rev-parse', 'HEAD', environment=dict(os.environ))) != args.approved_head:
         raise ValueError('Transition checkout differs from approved execution.')
     if output('git', 'status', '--porcelain', environment=dict(os.environ)):
@@ -1169,6 +1175,7 @@ def start_service_session(args):
         native_runner.require_lifecycle_preserved(stage)
         _exclusive_json(path.with_suffix(".start-claim.json"), {"stage": native_runner.lifecycle_ref(path)})
         _lifecycle_live(context, installed=True)
+        native_runner.require_lifecycle_preserved(stage)
         _lifecycle_action(context, context["actions"][1])
         generation = native_runner.lifecycle_service(context["service"], context["binding"]["expires_at"])
         if generation.get("loaded") is not True:
@@ -1219,6 +1226,8 @@ def main() -> None:
             if (not re.fullmatch(r"[0-9a-f]{64}", args.recoverable_policy_sha256 or "")
                     or hashlib.sha256(args.recoverable_policy.read_bytes()).hexdigest() != args.recoverable_policy_sha256):
                 raise ValueError("Reviewed input policy hash differs; no installation attempted.")
+            if native_runner.lifecycle_required(reviewed):
+                raise ValueError("Reviewed service lifecycle requires the explicit stage/start operation.")
             existing = RUNNER / ".runner"
             if existing.is_symlink():
                 raise ValueError("Existing registration is not physical.")

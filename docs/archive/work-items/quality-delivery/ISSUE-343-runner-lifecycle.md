@@ -6,7 +6,7 @@ The existing runner 134 registration and LaunchAgent retain an expired terminal 
 
 ## Required behavior
 
-Preserve the existing service, credentials, vendor installation and historical session. Prepare the next exact attempt under both leases with an inert STAGED record. Permit the bounded stop and start only with the independently reviewed operation, explicit human decision and fresh Root grant. The actual first hook must verify the loaded source, service generation and ACTIVE job identity before any checkout or workload.
+Preserve the existing service, credentials, vendor installation and historical session. Prepare the next exact attempt under both leases with an inert STAGED record. Permit the bounded stop and start only with the independently reviewed operation, explicit human decision and fresh Root grant. The actual first hook must verify the loaded source, service generation and ACTIVE job identity before any checkout or workload. Lifecycle admission must be required by the immutable reviewed policy. Missing stage or startup evidence cannot select the legacy admission path, and both old-generation snapshots must survive startup and ticket replacement.
 
 ## Acceptance
 

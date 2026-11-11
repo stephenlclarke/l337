@@ -744,6 +744,15 @@ def session_root():
     return Path(pwd.getpwuid(os.getuid()).pw_dir) / "Library/EliteNativeCI/recoverable-sessions"
 
 
+def lifecycle_required(policy):
+    """The reviewed policy fixes admission mode independently of filesystem presence."""
+    if "runner_lifecycle" not in policy:
+        return False
+    if policy["runner_lifecycle"] != "staged-service-handoff-v1":
+        raise ValueError("Unknown reviewed runner lifecycle")
+    return True
+
+
 def lifecycle_path(policy):
     return session_root() / ("lifecycle-" + policy_digest(policy) + ".json")
 
@@ -921,6 +930,8 @@ def require_lifecycle_run(policy, stage, environment, *, active):
 
 
 def require_lifecycle_preserved(stage):
+    lifecycle_read(stage["old_ticket_snapshot"])
+    lifecycle_read(stage["old_environment_snapshot"])
     for reference in stage["preserved"]:
         lifecycle_read(reference["ref"], reference["mode"])
         if "identity" in reference:
@@ -932,12 +943,17 @@ def require_lifecycle_preserved(stage):
 
 
 def require_lifecycle_active(policy, environment):
-    path = lifecycle_path(policy)
-    if not path.exists() and not path.is_symlink():
+    if not lifecycle_required(policy):
         return
+    path = lifecycle_path(policy)
     stage = json.loads(lifecycle_read(lifecycle_ref(path)))
     active_path = path.with_suffix(".active.json")
     active = json.loads(lifecycle_read(lifecycle_ref(active_path)))
+    started_ref = lifecycle_ref(path.with_suffix(".started.json"))
+    started = json.loads(lifecycle_read(started_ref))
+    if (active.get("started") != started_ref or started.get("phase") != "STARTED" or started.get("stage") != lifecycle_ref(path)):
+        raise ValueError("Lifecycle startup evidence is absent or changed")
+    require_lifecycle_preserved(stage)
     if (stage.get("kind") != "staged-service-session-v1" or stage["schema"] != 1
             or stage["binding"]["max_jobs"] != 1 or stage["binding"]["policy_sha256"] != policy_digest(policy)
             or stage["phase"] != "STAGED" or active["phase"] != "ACTIVE"
@@ -960,6 +976,8 @@ def require_lifecycle_active(policy, environment):
 
 def activate_staged_session(policy, policy_path, environment, event):
     """Only the actual installed first hook may exchange STAGED for one ACTIVE slot."""
+    if not lifecycle_required(policy):
+        raise ValueError("Staged hook requires its immutable reviewed lifecycle contract")
     path = lifecycle_path(policy)
     with lifecycle_custody() as verify:
         stage = json.loads(lifecycle_read(lifecycle_ref(path)))
@@ -977,7 +995,8 @@ def activate_staged_session(policy, policy_path, environment, event):
         lifecycle_read(stage["policy"])
         lifecycle_read(stage["archive"], stage["archive_mode"])
         verify_runner_archive(Path(policy["runner_root"]), Path(stage["archive"]["path"]))
-        started = json.loads(lifecycle_read(lifecycle_ref(path.with_suffix(".started.json"))))
+        started_ref = lifecycle_ref(path.with_suffix(".started.json"))
+        started = json.loads(lifecycle_read(started_ref))
         if started["stage"] != lifecycle_ref(path) or started["phase"] != "STARTED":
             raise ValueError("The staged service was not started by its exact operation")
         if lifecycle_service(stage["service"], binding["expires_at"]) != started["service_generation"]:
@@ -998,7 +1017,7 @@ def activate_staged_session(policy, policy_path, environment, event):
         state_path = binding_path.with_suffix(".state")
         lifecycle_publish(state_path, {"used": 1, "phase": "running"})
         state_path.chmod(0o600)
-        receipt = dict(phase="ACTIVE", stage=lifecycle_ref(path), binding=binding,
+        receipt = dict(phase="ACTIVE", stage=lifecycle_ref(path), started=started_ref, binding=binding,
                        run_id=binding["run_id"], run_attempt=binding["run_attempt"], runner=stage["runner"]["name"])
         verify()
         lifecycle_read(stage["guard"], 0o500)
@@ -1011,6 +1030,7 @@ def activate_staged_session(policy, policy_path, environment, event):
         pending = session_root() / ("ticket.pending-" + str(uuid.uuid4()))
         lifecycle_publish(pending, ticket)
         lifecycle_read(stage["old_ticket"])
+        require_lifecycle_preserved(stage)
         verify()
         os.replace(pending, session_root() / "ticket.json")
         directory = os.open(session_root(), os.O_RDONLY)
@@ -1019,6 +1039,8 @@ def activate_staged_session(policy, policy_path, environment, event):
         finally:
             os.close(directory)
         verify()
+        require_lifecycle_preserved(stage)
+        lifecycle_read(started_ref)
         lifecycle_publish(path.with_suffix(".active.json"), receipt)
 
 
@@ -1208,7 +1230,7 @@ def main() -> None:
         raise ValueError("Only reviewed recoverable jobs use split authorization.")
     if not args.checkout and recoverable:
         event = json.loads(Path(environment["GITHUB_EVENT_PATH"]).read_text())
-        if args.admit and lifecycle_path(policy).exists():
+        if args.admit and lifecycle_required(policy):
             activate_staged_session(policy, policy_path, environment, event)
         workspace = admit_recoverable(policy, environment, event)
         if not args.admit:
