@@ -10,7 +10,8 @@ final class AssemblyOpeningFixture {
   let files: ScriptFreightFixture
   let runtime: GameRuntime
 
-  init(buy: Bool = true) async throws {
+  // Keep this fixture in its caller's isolation through the async setup and service calls.
+  init(buy: Bool = true, isolation: isolated (any Actor)? = #isolation) async throws {
     let storage = try ScriptFreightFixture()
     files = storage
     var ready = false
@@ -85,7 +86,9 @@ final class AssemblyOpeningFixture {
     try #require(after.commander.scriptState.firstNativeCommoditySale == nil)
   }
 
-  func review(_ action: NativeAssemblyOfOrbitsAction) async throws -> Game {
+  func review(
+    _ action: NativeAssemblyOfOrbitsAction, isolation: isolated (any Actor)? = #isolation
+  ) async throws -> Game {
     await runtime.nativeCommand { game in
       game.openContractBoard()
       if let index = game.contractBoard.rows.firstIndex(where: { $0.assemblyOfOrbits == action }) {
@@ -101,7 +104,9 @@ final class AssemblyOpeningFixture {
     return detail
   }
 
-  func confirm(_ action: NativeAssemblyOfOrbitsAction) async throws -> Game {
+  func confirm(
+    _ action: NativeAssemblyOfOrbitsAction, isolation: isolated (any Actor)? = #isolation
+  ) async throws -> Game {
     let detail = try await review(action)
     try #require(detail.contractBoard.assemblyOfOrbitsQuote?.allowed == true)
     await runtime.key("right")
