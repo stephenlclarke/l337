@@ -36,18 +36,42 @@ enum NativeUnderTowDefinition {
     pack.manifest.stateID == stateID || pack.digest == digest
   }
 
+  @inline(never)
   static func matches(_ pack: borrowing ScriptPack) -> Bool {
-    pack.manifest.stateID == stateID && pack.manifest.version == version && pack.digest == digest
+    matchesIdentity(pack)
       && ScriptPackLibrary.hash(pack.manifestBytes) == manifestSHA256
       && ScriptPackLibrary.hash(pack.source) == moduleSHA256 && pack.entryBytes == pack.source
       && pack.models.isEmpty && pack.resourceBytes.isEmpty
-      && pack.manifest.board == nil && pack.manifest.providerContract == nil
-      && pack.manifest.equipment == nil && pack.manifest.encounters == nil
-      && pack.manifest.npcs == nil && pack.manifest.modules == nil && pack.manifest.trial == nil
-      && pack.manifest.handlers.count == 1
-      && pack.manifest.handlers.first?.event == "mission.accepted"
-      && pack.manifest.handlers.first?.function == "accepted"
-      && Set(pack.manifest.capabilities)
+      && matchesDeclaration(pack)
+  }
+
+  // End large manifest projections before the separately called byte hash routines.
+  @inline(never)
+  private static func matchesIdentity(_ pack: borrowing ScriptPack) -> Bool {
+    matchesIdentity(pack, manifest: pack.manifest)
+  }
+
+  @inline(never)
+  private static func matchesIdentity(
+    _ pack: borrowing ScriptPack, manifest: borrowing ScriptManifest
+  ) -> Bool {
+    manifest.stateID == stateID && manifest.version == version && pack.digest == digest
+  }
+
+  @inline(never)
+  private static func matchesDeclaration(_ pack: borrowing ScriptPack) -> Bool {
+    matchesDeclaration(pack.manifest)
+  }
+
+  @inline(never)
+  private static func matchesDeclaration(_ manifest: borrowing ScriptManifest) -> Bool {
+    manifest.board == nil && manifest.providerContract == nil
+      && manifest.equipment == nil && manifest.encounters == nil
+      && manifest.npcs == nil && manifest.modules == nil && manifest.trial == nil
+      && manifest.handlers.count == 1
+      && manifest.handlers.first?.event == "mission.accepted"
+      && manifest.handlers.first?.function == "accepted"
+      && Set(manifest.capabilities)
         == Set(["script-lua-v1", "story-v2", "durable-commands-v2"])
   }
 }
@@ -62,7 +86,7 @@ extension Game {
   /// Lua may record only the two original briefing lines during the real acceptance event.
   /// All custody, physical stages, rewards and closure belong to native transactions.
   func validateUnderTowScriptCommand(_ fields: [String: ScriptValue],
-    event: ScriptEvent, pack: ScriptPack, state: borrowing ScriptInstance,
+    event: ScriptEvent, pack: borrowing ScriptPack, state: borrowing ScriptInstance,
     candidate: borrowing Commander) throws
   {
     guard NativeUnderTowDefinition.applies(pack)

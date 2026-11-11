@@ -2535,6 +2535,7 @@ extension GameRuntime {
         if attempt.initial.tombstone != nil { return nil }
         attempt.state = .active(try utilityCombatPrepareWork(attempt))
       case .active(let work):
+        let binding = work.binding
         switch work.phase {
         case .beginAttempt:
           if work.attemptIndex >= work.maximumShots {
@@ -2590,7 +2591,7 @@ extension GameRuntime {
           var sourceFirst = false
           if !work.controller.active, own.stopped {
             let candidate = try pendingContact
-              ?? utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+              ?? utilityCurrentTargetContact(game, utility: utility, binding: binding)
             decisionContact = candidate
             sourceFirst = candidate.contact?.hit.target == .body(candidate.body.id)
             if own.weaponReady && sourceFirst && !rearIsStronger {
@@ -2637,7 +2638,7 @@ extension GameRuntime {
           // A fresh native hit can pay for this exact control step as F rather than R.
           if own.weaponReady {
             let candidate = try decisionContact
-              ?? utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+              ?? utilityCurrentTargetContact(game, utility: utility, binding: binding)
             if candidate.body.id == work.controller.sourceBodyID,
               candidate.body.physical?.identity == work.controller.source,
               candidate.contact?.hit.target == .body(candidate.body.id),
@@ -2671,7 +2672,7 @@ extension GameRuntime {
           }
           // Reuse an accepted pre-movement contact; no step has expired its native projection.
           let frame = try work.maneuverContact
-            ?? utilityCurrentTargetContact(game, utility: utility, binding: work.binding)
+            ?? utilityCurrentTargetContact(game, utility: utility, binding: binding)
           work.maneuverContact = nil
           work.phase = .contact(frame)
         case .contact(let frame):

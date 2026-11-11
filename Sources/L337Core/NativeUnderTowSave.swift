@@ -84,7 +84,9 @@ enum NativeUnderTowSave {
     else { return false }
     if issue.consumed.isEmpty {
       guard carried.count == 1 else { return false }
-      return (try? NativeUnderTowCustody.resolve(instance: instance, commander: commander)) != nil
+      return
+        (try? NativeUnderTowCustody.heldReference(
+          instance: instance, commander: commander)) != nil
     }
     // Retain the equipment kernel's actual consumed-original history. It supplies neither
     // a held reference, a replacement unit, a loss outcome nor a physical-stage receipt.

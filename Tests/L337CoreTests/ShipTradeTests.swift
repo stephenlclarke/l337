@@ -354,11 +354,26 @@ struct ShipPurchasePolicyUnitTests {
     game.commander.mirrorFittedEquipment()
     game.commander.xyzzyActive = enabled
     try #require(game.commander.valid)
+    // A positive authored price tests the policy alone; it grants no canonical hull or quote.
+    let priced = try #require(OriginalFleetR3Data.contract(for: "SH171"))
+    let positive = try #require(priced.performance)
+    try #require(
+      priced.sourceSHA256 == "f1e1365586a3723bed5a87f1041d086ab7a7dd3c4ce9d665c6fedce1b39eb48f"
+        && positive.price == 288000 && positive.price > 0)
+    #expect(
+      ShipTradeQuote.purchasePolicyIssues(price: positive.price, policy: .never)
+        == ["This hull is not for sale."])
+    #expect(
+      ShipTradeQuote.purchasePolicyIssues(price: positive.price, policy: .blueprintFabrication)
+        .isEmpty)
+    #expect(
+      ShipTradeQuote.purchasePolicyIssues(price: 0, policy: .blueprintFabrication)
+        == ["This hull is unpriced and not for sale."])
     let capsule = try #require(ShipCatalogue.ship("SH040"))
     let performance = try #require(capsule.game)
     try #require(
       capsule.catalogue.purchasePolicy == .never && !capsule.catalogue.normalPurchaseEligible
-        && performance.price > 0)
+        && performance.price == 0)
     let projected = try game.commander.projectedEquipmentTransfer(to: capsule.id)
     try #require(projected.valid && projected.fuel == 0 && projected.missiles == 0)
     game.screen = .status
@@ -366,7 +381,12 @@ struct ShipPurchasePolicyUnitTests {
     game.showroom.selection = capsule.id
     let before = game.commander
     let quote = try #require(game.shipTradeQuote)
-    #expect(!quote.allowed && quote.issues == ["This hull is not for sale."])
+    #expect(quote.purchase == 0)
+    #expect(
+      !quote.allowed
+        && quote.issues == [
+          "This hull is unpriced and not for sale.", "This hull is not for sale.",
+        ])
     game.key("showroom-trade")
     game.key("right")
     game.key("return")

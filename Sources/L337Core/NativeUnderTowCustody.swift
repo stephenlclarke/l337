@@ -26,9 +26,17 @@ enum NativeUnderTowCustody {
   static func resolve(instance: ScriptInstance, commander: borrowing Commander) throws
     -> NativeUnderTowReferenceBinding
   {
+    guard instance.suspension == nil else { throw EquipmentIssueError.staleObligation }
+    return try heldReference(instance: instance, commander: commander)
+  }
+
+  /// Owned property remains verifiable while its mission is suspended.
+  static func heldReference(instance: ScriptInstance, commander: borrowing Commander) throws
+    -> NativeUnderTowReferenceBinding
+  {
     guard commander.withReadOnlyScriptState({ $0.instances[instance.id] }) == instance,
       NativeUnderTowSave.prefixValid(instance), instance.outcome == .active,
-      instance.suspension == nil, let state = instance.savedUnderTow,
+      let state = instance.savedUnderTow,
       let collection = state.collection, let inventory = commander.equipmentInventory,
       inventory.owner == state.acceptance.owner,
       inventory.activeHull == commander.hullInstanceID,

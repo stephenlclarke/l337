@@ -8,6 +8,12 @@ public struct ShipTradeQuote: Sendable {
   public let balance: Int
   public let issues: [String]
   public var allowed: Bool { issues.isEmpty }
+  static func purchasePolicyIssues(price: Int, policy: ShipCataloguePurchasePolicy) -> [String] {
+    var issues: [String] = []
+    if price <= 0 { issues.append("This hull is unpriced and not for sale.") }
+    if policy == .never { issues.append("This hull is not for sale.") }
+    return issues
+  }
   public var rows: [String] {
     [
       "Selected: " + selected.name,
@@ -46,11 +52,8 @@ extension Game {
     let allowance = commander.performance.price * 10 * 3 / 4
     let net = purchase - allowance
     let balance = commander.unlimitedCash ? commander.credits : commander.credits - net
-    var issues: [String] = []
-    if next.price <= 0 { issues.append("This hull is unpriced and not for sale.") }
-    if selected.catalogue.purchasePolicy == .never {
-      issues.append("This hull is not for sale.")
-    }
+    var issues = ShipTradeQuote.purchasePolicyIssues(
+      price: next.price, policy: selected.catalogue.purchasePolicy)
     if selected.catalogue.purchasePolicy == .pendingFabrication {
       issues.append("Fabrication for this hull is not yet available.")
     }

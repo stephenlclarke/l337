@@ -11,6 +11,70 @@ struct OriginalBesraUnitTests {
       from: Data(contentsOf: ShipCatalogue.folder.appendingPathComponent(id + ".toml")))
   }
 
+  // Keep the literal oracle in this domain target; the adoption fixture is in another target.
+  private func independentBisonExpected(_ shipID: String) throws
+    -> (name: String, performance: ShipPerformance, units: Int, crew: Int)
+  {
+    switch shipID {
+    case "SH005":
+      return (
+        "Bison",
+        .init(
+          cargo: 1108, speed: 17.7, acceleration: 3.44, energy: 1120, recharge: 6.4,
+          roll: 0.267, pitch: 0.232, yaw: 0.215, shield: 590, shieldRecharge: 1.7,
+          fuel: 130, jump: 7, spool: 16, missiles: 7, facings: 15, cargoExpansion: 445,
+          price: 814000, workTools: [.salvageCutter]), 48, 12
+      )
+    case "SH006":
+      return (
+        "Bison Mk II",
+        .init(
+          cargo: 1220, speed: 16.8, acceleration: 3.35, energy: 1300, recharge: 7.1,
+          roll: 0.258, pitch: 0.224, yaw: 0.215, shield: 640, shieldRecharge: 1.78,
+          fuel: 130, jump: 7, spool: 16, missiles: 8, facings: 15, cargoExpansion: 490,
+          price: 908000, workTools: [.salvageCutter]), 54, 14
+      )
+    default: throw SaveError.invalidCommander
+    }
+  }
+
+  private func fieldsOutsideBisonDelivery(_ ship: CatalogueShip) throws -> Data {
+    var fields = try #require(
+      JSONSerialization.jsonObject(with: JSONEncoder().encode(ship)) as? [String: Any])
+    var metadata = try #require(fields["catalogue"] as? [String: Any])
+    for key in ["normalPurchaseEligible", "purchasePolicy", "mechanicsStatus", "basis"] {
+      metadata.removeValue(forKey: key)
+    }
+    fields["catalogue"] = metadata
+    return try JSONSerialization.data(withJSONObject: fields, options: .sortedKeys)
+  }
+
+  private func requireIndependentBisonDelivery(_ raw: CatalogueShip) throws {
+    let expectedSHA256 =
+      raw.id == "SH005"
+      ? "a1592e007d95c8608f5bcc893d3ecf450fa94e9b4437d15f5fddc593f4d6e9fb"
+      : "1fcf843a53ef11d4b0f6c503219cebfebf81ef6b97051a9b395ddbd4acec46c8"
+    try #require(raw.id == "SH005" || raw.id == "SH006")
+    let bytes = try Data(contentsOf: ShipCatalogue.folder.appendingPathComponent(raw.id + ".toml"))
+    try #require(ScriptPackLibrary.hash(bytes) == expectedSHA256)
+    let expected = try independentBisonExpected(raw.id)
+    let canonical = try #require(ShipCatalogue.ship(raw.id))
+    #expect(canonical.id == raw.id && canonical.name == expected.name)
+    #expect(raw.game == expected.performance && canonical.game == expected.performance)
+    #expect(
+      !raw.catalogue.normalPurchaseEligible && raw.catalogue.purchasePolicy == .pendingFabrication)
+    #expect(raw.catalogue.mechanicsStatus == .pending)
+    #expect(canonical.catalogue.normalPurchaseEligible)
+    #expect(canonical.catalogue.purchasePolicy == .blueprintFabrication)
+    #expect(canonical.catalogue.mechanicsStatus == .ready)
+    #expect(canonical.catalogue.minimumBuildTechLevel == (raw.id == "SH005" ? 9 : 11))
+    #expect(
+      canonical.catalogue.basis.hasPrefix(raw.id + " current adopted r3 source " + expectedSHA256))
+    let unchangedFields =
+      try fieldsOutsideBisonDelivery(canonical) == fieldsOutsideBisonDelivery(raw)
+    #expect(unchangedFields, "Only the four declared Bison delivery metadata fields may change.")
+  }
+
   @Test func exactMetreContractRejectsOtherHullIdentityUnitsPathAndHash() throws {
     let definition = try #require(OriginalFleetDefinitionData.definition(for: "SH108"))
     let model = try OriginalFleetShowroomModels.model(for: "SH108")
@@ -92,7 +156,11 @@ struct OriginalBesraUnitTests {
           && !foreignDefinition.runtimeReady)
       #expect(try OriginalBesraActivation.resolve(foreign) == foreign)
       #expect(try OriginalPlayerHullActivation.resolve(foreign) == foreign)
-      #expect(ShipCatalogue.ship(id) == foreign)
+      if id == "SH005" || id == "SH006" {
+        try requireIndependentBisonDelivery(foreign)
+      } else {
+        #expect(ShipCatalogue.ship(id) == foreign)
+      }
       #expect(throws: (any Error).self) {
         try OriginalPlayerHullActivation.resolve(
           foreign, definition: foreignDefinition, physical: contract)
