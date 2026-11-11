@@ -11,6 +11,33 @@ struct OriginalBesraUnitTests {
       from: Data(contentsOf: ShipCatalogue.folder.appendingPathComponent(id + ".toml")))
   }
 
+  // Keep the literal oracle in this domain target; the adoption fixture is in another target.
+  private func independentBisonExpected(_ shipID: String) throws
+    -> (name: String, performance: ShipPerformance, units: Int, crew: Int)
+  {
+    switch shipID {
+    case "SH005":
+      return (
+        "Bison",
+        .init(
+          cargo: 1108, speed: 17.7, acceleration: 3.44, energy: 1120, recharge: 6.4,
+          roll: 0.267, pitch: 0.232, yaw: 0.215, shield: 590, shieldRecharge: 1.7,
+          fuel: 130, jump: 7, spool: 16, missiles: 7, facings: 15, cargoExpansion: 445,
+          price: 814000, workTools: [.salvageCutter]), 48, 12
+      )
+    case "SH006":
+      return (
+        "Bison Mk II",
+        .init(
+          cargo: 1220, speed: 16.8, acceleration: 3.35, energy: 1300, recharge: 7.1,
+          roll: 0.258, pitch: 0.224, yaw: 0.215, shield: 640, shieldRecharge: 1.78,
+          fuel: 130, jump: 7, spool: 16, missiles: 8, facings: 15, cargoExpansion: 490,
+          price: 908000, workTools: [.salvageCutter]), 54, 14
+      )
+    default: throw SaveError.invalidCommander
+    }
+  }
+
   private func fieldsOutsideBisonDelivery(_ ship: CatalogueShip) throws -> Data {
     var fields = try #require(
       JSONSerialization.jsonObject(with: JSONEncoder().encode(ship)) as? [String: Any])
@@ -30,7 +57,7 @@ struct OriginalBesraUnitTests {
     try #require(raw.id == "SH005" || raw.id == "SH006")
     let bytes = try Data(contentsOf: ShipCatalogue.folder.appendingPathComponent(raw.id + ".toml"))
     try #require(ScriptPackLibrary.hash(bytes) == expectedSHA256)
-    let expected = try OriginalBisonFixture.expected(raw.id)
+    let expected = try independentBisonExpected(raw.id)
     let canonical = try #require(ShipCatalogue.ship(raw.id))
     #expect(canonical.id == raw.id && canonical.name == expected.name)
     #expect(raw.game == expected.performance && canonical.game == expected.performance)
